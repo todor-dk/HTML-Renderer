@@ -20,14 +20,13 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public static readonly RColor Empty = new RColor();
 
-        private readonly long _value;
+        private readonly long Value;
 
         #endregion
 
-
         private RColor(long value)
         {
-            _value = value;
+            this.Value = value;
         }
 
         /// <summary>
@@ -75,7 +74,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </summary>
         public byte R
         {
-            get { return (byte)((ulong)(_value >> 16) & byte.MaxValue); }
+            get { return (byte)((ulong)(this.Value >> 16) & byte.MaxValue); }
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </summary>
         public byte G
         {
-            get { return (byte)((ulong)(_value >> 8) & byte.MaxValue); }
+            get { return (byte)((ulong)(this.Value >> 8) & byte.MaxValue); }
         }
 
         /// <summary>
@@ -91,7 +90,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </summary>
         public byte B
         {
-            get { return (byte)((ulong)_value & byte.MaxValue); }
+            get { return (byte)((ulong)this.Value & byte.MaxValue); }
         }
 
         /// <summary>
@@ -99,7 +98,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </summary>
         public byte A
         {
-            get { return (byte)((ulong)(_value >> 24) & byte.MaxValue); }
+            get { return (byte)((ulong)(this.Value >> 24) & byte.MaxValue); }
         }
 
         /// <summary>
@@ -111,7 +110,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public bool IsEmpty
         {
-            get { return _value == 0; }
+            get { return this.Value == 0; }
         }
 
         /// <summary>
@@ -129,7 +128,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <filterpriority>3</filterpriority>
         public static bool operator ==(RColor left, RColor right)
         {
-            return left._value == right._value;
+            return left.Value == right.Value;
         }
 
         /// <summary>
@@ -216,8 +215,9 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
             if (obj is RColor)
             {
                 var color = (RColor)obj;
-                return _value == color._value;
+                return this.Value == color.Value;
             }
+
             return false;
         }
 
@@ -230,7 +230,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public override int GetHashCode()
         {
-            return _value.GetHashCode();
+            return this.Value.GetHashCode();
         }
 
         /// <summary>
@@ -239,25 +239,27 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         public override string ToString()
         {
             var stringBuilder = new StringBuilder(32);
-            stringBuilder.Append(GetType().Name);
+            stringBuilder.Append(this.GetType().Name);
             stringBuilder.Append(" [");
-            if (_value != 0)
+            if (this.Value != 0)
             {
                 stringBuilder.Append("A=");
-                stringBuilder.Append(A);
+                stringBuilder.Append(this.A);
                 stringBuilder.Append(", R=");
-                stringBuilder.Append(R);
+                stringBuilder.Append(this.R);
                 stringBuilder.Append(", G=");
-                stringBuilder.Append(G);
+                stringBuilder.Append(this.G);
                 stringBuilder.Append(", B=");
-                stringBuilder.Append(B);
+                stringBuilder.Append(this.B);
             }
             else
+            {
                 stringBuilder.Append("Empty");
+            }
+
             stringBuilder.Append("]");
             return stringBuilder.ToString();
         }
-
 
         #region Private methods
 

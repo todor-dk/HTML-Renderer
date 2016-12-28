@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -26,37 +26,36 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// <summary>
         /// the underline win-forms font.
         /// </summary>
-        private readonly Font _font;
+        private readonly Font _Font;
 
         /// <summary>
         /// a handle to this Font.
         /// </summary>
-        private IntPtr _hFont;
+        private IntPtr _HFont;
 
         /// <summary>
         /// the vertical offset of the font underline location from the top of the font.
         /// </summary>
-        private float _underlineOffset = -1;
+        private float _UnderlineOffset = -1;
 
         /// <summary>
         /// Cached font height.
         /// </summary>
-        private float _height = -1;
+        private float _Height = -1;
 
         /// <summary>
         /// Cached font whitespace width.
         /// </summary>
-        private double _whitespaceWidth = -1;
+        private double WhitespaceWidth = -1;
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         public FontAdapter(Font font)
         {
-            _font = font;
+            this._Font = font;
         }
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// </summary>
         public Font Font
         {
-            get { return _font; }
+            get { return this._Font; }
         }
 
         /// <summary>
@@ -74,39 +73,43 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         {
             get
             {
-                if (_hFont == IntPtr.Zero)
-                    _hFont = _font.ToHfont();
-                return _hFont;
+                if (this._HFont == IntPtr.Zero)
+                {
+                    this._HFont = this._Font.ToHfont();
+                }
+
+                return this._HFont;
             }
         }
 
         public override double Size
         {
-            get { return _font.Size; }
+            get { return this._Font.Size; }
         }
 
         public override double UnderlineOffset
         {
-            get { return _underlineOffset; }
+            get { return this._UnderlineOffset; }
         }
 
         public override double Height
         {
-            get { return _height; }
+            get { return this._Height; }
         }
 
         public override double LeftPadding
         {
-            get { return _height / 6f; }
+            get { return this._Height / 6f; }
         }
 
         public override double GetWhitespaceWidth(RGraphics graphics)
         {
-            if (_whitespaceWidth < 0)
+            if (this.WhitespaceWidth < 0)
             {
-                _whitespaceWidth = graphics.MeasureString(" ", this).Width;
+                this.WhitespaceWidth = graphics.MeasureString(" ", this).Width;
             }
-            return _whitespaceWidth;
+
+            return this.WhitespaceWidth;
         }
 
         /// <summary>
@@ -116,8 +119,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// <param name="underlineOffset">the vertical offset of the font underline location from the top of the font.</param>
         internal void SetMetrics(int height, int underlineOffset)
         {
-            _height = height;
-            _underlineOffset = underlineOffset;
+            this._Height = height;
+            this._UnderlineOffset = underlineOffset;
         }
     }
 }

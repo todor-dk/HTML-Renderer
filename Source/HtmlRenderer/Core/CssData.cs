@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -33,27 +33,26 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// <summary>
         /// used to return empty array
         /// </summary>
-        private static readonly List<CssBlock> _emptyArray = new List<CssBlock>();
+        private static readonly List<CssBlock> EmptyArray = new List<CssBlock>();
 
         /// <summary>
         /// dictionary of media type to dictionary of css class name to the cssBlocks collection with all the data.
         /// </summary>
-        private readonly Dictionary<string, Dictionary<string, List<CssBlock>>> _mediaBlocks = new Dictionary<string, Dictionary<string, List<CssBlock>>>(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, Dictionary<string, List<CssBlock>>> _MediaBlocks = new Dictionary<string, Dictionary<string, List<CssBlock>>>(StringComparer.InvariantCultureIgnoreCase);
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         internal CssData()
         {
-            _mediaBlocks.Add("all", new Dictionary<string, List<CssBlock>>(StringComparer.InvariantCultureIgnoreCase));
+            this._MediaBlocks.Add("all", new Dictionary<string, List<CssBlock>>(StringComparer.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
         /// Parse the given stylesheet to <see cref="CssData"/> object.<br/>
-        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the 
+        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the
         /// default css data (as defined by W3), merged if class name already exists. If false only the data in the given stylesheet is returned.
         /// </summary>
         /// <seealso cref="http://www.w3.org/TR/CSS21/sample.html"/>
@@ -72,7 +71,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         internal IDictionary<string, Dictionary<string, List<CssBlock>>> MediaBlocks
         {
-            get { return _mediaBlocks; }
+            get { return this._MediaBlocks; }
         }
 
         /// <summary>
@@ -84,12 +83,12 @@ namespace TheArtOfDev.HtmlRenderer.Core
         public bool ContainsCssBlock(string className, string media = "all")
         {
             Dictionary<string, List<CssBlock>> mid;
-            return _mediaBlocks.TryGetValue(media, out mid) && mid.ContainsKey(className);
+            return this._MediaBlocks.TryGetValue(media, out mid) && mid.ContainsKey(className);
         }
 
         /// <summary>
         /// Get collection of css blocks for the requested class selector.<br/>
-        /// the <paramref name="className"/> can be: class name, html element name, html element and 
+        /// the <paramref name="className"/> can be: class name, html element name, html element and
         /// class name (elm.class), hash tag with element id (#id).<br/>
         /// returned all the blocks that word on the requested class selector, it can contain simple
         /// selector or hierarchy selector.
@@ -101,11 +100,12 @@ namespace TheArtOfDev.HtmlRenderer.Core
         {
             List<CssBlock> block = null;
             Dictionary<string, List<CssBlock>> mid;
-            if (_mediaBlocks.TryGetValue(media, out mid))
+            if (this._MediaBlocks.TryGetValue(media, out mid))
             {
                 mid.TryGetValue(className, out block);
             }
-            return block ?? _emptyArray;
+
+            return block ?? EmptyArray;
         }
 
         /// <summary>
@@ -125,10 +125,10 @@ namespace TheArtOfDev.HtmlRenderer.Core
         public void AddCssBlock(string media, CssBlock cssBlock)
         {
             Dictionary<string, List<CssBlock>> mid;
-            if (!_mediaBlocks.TryGetValue(media, out mid))
+            if (!this._MediaBlocks.TryGetValue(media, out mid))
             {
                 mid = new Dictionary<string, List<CssBlock>>(StringComparer.InvariantCultureIgnoreCase);
-                _mediaBlocks.Add(media, mid);
+                this._MediaBlocks.Add(media, mid);
             }
 
             if (!mid.ContainsKey(cssBlock.Class))
@@ -181,7 +181,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
                     foreach (var cssBlock in bla.Value)
                     {
                         // combine with this
-                        AddCssBlock(mediaBlock.Key, cssBlock);
+                        this.AddCssBlock(mediaBlock.Key, cssBlock);
                     }
                 }
             }
@@ -194,7 +194,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         public CssData Clone()
         {
             var clone = new CssData();
-            foreach (var mid in _mediaBlocks)
+            foreach (var mid in this._MediaBlocks)
             {
                 var cloneMid = new Dictionary<string, List<CssBlock>>(StringComparer.InvariantCultureIgnoreCase);
                 foreach (var blocks in mid.Value)
@@ -204,10 +204,13 @@ namespace TheArtOfDev.HtmlRenderer.Core
                     {
                         cloneList.Add(cssBlock.Clone());
                     }
+
                     cloneMid[blocks.Key] = cloneList;
                 }
-                clone._mediaBlocks[mid.Key] = cloneMid;
+
+                clone._MediaBlocks[mid.Key] = cloneMid;
             }
+
             return clone;
         }
     }

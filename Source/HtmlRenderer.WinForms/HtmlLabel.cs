@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -75,71 +75,70 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// <summary>
         /// Underline html container instance.
         /// </summary>
-        protected HtmlContainer _htmlContainer;
+        protected HtmlContainer HtmlContainer;
 
         /// <summary>
         /// The current border style of the control
         /// </summary>
-        protected BorderStyle _borderStyle;
+        protected BorderStyle _BorderStyle;
 
         /// <summary>
         /// the raw base stylesheet data used in the control
         /// </summary>
-        protected string _baseRawCssData;
+        protected string BaseRawCssData;
 
         /// <summary>
         /// the base stylesheet data used in the panel
         /// </summary>
-        protected CssData _baseCssData;
+        protected CssData BaseCssData;
 
         /// <summary>
         /// the current html text set in the control
         /// </summary>
-        protected string _text;
+        protected string _Text;
 
         /// <summary>
         /// is to handle auto size of the control height only
         /// </summary>
-        protected bool _autoSizeHight;
+        protected bool AutoSizeHight;
 
         /// <summary>
         /// If to use cursors defined by the operating system or .NET cursors
         /// </summary>
-        protected bool _useSystemCursors;
+        protected bool _UseSystemCursors;
 
         /// <summary>
         /// The text rendering hint to be used for text rendering.
         /// </summary>
-        protected TextRenderingHint _textRenderingHint = TextRenderingHint.SystemDefault;
+        protected TextRenderingHint _TextRenderingHint = TextRenderingHint.SystemDefault;
 
         #endregion
-
 
         /// <summary>
         /// Creates a new HTML Label
         /// </summary>
         public HtmlLabel()
         {
-            SuspendLayout();
+            this.SuspendLayout();
 
-            AutoSize = true;
-            BackColor = SystemColors.Window;
-            DoubleBuffered = true;
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            SetStyle(ControlStyles.Opaque, false);
+            this.AutoSize = true;
+            this.BackColor = SystemColors.Window;
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+            this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            this.SetStyle(ControlStyles.Opaque, false);
 
-            _htmlContainer = new HtmlContainer();
-            _htmlContainer.AvoidImagesLateLoading = true;
-            _htmlContainer.MaxSize = MaximumSize;
-            _htmlContainer.LoadComplete += OnLoadComplete;
-            _htmlContainer.LinkClicked += OnLinkClicked;
-            _htmlContainer.RenderError += OnRenderError;
-            _htmlContainer.Refresh += OnRefresh;
-            _htmlContainer.StylesheetLoad += OnStylesheetLoad;
-            _htmlContainer.ImageLoad += OnImageLoad;
+            this.HtmlContainer = new HtmlContainer();
+            this.HtmlContainer.AvoidImagesLateLoading = true;
+            this.HtmlContainer.MaxSize = this.MaximumSize;
+            this.HtmlContainer.LoadComplete += this.OnLoadComplete;
+            this.HtmlContainer.LinkClicked += this.OnLinkClicked;
+            this.HtmlContainer.RenderError += this.OnRenderError;
+            this.HtmlContainer.Refresh += this.OnRefresh;
+            this.HtmlContainer.StylesheetLoad += this.OnStylesheetLoad;
+            this.HtmlContainer.ImageLoad += this.OnImageLoad;
 
-            ResumeLayout(false);
+            this.ResumeLayout(false);
         }
 
         /// <summary>
@@ -186,8 +185,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("If anti-aliasing should be avoided for geometry like backgrounds and borders")]
         public virtual bool AvoidGeometryAntialias
         {
-            get { return _htmlContainer.AvoidGeometryAntialias; }
-            set { _htmlContainer.AvoidGeometryAntialias = value; }
+            get { return this.HtmlContainer.AvoidGeometryAntialias; }
+            set { this.HtmlContainer.AvoidGeometryAntialias = value; }
         }
 
         /// <summary>
@@ -209,8 +208,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("If to use GDI+ text rendering to measure/draw text, false - use GDI")]
         public bool UseGdiPlusTextRendering
         {
-            get { return _htmlContainer.UseGdiPlusTextRendering; }
-            set { _htmlContainer.UseGdiPlusTextRendering = value; }
+            get { return this.HtmlContainer.UseGdiPlusTextRendering; }
+            set { this.HtmlContainer.UseGdiPlusTextRendering = value; }
         }
 
         /// <summary>
@@ -222,8 +221,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("The text rendering hint to be used for text rendering.")]
         public TextRenderingHint TextRenderingHint
         {
-            get { return _textRenderingHint; }
-            set { _textRenderingHint = value; }
+            get { return this._TextRenderingHint; }
+            set { this._TextRenderingHint = value; }
         }
 
         /// <summary>
@@ -235,8 +234,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("If to use cursors defined by the operating system or .NET cursors")]
         public bool UseSystemCursors
         {
-            get { return _useSystemCursors; }
-            set { _useSystemCursors = value; }
+            get { return this._UseSystemCursors; }
+            set { this._UseSystemCursors = value; }
         }
 
         /// <summary>
@@ -247,13 +246,17 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [DefaultValue(typeof(BorderStyle), "None")]
         public virtual BorderStyle BorderStyle
         {
-            get { return _borderStyle; }
+            get
+            {
+                return this._BorderStyle;
+            }
+
             set
             {
-                if (BorderStyle != value)
+                if (this.BorderStyle != value)
                 {
-                    _borderStyle = value;
-                    OnBorderStyleChanged(EventArgs.Empty);
+                    this._BorderStyle = value;
+                    this.OnBorderStyleChanged(EventArgs.Empty);
                 }
             }
         }
@@ -270,8 +273,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("Is content selection is enabled for the rendered html.")]
         public virtual bool IsSelectionEnabled
         {
-            get { return _htmlContainer.IsSelectionEnabled; }
-            set { _htmlContainer.IsSelectionEnabled = value; }
+            get { return this.HtmlContainer.IsSelectionEnabled; }
+            set { this.HtmlContainer.IsSelectionEnabled = value; }
         }
 
         /// <summary>
@@ -285,8 +288,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("Is the build-in context menu enabled and will be shown on mouse right click.")]
         public virtual bool IsContextMenuEnabled
         {
-            get { return _htmlContainer.IsContextMenuEnabled; }
-            set { _htmlContainer.IsContextMenuEnabled = value; }
+            get { return this.HtmlContainer.IsContextMenuEnabled; }
+            set { this.HtmlContainer.IsContextMenuEnabled = value; }
         }
 
         /// <summary>
@@ -298,12 +301,16 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Editor("System.ComponentModel.Design.MultilineStringEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", "System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
         public virtual string BaseStylesheet
         {
-            get { return _baseRawCssData; }
+            get
+            {
+                return this.BaseRawCssData;
+            }
+
             set
             {
-                _baseRawCssData = value;
-                _baseCssData = HtmlRender.ParseStyleSheet(value);
-                _htmlContainer.SetHtml(_text, _baseCssData);
+                this.BaseRawCssData = value;
+                this.BaseCssData = HtmlRender.ParseStyleSheet(value);
+                this.HtmlContainer.SetHtml(this._Text, this.BaseCssData);
             }
         }
 
@@ -317,15 +324,19 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("Automatically sets the size of the label by content size.")]
         public override bool AutoSize
         {
-            get { return base.AutoSize; }
+            get
+            {
+                return base.AutoSize;
+            }
+
             set
             {
                 base.AutoSize = value;
                 if (value)
                 {
-                    _autoSizeHight = false;
-                    PerformLayout();
-                    Invalidate();
+                    this.AutoSizeHight = false;
+                    this.PerformLayout();
+                    this.Invalidate();
                 }
             }
         }
@@ -339,15 +350,19 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("Automatically sets the height of the label by content height (width is not effected)")]
         public virtual bool AutoSizeHeightOnly
         {
-            get { return _autoSizeHight; }
+            get
+            {
+                return this.AutoSizeHight;
+            }
+
             set
             {
-                _autoSizeHight = value;
+                this.AutoSizeHight = value;
                 if (value)
                 {
-                    AutoSize = false;
-                    PerformLayout();
-                    Invalidate();
+                    this.AutoSize = false;
+                    this.PerformLayout();
+                    this.Invalidate();
                 }
             }
         }
@@ -359,15 +374,19 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("If AutoSize or AutoSizeHeightOnly is set this will restrict the max size of the control (0 is not restricted)")]
         public override Size MaximumSize
         {
-            get { return base.MaximumSize; }
+            get
+            {
+                return base.MaximumSize;
+            }
+
             set
             {
                 base.MaximumSize = value;
-                if (_htmlContainer != null)
+                if (this.HtmlContainer != null)
                 {
-                    _htmlContainer.MaxSize = value;
-                    PerformLayout();
-                    Invalidate();
+                    this.HtmlContainer.MaxSize = value;
+                    this.PerformLayout();
+                    this.Invalidate();
                 }
             }
         }
@@ -389,16 +408,20 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("Sets the html of this control.")]
         public override string Text
         {
-            get { return _text; }
+            get
+            {
+                return this._Text;
+            }
+
             set
             {
-                _text = value;
+                this._Text = value;
                 base.Text = value;
-                if (!IsDisposed)
+                if (!this.IsDisposed)
                 {
-                    _htmlContainer.SetHtml(_text, _baseCssData);
-                    PerformLayout();
-                    Invalidate();
+                    this.HtmlContainer.SetHtml(this._Text, this.BaseCssData);
+                    this.PerformLayout();
+                    this.Invalidate();
                 }
             }
         }
@@ -409,7 +432,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Browsable(false)]
         public virtual string SelectedText
         {
-            get { return _htmlContainer.SelectedText; }
+            get { return this.HtmlContainer.SelectedText; }
         }
 
         /// <summary>
@@ -418,7 +441,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Browsable(false)]
         public virtual string SelectedHtml
         {
-            get { return _htmlContainer.SelectedHtml; }
+            get { return this.HtmlContainer.SelectedHtml; }
         }
 
         /// <summary>
@@ -427,7 +450,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// <returns>generated html</returns>
         public virtual string GetHtml()
         {
-            return _htmlContainer != null ? _htmlContainer.GetHtml() : null;
+            return this.HtmlContainer != null ? this.HtmlContainer.GetHtml() : null;
         }
 
         /// <summary>
@@ -439,7 +462,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// <returns>the rectangle of the element or null if not found</returns>
         public virtual RectangleF? GetElementRectangle(string elementId)
         {
-            return _htmlContainer != null ? _htmlContainer.GetElementRectangle(elementId) : null;
+            return this.HtmlContainer != null ? this.HtmlContainer.GetElementRectangle(elementId) : null;
         }
 
         /// <summary>
@@ -447,10 +470,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         public void ClearSelection()
         {
-            if (_htmlContainer != null)
-                _htmlContainer.ClearSelection();
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.ClearSelection();
+            }
         }
-
 
         #region Private methods
 
@@ -464,7 +488,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
             {
                 CreateParams createParams = base.CreateParams;
 
-                switch (_borderStyle)
+                switch (this._BorderStyle)
                 {
                     case BorderStyle.FixedSingle:
                         createParams.Style |= Win32Utils.WsBorder;
@@ -485,25 +509,27 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected override void OnLayout(LayoutEventArgs levent)
         {
-            if (_htmlContainer != null)
+            if (this.HtmlContainer != null)
             {
                 Graphics g = Utils.CreateGraphics(this);
                 if (g != null)
                 {
                     using (g)
-                    using (var ig = new GraphicsAdapter(g, _htmlContainer.UseGdiPlusTextRendering))
+                    using (var ig = new GraphicsAdapter(g, this.HtmlContainer.UseGdiPlusTextRendering))
                     {
-                        var newSize = HtmlRendererUtils.Layout(ig,
-                            _htmlContainer.HtmlContainerInt,
-                            new RSize(ClientSize.Width - Padding.Horizontal, ClientSize.Height - Padding.Vertical),
-                            new RSize(MinimumSize.Width - Padding.Horizontal, MinimumSize.Height - Padding.Vertical),
-                            new RSize(MaximumSize.Width - Padding.Horizontal, MaximumSize.Height - Padding.Vertical),
-                            AutoSize,
-                            AutoSizeHeightOnly);
-                        ClientSize = Utils.ConvertRound(new RSize(newSize.Width + Padding.Horizontal, newSize.Height + Padding.Vertical));
+                        var newSize = HtmlRendererUtils.Layout(
+                            ig,
+                            this.HtmlContainer.HtmlContainerInt,
+                            new RSize(this.ClientSize.Width - this.Padding.Horizontal, this.ClientSize.Height - this.Padding.Vertical),
+                            new RSize(this.MinimumSize.Width - this.Padding.Horizontal, this.MinimumSize.Height - this.Padding.Vertical),
+                            new RSize(this.MaximumSize.Width - this.Padding.Horizontal, this.MaximumSize.Height - this.Padding.Vertical),
+                            this.AutoSize,
+                            this.AutoSizeHeightOnly);
+                        this.ClientSize = Utils.ConvertRound(new RSize(newSize.Width + this.Padding.Horizontal, newSize.Height + this.Padding.Vertical));
                     }
                 }
             }
+
             base.OnLayout(levent);
         }
 
@@ -514,33 +540,37 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         {
             base.OnPaint(e);
 
-            if (_htmlContainer != null)
+            if (this.HtmlContainer != null)
             {
-                e.Graphics.TextRenderingHint = _textRenderingHint;
+                e.Graphics.TextRenderingHint = this._TextRenderingHint;
 
-                _htmlContainer.Location = new PointF(Padding.Left, Padding.Top);
-                _htmlContainer.PerformPaint(e.Graphics);
+                this.HtmlContainer.Location = new PointF(this.Padding.Left, this.Padding.Top);
+                this.HtmlContainer.PerformPaint(e.Graphics);
             }
         }
 
         /// <summary>
-        /// Handle mouse move to handle hover cursor and text selection. 
+        /// Handle mouse move to handle hover cursor and text selection.
         /// </summary>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseMove(this, e);
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.HandleMouseMove(this, e);
+            }
         }
 
         /// <summary>
-        /// Handle mouse down to handle selection. 
+        /// Handle mouse down to handle selection.
         /// </summary>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseDown(this, e);
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.HandleMouseDown(this, e);
+            }
         }
 
         /// <summary>
@@ -549,28 +579,34 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseLeave(this);
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.HandleMouseLeave(this);
+            }
         }
 
         /// <summary>
-        /// Handle mouse up to handle selection and link click. 
+        /// Handle mouse up to handle selection and link click.
         /// </summary>
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseUp(this, e);
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.HandleMouseUp(this, e);
+            }
         }
 
         /// <summary>
-        /// Handle mouse double click to select word under the mouse. 
+        /// Handle mouse double click to select word under the mouse.
         /// </summary>
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
             base.OnMouseDoubleClick(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseDoubleClick(this, e);
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.HandleMouseDoubleClick(this, e);
+            }
         }
 
         /// <summary>
@@ -578,11 +614,13 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnBorderStyleChanged(EventArgs e)
         {
-            UpdateStyles();
+            this.UpdateStyles();
 
-            var handler = BorderStyleChanged;
+            var handler = this.BorderStyleChanged;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -590,9 +628,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnLoadComplete(EventArgs e)
         {
-            var handler = LoadComplete;
+            var handler = this.LoadComplete;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -600,9 +640,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnLinkClicked(HtmlLinkClickedEventArgs e)
         {
-            var handler = LinkClicked;
+            var handler = this.LinkClicked;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -610,9 +652,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnRenderError(HtmlRenderErrorEventArgs e)
         {
-            var handler = RenderError;
+            var handler = this.RenderError;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -620,9 +664,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnStylesheetLoad(HtmlStylesheetLoadEventArgs e)
         {
-            var handler = StylesheetLoad;
+            var handler = this.StylesheetLoad;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -630,9 +676,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnImageLoad(HtmlImageLoadEventArgs e)
         {
-            var handler = ImageLoad;
+            var handler = this.ImageLoad;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -641,8 +689,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         protected virtual void OnRefresh(HtmlRefreshEventArgs e)
         {
             if (e.Layout)
-                PerformLayout();
-            Invalidate();
+            {
+                this.PerformLayout();
+            }
+
+            this.Invalidate();
         }
 
 #if !MONO
@@ -653,7 +704,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [DebuggerStepThrough]
         protected override void WndProc(ref Message m)
         {
-            if (_useSystemCursors && m.Msg == Win32Utils.WmSetCursor && Cursor == Cursors.Hand)
+            if (this._UseSystemCursors && m.Msg == Win32Utils.WmSetCursor && this.Cursor == Cursors.Hand)
             {
                 try
                 {
@@ -664,9 +715,10 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
                 }
                 catch (Exception ex)
                 {
-                    OnRenderError(this, new HtmlRenderErrorEventArgs(HtmlRenderErrorType.General, "Failed to set OS hand cursor", ex));
+                    this.OnRenderError(this, new HtmlRenderErrorEventArgs(HtmlRenderErrorType.General, "Failed to set OS hand cursor", ex));
                 }
             }
+
             base.WndProc(ref m);
         }
 #endif
@@ -676,61 +728,68 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            if (_htmlContainer != null)
+            if (this.HtmlContainer != null)
             {
-                _htmlContainer.LoadComplete -= OnLoadComplete;
-                _htmlContainer.LinkClicked -= OnLinkClicked;
-                _htmlContainer.RenderError -= OnRenderError;
-                _htmlContainer.Refresh -= OnRefresh;
-                _htmlContainer.StylesheetLoad -= OnStylesheetLoad;
-                _htmlContainer.ImageLoad -= OnImageLoad;
-                _htmlContainer.Dispose();
-                _htmlContainer = null;
+                this.HtmlContainer.LoadComplete -= this.OnLoadComplete;
+                this.HtmlContainer.LinkClicked -= this.OnLinkClicked;
+                this.HtmlContainer.RenderError -= this.OnRenderError;
+                this.HtmlContainer.Refresh -= this.OnRefresh;
+                this.HtmlContainer.StylesheetLoad -= this.OnStylesheetLoad;
+                this.HtmlContainer.ImageLoad -= this.OnImageLoad;
+                this.HtmlContainer.Dispose();
+                this.HtmlContainer = null;
             }
+
             base.Dispose(disposing);
         }
-
 
         #region Private event handlers
 
         private void OnLoadComplete(object sender, EventArgs e)
         {
-            OnLoadComplete(e);
+            this.OnLoadComplete(e);
         }
 
         private void OnLinkClicked(object sender, HtmlLinkClickedEventArgs e)
         {
-            OnLinkClicked(e);
+            this.OnLinkClicked(e);
         }
 
         private void OnRenderError(object sender, HtmlRenderErrorEventArgs e)
         {
-            if (InvokeRequired)
-                Invoke(new MethodInvoker(() => OnRenderError(e)));
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(() => this.OnRenderError(e)));
+            }
             else
-                OnRenderError(e);
+            {
+                this.OnRenderError(e);
+            }
         }
 
         private void OnStylesheetLoad(object sender, HtmlStylesheetLoadEventArgs e)
         {
-            OnStylesheetLoad(e);
+            this.OnStylesheetLoad(e);
         }
 
         private void OnImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
-            OnImageLoad(e);
+            this.OnImageLoad(e);
         }
 
         private void OnRefresh(object sender, HtmlRefreshEventArgs e)
         {
-            if (InvokeRequired)
-                Invoke(new MethodInvoker(() => OnRefresh(e)));
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(() => this.OnRefresh(e)));
+            }
             else
-                OnRefresh(e);
+            {
+                this.OnRefresh(e);
+            }
         }
 
         #endregion
-
 
         #region Hide not relevant properties from designer
 
@@ -795,7 +854,6 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         }
 
         #endregion
-
 
         #endregion
     }

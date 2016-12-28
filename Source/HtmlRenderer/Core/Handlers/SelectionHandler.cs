@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -29,92 +29,91 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <summary>
         /// the root of the handled html tree
         /// </summary>
-        private readonly CssBox _root;
+        private readonly CssBox Root;
 
         /// <summary>
         /// handler for showing context menu on right click
         /// </summary>
-        private readonly ContextMenuHandler _contextMenuHandler;
+        private readonly ContextMenuHandler ContextMenuHandler;
 
         /// <summary>
         /// the mouse location when selection started used to ignore small selections
         /// </summary>
-        private RPoint _selectionStartPoint;
+        private RPoint SelectionStartPoint;
 
         /// <summary>
         /// the starting word of html selection<br/>
         /// where the user started the selection, if the selection is backwards then it will be the last selected word.
         /// </summary>
-        private CssRect _selectionStart;
+        private CssRect SelectionStart;
 
         /// <summary>
         /// the ending word of html selection<br/>
         /// where the user ended the selection, if the selection is backwards then it will be the first selected word.
         /// </summary>
-        private CssRect _selectionEnd;
+        private CssRect SelectionEnd;
 
         /// <summary>
         /// the selection start index if the first selected word is partially selected (-1 if not selected or fully selected)
         /// </summary>
-        private int _selectionStartIndex = -1;
+        private int SelectionStartIndex = -1;
 
         /// <summary>
         /// the selection end index if the last selected word is partially selected (-1 if not selected or fully selected)
         /// </summary>
-        private int _selectionEndIndex = -1;
+        private int SelectionEndIndex = -1;
 
         /// <summary>
         /// the selection start offset if the first selected word is partially selected (-1 if not selected or fully selected)
         /// </summary>
-        private double _selectionStartOffset = -1;
+        private double SelectionStartOffset = -1;
 
         /// <summary>
         /// the selection end offset if the last selected word is partially selected (-1 if not selected or fully selected)
         /// </summary>
-        private double _selectionEndOffset = -1;
+        private double SelectionEndOffset = -1;
 
         /// <summary>
         /// is the selection goes backward in the html, the starting word comes after the ending word in DFS traversing.<br/>
         /// </summary>
-        private bool _backwardSelection;
+        private bool BackwardSelection;
 
         /// <summary>
         /// used to ignore mouse up after selection
         /// </summary>
-        private bool _inSelection;
+        private bool InSelection;
 
         /// <summary>
         /// current selection process is after double click (full word selection)
         /// </summary>
-        private bool _isDoubleClickSelect;
+        private bool IsDoubleClickSelect;
 
         /// <summary>
         /// used to know if selection is in the control or started outside so it needs to be ignored
         /// </summary>
-        private bool _mouseDownInControl;
+        private bool MouseDownInControl;
 
         /// <summary>
         /// used to handle drag & drop
         /// </summary>
-        private bool _mouseDownOnSelectedWord;
+        private bool MouseDownOnSelectedWord;
 
         /// <summary>
         /// is the cursor on the control has been changed by the selection handler
         /// </summary>
-        private bool _cursorChanged;
+        private bool CursorChanged;
 
         /// <summary>
         /// used to know if double click selection is requested
         /// </summary>
-        private DateTime _lastMouseDown;
+        private DateTime LastMouseDown;
 
         /// <summary>
         /// used to know if drag & drop was already started not to execute the same operation over
         /// </summary>
-        private object _dragDropData;
+        private object DragDropData;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -124,8 +123,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             ArgChecker.AssertArgNotNull(root, "root");
 
-            _root = root;
-            _contextMenuHandler = new ContextMenuHandler(this, root.HtmlContainer);
+            this.Root = root;
+            this.ContextMenuHandler = new ContextMenuHandler(this, root.HtmlContainer);
         }
 
         /// <summary>
@@ -134,10 +133,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <param name="control">the control hosting the html to invalidate</param>
         public void SelectAll(RControl control)
         {
-            if (_root.HtmlContainer.IsSelectionEnabled)
+            if (this.Root.HtmlContainer.IsSelectionEnabled)
             {
-                ClearSelection();
-                SelectAllWords(_root);
+                this.ClearSelection();
+                this.SelectAllWords(this.Root);
                 control.Invalidate();
             }
         }
@@ -149,14 +148,14 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <param name="loc">the location to select word at</param>
         public void SelectWord(RControl control, RPoint loc)
         {
-            if (_root.HtmlContainer.IsSelectionEnabled)
+            if (this.Root.HtmlContainer.IsSelectionEnabled)
             {
-                var word = DomUtils.GetCssBoxWord(_root, loc);
+                var word = DomUtils.GetCssBoxWord(this.Root, loc);
                 if (word != null)
                 {
                     word.Selection = this;
-                    _selectionStartPoint = loc;
-                    _selectionStart = _selectionEnd = word;
+                    this.SelectionStartPoint = loc;
+                    this.SelectionStart = this.SelectionEnd = word;
                     control.Invalidate();
                 }
             }
@@ -173,17 +172,17 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             bool clear = !isMouseInContainer;
             if (isMouseInContainer)
             {
-                _mouseDownInControl = true;
-                _isDoubleClickSelect = (DateTime.Now - _lastMouseDown).TotalMilliseconds < 400;
-                _lastMouseDown = DateTime.Now;
-                _mouseDownOnSelectedWord = false;
+                this.MouseDownInControl = true;
+                this.IsDoubleClickSelect = (DateTime.Now - this.LastMouseDown).TotalMilliseconds < 400;
+                this.LastMouseDown = DateTime.Now;
+                this.MouseDownOnSelectedWord = false;
 
-                if (_root.HtmlContainer.IsSelectionEnabled && parent.LeftMouseButton)
+                if (this.Root.HtmlContainer.IsSelectionEnabled && parent.LeftMouseButton)
                 {
-                    var word = DomUtils.GetCssBoxWord(_root, loc);
+                    var word = DomUtils.GetCssBoxWord(this.Root, loc);
                     if (word != null && word.Selected)
                     {
-                        _mouseDownOnSelectedWord = true;
+                        this.MouseDownOnSelectedWord = true;
                     }
                     else
                     {
@@ -192,19 +191,20 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 }
                 else if (parent.RightMouseButton)
                 {
-                    var rect = DomUtils.GetCssBoxWord(_root, loc);
-                    var link = DomUtils.GetLinkBox(_root, loc);
-                    if (_root.HtmlContainer.IsContextMenuEnabled)
+                    var rect = DomUtils.GetCssBoxWord(this.Root, loc);
+                    var link = DomUtils.GetLinkBox(this.Root, loc);
+                    if (this.Root.HtmlContainer.IsContextMenuEnabled)
                     {
-                        _contextMenuHandler.ShowContextMenu(parent, rect, link);
+                        this.ContextMenuHandler.ShowContextMenu(parent, rect, link);
                     }
+
                     clear = rect == null || !rect.Selected;
                 }
             }
 
             if (clear)
             {
-                ClearSelection();
+                this.ClearSelection();
                 parent.Invalidate();
             }
         }
@@ -218,20 +218,21 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         public bool HandleMouseUp(RControl parent, bool leftMouseButton)
         {
             bool ignore = false;
-            _mouseDownInControl = false;
-            if (_root.HtmlContainer.IsSelectionEnabled)
+            this.MouseDownInControl = false;
+            if (this.Root.HtmlContainer.IsSelectionEnabled)
             {
-                ignore = _inSelection;
-                if (!_inSelection && leftMouseButton && _mouseDownOnSelectedWord)
+                ignore = this.InSelection;
+                if (!this.InSelection && leftMouseButton && this.MouseDownOnSelectedWord)
                 {
-                    ClearSelection();
+                    this.ClearSelection();
                     parent.Invalidate();
                 }
 
-                _mouseDownOnSelectedWord = false;
-                _inSelection = false;
+                this.MouseDownOnSelectedWord = false;
+                this.InSelection = false;
             }
-            ignore = ignore || (DateTime.Now - _lastMouseDown > TimeSpan.FromSeconds(1));
+
+            ignore = ignore || (DateTime.Now - this.LastMouseDown > TimeSpan.FromSeconds(1));
             return ignore;
         }
 
@@ -242,39 +243,39 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <param name="loc">the location of the mouse on the html</param>
         public void HandleMouseMove(RControl parent, RPoint loc)
         {
-            if (_root.HtmlContainer.IsSelectionEnabled && _mouseDownInControl && parent.LeftMouseButton)
+            if (this.Root.HtmlContainer.IsSelectionEnabled && this.MouseDownInControl && parent.LeftMouseButton)
             {
-                if (_mouseDownOnSelectedWord)
+                if (this.MouseDownOnSelectedWord)
                 {
                     // make sure not to start drag-drop on click but when it actually moves as it fucks mouse-up
-                    if ((DateTime.Now - _lastMouseDown).TotalMilliseconds > 200)
-                        StartDragDrop(parent);
+                    if ((DateTime.Now - this.LastMouseDown).TotalMilliseconds > 200)
+                        this.StartDragDrop(parent);
                 }
                 else
                 {
-                    HandleSelection(parent, loc, !_isDoubleClickSelect);
-                    _inSelection = _selectionStart != null && _selectionEnd != null && (_selectionStart != _selectionEnd || _selectionStartIndex != _selectionEndIndex);
+                    this.HandleSelection(parent, loc, !this.IsDoubleClickSelect);
+                    this.InSelection = this.SelectionStart != null && this.SelectionEnd != null && (this.SelectionStart != this.SelectionEnd || this.SelectionStartIndex != this.SelectionEndIndex);
                 }
             }
             else
             {
                 // Handle mouse hover over the html to change the cursor depending if hovering word, link of other.
-                var link = DomUtils.GetLinkBox(_root, loc);
+                var link = DomUtils.GetLinkBox(this.Root, loc);
                 if (link != null)
                 {
-                    _cursorChanged = true;
+                    this.CursorChanged = true;
                     parent.SetCursorHand();
                 }
-                else if (_root.HtmlContainer.IsSelectionEnabled)
+                else if (this.Root.HtmlContainer.IsSelectionEnabled)
                 {
-                    var word = DomUtils.GetCssBoxWord(_root, loc);
-                    _cursorChanged = word != null && !word.IsImage && !(word.Selected && (word.SelectedStartIndex < 0 || word.Left + word.SelectedStartOffset <= loc.X) && (word.SelectedEndOffset < 0 || word.Left + word.SelectedEndOffset >= loc.X));
-                    if (_cursorChanged)
+                    var word = DomUtils.GetCssBoxWord(this.Root, loc);
+                    this.CursorChanged = word != null && !word.IsImage && !(word.Selected && (word.SelectedStartIndex < 0 || word.Left + word.SelectedStartOffset <= loc.X) && (word.SelectedEndOffset < 0 || word.Left + word.SelectedEndOffset >= loc.X));
+                    if (this.CursorChanged)
                         parent.SetCursorIBeam();
                     else
                         parent.SetCursorDefault();
                 }
-                else if (_cursorChanged)
+                else if (this.CursorChanged)
                 {
                     parent.SetCursorDefault();
                 }
@@ -287,9 +288,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <param name="parent">the control hosting the html to set cursor and invalidate</param>
         public void HandleMouseLeave(RControl parent)
         {
-            if (_cursorChanged)
+            if (this.CursorChanged)
             {
-                _cursorChanged = false;
+                this.CursorChanged = false;
                 parent.SetCursorDefault();
             }
         }
@@ -300,12 +301,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// </summary>
         public void CopySelectedHtml()
         {
-            if (_root.HtmlContainer.IsSelectionEnabled)
+            if (this.Root.HtmlContainer.IsSelectionEnabled)
             {
-                var html = DomUtils.GenerateHtml(_root, HtmlGenerationStyle.Inline, true);
-                var plainText = DomUtils.GetSelectedPlainText(_root);
+                var html = DomUtils.GenerateHtml(this.Root, HtmlGenerationStyle.Inline, true);
+                var plainText = DomUtils.GetSelectedPlainText(this.Root);
                 if (!string.IsNullOrEmpty(plainText))
-                    _root.HtmlContainer.Adapter.SetToClipboard(html, plainText);
+                    this.Root.HtmlContainer.Adapter.SetToClipboard(html, plainText);
             }
         }
 
@@ -314,7 +315,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// </summary>
         public string GetSelectedText()
         {
-            return _root.HtmlContainer.IsSelectionEnabled ? DomUtils.GetSelectedPlainText(_root) : null;
+            return this.Root.HtmlContainer.IsSelectionEnabled ? DomUtils.GetSelectedPlainText(this.Root) : null;
         }
 
         /// <summary>
@@ -322,7 +323,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// </summary>
         public string GetSelectedHtml()
         {
-            return _root.HtmlContainer.IsSelectionEnabled ? DomUtils.GenerateHtml(_root, HtmlGenerationStyle.Inline, true) : null;
+            return this.Root.HtmlContainer.IsSelectionEnabled ? DomUtils.GenerateHtml(this.Root, HtmlGenerationStyle.Inline, true) : null;
         }
 
         /// <summary>
@@ -336,7 +337,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <returns>data value or -1 if not applicable</returns>
         public int GetSelectingStartIndex(CssRect word)
         {
-            return word == (_backwardSelection ? _selectionEnd : _selectionStart) ? (_backwardSelection ? _selectionEndIndex : _selectionStartIndex) : -1;
+            return word == (this.BackwardSelection ? this.SelectionEnd : this.SelectionStart) ? (this.BackwardSelection ? this.SelectionEndIndex : this.SelectionStartIndex) : -1;
         }
 
         /// <summary>
@@ -349,7 +350,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <param name="word">the word to return the selection end index for</param>
         public int GetSelectedEndIndexOffset(CssRect word)
         {
-            return word == (_backwardSelection ? _selectionStart : _selectionEnd) ? (_backwardSelection ? _selectionStartIndex : _selectionEndIndex) : -1;
+            return word == (this.BackwardSelection ? this.SelectionStart : this.SelectionEnd) ? (this.BackwardSelection ? this.SelectionStartIndex : this.SelectionEndIndex) : -1;
         }
 
         /// <summary>
@@ -362,7 +363,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <param name="word">the word to return the selection start offset for</param>
         public double GetSelectedStartOffset(CssRect word)
         {
-            return word == (_backwardSelection ? _selectionEnd : _selectionStart) ? (_backwardSelection ? _selectionEndOffset : _selectionStartOffset) : -1;
+            return word == (this.BackwardSelection ? this.SelectionEnd : this.SelectionStart) ? (this.BackwardSelection ? this.SelectionEndOffset : this.SelectionStartOffset) : -1;
         }
 
         /// <summary>
@@ -375,7 +376,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <param name="word">the word to return the selection end offset for</param>
         public double GetSelectedEndOffset(CssRect word)
         {
-            return word == (_backwardSelection ? _selectionStart : _selectionEnd) ? (_backwardSelection ? _selectionStartOffset : _selectionEndOffset) : -1;
+            return word == (this.BackwardSelection ? this.SelectionStart : this.SelectionEnd) ? (this.BackwardSelection ? this.SelectionStartOffset : this.SelectionEndOffset) : -1;
         }
 
         /// <summary>
@@ -384,18 +385,18 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         public void ClearSelection()
         {
             // clear drag and drop
-            _dragDropData = null;
+            this.DragDropData = null;
 
-            ClearSelection(_root);
+            ClearSelection(this.Root);
 
-            _selectionStartOffset = -1;
-            _selectionStartIndex = -1;
-            _selectionEndOffset = -1;
-            _selectionEndIndex = -1;
+            this.SelectionStartOffset = -1;
+            this.SelectionStartIndex = -1;
+            this.SelectionEndOffset = -1;
+            this.SelectionEndIndex = -1;
 
-            _selectionStartPoint = RPoint.Empty;
-            _selectionStart = null;
-            _selectionEnd = null;
+            this.SelectionStartPoint = RPoint.Empty;
+            this.SelectionStart = null;
+            this.SelectionEnd = null;
         }
 
         /// <summary>
@@ -404,9 +405,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
-            _contextMenuHandler.Dispose();
+            this.ContextMenuHandler.Dispose();
         }
-
 
         #region Private methods
 
@@ -420,7 +420,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         private void HandleSelection(RControl control, RPoint loc, bool allowPartialSelect)
         {
             // get the line under the mouse or nearest from the top
-            var lineBox = DomUtils.GetCssLineBox(_root, loc);
+            var lineBox = DomUtils.GetCssLineBox(this.Root, loc);
             if (lineBox != null)
             {
                 // get the word under the mouse
@@ -449,32 +449,32 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 // if there is matching word
                 if (word != null)
                 {
-                    if (_selectionStart == null)
+                    if (this.SelectionStart == null)
                     {
                         // on start set the selection start word
-                        _selectionStartPoint = loc;
-                        _selectionStart = word;
+                        this.SelectionStartPoint = loc;
+                        this.SelectionStart = word;
                         if (allowPartialSelect)
-                            CalculateWordCharIndexAndOffset(control, word, loc, true);
+                            this.CalculateWordCharIndexAndOffset(control, word, loc, true);
                     }
 
                     // always set selection end word
-                    _selectionEnd = word;
+                    this.SelectionEnd = word;
                     if (allowPartialSelect)
-                        CalculateWordCharIndexAndOffset(control, word, loc, false);
+                        this.CalculateWordCharIndexAndOffset(control, word, loc, false);
 
-                    ClearSelection(_root);
-                    if (CheckNonEmptySelection(loc, allowPartialSelect))
+                    ClearSelection(this.Root);
+                    if (this.CheckNonEmptySelection(loc, allowPartialSelect))
                     {
-                        CheckSelectionDirection();
-                        SelectWordsInRange(_root, _backwardSelection ? _selectionEnd : _selectionStart, _backwardSelection ? _selectionStart : _selectionEnd);
+                        this.CheckSelectionDirection();
+                        this.SelectWordsInRange(this.Root, this.BackwardSelection ? this.SelectionEnd : this.SelectionStart, this.BackwardSelection ? this.SelectionStart : this.SelectionEnd);
                     }
                     else
                     {
-                        _selectionEnd = null;
+                        this.SelectionEnd = null;
                     }
 
-                    _cursorChanged = true;
+                    this.CursorChanged = true;
                     control.SetCursorIBeam();
                     control.Invalidate();
                 }
@@ -491,6 +491,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             {
                 word.Selection = null;
             }
+
             foreach (var childBox in box.Boxes)
             {
                 ClearSelection(childBox);
@@ -503,13 +504,14 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <param name="control">the control to start the drag & drop on</param>
         private void StartDragDrop(RControl control)
         {
-            if (_dragDropData == null)
+            if (this.DragDropData == null)
             {
-                var html = DomUtils.GenerateHtml(_root, HtmlGenerationStyle.Inline, true);
-                var plainText = DomUtils.GetSelectedPlainText(_root);
-                _dragDropData = control.Adapter.GetClipboardDataObject(html, plainText);
+                var html = DomUtils.GenerateHtml(this.Root, HtmlGenerationStyle.Inline, true);
+                var plainText = DomUtils.GetSelectedPlainText(this.Root);
+                this.DragDropData = control.Adapter.GetClipboardDataObject(html, plainText);
             }
-            control.DoDragDropCopy(_dragDropData);
+
+            control.DoDragDropCopy(this.DragDropData);
         }
 
         /// <summary>
@@ -525,7 +527,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
 
             foreach (var childBox in box.Boxes)
             {
-                SelectAllWords(childBox);
+                this.SelectAllWords(childBox);
             }
         }
 
@@ -542,11 +544,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 return true;
 
             // if end selection location is near starting location then the selection is empty
-            if (Math.Abs(_selectionStartPoint.X - loc.X) <= 1 && Math.Abs(_selectionStartPoint.Y - loc.Y) < 5)
+            if (Math.Abs(this.SelectionStartPoint.X - loc.X) <= 1 && Math.Abs(this.SelectionStartPoint.Y - loc.Y) < 5)
                 return false;
 
             // selection is empty if on same word and same index
-            return _selectionStart != _selectionEnd || _selectionStartIndex != _selectionEndIndex;
+            return this.SelectionStart != this.SelectionEnd || this.SelectionStartIndex != this.SelectionEndIndex;
         }
 
         /// <summary>
@@ -558,7 +560,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         private void SelectWordsInRange(CssBox root, CssRect selectionStart, CssRect selectionEnd)
         {
             bool inSelection = false;
-            SelectWordsInRange(root, selectionStart, selectionEnd, ref inSelection);
+            this.SelectWordsInRange(root, selectionStart, selectionEnd, ref inSelection);
         }
 
         /// <summary>
@@ -577,6 +579,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 {
                     inSelection = true;
                 }
+
                 if (inSelection)
                 {
                     boxWord.Selection = this;
@@ -590,7 +593,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
 
             foreach (var childBox in box.Boxes)
             {
-                if (SelectWordsInRange(childBox, selectionStart, selectionEnd, ref inSelection))
+                if (this.SelectWordsInRange(childBox, selectionStart, selectionEnd, ref inSelection))
                 {
                     return true;
                 }
@@ -615,13 +618,13 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
 
             if (selectionStart)
             {
-                _selectionStartIndex = selectionIndex;
-                _selectionStartOffset = selectionOffset;
+                this.SelectionStartIndex = selectionIndex;
+                this.SelectionStartOffset = selectionOffset;
             }
             else
             {
-                _selectionEndIndex = selectionIndex;
-                _selectionEndOffset = selectionOffset;
+                this.SelectionEndIndex = selectionIndex;
+                this.SelectionEndOffset = selectionOffset;
             }
         }
 
@@ -674,17 +677,17 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// </summary>
         private void CheckSelectionDirection()
         {
-            if (_selectionStart == _selectionEnd)
+            if (this.SelectionStart == this.SelectionEnd)
             {
-                _backwardSelection = _selectionStartIndex > _selectionEndIndex;
+                this.BackwardSelection = this.SelectionStartIndex > this.SelectionEndIndex;
             }
-            else if (DomUtils.GetCssLineBoxByWord(_selectionStart) == DomUtils.GetCssLineBoxByWord(_selectionEnd))
+            else if (DomUtils.GetCssLineBoxByWord(this.SelectionStart) == DomUtils.GetCssLineBoxByWord(this.SelectionEnd))
             {
-                _backwardSelection = _selectionStart.Left > _selectionEnd.Left;
+                this.BackwardSelection = this.SelectionStart.Left > this.SelectionEnd.Left;
             }
             else
             {
-                _backwardSelection = _selectionStart.Top >= _selectionEnd.Bottom;
+                this.BackwardSelection = this.SelectionStart.Top >= this.SelectionEnd.Bottom;
             }
         }
 

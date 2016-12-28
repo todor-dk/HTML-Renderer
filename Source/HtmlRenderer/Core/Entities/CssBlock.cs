@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -30,25 +30,24 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <summary>
         /// the name of the css class of the block
         /// </summary>
-        private readonly string _class;
+        private readonly string _Class;
 
         /// <summary>
         /// the CSS block properties and values
         /// </summary>
-        private readonly Dictionary<string, string> _properties;
+        private readonly Dictionary<string, string> _Properties;
 
         /// <summary>
         /// additional selectors to used in hierarchy (p className1 > className2)
         /// </summary>
-        private readonly List<CssBlockSelectorItem> _selectors;
+        private readonly List<CssBlockSelectorItem> _Selectors;
 
         /// <summary>
         /// is the css block has :hover pseudo-class
         /// </summary>
-        private readonly bool _hover;
+        private readonly bool _Hover;
 
         #endregion
-
 
         /// <summary>
         /// Creates a new block from the block's source
@@ -62,10 +61,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
             ArgChecker.AssertArgNotNullOrEmpty(@class, "@class");
             ArgChecker.AssertArgNotNull(properties, "properties");
 
-            _class = @class;
-            _selectors = selectors;
-            _properties = properties;
-            _hover = hover;
+            this._Class = @class;
+            this._Selectors = selectors;
+            this._Properties = properties;
+            this._Hover = hover;
         }
 
         /// <summary>
@@ -73,7 +72,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public string Class
         {
-            get { return _class; }
+            get { return this._Class; }
         }
 
         /// <summary>
@@ -81,7 +80,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public List<CssBlockSelectorItem> Selectors
         {
-            get { return _selectors; }
+            get { return this._Selectors; }
         }
 
         /// <summary>
@@ -89,7 +88,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public IDictionary<string, string> Properties
         {
-            get { return _properties; }
+            get { return this._Properties; }
         }
 
         /// <summary>
@@ -97,7 +96,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public bool Hover
         {
-            get { return _hover; }
+            get { return this._Hover; }
         }
 
         /// <summary>
@@ -109,9 +108,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         {
             ArgChecker.AssertArgNotNull(other, "other");
 
-            foreach (var prop in other._properties.Keys)
+            foreach (var prop in other._Properties.Keys)
             {
-                _properties[prop] = other._properties[prop];
+                this._Properties[prop] = other._Properties[prop];
             }
         }
 
@@ -121,7 +120,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <returns>new CssBlock with same data</returns>
         public CssBlock Clone()
         {
-            return new CssBlock(_class, new Dictionary<string, string>(_properties), _selectors != null ? new List<CssBlockSelectorItem>(_selectors) : null);
+            return new CssBlock(this._Class, new Dictionary<string, string>(this._Properties), this._Selectors != null ? new List<CssBlockSelectorItem>(this._Selectors) : null);
         }
 
         /// <summary>
@@ -135,21 +134,21 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
-            if (!Equals(other._class, _class))
+            if (!Equals(other._Class, this._Class))
                 return false;
 
-            if (!Equals(other._properties.Count, _properties.Count))
+            if (!Equals(other._Properties.Count, this._Properties.Count))
                 return false;
 
-            foreach (var property in _properties)
+            foreach (var property in this._Properties)
             {
-                if (!other._properties.ContainsKey(property.Key))
+                if (!other._Properties.ContainsKey(property.Key))
                     return false;
-                if (!Equals(other._properties[property.Key], property.Value))
+                if (!Equals(other._Properties[property.Key], property.Value))
                     return false;
             }
 
-            if (!EqualsSelector(other))
+            if (!this.EqualsSelector(other))
                 return false;
 
             return true;
@@ -167,23 +166,23 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
             if (ReferenceEquals(this, other))
                 return true;
 
-            if (other.Hover != Hover)
+            if (other.Hover != this.Hover)
                 return false;
-            if (other._selectors == null && _selectors != null)
+            if (other._Selectors == null && this._Selectors != null)
                 return false;
-            if (other._selectors != null && _selectors == null)
+            if (other._Selectors != null && this._Selectors == null)
                 return false;
 
-            if (other._selectors != null && _selectors != null)
+            if (other._Selectors != null && this._Selectors != null)
             {
-                if (!Equals(other._selectors.Count, _selectors.Count))
+                if (!Equals(other._Selectors.Count, this._Selectors.Count))
                     return false;
 
-                for (int i = 0; i < _selectors.Count; i++)
+                for (int i = 0; i < this._Selectors.Count; i++)
                 {
-                    if (!Equals(other._selectors[i].Class, _selectors[i].Class))
+                    if (!Equals(other._Selectors[i].Class, this._Selectors[i].Class))
                         return false;
-                    if (!Equals(other._selectors[i].DirectParent, _selectors[i].DirectParent))
+                    if (!Equals(other._Selectors[i].DirectParent, this._Selectors[i].DirectParent))
                         return false;
                 }
             }
@@ -204,18 +203,18 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
                 return true;
             if (obj.GetType() != typeof(CssBlock))
                 return false;
-            return Equals((CssBlock)obj);
+            return this.Equals((CssBlock)obj);
         }
 
         /// <summary>
-        /// Serves as a hash function for a particular type. 
+        /// Serves as a hash function for a particular type.
         /// </summary>
         /// <returns>A hash code for the current <see cref="T:System.Object"/>.</returns>
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((_class != null ? _class.GetHashCode() : 0) * 397) ^ (_properties != null ? _properties.GetHashCode() : 0);
+                return ((this._Class != null ? this._Class.GetHashCode() : 0) * 397) ^ (this._Properties != null ? this._Properties.GetHashCode() : 0);
             }
         }
 
@@ -224,11 +223,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public override string ToString()
         {
-            var str = _class + " { ";
-            foreach (var property in _properties)
+            var str = this._Class + " { ";
+            foreach (var property in this._Properties)
             {
                 str += string.Format("{0}={1}; ", property.Key, property.Value);
             }
+
             return str + " }";
         }
     }

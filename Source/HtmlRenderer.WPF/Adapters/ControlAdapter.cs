@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -28,7 +28,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// <summary>
         /// the underline WPF control.
         /// </summary>
-        private readonly Control _control;
+        private readonly Control _Control;
 
         /// <summary>
         /// Init.
@@ -38,7 +38,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         {
             ArgChecker.AssertArgNotNull(control, "control");
 
-            _control = control;
+            this._Control = control;
         }
 
         /// <summary>
@@ -46,12 +46,12 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// </summary>
         public Control Control
         {
-            get { return _control; }
+            get { return this._Control; }
         }
 
         public override RPoint MouseLocation
         {
-            get { return Utils.Convert(_control.PointFromScreen(Mouse.GetPosition(_control))); }
+            get { return Utils.Convert(this._Control.PointFromScreen(Mouse.GetPosition(this._Control))); }
         }
 
         public override bool LeftMouseButton
@@ -66,22 +66,22 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
 
         public override void SetCursorDefault()
         {
-            _control.Cursor = Cursors.Arrow;
+            this._Control.Cursor = Cursors.Arrow;
         }
 
         public override void SetCursorHand()
         {
-            _control.Cursor = Cursors.Hand;
+            this._Control.Cursor = Cursors.Hand;
         }
 
         public override void SetCursorIBeam()
         {
-            _control.Cursor = Cursors.IBeam;
+            this._Control.Cursor = Cursors.IBeam;
         }
 
         public override void DoDragDropCopy(object dragDropData)
         {
-            DragDrop.DoDragDrop(_control, dragDropData, DragDropEffects.Copy);
+            DragDrop.DoDragDrop(this._Control, dragDropData, DragDropEffects.Copy);
         }
 
         public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
@@ -94,7 +94,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
 
         public override void Invalidate()
         {
-            _control.InvalidateVisual();
+            this._Control.InvalidateVisual();
         }
     }
 }

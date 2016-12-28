@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -31,25 +31,24 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// <summary>
         /// split CSS rule
         /// </summary>
-        private static readonly char[] _cssBlockSplitters = new[] { '}', ';' };
+        private static readonly char[] CssBlockSplitters = new[] { '}', ';' };
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        private readonly RAdapter _adapter;
+        private readonly RAdapter Adapter;
 
         /// <summary>
         /// Utility for value parsing.
         /// </summary>
-        private readonly CssValueParser _valueParser;
+        private readonly CssValueParser ValueParser;
 
         /// <summary>
         /// The chars to trim the css class name by
         /// </summary>
-        private static readonly char[] _cssClassTrimChars = new[] { '\r', '\n', '\t', ' ', '-', '!', '<', '>' };
+        private static readonly char[] CssClassTrimChars = new[] { '\r', '\n', '\t', ' ', '-', '!', '<', '>' };
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -58,15 +57,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         {
             ArgChecker.AssertArgNotNull(adapter, "global");
 
-            _valueParser = new CssValueParser(adapter);
-            _adapter = adapter;
+            this.ValueParser = new CssValueParser(adapter);
+            this.Adapter = adapter;
         }
 
         /// <summary>
         /// Parse the given stylesheet source to CSS blocks dictionary.<br/>
         /// The CSS blocks are organized into two level buckets of media type and class name.<br/>
         /// Root media type are found under 'all' bucket.<br/>
-        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the 
+        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the
         /// default css data (as defined by W3), merged if class name already exists. If false only the data in the given stylesheet is returned.
         /// </summary>
         /// <seealso cref="http://www.w3.org/TR/CSS21/sample.html"/>
@@ -75,11 +74,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// <returns>the CSS data with parsed CSS objects (never null)</returns>
         public CssData ParseStyleSheet(string stylesheet, bool combineWithDefault)
         {
-            var cssData = combineWithDefault ? _adapter.DefaultCssData.Clone() : new CssData();
+            var cssData = combineWithDefault ? this.Adapter.DefaultCssData.Clone() : new CssData();
             if (!string.IsNullOrEmpty(stylesheet))
             {
-                ParseStyleSheet(cssData, stylesheet);
+                this.ParseStyleSheet(cssData, stylesheet);
             }
+
             return cssData;
         }
 
@@ -97,9 +97,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             {
                 stylesheet = RemoveStylesheetComments(stylesheet);
 
-                ParseStyleBlocks(cssData, stylesheet);
+                this.ParseStyleBlocks(cssData, stylesheet);
 
-                ParseMediaStyleBlocks(cssData, stylesheet);
+                this.ParseMediaStyleBlocks(cssData, stylesheet);
             }
         }
 
@@ -111,7 +111,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// <returns>the created CSS block instance</returns>
         public CssBlock ParseCssBlock(string className, string blockSource)
         {
-            return ParseCssBlockImp(className, blockSource);
+            return this.ParseCssBlockImp(className, blockSource);
         }
 
         /// <summary>
@@ -122,19 +122,18 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// <returns>parsed font-family value</returns>
         public string ParseFontFamily(string value)
         {
-            return ParseFontFamilyProperty(value);
+            return this.ParseFontFamilyProperty(value);
         }
 
         /// <summary>
-        /// Parses a color value in CSS style; e.g. #ff0000, red, rgb(255,0,0), rgb(100%, 0, 0) 
+        /// Parses a color value in CSS style; e.g. #ff0000, red, rgb(255,0,0), rgb(100%, 0, 0)
         /// </summary>
         /// <param name="colorStr">color string value to parse</param>
         /// <returns>color value</returns>
         public RColor ParseColor(string colorStr)
         {
-            return _valueParser.GetActualColor(colorStr);
+            return this.ValueParser.GetActualColor(colorStr);
         }
-
 
         #region Private methods
 
@@ -212,8 +211,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                         while (Char.IsWhiteSpace(stylesheet[startIdx]))
                             startIdx++;
                         var substring = stylesheet.Substring(startIdx, endIdx - startIdx + 1);
-                        FeedStyleBlock(cssData, substring);
+                        this.FeedStyleBlock(cssData, substring);
                     }
+
                     startIdx = endIdx + 1;
                 }
             }
@@ -231,11 +231,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             string atrule;
             while ((atrule = RegexParserUtils.GetCssAtRules(stylesheet, ref startIdx)) != null)
             {
-                //Just process @media rules
+                // Just process @media rules
                 if (!atrule.StartsWith("@media", StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
-                //Extract specified media types
+                // Extract specified media types
                 MatchCollection types = RegexParserUtils.Match(RegexParserUtils.CssMediaTypes, atrule);
 
                 if (types.Count == 1)
@@ -244,21 +244,21 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
 
                     if (line.StartsWith("@media", StringComparison.InvariantCultureIgnoreCase) && line.EndsWith("{"))
                     {
-                        //Get specified media types in the at-rule
+                        // Get specified media types in the at-rule
                         string[] media = line.Substring(6, line.Length - 7).Split(' ');
 
-                        //Scan media types
+                        // Scan media types
                         foreach (string t in media)
                         {
                             if (!String.IsNullOrEmpty(t.Trim()))
                             {
-                                //Get blocks inside the at-rule
+                                // Get blocks inside the at-rule
                                 var insideBlocks = RegexParserUtils.Match(RegexParserUtils.CssBlocks, atrule);
 
-                                //Scan blocks and feed them to the style sheet
+                                // Scan blocks and feed them to the style sheet
                                 foreach (Match insideBlock in insideBlocks)
                                 {
-                                    FeedStyleBlock(cssData, insideBlock.Value, t.Trim());
+                                    this.FeedStyleBlock(cssData, insideBlock.Value, t.Trim());
                                 }
                             }
                         }
@@ -285,10 +285,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
 
                 foreach (string cls in classes)
                 {
-                    string className = cls.Trim(_cssClassTrimChars);
+                    string className = cls.Trim(CssClassTrimChars);
                     if (!String.IsNullOrEmpty(className))
                     {
-                        var newblock = ParseCssBlockImp(className, blockSource);
+                        var newblock = this.ParseCssBlockImp(className, blockSource);
                         if (newblock != null)
                         {
                             cssData.AddCssBlock(media, newblock);
@@ -320,7 +320,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 string firstClass;
                 var selectors = ParseCssBlockSelector(className, out firstClass);
 
-                var properties = ParseCssBlockProperties(blockSource);
+                var properties = this.ParseCssBlockProperties(blockSource);
 
                 return new CssBlock(firstClass, properties, selectors, psedoClass == "hover");
             }
@@ -394,12 +394,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             int startIdx = 0;
             while (startIdx < blockSource.Length)
             {
-                int endIdx = blockSource.IndexOfAny(_cssBlockSplitters, startIdx);
+                int endIdx = blockSource.IndexOfAny(CssBlockSplitters, startIdx);
 
                 // If blockSource contains "data:image" then skip first semicolon since it is a part of image definition
                 // example: "url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA......"
                 if (startIdx >= 0 && endIdx - startIdx >= 10 && blockSource.Length - startIdx >= 10 && blockSource.IndexOf("data:image", startIdx, endIdx - startIdx) >= 0)
-                    endIdx = blockSource.IndexOfAny(_cssBlockSplitters, endIdx + 1);
+                    endIdx = blockSource.IndexOfAny(CssBlockSplitters, endIdx + 1);
 
                 if (endIdx < 0)
                     endIdx = blockSource.Length - 1;
@@ -407,7 +407,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 var splitIdx = blockSource.IndexOf(':', startIdx, endIdx - startIdx);
                 if (splitIdx > -1)
                 {
-                    //Extract property name and value
+                    // Extract property name and value
                     startIdx = startIdx + (blockSource[startIdx] == ' ' ? 1 : 0);
                     var adjEndIdx = endIdx - (blockSource[endIdx] == ' ' || blockSource[endIdx] == ';' ? 1 : 0);
                     string propName = blockSource.Substring(startIdx, splitIdx - startIdx).Trim().ToLower();
@@ -417,11 +417,13 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                         string propValue = blockSource.Substring(splitIdx, adjEndIdx - splitIdx + 1).Trim();
                         if (!propValue.StartsWith("url", StringComparison.InvariantCultureIgnoreCase))
                             propValue = propValue.ToLower();
-                        AddProperty(propName, propValue, properties);
+                        this.AddProperty(propName, propValue, properties);
                     }
                 }
+
                 startIdx = endIdx + 1;
             }
+
             return properties;
         }
 
@@ -443,31 +445,31 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             }
             else if (propName == "color" || propName == "backgroundcolor" || propName == "bordertopcolor" || propName == "borderbottomcolor" || propName == "borderleftcolor" || propName == "borderrightcolor")
             {
-                ParseColorProperty(propName, propValue, properties);
+                this.ParseColorProperty(propName, propValue, properties);
             }
             else if (propName == "font")
             {
-                ParseFontProperty(propValue, properties);
+                this.ParseFontProperty(propValue, properties);
             }
             else if (propName == "border")
             {
-                ParseBorderProperty(propValue, null, properties);
+                this.ParseBorderProperty(propValue, null, properties);
             }
             else if (propName == "border-left")
             {
-                ParseBorderProperty(propValue, "-left", properties);
+                this.ParseBorderProperty(propValue, "-left", properties);
             }
             else if (propName == "border-top")
             {
-                ParseBorderProperty(propValue, "-top", properties);
+                this.ParseBorderProperty(propValue, "-top", properties);
             }
             else if (propName == "border-right")
             {
-                ParseBorderProperty(propValue, "-right", properties);
+                this.ParseBorderProperty(propValue, "-right", properties);
             }
             else if (propName == "border-bottom")
             {
-                ParseBorderProperty(propValue, "-bottom", properties);
+                this.ParseBorderProperty(propValue, "-bottom", properties);
             }
             else if (propName == "margin")
             {
@@ -499,7 +501,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             }
             else if (propName == "font-family")
             {
-                properties["font-family"] = ParseFontFamilyProperty(propValue);
+                properties["font-family"] = this.ParseFontFamilyProperty(propValue);
             }
             else
             {
@@ -529,7 +531,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// <param name="properties">the properties collection to add to</param>
         private void ParseColorProperty(string propName, string propValue, Dictionary<string, string> properties)
         {
-            if (_valueParser.IsColorValid(propValue))
+            if (this.ValueParser.IsColorValid(propValue))
             {
                 properties[propName] = propValue;
             }
@@ -548,17 +550,18 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             if (!string.IsNullOrEmpty(mustBe))
             {
                 mustBe = mustBe.Trim();
-                //Check for style||variant||weight on the left
+
+                // Check for style||variant||weight on the left
                 string leftSide = propValue.Substring(0, mustBePos);
                 string fontStyle = RegexParserUtils.Search(RegexParserUtils.CssFontStyle, leftSide);
                 string fontVariant = RegexParserUtils.Search(RegexParserUtils.CssFontVariant, leftSide);
                 string fontWeight = RegexParserUtils.Search(RegexParserUtils.CssFontWeight, leftSide);
 
-                //Check for family on the right
+                // Check for family on the right
                 string rightSide = propValue.Substring(mustBePos + mustBe.Length);
-                string fontFamily = rightSide.Trim(); //Parser.Search(Parser.CssFontFamily, rightSide); //TODO: Would this be right?
+                string fontFamily = rightSide.Trim(); // Parser.Search(Parser.CssFontFamily, rightSide); //TODO: Would this be right?
 
-                //Check for font-size and line-height
+                // Check for font-size and line-height
                 string fontSize = mustBe;
                 string lineHeight = string.Empty;
 
@@ -570,7 +573,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 }
 
                 if (!string.IsNullOrEmpty(fontFamily))
-                    properties["font-family"] = ParseFontFamilyProperty(fontFamily);
+                    properties["font-family"] = this.ParseFontFamilyProperty(fontFamily);
                 if (!string.IsNullOrEmpty(fontStyle))
                     properties["font-style"] = fontStyle;
                 if (!string.IsNullOrEmpty(fontVariant))
@@ -585,12 +588,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             else
             {
                 // Check for: caption | icon | menu | message-box | small-caption | status-bar
-                //TODO: Interpret font values of: caption | icon | menu | message-box | small-caption | status-bar
+                // TODO: Interpret font values of: caption | icon | menu | message-box | small-caption | status-bar
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="propValue">the value of the property to parse</param>
         /// <returns>parsed value</returns>
@@ -613,6 +616,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                         return propValue.Substring(startIdx, endIdx - startIdx + 1);
                 }
             }
+
             return propValue;
         }
 
@@ -638,7 +642,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
 
                 var font = propValue.Substring(start, adjEnd - start + 1);
 
-                if (_adapter.IsFontExists(font))
+                if (this.Adapter.IsFontExists(font))
                 {
                     return font;
                 }
@@ -660,7 +664,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             string borderWidth;
             string borderStyle;
             string borderColor;
-            ParseBorder(propValue, out borderWidth, out borderStyle, out borderColor);
+            this.ParseBorder(propValue, out borderWidth, out borderStyle, out borderColor);
 
             if (direction != null)
             {
@@ -823,8 +827,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// <returns>Splitted and trimmed values</returns>
         private static string[] SplitValues(string value, char separator = ' ')
         {
-            //TODO: CRITICAL! Don't split values on parenthesis (like rgb(0, 0, 0)) or quotes ("strings")
-
+            // TODO: CRITICAL! Don't split values on parenthesis (like rgb(0, 0, 0)) or quotes ("strings")
             if (!string.IsNullOrEmpty(value))
             {
                 string[] values = value.Split(separator);
@@ -847,7 +850,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="value"></param>
         /// <param name="width"> </param>
@@ -867,7 +870,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     if (style == null)
                         style = ParseBorderStyle(value, idx, length);
                     if (color == null)
-                        color = ParseBorderColor(value, idx, length);
+                        color = this.ParseBorderColor(value, idx, length);
                     idx = idx + length + 1;
                 }
             }
@@ -915,6 +918,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 if (CommonUtils.SubStringEquals(str, idx, length, CssConstants.Thick))
                     return CssConstants.Thick;
             }
+
             return null;
         }
 
@@ -956,7 +960,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         private string ParseBorderColor(string str, int idx, int length)
         {
             RColor color;
-            return _valueParser.TryGetColor(str, idx, length, out color) ? str.Substring(idx, length) : null;
+            return this.ValueParser.TryGetColor(str, idx, length, out color) ? str.Substring(idx, length) : null;
         }
 
         #endregion

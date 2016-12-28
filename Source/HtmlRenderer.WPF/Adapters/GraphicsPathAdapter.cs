@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -24,31 +24,31 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// <summary>
         /// The actual WPF graphics geometry instance.
         /// </summary>
-        private readonly StreamGeometry _geometry = new StreamGeometry();
+        private readonly StreamGeometry Geometry = new StreamGeometry();
 
         /// <summary>
         /// The context used in WPF geometry to render path
         /// </summary>
-        private readonly StreamGeometryContext _geometryContext;
+        private readonly StreamGeometryContext GeometryContext;
 
         public GraphicsPathAdapter()
         {
-            _geometryContext = _geometry.Open();
+            this.GeometryContext = this.Geometry.Open();
         }
 
         public override void Start(double x, double y)
         {
-            _geometryContext.BeginFigure(new Point(x, y), true, false);
+            this.GeometryContext.BeginFigure(new Point(x, y), true, false);
         }
 
         public override void LineTo(double x, double y)
         {
-            _geometryContext.LineTo(new Point(x, y), true, true);
+            this.GeometryContext.LineTo(new Point(x, y), true, true);
         }
 
         public override void ArcTo(double x, double y, double size, Corner corner)
         {
-            _geometryContext.ArcTo(new Point(x, y), new Size(size, size), 0, false, SweepDirection.Clockwise, true, true);
+            this.GeometryContext.ArcTo(new Point(x, y), new Size(size, size), 0, false, SweepDirection.Clockwise, true, true);
         }
 
         /// <summary>
@@ -56,12 +56,13 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// </summary>
         public StreamGeometry GetClosedGeometry()
         {
-            _geometryContext.Close();
-            _geometry.Freeze();
-            return _geometry;
+            this.GeometryContext.Close();
+            this.Geometry.Freeze();
+            return this.Geometry;
         }
 
         public override void Dispose()
-        { }
+        {
+        }
     }
 }

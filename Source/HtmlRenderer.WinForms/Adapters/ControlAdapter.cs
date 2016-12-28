@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -26,12 +26,12 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// <summary>
         /// the underline win forms control.
         /// </summary>
-        private readonly Control _control;
+        private readonly Control _Control;
 
         /// <summary>
         /// Use GDI+ text rendering to measure/draw text.
         /// </summary>
-        private readonly bool _useGdiPlusTextRendering;
+        private readonly bool UseGdiPlusTextRendering;
 
         /// <summary>
         /// Init.
@@ -41,8 +41,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         {
             ArgChecker.AssertArgNotNull(control, "control");
 
-            _control = control;
-            _useGdiPlusTextRendering = useGdiPlusTextRendering;
+            this._Control = control;
+            this.UseGdiPlusTextRendering = useGdiPlusTextRendering;
         }
 
         /// <summary>
@@ -50,12 +50,12 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// </summary>
         public Control Control
         {
-            get { return _control; }
+            get { return this._Control; }
         }
 
         public override RPoint MouseLocation
         {
-            get { return Utils.Convert(_control.PointToClient(Control.MousePosition)); }
+            get { return Utils.Convert(this._Control.PointToClient(Control.MousePosition)); }
         }
 
         public override bool LeftMouseButton
@@ -70,27 +70,27 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
 
         public override void SetCursorDefault()
         {
-            _control.Cursor = Cursors.Default;
+            this._Control.Cursor = Cursors.Default;
         }
 
         public override void SetCursorHand()
         {
-            _control.Cursor = Cursors.Hand;
+            this._Control.Cursor = Cursors.Hand;
         }
 
         public override void SetCursorIBeam()
         {
-            _control.Cursor = Cursors.IBeam;
+            this._Control.Cursor = Cursors.IBeam;
         }
 
         public override void DoDragDropCopy(object dragDropData)
         {
-            _control.DoDragDrop(dragDropData, DragDropEffects.Copy);
+            this._Control.DoDragDrop(dragDropData, DragDropEffects.Copy);
         }
 
         public override void MeasureString(string str, RFont font, double maxWidth, out int charFit, out double charFitWidth)
         {
-            using (var g = new GraphicsAdapter(_control.CreateGraphics(), _useGdiPlusTextRendering, true))
+            using (var g = new GraphicsAdapter(this._Control.CreateGraphics(), this.UseGdiPlusTextRendering, true))
             {
                 g.MeasureString(str, font, maxWidth, out charFit, out charFitWidth);
             }
@@ -98,7 +98,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
 
         public override void Invalidate()
         {
-            _control.Invalidate();
+            this._Control.Invalidate();
         }
     }
 }

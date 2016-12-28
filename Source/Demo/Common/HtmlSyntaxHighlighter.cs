@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -44,19 +44,19 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
 
         /// <summary>
         /// cf0 = default
-        /// cf1 = dark red  
+        /// cf1 = dark red
         /// cf2 = bright red
         /// cf3 = green
-        /// cf4 = blue    
-        /// cf5 = blue    
-        /// cf6 = purple          
+        /// cf4 = blue
+        /// cf5 = blue
+        /// cf6 = purple
         /// </summary>
         private const string DefaultColorScheme = "\\red128\\green0\\blue0;\\red240\\green0\\blue0;\\red0\\green128\\blue0;\\red0\\green0\\blue255;\\red0\\green0\\blue255;\\red128\\green0\\blue171;";
 
         /// <summary>
         /// Used to test if a char requires more than 1 byte
         /// </summary>
-        private static readonly char[] _unicodeTest = new char[1];
+        private static readonly char[] UnicodeTest = new char[1];
 
         #endregion
 
@@ -87,7 +87,6 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
         {
             return Process(text, CreateColorScheme(element, attribute, comment, chars, values, style));
         }
-
 
         #region Private/Protected methods
 
@@ -131,13 +130,14 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
                             sb.Append(c2);
                             i++;
                         }
+
                         sb.Append("\\cf1 ");
                         inHtmlTag = true;
                     }
                 }
                 else if (c == '>')
                 {
-                    //Check for comments tags
+                    // Check for comments tags
                     if (inComment && text[i - 1] == '-' && text[i - 2] == '-')
                     {
                         sb.Append(c).Append("\\cf0 ");
@@ -187,11 +187,15 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
                 }
                 else if (!rtfFormated)
                 {
-                    _unicodeTest[0] = c;
-                    if (Encoding.UTF8.GetByteCount(_unicodeTest, 0, 1) > 1)
+                    UnicodeTest[0] = c;
+                    if (Encoding.UTF8.GetByteCount(UnicodeTest, 0, 1) > 1)
+                    {
                         sb.Append("\\u" + Convert.ToUInt32(c) + "?");
+                    }
                     else
+                    {
                         sb.Append(c);
+                    }
                 }
                 else
                 {
@@ -201,7 +205,9 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
 
             // close the RTF if we added the header ourselves
             if (!rtfFormated)
+            {
                 sb.Append('}');
+            }
 
             // return the created colored RTF
             return sb.ToString();
@@ -224,7 +230,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
             {
                 sb.Append(text, 0, idx);
 
-                // insert our color table at our chosen location                
+                // insert our color table at our chosen location
                 sb.Append(ColorTbl).Append(";").Append(colorScheme).Append("}");
 
                 // skip the existing color table
@@ -240,7 +246,9 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
                     idx += Header.Length;
                     sb.Append(text, 0, idx);
                     while (text[idx] != '\\' && text[idx] != '{' && text[idx] != '}')
+                    {
                         sb.Append(text[idx++]);
+                    }
                 }
                 else
                 {
@@ -250,9 +258,10 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
                     rtfFormated = false;
                 }
 
-                // insert the color table at our chosen location                
+                // insert the color table at our chosen location
                 sb.Append("{").Append(ColorTbl).Append(";").Append(colorScheme).Append("}");
             }
+
             return idx;
         }
 

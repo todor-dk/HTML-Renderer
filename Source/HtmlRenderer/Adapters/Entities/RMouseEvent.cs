@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -20,24 +20,16 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
     public sealed class RMouseEvent
     {
         /// <summary>
-        /// Is the left mouse button participated in the event
-        /// </summary>
-        private readonly bool _leftButton;
-
-        /// <summary>
         /// Init.
         /// </summary>
         public RMouseEvent(bool leftButton)
         {
-            _leftButton = leftButton;
+            this.LeftButton = leftButton;
         }
 
         /// <summary>
         /// Is the left mouse button participated in the event
         /// </summary>
-        public bool LeftButton
-        {
-            get { return _leftButton; }
-        }
+        public bool LeftButton { get; private set; }
     }
 }

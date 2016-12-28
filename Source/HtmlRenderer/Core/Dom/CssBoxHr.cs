@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -31,7 +31,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         public CssBoxHr(CssBox parent, HtmlTag tag)
             : base(parent, tag)
         {
-            Display = CssConstants.Block;
+            this.Display = CssConstants.Block;
         }
 
         /// <summary>
@@ -41,52 +41,54 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="g">Device context to use</param>
         protected override void PerformLayoutImp(RGraphics g)
         {
-            if (Display == CssConstants.None)
+            if (this.Display == CssConstants.None)
                 return;
 
-            RectanglesReset();
+            this.RectanglesReset();
 
             var prevSibling = DomUtils.GetPreviousSibling(this);
-            double left = ContainingBlock.Location.X + ContainingBlock.ActualPaddingLeft + ActualMarginLeft + ContainingBlock.ActualBorderLeftWidth;
-            double top = (prevSibling == null && ParentBox != null ? ParentBox.ClientTop : ParentBox == null ? Location.Y : 0) + MarginTopCollapse(prevSibling) + (prevSibling != null ? prevSibling.ActualBottom + prevSibling.ActualBorderBottomWidth : 0);
-            Location = new RPoint(left, top);
-            ActualBottom = top;
+            double left = this.ContainingBlock.Location.X + this.ContainingBlock.ActualPaddingLeft + this.ActualMarginLeft + this.ContainingBlock.ActualBorderLeftWidth;
+            double top = (prevSibling == null && this.ParentBox != null ? this.ParentBox.ClientTop : this.ParentBox == null ? this.Location.Y : 0) + this.MarginTopCollapse(prevSibling) + (prevSibling != null ? prevSibling.ActualBottom + prevSibling.ActualBorderBottomWidth : 0);
+            this.Location = new RPoint(left, top);
+            this.ActualBottom = top;
 
-            //width at 100% (or auto)
-            double minwidth = GetMinimumWidth();
-            double width = ContainingBlock.Size.Width
-                           - ContainingBlock.ActualPaddingLeft - ContainingBlock.ActualPaddingRight
-                           - ContainingBlock.ActualBorderLeftWidth - ContainingBlock.ActualBorderRightWidth
-                           - ActualMarginLeft - ActualMarginRight - ActualBorderLeftWidth - ActualBorderRightWidth;
+            // width at 100% (or auto)
+            double minwidth = this.GetMinimumWidth();
+            double width = this.ContainingBlock.Size.Width
+                           - this.ContainingBlock.ActualPaddingLeft - this.ContainingBlock.ActualPaddingRight
+                           - this.ContainingBlock.ActualBorderLeftWidth - this.ContainingBlock.ActualBorderRightWidth
+                           - this.ActualMarginLeft - this.ActualMarginRight - this.ActualBorderLeftWidth - this.ActualBorderRightWidth;
 
-            //Check width if not auto
-            if (Width != CssConstants.Auto && !string.IsNullOrEmpty(Width))
+            // Check width if not auto
+            if (this.Width != CssConstants.Auto && !string.IsNullOrEmpty(this.Width))
             {
-                width = CssValueParser.ParseLength(Width, width, this);
+                width = CssValueParser.ParseLength(this.Width, width, this);
             }
 
             if (width < minwidth || width >= 9999)
                 width = minwidth;
 
-            double height = ActualHeight;
+            double height = this.ActualHeight;
             if (height < 1)
             {
-                height = Size.Height + ActualBorderTopWidth + ActualBorderBottomWidth;
+                height = this.Size.Height + this.ActualBorderTopWidth + this.ActualBorderBottomWidth;
             }
+
             if (height < 1)
             {
                 height = 2;
             }
-            if (height <= 2 && ActualBorderTopWidth < 1 && ActualBorderBottomWidth < 1)
+
+            if (height <= 2 && this.ActualBorderTopWidth < 1 && this.ActualBorderBottomWidth < 1)
             {
-                BorderTopStyle = BorderBottomStyle = CssConstants.Solid;
-                BorderTopWidth = "1px";
-                BorderBottomWidth = "1px";
+                this.BorderTopStyle = this.BorderBottomStyle = CssConstants.Solid;
+                this.BorderTopWidth = "1px";
+                this.BorderBottomWidth = "1px";
             }
 
-            Size = new RSize(width, height);
+            this.Size = new RSize(width, height);
 
-            ActualBottom = Location.Y + ActualPaddingTop + ActualPaddingBottom + height;
+            this.ActualBottom = this.Location.Y + this.ActualPaddingTop + this.ActualPaddingBottom + height;
         }
 
         /// <summary>
@@ -95,26 +97,26 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="g">the device to draw to</param>
         protected override void PaintImp(RGraphics g)
         {
-            var offset = (HtmlContainer != null && !IsFixed) ? HtmlContainer.ScrollOffset : RPoint.Empty;
-            var rect = new RRect(Bounds.X + offset.X, Bounds.Y + offset.Y, Bounds.Width, Bounds.Height);
+            var offset = (this.HtmlContainer != null && !this.IsFixed) ? this.HtmlContainer.ScrollOffset : RPoint.Empty;
+            var rect = new RRect(this.Bounds.X + offset.X, this.Bounds.Y + offset.Y, this.Bounds.Width, this.Bounds.Height);
 
-            if (rect.Height > 2 && RenderUtils.IsColorVisible(ActualBackgroundColor))
+            if (rect.Height > 2 && RenderUtils.IsColorVisible(this.ActualBackgroundColor))
             {
-                g.DrawRectangle(g.GetSolidBrush(ActualBackgroundColor), rect.X, rect.Y, rect.Width, rect.Height);
+                g.DrawRectangle(g.GetSolidBrush(this.ActualBackgroundColor), rect.X, rect.Y, rect.Width, rect.Height);
             }
 
-            var b1 = g.GetSolidBrush(ActualBorderTopColor);
+            var b1 = g.GetSolidBrush(this.ActualBorderTopColor);
             BordersDrawHandler.DrawBorder(Border.Top, g, this, b1, rect);
 
             if (rect.Height > 1)
             {
-                var b2 = g.GetSolidBrush(ActualBorderLeftColor);
+                var b2 = g.GetSolidBrush(this.ActualBorderLeftColor);
                 BordersDrawHandler.DrawBorder(Border.Left, g, this, b2, rect);
 
-                var b3 = g.GetSolidBrush(ActualBorderRightColor);
+                var b3 = g.GetSolidBrush(this.ActualBorderRightColor);
                 BordersDrawHandler.DrawBorder(Border.Right, g, this, b3, rect);
 
-                var b4 = g.GetSolidBrush(ActualBorderBottomColor);
+                var b4 = g.GetSolidBrush(this.ActualBorderBottomColor);
                 BordersDrawHandler.DrawBorder(Border.Bottom, g, this, b4, rect);
             }
         }

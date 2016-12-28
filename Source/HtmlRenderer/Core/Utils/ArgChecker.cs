@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -26,7 +26,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         /// <typeparam name="TException">Exception type to throw.</typeparam>
         /// <param name="condition">Condition to assert.</param>
         /// <param name="message">Exception message in-case of assert failure.</param>
-        public static void AssertIsTrue<TException>(bool condition, string message) where TException : Exception, new()
+        public static void AssertIsTrue<TException>(bool condition, string message)
+            where TException : Exception, new()
         {
             // Checks whether the condition is false
             if (!condition)
@@ -94,6 +95,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
             {
                 return (T)arg;
             }
+
             throw new ArgumentException(string.Format("Given argument isn't of type '{0}'.", typeof(T).Name), argName);
         }
 
@@ -108,7 +110,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         {
             AssertArgNotNullOrEmpty(arg, argName);
 
-            if (false == File.Exists(arg))
+            if (!File.Exists(arg))
             {
                 throw new FileNotFoundException(string.Format("Given file in argument '{0}' not exist.", argName), arg);
             }

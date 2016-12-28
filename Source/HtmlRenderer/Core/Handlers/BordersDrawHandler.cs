@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -28,10 +28,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <summary>
         /// used for all border paint to use the same points and not create new array each time.
         /// </summary>
-        private static readonly RPoint[] _borderPts = new RPoint[4];
+        private static readonly RPoint[] BorderPts = new RPoint[4];
 
         #endregion
-
 
         /// <summary>
         /// Draws all the border of the box with respect to style, width, etc.
@@ -49,14 +48,17 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 {
                     DrawBorder(Border.Top, box, g, rect, isFirst, isLast);
                 }
+
                 if (isFirst && !(string.IsNullOrEmpty(box.BorderLeftStyle) || box.BorderLeftStyle == CssConstants.None || box.BorderLeftStyle == CssConstants.Hidden) && box.ActualBorderLeftWidth > 0)
                 {
                     DrawBorder(Border.Left, box, g, rect, true, isLast);
                 }
+
                 if (!(string.IsNullOrEmpty(box.BorderBottomStyle) || box.BorderBottomStyle == CssConstants.None || box.BorderBottomStyle == CssConstants.Hidden) && box.ActualBorderBottomWidth > 0)
                 {
                     DrawBorder(Border.Bottom, box, g, rect, isFirst, isLast);
                 }
+
                 if (isLast && !(string.IsNullOrEmpty(box.BorderRightStyle) || box.BorderRightStyle == CssConstants.None || box.BorderRightStyle == CssConstants.Hidden) && box.ActualBorderRightWidth > 0)
                 {
                     DrawBorder(Border.Right, box, g, rect, isFirst, true);
@@ -76,9 +78,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         public static void DrawBorder(Border border, RGraphics g, CssBox box, RBrush brush, RRect rectangle)
         {
             SetInOutsetRectanglePoints(border, box, rectangle, true, true);
-            g.DrawPolygon(brush, _borderPts);
+            g.DrawPolygon(brush, BorderPts);
         }
-
 
         #region Private methods
 
@@ -117,7 +118,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 {
                     // inset/outset border needs special rectangle
                     SetInOutsetRectanglePoints(border, box, rect, isLineStart, isLineEnd);
-                    g.DrawPolygon(g.GetSolidBrush(color), _borderPts);
+                    g.DrawPolygon(g.GetSolidBrush(color), BorderPts);
                 }
                 else
                 {
@@ -126,16 +127,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                     switch (border)
                     {
                         case Border.Top:
-                            g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Top + box.ActualBorderTopWidth / 2, rect.Right - 1, rect.Top + box.ActualBorderTopWidth / 2);
+                            g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Top + (box.ActualBorderTopWidth / 2), rect.Right - 1, rect.Top + (box.ActualBorderTopWidth / 2));
                             break;
                         case Border.Left:
-                            g.DrawLine(pen, rect.Left + box.ActualBorderLeftWidth / 2, Math.Ceiling(rect.Top), rect.Left + box.ActualBorderLeftWidth / 2, Math.Floor(rect.Bottom));
+                            g.DrawLine(pen, rect.Left + (box.ActualBorderLeftWidth / 2), Math.Ceiling(rect.Top), rect.Left + (box.ActualBorderLeftWidth / 2), Math.Floor(rect.Bottom));
                             break;
                         case Border.Bottom:
-                            g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Bottom - box.ActualBorderBottomWidth / 2, rect.Right - 1, rect.Bottom - box.ActualBorderBottomWidth / 2);
+                            g.DrawLine(pen, Math.Ceiling(rect.Left), rect.Bottom - (box.ActualBorderBottomWidth / 2), rect.Right - 1, rect.Bottom - (box.ActualBorderBottomWidth / 2));
                             break;
                         case Border.Right:
-                            g.DrawLine(pen, rect.Right - box.ActualBorderRightWidth / 2, Math.Ceiling(rect.Top), rect.Right - box.ActualBorderRightWidth / 2, Math.Floor(rect.Bottom));
+                            g.DrawLine(pen, rect.Right - (box.ActualBorderRightWidth / 2), Math.Ceiling(rect.Top), rect.Right - (box.ActualBorderRightWidth / 2), Math.Floor(rect.Bottom));
                             break;
                     }
                 }
@@ -156,36 +157,36 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             switch (border)
             {
                 case Border.Top:
-                    _borderPts[0] = new RPoint(r.Left, r.Top);
-                    _borderPts[1] = new RPoint(r.Right, r.Top);
-                    _borderPts[2] = new RPoint(r.Right, r.Top + b.ActualBorderTopWidth);
-                    _borderPts[3] = new RPoint(r.Left, r.Top + b.ActualBorderTopWidth);
+                    BorderPts[0] = new RPoint(r.Left, r.Top);
+                    BorderPts[1] = new RPoint(r.Right, r.Top);
+                    BorderPts[2] = new RPoint(r.Right, r.Top + b.ActualBorderTopWidth);
+                    BorderPts[3] = new RPoint(r.Left, r.Top + b.ActualBorderTopWidth);
                     if (isLineEnd)
-                        _borderPts[2].X -= b.ActualBorderRightWidth;
+                        BorderPts[2].X -= b.ActualBorderRightWidth;
                     if (isLineStart)
-                        _borderPts[3].X += b.ActualBorderLeftWidth;
+                        BorderPts[3].X += b.ActualBorderLeftWidth;
                     break;
                 case Border.Right:
-                    _borderPts[0] = new RPoint(r.Right - b.ActualBorderRightWidth, r.Top + b.ActualBorderTopWidth);
-                    _borderPts[1] = new RPoint(r.Right, r.Top);
-                    _borderPts[2] = new RPoint(r.Right, r.Bottom);
-                    _borderPts[3] = new RPoint(r.Right - b.ActualBorderRightWidth, r.Bottom - b.ActualBorderBottomWidth);
+                    BorderPts[0] = new RPoint(r.Right - b.ActualBorderRightWidth, r.Top + b.ActualBorderTopWidth);
+                    BorderPts[1] = new RPoint(r.Right, r.Top);
+                    BorderPts[2] = new RPoint(r.Right, r.Bottom);
+                    BorderPts[3] = new RPoint(r.Right - b.ActualBorderRightWidth, r.Bottom - b.ActualBorderBottomWidth);
                     break;
                 case Border.Bottom:
-                    _borderPts[0] = new RPoint(r.Left, r.Bottom - b.ActualBorderBottomWidth);
-                    _borderPts[1] = new RPoint(r.Right, r.Bottom - b.ActualBorderBottomWidth);
-                    _borderPts[2] = new RPoint(r.Right, r.Bottom);
-                    _borderPts[3] = new RPoint(r.Left, r.Bottom);
+                    BorderPts[0] = new RPoint(r.Left, r.Bottom - b.ActualBorderBottomWidth);
+                    BorderPts[1] = new RPoint(r.Right, r.Bottom - b.ActualBorderBottomWidth);
+                    BorderPts[2] = new RPoint(r.Right, r.Bottom);
+                    BorderPts[3] = new RPoint(r.Left, r.Bottom);
                     if (isLineStart)
-                        _borderPts[0].X += b.ActualBorderLeftWidth;
+                        BorderPts[0].X += b.ActualBorderLeftWidth;
                     if (isLineEnd)
-                        _borderPts[1].X -= b.ActualBorderRightWidth;
+                        BorderPts[1].X -= b.ActualBorderRightWidth;
                     break;
                 case Border.Left:
-                    _borderPts[0] = new RPoint(r.Left, r.Top);
-                    _borderPts[1] = new RPoint(r.Left + b.ActualBorderLeftWidth, r.Top + b.ActualBorderTopWidth);
-                    _borderPts[2] = new RPoint(r.Left + b.ActualBorderLeftWidth, r.Bottom - b.ActualBorderBottomWidth);
-                    _borderPts[3] = new RPoint(r.Left, r.Bottom);
+                    BorderPts[0] = new RPoint(r.Left, r.Top);
+                    BorderPts[1] = new RPoint(r.Left + b.ActualBorderLeftWidth, r.Top + b.ActualBorderTopWidth);
+                    BorderPts[2] = new RPoint(r.Left + b.ActualBorderLeftWidth, r.Bottom - b.ActualBorderBottomWidth);
+                    BorderPts[3] = new RPoint(r.Left, r.Bottom);
                     break;
             }
         }
@@ -209,31 +210,33 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                     if (b.ActualCornerNw > 0 || b.ActualCornerNe > 0)
                     {
                         path = g.GetGraphicsPath();
-                        path.Start(r.Left + b.ActualBorderLeftWidth / 2, r.Top + b.ActualBorderTopWidth / 2 + b.ActualCornerNw);
+                        path.Start(r.Left + (b.ActualBorderLeftWidth / 2), r.Top + (b.ActualBorderTopWidth / 2) + b.ActualCornerNw);
 
                         if (b.ActualCornerNw > 0)
-                            path.ArcTo(r.Left + b.ActualBorderLeftWidth / 2 + b.ActualCornerNw, r.Top + b.ActualBorderTopWidth / 2, b.ActualCornerNw, RGraphicsPath.Corner.TopLeft);
+                            path.ArcTo(r.Left + (b.ActualBorderLeftWidth / 2) + b.ActualCornerNw, r.Top + (b.ActualBorderTopWidth / 2), b.ActualCornerNw, RGraphicsPath.Corner.TopLeft);
 
-                        path.LineTo(r.Right - b.ActualBorderRightWidth / 2 - b.ActualCornerNe, r.Top + b.ActualBorderTopWidth / 2);
+                        path.LineTo(r.Right - (b.ActualBorderRightWidth / 2) - b.ActualCornerNe, r.Top + (b.ActualBorderTopWidth / 2));
 
                         if (b.ActualCornerNe > 0)
-                            path.ArcTo(r.Right - b.ActualBorderRightWidth / 2, r.Top + b.ActualBorderTopWidth / 2 + b.ActualCornerNe, b.ActualCornerNe, RGraphicsPath.Corner.TopRight);
+                            path.ArcTo(r.Right - (b.ActualBorderRightWidth / 2), r.Top + (b.ActualBorderTopWidth / 2) + b.ActualCornerNe, b.ActualCornerNe, RGraphicsPath.Corner.TopRight);
                     }
+
                     break;
                 case Border.Bottom:
                     if (b.ActualCornerSw > 0 || b.ActualCornerSe > 0)
                     {
                         path = g.GetGraphicsPath();
-                        path.Start(r.Right - b.ActualBorderRightWidth / 2, r.Bottom - b.ActualBorderBottomWidth / 2 - b.ActualCornerSe);
+                        path.Start(r.Right - (b.ActualBorderRightWidth / 2), r.Bottom - (b.ActualBorderBottomWidth / 2) - b.ActualCornerSe);
 
                         if (b.ActualCornerSe > 0)
-                            path.ArcTo(r.Right - b.ActualBorderRightWidth / 2 - b.ActualCornerSe, r.Bottom - b.ActualBorderBottomWidth / 2, b.ActualCornerSe, RGraphicsPath.Corner.BottomRight);
+                            path.ArcTo(r.Right - (b.ActualBorderRightWidth / 2) - b.ActualCornerSe, r.Bottom - (b.ActualBorderBottomWidth / 2), b.ActualCornerSe, RGraphicsPath.Corner.BottomRight);
 
-                        path.LineTo(r.Left + b.ActualBorderLeftWidth / 2 + b.ActualCornerSw, r.Bottom - b.ActualBorderBottomWidth / 2);
+                        path.LineTo(r.Left + (b.ActualBorderLeftWidth / 2) + b.ActualCornerSw, r.Bottom - (b.ActualBorderBottomWidth / 2));
 
                         if (b.ActualCornerSw > 0)
-                            path.ArcTo(r.Left + b.ActualBorderLeftWidth / 2, r.Bottom - b.ActualBorderBottomWidth / 2 - b.ActualCornerSw, b.ActualCornerSw, RGraphicsPath.Corner.BottomLeft);
+                            path.ArcTo(r.Left + (b.ActualBorderLeftWidth / 2), r.Bottom - (b.ActualBorderBottomWidth / 2) - b.ActualCornerSw, b.ActualCornerSw, RGraphicsPath.Corner.BottomLeft);
                     }
+
                     break;
                 case Border.Right:
                     if (b.ActualCornerNe > 0 || b.ActualCornerSe > 0)
@@ -242,16 +245,17 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
 
                         bool noTop = b.BorderTopStyle == CssConstants.None || b.BorderTopStyle == CssConstants.Hidden;
                         bool noBottom = b.BorderBottomStyle == CssConstants.None || b.BorderBottomStyle == CssConstants.Hidden;
-                        path.Start(r.Right - b.ActualBorderRightWidth / 2 - (noTop ? b.ActualCornerNe : 0), r.Top + b.ActualBorderTopWidth / 2 + (noTop ? 0 : b.ActualCornerNe));
+                        path.Start(r.Right - (b.ActualBorderRightWidth / 2) - (noTop ? b.ActualCornerNe : 0), r.Top + (b.ActualBorderTopWidth / 2) + (noTop ? 0 : b.ActualCornerNe));
 
                         if (b.ActualCornerNe > 0 && noTop)
-                            path.ArcTo(r.Right - b.ActualBorderLeftWidth / 2, r.Top + b.ActualBorderTopWidth / 2 + b.ActualCornerNe, b.ActualCornerNe, RGraphicsPath.Corner.TopRight);
+                            path.ArcTo(r.Right - (b.ActualBorderLeftWidth / 2), r.Top + (b.ActualBorderTopWidth / 2) + b.ActualCornerNe, b.ActualCornerNe, RGraphicsPath.Corner.TopRight);
 
-                        path.LineTo(r.Right - b.ActualBorderRightWidth / 2, r.Bottom - b.ActualBorderBottomWidth / 2 - b.ActualCornerSe);
+                        path.LineTo(r.Right - (b.ActualBorderRightWidth / 2), r.Bottom - (b.ActualBorderBottomWidth / 2) - b.ActualCornerSe);
 
                         if (b.ActualCornerSe > 0 && noBottom)
-                            path.ArcTo(r.Right - b.ActualBorderRightWidth / 2 - b.ActualCornerSe, r.Bottom - b.ActualBorderBottomWidth / 2, b.ActualCornerSe, RGraphicsPath.Corner.BottomRight);
+                            path.ArcTo(r.Right - (b.ActualBorderRightWidth / 2) - b.ActualCornerSe, r.Bottom - (b.ActualBorderBottomWidth / 2), b.ActualCornerSe, RGraphicsPath.Corner.BottomRight);
                     }
+
                     break;
                 case Border.Left:
                     if (b.ActualCornerNw > 0 || b.ActualCornerSw > 0)
@@ -260,16 +264,17 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
 
                         bool noTop = b.BorderTopStyle == CssConstants.None || b.BorderTopStyle == CssConstants.Hidden;
                         bool noBottom = b.BorderBottomStyle == CssConstants.None || b.BorderBottomStyle == CssConstants.Hidden;
-                        path.Start(r.Left + b.ActualBorderLeftWidth / 2 + (noBottom ? b.ActualCornerSw : 0), r.Bottom - b.ActualBorderBottomWidth / 2 - (noBottom ? 0 : b.ActualCornerSw));
+                        path.Start(r.Left + (b.ActualBorderLeftWidth / 2) + (noBottom ? b.ActualCornerSw : 0), r.Bottom - (b.ActualBorderBottomWidth / 2) - (noBottom ? 0 : b.ActualCornerSw));
 
                         if (b.ActualCornerSw > 0 && noBottom)
-                            path.ArcTo(r.Left + b.ActualBorderLeftWidth / 2, r.Bottom - b.ActualBorderBottomWidth / 2 - b.ActualCornerSw, b.ActualCornerSw, RGraphicsPath.Corner.BottomLeft);
+                            path.ArcTo(r.Left + (b.ActualBorderLeftWidth / 2), r.Bottom - (b.ActualBorderBottomWidth / 2) - b.ActualCornerSw, b.ActualCornerSw, RGraphicsPath.Corner.BottomLeft);
 
-                        path.LineTo(r.Left + b.ActualBorderLeftWidth / 2, r.Top + b.ActualBorderTopWidth / 2 + b.ActualCornerNw);
+                        path.LineTo(r.Left + (b.ActualBorderLeftWidth / 2), r.Top + (b.ActualBorderTopWidth / 2) + b.ActualCornerNw);
 
                         if (b.ActualCornerNw > 0 && noTop)
-                            path.ArcTo(r.Left + b.ActualBorderLeftWidth / 2 + b.ActualCornerNw, r.Top + b.ActualBorderTopWidth / 2, b.ActualCornerNw, RGraphicsPath.Corner.TopLeft);
+                            path.ArcTo(r.Left + (b.ActualBorderLeftWidth / 2) + b.ActualCornerNw, r.Top + (b.ActualBorderTopWidth / 2), b.ActualCornerNw, RGraphicsPath.Corner.TopLeft);
                     }
+
                     break;
             }
 
@@ -295,6 +300,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                     p.DashStyle = RDashStyle.Dash;
                     break;
             }
+
             return p;
         }
 

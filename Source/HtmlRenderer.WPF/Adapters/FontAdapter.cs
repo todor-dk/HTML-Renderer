@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -25,57 +25,58 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// <summary>
         /// the underline win-forms font.
         /// </summary>
-        private readonly Typeface _font;
+        private readonly Typeface _Font;
 
         /// <summary>
         /// The glyph font for the font
         /// </summary>
-        private readonly GlyphTypeface _glyphTypeface;
+        private readonly GlyphTypeface _GlyphTypeface;
 
         /// <summary>
         /// the size of the font
         /// </summary>
-        private readonly double _size;
+        private readonly double _Size;
 
         /// <summary>
         /// the vertical offset of the font underline location from the top of the font.
         /// </summary>
-        private readonly double _underlineOffset = -1;
+        private readonly double _UnderlineOffset = -1;
 
         /// <summary>
         /// Cached font height.
         /// </summary>
-        private readonly double _height = -1;
+        private readonly double _Height = -1;
 
         /// <summary>
         /// Cached font whitespace width.
         /// </summary>
-        private double _whitespaceWidth = -1;
+        private double WhitespaceWidth = -1;
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         public FontAdapter(Typeface font, double size)
         {
-            _font = font;
-            _size = size;
-            _height = 96d / 72d * _size * _font.FontFamily.LineSpacing;
-            _underlineOffset = 96d / 72d * _size * (_font.FontFamily.LineSpacing + font.UnderlinePosition);
+            this._Font = font;
+            this._Size = size;
+            this._Height = 96d / 72d * this._Size * this._Font.FontFamily.LineSpacing;
+            this._UnderlineOffset = 96d / 72d * this._Size * (this._Font.FontFamily.LineSpacing + font.UnderlinePosition);
 
             GlyphTypeface typeface;
             if (font.TryGetGlyphTypeface(out typeface))
             {
-                _glyphTypeface = typeface;
+                this._GlyphTypeface = typeface;
             }
             else
             {
                 foreach (var sysTypeface in Fonts.SystemTypefaces)
                 {
                     if (sysTypeface.TryGetGlyphTypeface(out typeface))
+                    {
                         break;
+                    }
                 }
             }
         }
@@ -85,41 +86,42 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// </summary>
         public Typeface Font
         {
-            get { return _font; }
+            get { return this._Font; }
         }
 
         public GlyphTypeface GlyphTypeface
         {
-            get { return _glyphTypeface; }
+            get { return this._GlyphTypeface; }
         }
 
         public override double Size
         {
-            get { return _size; }
+            get { return this._Size; }
         }
 
         public override double UnderlineOffset
         {
-            get { return _underlineOffset; }
+            get { return this._UnderlineOffset; }
         }
 
         public override double Height
         {
-            get { return _height; }
+            get { return this._Height; }
         }
 
         public override double LeftPadding
         {
-            get { return _height / 6f; }
+            get { return this._Height / 6f; }
         }
 
         public override double GetWhitespaceWidth(RGraphics graphics)
         {
-            if (_whitespaceWidth < 0)
+            if (this.WhitespaceWidth < 0)
             {
-                _whitespaceWidth = graphics.MeasureString(" ", this).Width;
+                this.WhitespaceWidth = graphics.MeasureString(" ", this).Width;
             }
-            return _whitespaceWidth;
+
+            return this.WhitespaceWidth;
         }
     }
 }

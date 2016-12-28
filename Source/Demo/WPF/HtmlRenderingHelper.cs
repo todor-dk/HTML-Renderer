@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -29,10 +29,9 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
         /// <summary>
         /// Cache for resource images
         /// </summary>
-        private static readonly Dictionary<string, BitmapImage> _imageCache = new Dictionary<string, BitmapImage>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, BitmapImage> ImageCache = new Dictionary<string, BitmapImage>(StringComparer.OrdinalIgnoreCase);
 
         #endregion
-
 
         /// <summary>
         /// Get encoder to be used for encoding bitmap frame by given file extension.<br/>
@@ -58,7 +57,6 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
                     return new WmpBitmapEncoder();
                 default:
                     return new PngBitmapEncoder();
-
             }
         }
 
@@ -76,15 +74,16 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
         public static BitmapImage TryLoadResourceImage(string src)
         {
             BitmapImage image;
-            if (!_imageCache.TryGetValue(src, out image))
+            if (!ImageCache.TryGetValue(src, out image))
             {
                 var imageStream = DemoUtils.GetImageStream(src);
                 if (imageStream != null)
                 {
                     image = ImageFromStream(imageStream);
-                    _imageCache[src] = image;
+                    ImageCache[src] = image;
                 }
             }
+
             return image;
         }
 
@@ -156,7 +155,9 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
             }
 
             if (img != null)
+            {
                 e.Callback(img);
+            }
         }
     }
 }

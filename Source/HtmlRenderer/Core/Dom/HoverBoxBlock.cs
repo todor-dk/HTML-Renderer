@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -22,20 +22,20 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <summary>
         /// the box that has :hover css on
         /// </summary>
-        private readonly CssBox _cssBox;
+        private readonly CssBox _CssBox;
 
         /// <summary>
         /// the :hover style block data
         /// </summary>
-        private readonly CssBlock _cssBlock;
+        private readonly CssBlock _CssBlock;
 
         /// <summary>
         /// Init.
         /// </summary>
         public HoverBoxBlock(CssBox cssBox, CssBlock cssBlock)
         {
-            _cssBox = cssBox;
-            _cssBlock = cssBlock;
+            this._CssBox = cssBox;
+            this._CssBlock = cssBlock;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public CssBox CssBox
         {
-            get { return _cssBox; }
+            get { return this._CssBox; }
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public CssBlock CssBlock
         {
-            get { return _cssBlock; }
+            get { return this._CssBlock; }
         }
     }
 }

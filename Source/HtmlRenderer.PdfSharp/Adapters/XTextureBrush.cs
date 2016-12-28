@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -24,29 +24,28 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// <summary>
         /// The image to draw in the brush
         /// </summary>
-        private readonly XImage _image;
+        private readonly XImage Image;
 
         /// <summary>
         /// the
         /// </summary>
-        private readonly XRect _dstRect;
+        private readonly XRect DstRect;
 
         /// <summary>
         /// the transform the location of the image to handle center alignment
         /// </summary>
-        private readonly XPoint _translateTransformLocation;
+        private readonly XPoint TranslateTransformLocation;
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         public XTextureBrush(XImage image, XRect dstRect, XPoint translateTransformLocation)
         {
-            _image = image;
-            _dstRect = dstRect;
-            _translateTransformLocation = translateTransformLocation;
+            this.Image = image;
+            this.DstRect = dstRect;
+            this.TranslateTransformLocation = translateTransformLocation;
         }
 
         /// <summary>
@@ -57,16 +56,17 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
             var prevState = g.Save();
             g.IntersectClip(new XRect(x, y, width, height));
 
-            double rx = _translateTransformLocation.X;
-            double w = _image.PixelWidth, h = _image.PixelHeight;
+            double rx = this.TranslateTransformLocation.X;
+            double w = this.Image.PixelWidth, h = this.Image.PixelHeight;
             while (rx < x + width)
             {
-                double ry = _translateTransformLocation.Y;
+                double ry = this.TranslateTransformLocation.Y;
                 while (ry < y + height)
                 {
-                    g.DrawImage(_image, rx, ry, w, h);
+                    g.DrawImage(this.Image, rx, ry, w, h);
                     ry += h;
                 }
+
                 rx += w;
             }
 

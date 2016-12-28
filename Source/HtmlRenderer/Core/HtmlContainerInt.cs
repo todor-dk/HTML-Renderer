@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -26,7 +26,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
     /// <summary>
     /// Low level handling of Html Renderer logic.<br/>
     /// Allows html layout and rendering without association to actual control, those allowing to handle html rendering on any graphics object.<br/>
-    /// Using this class will require the client to handle all propagation's of mouse/keyboard events, layout/paint calls, scrolling offset, 
+    /// Using this class will require the client to handle all propagation's of mouse/keyboard events, layout/paint calls, scrolling offset,
     /// location/size/rectangle handling and UI refresh requests.<br/>
     /// </summary>
     /// <remarks>
@@ -41,7 +41,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
     /// <para>
     /// <b>ScrollOffset:</b><br/>
     /// This will adjust the rendered html by the given offset so the content will be "scrolled".<br/>
-    /// Element that is rendered at location (50,100) with offset of (0,200) will not be rendered 
+    /// Element that is rendered at location (50,100) with offset of (0,200) will not be rendered
     /// at -100, therefore outside the client rectangle.
     /// </para>
     /// <para>
@@ -63,7 +63,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
     /// Allows to overwrite the loaded image by providing the image object manually, or different source (file or URL) to load from.<br/>
     /// Example: image 'src' can be non-valid string that is interpreted in the overwrite delegate by custom logic to resource image object<br/>
     /// Example: image 'src' in the html is relative - the overwrite intercepts the load and provide full source URL to load the image from<br/>
-    /// Example: image download requires authentication - the overwrite intercepts the load, downloads the image to disk using custom code and provide 
+    /// Example: image download requires authentication - the overwrite intercepts the load, downloads the image to disk using custom code and provide
     /// file path to load the image from.<br/>
     /// If no alternative data is provided the original source will be used.<br/>
     /// </para>
@@ -84,123 +84,122 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// <summary>
         /// Main adapter to framework specific logic.
         /// </summary>
-        private readonly RAdapter _adapter;
+        private readonly RAdapter _Adapter;
 
         /// <summary>
         /// parser for CSS data
         /// </summary>
-        private readonly CssParser _cssParser;
+        private readonly CssParser _CssParser;
 
         /// <summary>
         /// the root css box of the parsed html
         /// </summary>
-        private CssBox _root;
+        private CssBox _Root;
 
         /// <summary>
         /// list of all css boxes that have ":hover" selector on them
         /// </summary>
-        private List<HoverBoxBlock> _hoverBoxes;
+        private List<HoverBoxBlock> HoverBoxes;
 
         /// <summary>
-        /// Handler for text selection in the html. 
+        /// Handler for text selection in the html.
         /// </summary>
-        private SelectionHandler _selectionHandler;
+        private SelectionHandler SelectionHandler;
 
         /// <summary>
         /// Handler for downloading of images in the html
         /// </summary>
-        private ImageDownloader _imageDownloader;
+        private ImageDownloader ImageDownloader;
 
         /// <summary>
         /// the text fore color use for selected text
         /// </summary>
-        private RColor _selectionForeColor;
+        private RColor _SelectionForeColor;
 
         /// <summary>
         /// the back-color to use for selected text
         /// </summary>
-        private RColor _selectionBackColor;
+        private RColor _SelectionBackColor;
 
         /// <summary>
         /// the parsed stylesheet data used for handling the html
         /// </summary>
-        private CssData _cssData;
+        private CssData _CssData;
 
         /// <summary>
         /// Is content selection is enabled for the rendered html (default - true).<br/>
         /// If set to 'false' the rendered html will be static only with ability to click on links.
         /// </summary>
-        private bool _isSelectionEnabled = true;
+        private bool _IsSelectionEnabled = true;
 
         /// <summary>
         /// Is the build-in context menu enabled (default - true)
         /// </summary>
-        private bool _isContextMenuEnabled = true;
+        private bool _IsContextMenuEnabled = true;
 
         /// <summary>
-        /// Gets or sets a value indicating if anti-aliasing should be avoided 
+        /// Gets or sets a value indicating if anti-aliasing should be avoided
         /// for geometry like backgrounds and borders
         /// </summary>
-        private bool _avoidGeometryAntialias;
+        private bool _AvoidGeometryAntialias;
 
         /// <summary>
         /// Gets or sets a value indicating if image asynchronous loading should be avoided (default - false).<br/>
         /// </summary>
-        private bool _avoidAsyncImagesLoading;
+        private bool _AvoidAsyncImagesLoading;
 
         /// <summary>
         /// Gets or sets a value indicating if image loading only when visible should be avoided (default - false).<br/>
         /// </summary>
-        private bool _avoidImagesLateLoading;
+        private bool _AvoidImagesLateLoading;
 
         /// <summary>
         /// is the load of the html document is complete
         /// </summary>
-        private bool _loadComplete;
+        private bool HasLoadCompleted;
 
         /// <summary>
         /// the top-left most location of the rendered html
         /// </summary>
-        private RPoint _location;
+        private RPoint _Location;
 
         /// <summary>
         /// the max width and height of the rendered html, effects layout, actual size cannot exceed this values.<br/>
         /// Set zero for unlimited.<br/>
         /// </summary>
-        private RSize _maxSize;
+        private RSize _MaxSize;
 
         /// <summary>
         /// Gets or sets the scroll offset of the document for scroll controls
         /// </summary>
-        private RPoint _scrollOffset;
+        private RPoint _ScrollOffset;
 
         /// <summary>
         /// The actual size of the rendered html (after layout)
         /// </summary>
-        private RSize _actualSize;
+        private RSize _ActualSize;
 
         /// <summary>
         /// the top margin between the page start and the text
         /// </summary>
-        private int _marginTop;
+        private int _MarginTop;
 
         /// <summary>
         /// the bottom margin between the page end and the text
         /// </summary>
-        private int _marginBottom;
+        private int _MarginBottom;
 
         /// <summary>
         /// the left margin between the page start and the text
         /// </summary>
-        private int _marginLeft;
+        private int _MarginLeft;
 
         /// <summary>
         /// the right margin between the page end and the text
         /// </summary>
-        private int _marginRight;
+        private int _MarginRight;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -209,16 +208,16 @@ namespace TheArtOfDev.HtmlRenderer.Core
         {
             ArgChecker.AssertArgNotNull(adapter, "global");
 
-            _adapter = adapter;
-            _cssParser = new CssParser(adapter);
+            this._Adapter = adapter;
+            this._CssParser = new CssParser(adapter);
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         internal RAdapter Adapter
         {
-            get { return _adapter; }
+            get { return this._Adapter; }
         }
 
         /// <summary>
@@ -226,7 +225,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         internal CssParser CssParser
         {
-            get { return _cssParser; }
+            get { return this._CssParser; }
         }
 
         /// <summary>
@@ -281,7 +280,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public CssData CssData
         {
-            get { return _cssData; }
+            get { return this._CssData; }
         }
 
         /// <summary>
@@ -289,8 +288,8 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public bool AvoidGeometryAntialias
         {
-            get { return _avoidGeometryAntialias; }
-            set { _avoidGeometryAntialias = value; }
+            get { return this._AvoidGeometryAntialias; }
+            set { this._AvoidGeometryAntialias = value; }
         }
 
         /// <summary>
@@ -299,14 +298,14 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// False - images are loaded asynchronously to html parsing when downloaded from URL or loaded from disk.<br/>
         /// </summary>
         /// <remarks>
-        /// Asynchronously image loading allows to unblock html rendering while image is downloaded or loaded from disk using IO 
+        /// Asynchronously image loading allows to unblock html rendering while image is downloaded or loaded from disk using IO
         /// ports to achieve better performance.<br/>
         /// Asynchronously image loading should be avoided when the full html content must be available during render, like render to image.
         /// </remarks>
         public bool AvoidAsyncImagesLoading
         {
-            get { return _avoidAsyncImagesLoading; }
-            set { _avoidAsyncImagesLoading = value; }
+            get { return this._AvoidAsyncImagesLoading; }
+            set { this._AvoidAsyncImagesLoading = value; }
         }
 
         /// <summary>
@@ -315,7 +314,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// False - images that are not visible because of scroll location are not loaded until they are scrolled to.
         /// </summary>
         /// <remarks>
-        /// Images late loading improve performance if the page contains image outside the visible scroll area, especially if there is large 
+        /// Images late loading improve performance if the page contains image outside the visible scroll area, especially if there is large
         /// amount of images, as all image loading is delayed (downloading and loading into memory).<br/>
         /// Late image loading may effect the layout and actual size as image without set size will not have actual size until they are loaded
         /// resulting in layout change during user scroll.<br/>
@@ -324,8 +323,8 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </remarks>
         public bool AvoidImagesLateLoading
         {
-            get { return _avoidImagesLateLoading; }
-            set { _avoidImagesLateLoading = value; }
+            get { return this._AvoidImagesLateLoading; }
+            set { this._AvoidImagesLateLoading = value; }
         }
 
         /// <summary>
@@ -334,8 +333,8 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public bool IsSelectionEnabled
         {
-            get { return _isSelectionEnabled; }
-            set { _isSelectionEnabled = value; }
+            get { return this._IsSelectionEnabled; }
+            set { this._IsSelectionEnabled = value; }
         }
 
         /// <summary>
@@ -343,8 +342,8 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public bool IsContextMenuEnabled
         {
-            get { return _isContextMenuEnabled; }
-            set { _isContextMenuEnabled = value; }
+            get { return this._IsContextMenuEnabled; }
+            set { this._IsContextMenuEnabled = value; }
         }
 
         /// <summary>
@@ -357,8 +356,8 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </example>
         public RPoint ScrollOffset
         {
-            get { return _scrollOffset; }
-            set { _scrollOffset = value; }
+            get { return this._ScrollOffset; }
+            set { this._ScrollOffset = value; }
         }
 
         /// <summary>
@@ -367,8 +366,8 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public RPoint Location
         {
-            get { return _location; }
-            set { _location = value; }
+            get { return this._Location; }
+            set { this._Location = value; }
         }
 
         /// <summary>
@@ -380,8 +379,8 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public RSize MaxSize
         {
-            get { return _maxSize; }
-            set { _maxSize = value; }
+            get { return this._MaxSize; }
+            set { this._MaxSize = value; }
         }
 
         /// <summary>
@@ -389,8 +388,8 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public RSize ActualSize
         {
-            get { return _actualSize; }
-            set { _actualSize = value; }
+            get { return this._ActualSize; }
+            set { this._ActualSize = value; }
         }
 
         public RSize PageSize { get; set; }
@@ -400,11 +399,15 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public int MarginTop
         {
-            get { return _marginTop; }
+            get
+            {
+                return this._MarginTop;
+            }
+
             set
             {
                 if (value > -1)
-                    _marginTop = value;
+                    this._MarginTop = value;
             }
         }
 
@@ -413,11 +416,15 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public int MarginBottom
         {
-            get { return _marginBottom; }
+            get
+            {
+                return this._MarginBottom;
+            }
+
             set
             {
                 if (value > -1)
-                    _marginBottom = value;
+                    this._MarginBottom = value;
             }
         }
 
@@ -426,11 +433,15 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public int MarginLeft
         {
-            get { return _marginLeft; }
+            get
+            {
+                return this._MarginLeft;
+            }
+
             set
             {
                 if (value > -1)
-                    _marginLeft = value;
+                    this._MarginLeft = value;
             }
         }
 
@@ -439,11 +450,15 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public int MarginRight
         {
-            get { return _marginRight; }
+            get
+            {
+                return this._MarginRight;
+            }
+
             set
             {
                 if (value > -1)
-                    _marginRight = value;
+                    this._MarginRight = value;
             }
         }
 
@@ -454,7 +469,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         public void SetMargins(int value)
         {
             if (value > -1)
-                _marginBottom = _marginLeft = _marginTop = _marginRight = value;
+                this._MarginBottom = this._MarginLeft = this._MarginTop = this._MarginRight = value;
         }
 
         /// <summary>
@@ -462,7 +477,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public string SelectedText
         {
-            get { return _selectionHandler.GetSelectedText(); }
+            get { return this.SelectionHandler.GetSelectedText(); }
         }
 
         /// <summary>
@@ -470,7 +485,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public string SelectedHtml
         {
-            get { return _selectionHandler.GetSelectedHtml(); }
+            get { return this.SelectionHandler.GetSelectedHtml(); }
         }
 
         /// <summary>
@@ -478,7 +493,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         internal CssBox Root
         {
-            get { return _root; }
+            get { return this._Root; }
         }
 
         /// <summary>
@@ -486,8 +501,8 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         internal RColor SelectionForeColor
         {
-            get { return _selectionForeColor; }
-            set { _selectionForeColor = value; }
+            get { return this._SelectionForeColor; }
+            set { this._SelectionForeColor = value; }
         }
 
         /// <summary>
@@ -495,8 +510,8 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         internal RColor SelectionBackColor
         {
-            get { return _selectionBackColor; }
-            set { _selectionBackColor = value; }
+            get { return this._SelectionBackColor; }
+            set { this._SelectionBackColor = value; }
         }
 
         /// <summary>
@@ -506,18 +521,18 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// <param name="baseCssData">optional: the stylesheet to init with, init default if not given</param>
         public void SetHtml(string htmlSource, CssData baseCssData = null)
         {
-            Clear();
+            this.Clear();
             if (!string.IsNullOrEmpty(htmlSource))
             {
-                _loadComplete = false;
-                _cssData = baseCssData ?? _adapter.DefaultCssData;
+                this.HasLoadCompleted = false;
+                this._CssData = baseCssData ?? this._Adapter.DefaultCssData;
 
-                DomParser parser = new DomParser(_cssParser);
-                _root = parser.GenerateCssTree(htmlSource, this, ref _cssData);
-                if (_root != null)
+                DomParser parser = new DomParser(this._CssParser);
+                this._Root = parser.GenerateCssTree(htmlSource, this, ref this._CssData);
+                if (this._Root != null)
                 {
-                    _selectionHandler = new SelectionHandler(_root);
-                    _imageDownloader = new ImageDownloader();
+                    this.SelectionHandler = new SelectionHandler(this._Root);
+                    this.ImageDownloader = new ImageDownloader();
                 }
             }
         }
@@ -527,20 +542,20 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public void Clear()
         {
-            if (_root != null)
+            if (this._Root != null)
             {
-                _root.Dispose();
-                _root = null;
+                this._Root.Dispose();
+                this._Root = null;
 
-                if (_selectionHandler != null)
-                    _selectionHandler.Dispose();
-                _selectionHandler = null;
+                if (this.SelectionHandler != null)
+                    this.SelectionHandler.Dispose();
+                this.SelectionHandler = null;
 
-                if (_imageDownloader != null)
-                    _imageDownloader.Dispose();
-                _imageDownloader = null;
+                if (this.ImageDownloader != null)
+                    this.ImageDownloader.Dispose();
+                this.ImageDownloader = null;
 
-                _hoverBoxes = null;
+                this.HoverBoxes = null;
             }
         }
 
@@ -549,10 +564,10 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         public void ClearSelection()
         {
-            if (_selectionHandler != null)
+            if (this.SelectionHandler != null)
             {
-                _selectionHandler.ClearSelection();
-                RequestRefresh(false);
+                this.SelectionHandler.ClearSelection();
+                this.RequestRefresh(false);
             }
         }
 
@@ -563,7 +578,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// <returns>generated html</returns>
         public string GetHtml(HtmlGenerationStyle styleGen = HtmlGenerationStyle.Inline)
         {
-            return DomUtils.GenerateHtml(_root, styleGen);
+            return DomUtils.GenerateHtml(this._Root, styleGen);
         }
 
         /// <summary>
@@ -577,7 +592,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         {
             ArgChecker.AssertArgNotNullOrEmpty(attribute, "attribute");
 
-            var cssBox = DomUtils.GetCssBox(_root, OffsetByScroll(location));
+            var cssBox = DomUtils.GetCssBox(this._Root, this.OffsetByScroll(location));
             return cssBox != null ? DomUtils.GetAttribute(cssBox, attribute) : null;
         }
 
@@ -588,13 +603,14 @@ namespace TheArtOfDev.HtmlRenderer.Core
         public List<LinkElementData<RRect>> GetLinks()
         {
             var linkBoxes = new List<CssBox>();
-            DomUtils.GetAllLinkBoxes(_root, linkBoxes);
+            DomUtils.GetAllLinkBoxes(this._Root, linkBoxes);
 
             var linkElements = new List<LinkElementData<RRect>>();
             foreach (var box in linkBoxes)
             {
                 linkElements.Add(new LinkElementData<RRect>(box.GetAttribute("id"), box.GetAttribute("href"), CommonUtils.GetFirstValueOrDefault(box.Rectangles, box.Bounds)));
             }
+
             return linkElements;
         }
 
@@ -605,7 +621,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// <returns>css link href if exists or null</returns>
         public string GetLinkAt(RPoint location)
         {
-            var link = DomUtils.GetLinkBox(_root, OffsetByScroll(location));
+            var link = DomUtils.GetLinkBox(this._Root, this.OffsetByScroll(location));
             return link != null ? link.HrefLink : null;
         }
 
@@ -620,7 +636,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         {
             ArgChecker.AssertArgNotNullOrEmpty(elementId, "elementId");
 
-            var box = DomUtils.GetBoxById(_root, elementId.ToLower());
+            var box = DomUtils.GetBoxById(this._Root, elementId.ToLower());
             return box != null ? CommonUtils.GetFirstValueOrDefault(box.Rectangles, box.Bounds) : (RRect?)null;
         }
 
@@ -632,26 +648,26 @@ namespace TheArtOfDev.HtmlRenderer.Core
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            _actualSize = RSize.Empty;
-            if (_root != null)
+            this._ActualSize = RSize.Empty;
+            if (this._Root != null)
             {
                 // if width is not restricted we set it to large value to get the actual later
-                _root.Size = new RSize(_maxSize.Width > 0 ? _maxSize.Width : 99999, 0);
-                _root.Location = _location;
-                _root.PerformLayout(g);
+                this._Root.Size = new RSize(this._MaxSize.Width > 0 ? this._MaxSize.Width : 99999, 0);
+                this._Root.Location = this._Location;
+                this._Root.PerformLayout(g);
 
-                if (_maxSize.Width <= 0.1)
+                if (this._MaxSize.Width <= 0.1)
                 {
                     // in case the width is not restricted we need to double layout, first will find the width so second can layout by it (center alignment)
-                    _root.Size = new RSize((int)Math.Ceiling(_actualSize.Width), 0);
-                    _actualSize = RSize.Empty;
-                    _root.PerformLayout(g);
+                    this._Root.Size = new RSize((int)Math.Ceiling(this._ActualSize.Width), 0);
+                    this._ActualSize = RSize.Empty;
+                    this._Root.PerformLayout(g);
                 }
 
-                if (!_loadComplete)
+                if (!this.HasLoadCompleted)
                 {
-                    _loadComplete = true;
-                    EventHandler handler = LoadComplete;
+                    this.HasLoadCompleted = true;
+                    EventHandler handler = this.LoadComplete;
                     if (handler != null)
                         handler(this, EventArgs.Empty);
                 }
@@ -666,18 +682,18 @@ namespace TheArtOfDev.HtmlRenderer.Core
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            if (MaxSize.Height > 0)
+            if (this.MaxSize.Height > 0)
             {
-                g.PushClip(new RRect(_location.X, _location.Y, Math.Min(_maxSize.Width, PageSize.Width), Math.Min(_maxSize.Height, PageSize.Height)));
+                g.PushClip(new RRect(this._Location.X, this._Location.Y, Math.Min(this._MaxSize.Width, this.PageSize.Width), Math.Min(this._MaxSize.Height, this.PageSize.Height)));
             }
             else
             {
-                g.PushClip(new RRect(MarginLeft, MarginTop, PageSize.Width, PageSize.Height));
+                g.PushClip(new RRect(this.MarginLeft, this.MarginTop, this.PageSize.Width, this.PageSize.Height));
             }
 
-            if (_root != null)
+            if (this._Root != null)
             {
-                _root.Paint(g);
+                this._Root.Paint(g);
             }
 
             g.PopClip();
@@ -694,12 +710,12 @@ namespace TheArtOfDev.HtmlRenderer.Core
 
             try
             {
-                if (_selectionHandler != null)
-                    _selectionHandler.HandleMouseDown(parent, OffsetByScroll(location), IsMouseInContainer(location));
+                if (this.SelectionHandler != null)
+                    this.SelectionHandler.HandleMouseDown(parent, this.OffsetByScroll(location), this.IsMouseInContainer(location));
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse down handle", ex);
+                this.ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse down handle", ex);
             }
         }
 
@@ -715,16 +731,16 @@ namespace TheArtOfDev.HtmlRenderer.Core
 
             try
             {
-                if (_selectionHandler != null && IsMouseInContainer(location))
+                if (this.SelectionHandler != null && this.IsMouseInContainer(location))
                 {
-                    var ignore = _selectionHandler.HandleMouseUp(parent, e.LeftButton);
+                    var ignore = this.SelectionHandler.HandleMouseUp(parent, e.LeftButton);
                     if (!ignore && e.LeftButton)
                     {
-                        var loc = OffsetByScroll(location);
-                        var link = DomUtils.GetLinkBox(_root, loc);
+                        var loc = this.OffsetByScroll(location);
+                        var link = DomUtils.GetLinkBox(this._Root, loc);
                         if (link != null)
                         {
-                            HandleLinkClicked(parent, location, link);
+                            this.HandleLinkClicked(parent, location, link);
                         }
                     }
                 }
@@ -735,7 +751,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse up handle", ex);
+                this.ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse up handle", ex);
             }
         }
 
@@ -750,12 +766,12 @@ namespace TheArtOfDev.HtmlRenderer.Core
 
             try
             {
-                if (_selectionHandler != null && IsMouseInContainer(location))
-                    _selectionHandler.SelectWord(parent, OffsetByScroll(location));
+                if (this.SelectionHandler != null && this.IsMouseInContainer(location))
+                    this.SelectionHandler.SelectWord(parent, this.OffsetByScroll(location));
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse double click handle", ex);
+                this.ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse double click handle", ex);
             }
         }
 
@@ -770,9 +786,9 @@ namespace TheArtOfDev.HtmlRenderer.Core
 
             try
             {
-                var loc = OffsetByScroll(location);
-                if (_selectionHandler != null && IsMouseInContainer(location))
-                    _selectionHandler.HandleMouseMove(parent, loc);
+                var loc = this.OffsetByScroll(location);
+                if (this.SelectionHandler != null && this.IsMouseInContainer(location))
+                    this.SelectionHandler.HandleMouseMove(parent, loc);
 
                 /*
                 if( _hoverBoxes != null )
@@ -797,7 +813,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse move handle", ex);
+                this.ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse move handle", ex);
             }
         }
 
@@ -811,12 +827,12 @@ namespace TheArtOfDev.HtmlRenderer.Core
 
             try
             {
-                if (_selectionHandler != null)
-                    _selectionHandler.HandleMouseLeave(parent);
+                if (this.SelectionHandler != null)
+                    this.SelectionHandler.HandleMouseLeave(parent);
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse leave handle", ex);
+                this.ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed mouse leave handle", ex);
             }
         }
 
@@ -832,24 +848,24 @@ namespace TheArtOfDev.HtmlRenderer.Core
 
             try
             {
-                if (e.Control && _selectionHandler != null)
+                if (e.Control && this.SelectionHandler != null)
                 {
                     // select all
                     if (e.AKeyCode)
                     {
-                        _selectionHandler.SelectAll(parent);
+                        this.SelectionHandler.SelectAll(parent);
                     }
 
                     // copy currently selected text
                     if (e.CKeyCode)
                     {
-                        _selectionHandler.CopySelectedHtml();
+                        this.SelectionHandler.CopySelectedHtml();
                     }
                 }
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed key down handle", ex);
+                this.ReportError(HtmlRenderErrorType.KeyboardMouse, "Failed key down handle", ex);
             }
         }
 
@@ -861,13 +877,13 @@ namespace TheArtOfDev.HtmlRenderer.Core
         {
             try
             {
-                EventHandler<HtmlStylesheetLoadEventArgs> handler = StylesheetLoad;
+                EventHandler<HtmlStylesheetLoadEventArgs> handler = this.StylesheetLoad;
                 if (handler != null)
                     handler(this, args);
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.CssParsing, "Failed stylesheet load event", ex);
+                this.ReportError(HtmlRenderErrorType.CssParsing, "Failed stylesheet load event", ex);
             }
         }
 
@@ -879,13 +895,13 @@ namespace TheArtOfDev.HtmlRenderer.Core
         {
             try
             {
-                EventHandler<HtmlImageLoadEventArgs> handler = ImageLoad;
+                EventHandler<HtmlImageLoadEventArgs> handler = this.ImageLoad;
                 if (handler != null)
                     handler(this, args);
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.Image, "Failed image load event", ex);
+                this.ReportError(HtmlRenderErrorType.Image, "Failed image load event", ex);
             }
         }
 
@@ -897,13 +913,13 @@ namespace TheArtOfDev.HtmlRenderer.Core
         {
             try
             {
-                EventHandler<HtmlRefreshEventArgs> handler = Refresh;
+                EventHandler<HtmlRefreshEventArgs> handler = this.Refresh;
                 if (handler != null)
                     handler(this, new HtmlRefreshEventArgs(layout));
             }
             catch (Exception ex)
             {
-                ReportError(HtmlRenderErrorType.General, "Failed refresh request", ex);
+                this.ReportError(HtmlRenderErrorType.General, "Failed refresh request", ex);
             }
         }
 
@@ -917,12 +933,13 @@ namespace TheArtOfDev.HtmlRenderer.Core
         {
             try
             {
-                EventHandler<HtmlRenderErrorEventArgs> handler = RenderError;
+                EventHandler<HtmlRenderErrorEventArgs> handler = this.RenderError;
                 if (handler != null)
                     handler(this, new HtmlRenderErrorEventArgs(type, message, exception));
             }
             catch
-            { }
+            {
+            }
         }
 
         /// <summary>
@@ -933,7 +950,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// <param name="link">the link that was clicked</param>
         internal void HandleLinkClicked(RControl parent, RPoint location, CssBox link)
         {
-            EventHandler<HtmlLinkClickedEventArgs> clickHandler = LinkClicked;
+            EventHandler<HtmlLinkClickedEventArgs> clickHandler = this.LinkClicked;
             if (clickHandler != null)
             {
                 var args = new HtmlLinkClickedEventArgs(link.HrefLink, link.HtmlTag.Attributes);
@@ -945,6 +962,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
                 {
                     throw new HtmlLinkClickedException("Error in link clicked intercept", ex);
                 }
+
                 if (args.Handled)
                     return;
             }
@@ -953,14 +971,14 @@ namespace TheArtOfDev.HtmlRenderer.Core
             {
                 if (link.HrefLink.StartsWith("#") && link.HrefLink.Length > 1)
                 {
-                    EventHandler<HtmlScrollEventArgs> scrollHandler = ScrollChange;
+                    EventHandler<HtmlScrollEventArgs> scrollHandler = this.ScrollChange;
                     if (scrollHandler != null)
                     {
-                        var rect = GetElementRectangle(link.HrefLink.Substring(1));
+                        var rect = this.GetElementRectangle(link.HrefLink.Substring(1));
                         if (rect.HasValue)
                         {
                             scrollHandler(this, new HtmlScrollEventArgs(rect.Value.Location));
-                            HandleMouseMove(parent, location);
+                            this.HandleMouseMove(parent, location);
                         }
                     }
                 }
@@ -983,10 +1001,10 @@ namespace TheArtOfDev.HtmlRenderer.Core
             ArgChecker.AssertArgNotNull(box, "box");
             ArgChecker.AssertArgNotNull(block, "block");
 
-            if (_hoverBoxes == null)
-                _hoverBoxes = new List<HoverBoxBlock>();
+            if (this.HoverBoxes == null)
+                this.HoverBoxes = new List<HoverBoxBlock>();
 
-            _hoverBoxes.Add(new HoverBoxBlock(box, block));
+            this.HoverBoxes.Add(new HoverBoxBlock(box, block));
         }
 
         /// <summary>
@@ -995,7 +1013,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         internal ImageDownloader GetImageDownloader()
         {
-            return _imageDownloader;
+            return this.ImageDownloader;
         }
 
         /// <summary>
@@ -1004,9 +1022,8 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
-
 
         #region Private methods
 
@@ -1017,7 +1034,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// <returns>the adjusted location</returns>
         private RPoint OffsetByScroll(RPoint location)
         {
-            return new RPoint(location.X - ScrollOffset.X, location.Y - ScrollOffset.Y);
+            return new RPoint(location.X - this.ScrollOffset.X, location.Y - this.ScrollOffset.Y);
         }
 
         /// <summary>
@@ -1026,7 +1043,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
         /// </summary>
         private bool IsMouseInContainer(RPoint location)
         {
-            return location.X >= _location.X && location.X <= _location.X + _actualSize.Width && location.Y >= _location.Y + ScrollOffset.Y && location.Y <= _location.Y + ScrollOffset.Y + _actualSize.Height;
+            return location.X >= this._Location.X && location.X <= this._Location.X + this._ActualSize.Width && location.Y >= this._Location.Y + this.ScrollOffset.Y && location.Y <= this._Location.Y + this.ScrollOffset.Y + this._ActualSize.Height;
         }
 
         /// <summary>
@@ -1038,23 +1055,24 @@ namespace TheArtOfDev.HtmlRenderer.Core
             {
                 if (all)
                 {
-                    LinkClicked = null;
-                    Refresh = null;
-                    RenderError = null;
-                    StylesheetLoad = null;
-                    ImageLoad = null;
+                    this.LinkClicked = null;
+                    this.Refresh = null;
+                    this.RenderError = null;
+                    this.StylesheetLoad = null;
+                    this.ImageLoad = null;
                 }
 
-                _cssData = null;
-                if (_root != null)
-                    _root.Dispose();
-                _root = null;
-                if (_selectionHandler != null)
-                    _selectionHandler.Dispose();
-                _selectionHandler = null;
+                this._CssData = null;
+                if (this._Root != null)
+                    this._Root.Dispose();
+                this._Root = null;
+                if (this.SelectionHandler != null)
+                    this.SelectionHandler.Dispose();
+                this.SelectionHandler = null;
             }
             catch
-            { }
+            {
+            }
         }
 
         #endregion

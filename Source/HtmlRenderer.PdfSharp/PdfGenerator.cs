@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -28,7 +28,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
     {
         /// <summary>
         /// Adds a font mapping from <paramref name="fromFamily"/> to <paramref name="toFamily"/> iff the <paramref name="fromFamily"/> is not found.<br/>
-        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing 
+        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing
         /// fonts (installed or added) it will be replaced by <paramref name="toFamily"/>.<br/>
         /// </summary>
         /// <remarks>
@@ -46,7 +46,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
 
         /// <summary>
         /// Parse the given stylesheet to <see cref="CssData"/> object.<br/>
-        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the 
+        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the
         /// default css data (as defined by W3), merged if class name already exists. If false only the data in the given stylesheet is returned.
         /// </summary>
         /// <seealso cref="http://www.w3.org/TR/CSS21/sample.html"/>
@@ -128,11 +128,16 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         public static void AddPdfPages(PdfDocument document, string html, PdfGenerateConfig config, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
         {
             XSize orgPageSize;
+
             // get the size of each page to layout the HTML in
             if (config.PageSize != PageSize.Undefined)
+            {
                 orgPageSize = PageSizeConverter.ToSize(config.PageSize);
+            }
             else
+            {
                 orgPageSize = config.ManualPageSize;
+            }
 
             if (config.PageOrientation == PageOrientation.Landscape)
             {
@@ -147,9 +152,14 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
                 using (var container = new HtmlContainer())
                 {
                     if (stylesheetLoad != null)
+                    {
                         container.StylesheetLoad += stylesheetLoad;
+                    }
+
                     if (imageLoad != null)
+                    {
                         container.ImageLoad += imageLoad;
+                    }
 
                     container.Location = new XPoint(config.MarginLeft, config.MarginTop);
                     container.MaxSize = new XSize(pageSize.Width, 0);
@@ -176,12 +186,13 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
 
                         using (var g = XGraphics.FromPdfPage(page))
                         {
-                            //g.IntersectClip(new XRect(config.MarginLeft, config.MarginTop, pageSize.Width, pageSize.Height));
+                            // g.IntersectClip(new XRect(config.MarginLeft, config.MarginTop, pageSize.Width, pageSize.Height));
                             g.IntersectClip(new XRect(0, 0, page.Width, page.Height));
 
                             container.ScrollOffset = new XPoint(0, scrollOffset);
                             container.PerformPaint(g);
                         }
+
                         scrollOffset -= pageSize.Height;
                     }
 
@@ -190,8 +201,6 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
                 }
             }
         }
-
-
 
         #region Private/Protected methods
 
@@ -219,7 +228,9 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
                             // document links to the same page as the link is not allowed
                             int anchorPageIdx = (int)(anchorRect.Value.Top / pageSize.Height);
                             if (i != anchorPageIdx)
+                            {
                                 document.Pages[i].AddDocumentLink(new PdfRectangle(xRect), anchorPageIdx);
+                            }
                         }
                     }
                     else

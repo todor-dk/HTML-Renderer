@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -15,7 +15,7 @@ using System;
 namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
 {
     /// <summary>
-    /// Stores a set of four floating-point numbers that represent the location and size of a rectangle. 
+    /// Stores a set of four floating-point numbers that represent the location and size of a rectangle.
     /// </summary>
     public struct RRect
     {
@@ -26,14 +26,13 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </summary>
         public static readonly RRect Empty = new RRect();
 
-        private double _height;
-        private double _width;
+        private double _Height;
+        private double _Width;
 
-        private double _x;
-        private double _y;
+        private double _X;
+        private double _Y;
 
         #endregion
-
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RRect" /> class with the specified location and size.
@@ -44,10 +43,10 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <param name="height">The height of the rectangle. </param>
         public RRect(double x, double y, double width, double height)
         {
-            _x = x;
-            _y = y;
-            _width = width;
-            _height = height;
+            this._X = x;
+            this._Y = y;
+            this._Width = width;
+            this._Height = height;
         }
 
         /// <summary>
@@ -57,10 +56,10 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <param name="size">A <see cref="RSize" /> that represents the width and height of the rectangular region.</param>
         public RRect(RPoint location, RSize size)
         {
-            _x = location.X;
-            _y = location.Y;
-            _width = size.Width;
-            _height = size.Height;
+            this._X = location.X;
+            this._Y = location.Y;
+            this._Width = size.Width;
+            this._Height = size.Height;
         }
 
         /// <summary>
@@ -69,11 +68,15 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <returns>A <see cref="RPoint" /> that represents the upper-left corner of this <see cref="RRect" /> structure.</returns>
         public RPoint Location
         {
-            get { return new RPoint(X, Y); }
+            get
+            {
+                return new RPoint(this.X, this.Y);
+            }
+
             set
             {
-                X = value.X;
-                Y = value.Y;
+                this.X = value.X;
+                this.Y = value.Y;
             }
         }
 
@@ -83,11 +86,15 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <returns>A <see cref="RSize" /> that represents the width and height of this <see cref="RRect" /> structure.</returns>
         public RSize Size
         {
-            get { return new RSize(Width, Height); }
+            get
+            {
+                return new RSize(this.Width, this.Height);
+            }
+
             set
             {
-                Width = value.Width;
-                Height = value.Height;
+                this.Width = value.Width;
+                this.Height = value.Height;
             }
         }
 
@@ -99,8 +106,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </returns>
         public double X
         {
-            get { return _x; }
-            set { _x = value; }
+            get { return this._X; }
+            set { this._X = value; }
         }
 
         /// <summary>
@@ -111,8 +118,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </returns>
         public double Y
         {
-            get { return _y; }
-            set { _y = value; }
+            get { return this._Y; }
+            set { this._Y = value; }
         }
 
         /// <summary>
@@ -123,8 +130,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </returns>
         public double Width
         {
-            get { return _width; }
-            set { _width = value; }
+            get { return this._Width; }
+            set { this._Width = value; }
         }
 
         /// <summary>
@@ -135,8 +142,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </returns>
         public double Height
         {
-            get { return _height; }
-            set { _height = value; }
+            get { return this._Height; }
+            set { this._Height = value; }
         }
 
         /// <summary>
@@ -147,7 +154,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </returns>
         public double Left
         {
-            get { return X; }
+            get { return this.X; }
         }
 
         /// <summary>
@@ -158,7 +165,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </returns>
         public double Top
         {
-            get { return Y; }
+            get { return this.Y; }
         }
 
         /// <summary>
@@ -175,7 +182,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </returns>
         public double Right
         {
-            get { return X + Width; }
+            get { return this.X + this.Width; }
         }
 
         /// <summary>
@@ -192,7 +199,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </returns>
         public double Bottom
         {
-            get { return Y + Height; }
+            get { return this.Y + this.Height; }
         }
 
         /// <summary>
@@ -211,8 +218,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         {
             get
             {
-                if (Width > 0.0)
-                    return Height <= 0.0;
+                if (this.Width > 0.0)
+                    return this.Height <= 0.0;
                 else
                     return true;
             }
@@ -289,8 +296,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
             if (!(obj is RRect))
                 return false;
             var rectangleF = (RRect)obj;
-            if (Math.Abs(rectangleF.X - X) < 0.001 && Math.Abs(rectangleF.Y - Y) < 0.001 && Math.Abs(rectangleF.Width - Width) < 0.001)
-                return Math.Abs(rectangleF.Height - Height) < 0.001;
+            if (Math.Abs(rectangleF.X - this.X) < 0.001 && Math.Abs(rectangleF.Y - this.Y) < 0.001 && Math.Abs(rectangleF.Width - this.Width) < 0.001)
+                return Math.Abs(rectangleF.Height - this.Height) < 0.001;
             else
                 return false;
         }
@@ -307,8 +314,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <param name="y">The y-coordinate of the point to test. </param>
         public bool Contains(double x, double y)
         {
-            if (X <= x && x < X + Width && Y <= y)
-                return y < Y + Height;
+            if (this.X <= x && x < this.X + this.Width && this.Y <= y)
+                return y < this.Y + this.Height;
             else
                 return false;
         }
@@ -324,7 +331,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <param name="pt">The <see cref="RPoint" /> to test.</param>
         public bool Contains(RPoint pt)
         {
-            return Contains(pt.X, pt.Y);
+            return this.Contains(pt.X, pt.Y);
         }
 
         /// <summary>
@@ -342,8 +349,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </param>
         public bool Contains(RRect rect)
         {
-            if (X <= rect.X && rect.X + rect.Width <= X + Width && Y <= rect.Y)
-                return rect.Y + rect.Height <= Y + Height;
+            if (this.X <= rect.X && rect.X + rect.Width <= this.X + this.Width && this.Y <= rect.Y)
+                return rect.Y + rect.Height <= this.Y + this.Height;
             else
                 return false;
         }
@@ -359,10 +366,10 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </param>
         public void Inflate(double x, double y)
         {
-            X -= x;
-            Y -= y;
-            Width += 2f * x;
-            Height += 2f * y;
+            this.X -= x;
+            this.Y -= y;
+            this.Width += 2f * x;
+            this.Height += 2f * y;
         }
 
         /// <summary>
@@ -371,7 +378,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <param name="size">The amount to inflate this rectangle. </param>
         public void Inflate(RSize size)
         {
-            Inflate(size.Width, size.Height);
+            this.Inflate(size.Width, size.Height);
         }
 
         /// <summary>
@@ -402,10 +409,10 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         public void Intersect(RRect rect)
         {
             RRect rectangleF = Intersect(rect, this);
-            X = rectangleF.X;
-            Y = rectangleF.Y;
-            Width = rectangleF.Width;
-            Height = rectangleF.Height;
+            this.X = rectangleF.X;
+            this.Y = rectangleF.Y;
+            this.Width = rectangleF.Width;
+            this.Height = rectangleF.Height;
         }
 
         /// <summary>
@@ -440,8 +447,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <param name="rect">The rectangle to test. </param>
         public bool IntersectsWith(RRect rect)
         {
-            if (rect.X < X + Width && X < rect.X + rect.Width && rect.Y < Y + Height)
-                return Y < rect.Y + rect.Height;
+            if (rect.X < this.X + this.Width && this.X < rect.X + rect.Width && rect.Y < this.Y + this.Height)
+                return this.Y < rect.Y + rect.Height;
             else
                 return false;
         }
@@ -469,7 +476,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <param name="pos">The amount to offset the location. </param>
         public void Offset(RPoint pos)
         {
-            Offset(pos.X, pos.Y);
+            this.Offset(pos.X, pos.Y);
         }
 
         /// <summary>
@@ -479,8 +486,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <param name="y">The amount to offset the location vertically. </param>
         public void Offset(double x, double y)
         {
-            X += x;
-            Y += y;
+            this.X += x;
+            this.Y += y;
         }
 
         /// <summary>
@@ -489,7 +496,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <returns>The hash code for this <see cref="RRect" /></returns>
         public override int GetHashCode()
         {
-            return (int)(uint)X ^ ((int)(uint)Y << 13 | (int)((uint)Y >> 19)) ^ ((int)(uint)Width << 26 | (int)((uint)Width >> 6)) ^ ((int)(uint)Height << 7 | (int)((uint)Height >> 25));
+            return (int)(uint)this.X ^ ((int)(uint)this.Y << 13 | (int)((uint)this.Y >> 19)) ^ ((int)(uint)this.Width << 26 | (int)((uint)this.Width >> 6)) ^ ((int)(uint)this.Height << 7 | (int)((uint)this.Height >> 25));
         }
 
         /// <summary>
@@ -500,7 +507,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </returns>
         public override string ToString()
         {
-            return "{X=" + X + ",Y=" + Y + ",Width=" + Width + ",Height=" + Height + "}";
+            return "{X=" + this.X + ",Y=" + this.Y + ",Width=" + this.Width + ",Height=" + this.Height + "}";
         }
     }
 }

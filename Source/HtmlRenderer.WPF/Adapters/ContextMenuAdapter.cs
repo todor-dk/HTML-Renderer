@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -30,27 +30,26 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// <summary>
         /// the underline WPF context menu
         /// </summary>
-        private readonly ContextMenu _contextMenu;
+        private readonly ContextMenu ContextMenu;
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         public ContextMenuAdapter()
         {
-            _contextMenu = new ContextMenu();
+            this.ContextMenu = new ContextMenu();
         }
 
         public override int ItemsCount
         {
-            get { return _contextMenu.Items.Count; }
+            get { return this.ContextMenu.Items.Count; }
         }
 
         public override void AddDivider()
         {
-            _contextMenu.Items.Add(new Separator());
+            this.ContextMenu.Items.Add(new Separator());
         }
 
         public override void AddItem(string text, bool enabled, EventHandler onClick)
@@ -62,27 +61,29 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
             item.Header = text;
             item.IsEnabled = enabled;
             item.Click += new RoutedEventHandler(onClick);
-            _contextMenu.Items.Add(item);
+            this.ContextMenu.Items.Add(item);
         }
 
         public override void RemoveLastDivider()
         {
-            if (_contextMenu.Items[_contextMenu.Items.Count - 1].GetType() == typeof(Separator))
-                _contextMenu.Items.RemoveAt(_contextMenu.Items.Count - 1);
+            if (this.ContextMenu.Items[this.ContextMenu.Items.Count - 1].GetType() == typeof(Separator))
+            {
+                this.ContextMenu.Items.RemoveAt(this.ContextMenu.Items.Count - 1);
+            }
         }
 
         public override void Show(RControl parent, RPoint location)
         {
-            _contextMenu.PlacementTarget = ((ControlAdapter)parent).Control;
-            _contextMenu.PlacementRectangle = new Rect(Utils.ConvertRound(location), Size.Empty);
-            _contextMenu.IsOpen = true;
+            this.ContextMenu.PlacementTarget = ((ControlAdapter)parent).Control;
+            this.ContextMenu.PlacementRectangle = new Rect(Utils.ConvertRound(location), Size.Empty);
+            this.ContextMenu.IsOpen = true;
         }
 
         public override void Dispose()
         {
-            _contextMenu.IsOpen = false;
-            _contextMenu.PlacementTarget = null;
-            _contextMenu.Items.Clear();
+            this.ContextMenu.IsOpen = false;
+            this.ContextMenu.PlacementTarget = null;
+            this.ContextMenu.Items.Clear();
         }
     }
 }

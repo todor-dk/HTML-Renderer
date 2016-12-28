@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -31,18 +31,17 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
         /// <summary>
         /// the private font used for the demo
         /// </summary>
-        //private readonly PrivateFontCollection _privateFont = new PrivateFontCollection();
-
+        // private readonly PrivateFontCollection _privateFont = new PrivateFontCollection();
         #endregion
         public DemoWindow()
         {
             SamplesLoader.Init("WPF", typeof(HtmlRender).Assembly.GetName().Version.ToString());
 
-            InitializeComponent();
+            this.InitializeComponent();
 
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            Width = SystemParameters.PrimaryScreenWidth * 0.7;
-            Height = SystemParameters.PrimaryScreenHeight * 0.8;
+            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            this.Width = SystemParameters.PrimaryScreenWidth * 0.7;
+            this.Height = SystemParameters.PrimaryScreenHeight * 0.8;
 
             LoadCustomFonts();
         }
@@ -67,8 +66,8 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
         {
             var w = new SampleWindow();
             w.Owner = this;
-            w.Width = Width * 0.8;
-            w.Height = Height * 0.8;
+            w.Width = this.Width * 0.8;
+            w.Height = this.Height * 0.8;
             w.ShowDialog();
         }
 
@@ -77,7 +76,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
         /// </summary>
         private void OnShowIEView_ButtonClick(object sender, EventArgs e)
         {
-            _mainControl.ShowWebBrowserView(_showIEView.IsChecked.GetValueOrDefault(false));
+            this._mainControl.ShowWebBrowserView(this._showIEView.IsChecked.GetValueOrDefault(false));
         }
 
         /// <summary>
@@ -86,7 +85,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
         private void OnOpenInExternalView_Click(object sender, EventArgs e)
         {
             var tmpFile = Path.ChangeExtension(Path.GetTempFileName(), ".htm");
-            File.WriteAllText(tmpFile, _mainControl.GetHtml());
+            File.WriteAllText(tmpFile, this._mainControl.GetHtml());
             Process.Start(tmpFile);
         }
 
@@ -95,8 +94,8 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
         /// </summary>
         private void OnUseGeneratedHtml_Click(object sender, EventArgs e)
         {
-            _mainControl.UseGeneratedHtml = _useGeneratedHtml.IsChecked.GetValueOrDefault(false);
-            _mainControl.UpdateWebBrowserHtml();
+            this._mainControl.UseGeneratedHtml = this._useGeneratedHtml.IsChecked.GetValueOrDefault(false);
+            this._mainControl.UpdateWebBrowserHtml();
         }
 
         /// <summary>
@@ -104,10 +103,10 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
         /// </summary>
         private void OnGenerateImage_Click(object sender, RoutedEventArgs e)
         {
-            var w = new GenerateImageWindow(_mainControl.GetHtml());
+            var w = new GenerateImageWindow(this._mainControl.GetHtml());
             w.Owner = this;
-            w.Width = Width * 0.8;
-            w.Height = Height * 0.8;
+            w.Width = this.Width * 0.8;
+            w.Height = this.Height * 0.8;
             w.ShowDialog();
         }
 
@@ -116,26 +115,27 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
         /// </summary>
         private void OnRunPerformance_Click(object sender, EventArgs e)
         {
-            _mainControl.UpdateLock = true;
-            _toolBar.IsEnabled = false;
+            this._mainControl.UpdateLock = true;
+            this._toolBar.IsEnabled = false;
             ApplicationDoEvents();
 
             var msg = DemoUtils.RunSamplesPerformanceTest(html =>
             {
-                _mainControl.SetHtml(html);
+                this._mainControl.SetHtml(html);
                 ApplicationDoEvents(); // so paint will be called
             });
 
             Clipboard.SetDataObject(msg);
             MessageBox.Show(msg, "Test run results");
 
-            _mainControl.UpdateLock = false;
-            _toolBar.IsEnabled = true;
+            this._mainControl.UpdateLock = false;
+            this._toolBar.IsEnabled = true;
         }
 
         private static void ApplicationDoEvents()
         {
-            Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new Action<bool>(delegate { }), false);
+            // Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, new Action<bool>(delegate { }), false);
+            Application.Current.Dispatcher.Invoke(DispatcherPriority.Background, (Action)(() => { }), false);
         }
     }
 }

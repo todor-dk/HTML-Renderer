@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -33,7 +33,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
     /// Handler for downloading images from the web.<br/>
     /// Single instance of the handler used for all images downloaded in a single html, this way if the html contains more
     /// than one reference to the same image it will be downloaded only once.<br/>
-    /// Also handles corrupt, partial and canceled downloads by first downloading to temp file and only if successful moving to cached 
+    /// Also handles corrupt, partial and canceled downloads by first downloading to temp file and only if successful moving to cached
     /// file location.
     /// </summary>
     internal sealed class ImageDownloader : IDisposable
@@ -41,12 +41,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <summary>
         /// the web client used to download image from URL (to cancel on dispose)
         /// </summary>
-        private readonly List<WebClient> _clients = new List<WebClient>();
+        private readonly List<WebClient> Clients = new List<WebClient>();
 
         /// <summary>
-        /// dictionary of image cache path to callbacks of download to handle multiple requests to download the same image 
+        /// dictionary of image cache path to callbacks of download to handle multiple requests to download the same image
         /// </summary>
-        private readonly Dictionary<string, List<DownloadFileAsyncCallback>> _imageDownloadCallbacks = new Dictionary<string, List<DownloadFileAsyncCallback>>();
+        private readonly Dictionary<string, List<DownloadFileAsyncCallback>> ImageDownloadCallbacks = new Dictionary<string, List<DownloadFileAsyncCallback>>();
 
         /// <summary>
         /// Makes a request to download the image from the server and raises the <see cref="cachedFileCallback"/> when it's down.<br/>
@@ -62,16 +62,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
 
             // to handle if the file is already been downloaded
             bool download = true;
-            lock (_imageDownloadCallbacks)
+            lock (this.ImageDownloadCallbacks)
             {
-                if (_imageDownloadCallbacks.ContainsKey(filePath))
+                if (this.ImageDownloadCallbacks.ContainsKey(filePath))
                 {
                     download = false;
-                    _imageDownloadCallbacks[filePath].Add(cachedFileCallback);
+                    this.ImageDownloadCallbacks[filePath].Add(cachedFileCallback);
                 }
                 else
                 {
-                    _imageDownloadCallbacks[filePath] = new List<DownloadFileAsyncCallback> { cachedFileCallback };
+                    this.ImageDownloadCallbacks[filePath] = new List<DownloadFileAsyncCallback> { cachedFileCallback };
                 }
             }
 
@@ -79,9 +79,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             {
                 var tempPath = Path.GetTempFileName();
                 if (async)
-                    ThreadPool.QueueUserWorkItem(DownloadImageFromUrlAsync, new DownloadData(imageUri, tempPath, filePath));
+                    ThreadPool.QueueUserWorkItem(this.DownloadImageFromUrlAsync, new DownloadData(imageUri, tempPath, filePath));
                 else
-                    DownloadImageFromUrl(imageUri, tempPath, filePath);
+                    this.DownloadImageFromUrl(imageUri, tempPath, filePath);
             }
         }
 
@@ -90,9 +90,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// </summary>
         public void Dispose()
         {
-            ReleaseObjects();
+            this.ReleaseObjects();
         }
-
 
         #region Private/Protected methods
 
@@ -106,14 +105,14 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             {
                 using (var client = new WebClient())
                 {
-                    _clients.Add(client);
+                    this.Clients.Add(client);
                     client.DownloadFile(source, tempPath);
-                    OnDownloadImageCompleted(client, source, tempPath, filePath, null, false);
+                    this.OnDownloadImageCompleted(client, source, tempPath, filePath, null, false);
                 }
             }
             catch (Exception ex)
             {
-                OnDownloadImageCompleted(null, source, tempPath, filePath, ex, false);
+                this.OnDownloadImageCompleted(null, source, tempPath, filePath, ex, false);
             }
         }
 
@@ -128,13 +127,13 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             try
             {
                 var client = new WebClient();
-                _clients.Add(client);
-                client.DownloadFileCompleted += OnDownloadImageAsyncCompleted;
-                client.DownloadFileAsync(downloadData._uri, downloadData._tempPath, downloadData);
+                this.Clients.Add(client);
+                client.DownloadFileCompleted += this.OnDownloadImageAsyncCompleted;
+                client.DownloadFileAsync(downloadData.Uri, downloadData.TempPath, downloadData);
             }
             catch (Exception ex)
             {
-                OnDownloadImageCompleted(null, downloadData._uri, downloadData._tempPath, downloadData._filePath, ex, false);
+                this.OnDownloadImageCompleted(null, downloadData.Uri, downloadData.TempPath, downloadData.FilePath, ex, false);
             }
         }
 
@@ -149,18 +148,18 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             {
                 using (var client = (WebClient)sender)
                 {
-                    client.DownloadFileCompleted -= OnDownloadImageAsyncCompleted;
-                    OnDownloadImageCompleted(client, downloadData._uri, downloadData._tempPath, downloadData._filePath, e.Error, e.Cancelled);
+                    client.DownloadFileCompleted -= this.OnDownloadImageAsyncCompleted;
+                    this.OnDownloadImageCompleted(client, downloadData.Uri, downloadData.TempPath, downloadData.FilePath, e.Error, e.Cancelled);
                 }
             }
             catch (Exception ex)
             {
-                OnDownloadImageCompleted(null, downloadData._uri, downloadData._tempPath, downloadData._filePath, ex, false);
+                this.OnDownloadImageCompleted(null, downloadData.Uri, downloadData.TempPath, downloadData.FilePath, ex, false);
             }
         }
 
         /// <summary>
-        /// Checks if the file was downloaded and raises the cachedFileCallback from <see cref="_imageDownloadCallbacks"/>
+        /// Checks if the file was downloaded and raises the cachedFileCallback from <see cref="ImageDownloadCallbacks"/>
         /// </summary>
         private void OnDownloadImageCompleted(WebClient client, Uri source, string tempPath, string filePath, Exception error, bool cancelled)
         {
@@ -173,7 +172,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                     {
                         error = new Exception("Failed to load image, not image content type: " + contentType);
                     }
-
                 }
 
                 if (error == null)
@@ -195,10 +193,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             }
 
             List<DownloadFileAsyncCallback> callbacksList;
-            lock (_imageDownloadCallbacks)
+            lock (this.ImageDownloadCallbacks)
             {
-                if (_imageDownloadCallbacks.TryGetValue(filePath, out callbacksList))
-                    _imageDownloadCallbacks.Remove(filePath);
+                if (this.ImageDownloadCallbacks.TryGetValue(filePath, out callbacksList))
+                    this.ImageDownloadCallbacks.Remove(filePath);
             }
 
             if (callbacksList != null)
@@ -210,7 +208,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                         cachedFileCallback(source, filePath, error, cancelled);
                     }
                     catch
-                    { }
+                    {
+                    }
                 }
             }
         }
@@ -220,37 +219,37 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// </summary>
         private void ReleaseObjects()
         {
-            _imageDownloadCallbacks.Clear();
-            while (_clients.Count > 0)
+            this.ImageDownloadCallbacks.Clear();
+            while (this.Clients.Count > 0)
             {
                 try
                 {
-                    var client = _clients[0];
+                    var client = this.Clients[0];
                     client.CancelAsync();
                     client.Dispose();
-                    _clients.RemoveAt(0);
+                    this.Clients.RemoveAt(0);
                 }
                 catch
-                { }
+                {
+                }
             }
         }
 
         #endregion
 
-
         #region Inner class: DownloadData
 
         private sealed class DownloadData
         {
-            public readonly Uri _uri;
-            public readonly string _tempPath;
-            public readonly string _filePath;
+            public readonly Uri Uri;
+            public readonly string TempPath;
+            public readonly string FilePath;
 
             public DownloadData(Uri uri, string tempPath, string filePath)
             {
-                _uri = uri;
-                _tempPath = tempPath;
-                _filePath = filePath;
+                this.Uri = uri;
+                this.TempPath = tempPath;
+                this.FilePath = filePath;
             }
         }
 

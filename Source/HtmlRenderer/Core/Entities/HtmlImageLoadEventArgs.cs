@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -21,7 +21,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
     /// Callback used in <see cref="HtmlImageLoadEventArgs"/> to allow setting image externally and async.<br/>
     /// The callback can provide path to image file path, URL or the actual image to use.<br/>
     /// If <paramref name="imageRectangle"/> is given (not <see cref="RRect.Empty"/>) then only the specified rectangle will
-    /// be used from the loaded image and not all of it, also the rectangle will be used for size and not the actual image size.<br/> 
+    /// be used from the loaded image and not all of it, also the rectangle will be used for size and not the actual image size.<br/>
     /// </summary>
     /// <param name="path">the path to the image to load (file path or URL)</param>
     /// <param name="image">the image to use</param>
@@ -33,7 +33,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
     /// Allows to overwrite the loaded image by providing the image object manually, or different source (file or URL) to load from.<br/>
     /// Example: image 'src' can be non-valid string that is interpreted in the overwrite delegate by custom logic to resource image object<br/>
     /// Example: image 'src' in the html is relative - the overwrite intercepts the load and provide full source URL to load the image from<br/>
-    /// Example: image download requires authentication - the overwrite intercepts the load, downloads the image to disk using custom code and 
+    /// Example: image download requires authentication - the overwrite intercepts the load, downloads the image to disk using custom code and
     /// provide file path to load the image from. Can also use the asynchronous image overwrite not to block HTML rendering is applicable.<br/>
     /// If no alternative data is provided the original source will be used.<br/>
     /// </summary>
@@ -44,25 +44,24 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <summary>
         /// use to cancel the image loading by html renderer, the provided image will be used.
         /// </summary>
-        private bool _handled;
+        private bool _Handled;
 
         /// <summary>
         /// the source of the image (file path or uri)
         /// </summary>
-        private readonly string _src;
+        private readonly string _Src;
 
         /// <summary>
         /// collection of all the attributes that are defined on the image element
         /// </summary>
-        private readonly Dictionary<string, string> _attributes;
+        private readonly Dictionary<string, string> _Attributes;
 
         /// <summary>
         /// Callback used to allow setting image externally and async.
         /// </summary>
-        private readonly HtmlImageLoadCallback _callback;
+        private readonly HtmlImageLoadCallback LoadCallback;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -72,9 +71,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <param name="callback">Callback used to allow setting image externally and async.</param>
         internal HtmlImageLoadEventArgs(string src, Dictionary<string, string> attributes, HtmlImageLoadCallback callback)
         {
-            _src = src;
-            _attributes = attributes;
-            _callback = callback;
+            this._Src = src;
+            this._Attributes = attributes;
+            this.LoadCallback = callback;
         }
 
         /// <summary>
@@ -82,7 +81,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public string Src
         {
-            get { return _src; }
+            get { return this._Src; }
         }
 
         /// <summary>
@@ -90,7 +89,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public Dictionary<string, string> Attributes
         {
-            get { return _attributes; }
+            get { return this._Attributes; }
         }
 
         /// <summary>
@@ -99,8 +98,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public bool Handled
         {
-            get { return _handled; }
-            set { _handled = value; }
+            get { return this._Handled; }
+            set { this._Handled = value; }
         }
 
         /// <summary>
@@ -109,8 +108,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public void Callback()
         {
-            _handled = true;
-            _callback(null, null, new RRect());
+            this._Handled = true;
+            this.LoadCallback(null, null, new RRect());
         }
 
         /// <summary>
@@ -122,15 +121,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         {
             ArgChecker.AssertArgNotNullOrEmpty(path, "path");
 
-            _handled = true;
-            _callback(path, null, RRect.Empty);
+            this._Handled = true;
+            this.LoadCallback(path, null, RRect.Empty);
         }
 
         /// <summary>
         /// Callback to overwrite the loaded image with image to load from given URI.<br/>
         /// Can be called directly from delegate handler or asynchronously after setting <see cref="Handled"/> to True.<br/>
-        /// Only the specified rectangle (x,y,width,height) will be used from the loaded image and not all of it, also 
-        /// the rectangle will be used for size and not the actual image size.<br/> 
+        /// Only the specified rectangle (x,y,width,height) will be used from the loaded image and not all of it, also
+        /// the rectangle will be used for size and not the actual image size.<br/>
         /// </summary>
         /// <param name="path">the path to the image to load (file path or URL)</param>
         /// <param name="imageRectangle">optional: limit to specific rectangle of the image and not all of it</param>
@@ -138,30 +137,30 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         {
             ArgChecker.AssertArgNotNullOrEmpty(path, "path");
 
-            _handled = true;
-            _callback(path, null, new RRect(x, y, width, height));
+            this._Handled = true;
+            this.LoadCallback(path, null, new RRect(x, y, width, height));
         }
 
         /// <summary>
         /// Callback to overwrite the loaded image with given image object.<br/>
         /// Can be called directly from delegate handler or asynchronously after setting <see cref="Handled"/> to True.<br/>
         /// If <paramref name="imageRectangle"/> is given (not <see cref="RRect.Empty"/>) then only the specified rectangle will
-        /// be used from the loaded image and not all of it, also the rectangle will be used for size and not the actual image size.<br/> 
+        /// be used from the loaded image and not all of it, also the rectangle will be used for size and not the actual image size.<br/>
         /// </summary>
         /// <param name="image">the image to load</param>
         public void Callback(Object image)
         {
             ArgChecker.AssertArgNotNull(image, "image");
 
-            _handled = true;
-            _callback(null, image, RRect.Empty);
+            this._Handled = true;
+            this.LoadCallback(null, image, RRect.Empty);
         }
 
         /// <summary>
         /// Callback to overwrite the loaded image with given image object.<br/>
         /// Can be called directly from delegate handler or asynchronously after setting <see cref="Handled"/> to True.<br/>
-        /// Only the specified rectangle (x,y,width,height) will be used from the loaded image and not all of it, also 
-        /// the rectangle will be used for size and not the actual image size.<br/> 
+        /// Only the specified rectangle (x,y,width,height) will be used from the loaded image and not all of it, also
+        /// the rectangle will be used for size and not the actual image size.<br/>
         /// </summary>
         /// <param name="image">the image to load</param>
         /// <param name="imageRectangle">optional: limit to specific rectangle of the image and not all of it</param>
@@ -169,8 +168,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         {
             ArgChecker.AssertArgNotNull(image, "image");
 
-            _handled = true;
-            _callback(null, image, new RRect(x, y, width, height));
+            this._Handled = true;
+            this.LoadCallback(null, image, new RRect(x, y, width, height));
         }
     }
 }

@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -36,7 +36,10 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Utilities
         {
             XPoint[] myPoints = new XPoint[points.Length];
             for (int i = 0; i < points.Length; i++)
+            {
                 myPoints[i] = Convert(points[i]);
+            }
+
             return myPoints;
         }
 
@@ -95,6 +98,5 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Utilities
         {
             return RColor.FromArgb(c.A, c.R, c.G, c.B);
         }
-
     }
 }

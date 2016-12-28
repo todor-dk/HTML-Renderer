@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -39,11 +39,13 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                 if (line.Value.Contains(location))
                     return true;
             }
+
             foreach (var childBox in box.Boxes)
             {
                 if (IsInBox(childBox, location))
                     return true;
             }
+
             return false;
         }
 
@@ -109,6 +111,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                     return (sib.Display == CssConstants.None || sib.Position == CssConstants.Fixed) ? null : sib;
                 }
             }
+
             return null;
         }
 
@@ -125,6 +128,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                 conBlock = conBlock.ParentBox;
                 index = conBlock.ParentBox != null ? conBlock.ParentBox.Boxes.IndexOf(conBlock) : -1;
             }
+
             conBlock = conBlock.ParentBox;
             if (conBlock != null && index > 0)
             {
@@ -138,6 +142,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
 
                 return sib.Display == CssConstants.None ? null : sib;
             }
+
             return null;
         }
 
@@ -153,6 +158,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                 if (sib != null && sib.IsInline)
                     return true;
             }
+
             return false;
         }
 
@@ -174,9 +180,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                         sib = pSib;
                         break;
                     }
+
                     index++;
                 }
             }
+
             return sib;
         }
 
@@ -195,6 +203,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                 value = box.GetAttribute(attribute, null);
                 box = box.ParentBox;
             }
+
             return value;
         }
 
@@ -405,6 +414,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                     }
                 }
             }
+
             return null;
         }
 
@@ -420,6 +430,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
             {
                 box = box.ParentBox;
             }
+
             foreach (var lineBox in box.LineBoxes)
             {
                 foreach (var lineWord in lineBox.Words)
@@ -430,6 +441,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                     }
                 }
             }
+
             return box.LineBoxes[0];
         }
 
@@ -462,6 +474,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                 var selectionRoot = onlySelected ? GetSelectionRoot(root, selectedBoxes) : null;
                 WriteHtml(root.HtmlContainer.CssParser, sb, root, styleGen, selectedBoxes, selectionRoot);
             }
+
             return sb.ToString();
         }
 
@@ -477,7 +490,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
             GenerateBoxTree(root, sb, 0);
             return sb.ToString();
         }
-
 
         #region Private methods
 
@@ -631,6 +643,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                             foundRoot = true;
                             break;
                         }
+
                         selectedChild = childBox;
                     }
                 }
@@ -671,6 +684,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                 if (childBox.HtmlTag != null || ContainsNamedBox(childBox))
                     return true;
             }
+
             return false;
         }
 
@@ -750,8 +764,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
             {
                 // TODO:a handle selectors
                 foreach (var cssBlock in tagCssBlock)
+                {
                     foreach (var prop in cssBlock.Properties)
                         tagStyles[prop.Key] = prop.Value;
+                }
             }
 
             if (box.HtmlTag.HasAttributes())
@@ -775,8 +791,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                         {
                             // TODO:a handle selectors
                             foreach (var cssBlock in cssBlocks)
+                            {
                                 foreach (var prop in cssBlock.Properties)
                                     tagStyles[prop.Key] = prop.Value;
+                            }
                         }
                     }
                     else
@@ -833,7 +851,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                 if (!isDefault)
                     cleanTagStyles[style.Key] = style.Value;
             }
+
             return cleanTagStyles;
+
             // ReSharper restore PossibleMultipleEnumeration
         }
 
@@ -857,9 +877,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                         sb.AppendFormat("{0}: {1};", property.Key, property.Value);
                     }
                 }
+
                 sb.Append(" }");
                 sb.AppendLine();
             }
+
             sb.AppendLine("</style>");
         }
 
@@ -910,6 +932,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                 {
                     GenerateBoxTree(childBox, builder, indent + 1);
                 }
+
                 builder.AppendFormat("{0}</{1}>\r\n", new string(' ', 2 * indent), box.Display);
             }
         }

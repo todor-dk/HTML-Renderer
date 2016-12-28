@@ -6,10 +6,9 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
-
 
 using System;
 using System.Collections.Generic;
@@ -24,7 +23,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
 {
     /// <summary>
     /// Platform adapter to bridge platform specific objects to HTML Renderer core library.<br/>
-    /// Core uses abstract renderer objects (RAdapter/RControl/REtc...) to access platform specific functionality, the concrete platforms 
+    /// Core uses abstract renderer objects (RAdapter/RControl/REtc...) to access platform specific functionality, the concrete platforms
     /// implements those objects to provide concrete platform implementation. Those allowing the core library to be platform agnostic.
     /// <para>
     /// Platforms: WinForms, WPF, Metro, PDF renders, etc.<br/>
@@ -42,42 +41,41 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <summary>
         /// cache of brush color to brush instance
         /// </summary>
-        private readonly Dictionary<RColor, RBrush> _brushesCache = new Dictionary<RColor, RBrush>();
+        private readonly Dictionary<RColor, RBrush> BrushesCache = new Dictionary<RColor, RBrush>();
 
         /// <summary>
         /// cache of pen color to pen instance
         /// </summary>
-        private readonly Dictionary<RColor, RPen> _penCache = new Dictionary<RColor, RPen>();
+        private readonly Dictionary<RColor, RPen> PenCache = new Dictionary<RColor, RPen>();
 
         /// <summary>
         /// cache of all the font used not to create same font again and again
         /// </summary>
-        private readonly FontsHandler _fontsHandler;
+        private readonly FontsHandler FontsHandler;
 
         /// <summary>
         /// default CSS parsed data singleton
         /// </summary>
-        private CssData _defaultCssData;
+        private CssData _DefaultCssData;
 
         /// <summary>
         /// image used to draw loading image icon
         /// </summary>
-        private RImage _loadImage;
+        private RImage LoadImage;
 
         /// <summary>
         /// image used to draw error image icon
         /// </summary>
-        private RImage _errorImage;
+        private RImage ErrorImage;
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         protected RAdapter()
         {
-            _fontsHandler = new FontsHandler(this);
+            this.FontsHandler = new FontsHandler(this);
         }
 
         /// <summary>
@@ -85,7 +83,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// </summary>
         public CssData DefaultCssData
         {
-            get { return _defaultCssData ?? (_defaultCssData = CssData.Parse(this, CssDefaults.DefaultStyleSheet, false)); }
+            get { return this._DefaultCssData ?? (this._DefaultCssData = CssData.Parse(this, CssDefaults.DefaultStyleSheet, false)); }
         }
 
         /// <summary>
@@ -96,7 +94,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         public RColor GetColor(string colorName)
         {
             ArgChecker.AssertArgNotNullOrEmpty(colorName, "colorName");
-            return GetColorInt(colorName);
+            return this.GetColorInt(colorName);
         }
 
         /// <summary>
@@ -107,10 +105,11 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         public RPen GetPen(RColor color)
         {
             RPen pen;
-            if (!_penCache.TryGetValue(color, out pen))
+            if (!this.PenCache.TryGetValue(color, out pen))
             {
-                _penCache[color] = pen = CreatePen(color);
+                this.PenCache[color] = pen = this.CreatePen(color);
             }
+
             return pen;
         }
 
@@ -122,10 +121,11 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         public RBrush GetSolidBrush(RColor color)
         {
             RBrush brush;
-            if (!_brushesCache.TryGetValue(color, out brush))
+            if (!this.BrushesCache.TryGetValue(color, out brush))
             {
-                _brushesCache[color] = brush = CreateSolidBrush(color);
+                this.BrushesCache[color] = brush = this.CreateSolidBrush(color);
             }
+
             return brush;
         }
 
@@ -139,7 +139,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>linear gradient color brush instance</returns>
         public RBrush GetLinearGradientBrush(RRect rect, RColor color1, RColor color2, double angle)
         {
-            return CreateLinearGradientBrush(rect, color1, color2, angle);
+            return this.CreateLinearGradientBrush(rect, color1, color2, angle);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         public RImage ConvertImage(object image)
         {
             // TODO:a remove this by creating better API.
-            return ConvertImageInt(image);
+            return this.ConvertImageInt(image);
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>new image instance</returns>
         public RImage ImageFromStream(Stream memoryStream)
         {
-            return ImageFromStreamInt(memoryStream);
+            return this.ImageFromStreamInt(memoryStream);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>true - font exists by given family name, false - otherwise</returns>
         public bool IsFontExists(string font)
         {
-            return _fontsHandler.IsFontExists(font);
+            return this.FontsHandler.IsFontExists(font);
         }
 
         /// <summary>
@@ -179,19 +179,19 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <param name="fontFamily">The font family to add.</param>
         public void AddFontFamily(RFontFamily fontFamily)
         {
-            _fontsHandler.AddFontFamily(fontFamily);
+            this.FontsHandler.AddFontFamily(fontFamily);
         }
 
         /// <summary>
         /// Adds a font mapping from <paramref name="fromFamily"/> to <paramref name="toFamily"/> iff the <paramref name="fromFamily"/> is not found.<br/>
-        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing 
+        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing
         /// fonts (installed or added) it will be replaced by <paramref name="toFamily"/>.<br/>
         /// </summary>
         /// <param name="fromFamily">the font family to replace</param>
         /// <param name="toFamily">the font family to replace with</param>
         public void AddFontFamilyMapping(string fromFamily, string toFamily)
         {
-            _fontsHandler.AddFontFamilyMapping(fromFamily, toFamily);
+            this.FontsHandler.AddFontFamilyMapping(fromFamily, toFamily);
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>font instance</returns>
         public RFont GetFont(string family, double size, RFontStyle style)
         {
-            return _fontsHandler.GetCachedFont(family, size, style);
+            return this.FontsHandler.GetCachedFont(family, size, style);
         }
 
         /// <summary>
@@ -211,13 +211,14 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// </summary>
         public RImage GetLoadingImage()
         {
-            if (_loadImage == null)
+            if (this.LoadImage == null)
             {
                 var stream = typeof(HtmlRendererUtils).Assembly.GetManifestResourceStream("TheArtOfDev.HtmlRenderer.Core.Utils.ImageLoad.png");
                 if (stream != null)
-                    _loadImage = ImageFromStream(stream);
+                    this.LoadImage = this.ImageFromStream(stream);
             }
-            return _loadImage;
+
+            return this.LoadImage;
         }
 
         /// <summary>
@@ -225,13 +226,14 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// </summary>
         public RImage GetLoadingFailedImage()
         {
-            if (_errorImage == null)
+            if (this.ErrorImage == null)
             {
                 var stream = typeof(HtmlRendererUtils).Assembly.GetManifestResourceStream("TheArtOfDev.HtmlRenderer.Core.Utils.ImageError.png");
                 if (stream != null)
-                    _errorImage = ImageFromStream(stream);
+                    this.ErrorImage = this.ImageFromStream(stream);
             }
-            return _errorImage;
+
+            return this.ErrorImage;
         }
 
         /// <summary>
@@ -244,7 +246,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>drag-drop data object</returns>
         public object GetClipboardDataObject(string html, string plainText)
         {
-            return GetClipboardDataObjectInt(html, plainText);
+            return this.GetClipboardDataObjectInt(html, plainText);
         }
 
         /// <summary>
@@ -254,7 +256,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <param name="text">the text to set</param>
         public void SetToClipboard(string text)
         {
-            SetToClipboardInt(text);
+            this.SetToClipboardInt(text);
         }
 
         /// <summary>
@@ -265,7 +267,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <param name="plainText">the plain text data</param>
         public void SetToClipboard(string html, string plainText)
         {
-            SetToClipboardInt(html, plainText);
+            this.SetToClipboardInt(html, plainText);
         }
 
         /// <summary>
@@ -275,7 +277,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <param name="image">the image object to set to clipboard</param>
         public void SetToClipboard(RImage image)
         {
-            SetToClipboardInt(image);
+            this.SetToClipboardInt(image);
         }
 
         /// <summary>
@@ -285,7 +287,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>new context menu</returns>
         public RContextMenu GetContextMenu()
         {
-            return CreateContextMenuInt();
+            return this.CreateContextMenuInt();
         }
 
         /// <summary>
@@ -298,7 +300,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <param name="control">optional: the control to show the dialog on</param>
         public void SaveToFile(RImage image, string name, string extension, RControl control = null)
         {
-            SaveToFileInt(image, name, extension, control);
+            this.SaveToFileInt(image, name, extension, control);
         }
 
         /// <summary>
@@ -310,7 +312,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>font instance</returns>
         internal RFont CreateFont(string family, double size, RFontStyle style)
         {
-            return CreateFontInt(family, size, style);
+            return this.CreateFontInt(family, size, style);
         }
 
         /// <summary>
@@ -323,9 +325,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>font instance</returns>
         internal RFont CreateFont(RFontFamily family, double size, RFontStyle style)
         {
-            return CreateFontInt(family, size, style);
+            return this.CreateFontInt(family, size, style);
         }
-
 
         #region Private/Protected methods
 

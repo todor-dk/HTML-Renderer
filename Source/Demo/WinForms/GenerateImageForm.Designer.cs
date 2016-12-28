@@ -104,7 +104,7 @@
             this._textRenderingHintTSCB.Name = "_textRenderingHintTSCB";
             this._textRenderingHintTSCB.Size = new System.Drawing.Size(121, 23);
             this._textRenderingHintTSCB.Visible = false;
-            this._textRenderingHintTSCB.SelectedIndexChanged += new System.EventHandler(this._textRenderingHintTSCB_SelectedIndexChanged);
+            this._textRenderingHintTSCB.SelectedIndexChanged += new System.EventHandler(this.TextRenderingHintTSCB_SelectedIndexChanged);
             // 
             // _pictureBox
             // 

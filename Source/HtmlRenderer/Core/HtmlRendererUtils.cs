@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -56,7 +56,6 @@ namespace TheArtOfDev.HtmlRenderer.Core
             return new RSize(finalWidth, finalHeight);
         }
 
-
         /// <summary>
         /// Perform the layout of the html container by given size restrictions returning the final size.<br/>
         /// The layout can be effected by the HTML content in the <paramref name="htmlContainer"/> if <paramref name="autoSize"/> or
@@ -100,6 +99,7 @@ namespace TheArtOfDev.HtmlRenderer.Core
                         htmlContainer.MaxSize = new RSize(minSize.Width, 0);
                         htmlContainer.PerformLayout(g);
                     }
+
                     newSize = htmlContainer.ActualSize;
                 }
                 else if (Math.Abs(size.Height - htmlContainer.ActualSize.Height) > 0.01)

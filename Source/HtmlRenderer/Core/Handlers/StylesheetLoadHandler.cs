@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -69,7 +69,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             }
         }
 
-
         #region Private methods
 
         /// <summary>
@@ -118,6 +117,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             {
                 htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Failed load image, invalid source: " + path);
             }
+
             return string.Empty;
         }
 
@@ -140,6 +140,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 {
                     htmlContainer.ReportError(HtmlRenderErrorType.CssParsing, "Error in correcting relative URL in loaded stylesheet", ex);
                 }
+
                 return stylesheet;
             }
         }
@@ -162,7 +163,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                     if (endIdx > idx + 4)
                     {
                         var offset1 = 4 + (stylesheet[idx + 4] == '\'' ? 1 : 0);
-                        var offset2 = (stylesheet[endIdx - 1] == '\'' ? 1 : 0);
+                        var offset2 = stylesheet[endIdx - 1] == '\'' ? 1 : 0;
                         var urlStr = stylesheet.Substring(idx + offset1, endIdx - idx - offset1 - offset2);
                         Uri url;
                         if (Uri.TryCreate(urlStr, UriKind.Relative, out url))

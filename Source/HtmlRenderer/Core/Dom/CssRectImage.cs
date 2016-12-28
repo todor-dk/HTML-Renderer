@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -25,15 +25,14 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <summary>
         /// the image object if it is image word (can be null if not loaded)
         /// </summary>
-        private RImage _image;
+        private RImage _Image;
 
         /// <summary>
         /// the image rectangle restriction as returned from image load event
         /// </summary>
-        private RRect _imageRectangle;
+        private RRect _ImageRectangle;
 
         #endregion
-
 
         /// <summary>
         /// Creates a new BoxWord which represents an image
@@ -41,15 +40,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="owner">the CSS box owner of the word</param>
         public CssRectImage(CssBox owner)
             : base(owner)
-        { }
+        {
+        }
 
         /// <summary>
         /// Gets the image this words represents (if one exists)
         /// </summary>
         public override RImage Image
         {
-            get { return _image; }
-            set { _image = value; }
+            get { return this._Image; }
+            set { this._Image = value; }
         }
 
         /// <summary>
@@ -65,8 +65,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public RRect ImageRectangle
         {
-            get { return _imageRectangle; }
-            set { _imageRectangle = value; }
+            get { return this._ImageRectangle; }
+            set { this._ImageRectangle = value; }
         }
 
         /// <summary>

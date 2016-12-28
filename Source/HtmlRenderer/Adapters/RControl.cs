@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -24,7 +24,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <summary>
         /// The platform adapter.
         /// </summary>
-        private readonly RAdapter _adapter;
+        private readonly RAdapter _Adapter;
 
         /// <summary>
         /// Init control with platform adapter.
@@ -32,7 +32,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         protected RControl(RAdapter adapter)
         {
             ArgChecker.AssertArgNotNull(adapter, "adapter");
-            _adapter = adapter;
+            this._Adapter = adapter;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// </summary>
         public RAdapter Adapter
         {
-            get { return _adapter; }
+            get { return this._Adapter; }
         }
 
         /// <summary>

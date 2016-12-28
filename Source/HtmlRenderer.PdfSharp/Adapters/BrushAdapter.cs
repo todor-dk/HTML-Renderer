@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -25,14 +25,14 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// The actual PdfSharp brush instance.<br/>
         /// Should be <see cref="XBrush"/> but there is some fucking issue inheriting from it =/
         /// </summary>
-        private readonly Object _brush;
+        private readonly Object _Brush;
 
         /// <summary>
         /// Init.
         /// </summary>
         public BrushAdapter(Object brush)
         {
-            _brush = brush;
+            this._Brush = brush;
         }
 
         /// <summary>
@@ -40,10 +40,11 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// </summary>
         public Object Brush
         {
-            get { return _brush; }
+            get { return this._Brush; }
         }
 
         public override void Dispose()
-        { }
+        {
+        }
     }
 }

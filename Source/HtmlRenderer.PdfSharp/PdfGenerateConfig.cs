@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -25,56 +25,56 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// <summary>
         /// the page size to use for each page in the generated pdf
         /// </summary>
-        private PageSize _pageSize;
+        private PageSize _PageSize;
 
         /// <summary>
         /// if the page size is undefined this allow you to set manually the page size
         /// </summary>
-        private XSize _xsize;
+        private XSize Xsize;
 
         /// <summary>
         /// the orientation of each page of the generated pdf
         /// </summary>
-        private PageOrientation _pageOrientation;
+        private PageOrientation _PageOrientation;
 
         /// <summary>
         /// the top margin between the page start and the text
         /// </summary>
-        private int _marginTop;
+        private int _MarginTop;
 
         /// <summary>
         /// the bottom margin between the page end and the text
         /// </summary>
-        private int _marginBottom;
+        private int _MarginBottom;
 
         /// <summary>
         /// the left margin between the page start and the text
         /// </summary>
-        private int _marginLeft;
+        private int _MarginLeft;
 
         /// <summary>
         /// the right margin between the page end and the text
         /// </summary>
-        private int _marginRight;
+        private int _MarginRight;
 
         #endregion
-
 
         /// <summary>
         /// the page size to use for each page in the generated pdf
         /// </summary>
         public PageSize PageSize
         {
-            get { return _pageSize; }
-            set { _pageSize = value; }
+            get { return this._PageSize; }
+            set { this._PageSize = value; }
         }
 
         /// <summary>
         /// if the page size is undefined this allow you to set manually the page size
         /// </summary>
-        public XSize ManualPageSize {
-            get { return _xsize; }
-            set { _xsize = value; }
+        public XSize ManualPageSize
+        {
+            get { return this.Xsize; }
+            set { this.Xsize = value; }
         }
 
         /// <summary>
@@ -82,8 +82,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public PageOrientation PageOrientation
         {
-            get { return _pageOrientation; }
-            set { _pageOrientation = value; }
+            get { return this._PageOrientation; }
+            set { this._PageOrientation = value; }
         }
 
         /// <summary>
@@ -91,11 +91,17 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public int MarginTop
         {
-            get { return _marginTop; }
+            get
+            {
+                return this._MarginTop;
+            }
+
             set
             {
                 if (value > -1)
-                    _marginTop = value;
+                {
+                    this._MarginTop = value;
+                }
             }
         }
 
@@ -104,11 +110,17 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public int MarginBottom
         {
-            get { return _marginBottom; }
+            get
+            {
+                return this._MarginBottom;
+            }
+
             set
             {
                 if (value > -1)
-                    _marginBottom = value;
+                {
+                    this._MarginBottom = value;
+                }
             }
         }
 
@@ -117,11 +129,17 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public int MarginLeft
         {
-            get { return _marginLeft; }
+            get
+            {
+                return this._MarginLeft;
+            }
+
             set
             {
                 if (value > -1)
-                    _marginLeft = value;
+                {
+                    this._MarginLeft = value;
+                }
             }
         }
 
@@ -130,11 +148,17 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public int MarginRight
         {
-            get { return _marginRight; }
+            get
+            {
+                return this._MarginRight;
+            }
+
             set
             {
                 if (value > -1)
-                    _marginRight = value;
+                {
+                    this._MarginRight = value;
+                }
             }
         }
 
@@ -145,7 +169,9 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         public void SetMargins(int value)
         {
             if (value > -1)
-                _marginBottom = _marginLeft = _marginTop = _marginRight = value;
+            {
+                this._MarginBottom = this._MarginLeft = this._MarginTop = this._MarginRight = value;
+            }
         }
 
         // The international definitions are:
@@ -158,7 +184,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public static XSize MilimitersToUnits(double width, double height) {
+        public static XSize MilimitersToUnits(double width, double height)
+        {
             return new XSize(width / 25.4 * 72, height / 25.4 * 72);
         }
 
@@ -168,7 +195,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public static XSize InchesToUnits(double width, double height) {
+        public static XSize InchesToUnits(double width, double height)
+        {
             return new XSize(width * 72, height * 72);
         }
     }

@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -28,17 +28,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         /// <summary>
         /// Brush for selection background
         /// </summary>
-        private static readonly RColor _defaultSelectionBackcolor = RColor.FromArgb(0xa9, 0x33, 0x99, 0xFF);
+        private static readonly RColor _DefaultSelectionBackcolor = RColor.FromArgb(0xa9, 0x33, 0x99, 0xFF);
 
         #endregion
-
 
         /// <summary>
         /// Brush for selection background
         /// </summary>
         public static RColor DefaultSelectionBackcolor
         {
-            get { return _defaultSelectionBackcolor; }
+            get { return _DefaultSelectionBackcolor; }
         }
 
         /// <summary>
@@ -54,6 +53,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
             {
                 w += CssValueParser.ParseLength(box.WordSpacing, 0, box, true);
             }
+
             return w;
         }
 
@@ -199,6 +199,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                 case "overflow":
                     return cssBox.Overflow;
             }
+
             return null;
         }
 

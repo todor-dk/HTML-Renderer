@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -22,20 +22,19 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <summary>
         /// the name of the html tag
         /// </summary>
-        private readonly string _name;
+        private readonly string _Name;
 
         /// <summary>
         /// if the tag is single placed; in other words it doesn't have a separate closing tag;
         /// </summary>
-        private readonly bool _isSingle;
+        private readonly bool _IsSingle;
 
         /// <summary>
         /// collection of attributes and their value the html tag has
         /// </summary>
-        private readonly Dictionary<string, string> _attributes;
+        private readonly Dictionary<string, string> _Attributes;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -47,9 +46,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         {
             ArgChecker.AssertArgNotNullOrEmpty(name, "name");
 
-            _name = name;
-            _isSingle = isSingle;
-            _attributes = attributes;
+            this._Name = name;
+            this._IsSingle = isSingle;
+            this._Attributes = attributes;
         }
 
         /// <summary>
@@ -57,7 +56,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public string Name
         {
-            get { return _name; }
+            get { return this._Name; }
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public Dictionary<string, string> Attributes
         {
-            get { return _attributes; }
+            get { return this._Attributes; }
         }
 
         /// <summary>
@@ -74,7 +73,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public bool IsSingle
         {
-            get { return _isSingle; }
+            get { return this._IsSingle; }
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <returns>true - has attributes, false - otherwise</returns>
         public bool HasAttributes()
         {
-            return _attributes != null && _attributes.Count > 0;
+            return this._Attributes != null && this._Attributes.Count > 0;
         }
 
         /// <summary>
@@ -93,7 +92,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <returns>true - attribute exists, false - otherwise</returns>
         public bool HasAttribute(string attribute)
         {
-            return _attributes != null && _attributes.ContainsKey(attribute);
+            return this._Attributes != null && this._Attributes.ContainsKey(attribute);
         }
 
         /// <summary>
@@ -104,12 +103,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <returns>attribute value or null if not found</returns>
         public string TryGetAttribute(string attribute, string defaultValue = null)
         {
-            return _attributes != null && _attributes.ContainsKey(attribute) ? _attributes[attribute] : defaultValue;
+            return this._Attributes != null && this._Attributes.ContainsKey(attribute) ? this._Attributes[attribute] : defaultValue;
         }
 
         public override string ToString()
         {
-            return string.Format("<{0}>", _name);
+            return string.Format("<{0}>", this._Name);
         }
     }
 }

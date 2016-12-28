@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -23,14 +23,14 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// <summary>
         /// the underline win-forms image.
         /// </summary>
-        private readonly XImage _image;
+        private readonly XImage _Image;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public ImageAdapter(XImage image)
         {
-            _image = image;
+            this._Image = image;
         }
 
         /// <summary>
@@ -38,22 +38,22 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// </summary>
         public XImage Image
         {
-            get { return _image; }
+            get { return this._Image; }
         }
 
         public override double Width
         {
-            get { return _image.PixelWidth; }
+            get { return this._Image.PixelWidth; }
         }
 
         public override double Height
         {
-            get { return _image.PixelHeight; }
+            get { return this._Image.PixelHeight; }
         }
 
         public override void Dispose()
         {
-            _image.Dispose();
+            this._Image.Dispose();
         }
     }
 }

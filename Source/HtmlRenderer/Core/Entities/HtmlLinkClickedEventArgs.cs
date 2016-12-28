@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -23,17 +23,17 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <summary>
         /// the link href that was clicked
         /// </summary>
-        private readonly string _link;
+        private readonly string _Link;
 
         /// <summary>
         /// collection of all the attributes that are defined on the link element
         /// </summary>
-        private readonly Dictionary<string, string> _attributes;
+        private readonly Dictionary<string, string> _Attributes;
 
         /// <summary>
         /// use to cancel the execution of the link
         /// </summary>
-        private bool _handled;
+        private bool _Handled;
 
         /// <summary>
         /// Init.
@@ -41,8 +41,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <param name="link">the link href that was clicked</param>
         public HtmlLinkClickedEventArgs(string link, Dictionary<string, string> attributes)
         {
-            _link = link;
-            _attributes = attributes;
+            this._Link = link;
+            this._Attributes = attributes;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public string Link
         {
-            get { return _link; }
+            get { return this._Link; }
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public Dictionary<string, string> Attributes
         {
-            get { return _attributes; }
+            get { return this._Attributes; }
         }
 
         /// <summary>
@@ -66,13 +66,13 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public bool Handled
         {
-            get { return _handled; }
-            set { _handled = value; }
+            get { return this._Handled; }
+            set { this._Handled = value; }
         }
 
         public override string ToString()
         {
-            return string.Format("Link: {0}, Handled: {1}", _link, _handled);
+            return string.Format("Link: {0}, Handled: {1}", this._Link, this._Handled);
         }
     }
 }

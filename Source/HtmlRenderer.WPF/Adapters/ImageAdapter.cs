@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -23,14 +23,14 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// <summary>
         /// the underline WPF image.
         /// </summary>
-        private readonly BitmapImage _image;
+        private readonly BitmapImage _Image;
 
         /// <summary>
         /// Init.
         /// </summary>
         public ImageAdapter(BitmapImage image)
         {
-            _image = image;
+            this._Image = image;
         }
 
         /// <summary>
@@ -38,23 +38,25 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// </summary>
         public BitmapImage Image
         {
-            get { return _image; }
+            get { return this._Image; }
         }
 
         public override double Width
         {
-            get { return _image.PixelWidth; }
+            get { return this._Image.PixelWidth; }
         }
 
         public override double Height
         {
-            get { return _image.PixelHeight; }
+            get { return this._Image.PixelHeight; }
         }
 
         public override void Dispose()
         {
-            if (_image.StreamSource != null)
-                _image.StreamSource.Dispose();
+            if (this._Image.StreamSource != null)
+            {
+                this._Image.StreamSource.Dispose();
+            }
         }
     }
 }

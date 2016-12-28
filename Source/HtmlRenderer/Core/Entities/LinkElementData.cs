@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -21,26 +21,26 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <summary>
         /// the id of the link element if present
         /// </summary>
-        private readonly string _id;
+        private readonly string _Id;
 
         /// <summary>
         /// the href data of the link
         /// </summary>
-        private readonly string _href;
+        private readonly string _Href;
 
         /// <summary>
         /// the rectangle of element as calculated by html layout
         /// </summary>
-        private readonly T _rectangle;
+        private readonly T _Rectangle;
 
         /// <summary>
         /// Init.
         /// </summary>
         public LinkElementData(string id, string href, T rectangle)
         {
-            _id = id;
-            _href = href;
-            _rectangle = rectangle;
+            this._Id = id;
+            this._Href = href;
+            this._Rectangle = rectangle;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public string Id
         {
-            get { return _id; }
+            get { return this._Id; }
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public string Href
         {
-            get { return _href; }
+            get { return this._Href; }
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public T Rectangle
         {
-            get { return _rectangle; }
+            get { return this._Rectangle; }
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public bool IsAnchor
         {
-            get { return _href.Length > 0 && _href[0] == '#'; }
+            get { return this._Href.Length > 0 && this._Href[0] == '#'; }
         }
 
         /// <summary>
@@ -80,12 +80,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public string AnchorId
         {
-            get { return IsAnchor && _href.Length > 1 ? _href.Substring(1) : string.Empty; }
+            get { return this.IsAnchor && this._Href.Length > 1 ? this._Href.Substring(1) : string.Empty; }
         }
 
         public override string ToString()
         {
-            return string.Format("Id: {0}, Href: {1}, Rectangle: {2}", _id, _href, _rectangle);
+            return string.Format("Id: {0}, Href: {1}, Rectangle: {2}", this._Id, this._Href, this._Rectangle);
         }
     }
 }

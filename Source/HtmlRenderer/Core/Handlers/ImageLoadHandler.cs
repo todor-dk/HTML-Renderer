@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -47,45 +47,44 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <summary>
         /// the container of the html to handle load image for
         /// </summary>
-        private readonly HtmlContainerInt _htmlContainer;
+        private readonly HtmlContainerInt HtmlContainer;
 
         /// <summary>
         /// callback raised when image load process is complete with image or without
         /// </summary>
-        private readonly ActionInt<RImage, RRect, bool> _loadCompleteCallback;
+        private readonly ActionInt<RImage, RRect, bool> LoadCompleteCallback;
 
         /// <summary>
         /// Must be open as long as the image is in use
         /// </summary>
-        private FileStream _imageFileStream;
+        private FileStream ImageFileStream;
 
         /// <summary>
         /// the image instance of the loaded image
         /// </summary>
-        private RImage _image;
+        private RImage _Image;
 
         /// <summary>
         /// the image rectangle restriction as returned from image load event
         /// </summary>
-        private RRect _imageRectangle;
+        private RRect ImageRectangle;
 
         /// <summary>
         /// to know if image load event callback was sync or async raised
         /// </summary>
-        private bool _asyncCallback;
+        private bool AsyncCallback;
 
         /// <summary>
         /// flag to indicate if to release the image object on box dispose (only if image was loaded by the box)
         /// </summary>
-        private bool _releaseImageObject;
+        private bool ReleaseImageObject;
 
         /// <summary>
         /// is the handler has been disposed
         /// </summary>
-        private bool _disposed;
+        private bool Disposed;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -97,8 +96,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             ArgChecker.AssertArgNotNull(htmlContainer, "htmlContainer");
             ArgChecker.AssertArgNotNull(loadCompleteCallback, "loadCompleteCallback");
 
-            _htmlContainer = htmlContainer;
-            _loadCompleteCallback = loadCompleteCallback;
+            this.HtmlContainer = htmlContainer;
+            this.LoadCompleteCallback = loadCompleteCallback;
         }
 
         /// <summary>
@@ -106,7 +105,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// </summary>
         public RImage Image
         {
-            get { return _image; }
+            get { return this._Image; }
         }
 
         /// <summary>
@@ -114,7 +113,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// </summary>
         public RRect Rectangle
         {
-            get { return _imageRectangle; }
+            get { return this.ImageRectangle; }
         }
 
         /// <summary>
@@ -135,9 +134,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             try
             {
-                var args = new HtmlImageLoadEventArgs(src, attributes, OnHtmlImageLoadEventCallback);
-                _htmlContainer.RaiseHtmlImageLoadEvent(args);
-                _asyncCallback = !_htmlContainer.AvoidAsyncImagesLoading;
+                var args = new HtmlImageLoadEventArgs(src, attributes, this.OnHtmlImageLoadEventCallback);
+                this.HtmlContainer.RaiseHtmlImageLoadEvent(args);
+                this.AsyncCallback = !this.HtmlContainer.AvoidAsyncImagesLoading;
 
                 if (!args.Handled)
                 {
@@ -145,23 +144,23 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                     {
                         if (src.StartsWith("data:image", StringComparison.CurrentCultureIgnoreCase))
                         {
-                            SetFromInlineData(src);
+                            this.SetFromInlineData(src);
                         }
                         else
                         {
-                            SetImageFromPath(src);
+                            this.SetImageFromPath(src);
                         }
                     }
                     else
                     {
-                        ImageLoadComplete(false);
+                        this.ImageLoadComplete(false);
                     }
                 }
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Exception in handling image source", ex);
-                ImageLoadComplete(false);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.Image, "Exception in handling image source", ex);
+                this.ImageLoadComplete(false);
             }
         }
 
@@ -170,10 +169,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// </summary>
         public void Dispose()
         {
-            _disposed = true;
-            ReleaseObjects();
+            this.Disposed = true;
+            this.ReleaseObjects();
         }
-
 
         #region Private methods
 
@@ -185,22 +183,22 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <param name="imageRectangle">optional: limit to specific rectangle of the image and not all of it</param>
         private void OnHtmlImageLoadEventCallback(string path, object image, RRect imageRectangle)
         {
-            if (!_disposed)
+            if (!this.Disposed)
             {
-                _imageRectangle = imageRectangle;
+                this.ImageRectangle = imageRectangle;
 
                 if (image != null)
                 {
-                    _image = _htmlContainer.Adapter.ConvertImage(image);
-                    ImageLoadComplete(_asyncCallback);
+                    this._Image = this.HtmlContainer.Adapter.ConvertImage(image);
+                    this.ImageLoadComplete(this.AsyncCallback);
                 }
                 else if (!string.IsNullOrEmpty(path))
                 {
-                    SetImageFromPath(path);
+                    this.SetImageFromPath(path);
                 }
                 else
                 {
-                    ImageLoadComplete(_asyncCallback);
+                    this.ImageLoadComplete(this.AsyncCallback);
                 }
             }
         }
@@ -211,11 +209,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <param name="src">the source that has the base64 encoded image</param>
         private void SetFromInlineData(string src)
         {
-            _image = GetImageFromData(src);
-            if (_image == null)
-                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed extract image from inline data");
-            _releaseImageObject = true;
-            ImageLoadComplete(false);
+            this._Image = this.GetImageFromData(src);
+            if (this._Image == null)
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed extract image from inline data");
+            this.ReleaseImageObject = true;
+            this.ImageLoadComplete(false);
         }
 
         /// <summary>
@@ -241,9 +239,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 if (imagePartsCount > 0)
                 {
                     byte[] imageData = base64PartsCount > 0 ? Convert.FromBase64String(s[1].Trim()) : new UTF8Encoding().GetBytes(Uri.UnescapeDataString(s[1].Trim()));
-                    return _htmlContainer.Adapter.ImageFromStream(new MemoryStream(imageData));
+                    return this.HtmlContainer.Adapter.ImageFromStream(new MemoryStream(imageData));
                 }
             }
+
             return null;
         }
 
@@ -256,19 +255,19 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             var uri = CommonUtils.TryGetUri(path);
             if (uri != null && uri.Scheme != "file")
             {
-                SetImageFromUrl(uri);
+                this.SetImageFromUrl(uri);
             }
             else
             {
                 var fileInfo = CommonUtils.TryGetFileInfo(uri != null ? uri.AbsolutePath : path);
                 if (fileInfo != null)
                 {
-                    SetImageFromFile(fileInfo);
+                    this.SetImageFromFile(fileInfo);
                 }
                 else
                 {
-                    _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed load image, invalid source: " + path);
-                    ImageLoadComplete(false);
+                    this.HtmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed load image, invalid source: " + path);
+                    this.ImageLoadComplete(false);
                 }
             }
         }
@@ -281,14 +280,14 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             if (source.Exists)
             {
-                if (_htmlContainer.AvoidAsyncImagesLoading)
-                    LoadImageFromFile(source.FullName);
+                if (this.HtmlContainer.AvoidAsyncImagesLoading)
+                    this.LoadImageFromFile(source.FullName);
                 else
-                    ThreadPool.QueueUserWorkItem(state => LoadImageFromFile(source.FullName));
+                    ThreadPool.QueueUserWorkItem(state => this.LoadImageFromFile(source.FullName));
             }
             else
             {
-                ImageLoadComplete();
+                this.ImageLoadComplete();
             }
         }
 
@@ -302,19 +301,20 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             try
             {
                 var imageFileStream = File.Open(source, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                lock (_loadCompleteCallback)
+                lock (this.LoadCompleteCallback)
                 {
-                    _imageFileStream = imageFileStream;
-                    if (!_disposed)
-                        _image = _htmlContainer.Adapter.ImageFromStream(_imageFileStream);
-                    _releaseImageObject = true;
+                    this.ImageFileStream = imageFileStream;
+                    if (!this.Disposed)
+                        this._Image = this.HtmlContainer.Adapter.ImageFromStream(this.ImageFileStream);
+                    this.ReleaseImageObject = true;
                 }
-                ImageLoadComplete();
+
+                this.ImageLoadComplete();
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from disk: " + source, ex);
-                ImageLoadComplete();
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from disk: " + source, ex);
+                this.ImageLoadComplete();
             }
         }
 
@@ -328,11 +328,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             var filePath = CommonUtils.GetLocalfileName(source);
             if (filePath.Exists && filePath.Length > 0)
             {
-                SetImageFromFile(filePath);
+                this.SetImageFromFile(filePath);
             }
             else
             {
-                _htmlContainer.GetImageDownloader().DownloadImage(source, filePath.FullName, !_htmlContainer.AvoidAsyncImagesLoading, OnDownloadImageCompleted);
+                this.HtmlContainer.GetImageDownloader().DownloadImage(source, filePath.FullName, !this.HtmlContainer.AvoidAsyncImagesLoading, this.OnDownloadImageCompleted);
             }
         }
 
@@ -342,16 +342,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// </summary>
         private void OnDownloadImageCompleted(Uri imageUri, string filePath, Exception error, bool canceled)
         {
-            if (!canceled && !_disposed)
+            if (!canceled && !this.Disposed)
             {
                 if (error == null)
                 {
-                    LoadImageFromFile(filePath);
+                    this.LoadImageFromFile(filePath);
                 }
                 else
                 {
-                    _htmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from URL: " + imageUri, error);
-                    ImageLoadComplete();
+                    this.HtmlContainer.ReportError(HtmlRenderErrorType.Image, "Failed to load image from URL: " + imageUri, error);
+                    this.ImageLoadComplete();
                 }
             }
         }
@@ -362,10 +362,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         private void ImageLoadComplete(bool async = true)
         {
             // can happen if some operation return after the handler was disposed
-            if (_disposed)
-                ReleaseObjects();
+            if (this.Disposed)
+                this.ReleaseObjects();
             else
-                _loadCompleteCallback(_image, _imageRectangle, async);
+                this.LoadCompleteCallback(this._Image, this.ImageRectangle, async);
         }
 
         /// <summary>
@@ -373,17 +373,18 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// </summary>
         private void ReleaseObjects()
         {
-            lock (_loadCompleteCallback)
+            lock (this.LoadCompleteCallback)
             {
-                if (_releaseImageObject && _image != null)
+                if (this.ReleaseImageObject && this._Image != null)
                 {
-                    _image.Dispose();
-                    _image = null;
+                    this._Image.Dispose();
+                    this._Image = null;
                 }
-                if (_imageFileStream != null)
+
+                if (this.ImageFileStream != null)
                 {
-                    _imageFileStream.Dispose();
-                    _imageFileStream = null;
+                    this.ImageFileStream.Dispose();
+                    this.ImageFileStream = null;
                 }
             }
         }

@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -29,28 +29,27 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// <summary>
         /// the underline win forms context menu
         /// </summary>
-        private readonly ContextMenuStrip _contextMenu;
+        private readonly ContextMenuStrip ContextMenu;
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         public ContextMenuAdapter()
         {
-            _contextMenu = new ContextMenuStrip();
-            _contextMenu.ShowImageMargin = false;
+            this.ContextMenu = new ContextMenuStrip();
+            this.ContextMenu.ShowImageMargin = false;
         }
 
         public override int ItemsCount
         {
-            get { return _contextMenu.Items.Count; }
+            get { return this.ContextMenu.Items.Count; }
         }
 
         public override void AddDivider()
         {
-            _contextMenu.Items.Add("-");
+            this.ContextMenu.Items.Add("-");
         }
 
         public override void AddItem(string text, bool enabled, EventHandler onClick)
@@ -58,24 +57,26 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
             ArgChecker.AssertArgNotNullOrEmpty(text, "text");
             ArgChecker.AssertArgNotNull(onClick, "onClick");
 
-            var item = _contextMenu.Items.Add(text, null, onClick);
+            var item = this.ContextMenu.Items.Add(text, null, onClick);
             item.Enabled = enabled;
         }
 
         public override void RemoveLastDivider()
         {
-            if (_contextMenu.Items[_contextMenu.Items.Count - 1].Text == string.Empty)
-                _contextMenu.Items.RemoveAt(_contextMenu.Items.Count - 1);
+            if (this.ContextMenu.Items[this.ContextMenu.Items.Count - 1].Text == string.Empty)
+            {
+                this.ContextMenu.Items.RemoveAt(this.ContextMenu.Items.Count - 1);
+            }
         }
 
         public override void Show(RControl parent, RPoint location)
         {
-            _contextMenu.Show(((ControlAdapter)parent).Control, Utils.ConvertRound(location));
+            this.ContextMenu.Show(((ControlAdapter)parent).Control, Utils.ConvertRound(location));
         }
 
         public override void Dispose()
         {
-            _contextMenu.Dispose();
+            this.ContextMenu.Dispose();
         }
     }
 }

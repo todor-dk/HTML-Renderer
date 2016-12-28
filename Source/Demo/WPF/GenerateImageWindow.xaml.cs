@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -24,16 +24,16 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
     /// </summary>
     public partial class GenerateImageWindow
     {
-        private readonly string _html;
-        private BitmapFrame _generatedImage;
+        private readonly string Html;
+        private BitmapFrame GeneratedImage;
 
         public GenerateImageWindow(string html)
         {
-            _html = html;
+            this.Html = html;
 
-            InitializeComponent();
+            this.InitializeComponent();
 
-            Loaded += (sender, args) => GenerateImage();
+            this.Loaded += (sender, args) => this.GenerateImage();
         }
 
         private void OnSaveToFile_click(object sender, RoutedEventArgs e)
@@ -47,23 +47,25 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
             if (dialogResult.GetValueOrDefault())
             {
                 var encoder = HtmlRenderingHelper.GetBitmapEncoder(Path.GetExtension(saveDialog.FileName));
-                encoder.Frames.Add(_generatedImage);
+                encoder.Frames.Add(this.GeneratedImage);
                 using (FileStream stream = new FileStream(saveDialog.FileName, FileMode.OpenOrCreate))
+                {
                     encoder.Save(stream);
+                }
             }
         }
 
         private void OnGenerateImage_Click(object sender, RoutedEventArgs e)
         {
-            GenerateImage();
+            this.GenerateImage();
         }
 
         private void GenerateImage()
         {
-            if (_imageBoxBorder.RenderSize.Width > 0 && _imageBoxBorder.RenderSize.Height > 0)
+            if (this._imageBoxBorder.RenderSize.Width > 0 && this._imageBoxBorder.RenderSize.Height > 0)
             {
-                _generatedImage = HtmlRender.RenderToImage(_html, _imageBoxBorder.RenderSize, null, DemoUtils.OnStylesheetLoad, HtmlRenderingHelper.OnImageLoad);
-                _imageBox.Source = _generatedImage;
+                this.GeneratedImage = HtmlRender.RenderToImage(this.Html, this._imageBoxBorder.RenderSize, null, DemoUtils.OnStylesheetLoad, HtmlRenderingHelper.OnImageLoad);
+                this._imageBox.Source = this.GeneratedImage;
             }
         }
     }

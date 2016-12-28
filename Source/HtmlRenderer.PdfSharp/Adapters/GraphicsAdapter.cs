@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -29,26 +29,25 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// <summary>
         /// The wrapped WinForms graphics object
         /// </summary>
-        private readonly XGraphics _g;
+        private readonly XGraphics Graphics;
 
         /// <summary>
         /// if to release the graphics object on dispose
         /// </summary>
-        private readonly bool _releaseGraphics;
+        private readonly bool ReleaseGraphics;
 
         /// <summary>
         /// Used to measure and draw strings
         /// </summary>
-        private static readonly XStringFormat _stringFormat;
+        private static readonly XStringFormat StringFormat;
 
         #endregion
 
-
         static GraphicsAdapter()
         {
-            _stringFormat = new XStringFormat();
-            _stringFormat.Alignment = XStringAlignment.Near;
-            _stringFormat.LineAlignment = XLineAlignment.Near;
+            StringFormat = new XStringFormat();
+            StringFormat.Alignment = XStringAlignment.Near;
+            StringFormat.LineAlignment = XLineAlignment.Near;
         }
 
         /// <summary>
@@ -61,30 +60,31 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         {
             ArgChecker.AssertArgNotNull(g, "g");
 
-            _g = g;
-            _releaseGraphics = releaseGraphics;
+            this.Graphics = g;
+            this.ReleaseGraphics = releaseGraphics;
         }
 
         public override void PopClip()
         {
-            _clipStack.Pop();
-            _g.Restore();
+            this.ClipStack.Pop();
+            this.Graphics.Restore();
         }
 
         public override void PushClip(RRect rect)
         {
-            _clipStack.Push(rect);
-            _g.Save();
-            _g.IntersectClip(Utils.Convert(rect));
+            this.ClipStack.Push(rect);
+            this.Graphics.Save();
+            this.Graphics.IntersectClip(Utils.Convert(rect));
         }
 
         public override void PushClipExclude(RRect rect)
-        { }
+        {
+        }
 
         public override Object SetAntiAliasSmoothingMode()
         {
-            var prevMode = _g.SmoothingMode;
-            _g.SmoothingMode = XSmoothingMode.AntiAlias;
+            var prevMode = this.Graphics.SmoothingMode;
+            this.Graphics.SmoothingMode = XSmoothingMode.AntiAlias;
             return prevMode;
         }
 
@@ -92,7 +92,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         {
             if (prevMode != null)
             {
-                _g.SmoothingMode = (XSmoothingMode)prevMode;
+                this.Graphics.SmoothingMode = (XSmoothingMode)prevMode;
             }
         }
 
@@ -100,13 +100,13 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         {
             var fontAdapter = (FontAdapter)font;
             var realFont = fontAdapter.Font;
-            var size = _g.MeasureString(str, realFont, _stringFormat);
+            var size = this.Graphics.MeasureString(str, realFont, StringFormat);
 
             if (font.Height < 0)
             {
                 var height = realFont.Height;
                 var descent = realFont.Size * realFont.FontFamily.GetCellDescent(realFont.Style) / realFont.FontFamily.GetEmHeight(realFont.Style);
-                fontAdapter.SetMetrics(height, (int)Math.Round((height - descent + 1f)));
+                fontAdapter.SetMetrics(height, (int)Math.Round(height - descent + 1f));
             }
 
             return Utils.Convert(size);
@@ -120,8 +120,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
 
         public override void DrawString(string str, RFont font, RColor color, RPoint point, RSize size, bool rtl)
         {
-            var xBrush = ((BrushAdapter)_adapter.GetSolidBrush(color)).Brush;
-            _g.DrawString(str, ((FontAdapter)font).Font, (XBrush)xBrush, point.X, point.Y, _stringFormat);
+            var xBrush = ((BrushAdapter)this.Adapter.GetSolidBrush(color)).Brush;
+            this.Graphics.DrawString(str, ((FontAdapter)font).Font, (XBrush)xBrush, point.X, point.Y, StringFormat);
         }
 
         public override RBrush GetTextureBrush(RImage image, RRect dstRect, RPoint translateTransformLocation)
@@ -136,21 +136,22 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
 
         public override void Dispose()
         {
-            if (_releaseGraphics)
-                _g.Dispose();
+            if (this.ReleaseGraphics)
+            {
+                this.Graphics.Dispose();
+            }
         }
-
 
         #region Delegate graphics methods
 
         public override void DrawLine(RPen pen, double x1, double y1, double x2, double y2)
         {
-            _g.DrawLine(((PenAdapter)pen).Pen, x1, y1, x2, y2);
+            this.Graphics.DrawLine(((PenAdapter)pen).Pen, x1, y1, x2, y2);
         }
 
         public override void DrawRectangle(RPen pen, double x, double y, double width, double height)
         {
-            _g.DrawRectangle(((PenAdapter)pen).Pen, x, y, width, height);
+            this.Graphics.DrawRectangle(((PenAdapter)pen).Pen, x, y, width, height);
         }
 
         public override void DrawRectangle(RBrush brush, double x, double y, double width, double height)
@@ -159,43 +160,45 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
             var xTextureBrush = xBrush as XTextureBrush;
             if (xTextureBrush != null)
             {
-                xTextureBrush.DrawRectangle(_g, x, y, width, height);
+                xTextureBrush.DrawRectangle(this.Graphics, x, y, width, height);
             }
             else
             {
-                _g.DrawRectangle((XBrush)xBrush, x, y, width, height);
+                this.Graphics.DrawRectangle((XBrush)xBrush, x, y, width, height);
 
                 // handle bug in PdfSharp that keeps the brush color for next string draw
                 if (xBrush is XLinearGradientBrush)
-                    _g.DrawRectangle(XBrushes.White, 0, 0, 0.1, 0.1);
+                {
+                    this.Graphics.DrawRectangle(XBrushes.White, 0, 0, 0.1, 0.1);
+                }
             }
         }
 
         public override void DrawImage(RImage image, RRect destRect, RRect srcRect)
         {
-            _g.DrawImage(((ImageAdapter)image).Image, Utils.Convert(destRect), Utils.Convert(srcRect), XGraphicsUnit.Point);
+            this.Graphics.DrawImage(((ImageAdapter)image).Image, Utils.Convert(destRect), Utils.Convert(srcRect), XGraphicsUnit.Point);
         }
 
         public override void DrawImage(RImage image, RRect destRect)
         {
-            _g.DrawImage(((ImageAdapter)image).Image, Utils.Convert(destRect));
+            this.Graphics.DrawImage(((ImageAdapter)image).Image, Utils.Convert(destRect));
         }
 
         public override void DrawPath(RPen pen, RGraphicsPath path)
         {
-            _g.DrawPath(((PenAdapter)pen).Pen, ((GraphicsPathAdapter)path).GraphicsPath);
+            this.Graphics.DrawPath(((PenAdapter)pen).Pen, ((GraphicsPathAdapter)path).GraphicsPath);
         }
 
         public override void DrawPath(RBrush brush, RGraphicsPath path)
         {
-            _g.DrawPath((XBrush)((BrushAdapter)brush).Brush, ((GraphicsPathAdapter)path).GraphicsPath);
+            this.Graphics.DrawPath((XBrush)((BrushAdapter)brush).Brush, ((GraphicsPathAdapter)path).GraphicsPath);
         }
 
         public override void DrawPolygon(RBrush brush, RPoint[] points)
         {
             if (points != null && points.Length > 0)
             {
-                _g.DrawPolygon((XBrush)((BrushAdapter)brush).Brush, Utils.Convert(points), XFillMode.Winding);
+                this.Graphics.DrawPolygon((XBrush)((BrushAdapter)brush).Brush, Utils.Convert(points), XFillMode.Winding);
             }
         }
 

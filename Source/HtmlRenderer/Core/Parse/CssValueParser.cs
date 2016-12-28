@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -27,12 +27,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         #region Fields and Consts
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        private readonly RAdapter _adapter;
+        private readonly RAdapter Adapter;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -41,7 +40,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         {
             ArgChecker.AssertArgNotNull(adapter, "global");
 
-            _adapter = adapter;
+            this.Adapter = adapter;
         }
 
         /// <summary>
@@ -68,6 +67,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -86,6 +86,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 if (!char.IsDigit(str[idx + i]))
                     return false;
             }
+
             return true;
         }
 
@@ -107,9 +108,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 {
                     number = value.Substring(0, value.Length - 2);
                 }
+
                 double stub;
                 return double.TryParse(number, out stub);
             }
+
             return false;
         }
 
@@ -184,25 +187,25 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// <returns>the parsed length value with adjustments</returns>
         public static double ParseLength(string length, double hundredPercent, double emFactor, string defaultUnit, bool fontAdjust, bool returnPoints)
         {
-            //Return zero if no length specified, zero specified
+            // Return zero if no length specified, zero specified
             if (string.IsNullOrEmpty(length) || length == "0")
                 return 0f;
 
-            //If percentage, use ParseNumber
+            // If percentage, use ParseNumber
             if (length.EndsWith("%"))
                 return ParseNumber(length, hundredPercent);
 
-            //Get units of the length
+            // Get units of the length
             bool hasUnit;
             string unit = GetUnit(length, defaultUnit, out hasUnit);
 
-            //Factor will depend on the unit
+            // Factor will depend on the unit
             double factor;
 
-            //Number of the length
+            // Number of the length
             string number = hasUnit ? length.Substring(0, length.Length - 2) : length;
 
-            //TODO: Units behave different in paper and in screen!
+            // TODO: Units behave different in paper and in screen!
             switch (unit)
             {
                 case CssConstants.Em:
@@ -212,16 +215,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     factor = emFactor / 2;
                     break;
                 case CssConstants.Px:
-                    factor = fontAdjust ? 72f / 96f : 1f; //TODO:a check support for hi dpi
+                    factor = fontAdjust ? 72f / 96f : 1f; // TODO:a check support for hi dpi
                     break;
                 case CssConstants.Mm:
-                    factor = 3.779527559f; //3 pixels per millimeter
+                    factor = 3.779527559f; // 3 pixels per millimeter
                     break;
                 case CssConstants.Cm:
-                    factor = 37.795275591f; //37 pixels per centimeter
+                    factor = 37.795275591f; // 37 pixels per centimeter
                     break;
                 case CssConstants.In:
-                    factor = 96f; //96 pixels per inch
+                    factor = 96f; // 96 pixels per inch
                     break;
                 case CssConstants.Pt:
                     factor = 96f / 72f; // 1 point = 1/72 of inch
@@ -266,6 +269,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     unit = defaultUnit ?? String.Empty;
                     break;
             }
+
             return unit;
         }
 
@@ -277,7 +281,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         public bool IsColorValid(string colorValue)
         {
             RColor color;
-            return TryGetColor(colorValue, 0, colorValue.Length, out color);
+            return this.TryGetColor(colorValue, 0, colorValue.Length, out color);
         }
 
         /// <summary>
@@ -288,7 +292,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         public RColor GetActualColor(string colorValue)
         {
             RColor color;
-            TryGetColor(colorValue, 0, colorValue.Length, out color);
+            this.TryGetColor(colorValue, 0, colorValue.Length, out color);
             return color;
         }
 
@@ -320,12 +324,14 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     }
                     else
                     {
-                        return GetColorByName(str, idx, length, out color);
+                        return this.GetColorByName(str, idx, length, out color);
                     }
                 }
             }
             catch
-            { }
+            {
+            }
+
             color = RColor.Black;
             return false;
         }
@@ -356,7 +362,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             }
         }
 
-
         #region Private methods
 
         /// <summary>
@@ -377,17 +382,19 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
             else if (length == 4)
             {
                 r = ParseHexInt(str, idx + 1, 1);
-                r = r * 16 + r;
+                r = (r * 16) + r;
                 g = ParseHexInt(str, idx + 2, 1);
-                g = g * 16 + g;
+                g = (g * 16) + g;
                 b = ParseHexInt(str, idx + 3, 1);
-                b = b * 16 + b;
+                b = (b * 16) + b;
             }
+
             if (r > -1 && g > -1 && b > -1)
             {
                 color = RColor.FromArgb(r, g, b);
                 return true;
             }
+
             color = RColor.Empty;
             return false;
         }
@@ -410,6 +417,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 {
                     g = ParseIntAtIndex(str, ref s);
                 }
+
                 if (s < idx + length)
                 {
                     b = ParseIntAtIndex(str, ref s);
@@ -421,6 +429,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 color = RColor.FromArgb(r, g, b);
                 return true;
             }
+
             color = RColor.Empty;
             return false;
         }
@@ -445,10 +454,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 {
                     g = ParseIntAtIndex(str, ref s);
                 }
+
                 if (s < idx + length)
                 {
                     b = ParseIntAtIndex(str, ref s);
                 }
+
                 if (s < idx + length)
                 {
                     a = ParseIntAtIndex(str, ref s);
@@ -460,6 +471,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 color = RColor.FromArgb(a, r, g, b);
                 return true;
             }
+
             color = RColor.Empty;
             return false;
         }
@@ -470,7 +482,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// <returns>true - valid color, false - otherwise</returns>
         private bool GetColorByName(string str, int idx, int length, out RColor color)
         {
-            color = _adapter.GetColor(str.Substring(idx, length));
+            color = this.Adapter.GetColor(str.Substring(idx, length));
             return color.A > 0;
         }
 
@@ -511,8 +523,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 if (!(c >= 48 && c <= 57))
                     return -1;
 
-                num = num * 10 + c - 48;
+                num = (num * 10) + c - 48;
             }
+
             return num;
         }
 
@@ -533,8 +546,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 if (!(c >= 48 && c <= 57) && !(c >= 65 && c <= 70) && !(c >= 97 && c <= 102))
                     return -1;
 
-                num = num * 16 + (c <= 57 ? c - 48 : (10 + c - (c <= 70 ? 65 : 97)));
+                num = (num * 16) + (c <= 57 ? c - 48 : (10 + c - (c <= 70 ? 65 : 97)));
             }
+
             return num;
         }
 

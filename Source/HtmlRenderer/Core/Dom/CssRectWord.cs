@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -22,20 +22,19 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <summary>
         /// The word text
         /// </summary>
-        private readonly string _text;
+        private readonly string _Text;
 
         /// <summary>
         /// was there a whitespace before the word chars (before trim)
         /// </summary>
-        private readonly bool _hasSpaceBefore;
+        private readonly bool _HasSpaceBefore;
 
         /// <summary>
         /// was there a whitespace after the word chars (before trim)
         /// </summary>
-        private readonly bool _hasSpaceAfter;
+        private readonly bool _HasSpaceAfter;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -47,9 +46,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         public CssRectWord(CssBox owner, string text, bool hasSpaceBefore, bool hasSpaceAfter)
             : base(owner)
         {
-            _text = text;
-            _hasSpaceBefore = hasSpaceBefore;
-            _hasSpaceAfter = hasSpaceAfter;
+            this._Text = text;
+            this._HasSpaceBefore = hasSpaceBefore;
+            this._HasSpaceAfter = hasSpaceAfter;
         }
 
         /// <summary>
@@ -57,7 +56,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public override bool HasSpaceBefore
         {
-            get { return _hasSpaceBefore; }
+            get { return this._HasSpaceBefore; }
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public override bool HasSpaceAfter
         {
-            get { return _hasSpaceAfter; }
+            get { return this._HasSpaceAfter; }
         }
 
         /// <summary>
@@ -76,11 +75,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         {
             get
             {
-                foreach (var c in Text)
+                foreach (var c in this.Text)
                 {
                     if (!char.IsWhiteSpace(c))
                         return false;
                 }
+
                 return true;
             }
         }
@@ -90,7 +90,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public override bool IsLineBreak
         {
-            get { return Text == "\n"; }
+            get { return this.Text == "\n"; }
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public override string Text
         {
-            get { return _text; }
+            get { return this._Text; }
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("{0} ({1} char{2})", Text.Replace(' ', '-').Replace("\n", "\\n"), Text.Length, Text.Length != 1 ? "s" : string.Empty);
+            return string.Format("{0} ({1} char{2})", this.Text.Replace(' ', '-').Replace("\n", "\\n"), this.Text.Length, this.Text.Length != 1 ? "s" : string.Empty);
         }
     }
 }

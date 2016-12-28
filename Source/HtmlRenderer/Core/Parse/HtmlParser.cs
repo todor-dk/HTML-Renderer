@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -18,7 +18,7 @@ using TheArtOfDev.HtmlRenderer.Core.Utils;
 namespace TheArtOfDev.HtmlRenderer.Core.Parse
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     internal static class HtmlParser
     {
@@ -70,6 +70,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                         }
                     }
                 }
+
                 startIdx = tagIdx > -1 && endIdx > 0 ? endIdx : -1;
             }
 
@@ -87,7 +88,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
 
             return root;
         }
-
 
         #region Private methods
 
@@ -135,7 +135,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 }
                 else if (!string.IsNullOrEmpty(tagName))
                 {
-                    //new SubString(source, lastEnd + 1, tagmatch.Index - lastEnd - 1)
+                    // new SubString(source, lastEnd + 1, tagmatch.Index - lastEnd - 1)
                     var isSingle = HtmlUtils.IsSingleTag(tagName) || source[endIdx - 1] == '/';
                     var tag = new HtmlTag(tagName, isSingle, tagAttributes);
 
@@ -155,6 +155,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     endIdx = tagIdx + 1;
                 }
             }
+
             return endIdx;
         }
 

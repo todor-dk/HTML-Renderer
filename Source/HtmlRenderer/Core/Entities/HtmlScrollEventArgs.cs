@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -24,7 +24,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <summary>
         /// the location to scroll to
         /// </summary>
-        private readonly RPoint _location;
+        private readonly RPoint Location;
 
         /// <summary>
         /// Init.
@@ -32,7 +32,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <param name="location">the location to scroll to</param>
         public HtmlScrollEventArgs(RPoint location)
         {
-            _location = location;
+            this.Location = location;
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public double X
         {
-            get { return _location.X; }
+            get { return this.Location.X; }
         }
 
         /// <summary>
@@ -48,12 +48,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public double Y
         {
-            get { return _location.Y; }
+            get { return this.Location.Y; }
         }
 
         public override string ToString()
         {
-            return string.Format("Location: {0}", _location);
+            return string.Format("Location: {0}", this.Location);
         }
     }
 }

@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -28,10 +28,9 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// <summary>
         /// Cache for resource images
         /// </summary>
-        private static readonly Dictionary<string, Image> _imageCache = new Dictionary<string, Image>(StringComparer.OrdinalIgnoreCase);
+        private static readonly Dictionary<string, Image> ImageCache = new Dictionary<string, Image>(StringComparer.OrdinalIgnoreCase);
 
         #endregion
-
 
         /// <summary>
         /// Check if currently running in mono.
@@ -53,6 +52,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
                 g.FillRectangle(SystemBrushes.Control, new Rectangle(0, 0, 5, 5));
                 g.FillRectangle(SystemBrushes.Control, new Rectangle(5, 5, 5, 5));
             }
+
             return image;
         }
 
@@ -62,15 +62,16 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         public static Image TryLoadResourceImage(string src)
         {
             Image image;
-            if (!_imageCache.TryGetValue(src, out image))
+            if (!ImageCache.TryGetValue(src, out image))
             {
                 var imageStream = DemoUtils.GetImageStream(src);
                 if (imageStream != null)
                 {
                     image = Image.FromStream(imageStream);
-                    _imageCache[src] = image;
+                    ImageCache[src] = image;
                 }
             }
+
             return image;
         }
 
@@ -83,7 +84,9 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
             XImage xImg;
 
             if (img == null)
+            {
                 return null;
+            }
 
             using (var ms = new MemoryStream())
             {
@@ -129,9 +132,13 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
 
             object imgObj;
             if (pdfSharp)
+            {
                 imgObj = xImg;
+            }
             else
+            {
                 imgObj = img;
+            }
 
             if (!e.Handled && e.Attributes != null)
             {
@@ -164,7 +171,9 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
             }
 
             if (img != null)
+            {
                 e.Callback(imgObj);
+            }
         }
     }
 }

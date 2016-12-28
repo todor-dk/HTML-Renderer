@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -20,7 +20,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
     /// Represents a word inside an inline box
     /// </summary>
     /// <remarks>
-    /// Because of performance, words of text are the most atomic 
+    /// Because of performance, words of text are the most atomic
     /// element in the project. It should be characters, but come on,
     /// imagine the performance when drawing char by char on the device.<br/>
     /// It may change for future versions of the library.
@@ -32,20 +32,19 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <summary>
         /// the CSS box owner of the word
         /// </summary>
-        private readonly CssBox _ownerBox;
+        private readonly CssBox _OwnerBox;
 
         /// <summary>
         /// Rectangle
         /// </summary>
-        private RRect _rect;
+        private RRect Rect;
 
         /// <summary>
         /// If the word is selected this points to the selection handler for more data
         /// </summary>
-        private SelectionHandler _selection;
+        private SelectionHandler _Selection;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -53,7 +52,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="owner">the CSS box owner of the word</param>
         protected CssRect(CssBox owner)
         {
-            _ownerBox = owner;
+            this._OwnerBox = owner;
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public CssBox OwnerBox
         {
-            get { return _ownerBox; }
+            get { return this._OwnerBox; }
         }
 
         /// <summary>
@@ -69,8 +68,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public RRect Rectangle
         {
-            get { return _rect; }
-            set { _rect = value; }
+            get { return this.Rect; }
+            set { this.Rect = value; }
         }
 
         /// <summary>
@@ -78,8 +77,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public double Left
         {
-            get { return _rect.X; }
-            set { _rect.X = value; }
+            get { return this.Rect.X; }
+            set { this.Rect.X = value; }
         }
 
         /// <summary>
@@ -87,8 +86,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public double Top
         {
-            get { return _rect.Y; }
-            set { _rect.Y = value; }
+            get { return this.Rect.Y; }
+            set { this.Rect.Y = value; }
         }
 
         /// <summary>
@@ -96,8 +95,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public double Width
         {
-            get { return _rect.Width; }
-            set { _rect.Width = value; }
+            get { return this.Rect.Width; }
+            set { this.Rect.Width = value; }
         }
 
         /// <summary>
@@ -105,7 +104,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public double FullWidth
         {
-            get { return _rect.Width + ActualWordSpacing; }
+            get { return this.Rect.Width + this.ActualWordSpacing; }
         }
 
         /// <summary>
@@ -113,7 +112,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public double ActualWordSpacing
         {
-            get { return (OwnerBox != null ? (HasSpaceAfter ? OwnerBox.ActualWordSpacing : 0) + (IsImage ? OwnerBox.ActualWordSpacing : 0) : 0); }
+            get { return this.OwnerBox != null ? (this.HasSpaceAfter ? this.OwnerBox.ActualWordSpacing : 0) + (this.IsImage ? this.OwnerBox.ActualWordSpacing : 0) : 0; }
         }
 
         /// <summary>
@@ -121,8 +120,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public double Height
         {
-            get { return _rect.Height; }
-            set { _rect.Height = value; }
+            get { return this.Rect.Height; }
+            set { this.Rect.Height = value; }
         }
 
         /// <summary>
@@ -130,8 +129,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public double Right
         {
-            get { return Rectangle.Right; }
-            set { Width = value - Left; }
+            get { return this.Rectangle.Right; }
+            set { this.Width = value - this.Left; }
         }
 
         /// <summary>
@@ -139,8 +138,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public double Bottom
         {
-            get { return Rectangle.Bottom; }
-            set { Height = value - Top; }
+            get { return this.Rectangle.Bottom; }
+            set { this.Height = value - this.Top; }
         }
 
         /// <summary>
@@ -148,8 +147,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public SelectionHandler Selection
         {
-            get { return _selection; }
-            set { _selection = value; }
+            get { return this._Selection; }
+            set { this._Selection = value; }
         }
 
         /// <summary>
@@ -174,8 +173,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         public virtual RImage Image
         {
             get { return null; }
+
             // ReSharper disable ValueParameterNotUsed
             set { }
+
             // ReSharper restore ValueParameterNotUsed
         }
 
@@ -217,7 +218,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public bool Selected
         {
-            get { return _selection != null; }
+            get { return this._Selection != null; }
         }
 
         /// <summary>
@@ -225,7 +226,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public int SelectedStartIndex
         {
-            get { return _selection != null ? _selection.GetSelectingStartIndex(this) : -1; }
+            get { return this._Selection != null ? this._Selection.GetSelectingStartIndex(this) : -1; }
         }
 
         /// <summary>
@@ -233,7 +234,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public int SelectedEndIndexOffset
         {
-            get { return _selection != null ? _selection.GetSelectedEndIndexOffset(this) : -1; }
+            get { return this._Selection != null ? this._Selection.GetSelectedEndIndexOffset(this) : -1; }
         }
 
         /// <summary>
@@ -241,7 +242,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public double SelectedStartOffset
         {
-            get { return _selection != null ? _selection.GetSelectedStartOffset(this) : -1; }
+            get { return this._Selection != null ? this._Selection.GetSelectedStartOffset(this) : -1; }
         }
 
         /// <summary>
@@ -249,7 +250,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public double SelectedEndOffset
         {
-            get { return _selection != null ? _selection.GetSelectedEndOffset(this) : -1; }
+            get { return this._Selection != null ? this._Selection.GetSelectedEndOffset(this) : -1; }
         }
 
         /// <summary>
@@ -257,7 +258,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         internal double LeftGlyphPadding
         {
-            get { return OwnerBox != null ? OwnerBox.ActualFont.LeftPadding : 0; }
+            get { return this.OwnerBox != null ? this.OwnerBox.ActualFont.LeftPadding : 0; }
         }
 
         /// <summary>
@@ -266,7 +267,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("{0} ({1} char{2})", Text.Replace(' ', '-').Replace("\n", "\\n"), Text.Length, Text.Length != 1 ? "s" : string.Empty);
+            return string.Format("{0} ({1} char{2})", this.Text.Replace(' ', '-').Replace("\n", "\\n"), this.Text.Length, this.Text.Length != 1 ? "s" : string.Empty);
         }
 
         public bool BreakPage()

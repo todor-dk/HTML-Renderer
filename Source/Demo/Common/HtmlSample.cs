@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -17,33 +17,33 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
     /// </summary>
     public sealed class HtmlSample
     {
-        private readonly string _name;
-        private readonly string _fullName;
-        private readonly string _html;
+        private readonly string _Name;
+        private readonly string _FullName;
+        private readonly string _Html;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public HtmlSample(string name, string fullName, string html)
         {
-            _name = name;
-            _fullName = fullName;
-            _html = html;
+            this._Name = name;
+            this._FullName = fullName;
+            this._Html = html;
         }
 
         public string Name
         {
-            get { return _name; }
+            get { return this._Name; }
         }
 
         public string FullName
         {
-            get { return _fullName; }
+            get { return this._FullName; }
         }
 
         public string Html
         {
-            get { return _html; }
+            get { return this._Html; }
         }
     }
 }

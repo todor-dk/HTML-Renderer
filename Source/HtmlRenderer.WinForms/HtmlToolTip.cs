@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -31,85 +31,84 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// <summary>
         /// the container to render and handle the html shown in the tooltip
         /// </summary>
-        protected HtmlContainer _htmlContainer;
+        protected HtmlContainer HtmlContainer;
 
         /// <summary>
         /// the raw base stylesheet data used in the control
         /// </summary>
-        protected string _baseRawCssData;
+        protected string BaseRawCssData;
 
         /// <summary>
         /// the base stylesheet data used in the panel
         /// </summary>
-        protected CssData _baseCssData;
+        protected CssData BaseCssData;
 
         /// <summary>
         /// The text rendering hint to be used for text rendering.
         /// </summary>
-        protected TextRenderingHint _textRenderingHint = TextRenderingHint.SystemDefault;
+        protected TextRenderingHint _TextRenderingHint = TextRenderingHint.SystemDefault;
 
         /// <summary>
         /// The CSS class used for tooltip html root div
         /// </summary>
-        private string _tooltipCssClass = "htmltooltip";
+        private string _TooltipCssClass = "htmltooltip";
 
 #if !MONO
-       
+
         /// <summary>
         /// the control that the tooltip is currently showing on.<br/>
         /// Used for link handling.
         /// </summary>
-        private Control _associatedControl;
+        private Control AssociatedControl;
 
         /// <summary>
         /// timer used to handle mouse move events when mouse is over the tooltip.<br/>
         /// Used for link handling.
         /// </summary>
-        private Timer _linkHandlingTimer;
+        private Timer LinkHandlingTimer;
 
         /// <summary>
         /// the handle of the actual tooltip window used to know when the tooltip is hidden<br/>
         /// Used for link handling.
         /// </summary>
-        private IntPtr _tooltipHandle;
+        private IntPtr TooltipHandle;
 
         /// <summary>
         /// If to handle links in the tooltip (default: false).<br/>
         /// When set to true the mouse pointer will change to hand when hovering over a tooltip and
         /// if clicked the <see cref="LinkClicked"/> event will be raised although the tooltip will be closed.
         /// </summary>
-        private bool _allowLinksHandling = true;
+        private bool _AllowLinksHandling = true;
 #endif
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         public HtmlToolTip()
         {
-            OwnerDraw = true;
+            this.OwnerDraw = true;
 
-            _htmlContainer = new HtmlContainer();
-            _htmlContainer.IsSelectionEnabled = false;
-            _htmlContainer.IsContextMenuEnabled = false;
-            _htmlContainer.AvoidGeometryAntialias = true;
-            _htmlContainer.AvoidImagesLateLoading = true;
-            _htmlContainer.RenderError += OnRenderError;
-            _htmlContainer.StylesheetLoad += OnStylesheetLoad;
-            _htmlContainer.ImageLoad += OnImageLoad;
+            this.HtmlContainer = new HtmlContainer();
+            this.HtmlContainer.IsSelectionEnabled = false;
+            this.HtmlContainer.IsContextMenuEnabled = false;
+            this.HtmlContainer.AvoidGeometryAntialias = true;
+            this.HtmlContainer.AvoidImagesLateLoading = true;
+            this.HtmlContainer.RenderError += this.OnRenderError;
+            this.HtmlContainer.StylesheetLoad += this.OnStylesheetLoad;
+            this.HtmlContainer.ImageLoad += this.OnImageLoad;
 
-            Popup += OnToolTipPopup;
-            Draw += OnToolTipDraw;
-            Disposed += OnToolTipDisposed;
+            this.Popup += this.OnToolTipPopup;
+            this.Draw += this.OnToolTipDraw;
+            this.Disposed += this.OnToolTipDisposed;
 
 #if !MONO
-            _linkHandlingTimer = new Timer();
-            _linkHandlingTimer.Tick += OnLinkHandlingTimerTick;
-            _linkHandlingTimer.Interval = 40;
+            this.LinkHandlingTimer = new Timer();
+            this.LinkHandlingTimer.Tick += this.OnLinkHandlingTimerTick;
+            this.LinkHandlingTimer.Interval = 40;
 
-            _htmlContainer.LinkClicked += OnLinkClicked;
+            this.HtmlContainer.LinkClicked += this.OnLinkClicked;
 #endif
         }
 
@@ -158,8 +157,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("If to use GDI+ text rendering to measure/draw text, false - use GDI")]
         public bool UseGdiPlusTextRendering
         {
-            get { return _htmlContainer.UseGdiPlusTextRendering; }
-            set { _htmlContainer.UseGdiPlusTextRendering = value; }
+            get { return this.HtmlContainer.UseGdiPlusTextRendering; }
+            set { this.HtmlContainer.UseGdiPlusTextRendering = value; }
         }
 
         /// <summary>
@@ -171,8 +170,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("The text rendering hint to be used for text rendering.")]
         public TextRenderingHint TextRenderingHint
         {
-            get { return _textRenderingHint; }
-            set { _textRenderingHint = value; }
+            get { return this._TextRenderingHint; }
+            set { this._TextRenderingHint = value; }
         }
 
         /// <summary>
@@ -184,11 +183,15 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Editor("System.ComponentModel.Design.MultilineStringEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", "System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
         public virtual string BaseStylesheet
         {
-            get { return _baseRawCssData; }
+            get
+            {
+                return this.BaseRawCssData;
+            }
+
             set
             {
-                _baseRawCssData = value;
-                _baseCssData = HtmlRender.ParseStyleSheet(value);
+                this.BaseRawCssData = value;
+                this.BaseCssData = HtmlRender.ParseStyleSheet(value);
             }
         }
 
@@ -202,8 +205,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Category("Appearance")]
         public virtual string TooltipCssClass
         {
-            get { return _tooltipCssClass; }
-            set { _tooltipCssClass = value; }
+            get { return this._TooltipCssClass; }
+            set { this._TooltipCssClass = value; }
         }
 
 #if !MONO
@@ -218,8 +221,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Category("Behavior")]
         public virtual bool AllowLinksHandling
         {
-            get { return _allowLinksHandling; }
-            set { _allowLinksHandling = value; }
+            get { return this._AllowLinksHandling; }
+            set { this._AllowLinksHandling = value; }
         }
 #endif
 
@@ -232,10 +235,9 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("Restrict the max size of the shown tooltip (0 is not restricted)")]
         public virtual Size MaximumSize
         {
-            get { return Size.Round(_htmlContainer.MaxSize); }
-            set { _htmlContainer.MaxSize = value; }
+            get { return Size.Round(this.HtmlContainer.MaxSize); }
+            set { this.HtmlContainer.MaxSize = value; }
         }
-
 
         #region Private methods
 
@@ -244,30 +246,30 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnToolTipPopup(PopupEventArgs e)
         {
-            //Create fragment container
-            var cssClass = string.IsNullOrEmpty(_tooltipCssClass) ? null : string.Format(" class=\"{0}\"", _tooltipCssClass);
-            var toolipHtml = string.Format("<div{0}>{1}</div>", cssClass, GetToolTip(e.AssociatedControl));
-            _htmlContainer.SetHtml(toolipHtml, _baseCssData);
-            _htmlContainer.MaxSize = MaximumSize;
+            // Create fragment container
+            var cssClass = string.IsNullOrEmpty(this._TooltipCssClass) ? null : string.Format(" class=\"{0}\"", this._TooltipCssClass);
+            var toolipHtml = string.Format("<div{0}>{1}</div>", cssClass, this.GetToolTip(e.AssociatedControl));
+            this.HtmlContainer.SetHtml(toolipHtml, this.BaseCssData);
+            this.HtmlContainer.MaxSize = this.MaximumSize;
 
-            //Measure size of the container
+            // Measure size of the container
             using (var g = e.AssociatedControl.CreateGraphics())
             {
-                g.TextRenderingHint = _textRenderingHint;
-                _htmlContainer.PerformLayout(g);
+                g.TextRenderingHint = this._TextRenderingHint;
+                this.HtmlContainer.PerformLayout(g);
             }
 
-            //Set the size of the tooltip
-            var desiredWidth = (int)Math.Ceiling(MaximumSize.Width > 0 ? Math.Min(_htmlContainer.ActualSize.Width, MaximumSize.Width) : _htmlContainer.ActualSize.Width);
-            var desiredHeight = (int)Math.Ceiling(MaximumSize.Height > 0 ? Math.Min(_htmlContainer.ActualSize.Height, MaximumSize.Height) : _htmlContainer.ActualSize.Height);
+            // Set the size of the tooltip
+            var desiredWidth = (int)Math.Ceiling(this.MaximumSize.Width > 0 ? Math.Min(this.HtmlContainer.ActualSize.Width, this.MaximumSize.Width) : this.HtmlContainer.ActualSize.Width);
+            var desiredHeight = (int)Math.Ceiling(this.MaximumSize.Height > 0 ? Math.Min(this.HtmlContainer.ActualSize.Height, this.MaximumSize.Height) : this.HtmlContainer.ActualSize.Height);
             e.ToolTipSize = new Size(desiredWidth, desiredHeight);
 
 #if !MONO
             // start mouse handle timer
-            if (_allowLinksHandling)
+            if (this._AllowLinksHandling)
             {
-                _associatedControl = e.AssociatedControl;
-                _linkHandlingTimer.Start();
+                this.AssociatedControl = e.AssociatedControl;
+                this.LinkHandlingTimer.Start();
             }
 #endif
         }
@@ -278,20 +280,20 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         protected virtual void OnToolTipDraw(DrawToolTipEventArgs e)
         {
 #if !MONO
-            if (_tooltipHandle == IntPtr.Zero)
+            if (this.TooltipHandle == IntPtr.Zero)
             {
                 // get the handle of the tooltip window using the graphics device context
                 var hdc = e.Graphics.GetHdc();
-                _tooltipHandle = Win32Utils.WindowFromDC(hdc);
+                this.TooltipHandle = Win32Utils.WindowFromDC(hdc);
                 e.Graphics.ReleaseHdc(hdc);
 
-                AdjustTooltipPosition(e.AssociatedControl, e.Bounds.Size);
+                this.AdjustTooltipPosition(e.AssociatedControl, e.Bounds.Size);
             }
 #endif
 
             e.Graphics.Clear(Color.White);
-            e.Graphics.TextRenderingHint = _textRenderingHint;
-            _htmlContainer.PerformPaint(e.Graphics);
+            e.Graphics.TextRenderingHint = this._TextRenderingHint;
+            this.HtmlContainer.PerformPaint(e.Graphics);
         }
 
         /// <summary>
@@ -307,15 +309,19 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
 
             // adjust if tooltip is outside form bounds
             if (mousePos.X + size.Width > screenBounds.Right)
+            {
                 mousePos.X = Math.Max(screenBounds.Right - size.Width - 5, screenBounds.Left + 3);
+            }
 
             const int yOffset = 20;
             if (mousePos.Y + size.Height + yOffset > screenBounds.Bottom)
+            {
                 mousePos.Y = Math.Max(screenBounds.Bottom - size.Height - yOffset - 3, screenBounds.Top + 2);
+            }
 
 #if !MONO
             // move the tooltip window to new location
-            Win32Utils.MoveWindow(_tooltipHandle, mousePos.X, mousePos.Y + yOffset, size.Width, size.Height, false);
+            Win32Utils.MoveWindow(this.TooltipHandle, mousePos.X, mousePos.Y + yOffset, size.Width, size.Height, false);
 #endif
         }
 
@@ -325,9 +331,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnLinkClicked(HtmlLinkClickedEventArgs e)
         {
-            var handler = LinkClicked;
+            var handler = this.LinkClicked;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 #endif
 
@@ -336,9 +344,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnRenderError(HtmlRenderErrorEventArgs e)
         {
-            var handler = RenderError;
+            var handler = this.RenderError;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -346,9 +356,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnStylesheetLoad(HtmlStylesheetLoadEventArgs e)
         {
-            var handler = StylesheetLoad;
+            var handler = this.StylesheetLoad;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -356,9 +368,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnImageLoad(HtmlImageLoadEventArgs e)
         {
-            var handler = ImageLoad;
+            var handler = this.ImageLoad;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
 #if !MONO
@@ -372,7 +386,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         {
             try
             {
-                var handle = _tooltipHandle;
+                var handle = this.TooltipHandle;
                 if (handle != IntPtr.Zero && Win32Utils.IsWindowVisible(handle))
                 {
                     var mPos = Control.MousePosition;
@@ -380,13 +394,13 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
                     var rect = Win32Utils.GetWindowRectangle(handle);
                     if (rect.Contains(mPos))
                     {
-                        _htmlContainer.HandleMouseMove(_associatedControl, new MouseEventArgs(mButtons, 0, mPos.X - rect.X, mPos.Y - rect.Y, 0));
+                        this.HtmlContainer.HandleMouseMove(this.AssociatedControl, new MouseEventArgs(mButtons, 0, mPos.X - rect.X, mPos.Y - rect.Y, 0));
                     }
                 }
                 else
                 {
-                    _linkHandlingTimer.Stop();
-                    _tooltipHandle = IntPtr.Zero;
+                    this.LinkHandlingTimer.Stop();
+                    this.TooltipHandle = IntPtr.Zero;
 
                     var mPos = Control.MousePosition;
                     var mButtons = Control.MouseButtons;
@@ -396,94 +410,96 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
                         if (mButtons == MouseButtons.Left)
                         {
                             var args = new MouseEventArgs(mButtons, 1, mPos.X - rect.X, mPos.Y - rect.Y, 0);
-                            _htmlContainer.HandleMouseDown(_associatedControl, args);
-                            _htmlContainer.HandleMouseUp(_associatedControl, args);
+                            this.HtmlContainer.HandleMouseDown(this.AssociatedControl, args);
+                            this.HtmlContainer.HandleMouseUp(this.AssociatedControl, args);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                OnRenderError(this, new HtmlRenderErrorEventArgs(HtmlRenderErrorType.General, "Error in link handling for tooltip", ex));
+                this.OnRenderError(this, new HtmlRenderErrorEventArgs(HtmlRenderErrorType.General, "Error in link handling for tooltip", ex));
             }
         }
 #endif
 
         /// <summary>
-        /// Unsubscribe from events and dispose of <see cref="_htmlContainer"/>.
+        /// Unsubscribe from events and dispose of <see cref="HtmlContainer"/>.
         /// </summary>
         protected virtual void OnToolTipDisposed(EventArgs e)
         {
-            Popup -= OnToolTipPopup;
-            Draw -= OnToolTipDraw;
-            Disposed -= OnToolTipDisposed;
+            this.Popup -= this.OnToolTipPopup;
+            this.Draw -= this.OnToolTipDraw;
+            this.Disposed -= this.OnToolTipDisposed;
 
-            if (_htmlContainer != null)
+            if (this.HtmlContainer != null)
             {
-                _htmlContainer.RenderError -= OnRenderError;
-                _htmlContainer.StylesheetLoad -= OnStylesheetLoad;
-                _htmlContainer.ImageLoad -= OnImageLoad;
-                _htmlContainer.Dispose();
-                _htmlContainer = null;
+                this.HtmlContainer.RenderError -= this.OnRenderError;
+                this.HtmlContainer.StylesheetLoad -= this.OnStylesheetLoad;
+                this.HtmlContainer.ImageLoad -= this.OnImageLoad;
+                this.HtmlContainer.Dispose();
+                this.HtmlContainer = null;
             }
 
 #if !MONO
-            if (_linkHandlingTimer != null)
+            if (this.LinkHandlingTimer != null)
             {
-                _linkHandlingTimer.Dispose();
-                _linkHandlingTimer = null;
+                this.LinkHandlingTimer.Dispose();
+                this.LinkHandlingTimer = null;
 
-                if (_htmlContainer != null)
-                    _htmlContainer.LinkClicked -= OnLinkClicked;
+                if (this.HtmlContainer != null)
+                {
+                    this.HtmlContainer.LinkClicked -= this.OnLinkClicked;
+                }
             }
 #endif
         }
-
 
         #region Private event handlers
 
         private void OnToolTipPopup(object sender, PopupEventArgs e)
         {
-            OnToolTipPopup(e);
+            this.OnToolTipPopup(e);
         }
 
         private void OnToolTipDraw(object sender, DrawToolTipEventArgs e)
         {
-            OnToolTipDraw(e);
+            this.OnToolTipDraw(e);
         }
+
         private void OnRenderError(object sender, HtmlRenderErrorEventArgs e)
         {
-            OnRenderError(e);
+            this.OnRenderError(e);
         }
 
         private void OnStylesheetLoad(object sender, HtmlStylesheetLoadEventArgs e)
         {
-            OnStylesheetLoad(e);
+            this.OnStylesheetLoad(e);
         }
 
         private void OnImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
-            OnImageLoad(e);
+            this.OnImageLoad(e);
         }
 
 #if !MONO
         private void OnLinkClicked(object sender, HtmlLinkClickedEventArgs e)
         {
-            OnLinkClicked(e);
+            this.OnLinkClicked(e);
         }
+
         private void OnLinkHandlingTimerTick(object sender, EventArgs e)
         {
-            OnLinkHandlingTimerTick(e);
+            this.OnLinkHandlingTimerTick(e);
         }
 #endif
 
         private void OnToolTipDisposed(object sender, EventArgs e)
         {
-            OnToolTipDisposed(e);
+            this.OnToolTipDisposed(e);
         }
 
         #endregion
-
 
         #endregion
     }

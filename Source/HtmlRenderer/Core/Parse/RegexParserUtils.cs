@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -28,7 +28,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         public const string CssMediaTypes = @"@media[^\{\}]*\{";
 
         /// <summary>
-        /// Extracts defined blocks in CSS. 
+        /// Extracts defined blocks in CSS.
         /// WARNING: Blocks will include blocks inside at-rules.
         /// </summary>
         public const string CssBlocks = @"[^\{\}]*\{[^\{\}]*\}";
@@ -87,10 +87,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// <summary>
         /// the regexes cache that is used by the parser so not to create regex each time
         /// </summary>
-        private static readonly Dictionary<string, Regex> _regexes = new Dictionary<string, Regex>();
+        private static readonly Dictionary<string, Regex> Regexes = new Dictionary<string, Regex>();
 
         #endregion
-
 
         /// <summary>
         /// Get CSS at rule from the given stylesheet.
@@ -119,6 +118,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                             count--;
                         }
                     }
+
                     if (endIdx < stylesheet.Length)
                     {
                         var atrule = stylesheet.Substring(startIdx, endIdx - startIdx + 1);
@@ -127,6 +127,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     }
                 }
             }
+
             return null;
         }
 
@@ -186,11 +187,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         private static Regex GetRegex(string regex)
         {
             Regex r;
-            if (!_regexes.TryGetValue(regex, out r))
+            if (!Regexes.TryGetValue(regex, out r))
             {
                 r = new Regex(regex, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                _regexes[regex] = r;
+                Regexes[regex] = r;
             }
+
             return r;
         }
     }

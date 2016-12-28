@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -30,10 +30,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         /// <summary>
         /// Parser for CSS
         /// </summary>
-        private readonly CssParser _cssParser;
+        private readonly CssParser CssParser;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -42,7 +41,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         {
             ArgChecker.AssertArgNotNull(cssParser, "cssParser");
 
-            _cssParser = cssParser;
+            this.CssParser = cssParser;
         }
 
         /// <summary>
@@ -60,11 +59,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 root.HtmlContainer = htmlContainer;
 
                 bool cssDataChanged = false;
-                CascadeParseStyles(root, htmlContainer, ref cssData, ref cssDataChanged);
+                this.CascadeParseStyles(root, htmlContainer, ref cssData, ref cssDataChanged);
 
-                CascadeApplyStyles(root, cssData);
+                this.CascadeApplyStyles(root, cssData);
 
-                SetTextSelectionStyle(htmlContainer, cssData);
+                this.SetTextSelectionStyle(htmlContainer, cssData);
 
                 CorrectTextBoxes(root);
 
@@ -79,9 +78,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
 
                 CorrectInlineBoxesParent(root);
             }
+
             return root;
         }
-
 
         #region Private methods
 
@@ -107,7 +106,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     CssData stylesheetData;
                     StylesheetLoadHandler.LoadStylesheet(htmlContainer, box.GetAttribute("href", string.Empty), box.HtmlTag.Attributes, out stylesheet, out stylesheetData);
                     if (stylesheet != null)
-                        _cssParser.ParseStyleSheet(cssData, stylesheet);
+                        this.CssParser.ParseStyleSheet(cssData, stylesheet);
                     else if (stylesheetData != null)
                         cssData.Combine(stylesheetData);
                 }
@@ -117,16 +116,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 {
                     CloneCssData(ref cssData, ref cssDataChanged);
                     foreach (var child in box.Boxes)
-                        _cssParser.ParseStyleSheet(cssData, child.Text.CutSubstring());
+                        this.CssParser.ParseStyleSheet(cssData, child.Text.CutSubstring());
                 }
             }
 
             foreach (var childBox in box.Boxes)
             {
-                CascadeParseStyles(childBox, htmlContainer, ref cssData, ref cssDataChanged);
+                this.CascadeParseStyles(childBox, htmlContainer, ref cssData, ref cssDataChanged);
             }
         }
-
 
         /// <summary>
         /// Applies style to all boxes in the tree.<br/>
@@ -161,12 +159,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     AssignCssBlocks(box, cssData, "#" + id);
                 }
 
-                TranslateAttributes(box.HtmlTag, box);
+                this.TranslateAttributes(box.HtmlTag, box);
 
                 // Check for the style="" attribute
                 if (box.HtmlTag.HasAttribute("style"))
                 {
-                    var block = _cssParser.ParseCssBlock(box.HtmlTag.Name, box.HtmlTag.TryGetAttribute("style"));
+                    var block = this.CssParser.ParseCssBlock(box.HtmlTag.Name, box.HtmlTag.TryGetAttribute("style"));
                     if (block != null)
                         AssignCssBlock(box, block);
                 }
@@ -182,7 +180,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
 
             foreach (var childBox in box.Boxes)
             {
-                CascadeApplyStyles(childBox, cssData);
+                this.CascadeApplyStyles(childBox, cssData);
             }
         }
 
@@ -202,9 +200,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 foreach (var block in blocks)
                 {
                     if (block.Properties.ContainsKey("color"))
-                        htmlContainer.SelectionForeColor = _cssParser.ParseColor(block.Properties["color"]);
+                        htmlContainer.SelectionForeColor = this.CssParser.ParseColor(block.Properties["color"]);
                     if (block.Properties.ContainsKey("background-color"))
-                        htmlContainer.SelectionBackColor = _cssParser.ParseColor(block.Properties["background-color"]);
+                        htmlContainer.SelectionBackColor = this.CssParser.ParseColor(block.Properties["background-color"]);
                 }
             }
         }
@@ -329,6 +327,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                         return false;
                 }
             }
+
             return true;
         }
 
@@ -346,6 +345,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                 {
                     value = CssUtils.GetPropertyValue(box.ParentBox, prop.Key);
                 }
+
                 if (IsStyleOnElementAllowed(box, prop.Key, value))
                 {
                     CssUtils.SetPropertyValue(box, prop.Key, value);
@@ -388,6 +388,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                         return value == CssConstants.TableCaption;
                 }
             }
+
             return true;
         }
 
@@ -405,7 +406,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tag"></param>
         /// <param name="box"></param>
@@ -445,6 +446,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                             {
                                 box.BorderTopStyle = box.BorderLeftStyle = box.BorderRightStyle = box.BorderBottomStyle = CssConstants.Solid;
                             }
+
                             break;
                         case HtmlConstants.Bordercolor:
                             box.BorderLeftColor = box.BorderTopColor = box.BorderRightColor = box.BorderBottomColor = value.ToLower();
@@ -462,7 +464,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                             box.Direction = value.ToLower();
                             break;
                         case HtmlConstants.Face:
-                            box.FontFamily = _cssParser.ParseFontFamily(value);
+                            box.FontFamily = this.CssParser.ParseFontFamily(value);
                             break;
                         case HtmlConstants.Height:
                             box.Height = TranslateLength(value);
@@ -597,7 +599,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     }
                     else
                     {
-                        // remove text box that has no 
+                        // remove text box that has no
                         childBox.ParentBox.Boxes.RemoveAt(i);
                     }
                 }
@@ -677,7 +679,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     if (followingBlock)
                         brBox.Height = ".95em"; // TODO:a check the height to min-height when it is supported
                 }
-            } while (brBox != null);
+            }
+            while (brBox != null);
         }
 
         /// <summary>
@@ -782,6 +785,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Parse
                     leftbox = CssBox.CreateBox(leftBlock, badBox.HtmlTag);
                     leftbox.InheritStyle(badBox, true);
                 }
+
                 badBox.Boxes[0].ParentBox = leftbox;
             }
 

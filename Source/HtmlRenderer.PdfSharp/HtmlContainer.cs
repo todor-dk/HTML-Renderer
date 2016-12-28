@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -33,19 +33,18 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// <summary>
         /// The internal core html container
         /// </summary>
-        private readonly HtmlContainerInt _htmlContainerInt;
+        private readonly HtmlContainerInt _HtmlContainerInt;
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         public HtmlContainer()
         {
-            _htmlContainerInt = new HtmlContainerInt(PdfSharpAdapter.Instance);
-            _htmlContainerInt.AvoidAsyncImagesLoading = true;
-            _htmlContainerInt.AvoidImagesLateLoading = true;
+            this._HtmlContainerInt = new HtmlContainerInt(PdfSharpAdapter.Instance);
+            this._HtmlContainerInt.AvoidAsyncImagesLoading = true;
+            this._HtmlContainerInt.AvoidImagesLateLoading = true;
         }
 
         /// <summary>
@@ -54,8 +53,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public event EventHandler LoadComplete
         {
-            add { _htmlContainerInt.LoadComplete += value; }
-            remove { _htmlContainerInt.LoadComplete -= value; }
+            add { this._HtmlContainerInt.LoadComplete += value; }
+            remove { this._HtmlContainerInt.LoadComplete -= value; }
         }
 
         /// <summary>
@@ -66,8 +65,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </remarks>
         public event EventHandler<HtmlRenderErrorEventArgs> RenderError
         {
-            add { _htmlContainerInt.RenderError += value; }
-            remove { _htmlContainerInt.RenderError -= value; }
+            add { this._HtmlContainerInt.RenderError += value; }
+            remove { this._HtmlContainerInt.RenderError -= value; }
         }
 
         /// <summary>
@@ -77,8 +76,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public event EventHandler<HtmlStylesheetLoadEventArgs> StylesheetLoad
         {
-            add { _htmlContainerInt.StylesheetLoad += value; }
-            remove { _htmlContainerInt.StylesheetLoad -= value; }
+            add { this._HtmlContainerInt.StylesheetLoad += value; }
+            remove { this._HtmlContainerInt.StylesheetLoad -= value; }
         }
 
         /// <summary>
@@ -87,8 +86,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public event EventHandler<HtmlImageLoadEventArgs> ImageLoad
         {
-            add { _htmlContainerInt.ImageLoad += value; }
-            remove { _htmlContainerInt.ImageLoad -= value; }
+            add { this._HtmlContainerInt.ImageLoad += value; }
+            remove { this._HtmlContainerInt.ImageLoad -= value; }
         }
 
         /// <summary>
@@ -96,7 +95,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         internal HtmlContainerInt HtmlContainerInt
         {
-            get { return _htmlContainerInt; }
+            get { return this._HtmlContainerInt; }
         }
 
         /// <summary>
@@ -104,7 +103,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public CssData CssData
         {
-            get { return _htmlContainerInt.CssData; }
+            get { return this._HtmlContainerInt.CssData; }
         }
 
         /// <summary>
@@ -112,8 +111,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public bool AvoidGeometryAntialias
         {
-            get { return _htmlContainerInt.AvoidGeometryAntialias; }
-            set { _htmlContainerInt.AvoidGeometryAntialias = value; }
+            get { return this._HtmlContainerInt.AvoidGeometryAntialias; }
+            set { this._HtmlContainerInt.AvoidGeometryAntialias = value; }
         }
 
         /// <summary>
@@ -126,8 +125,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </example>
         public XPoint ScrollOffset
         {
-            get { return Utils.Convert(_htmlContainerInt.ScrollOffset); }
-            set { _htmlContainerInt.ScrollOffset = Utils.Convert(value); }
+            get { return Utils.Convert(this._HtmlContainerInt.ScrollOffset); }
+            set { this._HtmlContainerInt.ScrollOffset = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -136,8 +135,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public XPoint Location
         {
-            get { return Utils.Convert(_htmlContainerInt.Location); }
-            set { _htmlContainerInt.Location = Utils.Convert(value); }
+            get { return Utils.Convert(this._HtmlContainerInt.Location); }
+            set { this._HtmlContainerInt.Location = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -149,8 +148,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public XSize MaxSize
         {
-            get { return Utils.Convert(_htmlContainerInt.MaxSize); }
-            set { _htmlContainerInt.MaxSize = Utils.Convert(value); }
+            get { return Utils.Convert(this._HtmlContainerInt.MaxSize); }
+            set { this._HtmlContainerInt.MaxSize = Utils.Convert(value); }
         }
 
         /// <summary>
@@ -158,18 +157,20 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public XSize ActualSize
         {
-            get { return Utils.Convert(_htmlContainerInt.ActualSize); }
-            internal set { _htmlContainerInt.ActualSize = Utils.Convert(value); }
+            get { return Utils.Convert(this._HtmlContainerInt.ActualSize); }
+            internal set { this._HtmlContainerInt.ActualSize = Utils.Convert(value); }
         }
 
-        public XSize PageSize {
+        public XSize PageSize
+        {
             get
             {
-                return new XSize(_htmlContainerInt.PageSize.Width, _htmlContainerInt.PageSize.Height);
+                return new XSize(this._HtmlContainerInt.PageSize.Width, this._HtmlContainerInt.PageSize.Height);
             }
+
             set
             {
-                _htmlContainerInt.PageSize = new RSize(value.Width, value.Height);
+                this._HtmlContainerInt.PageSize = new RSize(value.Width, value.Height);
             }
         }
 
@@ -178,11 +179,17 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public int MarginTop
         {
-            get { return _htmlContainerInt.MarginTop; }
+            get
+            {
+                return this._HtmlContainerInt.MarginTop;
+            }
+
             set
             {
                 if (value > -1)
-                    _htmlContainerInt.MarginTop = value;
+                {
+                    this._HtmlContainerInt.MarginTop = value;
+                }
             }
         }
 
@@ -191,11 +198,17 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public int MarginBottom
         {
-            get { return _htmlContainerInt.MarginBottom; }
+            get
+            {
+                return this._HtmlContainerInt.MarginBottom;
+            }
+
             set
             {
                 if (value > -1)
-                    _htmlContainerInt.MarginBottom = value;
+                {
+                    this._HtmlContainerInt.MarginBottom = value;
+                }
             }
         }
 
@@ -204,11 +217,17 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public int MarginLeft
         {
-            get { return _htmlContainerInt.MarginLeft; }
+            get
+            {
+                return this._HtmlContainerInt.MarginLeft;
+            }
+
             set
             {
                 if (value > -1)
-                    _htmlContainerInt.MarginLeft = value;
+                {
+                    this._HtmlContainerInt.MarginLeft = value;
+                }
             }
         }
 
@@ -217,11 +236,17 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public int MarginRight
         {
-            get { return _htmlContainerInt.MarginRight; }
+            get
+            {
+                return this._HtmlContainerInt.MarginRight;
+            }
+
             set
             {
                 if (value > -1)
-                    _htmlContainerInt.MarginRight = value;
+                {
+                    this._HtmlContainerInt.MarginRight = value;
+                }
             }
         }
 
@@ -232,7 +257,9 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         public void SetMargins(int value)
         {
             if (value > -1)
-                _htmlContainerInt.SetMargins(value);
+            {
+                this._HtmlContainerInt.SetMargins(value);
+            }
         }
 
         /// <summary>
@@ -240,7 +267,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public string SelectedText
         {
-            get { return _htmlContainerInt.SelectedText; }
+            get { return this._HtmlContainerInt.SelectedText; }
         }
 
         /// <summary>
@@ -248,7 +275,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// </summary>
         public string SelectedHtml
         {
-            get { return _htmlContainerInt.SelectedHtml; }
+            get { return this._HtmlContainerInt.SelectedHtml; }
         }
 
         /// <summary>
@@ -258,7 +285,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// <param name="baseCssData">optional: the stylesheet to init with, init default if not given</param>
         public void SetHtml(string htmlSource, CssData baseCssData = null)
         {
-            _htmlContainerInt.SetHtml(htmlSource, baseCssData);
+            this._HtmlContainerInt.SetHtml(htmlSource, baseCssData);
         }
 
         /// <summary>
@@ -268,7 +295,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// <returns>generated html</returns>
         public string GetHtml(HtmlGenerationStyle styleGen = HtmlGenerationStyle.Inline)
         {
-            return _htmlContainerInt.GetHtml(styleGen);
+            return this._HtmlContainerInt.GetHtml(styleGen);
         }
 
         /// <summary>
@@ -280,7 +307,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// <returns>found attribute value or null if not found</returns>
         public string GetAttributeAt(XPoint location, string attribute)
         {
-            return _htmlContainerInt.GetAttributeAt(Utils.Convert(location), attribute);
+            return this._HtmlContainerInt.GetAttributeAt(Utils.Convert(location), attribute);
         }
 
         /// <summary>
@@ -290,10 +317,11 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         public List<LinkElementData<XRect>> GetLinks()
         {
             var linkElements = new List<LinkElementData<XRect>>();
-            foreach (var link in HtmlContainerInt.GetLinks())
+            foreach (var link in this.HtmlContainerInt.GetLinks())
             {
                 linkElements.Add(new LinkElementData<XRect>(link.Id, link.Href, Utils.Convert(link.Rectangle)));
             }
+
             return linkElements;
         }
 
@@ -304,7 +332,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// <returns>css link href if exists or null</returns>
         public string GetLinkAt(XPoint location)
         {
-            return _htmlContainerInt.GetLinkAt(Utils.Convert(location));
+            return this._HtmlContainerInt.GetLinkAt(Utils.Convert(location));
         }
 
         /// <summary>
@@ -316,7 +344,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
         /// <returns>the rectangle of the element or null if not found</returns>
         public XRect? GetElementRectangle(string elementId)
         {
-            var r = _htmlContainerInt.GetElementRectangle(elementId);
+            var r = this._HtmlContainerInt.GetElementRectangle(elementId);
             return r.HasValue ? Utils.Convert(r.Value) : (XRect?)null;
         }
 
@@ -330,7 +358,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
 
             using (var ig = new GraphicsAdapter(g))
             {
-                _htmlContainerInt.PerformLayout(ig);
+                this._HtmlContainerInt.PerformLayout(ig);
             }
         }
 
@@ -344,13 +372,13 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp
 
             using (var ig = new GraphicsAdapter(g))
             {
-                _htmlContainerInt.PerformPaint(ig);
+                this._HtmlContainerInt.PerformPaint(ig);
             }
         }
 
         public void Dispose()
         {
-            _htmlContainerInt.Dispose();
+            this._HtmlContainerInt.Dispose();
         }
     }
 }

@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -33,40 +33,39 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <summary>
         /// the image word of this image box
         /// </summary>
-        private readonly CssRectImage _imageWord;
+        private readonly CssRectImage ImageWord;
 
         /// <summary>
         /// is the iframe is of embeded video
         /// </summary>
-        private readonly bool _isVideo;
+        private readonly bool _IsVideo;
 
         /// <summary>
         /// the title of the video
         /// </summary>
-        private string _videoTitle;
+        private string VideoTitle;
 
         /// <summary>
         /// the url of the video thumbnail image
         /// </summary>
-        private string _videoImageUrl;
+        private string VideoImageUrl;
 
         /// <summary>
         /// link to the video on the site
         /// </summary>
-        private string _videoLinkUrl;
+        private string VideoLinkUrl;
 
         /// <summary>
         /// handler used for image loading by source
         /// </summary>
-        private ImageLoadHandler _imageLoadHandler;
+        private ImageLoadHandler ImageLoadHandler;
 
         /// <summary>
         /// is image load is finished, used to know if no image is found
         /// </summary>
-        private bool _imageLoadingComplete;
+        private bool ImageLoadingComplete;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -76,27 +75,27 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         public CssBoxFrame(CssBox parent, HtmlTag tag)
             : base(parent, tag)
         {
-            _imageWord = new CssRectImage(this);
-            Words.Add(_imageWord);
+            this.ImageWord = new CssRectImage(this);
+            this.Words.Add(this.ImageWord);
 
             Uri uri;
-            if (Uri.TryCreate(GetAttribute("src"), UriKind.Absolute, out uri))
+            if (Uri.TryCreate(this.GetAttribute("src"), UriKind.Absolute, out uri))
             {
                 if (uri.Host.IndexOf("youtube.com", StringComparison.InvariantCultureIgnoreCase) > -1)
                 {
-                    _isVideo = true;
-                    LoadYoutubeDataAsync(uri);
+                    this._IsVideo = true;
+                    this.LoadYoutubeDataAsync(uri);
                 }
                 else if (uri.Host.IndexOf("vimeo.com", StringComparison.InvariantCultureIgnoreCase) > -1)
                 {
-                    _isVideo = true;
-                    LoadVimeoDataAsync(uri);
+                    this._IsVideo = true;
+                    this.LoadVimeoDataAsync(uri);
                 }
             }
 
-            if (!_isVideo)
+            if (!this._IsVideo)
             {
-                SetErrorBorder();
+                this.SetErrorBorder();
             }
         }
 
@@ -113,7 +112,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public override string HrefLink
         {
-            get { return _videoLinkUrl ?? GetAttribute("src"); }
+            get { return this.VideoLinkUrl ?? this.GetAttribute("src"); }
         }
 
         /// <summary>
@@ -121,7 +120,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public bool IsVideo
         {
-            get { return _isVideo; }
+            get { return this._IsVideo; }
         }
 
         /// <summary>
@@ -129,11 +128,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public override void Dispose()
         {
-            if (_imageLoadHandler != null)
-                _imageLoadHandler.Dispose();
+            if (this.ImageLoadHandler != null)
+                this.ImageLoadHandler.Dispose();
             base.Dispose();
         }
-
 
         #region Private methods
 
@@ -150,13 +148,13 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
 
                     var client = new WebClient();
                     client.Encoding = Encoding.UTF8;
-                    client.DownloadStringCompleted += OnDownloadYoutubeApiCompleted;
+                    client.DownloadStringCompleted += this.OnDownloadYoutubeApiCompleted;
                     client.DownloadStringAsync(apiUri);
                 }
                 catch (Exception ex)
                 {
-                    HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get youtube video data: " + uri, ex);
-                    HtmlContainer.RequestRefresh(false);
+                    this.HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get youtube video data: " + uri, ex);
+                    this.HtmlContainer.RequestRefresh(false);
                 }
             });
         }
@@ -186,7 +184,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                                         endIdx = e.Result.IndexOf('"', endIdx + 1);
                                     if (endIdx > -1)
                                     {
-                                        _videoTitle = e.Result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"");
+                                        this.VideoTitle = e.Result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"");
                                     }
                                 }
                             }
@@ -198,38 +196,38 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                             var iidx = e.Result.IndexOf("sddefault", idx);
                             if (iidx > -1)
                             {
-                                if (string.IsNullOrEmpty(Width))
-                                    Width = "640px";
-                                if (string.IsNullOrEmpty(Height))
-                                    Height = "480px";
+                                if (string.IsNullOrEmpty(this.Width))
+                                    this.Width = "640px";
+                                if (string.IsNullOrEmpty(this.Height))
+                                    this.Height = "480px";
                             }
                             else
                             {
                                 iidx = e.Result.IndexOf("hqdefault", idx);
                                 if (iidx > -1)
                                 {
-                                    if (string.IsNullOrEmpty(Width))
-                                        Width = "480px";
-                                    if (string.IsNullOrEmpty(Height))
-                                        Height = "360px";
+                                    if (string.IsNullOrEmpty(this.Width))
+                                        this.Width = "480px";
+                                    if (string.IsNullOrEmpty(this.Height))
+                                        this.Height = "360px";
                                 }
                                 else
                                 {
                                     iidx = e.Result.IndexOf("mqdefault", idx);
                                     if (iidx > -1)
                                     {
-                                        if (string.IsNullOrEmpty(Width))
-                                            Width = "320px";
-                                        if (string.IsNullOrEmpty(Height))
-                                            Height = "180px";
+                                        if (string.IsNullOrEmpty(this.Width))
+                                            this.Width = "320px";
+                                        if (string.IsNullOrEmpty(this.Height))
+                                            this.Height = "180px";
                                     }
                                     else
                                     {
                                         iidx = e.Result.IndexOf("default", idx);
-                                        if (string.IsNullOrEmpty(Width))
-                                            Width = "120px";
-                                        if (string.IsNullOrEmpty(Height))
-                                            Height = "90px";
+                                        if (string.IsNullOrEmpty(this.Width))
+                                            this.Width = "120px";
+                                        if (string.IsNullOrEmpty(this.Height))
+                                            this.Height = "90px";
                                     }
                                 }
                             }
@@ -240,7 +238,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                                 var endIdx = e.Result.IndexOf('"', iidx);
                                 if (endIdx > -1)
                                 {
-                                    _videoImageUrl = e.Result.Substring(iidx, endIdx - iidx).Replace("\\\"", "\"").Replace("\\", "");
+                                    this.VideoImageUrl = e.Result.Substring(iidx, endIdx - iidx).Replace("\\\"", "\"").Replace("\\", "");
                                 }
                             }
                         }
@@ -254,23 +252,23 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                                 var endIdx = e.Result.IndexOf('"', idx);
                                 if (endIdx > -1)
                                 {
-                                    _videoLinkUrl = e.Result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
+                                    this.VideoLinkUrl = e.Result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
                                 }
                             }
                         }
                     }
                     else
                     {
-                        HandleDataLoadFailure(e.Error, "YouTube");
+                        this.HandleDataLoadFailure(e.Error, "YouTube");
                     }
                 }
             }
             catch (Exception ex)
             {
-                HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to parse YouTube video response", ex);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to parse YouTube video response", ex);
             }
 
-            HandlePostApiCall(sender);
+            this.HandlePostApiCall(sender);
         }
 
         /// <summary>
@@ -286,15 +284,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
 
                     var client = new WebClient();
                     client.Encoding = Encoding.UTF8;
-                    client.DownloadStringCompleted += OnDownloadVimeoApiCompleted;
+                    client.DownloadStringCompleted += this.OnDownloadVimeoApiCompleted;
                     client.DownloadStringAsync(apiUri);
                 }
                 catch (Exception ex)
                 {
-                    _imageLoadingComplete = true;
-                    SetErrorBorder();
-                    HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get vimeo video data: " + uri, ex);
-                    HtmlContainer.RequestRefresh(false);
+                    this.ImageLoadingComplete = true;
+                    this.SetErrorBorder();
+                    this.HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get vimeo video data: " + uri, ex);
+                    this.HtmlContainer.RequestRefresh(false);
                 }
             });
         }
@@ -321,7 +319,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                                     endIdx = e.Result.IndexOf('"', endIdx + 1);
                                 if (endIdx > -1)
                                 {
-                                    _videoTitle = e.Result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"");
+                                    this.VideoTitle = e.Result.Substring(idx + 1, endIdx - idx - 1).Replace("\\\"", "\"");
                                 }
                             }
                         }
@@ -329,30 +327,31 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                         idx = e.Result.IndexOf("\"thumbnail_large\"", StringComparison.Ordinal);
                         if (idx > -1)
                         {
-                            if (string.IsNullOrEmpty(Width))
-                                Width = "640";
-                            if (string.IsNullOrEmpty(Height))
-                                Height = "360";
+                            if (string.IsNullOrEmpty(this.Width))
+                                this.Width = "640";
+                            if (string.IsNullOrEmpty(this.Height))
+                                this.Height = "360";
                         }
                         else
                         {
                             idx = e.Result.IndexOf("thumbnail_medium", idx);
                             if (idx > -1)
                             {
-                                if (string.IsNullOrEmpty(Width))
-                                    Width = "200";
-                                if (string.IsNullOrEmpty(Height))
-                                    Height = "150";
+                                if (string.IsNullOrEmpty(this.Width))
+                                    this.Width = "200";
+                                if (string.IsNullOrEmpty(this.Height))
+                                    this.Height = "150";
                             }
                             else
                             {
                                 idx = e.Result.IndexOf("thumbnail_small", idx);
-                                if (string.IsNullOrEmpty(Width))
-                                    Width = "100";
-                                if (string.IsNullOrEmpty(Height))
-                                    Height = "75";
+                                if (string.IsNullOrEmpty(this.Width))
+                                    this.Width = "100";
+                                if (string.IsNullOrEmpty(this.Height))
+                                    this.Height = "75";
                             }
                         }
+
                         if (idx > -1)
                         {
                             idx = e.Result.IndexOf("http:", idx);
@@ -361,7 +360,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                                 var endIdx = e.Result.IndexOf('"', idx);
                                 if (endIdx > -1)
                                 {
-                                    _videoImageUrl = e.Result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
+                                    this.VideoImageUrl = e.Result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
                                 }
                             }
                         }
@@ -375,23 +374,23 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                                 var endIdx = e.Result.IndexOf('"', idx);
                                 if (endIdx > -1)
                                 {
-                                    _videoLinkUrl = e.Result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
+                                    this.VideoLinkUrl = e.Result.Substring(idx, endIdx - idx).Replace("\\\"", "\"").Replace("\\", "");
                                 }
                             }
                         }
                     }
                     else
                     {
-                        HandleDataLoadFailure(e.Error, "Vimeo");
+                        this.HandleDataLoadFailure(e.Error, "Vimeo");
                     }
                 }
             }
             catch (Exception ex)
             {
-                HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to parse Vimeo video response", ex);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to parse Vimeo video response", ex);
             }
 
-            HandlePostApiCall(sender);
+            this.HandlePostApiCall(sender);
         }
 
         /// <summary>
@@ -405,11 +404,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
             var webResponse = webError != null ? webError.Response as HttpWebResponse : null;
             if (webResponse != null && webResponse.StatusCode == HttpStatusCode.NotFound)
             {
-                _videoTitle = "The video is not found, possibly removed by the user.";
+                this.VideoTitle = "The video is not found, possibly removed by the user.";
             }
             else
             {
-                HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to load " + source + " video data", ex);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to load " + source + " video data", ex);
             }
         }
 
@@ -420,21 +419,22 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         {
             try
             {
-                if (_videoImageUrl == null)
+                if (this.VideoImageUrl == null)
                 {
-                    _imageLoadingComplete = true;
-                    SetErrorBorder();
+                    this.ImageLoadingComplete = true;
+                    this.SetErrorBorder();
                 }
 
                 var webClient = (WebClient)sender;
-                webClient.DownloadStringCompleted -= OnDownloadYoutubeApiCompleted;
-                webClient.DownloadStringCompleted -= OnDownloadVimeoApiCompleted;
+                webClient.DownloadStringCompleted -= this.OnDownloadYoutubeApiCompleted;
+                webClient.DownloadStringCompleted -= this.OnDownloadVimeoApiCompleted;
                 webClient.Dispose();
 
-                HtmlContainer.RequestRefresh(IsLayoutRequired());
+                this.HtmlContainer.RequestRefresh(this.IsLayoutRequired());
             }
             catch
-            { }
+            {
+            }
         }
 
         /// <summary>
@@ -443,37 +443,37 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="g">the device to draw to</param>
         protected override void PaintImp(RGraphics g)
         {
-            if (_videoImageUrl != null && _imageLoadHandler == null)
+            if (this.VideoImageUrl != null && this.ImageLoadHandler == null)
             {
-                _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
-                _imageLoadHandler.LoadImage(_videoImageUrl, HtmlTag != null ? HtmlTag.Attributes : null);
+                this.ImageLoadHandler = new ImageLoadHandler(this.HtmlContainer, this.OnLoadImageComplete);
+                this.ImageLoadHandler.LoadImage(this.VideoImageUrl, this.HtmlTag != null ? this.HtmlTag.Attributes : null);
             }
 
-            var rects = CommonUtils.GetFirstValueOrDefault(Rectangles);
+            var rects = CommonUtils.GetFirstValueOrDefault(this.Rectangles);
 
-            RPoint offset = (HtmlContainer != null && !IsFixed) ? HtmlContainer.ScrollOffset : RPoint.Empty;
+            RPoint offset = (this.HtmlContainer != null && !this.IsFixed) ? this.HtmlContainer.ScrollOffset : RPoint.Empty;
             rects.Offset(offset);
 
             var clipped = RenderUtils.ClipGraphicsByOverflow(g, this);
 
-            PaintBackground(g, rects, true, true);
+            this.PaintBackground(g, rects, true, true);
 
             BordersDrawHandler.DrawBoxBorders(g, this, rects, true, true);
 
-            var word = Words[0];
+            var word = this.Words[0];
             var tmpRect = word.Rectangle;
             tmpRect.Offset(offset);
-            tmpRect.Height -= ActualBorderTopWidth + ActualBorderBottomWidth + ActualPaddingTop + ActualPaddingBottom;
-            tmpRect.Y += ActualBorderTopWidth + ActualPaddingTop;
+            tmpRect.Height -= this.ActualBorderTopWidth + this.ActualBorderBottomWidth + this.ActualPaddingTop + this.ActualPaddingBottom;
+            tmpRect.Y += this.ActualBorderTopWidth + this.ActualPaddingTop;
             tmpRect.X = Math.Floor(tmpRect.X);
             tmpRect.Y = Math.Floor(tmpRect.Y);
             var rect = tmpRect;
 
-            DrawImage(g, offset, rect);
+            this.DrawImage(g, offset, rect);
 
-            DrawTitle(g, rect);
+            this.DrawTitle(g, rect);
 
-            DrawPlay(g, rect);
+            this.DrawPlay(g, rect);
 
             if (clipped)
                 g.PopClip();
@@ -484,24 +484,24 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         private void DrawImage(RGraphics g, RPoint offset, RRect rect)
         {
-            if (_imageWord.Image != null)
+            if (this.ImageWord.Image != null)
             {
                 if (rect.Width > 0 && rect.Height > 0)
                 {
-                    if (_imageWord.ImageRectangle == RRect.Empty)
-                        g.DrawImage(_imageWord.Image, rect);
+                    if (this.ImageWord.ImageRectangle == RRect.Empty)
+                        g.DrawImage(this.ImageWord.Image, rect);
                     else
-                        g.DrawImage(_imageWord.Image, rect, _imageWord.ImageRectangle);
+                        g.DrawImage(this.ImageWord.Image, rect, this.ImageWord.ImageRectangle);
 
-                    if (_imageWord.Selected)
+                    if (this.ImageWord.Selected)
                     {
-                        g.DrawRectangle(GetSelectionBackBrush(g, true), _imageWord.Left + offset.X, _imageWord.Top + offset.Y, _imageWord.Width + 2, DomUtils.GetCssLineBoxByWord(_imageWord).LineHeight);
+                        g.DrawRectangle(this.GetSelectionBackBrush(g, true), this.ImageWord.Left + offset.X, this.ImageWord.Top + offset.Y, this.ImageWord.Width + 2, DomUtils.GetCssLineBoxByWord(this.ImageWord).LineHeight);
                     }
                 }
             }
-            else if (_isVideo && !_imageLoadingComplete)
+            else if (this._IsVideo && !this.ImageLoadingComplete)
             {
-                RenderUtils.DrawImageLoadingIcon(g, HtmlContainer, rect);
+                RenderUtils.DrawImageLoadingIcon(g, this.HtmlContainer, rect);
                 if (rect.Width > 19 && rect.Height > 19)
                 {
                     g.DrawRectangle(g.GetPen(RColor.LightGray), rect.X, rect.Y, rect.Width, rect.Height);
@@ -514,13 +514,13 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         private void DrawTitle(RGraphics g, RRect rect)
         {
-            if (_videoTitle != null && _imageWord.Width > 40 && _imageWord.Height > 40)
+            if (this.VideoTitle != null && this.ImageWord.Width > 40 && this.ImageWord.Height > 40)
             {
-                var font = HtmlContainer.Adapter.GetFont("Arial", 9f, RFontStyle.Regular);
-                g.DrawRectangle(g.GetSolidBrush(RColor.FromArgb(160, 0, 0, 0)), rect.Left, rect.Top, rect.Width, ActualFont.Height + 7);
+                var font = this.HtmlContainer.Adapter.GetFont("Arial", 9f, RFontStyle.Regular);
+                g.DrawRectangle(g.GetSolidBrush(RColor.FromArgb(160, 0, 0, 0)), rect.Left, rect.Top, rect.Width, this.ActualFont.Height + 7);
 
                 var titleRect = new RRect(rect.Left + 3, rect.Top + 3, rect.Width - 6, rect.Height - 6);
-                g.DrawString(_videoTitle, font, RColor.WhiteSmoke, titleRect.Location, RSize.Empty, false);
+                g.DrawString(this.VideoTitle, font, RColor.WhiteSmoke, titleRect.Location, RSize.Empty, false);
             }
         }
 
@@ -529,23 +529,23 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         private void DrawPlay(RGraphics g, RRect rect)
         {
-            if (_isVideo && _imageWord.Width > 70 && _imageWord.Height > 50)
+            if (this._IsVideo && this.ImageWord.Width > 70 && this.ImageWord.Height > 50)
             {
                 var prevMode = g.SetAntiAliasSmoothingMode();
 
                 var size = new RSize(60, 40);
-                var left = rect.Left + (rect.Width - size.Width) / 2;
-                var top = rect.Top + (rect.Height - size.Height) / 2;
+                var left = rect.Left + ((rect.Width - size.Width) / 2);
+                var top = rect.Top + ((rect.Height - size.Height) / 2);
                 g.DrawRectangle(g.GetSolidBrush(RColor.FromArgb(160, 0, 0, 0)), left, top, size.Width, size.Height);
 
                 RPoint[] points =
                 {
-                    new RPoint(left + size.Width / 3f + 1,top + 3 * size.Height / 4f),
-                    new RPoint(left + size.Width / 3f + 1, top + size.Height / 4f),
-                    new RPoint(left + 2 * size.Width / 3f + 1, top + size.Height / 2f)
+                    new RPoint(left + (size.Width / 3f) + 1, top + (3 * size.Height / 4f)),
+                    new RPoint(left + (size.Width / 3f) + 1, top + (size.Height / 4f)),
+                    new RPoint(left + (2 * size.Width / 3f) + 1, top + (size.Height / 2f))
                 };
                 g.DrawPolygon(g.GetSolidBrush(RColor.White), points);
-                
+
                 g.ReturnPreviousSmoothingMode(prevMode);
             }
         }
@@ -556,12 +556,13 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="g">the device to use</param>
         internal override void MeasureWordsSize(RGraphics g)
         {
-            if (!_wordsSizeMeasured)
+            if (!this.WordsSizeMeasured)
             {
-                MeasureWordSpacing(g);
-                _wordsSizeMeasured = true;
+                this.MeasureWordSpacing(g);
+                this.WordsSizeMeasured = true;
             }
-            CssLayoutEngine.MeasureImageSize(_imageWord);
+
+            CssLayoutEngine.MeasureImageSize(this.ImageWord);
         }
 
         /// <summary>
@@ -569,8 +570,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         private void SetErrorBorder()
         {
-            SetAllBorders(CssConstants.Solid, "2px", "#A0A0A0");
-            BorderRightColor = BorderBottomColor = "#E3E3E3";
+            this.SetAllBorders(CssConstants.Solid, "2px", "#A0A0A0");
+            this.BorderRightColor = this.BorderBottomColor = "#E3E3E3";
         }
 
         /// <summary>
@@ -581,26 +582,26 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="async">is the callback was called async to load image call</param>
         private void OnLoadImageComplete(RImage image, RRect rectangle, bool async)
         {
-            _imageWord.Image = image;
-            _imageWord.ImageRectangle = rectangle;
-            _imageLoadingComplete = true;
-            _wordsSizeMeasured = false;
+            this.ImageWord.Image = image;
+            this.ImageWord.ImageRectangle = rectangle;
+            this.ImageLoadingComplete = true;
+            this.WordsSizeMeasured = false;
 
-            if (_imageLoadingComplete && image == null)
+            if (this.ImageLoadingComplete && image == null)
             {
-                SetErrorBorder();
+                this.SetErrorBorder();
             }
 
             if (async)
             {
-                HtmlContainer.RequestRefresh(IsLayoutRequired());
+                this.HtmlContainer.RequestRefresh(this.IsLayoutRequired());
             }
         }
 
         private bool IsLayoutRequired()
         {
-            var width = new CssLength(Width);
-            var height = new CssLength(Height);
+            var width = new CssLength(this.Width);
+            var height = new CssLength(this.Height);
             return (width.Number <= 0 || width.Unit != CssUnit.Pixels) || (height.Number <= 0 || height.Unit != CssUnit.Pixels);
         }
 

@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -42,11 +42,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public static readonly RSize Empty = new RSize();
 
-        private double _height;
-        private double _width;
-
         #endregion
-
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RSize" /> structure from the specified existing
@@ -62,8 +58,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </param>
         public RSize(RSize size)
         {
-            _width = size._width;
-            _height = size._height;
+            this.Width = size.Width;
+            this.Height = size.Height;
         }
 
         /// <summary>
@@ -72,8 +68,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <param name="pt">The <see cref="RPoint" /> structure from which to initialize this <see cref="RSize" /> structure.</param>
         public RSize(RPoint pt)
         {
-            _width = pt.X;
-            _height = pt.Y;
+            this.Width = pt.X;
+            this.Height = pt.Y;
         }
 
         /// <summary>
@@ -87,8 +83,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </param>
         public RSize(double width, double height)
         {
-            _width = width;
-            _height = height;
+            this.Width = width;
+            this.Height = height;
         }
 
         /// <summary>
@@ -102,8 +98,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         {
             get
             {
-                if (Math.Abs(_width) < 0.0001)
-                    return Math.Abs(_height) < 0.0001;
+                if (Math.Abs(this.Width) < 0.0001)
+                    return Math.Abs(this.Height) < 0.0001;
                 else
                     return false;
             }
@@ -116,11 +112,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         ///     The horizontal component of this <see cref="RSize" /> structure, typically measured in pixels.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public double Width
-        {
-            get { return _width; }
-            set { _width = value; }
-        }
+        public double Width { get; set; }
 
         /// <summary>
         ///     Gets or sets the vertical component of this <see cref="RSize" /> structure.
@@ -129,11 +121,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         ///     The vertical component of this <see cref="RSize" /> structure, typically measured in pixels.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public double Height
-        {
-            get { return _height; }
-            set { _height = value; }
-        }
+        public double Height { get; set; }
 
         /// <summary>
         ///     Converts the specified <see cref="RSize" /> structure to a
@@ -292,8 +280,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
             if (!(obj is RSize))
                 return false;
             var sizeF = (RSize)obj;
-            if (Math.Abs(sizeF.Width - Width) < 0.001 && Math.Abs(sizeF.Height - Height) < 0.001)
-                return sizeF.GetType() == GetType();
+            if (Math.Abs(sizeF.Width - this.Width) < 0.001 && Math.Abs(sizeF.Height - this.Height) < 0.001)
+                return sizeF.GetType() == this.GetType();
             else
                 return false;
         }
@@ -335,7 +323,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </PermissionSet>
         public override string ToString()
         {
-            return "{Width=" + _width + ", Height=" + _height + "}";
+            return "{Width=" + this.Width + ", Height=" + this.Height + "}";
         }
     }
 }

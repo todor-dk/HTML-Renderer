@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -35,7 +35,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF
     /// Because of GDI text rendering issue with alpha channel clear type text rendering rendering to image requires special handling.<br/>
     /// <u>Solid color background -</u> generate an image where the background is filled with solid color and all the html is rendered on top
     /// of the background color, GDI text rendering will be used. (RenderToImage method where the first argument is html string)<br/>
-    /// <u>Image background -</u> render html on top of existing image with whatever currently exist but it cannot have transparent pixels, 
+    /// <u>Image background -</u> render html on top of existing image with whatever currently exist but it cannot have transparent pixels,
     /// GDI text rendering will be used. (RenderToImage method where the first argument is Image object)<br/>
     /// <u>Transparent background -</u> render html to empty image using GDI+ text rendering, the generated image can be transparent.
     /// </para>
@@ -54,7 +54,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF
     /// Allows to overwrite the loaded image by providing the image object manually, or different source (file or URL) to load from.<br/>
     /// Example: image 'src' can be non-valid string that is interpreted in the overwrite delegate by custom logic to resource image object<br/>
     /// Example: image 'src' in the html is relative - the overwrite intercepts the load and provide full source URL to load the image from<br/>
-    /// Example: image download requires authentication - the overwrite intercepts the load, downloads the image to disk using custom code and provide 
+    /// Example: image download requires authentication - the overwrite intercepts the load, downloads the image to disk using custom code and provide
     /// file path to load the image from.<br/>
     /// If no alternative data is provided the original source will be used.<br/>
     /// Note: Cannot use asynchronous scheme overwrite scheme.<br/>
@@ -93,7 +93,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF
 
         /// <summary>
         /// Adds a font mapping from <paramref name="fromFamily"/> to <paramref name="toFamily"/> iff the <paramref name="fromFamily"/> is not found.<br/>
-        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing 
+        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing
         /// fonts (installed or added) it will be replaced by <paramref name="toFamily"/>.<br/>
         /// </summary>
         /// <remarks>
@@ -111,7 +111,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF
 
         /// <summary>
         /// Parse the given stylesheet to <see cref="CssData"/> object.<br/>
-        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the 
+        /// If <paramref name="combineWithDefault"/> is true the parsed css blocks are added to the
         /// default css data (as defined by W3), merged if class name already exists. If false only the data in the given stylesheet is returned.
         /// </summary>
         /// <seealso cref="http://www.w3.org/TR/CSS21/sample.html"/>
@@ -134,8 +134,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the size required for the html</returns>
-        public static Size Measure(string html, double maxWidth = 0, CssData cssData = null,
-            EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static Size Measure(string html, double maxWidth = 0, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
         {
             Size actualSize = Size.Empty;
             if (!string.IsNullOrEmpty(html))
@@ -147,9 +146,14 @@ namespace TheArtOfDev.HtmlRenderer.WPF
                     container.AvoidImagesLateLoading = true;
 
                     if (stylesheetLoad != null)
+                    {
                         container.StylesheetLoad += stylesheetLoad;
+                    }
+
                     if (imageLoad != null)
+                    {
                         container.ImageLoad += imageLoad;
+                    }
 
                     container.SetHtml(html, cssData);
                     container.PerformLayout();
@@ -157,12 +161,13 @@ namespace TheArtOfDev.HtmlRenderer.WPF
                     actualSize = container.ActualSize;
                 }
             }
+
             return actualSize;
         }
 
         /// <summary>
         /// Renders the specified HTML source on the specified location and max width restriction.<br/>
-        /// If <paramref name="maxWidth"/> is zero the html will use all the required width, otherwise it will perform line 
+        /// If <paramref name="maxWidth"/> is zero the html will use all the required width, otherwise it will perform line
         /// wrap as specified in the html<br/>
         /// Returned is the actual width and height of the rendered html.<br/>
         /// </summary>
@@ -175,8 +180,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the actual size of the rendered html</returns>
-        public static Size Render(DrawingContext g, string html, double left = 0, double top = 0, double maxWidth = 0, CssData cssData = null,
-            EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static Size Render(DrawingContext g, string html, double left = 0, double top = 0, double maxWidth = 0, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
         {
             ArgChecker.AssertArgNotNull(g, "g");
             return RenderClip(g, html, new Point(left, top), new Size(maxWidth, 0), cssData, stylesheetLoad, imageLoad);
@@ -184,7 +188,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF
 
         /// <summary>
         /// Renders the specified HTML source on the specified location and max size restriction.<br/>
-        /// If <paramref name="maxSize"/>.Width is zero the html will use all the required width, otherwise it will perform line 
+        /// If <paramref name="maxSize"/>.Width is zero the html will use all the required width, otherwise it will perform line
         /// wrap as specified in the html<br/>
         /// If <paramref name="maxSize"/>.Height is zero the html will use all the required height, otherwise it will clip at the
         /// given max height not rendering the html below it.<br/>
@@ -198,8 +202,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the actual size of the rendered html</returns>
-        public static Size Render(DrawingContext g, string html, Point location, Size maxSize, CssData cssData = null,
-            EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static Size Render(DrawingContext g, string html, Point location, Size maxSize, CssData cssData = null, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
         {
             ArgChecker.AssertArgNotNull(g, "g");
             return RenderClip(g, html, location, maxSize, cssData, stylesheetLoad, imageLoad);
@@ -215,8 +218,12 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the generated image of the html</returns>
-        public static BitmapFrame RenderToImage(string html, Size size, CssData cssData = null,
-            EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static BitmapFrame RenderToImage(
+            string html,
+            Size size,
+            CssData cssData = null,
+            EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null,
+            EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
         {
             var renderTarget = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96, 96, PixelFormats.Pbgra32);
 
@@ -238,7 +245,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF
 
         /// <summary>
         /// Renders the specified HTML into a new image of unknown size that will be determined by max width/height and HTML layout.<br/>
-        /// If <paramref name="maxWidth"/> is zero the html will use all the required width, otherwise it will perform line 
+        /// If <paramref name="maxWidth"/> is zero the html will use all the required width, otherwise it will perform line
         /// wrap as specified in the html<br/>
         /// If <paramref name="maxHeight"/> is zero the html will use all the required height, otherwise it will clip at the
         /// given max height not rendering the html below it.<br/>
@@ -255,15 +262,21 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the generated image of the html</returns>
-        public static BitmapFrame RenderToImage(string html, int maxWidth = 0, int maxHeight = 0, Color backgroundColor = new Color(), CssData cssData = null,
-            EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static BitmapFrame RenderToImage(
+            string html,
+            int maxWidth = 0,
+            int maxHeight = 0,
+            Color backgroundColor = new Color(),
+            CssData cssData = null,
+            EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null,
+            EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
         {
             return RenderToImage(html, Size.Empty, new Size(maxWidth, maxHeight), backgroundColor, cssData, stylesheetLoad, imageLoad);
         }
 
         /// <summary>
         /// Renders the specified HTML into a new image of unknown size that will be determined by min/max width/height and HTML layout.<br/>
-        /// If <paramref name="maxSize.Width"/> is zero the html will use all the required width, otherwise it will perform line 
+        /// If <paramref name="maxSize.Width"/> is zero the html will use all the required width, otherwise it will perform line
         /// wrap as specified in the html<br/>
         /// If <paramref name="maxSize.Height"/> is zero the html will use all the required height, otherwise it will clip at the
         /// given max height not rendering the html below it.<br/>
@@ -281,8 +294,14 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         /// <param name="stylesheetLoad">optional: can be used to overwrite stylesheet resolution logic</param>
         /// <param name="imageLoad">optional: can be used to overwrite image resolution logic</param>
         /// <returns>the generated image of the html</returns>
-        public static BitmapFrame RenderToImage(string html, Size minSize, Size maxSize, Color backgroundColor = new Color(), CssData cssData = null,
-            EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null, EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
+        public static BitmapFrame RenderToImage(
+            string html,
+            Size minSize,
+            Size maxSize,
+            Color backgroundColor = new Color(),
+            CssData cssData = null,
+            EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = null,
+            EventHandler<HtmlImageLoadEventArgs> imageLoad = null)
         {
             RenderTargetBitmap renderTarget;
             if (!string.IsNullOrEmpty(html))
@@ -293,9 +312,15 @@ namespace TheArtOfDev.HtmlRenderer.WPF
                     container.AvoidImagesLateLoading = true;
 
                     if (stylesheetLoad != null)
+                    {
                         container.StylesheetLoad += stylesheetLoad;
+                    }
+
                     if (imageLoad != null)
+                    {
                         container.ImageLoad += imageLoad;
+                    }
+
                     container.SetHtml(html, cssData);
 
                     var finalSize = MeasureHtmlByRestrictions(container, minSize, maxSize);
@@ -322,7 +347,6 @@ namespace TheArtOfDev.HtmlRenderer.WPF
             return BitmapFrame.Create(renderTarget);
         }
 
-
         #region Private methods
 
         /// <summary>
@@ -339,14 +363,17 @@ namespace TheArtOfDev.HtmlRenderer.WPF
             {
                 var sizeInt = HtmlRendererUtils.MeasureHtmlByRestrictions(mg, htmlContainer.HtmlContainerInt, Utils.Convert(minSize), Utils.Convert(maxSize));
                 if (maxSize.Width < 1 && sizeInt.Width > 4096)
+                {
                     sizeInt.Width = 4096;
+                }
+
                 return Utils.ConvertRound(sizeInt);
             }
         }
 
         /// <summary>
         /// Renders the specified HTML source on the specified location and max size restriction.<br/>
-        /// If <paramref name="maxSize"/>.Width is zero the html will use all the required width, otherwise it will perform line 
+        /// If <paramref name="maxSize"/>.Width is zero the html will use all the required width, otherwise it will perform line
         /// wrap as specified in the html<br/>
         /// If <paramref name="maxSize"/>.Height is zero the html will use all the required height, otherwise it will clip at the
         /// given max height not rendering the html below it.<br/>
@@ -364,19 +391,23 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         private static Size RenderClip(DrawingContext g, string html, Point location, Size maxSize, CssData cssData, EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad, EventHandler<HtmlImageLoadEventArgs> imageLoad)
         {
             if (maxSize.Height > 0)
+            {
                 g.PushClip(new RectangleGeometry(new Rect(location, maxSize)));
+            }
 
             var actualSize = RenderHtml(g, html, location, maxSize, cssData, stylesheetLoad, imageLoad);
 
             if (maxSize.Height > 0)
+            {
                 g.Pop();
+            }
 
             return actualSize;
         }
 
         /// <summary>
         /// Renders the specified HTML source on the specified location and max size restriction.<br/>
-        /// If <paramref name="maxSize"/>.Width is zero the html will use all the required width, otherwise it will perform line 
+        /// If <paramref name="maxSize"/>.Width is zero the html will use all the required width, otherwise it will perform line
         /// wrap as specified in the html<br/>
         /// If <paramref name="maxSize"/>.Height is zero the html will use all the required height, otherwise it will clip at the
         /// given max height not rendering the html below it.<br/>
@@ -404,9 +435,14 @@ namespace TheArtOfDev.HtmlRenderer.WPF
                     container.AvoidImagesLateLoading = true;
 
                     if (stylesheetLoad != null)
+                    {
                         container.StylesheetLoad += stylesheetLoad;
+                    }
+
                     if (imageLoad != null)
+                    {
                         container.ImageLoad += imageLoad;
+                    }
 
                     container.SetHtml(html, cssData);
                     container.PerformLayout();

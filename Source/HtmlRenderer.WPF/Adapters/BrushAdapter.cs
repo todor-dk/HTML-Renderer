@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -23,14 +23,14 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// <summary>
         /// The actual WPF brush instance.
         /// </summary>
-        private readonly Brush _brush;
+        private readonly Brush _Brush;
 
         /// <summary>
         /// Init.
         /// </summary>
         public BrushAdapter(Brush brush)
         {
-            _brush = brush;
+            this._Brush = brush;
         }
 
         /// <summary>
@@ -38,10 +38,11 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// </summary>
         public Brush Brush
         {
-            get { return _brush; }
+            get { return this._Brush; }
         }
 
         public override void Dispose()
-        { }
+        {
+        }
     }
 }

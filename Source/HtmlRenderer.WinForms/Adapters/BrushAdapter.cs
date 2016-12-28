@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -23,21 +23,21 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// <summary>
         /// The actual WinForms brush instance.
         /// </summary>
-        private readonly Brush _brush;
+        private readonly Brush _Brush;
 
         /// <summary>
         /// If to dispose the brush when <see cref="Dispose"/> is called.<br/>
         /// Ignore dispose for cached brushes.
         /// </summary>
-        private readonly bool _dispose;
+        private readonly bool DisposeBrush;
 
         /// <summary>
         /// Init.
         /// </summary>
         public BrushAdapter(Brush brush, bool dispose)
         {
-            _brush = brush;
-            _dispose = dispose;
+            this._Brush = brush;
+            this.DisposeBrush = dispose;
         }
 
         /// <summary>
@@ -45,14 +45,14 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// </summary>
         public Brush Brush
         {
-            get { return _brush; }
+            get { return this._Brush; }
         }
 
         public override void Dispose()
         {
-            if (_dispose)
+            if (this.DisposeBrush)
             {
-                _brush.Dispose();
+                this._Brush.Dispose();
             }
         }
     }

@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -25,32 +25,31 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// <summary>
         /// the underline win-forms font.
         /// </summary>
-        private readonly XFont _font;
+        private readonly XFont _Font;
 
         /// <summary>
         /// the vertical offset of the font underline location from the top of the font.
         /// </summary>
-        private double _underlineOffset = -1;
+        private double _UnderlineOffset = -1;
 
         /// <summary>
         /// Cached font height.
         /// </summary>
-        private double _height = -1;
+        private double _Height = -1;
 
         /// <summary>
         /// Cached font whitespace width.
         /// </summary>
-        private double _whitespaceWidth = -1;
+        private double WhitespaceWidth = -1;
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         public FontAdapter(XFont font)
         {
-            _font = font;
+            this._Font = font;
         }
 
         /// <summary>
@@ -58,37 +57,37 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// </summary>
         public XFont Font
         {
-            get { return _font; }
+            get { return this._Font; }
         }
 
         public override double Size
         {
-            get { return _font.Size; }
+            get { return this._Font.Size; }
         }
 
         public override double UnderlineOffset
         {
-            get { return _underlineOffset; }
+            get { return this._UnderlineOffset; }
         }
 
         public override double Height
         {
-            get { return _height; }
+            get { return this._Height; }
         }
 
         public override double LeftPadding
         {
-            get { return _height / 6f; }
+            get { return this._Height / 6f; }
         }
-
 
         public override double GetWhitespaceWidth(RGraphics graphics)
         {
-            if (_whitespaceWidth < 0)
+            if (this.WhitespaceWidth < 0)
             {
-                _whitespaceWidth = graphics.MeasureString(" ", this).Width;
+                this.WhitespaceWidth = graphics.MeasureString(" ", this).Width;
             }
-            return _whitespaceWidth;
+
+            return this.WhitespaceWidth;
         }
 
         /// <summary>
@@ -98,8 +97,8 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// <param name="underlineOffset">the vertical offset of the font underline location from the top of the font.</param>
         internal void SetMetrics(int height, int underlineOffset)
         {
-            _height = height;
-            _underlineOffset = underlineOffset;
+            this._Height = height;
+            this._UnderlineOffset = underlineOffset;
         }
     }
 }

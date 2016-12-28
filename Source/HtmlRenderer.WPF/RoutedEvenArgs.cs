@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -20,30 +20,32 @@ namespace TheArtOfDev.HtmlRenderer.WPF
     /// </summary>
     /// <param name="args">the event arguments object</param>
     /// <typeparam name="T">the type of the routed events args data</typeparam>
-    public delegate void RoutedEventHandler<T>(object sender, RoutedEvenArgs<T> args) where T : class;
+    public delegate void RoutedEventHandler<T>(object sender, RoutedEvenArgs<T> args)
+        where T : class;
 
     /// <summary>
     /// HTML Renderer routed event arguments containing event data.
     /// </summary>
-    public sealed class RoutedEvenArgs<T> : RoutedEventArgs where T : class
+    public sealed class RoutedEvenArgs<T> : RoutedEventArgs
+        where T : class
     {
         /// <summary>
         /// the argument data of the routed event
         /// </summary>
-        private readonly T _data;
+        private readonly T _Data;
 
         public RoutedEvenArgs(RoutedEvent routedEvent, T data)
             : base(routedEvent)
         {
             ArgChecker.AssertArgNotNull(data, "args");
-            _data = data;
+            this._Data = data;
         }
 
         public RoutedEvenArgs(RoutedEvent routedEvent, object source, T data)
             : base(routedEvent, source)
         {
             ArgChecker.AssertArgNotNull(data, "args");
-            _data = data;
+            this._Data = data;
         }
 
         /// <summary>
@@ -51,12 +53,12 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         /// </summary>
         public T Data
         {
-            get { return _data; }
+            get { return this._Data; }
         }
 
         public override string ToString()
         {
-            return string.Format("RoutedEventArgs({0})", _data);
+            return string.Format("RoutedEventArgs({0})", this._Data);
         }
     }
 }

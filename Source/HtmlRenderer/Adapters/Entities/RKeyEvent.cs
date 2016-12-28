@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -22,26 +22,26 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <summary>
         /// is control is pressed
         /// </summary>
-        private readonly bool _control;
+        private readonly bool _Control;
 
         /// <summary>
         /// is 'A' key is pressed
         /// </summary>
-        private readonly bool _aKeyCode;
+        private readonly bool _AKeyCode;
 
         /// <summary>
         /// is 'C' key is pressed
         /// </summary>
-        private readonly bool _cKeyCode;
+        private readonly bool _CKeyCode;
 
         /// <summary>
         /// Init.
         /// </summary>
         public RKeyEvent(bool control, bool aKeyCode, bool cKeyCode)
         {
-            _control = control;
-            _aKeyCode = aKeyCode;
-            _cKeyCode = cKeyCode;
+            this._Control = control;
+            this._AKeyCode = aKeyCode;
+            this._CKeyCode = cKeyCode;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </summary>
         public bool Control
         {
-            get { return _control; }
+            get { return this._Control; }
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </summary>
         public bool AKeyCode
         {
-            get { return _aKeyCode; }
+            get { return this._AKeyCode; }
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// </summary>
         public bool CKeyCode
         {
-            get { return _cKeyCode; }
+            get { return this._CKeyCode; }
         }
     }
 }

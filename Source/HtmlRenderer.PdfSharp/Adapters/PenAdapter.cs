@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -24,14 +24,14 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// <summary>
         /// The actual WinForms brush instance.
         /// </summary>
-        private readonly XPen _pen;
+        private readonly XPen _Pen;
 
         /// <summary>
         /// Init.
         /// </summary>
         public PenAdapter(XPen pen)
         {
-            _pen = pen;
+            this._Pen = pen;
         }
 
         /// <summary>
@@ -39,13 +39,13 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// </summary>
         public XPen Pen
         {
-            get { return _pen; }
+            get { return this._Pen; }
         }
 
         public override double Width
         {
-            get { return _pen.Width; }
-            set { _pen.Width = value; }
+            get { return this._Pen.Width; }
+            set { this._Pen.Width = value; }
         }
 
         public override RDashStyle DashStyle
@@ -55,27 +55,30 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
                 switch (value)
                 {
                     case RDashStyle.Solid:
-                        _pen.DashStyle = XDashStyle.Solid;
+                        this._Pen.DashStyle = XDashStyle.Solid;
                         break;
                     case RDashStyle.Dash:
-                        _pen.DashStyle = XDashStyle.Dash;
-                        if (Width < 2)
-                            _pen.DashPattern = new[] { 4, 4d }; // better looking
+                        this._Pen.DashStyle = XDashStyle.Dash;
+                        if (this.Width < 2)
+                        {
+                            this._Pen.DashPattern = new[] { 4, 4d }; // better looking
+                        }
+
                         break;
                     case RDashStyle.Dot:
-                        _pen.DashStyle = XDashStyle.Dot;
+                        this._Pen.DashStyle = XDashStyle.Dot;
                         break;
                     case RDashStyle.DashDot:
-                        _pen.DashStyle = XDashStyle.DashDot;
+                        this._Pen.DashStyle = XDashStyle.DashDot;
                         break;
                     case RDashStyle.DashDotDot:
-                        _pen.DashStyle = XDashStyle.DashDotDot;
+                        this._Pen.DashStyle = XDashStyle.DashDotDot;
                         break;
                     case RDashStyle.Custom:
-                        _pen.DashStyle = XDashStyle.Custom;
+                        this._Pen.DashStyle = XDashStyle.Custom;
                         break;
                     default:
-                        _pen.DashStyle = XDashStyle.Solid;
+                        this._Pen.DashStyle = XDashStyle.Solid;
                         break;
                 }
             }

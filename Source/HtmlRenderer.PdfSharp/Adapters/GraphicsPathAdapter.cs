@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -25,42 +25,43 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// <summary>
         /// The actual PdfSharp graphics path instance.
         /// </summary>
-        private readonly XGraphicsPath _graphicsPath = new XGraphicsPath();
+        private readonly XGraphicsPath _GraphicsPath = new XGraphicsPath();
 
         /// <summary>
         /// the last point added to the path to begin next segment from
         /// </summary>
-        private RPoint _lastPoint;
+        private RPoint LastPoint;
 
         /// <summary>
         /// The actual PdfSharp graphics path instance.
         /// </summary>
         public XGraphicsPath GraphicsPath
         {
-            get { return _graphicsPath; }
+            get { return this._GraphicsPath; }
         }
 
         public override void Start(double x, double y)
         {
-            _lastPoint = new RPoint(x, y);
+            this.LastPoint = new RPoint(x, y);
         }
 
         public override void LineTo(double x, double y)
         {
-            _graphicsPath.AddLine((float)_lastPoint.X, (float)_lastPoint.Y, (float)x, (float)y);
-            _lastPoint = new RPoint(x, y);
+            this._GraphicsPath.AddLine((float)this.LastPoint.X, (float)this.LastPoint.Y, (float)x, (float)y);
+            this.LastPoint = new RPoint(x, y);
         }
 
         public override void ArcTo(double x, double y, double size, Corner corner)
         {
-            float left = (float)(Math.Min(x, _lastPoint.X) - (corner == Corner.TopRight || corner == Corner.BottomRight ? size : 0));
-            float top = (float)(Math.Min(y, _lastPoint.Y) - (corner == Corner.BottomLeft || corner == Corner.BottomRight ? size : 0));
-            _graphicsPath.AddArc(left, top, (float)size * 2, (float)size * 2, GetStartAngle(corner), 90);
-            _lastPoint = new RPoint(x, y);
+            float left = (float)(Math.Min(x, this.LastPoint.X) - (corner == Corner.TopRight || corner == Corner.BottomRight ? size : 0));
+            float top = (float)(Math.Min(y, this.LastPoint.Y) - (corner == Corner.BottomLeft || corner == Corner.BottomRight ? size : 0));
+            this._GraphicsPath.AddArc(left, top, (float)size * 2, (float)size * 2, GetStartAngle(corner), 90);
+            this.LastPoint = new RPoint(x, y);
         }
 
         public override void Dispose()
-        { }
+        {
+        }
 
         /// <summary>
         /// Get arc start angle for the given corner.
@@ -85,6 +86,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
                 default:
                     throw new ArgumentOutOfRangeException("corner");
             }
+
             return startAngle;
         }
     }

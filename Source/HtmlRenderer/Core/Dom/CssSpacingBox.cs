@@ -11,34 +11,33 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
     {
         #region Fields and Consts
 
-        private readonly CssBox _extendedBox;
+        private readonly CssBox _ExtendedBox;
 
         /// <summary>
         /// the index of the row where box starts
         /// </summary>
-        private readonly int _startRow;
+        private readonly int _StartRow;
 
         /// <summary>
         /// the index of the row where box ends
         /// </summary>
-        private readonly int _endRow;
+        private readonly int _EndRow;
 
         #endregion
-
 
         public CssSpacingBox(CssBox tableBox, ref CssBox extendedBox, int startRow)
             : base(tableBox, new HtmlTag("none", false, new Dictionary<string, string> { { "colspan", "1" } }))
         {
-            _extendedBox = extendedBox;
-            Display = CssConstants.None;
+            this._ExtendedBox = extendedBox;
+            this.Display = CssConstants.None;
 
-            _startRow = startRow;
-            _endRow = startRow + Int32.Parse(extendedBox.GetAttribute("rowspan", "1")) - 1;
+            this._StartRow = startRow;
+            this._EndRow = startRow + Int32.Parse(extendedBox.GetAttribute("rowspan", "1")) - 1;
         }
 
         public CssBox ExtendedBox
         {
-            get { return _extendedBox; }
+            get { return this._ExtendedBox; }
         }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public int StartRow
         {
-            get { return _startRow; }
+            get { return this._StartRow; }
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public int EndRow
         {
-            get { return _endRow; }
+            get { return this._EndRow; }
         }
     }
 }

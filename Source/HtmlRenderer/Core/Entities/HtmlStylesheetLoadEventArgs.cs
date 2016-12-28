@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -28,30 +28,29 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <summary>
         /// the source of the stylesheet as found in the HTML (file path or URL)
         /// </summary>
-        private readonly string _src;
+        private readonly string _Src;
 
         /// <summary>
         /// collection of all the attributes that are defined on the link element
         /// </summary>
-        private readonly Dictionary<string, string> _attributes;
+        private readonly Dictionary<string, string> _Attributes;
 
         /// <summary>
         /// provide the new source (file path or URL) to load stylesheet from
         /// </summary>
-        private string _setSrc;
+        private string _SetSrc;
 
         /// <summary>
         /// provide the stylesheet to load
         /// </summary>
-        private string _setStyleSheet;
+        private string _SetStyleSheet;
 
         /// <summary>
         /// provide the stylesheet data to load
         /// </summary>
-        private CssData _setStyleSheetData;
+        private CssData _SetStyleSheetData;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -60,8 +59,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <param name="attributes">collection of all the attributes that are defined on the image element</param>
         internal HtmlStylesheetLoadEventArgs(string src, Dictionary<string, string> attributes)
         {
-            _src = src;
-            _attributes = attributes;
+            this._Src = src;
+            this._Attributes = attributes;
         }
 
         /// <summary>
@@ -69,7 +68,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public string Src
         {
-            get { return _src; }
+            get { return this._Src; }
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public Dictionary<string, string> Attributes
         {
-            get { return _attributes; }
+            get { return this._Attributes; }
         }
 
         /// <summary>
@@ -85,8 +84,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public string SetSrc
         {
-            get { return _setSrc; }
-            set { _setSrc = value; }
+            get { return this._SetSrc; }
+            set { this._SetSrc = value; }
         }
 
         /// <summary>
@@ -94,8 +93,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public string SetStyleSheet
         {
-            get { return _setStyleSheet; }
-            set { _setStyleSheet = value; }
+            get { return this._SetStyleSheet; }
+            set { this._SetStyleSheet = value; }
         }
 
         /// <summary>
@@ -103,8 +102,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public CssData SetStyleSheetData
         {
-            get { return _setStyleSheetData; }
-            set { _setStyleSheetData = value; }
+            get { return this._SetStyleSheetData; }
+            set { this._SetStyleSheetData = value; }
         }
     }
 }

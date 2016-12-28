@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -24,7 +24,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <summary>
         /// is re-layout is required for the refresh
         /// </summary>
-        private readonly bool _layout;
+        private readonly bool _Layout;
 
         /// <summary>
         /// Init.
@@ -32,7 +32,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <param name="layout">is re-layout is required for the refresh</param>
         public HtmlRefreshEventArgs(bool layout)
         {
-            _layout = layout;
+            this._Layout = layout;
         }
 
         /// <summary>
@@ -40,12 +40,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public bool Layout
         {
-            get { return _layout; }
+            get { return this._Layout; }
         }
 
         public override string ToString()
         {
-            return string.Format("Layout: {0}", _layout);
+            return string.Format("Layout: {0}", this._Layout);
         }
     }
 }

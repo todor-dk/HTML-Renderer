@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -30,36 +30,34 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// <summary>
         /// the html samples to show in the demo
         /// </summary>
-        private readonly Dictionary<string, string> _samples = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> Samples = new Dictionary<string, string>();
 
         /// <summary>
         /// the HTML samples to run on
         /// </summary>
-        private static readonly List<string> _perfTestSamples = new List<string>();
+        private static readonly List<string> PerfTestSamples = new List<string>();
 
         private const int Iterations = 3;
 
         #endregion
-
 
         /// <summary>
         /// Init.
         /// </summary>
         public PerfForm()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            Icon = DemoForm.GetIcon();
+            this.Icon = DemoForm.GetIcon();
 
-            StartPosition = FormStartPosition.CenterScreen;
-            Size = new Size(1200, 800);
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.Size = new Size(1200, 800);
 
-            LoadSamples();
+            this.LoadSamples();
         }
 
-
         /// <summary>
-        /// Used to execute performance test run for memory profiler so the form is not loaded, 
+        /// Used to execute performance test run for memory profiler so the form is not loaded,
         /// only html container is working.
         /// </summary>
         public static void Run(bool layout, bool paint)
@@ -79,15 +77,19 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
                 {
                     for (int i = 0; i < Iterations; i++)
                     {
-                        foreach (var html in _perfTestSamples)
+                        foreach (var html in PerfTestSamples)
                         {
                             htmlContainer.SetHtml(html);
 
                             if (layout)
+                            {
                                 htmlContainer.PerformLayout(g);
+                            }
 
                             if (paint)
+                            {
                                 htmlContainer.PerformPaint(g);
+                            }
                         }
                     }
                 }
@@ -97,7 +99,6 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
                 MessageBox.Show(ex.ToString(), "Error");
             }
         }
-
 
         #region Private methods
 
@@ -121,7 +122,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
                         using (var sreader = new StreamReader(resourceStream, Encoding.Default))
                         {
                             var html = sreader.ReadToEnd();
-                            _perfTestSamples.Add(html);
+                            PerfTestSamples.Add(html);
                         }
                     }
                 }
@@ -134,7 +135,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         private void LoadSamples()
         {
             var root = new TreeNode("HTML Renderer");
-            _samplesTreeView.Nodes.Add(root);
+            this._samplesTreeView.Nodes.Add(root);
 
             var names = Assembly.GetExecutingAssembly().GetManifestResourceNames();
             Array.Sort(names);
@@ -154,10 +155,10 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
                         {
                             using (var sreader = new StreamReader(resourceStream, Encoding.Default))
                             {
-                                _samples[name] = sreader.ReadToEnd();
+                                this.Samples[name] = sreader.ReadToEnd();
                             }
 
-                            string nameWithSzie = string.Format("{0} ({1:N0} KB)", shortName, _samples[name].Length * 2 / 1024);
+                            string nameWithSzie = string.Format("{0} ({1:N0} KB)", shortName, this.Samples[name].Length * 2 / 1024);
                             var node = new TreeNode(nameWithSzie);
                             root.Nodes.Add(node);
                             node.Tag = name;
@@ -177,7 +178,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
             var name = e.Node.Tag as string;
             if (!string.IsNullOrEmpty(name))
             {
-                _htmlPanel.Text = _samples[name];
+                this._htmlPanel.Text = this.Samples[name];
             }
         }
 
@@ -186,8 +187,8 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         private void OnClearLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            _samplesTreeView.SelectedNode = null;
-            _htmlPanel.Text = null;
+            this._samplesTreeView.SelectedNode = null;
+            this._htmlPanel.Text = null;
             GC.Collect();
         }
 
@@ -196,14 +197,14 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         private void OnRunTestButtonClick(object sender, EventArgs e)
         {
-            if (_samplesTreeView.SelectedNode != null && _samplesTreeView.SelectedNode.Tag != null)
+            if (this._samplesTreeView.SelectedNode != null && this._samplesTreeView.SelectedNode.Tag != null)
             {
-                _runTestButton.Text = "Running..";
-                _runTestButton.Enabled = false;
+                this._runTestButton.Text = "Running..";
+                this._runTestButton.Enabled = false;
                 Application.DoEvents();
 
-                var iterations = (float)_iterations.Value;
-                var html = _samples[(string)_samplesTreeView.SelectedNode.Tag];
+                var iterations = (float)this._iterations.Value;
+                var html = this.Samples[(string)this._samplesTreeView.SelectedNode.Tag];
 
                 GC.Collect();
 
@@ -217,9 +218,9 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
 
                 var sw = Stopwatch.StartNew();
 
-                for (int i = 0; i < _iterations.Value; i++)
+                for (int i = 0; i < this._iterations.Value; i++)
                 {
-                    _htmlPanel.Text = html;
+                    this._htmlPanel.Text = html;
                     Application.DoEvents(); // so paint will be called
                 }
 
@@ -233,19 +234,24 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
 
                 float htmlSize = html.Length * 2 / 1024f;
 
-                var msg = string.Format("1 HTML ({0:N0} KB)\r\n{1} Iterations", htmlSize, _iterations.Value);
+                var msg = string.Format("1 HTML ({0:N0} KB)\r\n{1} Iterations", htmlSize, this._iterations.Value);
                 msg += "\r\n\r\n";
-                msg += string.Format("CPU:\r\nTotal: {0} msec\r\nIterationAvg: {1:N2} msec",
-                    sw.ElapsedMilliseconds, sw.ElapsedMilliseconds / iterations);
+                msg += string.Format(
+                    "CPU:\r\nTotal: {0} msec\r\nIterationAvg: {1:N2} msec",
+                    sw.ElapsedMilliseconds,
+                    sw.ElapsedMilliseconds / iterations);
                 msg += "\r\n\r\n";
-                msg += string.Format("Memory:\r\nTotal: {0:N0} KB\r\nIterationAvg: {1:N0} KB\r\nOverhead: {2:N0}%",
-                    totalMem, totalMem / iterations, 100 * (totalMem / iterations) / htmlSize);
+                msg += string.Format(
+                    "Memory:\r\nTotal: {0:N0} KB\r\nIterationAvg: {1:N0} KB\r\nOverhead: {2:N0}%",
+                    totalMem,
+                    totalMem / iterations,
+                    100 * (totalMem / iterations) / htmlSize);
 
                 Clipboard.SetDataObject(msg);
                 MessageBox.Show(msg, "Test run results");
 
-                _runTestButton.Text = "Run Tests";
-                _runTestButton.Enabled = true;
+                this._runTestButton.Text = "Run Tests";
+                this._runTestButton.Enabled = true;
             }
         }
 

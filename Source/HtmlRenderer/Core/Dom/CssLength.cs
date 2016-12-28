@@ -15,15 +15,14 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
     {
         #region Fields
 
-        private readonly double _number;
-        private readonly bool _isRelative;
-        private readonly CssUnit _unit;
-        private readonly string _length;
-        private readonly bool _isPercentage;
-        private readonly bool _hasError;
+        private readonly double _Number;
+        private readonly bool _IsRelative;
+        private readonly CssUnit _Unit;
+        private readonly string _Length;
+        private readonly bool _IsPercentage;
+        private readonly bool _HasError;
 
         #endregion
-
 
         /// <summary>
         /// Creates a new CssLength from a length specified on a CSS style sheet or fragment
@@ -31,78 +30,77 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="length">Length as specified in the Style Sheet or style fragment</param>
         public CssLength(string length)
         {
-            _length = length;
-            _number = 0f;
-            _unit = CssUnit.None;
-            _isPercentage = false;
+            this._Length = length;
+            this._Number = 0f;
+            this._Unit = CssUnit.None;
+            this._IsPercentage = false;
 
-            //Return zero if no length specified, zero specified
+            // Return zero if no length specified, zero specified
             if (string.IsNullOrEmpty(length) || length == "0")
                 return;
 
-            //If percentage, use ParseNumber
+            // If percentage, use ParseNumber
             if (length.EndsWith("%"))
             {
-                _number = CssValueParser.ParseNumber(length, 1);
-                _isPercentage = true;
+                this._Number = CssValueParser.ParseNumber(length, 1);
+                this._IsPercentage = true;
                 return;
             }
 
-            //If no units, has error
+            // If no units, has error
             if (length.Length < 3)
             {
-                double.TryParse(length, out _number);
-                _hasError = true;
+                double.TryParse(length, out this._Number);
+                this._HasError = true;
                 return;
             }
 
-            //Get units of the length
+            // Get units of the length
             string u = length.Substring(length.Length - 2, 2);
 
-            //Number of the length
+            // Number of the length
             string number = length.Substring(0, length.Length - 2);
 
-            //TODO: Units behave different in paper and in screen!
+            // TODO: Units behave different in paper and in screen!
             switch (u)
             {
                 case CssConstants.Em:
-                    _unit = CssUnit.Ems;
-                    _isRelative = true;
+                    this._Unit = CssUnit.Ems;
+                    this._IsRelative = true;
                     break;
                 case CssConstants.Ex:
-                    _unit = CssUnit.Ex;
-                    _isRelative = true;
+                    this._Unit = CssUnit.Ex;
+                    this._IsRelative = true;
                     break;
                 case CssConstants.Px:
-                    _unit = CssUnit.Pixels;
-                    _isRelative = true;
+                    this._Unit = CssUnit.Pixels;
+                    this._IsRelative = true;
                     break;
                 case CssConstants.Mm:
-                    _unit = CssUnit.Milimeters;
+                    this._Unit = CssUnit.Milimeters;
                     break;
                 case CssConstants.Cm:
-                    _unit = CssUnit.Centimeters;
+                    this._Unit = CssUnit.Centimeters;
                     break;
                 case CssConstants.In:
-                    _unit = CssUnit.Inches;
+                    this._Unit = CssUnit.Inches;
                     break;
                 case CssConstants.Pt:
-                    _unit = CssUnit.Points;
+                    this._Unit = CssUnit.Points;
                     break;
                 case CssConstants.Pc:
-                    _unit = CssUnit.Picas;
+                    this._Unit = CssUnit.Picas;
                     break;
                 default:
-                    _hasError = true;
+                    this._HasError = true;
                     return;
             }
 
-            if (!double.TryParse(number, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out _number))
+            if (!double.TryParse(number, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out this._Number))
             {
-                _hasError = true;
+                this._HasError = true;
             }
         }
-
 
         #region Props
 
@@ -111,7 +109,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public double Number
         {
-            get { return _number; }
+            get { return this._Number; }
         }
 
         /// <summary>
@@ -119,25 +117,23 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public bool HasError
         {
-            get { return _hasError; }
+            get { return this._HasError; }
         }
-
 
         /// <summary>
         /// Gets if the length represents a precentage (not actually a length)
         /// </summary>
         public bool IsPercentage
         {
-            get { return _isPercentage; }
+            get { return this._IsPercentage; }
         }
-
 
         /// <summary>
         /// Gets if the length is specified in relative units
         /// </summary>
         public bool IsRelative
         {
-            get { return _isRelative; }
+            get { return this._IsRelative; }
         }
 
         /// <summary>
@@ -145,7 +141,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public CssUnit Unit
         {
-            get { return _unit; }
+            get { return this._Unit; }
         }
 
         /// <summary>
@@ -153,11 +149,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public string Length
         {
-            get { return _length; }
+            get { return this._Length; }
         }
 
         #endregion
-
 
         #region Methods
 
@@ -169,12 +164,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <exception cref="InvalidOperationException">If length has an error or isn't in ems</exception>
         public CssLength ConvertEmToPoints(double emSize)
         {
-            if (HasError)
+            if (this.HasError)
                 throw new InvalidOperationException("Invalid length");
-            if (Unit != CssUnit.Ems)
+            if (this.Unit != CssUnit.Ems)
                 throw new InvalidOperationException("Length is not in ems");
 
-            return new CssLength(string.Format("{0}pt", Convert.ToSingle(Number * emSize).ToString("0.0", NumberFormatInfo.InvariantInfo)));
+            return new CssLength(string.Format("{0}pt", Convert.ToSingle(this.Number * emSize).ToString("0.0", NumberFormatInfo.InvariantInfo)));
         }
 
         /// <summary>
@@ -185,12 +180,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <exception cref="InvalidOperationException">If length has an error or isn't in ems</exception>
         public CssLength ConvertEmToPixels(double pixelFactor)
         {
-            if (HasError)
+            if (this.HasError)
                 throw new InvalidOperationException("Invalid length");
-            if (Unit != CssUnit.Ems)
+            if (this.Unit != CssUnit.Ems)
                 throw new InvalidOperationException("Length is not in ems");
 
-            return new CssLength(string.Format("{0}px", Convert.ToSingle(Number * pixelFactor).ToString("0.0", NumberFormatInfo.InvariantInfo)));
+            return new CssLength(string.Format("{0}px", Convert.ToSingle(this.Number * pixelFactor).ToString("0.0", NumberFormatInfo.InvariantInfo)));
         }
 
         /// <summary>
@@ -199,19 +194,19 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <returns></returns>
         public override string ToString()
         {
-            if (HasError)
+            if (this.HasError)
             {
                 return string.Empty;
             }
-            else if (IsPercentage)
+            else if (this.IsPercentage)
             {
-                return string.Format(NumberFormatInfo.InvariantInfo, "{0}%", Number);
+                return string.Format(NumberFormatInfo.InvariantInfo, "{0}%", this.Number);
             }
             else
             {
                 string u = string.Empty;
 
-                switch (Unit)
+                switch (this.Unit)
                 {
                     case CssUnit.None:
                         break;
@@ -241,7 +236,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                         break;
                 }
 
-                return string.Format(NumberFormatInfo.InvariantInfo, "{0}{1}", Number, u);
+                return string.Format(NumberFormatInfo.InvariantInfo, "{0}{1}", this.Number, u);
             }
         }
 

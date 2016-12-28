@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -55,10 +55,9 @@ EndSelection:<<<<<<<<4";
         /// <summary>
         /// Used to calculate characters byte count in UTF-8
         /// </summary>
-        private static readonly char[] _byteCount = new char[1];
+        private static readonly char[] ByteCount = new char[1];
 
         #endregion
-
 
         /// <summary>
         /// Create <see cref="DataObject"/> with given html and plain-text ready to be used for clipboard or drag and drop.<br/>
@@ -103,7 +102,9 @@ EndSelection:<<<<<<<<4";
 
             // re-encode the string so it will work correctly (fixed in CLR 4.0)
             if (Environment.Version.Major < 4 && html.Length != Encoding.UTF8.GetByteCount(html))
+            {
                 htmlFragment = Encoding.Default.GetString(Encoding.UTF8.GetBytes(htmlFragment));
+            }
 
             var dataObject = new DataObject();
             dataObject.SetData(DataFormats.Html, htmlFragment);
@@ -138,7 +139,6 @@ EndSelection:<<<<<<<<4";
             dataObject.SetData(DataFormats.UnicodeText, plainText);
             Clipboard.SetDataObject(dataObject, true);
         }
-
 
         #region Private/Protected methods
 
@@ -185,12 +185,18 @@ EndSelection:<<<<<<<<4";
                     int bodyCloseIdx = html.LastIndexOf("</body", StringComparison.OrdinalIgnoreCase);
 
                     if (htmlOpenEndIdx < 0)
+                    {
                         sb.Append("<html>");
+                    }
                     else
+                    {
                         sb.Append(html, 0, htmlOpenEndIdx);
+                    }
 
                     if (bodyOpenEndIdx > -1)
+                    {
                         sb.Append(html, htmlOpenEndIdx > -1 ? htmlOpenEndIdx : 0, bodyOpenEndIdx - (htmlOpenEndIdx > -1 ? htmlOpenEndIdx : 0));
+                    }
 
                     sb.Append(StartFragment);
                     fragmentStart = GetByteCount(sb);
@@ -203,23 +209,32 @@ EndSelection:<<<<<<<<4";
                     sb.Append(EndFragment);
 
                     if (innerHtmlEnd < html.Length)
+                    {
                         sb.Append(html, innerHtmlEnd, html.Length - innerHtmlEnd);
+                    }
 
                     if (htmlCloseIdx < 0)
+                    {
                         sb.Append("</html>");
+                    }
                 }
             }
             else
             {
                 // handle html with existing start\end fragments just need to calculate the correct bytes offset (surround with html tag if missing)
                 if (htmlOpenEndIdx < 0)
+                {
                     sb.Append("<html>");
+                }
+
                 int start = GetByteCount(sb);
                 sb.Append(html);
                 fragmentStart = start + GetByteCount(sb, start, start + fragmentStartIdx) + StartFragment.Length;
                 fragmentEnd = start + GetByteCount(sb, start, start + fragmentEndIdx);
                 if (htmlCloseIdx < 0)
+                {
                     sb.Append("</html>");
+                }
             }
 
             // Back-patch offsets (scan only the header part for performance)
@@ -244,9 +259,10 @@ EndSelection:<<<<<<<<4";
             end = end > -1 ? end : sb.Length;
             for (int i = start; i < end; i++)
             {
-                _byteCount[0] = sb[i];
-                count += Encoding.UTF8.GetByteCount(_byteCount);
+                ByteCount[0] = sb[i];
+                count += Encoding.UTF8.GetByteCount(ByteCount);
             }
+
             return count;
         }
 

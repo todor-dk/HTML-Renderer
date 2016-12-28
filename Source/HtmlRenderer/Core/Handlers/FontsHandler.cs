@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -26,27 +26,26 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         #region Fields and Consts
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        private readonly RAdapter _adapter;
+        private readonly RAdapter Adapter;
 
         /// <summary>
         /// Allow to map not installed fonts to different
         /// </summary>
-        private readonly Dictionary<string, string> _fontsMapping = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, string> FontsMapping = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// collection of all installed and added font families to check if font exists
         /// </summary>
-        private readonly Dictionary<string, RFontFamily> _existingFontFamilies = new Dictionary<string, RFontFamily>(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, RFontFamily> ExistingFontFamilies = new Dictionary<string, RFontFamily>(StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// cache of all the font used not to create same font again and again
         /// </summary>
-        private readonly Dictionary<string, Dictionary<double, Dictionary<RFontStyle, RFont>>> _fontsCache = new Dictionary<string, Dictionary<double, Dictionary<RFontStyle, RFont>>>(StringComparer.InvariantCultureIgnoreCase);
+        private readonly Dictionary<string, Dictionary<double, Dictionary<RFontStyle, RFont>>> FontsCache = new Dictionary<string, Dictionary<double, Dictionary<RFontStyle, RFont>>>(StringComparer.InvariantCultureIgnoreCase);
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -55,7 +54,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             ArgChecker.AssertArgNotNull(adapter, "global");
 
-            _adapter = adapter;
+            this.Adapter = adapter;
         }
 
         /// <summary>
@@ -65,15 +64,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <returns>true - font exists by given family name, false - otherwise</returns>
         public bool IsFontExists(string family)
         {
-            bool exists = _existingFontFamilies.ContainsKey(family);
+            bool exists = this.ExistingFontFamilies.ContainsKey(family);
             if (!exists)
             {
                 string mappedFamily;
-                if (_fontsMapping.TryGetValue(family, out mappedFamily))
+                if (this.FontsMapping.TryGetValue(family, out mappedFamily))
                 {
-                    exists = _existingFontFamilies.ContainsKey(mappedFamily);
+                    exists = this.ExistingFontFamilies.ContainsKey(mappedFamily);
                 }
             }
+
             return exists;
         }
 
@@ -85,12 +85,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             ArgChecker.AssertArgNotNull(fontFamily, "family");
 
-            _existingFontFamilies[fontFamily.Name] = fontFamily;
+            this.ExistingFontFamilies[fontFamily.Name] = fontFamily;
         }
 
         /// <summary>
         /// Adds a font mapping from <paramref name="fromFamily"/> to <paramref name="toFamily"/> iff the <paramref name="fromFamily"/> is not found.<br/>
-        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing 
+        /// When the <paramref name="fromFamily"/> font is used in rendered html and is not found in existing
         /// fonts (installed or added) it will be replaced by <paramref name="toFamily"/>.<br/>
         /// </summary>
         /// <param name="fromFamily">the font family to replace</param>
@@ -100,7 +100,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             ArgChecker.AssertArgNotNullOrEmpty(fromFamily, "fromFamily");
             ArgChecker.AssertArgNotNullOrEmpty(toFamily, "toFamily");
 
-            _fontsMapping[fromFamily] = toFamily;
+            this.FontsMapping[fromFamily] = toFamily;
         }
 
         /// <summary>
@@ -110,33 +110,33 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <returns>cached font instance</returns>
         public RFont GetCachedFont(string family, double size, RFontStyle style)
         {
-            var font = TryGetFont(family, size, style);
+            var font = this.TryGetFont(family, size, style);
             if (font == null)
             {
-                if (!_existingFontFamilies.ContainsKey(family))
+                if (!this.ExistingFontFamilies.ContainsKey(family))
                 {
                     string mappedFamily;
-                    if (_fontsMapping.TryGetValue(family, out mappedFamily))
+                    if (this.FontsMapping.TryGetValue(family, out mappedFamily))
                     {
-                        font = TryGetFont(mappedFamily, size, style);
+                        font = this.TryGetFont(mappedFamily, size, style);
                         if (font == null)
                         {
-                            font = CreateFont(mappedFamily, size, style);
-                            _fontsCache[mappedFamily][size][style] = font;
+                            font = this.CreateFont(mappedFamily, size, style);
+                            this.FontsCache[mappedFamily][size][style] = font;
                         }
                     }
                 }
 
                 if (font == null)
                 {
-                    font = CreateFont(family, size, style);
+                    font = this.CreateFont(family, size, style);
                 }
 
-                _fontsCache[family][size][style] = font;
+                this.FontsCache[family][size][style] = font;
             }
+
             return font;
         }
-
 
         #region Private methods
 
@@ -146,9 +146,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         private RFont TryGetFont(string family, double size, RFontStyle style)
         {
             RFont font = null;
-            if (_fontsCache.ContainsKey(family))
+            if (this.FontsCache.ContainsKey(family))
             {
-                var a = _fontsCache[family];
+                var a = this.FontsCache[family];
                 if (a.ContainsKey(size))
                 {
                     var b = a[size];
@@ -159,14 +159,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                 }
                 else
                 {
-                    _fontsCache[family][size] = new Dictionary<RFontStyle, RFont>();
+                    this.FontsCache[family][size] = new Dictionary<RFontStyle, RFont>();
                 }
             }
             else
             {
-                _fontsCache[family] = new Dictionary<double, Dictionary<RFontStyle, RFont>>();
-                _fontsCache[family][size] = new Dictionary<RFontStyle, RFont>();
+                this.FontsCache[family] = new Dictionary<double, Dictionary<RFontStyle, RFont>>();
+                this.FontsCache[family][size] = new Dictionary<RFontStyle, RFont>();
             }
+
             return font;
         }
 
@@ -178,16 +179,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             RFontFamily fontFamily;
             try
             {
-                return _existingFontFamilies.TryGetValue(family, out fontFamily)
-                    ? _adapter.CreateFont(fontFamily, size, style)
-                    : _adapter.CreateFont(family, size, style);
+                return this.ExistingFontFamilies.TryGetValue(family, out fontFamily)
+                    ? this.Adapter.CreateFont(fontFamily, size, style)
+                    : this.Adapter.CreateFont(family, size, style);
             }
             catch
             {
                 // handle possibility of no requested style exists for the font, use regular then
-                return _existingFontFamilies.TryGetValue(family, out fontFamily)
-                    ? _adapter.CreateFont(fontFamily, size, RFontStyle.Regular)
-                    : _adapter.CreateFont(family, size, RFontStyle.Regular);
+                return this.ExistingFontFamilies.TryGetValue(family, out fontFamily)
+                    ? this.Adapter.CreateFont(fontFamily, size, RFontStyle.Regular)
+                    : this.Adapter.CreateFont(family, size, RFontStyle.Regular);
             }
         }
 

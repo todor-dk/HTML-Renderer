@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -40,7 +40,6 @@ namespace TheArtOfDev.HtmlRenderer.WPF
 
         #endregion
 
-
         /// <summary>
         /// Init.
         /// </summary>
@@ -56,8 +55,8 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         [Description("Automatically sets the size of the label by content size.")]
         public bool AutoSize
         {
-            get { return (bool)GetValue(AutoSizeProperty); }
-            set { SetValue(AutoSizeProperty, value); }
+            get { return (bool)this.GetValue(AutoSizeProperty); }
+            set { this.SetValue(AutoSizeProperty, value); }
         }
 
         /// <summary>
@@ -67,10 +66,9 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         [Description("Automatically sets the height of the label by content height (width is not effected)")]
         public virtual bool AutoSizeHeightOnly
         {
-            get { return (bool)GetValue(AutoSizeHeightOnlyProperty); }
-            set { SetValue(AutoSizeHeightOnlyProperty, value); }
+            get { return (bool)this.GetValue(AutoSizeHeightOnlyProperty); }
+            set { this.SetValue(AutoSizeHeightOnlyProperty, value); }
         }
-
 
         #region Private methods
 
@@ -79,25 +77,27 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         /// </summary>
         protected override Size MeasureOverride(Size constraint)
         {
-            if (_htmlContainer != null)
+            if (this.HtmlContainer != null)
             {
                 using (var ig = new GraphicsAdapter())
                 {
-                    var horizontal = Padding.Left + Padding.Right + BorderThickness.Left + BorderThickness.Right;
-                    var vertical = Padding.Top + Padding.Bottom + BorderThickness.Top + BorderThickness.Bottom;
+                    var horizontal = this.Padding.Left + this.Padding.Right + this.BorderThickness.Left + this.BorderThickness.Right;
+                    var vertical = this.Padding.Top + this.Padding.Bottom + this.BorderThickness.Top + this.BorderThickness.Bottom;
 
                     var size = new RSize(constraint.Width < Double.PositiveInfinity ? constraint.Width - horizontal : 0, constraint.Height < Double.PositiveInfinity ? constraint.Height - vertical : 0);
-                    var minSize = new RSize(MinWidth < Double.PositiveInfinity ? MinWidth - horizontal : 0, MinHeight < Double.PositiveInfinity ? MinHeight - vertical : 0);
-                    var maxSize = new RSize(MaxWidth < Double.PositiveInfinity ? MaxWidth - horizontal : 0, MaxHeight < Double.PositiveInfinity ? MaxHeight - vertical : 0);
+                    var minSize = new RSize(this.MinWidth < Double.PositiveInfinity ? this.MinWidth - horizontal : 0, this.MinHeight < Double.PositiveInfinity ? this.MinHeight - vertical : 0);
+                    var maxSize = new RSize(this.MaxWidth < Double.PositiveInfinity ? this.MaxWidth - horizontal : 0, this.MaxHeight < Double.PositiveInfinity ? this.MaxHeight - vertical : 0);
 
-                    var newSize = HtmlRendererUtils.Layout(ig, _htmlContainer.HtmlContainerInt, size, minSize, maxSize, AutoSize, AutoSizeHeightOnly);
+                    var newSize = HtmlRendererUtils.Layout(ig, this.HtmlContainer.HtmlContainerInt, size, minSize, maxSize, this.AutoSize, this.AutoSizeHeightOnly);
 
                     constraint = new Size(newSize.Width + horizontal, newSize.Height + vertical);
                 }
             }
 
             if (double.IsPositiveInfinity(constraint.Width) || double.IsPositiveInfinity(constraint.Height))
+            {
                 constraint = Size.Empty;
+            }
 
             return constraint;
         }

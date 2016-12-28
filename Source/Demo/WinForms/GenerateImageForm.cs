@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -26,33 +26,37 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
 {
     public partial class GenerateImageForm : Form
     {
-        private readonly string _html;
-        private readonly Bitmap _background;
+        private readonly string Html;
+        private readonly Bitmap Background;
 
         public GenerateImageForm(string html)
         {
-            _html = html;
-            InitializeComponent();
+            this.Html = html;
+            this.InitializeComponent();
 
-            Icon = DemoForm.GetIcon();
+            this.Icon = DemoForm.GetIcon();
 
-            _background = HtmlRenderingHelper.CreateImageForTransparentBackground();
+            this.Background = HtmlRenderingHelper.CreateImageForTransparentBackground();
 
             foreach (var color in GetColors())
             {
                 if (color != Color.Transparent)
-                    _backgroundColorTSB.Items.Add(color.Name);
+                {
+                    this._backgroundColorTSB.Items.Add(color.Name);
+                }
             }
-            _backgroundColorTSB.SelectedItem = Color.White.Name;
+
+            this._backgroundColorTSB.SelectedItem = Color.White.Name;
 
             foreach (var hint in Enum.GetNames(typeof(TextRenderingHint)))
             {
-                _textRenderingHintTSCB.Items.Add(hint);
+                this._textRenderingHintTSCB.Items.Add(hint);
             }
-            _textRenderingHintTSCB.SelectedItem = TextRenderingHint.AntiAlias.ToString();
 
-            _useGdiPlusTSB.Enabled = !HtmlRenderingHelper.IsRunningOnMono();
-            _backgroundColorTSB.Enabled = !HtmlRenderingHelper.IsRunningOnMono();
+            this._textRenderingHintTSCB.SelectedItem = TextRenderingHint.AntiAlias.ToString();
+
+            this._useGdiPlusTSB.Enabled = !HtmlRenderingHelper.IsRunningOnMono();
+            this._backgroundColorTSB.Enabled = !HtmlRenderingHelper.IsRunningOnMono();
         }
 
         private void OnSaveToFile_Click(object sender, EventArgs e)
@@ -66,67 +70,68 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
                 var dialogResult = saveDialog.ShowDialog(this);
                 if (dialogResult == DialogResult.OK)
                 {
-                    _pictureBox.Image.Save(saveDialog.FileName);
+                    this._pictureBox.Image.Save(saveDialog.FileName);
                 }
             }
         }
 
         private void OnUseGdiPlus_Click(object sender, EventArgs e)
         {
-            _useGdiPlusTSB.Checked = !_useGdiPlusTSB.Checked;
-            _textRenderingHintTSCB.Visible = _useGdiPlusTSB.Checked;
-            _backgroundColorTSB.Visible = !_useGdiPlusTSB.Checked;
-            _toolStripLabel.Text = _useGdiPlusTSB.Checked ? "Text Rendering Hint:" : "Background:";
-            GenerateImage();
+            this._useGdiPlusTSB.Checked = !this._useGdiPlusTSB.Checked;
+            this._textRenderingHintTSCB.Visible = this._useGdiPlusTSB.Checked;
+            this._backgroundColorTSB.Visible = !this._useGdiPlusTSB.Checked;
+            this._toolStripLabel.Text = this._useGdiPlusTSB.Checked ? "Text Rendering Hint:" : "Background:";
+            this.GenerateImage();
         }
 
         private void OnBackgroundColor_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GenerateImage();
+            this.GenerateImage();
         }
 
-        private void _textRenderingHintTSCB_SelectedIndexChanged(object sender, EventArgs e)
+        private void TextRenderingHintTSCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GenerateImage();
+            this.GenerateImage();
         }
 
         private void OnGenerateImage_Click(object sender, EventArgs e)
         {
-            GenerateImage();
+            this.GenerateImage();
         }
 
         private void GenerateImage()
         {
-            if (_backgroundColorTSB.SelectedItem != null && _textRenderingHintTSCB.SelectedItem != null)
+            if (this._backgroundColorTSB.SelectedItem != null && this._textRenderingHintTSCB.SelectedItem != null)
             {
-                var backgroundColor = Color.FromName(_backgroundColorTSB.SelectedItem.ToString());
-                TextRenderingHint textRenderingHint = (TextRenderingHint)Enum.Parse(typeof(TextRenderingHint), _textRenderingHintTSCB.SelectedItem.ToString());
+                var backgroundColor = Color.FromName(this._backgroundColorTSB.SelectedItem.ToString());
+                TextRenderingHint textRenderingHint = (TextRenderingHint)Enum.Parse(typeof(TextRenderingHint), this._textRenderingHintTSCB.SelectedItem.ToString());
 
                 Image img;
-                if (_useGdiPlusTSB.Checked || HtmlRenderingHelper.IsRunningOnMono())
+                if (this._useGdiPlusTSB.Checked || HtmlRenderingHelper.IsRunningOnMono())
                 {
-                    img = HtmlRender.RenderToImageGdiPlus(_html, _pictureBox.ClientSize, textRenderingHint, null, DemoUtils.OnStylesheetLoad, HtmlRenderingHelper.OnImageLoad);
+                    img = HtmlRender.RenderToImageGdiPlus(this.Html, this._pictureBox.ClientSize, textRenderingHint, null, DemoUtils.OnStylesheetLoad, HtmlRenderingHelper.OnImageLoad);
                 }
                 else
                 {
                     EventHandler<HtmlStylesheetLoadEventArgs> stylesheetLoad = DemoUtils.OnStylesheetLoad;
                     EventHandler<HtmlImageLoadEventArgs> imageLoad = HtmlRenderingHelper.OnImageLoad;
-                    var objects = new object[] { _html, _pictureBox.ClientSize, backgroundColor, null, stylesheetLoad, imageLoad };
+                    var objects = new object[] { this.Html, this._pictureBox.ClientSize, backgroundColor, null, stylesheetLoad, imageLoad };
 
                     var types = new[] { typeof(String), typeof(Size), typeof(Color), typeof(CssData), typeof(EventHandler<HtmlStylesheetLoadEventArgs>), typeof(EventHandler<HtmlImageLoadEventArgs>) };
                     var m = typeof(HtmlRender).GetMethod("RenderToImage", BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public, null, types, null);
                     img = (Image)m.Invoke(null, objects);
                 }
-                _pictureBox.Image = img;
+
+                this._pictureBox.Image = img;
             }
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             base.OnPaintBackground(e);
-            using (var b = new TextureBrush(_background, WrapMode.Tile))
+            using (var b = new TextureBrush(this.Background, WrapMode.Tile))
             {
-                e.Graphics.FillRectangle(b, ClientRectangle);
+                e.Graphics.FillRectangle(b, this.ClientRectangle);
             }
         }
 
@@ -147,6 +152,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
                     }
                 }
             }
+
             return list;
         }
     }

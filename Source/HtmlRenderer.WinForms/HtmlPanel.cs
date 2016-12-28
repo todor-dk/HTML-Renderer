@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -26,7 +26,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
     /// <summary>
     /// Provides HTML rendering using the text property.<br/>
     /// WinForms control that will render html content in it's client rectangle.<br/>
-    /// If <see cref="AutoScroll"/> is true and the layout of the html resulted in its content beyond the client bounds 
+    /// If <see cref="AutoScroll"/> is true and the layout of the html resulted in its content beyond the client bounds
     /// of the panel it will show scrollbars (horizontal/vertical) allowing to scroll the content.<br/>
     /// If <see cref="AutoScroll"/> is false html content outside the client bounds will be clipped.<br/>
     /// The control will handle mouse and keyboard events on it to support html text selection, copy-paste and mouse clicks.<br/>
@@ -67,65 +67,64 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// <summary>
         /// Underline html container instance.
         /// </summary>
-        protected HtmlContainer _htmlContainer;
+        protected HtmlContainer HtmlContainer;
 
         /// <summary>
         /// The current border style of the control
         /// </summary>
-        protected BorderStyle _borderStyle;
+        protected BorderStyle _BorderStyle;
 
         /// <summary>
         /// the raw base stylesheet data used in the control
         /// </summary>
-        protected string _baseRawCssData;
+        protected string BaseRawCssData;
 
         /// <summary>
         /// the base stylesheet data used in the control
         /// </summary>
-        protected CssData _baseCssData;
+        protected CssData BaseCssData;
 
         /// <summary>
         /// the current html text set in the control
         /// </summary>
-        protected string _text;
+        protected string _Text;
 
         /// <summary>
         /// If to use cursors defined by the operating system or .NET cursors
         /// </summary>
-        protected bool _useSystemCursors;
+        protected bool _UseSystemCursors;
 
         /// <summary>
         /// The text rendering hint to be used for text rendering.
         /// </summary>
-        protected TextRenderingHint _textRenderingHint = TextRenderingHint.SystemDefault;
+        protected TextRenderingHint _TextRenderingHint = TextRenderingHint.SystemDefault;
 
         /// <summary>
         /// The last position of the scrollbars to know if it has changed to update mouse
         /// </summary>
-        protected Point _lastScrollOffset;
+        protected Point LastScrollOffset;
 
         #endregion
-
 
         /// <summary>
         /// Creates a new HtmlPanel and sets a basic css for it's styling.
         /// </summary>
         public HtmlPanel()
         {
-            AutoScroll = true;
-            BackColor = SystemColors.Window;
-            DoubleBuffered = true;
-            SetStyle(ControlStyles.ResizeRedraw, true);
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+            this.AutoScroll = true;
+            this.BackColor = SystemColors.Window;
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+            this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 
-            _htmlContainer = new HtmlContainer();
-            _htmlContainer.LoadComplete += OnLoadComplete;
-            _htmlContainer.LinkClicked += OnLinkClicked;
-            _htmlContainer.RenderError += OnRenderError;
-            _htmlContainer.Refresh += OnRefresh;
-            _htmlContainer.ScrollChange += OnScrollChange;
-            _htmlContainer.StylesheetLoad += OnStylesheetLoad;
-            _htmlContainer.ImageLoad += OnImageLoad;
+            this.HtmlContainer = new HtmlContainer();
+            this.HtmlContainer.LoadComplete += this.OnLoadComplete;
+            this.HtmlContainer.LinkClicked += this.OnLinkClicked;
+            this.HtmlContainer.RenderError += this.OnRenderError;
+            this.HtmlContainer.Refresh += this.OnRefresh;
+            this.HtmlContainer.ScrollChange += this.OnScrollChange;
+            this.HtmlContainer.StylesheetLoad += this.OnStylesheetLoad;
+            this.HtmlContainer.ImageLoad += this.OnImageLoad;
         }
 
         /// <summary>
@@ -172,8 +171,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("If anti-aliasing should be avoided for geometry like backgrounds and borders")]
         public virtual bool AvoidGeometryAntialias
         {
-            get { return _htmlContainer.AvoidGeometryAntialias; }
-            set { _htmlContainer.AvoidGeometryAntialias = value; }
+            get { return this.HtmlContainer.AvoidGeometryAntialias; }
+            set { this.HtmlContainer.AvoidGeometryAntialias = value; }
         }
 
         /// <summary>
@@ -182,7 +181,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// False - images that are not visible because of scroll location are not loaded until they are scrolled to.
         /// </summary>
         /// <remarks>
-        /// Images late loading improve performance if the page contains image outside the visible scroll area, especially if there is large 
+        /// Images late loading improve performance if the page contains image outside the visible scroll area, especially if there is large
         /// amount of images, as all image loading is delayed (downloading and loading into memory).<br/>
         /// Late image loading may effect the layout and actual size as image without set size will not have actual size until they are loaded
         /// resulting in layout change during user scroll.<br/>
@@ -194,8 +193,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("If image loading only when visible should be avoided")]
         public virtual bool AvoidImagesLateLoading
         {
-            get { return _htmlContainer.AvoidImagesLateLoading; }
-            set { _htmlContainer.AvoidImagesLateLoading = value; }
+            get { return this.HtmlContainer.AvoidImagesLateLoading; }
+            set { this.HtmlContainer.AvoidImagesLateLoading = value; }
         }
 
         /// <summary>
@@ -217,8 +216,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("If to use GDI+ text rendering to measure/draw text, false - use GDI")]
         public bool UseGdiPlusTextRendering
         {
-            get { return _htmlContainer.UseGdiPlusTextRendering; }
-            set { _htmlContainer.UseGdiPlusTextRendering = value; }
+            get { return this.HtmlContainer.UseGdiPlusTextRendering; }
+            set { this.HtmlContainer.UseGdiPlusTextRendering = value; }
         }
 
         /// <summary>
@@ -230,8 +229,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("The text rendering hint to be used for text rendering.")]
         public TextRenderingHint TextRenderingHint
         {
-            get { return _textRenderingHint; }
-            set { _textRenderingHint = value; }
+            get { return this._TextRenderingHint; }
+            set { this._TextRenderingHint = value; }
         }
 
         /// <summary>
@@ -243,8 +242,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("If to use cursors defined by the operating system or .NET cursors")]
         public bool UseSystemCursors
         {
-            get { return _useSystemCursors; }
-            set { _useSystemCursors = value; }
+            get { return this._UseSystemCursors; }
+            set { this._UseSystemCursors = value; }
         }
 
         /// <summary>
@@ -255,13 +254,17 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [DefaultValue(typeof(BorderStyle), "None")]
         public virtual BorderStyle BorderStyle
         {
-            get { return _borderStyle; }
+            get
+            {
+                return this._BorderStyle;
+            }
+
             set
             {
-                if (BorderStyle != value)
+                if (this.BorderStyle != value)
                 {
-                    _borderStyle = value;
-                    OnBorderStyleChanged(EventArgs.Empty);
+                    this._BorderStyle = value;
+                    this.OnBorderStyleChanged(EventArgs.Empty);
                 }
             }
         }
@@ -278,8 +281,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("Is content selection is enabled for the rendered html.")]
         public virtual bool IsSelectionEnabled
         {
-            get { return _htmlContainer.IsSelectionEnabled; }
-            set { _htmlContainer.IsSelectionEnabled = value; }
+            get { return this.HtmlContainer.IsSelectionEnabled; }
+            set { this.HtmlContainer.IsSelectionEnabled = value; }
         }
 
         /// <summary>
@@ -293,8 +296,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("Is the build-in context menu enabled and will be shown on mouse right click.")]
         public virtual bool IsContextMenuEnabled
         {
-            get { return _htmlContainer.IsContextMenuEnabled; }
-            set { _htmlContainer.IsContextMenuEnabled = value; }
+            get { return this.HtmlContainer.IsContextMenuEnabled; }
+            set { this.HtmlContainer.IsContextMenuEnabled = value; }
         }
 
         /// <summary>
@@ -306,17 +309,21 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Editor("System.ComponentModel.Design.MultilineStringEditor, System.Design, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a", "System.Drawing.Design.UITypeEditor, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")]
         public virtual string BaseStylesheet
         {
-            get { return _baseRawCssData; }
+            get
+            {
+                return this.BaseRawCssData;
+            }
+
             set
             {
-                _baseRawCssData = value;
-                _baseCssData = HtmlRender.ParseStyleSheet(value);
-                _htmlContainer.SetHtml(_text, _baseCssData);
+                this.BaseRawCssData = value;
+                this.BaseCssData = HtmlRender.ParseStyleSheet(value);
+                this.HtmlContainer.SetHtml(this._Text, this.BaseCssData);
             }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the container enables the user to scroll to any controls placed outside of its visible boundaries. 
+        /// Gets or sets a value indicating whether the container enables the user to scroll to any controls placed outside of its visible boundaries.
         /// </summary>
         [Browsable(true)]
         [Description("Sets a value indicating whether the container enables the user to scroll to any controls placed outside of its visible boundaries.")]
@@ -333,18 +340,22 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Description("Sets the html of this control.")]
         public override string Text
         {
-            get { return _text; }
+            get
+            {
+                return this._Text;
+            }
+
             set
             {
-                _text = value;
+                this._Text = value;
                 base.Text = value;
-                if (!IsDisposed)
+                if (!this.IsDisposed)
                 {
-                    VerticalScroll.Value = VerticalScroll.Minimum;
-                    _htmlContainer.SetHtml(_text, _baseCssData);
-                    PerformLayout();
-                    Invalidate();
-                    InvokeMouseMove();
+                    this.VerticalScroll.Value = this.VerticalScroll.Minimum;
+                    this.HtmlContainer.SetHtml(this._Text, this.BaseCssData);
+                    this.PerformLayout();
+                    this.Invalidate();
+                    this.InvokeMouseMove();
                 }
             }
         }
@@ -355,7 +366,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Browsable(false)]
         public virtual string SelectedText
         {
-            get { return _htmlContainer.SelectedText; }
+            get { return this.HtmlContainer.SelectedText; }
         }
 
         /// <summary>
@@ -364,7 +375,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [Browsable(false)]
         public virtual string SelectedHtml
         {
-            get { return _htmlContainer.SelectedHtml; }
+            get { return this.HtmlContainer.SelectedHtml; }
         }
 
         /// <summary>
@@ -373,7 +384,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// <returns>generated html</returns>
         public virtual string GetHtml()
         {
-            return _htmlContainer != null ? _htmlContainer.GetHtml() : null;
+            return this.HtmlContainer != null ? this.HtmlContainer.GetHtml() : null;
         }
 
         /// <summary>
@@ -385,7 +396,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// <returns>the rectangle of the element or null if not found</returns>
         public virtual RectangleF? GetElementRectangle(string elementId)
         {
-            return _htmlContainer != null ? _htmlContainer.GetElementRectangle(elementId) : null;
+            return this.HtmlContainer != null ? this.HtmlContainer.GetElementRectangle(elementId) : null;
         }
 
         /// <summary>
@@ -398,13 +409,13 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         {
             ArgChecker.AssertArgNotNullOrEmpty(elementId, "elementId");
 
-            if (_htmlContainer != null)
+            if (this.HtmlContainer != null)
             {
-                var rect = _htmlContainer.GetElementRectangle(elementId);
+                var rect = this.HtmlContainer.GetElementRectangle(elementId);
                 if (rect.HasValue)
                 {
-                    UpdateScroll(Point.Round(rect.Value.Location));
-                    _htmlContainer.HandleMouseMove(this, new MouseEventArgs(MouseButtons, 0, MousePosition.X, MousePosition.Y, 0));
+                    this.UpdateScroll(Point.Round(rect.Value.Location));
+                    this.HtmlContainer.HandleMouseMove(this, new MouseEventArgs(MouseButtons, 0, MousePosition.X, MousePosition.Y, 0));
                 }
             }
         }
@@ -414,10 +425,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         public void ClearSelection()
         {
-            if (_htmlContainer != null)
-                _htmlContainer.ClearSelection();
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.ClearSelection();
+            }
         }
-
 
         #region Private methods
 
@@ -431,7 +443,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
             {
                 CreateParams createParams = base.CreateParams;
 
-                switch (_borderStyle)
+                switch (this._BorderStyle)
                 {
                     case BorderStyle.FixedSingle:
                         createParams.Style |= Win32Utils.WsBorder;
@@ -452,14 +464,14 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected override void OnLayout(LayoutEventArgs levent)
         {
-            PerformHtmlLayout();
+            this.PerformHtmlLayout();
 
             base.OnLayout(levent);
 
             // to handle if vertical scrollbar is appearing or disappearing
-            if (_htmlContainer != null && Math.Abs(_htmlContainer.MaxSize.Width - ClientSize.Width) > 0.1)
+            if (this.HtmlContainer != null && Math.Abs(this.HtmlContainer.MaxSize.Width - this.ClientSize.Width) > 0.1)
             {
-                PerformHtmlLayout();
+                this.PerformHtmlLayout();
                 base.OnLayout(levent);
             }
         }
@@ -469,21 +481,20 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected void PerformHtmlLayout()
         {
-            if (_htmlContainer != null)
+            if (this.HtmlContainer != null)
             {
-                _htmlContainer.MaxSize = new SizeF(ClientSize.Width - Padding.Horizontal, 0);
+                this.HtmlContainer.MaxSize = new SizeF(this.ClientSize.Width - this.Padding.Horizontal, 0);
 
                 Graphics g = Utils.CreateGraphics(this);
                 if (g != null)
                 {
                     using (g)
                     {
-                        _htmlContainer.PerformLayout(g);
+                        this.HtmlContainer.PerformLayout(g);
                     }
                 }
 
-
-                AutoScrollMinSize = Size.Round(new SizeF(_htmlContainer.ActualSize.Width + Padding.Horizontal, _htmlContainer.ActualSize.Height));
+                this.AutoScrollMinSize = Size.Round(new SizeF(this.HtmlContainer.ActualSize.Width + this.Padding.Horizontal, this.HtmlContainer.ActualSize.Height));
             }
         }
 
@@ -494,18 +505,18 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         {
             base.OnPaint(e);
 
-            if (_htmlContainer != null)
+            if (this.HtmlContainer != null)
             {
-                e.Graphics.TextRenderingHint = _textRenderingHint;
-                e.Graphics.SetClip(ClientRectangle);
-                _htmlContainer.Location = new PointF(Padding.Left, Padding.Top);
-                _htmlContainer.ScrollOffset = AutoScrollPosition;
-                _htmlContainer.PerformPaint(e.Graphics);
+                e.Graphics.TextRenderingHint = this._TextRenderingHint;
+                e.Graphics.SetClip(this.ClientRectangle);
+                this.HtmlContainer.Location = new PointF(this.Padding.Left, this.Padding.Top);
+                this.HtmlContainer.ScrollOffset = this.AutoScrollPosition;
+                this.HtmlContainer.PerformPaint(e.Graphics);
 
-                if (!_lastScrollOffset.Equals(_htmlContainer.ScrollOffset))
+                if (!this.LastScrollOffset.Equals(this.HtmlContainer.ScrollOffset))
                 {
-                    _lastScrollOffset = _htmlContainer.ScrollOffset;
-                    InvokeMouseMove();
+                    this.LastScrollOffset = this.HtmlContainer.ScrollOffset;
+                    this.InvokeMouseMove();
                 }
             }
         }
@@ -516,17 +527,19 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
-            Focus();
+            this.Focus();
         }
 
         /// <summary>
-        /// Handle mouse move to handle hover cursor and text selection. 
+        /// Handle mouse move to handle hover cursor and text selection.
         /// </summary>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseMove(this, e);
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.HandleMouseMove(this, e);
+            }
         }
 
         /// <summary>
@@ -535,38 +548,46 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseLeave(this);
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.HandleMouseLeave(this);
+            }
         }
 
         /// <summary>
-        /// Handle mouse down to handle selection. 
+        /// Handle mouse down to handle selection.
         /// </summary>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseDown(this, e);
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.HandleMouseDown(this, e);
+            }
         }
 
         /// <summary>
-        /// Handle mouse up to handle selection and link click. 
+        /// Handle mouse up to handle selection and link click.
         /// </summary>
         protected override void OnMouseUp(MouseEventArgs e)
         {
-			base.OnMouseUp(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseUp(this, e);
+            base.OnMouseUp(e);
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.HandleMouseUp(this, e);
+            }
         }
 
         /// <summary>
-        /// Handle mouse double click to select word under the mouse. 
+        /// Handle mouse double click to select word under the mouse.
         /// </summary>
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
             base.OnMouseDoubleClick(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleMouseDoubleClick(this, e);
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.HandleMouseDoubleClick(this, e);
+            }
         }
 
         /// <summary>
@@ -575,37 +596,40 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            if (_htmlContainer != null)
-                _htmlContainer.HandleKeyDown(this, e);
+            if (this.HtmlContainer != null)
+            {
+                this.HtmlContainer.HandleKeyDown(this, e);
+            }
+
             if (e.KeyCode == Keys.Up)
             {
-                VerticalScroll.Value = Math.Max(VerticalScroll.Value - 70, VerticalScroll.Minimum);
-                PerformLayout();
+                this.VerticalScroll.Value = Math.Max(this.VerticalScroll.Value - 70, this.VerticalScroll.Minimum);
+                this.PerformLayout();
             }
             else if (e.KeyCode == Keys.Down)
             {
-                VerticalScroll.Value = Math.Min(VerticalScroll.Value + 70, VerticalScroll.Maximum);
-                PerformLayout();
+                this.VerticalScroll.Value = Math.Min(this.VerticalScroll.Value + 70, this.VerticalScroll.Maximum);
+                this.PerformLayout();
             }
             else if (e.KeyCode == Keys.PageDown)
             {
-                VerticalScroll.Value = Math.Min(VerticalScroll.Value + 400, VerticalScroll.Maximum);
-                PerformLayout();
+                this.VerticalScroll.Value = Math.Min(this.VerticalScroll.Value + 400, this.VerticalScroll.Maximum);
+                this.PerformLayout();
             }
             else if (e.KeyCode == Keys.PageUp)
             {
-                VerticalScroll.Value = Math.Max(VerticalScroll.Value - 400, VerticalScroll.Minimum);
-                PerformLayout();
+                this.VerticalScroll.Value = Math.Max(this.VerticalScroll.Value - 400, this.VerticalScroll.Minimum);
+                this.PerformLayout();
             }
             else if (e.KeyCode == Keys.End)
             {
-                VerticalScroll.Value = VerticalScroll.Maximum;
-                PerformLayout();
+                this.VerticalScroll.Value = this.VerticalScroll.Maximum;
+                this.PerformLayout();
             }
             else if (e.KeyCode == Keys.Home)
             {
-                VerticalScroll.Value = VerticalScroll.Minimum;
-                PerformLayout();
+                this.VerticalScroll.Value = this.VerticalScroll.Minimum;
+                this.PerformLayout();
             }
         }
 
@@ -614,9 +638,9 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnBorderStyleChanged(EventArgs e)
         {
-            UpdateStyles();
+            this.UpdateStyles();
 
-            var handler = BorderStyleChanged;
+            var handler = this.BorderStyleChanged;
             if (handler != null)
             {
                 handler(this, e);
@@ -628,9 +652,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnLoadComplete(EventArgs e)
         {
-            var handler = LoadComplete;
+            var handler = this.LoadComplete;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -638,9 +664,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnLinkClicked(HtmlLinkClickedEventArgs e)
         {
-            var handler = LinkClicked;
+            var handler = this.LinkClicked;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -648,9 +676,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnRenderError(HtmlRenderErrorEventArgs e)
         {
-            var handler = RenderError;
+            var handler = this.RenderError;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -658,9 +688,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnStylesheetLoad(HtmlStylesheetLoadEventArgs e)
         {
-            var handler = StylesheetLoad;
+            var handler = this.StylesheetLoad;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -668,9 +700,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnImageLoad(HtmlImageLoadEventArgs e)
         {
-            var handler = ImageLoad;
+            var handler = this.ImageLoad;
             if (handler != null)
+            {
                 handler(this, e);
+            }
         }
 
         /// <summary>
@@ -679,8 +713,11 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         protected virtual void OnRefresh(HtmlRefreshEventArgs e)
         {
             if (e.Layout)
-                PerformLayout();
-            Invalidate();
+            {
+                this.PerformLayout();
+            }
+
+            this.Invalidate();
         }
 
         /// <summary>
@@ -688,7 +725,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected virtual void OnScrollChange(HtmlScrollEventArgs e)
         {
-            UpdateScroll(new Point((int)e.X, (int)e.Y));
+            this.UpdateScroll(new Point((int)e.X, (int)e.Y));
         }
 
         /// <summary>
@@ -697,8 +734,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// <param name="location">the location to adjust the scroll to</param>
         protected virtual void UpdateScroll(Point location)
         {
-            AutoScrollPosition = location;
-            _htmlContainer.ScrollOffset = AutoScrollPosition;
+            this.AutoScrollPosition = location;
+            this.HtmlContainer.ScrollOffset = this.AutoScrollPosition;
         }
 
         /// <summary>
@@ -709,8 +746,8 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
             try
             {
                 // mono has issue throwing exception for no reason
-                var mp = PointToClient(MousePosition);
-                _htmlContainer.HandleMouseMove(this, new MouseEventArgs(MouseButtons.None, 0, mp.X, mp.Y, 0));
+                var mp = this.PointToClient(MousePosition);
+                this.HtmlContainer.HandleMouseMove(this, new MouseEventArgs(MouseButtons.None, 0, mp.X, mp.Y, 0));
             }
             catch
             {
@@ -738,6 +775,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
                 case Keys.Shift | Keys.Down:
                     return true;
             }
+
             return base.IsInputKey(keyData);
         }
 
@@ -749,7 +787,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         [DebuggerStepThrough]
         protected override void WndProc(ref Message m)
         {
-            if (_useSystemCursors && m.Msg == Win32Utils.WmSetCursor && Cursor == Cursors.Hand)
+            if (this._UseSystemCursors && m.Msg == Win32Utils.WmSetCursor && this.Cursor == Cursors.Hand)
             {
                 try
                 {
@@ -760,9 +798,10 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
                 }
                 catch (Exception ex)
                 {
-                    OnRenderError(this, new HtmlRenderErrorEventArgs(HtmlRenderErrorType.General, "Failed to set OS hand cursor", ex));
+                    this.OnRenderError(this, new HtmlRenderErrorEventArgs(HtmlRenderErrorType.General, "Failed to set OS hand cursor", ex));
                 }
             }
+
             base.WndProc(ref m);
         }
 #endif
@@ -772,67 +811,74 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            if (_htmlContainer != null)
+            if (this.HtmlContainer != null)
             {
-                _htmlContainer.LoadComplete -= OnLoadComplete;
-                _htmlContainer.LinkClicked -= OnLinkClicked;
-                _htmlContainer.RenderError -= OnRenderError;
-                _htmlContainer.Refresh -= OnRefresh;
-                _htmlContainer.ScrollChange -= OnScrollChange;
-                _htmlContainer.StylesheetLoad -= OnStylesheetLoad;
-                _htmlContainer.ImageLoad -= OnImageLoad;
-                _htmlContainer.Dispose();
-                _htmlContainer = null;
+                this.HtmlContainer.LoadComplete -= this.OnLoadComplete;
+                this.HtmlContainer.LinkClicked -= this.OnLinkClicked;
+                this.HtmlContainer.RenderError -= this.OnRenderError;
+                this.HtmlContainer.Refresh -= this.OnRefresh;
+                this.HtmlContainer.ScrollChange -= this.OnScrollChange;
+                this.HtmlContainer.StylesheetLoad -= this.OnStylesheetLoad;
+                this.HtmlContainer.ImageLoad -= this.OnImageLoad;
+                this.HtmlContainer.Dispose();
+                this.HtmlContainer = null;
             }
+
             base.Dispose(disposing);
         }
-
 
         #region Private event handlers
 
         private void OnLoadComplete(object sender, EventArgs e)
         {
-            OnLoadComplete(e);
+            this.OnLoadComplete(e);
         }
 
         private void OnLinkClicked(object sender, HtmlLinkClickedEventArgs e)
         {
-            OnLinkClicked(e);
+            this.OnLinkClicked(e);
         }
 
         private void OnRenderError(object sender, HtmlRenderErrorEventArgs e)
         {
-            if (InvokeRequired)
-                Invoke(new MethodInvoker(() => OnRenderError(e)));
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(() => this.OnRenderError(e)));
+            }
             else
-                OnRenderError(e);
+            {
+                this.OnRenderError(e);
+            }
         }
 
         private void OnStylesheetLoad(object sender, HtmlStylesheetLoadEventArgs e)
         {
-            OnStylesheetLoad(e);
+            this.OnStylesheetLoad(e);
         }
 
         private void OnImageLoad(object sender, HtmlImageLoadEventArgs e)
         {
-            OnImageLoad(e);
+            this.OnImageLoad(e);
         }
 
         private void OnRefresh(object sender, HtmlRefreshEventArgs e)
         {
-            if (InvokeRequired)
-                Invoke(new MethodInvoker(() => OnRefresh(e)));
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new MethodInvoker(() => this.OnRefresh(e)));
+            }
             else
-                OnRefresh(e);
+            {
+                this.OnRefresh(e);
+            }
         }
 
         private void OnScrollChange(object sender, HtmlScrollEventArgs e)
         {
-            OnScrollChange(e);
+            this.OnScrollChange(e);
         }
 
         #endregion
-
 
         #region Hide not relevant properties from designer
 
@@ -897,7 +943,6 @@ namespace TheArtOfDev.HtmlRenderer.WinForms
         }
 
         #endregion
-
 
         #endregion
     }

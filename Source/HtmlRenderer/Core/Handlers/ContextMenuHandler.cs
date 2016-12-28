@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -30,80 +30,79 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <summary>
         /// select all text
         /// </summary>
-        private static readonly string _selectAll;
+        private static readonly string SelectAll;
 
         /// <summary>
         /// copy selected text
         /// </summary>
-        private static readonly string _copy;
+        private static readonly string Copy;
 
         /// <summary>
         /// copy the link source
         /// </summary>
-        private static readonly string _copyLink;
+        private static readonly string CopyLink;
 
         /// <summary>
         /// open link (as left mouse click)
         /// </summary>
-        private static readonly string _openLink;
+        private static readonly string OpenLink;
 
         /// <summary>
         /// copy the source of the image
         /// </summary>
-        private static readonly string _copyImageLink;
+        private static readonly string CopyImageLink;
 
         /// <summary>
         /// copy image to clipboard
         /// </summary>
-        private static readonly string _copyImage;
+        private static readonly string CopyImage;
 
         /// <summary>
         /// save image to disk
         /// </summary>
-        private static readonly string _saveImage;
+        private static readonly string SaveImage;
 
         /// <summary>
         /// open video in browser
         /// </summary>
-        private static readonly string _openVideo;
+        private static readonly string OpenVideo;
 
         /// <summary>
         /// copy video url to browser
         /// </summary>
-        private static readonly string _copyVideoUrl;
+        private static readonly string CopyVideoUrl;
 
         /// <summary>
         /// the selection handler linked to the context menu handler
         /// </summary>
-        private readonly SelectionHandler _selectionHandler;
+        private readonly SelectionHandler SelectionHandler;
 
         /// <summary>
         /// the html container the handler is on
         /// </summary>
-        private readonly HtmlContainerInt _htmlContainer;
+        private readonly HtmlContainerInt HtmlContainer;
 
         /// <summary>
         /// the last context menu shown
         /// </summary>
-        private RContextMenu _contextMenu;
+        private RContextMenu ContextMenu;
 
         /// <summary>
         /// the control that the context menu was shown on
         /// </summary>
-        private RControl _parentControl;
+        private RControl ParentControl;
 
         /// <summary>
         /// the css rectangle that context menu shown on
         /// </summary>
-        private CssRect _currentRect;
+        private CssRect CurrentRect;
 
         /// <summary>
         /// the css link box that context menu shown on
         /// </summary>
-        private CssBox _currentLink;
+        private CssBox CurrentLink;
 
         #endregion
-
 
         /// <summary>
         /// Init context menu items strings.
@@ -112,147 +111,147 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             if (CultureInfo.CurrentUICulture.Name.StartsWith("fr", StringComparison.InvariantCultureIgnoreCase))
             {
-                _selectAll = "Tout sélectionner";
-                _copy = "Copier";
-                _copyLink = "Copier l'adresse du lien";
-                _openLink = "Ouvrir le lien";
-                _copyImageLink = "Copier l'URL de l'image";
-                _copyImage = "Copier l'image";
-                _saveImage = "Enregistrer l'image sous...";
-                _openVideo = "Ouvrir la vidéo";
-                _copyVideoUrl = "Copier l'URL de l'vidéo";
+                SelectAll = "Tout sélectionner";
+                Copy = "Copier";
+                CopyLink = "Copier l'adresse du lien";
+                OpenLink = "Ouvrir le lien";
+                CopyImageLink = "Copier l'URL de l'image";
+                CopyImage = "Copier l'image";
+                SaveImage = "Enregistrer l'image sous...";
+                OpenVideo = "Ouvrir la vidéo";
+                CopyVideoUrl = "Copier l'URL de l'vidéo";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("de", StringComparison.InvariantCultureIgnoreCase))
             {
-                _selectAll = "Alle auswählen";
-                _copy = "Kopieren";
-                _copyLink = "Link-Adresse kopieren";
-                _openLink = "Link öffnen";
-                _copyImageLink = "Bild-URL kopieren";
-                _copyImage = "Bild kopieren";
-                _saveImage = "Bild speichern unter...";
-                _openVideo = "Video öffnen";
-                _copyVideoUrl = "Video-URL kopieren";
+                SelectAll = "Alle auswählen";
+                Copy = "Kopieren";
+                CopyLink = "Link-Adresse kopieren";
+                OpenLink = "Link öffnen";
+                CopyImageLink = "Bild-URL kopieren";
+                CopyImage = "Bild kopieren";
+                SaveImage = "Bild speichern unter...";
+                OpenVideo = "Video öffnen";
+                CopyVideoUrl = "Video-URL kopieren";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("it", StringComparison.InvariantCultureIgnoreCase))
             {
-                _selectAll = "Seleziona tutto";
-                _copy = "Copia";
-                _copyLink = "Copia indirizzo del link";
-                _openLink = "Apri link";
-                _copyImageLink = "Copia URL immagine";
-                _copyImage = "Copia immagine";
-                _saveImage = "Salva immagine con nome...";
-                _openVideo = "Apri il video";
-                _copyVideoUrl = "Copia URL video";
+                SelectAll = "Seleziona tutto";
+                Copy = "Copia";
+                CopyLink = "Copia indirizzo del link";
+                OpenLink = "Apri link";
+                CopyImageLink = "Copia URL immagine";
+                CopyImage = "Copia immagine";
+                SaveImage = "Salva immagine con nome...";
+                OpenVideo = "Apri il video";
+                CopyVideoUrl = "Copia URL video";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("es", StringComparison.InvariantCultureIgnoreCase))
             {
-                _selectAll = "Seleccionar todo";
-                _copy = "Copiar";
-                _copyLink = "Copiar dirección de enlace";
-                _openLink = "Abrir enlace";
-                _copyImageLink = "Copiar URL de la imagen";
-                _copyImage = "Copiar imagen";
-                _saveImage = "Guardar imagen como...";
-                _openVideo = "Abrir video";
-                _copyVideoUrl = "Copiar URL de la video";
+                SelectAll = "Seleccionar todo";
+                Copy = "Copiar";
+                CopyLink = "Copiar dirección de enlace";
+                OpenLink = "Abrir enlace";
+                CopyImageLink = "Copiar URL de la imagen";
+                CopyImage = "Copiar imagen";
+                SaveImage = "Guardar imagen como...";
+                OpenVideo = "Abrir video";
+                CopyVideoUrl = "Copiar URL de la video";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("ru", StringComparison.InvariantCultureIgnoreCase))
             {
-                _selectAll = "Выбрать все";
-                _copy = "Копировать";
-                _copyLink = "Копировать адрес ссылки";
-                _openLink = "Перейти по ссылке";
-                _copyImageLink = "Копировать адрес изображения";
-                _copyImage = "Копировать изображение";
-                _saveImage = "Сохранить изображение как...";
-                _openVideo = "Открыть видео";
-                _copyVideoUrl = "Копировать адрес видео";
+                SelectAll = "Выбрать все";
+                Copy = "Копировать";
+                CopyLink = "Копировать адрес ссылки";
+                OpenLink = "Перейти по ссылке";
+                CopyImageLink = "Копировать адрес изображения";
+                CopyImage = "Копировать изображение";
+                SaveImage = "Сохранить изображение как...";
+                OpenVideo = "Открыть видео";
+                CopyVideoUrl = "Копировать адрес видео";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("sv", StringComparison.InvariantCultureIgnoreCase))
             {
-                _selectAll = "Välj allt";
-                _copy = "Kopiera";
-                _copyLink = "Kopiera länkadress";
-                _openLink = "Öppna länk";
-                _copyImageLink = "Kopiera bildens URL";
-                _copyImage = "Kopiera bild";
-                _saveImage = "Spara bild som...";
-                _openVideo = "Öppna video";
-                _copyVideoUrl = "Kopiera video URL";
+                SelectAll = "Välj allt";
+                Copy = "Kopiera";
+                CopyLink = "Kopiera länkadress";
+                OpenLink = "Öppna länk";
+                CopyImageLink = "Kopiera bildens URL";
+                CopyImage = "Kopiera bild";
+                SaveImage = "Spara bild som...";
+                OpenVideo = "Öppna video";
+                CopyVideoUrl = "Kopiera video URL";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("hu", StringComparison.InvariantCultureIgnoreCase))
             {
-                _selectAll = "Összes kiválasztása";
-                _copy = "Másolás";
-                _copyLink = "Hivatkozás címének másolása";
-                _openLink = "Hivatkozás megnyitása";
-                _copyImageLink = "Kép URL másolása";
-                _copyImage = "Kép másolása";
-                _saveImage = "Kép mentése másként...";
-                _openVideo = "Videó megnyitása";
-                _copyVideoUrl = "Videó URL másolása";
+                SelectAll = "Összes kiválasztása";
+                Copy = "Másolás";
+                CopyLink = "Hivatkozás címének másolása";
+                OpenLink = "Hivatkozás megnyitása";
+                CopyImageLink = "Kép URL másolása";
+                CopyImage = "Kép másolása";
+                SaveImage = "Kép mentése másként...";
+                OpenVideo = "Videó megnyitása";
+                CopyVideoUrl = "Videó URL másolása";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("cs", StringComparison.InvariantCultureIgnoreCase))
             {
-                _selectAll = "Vybrat vše";
-                _copy = "Kopírovat";
-                _copyLink = "Kopírovat adresu odkazu";
-                _openLink = "Otevřít odkaz";
-                _copyImageLink = "Kopírovat URL snímku";
-                _copyImage = "Kopírovat snímek";
-                _saveImage = "Uložit snímek jako...";
-                _openVideo = "Otevřít video";
-                _copyVideoUrl = "Kopírovat URL video";
+                SelectAll = "Vybrat vše";
+                Copy = "Kopírovat";
+                CopyLink = "Kopírovat adresu odkazu";
+                OpenLink = "Otevřít odkaz";
+                CopyImageLink = "Kopírovat URL snímku";
+                CopyImage = "Kopírovat snímek";
+                SaveImage = "Uložit snímek jako...";
+                OpenVideo = "Otevřít video";
+                CopyVideoUrl = "Kopírovat URL video";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("da", StringComparison.InvariantCultureIgnoreCase))
             {
-                _selectAll = "Vælg alt";
-                _copy = "Kopiér";
-                _copyLink = "Kopier link-adresse";
-                _openLink = "Åbn link";
-                _copyImageLink = "Kopier billede-URL";
-                _copyImage = "Kopier billede";
-                _saveImage = "Gem billede som...";
-                _openVideo = "Åbn video";
-                _copyVideoUrl = "Kopier video-URL";
+                SelectAll = "Vælg alt";
+                Copy = "Kopiér";
+                CopyLink = "Kopier link-adresse";
+                OpenLink = "Åbn link";
+                CopyImageLink = "Kopier billede-URL";
+                CopyImage = "Kopier billede";
+                SaveImage = "Gem billede som...";
+                OpenVideo = "Åbn video";
+                CopyVideoUrl = "Kopier video-URL";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("nl", StringComparison.InvariantCultureIgnoreCase))
             {
-                _selectAll = "Alles selecteren";
-                _copy = "Kopiëren";
-                _copyLink = "Link adres kopiëren";
-                _openLink = "Link openen";
-                _copyImageLink = "URL Afbeelding kopiëren";
-                _copyImage = "Afbeelding kopiëren";
-                _saveImage = "Bewaar afbeelding als...";
-                _openVideo = "Video openen";
-                _copyVideoUrl = "URL video kopiëren";
+                SelectAll = "Alles selecteren";
+                Copy = "Kopiëren";
+                CopyLink = "Link adres kopiëren";
+                OpenLink = "Link openen";
+                CopyImageLink = "URL Afbeelding kopiëren";
+                CopyImage = "Afbeelding kopiëren";
+                SaveImage = "Bewaar afbeelding als...";
+                OpenVideo = "Video openen";
+                CopyVideoUrl = "URL video kopiëren";
             }
             else if (CultureInfo.CurrentUICulture.Name.StartsWith("fi", StringComparison.InvariantCultureIgnoreCase))
             {
-                _selectAll = "Valitse kaikki";
-                _copy = "Kopioi";
-                _copyLink = "Kopioi linkin osoite";
-                _openLink = "Avaa linkki";
-                _copyImageLink = "Kopioi kuvan URL";
-                _copyImage = "Kopioi kuva";
-                _saveImage = "Tallena kuva nimellä...";
-                _openVideo = "Avaa video";
-                _copyVideoUrl = "Kopioi video URL";
+                SelectAll = "Valitse kaikki";
+                Copy = "Kopioi";
+                CopyLink = "Kopioi linkin osoite";
+                OpenLink = "Avaa linkki";
+                CopyImageLink = "Kopioi kuvan URL";
+                CopyImage = "Kopioi kuva";
+                SaveImage = "Tallena kuva nimellä...";
+                OpenVideo = "Avaa video";
+                CopyVideoUrl = "Kopioi video URL";
             }
             else
             {
-                _selectAll = "Select all";
-                _copy = "Copy";
-                _copyLink = "Copy link address";
-                _openLink = "Open link";
-                _copyImageLink = "Copy image URL";
-                _copyImage = "Copy image";
-                _saveImage = "Save image as...";
-                _openVideo = "Open video";
-                _copyVideoUrl = "Copy video URL";
+                SelectAll = "Select all";
+                Copy = "Copy";
+                CopyLink = "Copy link address";
+                OpenLink = "Open link";
+                CopyImageLink = "Copy image URL";
+                CopyImage = "Copy image";
+                SaveImage = "Save image as...";
+                OpenVideo = "Open video";
+                CopyVideoUrl = "Copy video URL";
             }
         }
 
@@ -266,8 +265,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             ArgChecker.AssertArgNotNull(selectionHandler, "selectionHandler");
             ArgChecker.AssertArgNotNull(htmlContainer, "htmlContainer");
 
-            _selectionHandler = selectionHandler;
-            _htmlContainer = htmlContainer;
+            this.SelectionHandler = selectionHandler;
+            this.HtmlContainer = htmlContainer;
         }
 
         /// <summary>
@@ -280,12 +279,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             try
             {
-                DisposeContextMenu();
+                this.DisposeContextMenu();
 
-                _parentControl = parent;
-                _currentRect = rect;
-                _currentLink = link;
-                _contextMenu = _htmlContainer.Adapter.GetContextMenu();
+                this.ParentControl = parent;
+                this.CurrentRect = rect;
+                this.CurrentLink = link;
+                this.ContextMenu = this.HtmlContainer.Adapter.GetContextMenu();
 
                 if (rect != null)
                 {
@@ -294,45 +293,47 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
                     {
                         isVideo = link is CssBoxFrame && ((CssBoxFrame)link).IsVideo;
                         var linkExist = !string.IsNullOrEmpty(link.HrefLink);
-                        _contextMenu.AddItem(isVideo ? _openVideo : _openLink, linkExist, OnOpenLinkClick);
-                        if (_htmlContainer.IsSelectionEnabled)
+                        this.ContextMenu.AddItem(isVideo ? OpenVideo : OpenLink, linkExist, this.OnOpenLinkClick);
+                        if (this.HtmlContainer.IsSelectionEnabled)
                         {
-                            _contextMenu.AddItem(isVideo ? _copyVideoUrl : _copyLink, linkExist, OnCopyLinkClick);
+                            this.ContextMenu.AddItem(isVideo ? CopyVideoUrl : CopyLink, linkExist, this.OnCopyLinkClick);
                         }
-                        _contextMenu.AddDivider();
+
+                        this.ContextMenu.AddDivider();
                     }
 
                     if (rect.IsImage && !isVideo)
                     {
-                        _contextMenu.AddItem(_saveImage, rect.Image != null, OnSaveImageClick);
-                        if (_htmlContainer.IsSelectionEnabled)
+                        this.ContextMenu.AddItem(SaveImage, rect.Image != null, this.OnSaveImageClick);
+                        if (this.HtmlContainer.IsSelectionEnabled)
                         {
-                            _contextMenu.AddItem(_copyImageLink, !string.IsNullOrEmpty(_currentRect.OwnerBox.GetAttribute("src")), OnCopyImageLinkClick);
-                            _contextMenu.AddItem(_copyImage, rect.Image != null, OnCopyImageClick);
+                            this.ContextMenu.AddItem(CopyImageLink, !string.IsNullOrEmpty(this.CurrentRect.OwnerBox.GetAttribute("src")), this.OnCopyImageLinkClick);
+                            this.ContextMenu.AddItem(CopyImage, rect.Image != null, this.OnCopyImageClick);
                         }
-                        _contextMenu.AddDivider();
+
+                        this.ContextMenu.AddDivider();
                     }
 
-                    if (_htmlContainer.IsSelectionEnabled)
+                    if (this.HtmlContainer.IsSelectionEnabled)
                     {
-                        _contextMenu.AddItem(_copy, rect.Selected, OnCopyClick);
+                        this.ContextMenu.AddItem(Copy, rect.Selected, this.OnCopyClick);
                     }
                 }
 
-                if (_htmlContainer.IsSelectionEnabled)
+                if (this.HtmlContainer.IsSelectionEnabled)
                 {
-                    _contextMenu.AddItem(_selectAll, true, OnSelectAllClick);
+                    this.ContextMenu.AddItem(SelectAll, true, this.OnSelectAllClick);
                 }
 
-                if (_contextMenu.ItemsCount > 0)
+                if (this.ContextMenu.ItemsCount > 0)
                 {
-                    _contextMenu.RemoveLastDivider();
-                    _contextMenu.Show(parent, parent.MouseLocation);
+                    this.ContextMenu.RemoveLastDivider();
+                    this.ContextMenu.Show(parent, parent.MouseLocation);
                 }
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to show context menu", ex);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to show context menu", ex);
             }
         }
 
@@ -342,9 +343,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
-            DisposeContextMenu();
+            this.DisposeContextMenu();
         }
-
 
         #region Private methods
 
@@ -355,15 +355,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             try
             {
-                if (_contextMenu != null)
-                    _contextMenu.Dispose();
-                _contextMenu = null;
-                _parentControl = null;
-                _currentRect = null;
-                _currentLink = null;
+                if (this.ContextMenu != null)
+                    this.ContextMenu.Dispose();
+                this.ContextMenu = null;
+                this.ParentControl = null;
+                this.CurrentRect = null;
+                this.CurrentLink = null;
             }
             catch
-            { }
+            {
+            }
         }
 
         /// <summary>
@@ -373,7 +374,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             try
             {
-                _currentLink.HtmlContainer.HandleLinkClicked(_parentControl, _parentControl.MouseLocation, _currentLink);
+                this.CurrentLink.HtmlContainer.HandleLinkClicked(this.ParentControl, this.ParentControl.MouseLocation, this.CurrentLink);
             }
             catch (HtmlLinkClickedException)
             {
@@ -381,11 +382,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to open link", ex);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to open link", ex);
             }
             finally
             {
-                DisposeContextMenu();
+                this.DisposeContextMenu();
             }
         }
 
@@ -396,15 +397,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             try
             {
-                _htmlContainer.Adapter.SetToClipboard(_currentLink.HrefLink);
+                this.HtmlContainer.Adapter.SetToClipboard(this.CurrentLink.HrefLink);
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy link url to clipboard", ex);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy link url to clipboard", ex);
             }
             finally
             {
-                DisposeContextMenu();
+                this.DisposeContextMenu();
             }
         }
 
@@ -415,16 +416,16 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             try
             {
-                var imageSrc = _currentRect.OwnerBox.GetAttribute("src");
-                _htmlContainer.Adapter.SaveToFile(_currentRect.Image, Path.GetFileName(imageSrc) ?? "image", Path.GetExtension(imageSrc) ?? "png");
+                var imageSrc = this.CurrentRect.OwnerBox.GetAttribute("src");
+                this.HtmlContainer.Adapter.SaveToFile(this.CurrentRect.Image, Path.GetFileName(imageSrc) ?? "image", Path.GetExtension(imageSrc) ?? "png");
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to save image", ex);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to save image", ex);
             }
             finally
             {
-                DisposeContextMenu();
+                this.DisposeContextMenu();
             }
         }
 
@@ -435,15 +436,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             try
             {
-                _htmlContainer.Adapter.SetToClipboard(_currentRect.OwnerBox.GetAttribute("src"));
+                this.HtmlContainer.Adapter.SetToClipboard(this.CurrentRect.OwnerBox.GetAttribute("src"));
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy image url to clipboard", ex);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy image url to clipboard", ex);
             }
             finally
             {
-                DisposeContextMenu();
+                this.DisposeContextMenu();
             }
         }
 
@@ -454,15 +455,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             try
             {
-                _htmlContainer.Adapter.SetToClipboard(_currentRect.Image);
+                this.HtmlContainer.Adapter.SetToClipboard(this.CurrentRect.Image);
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy image to clipboard", ex);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy image to clipboard", ex);
             }
             finally
             {
-                DisposeContextMenu();
+                this.DisposeContextMenu();
             }
         }
 
@@ -473,15 +474,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             try
             {
-                _selectionHandler.CopySelectedHtml();
+                this.SelectionHandler.CopySelectedHtml();
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy text to clipboard", ex);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to copy text to clipboard", ex);
             }
             finally
             {
-                DisposeContextMenu();
+                this.DisposeContextMenu();
             }
         }
 
@@ -492,15 +493,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         {
             try
             {
-                _selectionHandler.SelectAll(_parentControl);
+                this.SelectionHandler.SelectAll(this.ParentControl);
             }
             catch (Exception ex)
             {
-                _htmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to select all text", ex);
+                this.HtmlContainer.ReportError(HtmlRenderErrorType.ContextMenu, "Failed to select all text", ex);
             }
             finally
             {
-                DisposeContextMenu();
+                this.DisposeContextMenu();
             }
         }
 

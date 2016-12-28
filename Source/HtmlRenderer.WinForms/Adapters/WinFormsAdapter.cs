@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -30,22 +30,21 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// <summary>
         /// Singleton instance of global adapter.
         /// </summary>
-        private static readonly WinFormsAdapter _instance = new WinFormsAdapter();
+        private static readonly WinFormsAdapter _Instance = new WinFormsAdapter();
 
         #endregion
-
 
         /// <summary>
         /// Init installed font families and set default font families mapping.
         /// </summary>
         private WinFormsAdapter()
         {
-            AddFontFamilyMapping("monospace", "Courier New");
-            AddFontFamilyMapping("Helvetica", "Arial");
+            this.AddFontFamilyMapping("monospace", "Courier New");
+            this.AddFontFamilyMapping("Helvetica", "Arial");
 
             foreach (var family in FontFamily.Families)
             {
-                AddFontFamily(new FontFamilyAdapter(family));
+                this.AddFontFamily(new FontFamilyAdapter(family));
             }
         }
 
@@ -54,7 +53,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// </summary>
         public static WinFormsAdapter Instance
         {
-            get { return _instance; }
+            get { return _Instance; }
         }
 
         protected override RColor GetColorInt(string colorName)
@@ -72,13 +71,21 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         {
             Brush solidBrush;
             if (color == RColor.White)
+            {
                 solidBrush = Brushes.White;
+            }
             else if (color == RColor.Black)
+            {
                 solidBrush = Brushes.Black;
+            }
             else if (color.A < 1)
+            {
                 solidBrush = Brushes.Transparent;
+            }
             else
+            {
                 solidBrush = new SolidBrush(Utils.Convert(color));
+            }
 
             return new BrushAdapter(solidBrush, false);
         }

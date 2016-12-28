@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -23,14 +23,14 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// <summary>
         /// the underline win-forms image.
         /// </summary>
-        private readonly Image _image;
+        private readonly Image _Image;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public ImageAdapter(Image image)
         {
-            _image = image;
+            this._Image = image;
         }
 
         /// <summary>
@@ -38,22 +38,22 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
         /// </summary>
         public Image Image
         {
-            get { return _image; }
+            get { return this._Image; }
         }
 
         public override double Width
         {
-            get { return _image.Width; }
+            get { return this._Image.Width; }
         }
 
         public override double Height
         {
-            get { return _image.Height; }
+            get { return this._Image.Height; }
         }
 
         public override void Dispose()
         {
-            _image.Dispose();
+            this._Image.Dispose();
         }
     }
 }

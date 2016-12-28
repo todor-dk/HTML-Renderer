@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -34,12 +34,12 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// <summary>
         /// Singleton instance of global adapter.
         /// </summary>
-        private static readonly WpfAdapter _instance = new WpfAdapter();
+        private static readonly WpfAdapter _Instance = new WpfAdapter();
 
         /// <summary>
         /// List of valid predefined color names in lower-case
         /// </summary>
-        private static readonly List<string> ValidColorNamesLc; 
+        private static readonly List<string> ValidColorNamesLc;
 
         #endregion
 
@@ -58,18 +58,18 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// </summary>
         private WpfAdapter()
         {
-            AddFontFamilyMapping("monospace", "Courier New");
-            AddFontFamilyMapping("Helvetica", "Arial");
+            this.AddFontFamilyMapping("monospace", "Courier New");
+            this.AddFontFamilyMapping("Helvetica", "Arial");
 
             foreach (var family in Fonts.SystemFontFamilies)
             {
-	            try
-	            {
-	                AddFontFamily(new FontFamilyAdapter(family));
-	            }
-	            catch
-	            {
-	            }
+                try
+                {
+                    this.AddFontFamily(new FontFamilyAdapter(family));
+                }
+                catch
+                {
+                }
             }
         }
 
@@ -78,14 +78,16 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// </summary>
         public static WpfAdapter Instance
         {
-            get { return _instance; }
+            get { return _Instance; }
         }
 
         protected override RColor GetColorInt(string colorName)
         {
             // check if color name is valid to avoid ColorConverter throwing an exception
             if (!ValidColorNamesLc.Contains(colorName.ToLower()))
+            {
                 return RColor.Empty;
+            }
 
             var convertFromString = ColorConverter.ConvertFromString(colorName) ?? Colors.Black;
             return Utils.Convert((Color)convertFromString);
@@ -108,7 +110,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
             var endColor = angle <= 180 ? Utils.Convert(color2) : Utils.Convert(color1);
             angle = angle <= 180 ? angle : angle - 180;
             double x = angle < 135 ? Math.Max((angle - 45) / 90, 0) : 1;
-            double y = angle <= 45 ? Math.Max(0.5 - angle / 90, 0) : angle > 135 ? Math.Abs(1.5 - angle / 90) : 0;
+            double y = angle <= 45 ? Math.Max(0.5 - (angle / 90), 0) : angle > 135 ? Math.Abs(1.5 - (angle / 90)) : 0;
             return new BrushAdapter(new LinearGradientBrush(startColor, endColor, new Point(x, y), new Point(1 - x, 1 - y)));
         }
 
@@ -178,10 +180,11 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
                 var encoder = Utils.GetBitmapEncoder(Path.GetExtension(saveDialog.FileName));
                 encoder.Frames.Add(BitmapFrame.Create(((ImageAdapter)image).Image));
                 using (FileStream stream = new FileStream(saveDialog.FileName, FileMode.OpenOrCreate))
+                {
                     encoder.Save(stream);
+                }
             }
         }
-
 
         #region Private/Protected methods
 
@@ -192,13 +195,22 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         {
             Brush solidBrush;
             if (color == RColor.White)
+            {
                 solidBrush = Brushes.White;
+            }
             else if (color == RColor.Black)
+            {
                 solidBrush = Brushes.Black;
+            }
             else if (color.A < 1)
+            {
                 solidBrush = Brushes.Transparent;
+            }
             else
+            {
                 solidBrush = new SolidColorBrush(Utils.Convert(color));
+            }
+
             return solidBrush;
         }
 

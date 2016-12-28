@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -29,20 +29,19 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <summary>
         /// the global adapter
         /// </summary>
-        protected readonly RAdapter _adapter;
+        protected readonly RAdapter Adapter;
 
         /// <summary>
         /// The clipping bound stack as clips are pushed/poped to/from the graphics
         /// </summary>
-        protected readonly Stack<RRect> _clipStack = new Stack<RRect>();
+        protected readonly Stack<RRect> ClipStack = new Stack<RRect>();
 
         /// <summary>
         /// The suspended clips
         /// </summary>
-        private Stack<RRect> _suspendedClips = new Stack<RRect>();
+        private Stack<RRect> SuspendedClips = new Stack<RRect>();
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -51,8 +50,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         {
             ArgChecker.AssertArgNotNull(adapter, "global");
 
-            _adapter = adapter;
-            _clipStack.Push(initialClip);
+            this.Adapter = adapter;
+            this.ClipStack.Push(initialClip);
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>pen instance</returns>
         public RPen GetPen(RColor color)
         {
-            return _adapter.GetPen(color);
+            return this.Adapter.GetPen(color);
         }
 
         /// <summary>
@@ -72,7 +71,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>solid color brush instance</returns>
         public RBrush GetSolidBrush(RColor color)
         {
-            return _adapter.GetSolidBrush(color);
+            return this.Adapter.GetSolidBrush(color);
         }
 
         /// <summary>
@@ -85,7 +84,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>linear gradient color brush instance</returns>
         public RBrush GetLinearGradientBrush(RRect rect, RColor color1, RColor color2, double angle)
         {
-            return _adapter.GetLinearGradientBrush(rect, color1, color2, angle);
+            return this.Adapter.GetLinearGradientBrush(rect, color1, color2, angle);
         }
 
         /// <summary>
@@ -94,7 +93,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <returns>A rectangle structure that represents a bounding rectangle for the clipping region of this Graphics.</returns>
         public RRect GetClip()
         {
-            return _clipStack.Peek();
+            return this.ClipStack.Peek();
         }
 
         /// <summary>
@@ -114,17 +113,16 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// <param name="rect">Rectangle to exclude clipping in.</param>
         public abstract void PushClipExclude(RRect rect);
 
-
         /// <summary>
         /// Restore the clipping region to the initial clip.
         /// </summary>
         public void SuspendClipping()
         {
-            while (_clipStack.Count > 1)
+            while (this.ClipStack.Count > 1)
             {
-                var clip = GetClip();
-                _suspendedClips.Push(clip);
-                PopClip();
+                var clip = this.GetClip();
+                this.SuspendedClips.Push(clip);
+                this.PopClip();
             }
         }
 
@@ -133,10 +131,10 @@ namespace TheArtOfDev.HtmlRenderer.Adapters
         /// </summary>
         public void ResumeClipping()
         {
-            while (_suspendedClips.Count > 0)
+            while (this.SuspendedClips.Count > 0)
             {
-                var clip = _suspendedClips.Pop();
-                PushClip(clip);
+                var clip = this.SuspendedClips.Pop();
+                this.PushClip(clip);
             }
         }
 

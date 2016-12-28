@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -34,39 +34,38 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// <summary>
         /// timer to update the rendered html when html in editor changes with delay
         /// </summary>
-        private readonly Timer _updateHtmlTimer;
+        private readonly Timer UpdateHtmlTimer;
 
         /// <summary>
         /// used ignore html editor updates when updating separately
         /// </summary>
-        private bool _updateLock;
+        private bool _UpdateLock;
 
         /// <summary>
         /// In IE view if to show original html or the html generated from the html control
         /// </summary>
-        private bool _useGeneratedHtml;
+        private bool _UseGeneratedHtml;
 
         #endregion
 
-
         public MainControl()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            _htmlPanel.RenderError += OnRenderError;
-            _htmlPanel.LinkClicked += OnLinkClicked;
-            _htmlPanel.StylesheetLoad += DemoUtils.OnStylesheetLoad;
-            _htmlPanel.ImageLoad += HtmlRenderingHelper.OnImageLoad;
-            _htmlToolTip.ImageLoad += HtmlRenderingHelper.OnImageLoad;
-            _htmlPanel.LoadComplete += (sender, args) => _htmlPanel.ScrollToElement("C4");
+            this._htmlPanel.RenderError += OnRenderError;
+            this._htmlPanel.LinkClicked += OnLinkClicked;
+            this._htmlPanel.StylesheetLoad += DemoUtils.OnStylesheetLoad;
+            this._htmlPanel.ImageLoad += HtmlRenderingHelper.OnImageLoad;
+            this._htmlToolTip.ImageLoad += HtmlRenderingHelper.OnImageLoad;
+            this._htmlPanel.LoadComplete += (sender, args) => this._htmlPanel.ScrollToElement("C4");
 
-            _htmlToolTip.SetToolTip(_htmlPanel, Resources.Tooltip);
+            this._htmlToolTip.SetToolTip(this._htmlPanel, Resources.Tooltip);
 
-            _htmlEditor.Font = new Font(FontFamily.GenericMonospace, 10);
+            this._htmlEditor.Font = new Font(FontFamily.GenericMonospace, 10);
 
-            LoadSamples();
+            this.LoadSamples();
 
-            _updateHtmlTimer = new Timer(OnUpdateHtmlTimerTick);
+            this.UpdateHtmlTimer = new Timer(this.OnUpdateHtmlTimerTick);
         }
 
         /// <summary>
@@ -74,8 +73,8 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         public bool UpdateLock
         {
-            get { return _updateLock; }
-            set { _updateLock = value; }
+            get { return this._UpdateLock; }
+            set { this._UpdateLock = value; }
         }
 
         /// <summary>
@@ -83,8 +82,8 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         public bool UseGeneratedHtml
         {
-            get { return _useGeneratedHtml; }
-            set { _useGeneratedHtml = value; }
+            get { return this._UseGeneratedHtml; }
+            set { this._UseGeneratedHtml = value; }
         }
 
         /// <summary>
@@ -92,13 +91,13 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         public void ShowWebBrowserView(bool show)
         {
-            _webBrowser.Visible = show;
-            _splitter.Visible = show;
+            this._webBrowser.Visible = show;
+            this._splitter.Visible = show;
 
-            if (_webBrowser.Visible)
+            if (this._webBrowser.Visible)
             {
-                _webBrowser.Width = _splitContainer2.Panel2.Width / 2;
-                UpdateWebBrowserHtml();
+                this._webBrowser.Width = this._splitContainer2.Panel2.Width / 2;
+                this.UpdateWebBrowserHtml();
             }
         }
 
@@ -107,22 +106,21 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         public void UpdateWebBrowserHtml()
         {
-            if (_webBrowser.Visible)
+            if (this._webBrowser.Visible)
             {
-                _webBrowser.DocumentText = _useGeneratedHtml ? _htmlPanel.GetHtml() : GetFixedHtml();
+                this._webBrowser.DocumentText = this._UseGeneratedHtml ? this._htmlPanel.GetHtml() : this.GetFixedHtml();
             }
         }
 
         public string GetHtml()
         {
-            return _useGeneratedHtml ? _htmlPanel.GetHtml() : _htmlEditor.Text;
+            return this._UseGeneratedHtml ? this._htmlPanel.GetHtml() : this._htmlEditor.Text;
         }
 
         public void SetHtml(string html)
         {
-            _htmlPanel.Text = html;
+            this._htmlPanel.Text = html;
         }
-
 
         #region Private methods
 
@@ -132,29 +130,29 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         private void LoadSamples()
         {
             var showcaseRoot = new TreeNode("HTML Renderer");
-            _samplesTreeView.Nodes.Add(showcaseRoot);
+            this._samplesTreeView.Nodes.Add(showcaseRoot);
 
             foreach (var sample in SamplesLoader.ShowcaseSamples)
             {
-                AddTreeNode(showcaseRoot, sample);
+                this.AddTreeNode(showcaseRoot, sample);
             }
 
             var testSamplesRoot = new TreeNode("Test Samples");
-            _samplesTreeView.Nodes.Add(testSamplesRoot);
+            this._samplesTreeView.Nodes.Add(testSamplesRoot);
 
             foreach (var sample in SamplesLoader.TestSamples)
             {
-                AddTreeNode(testSamplesRoot, sample);
+                this.AddTreeNode(testSamplesRoot, sample);
             }
 
             if (SamplesLoader.PerformanceSamples.Count > 0)
             {
                 var perfTestSamplesRoot = new TreeNode(PerformanceSamplesTreeNodeName);
-                _samplesTreeView.Nodes.Add(perfTestSamplesRoot);
+                this._samplesTreeView.Nodes.Add(perfTestSamplesRoot);
 
                 foreach (var sample in SamplesLoader.PerformanceSamples)
                 {
-                    AddTreeNode(perfTestSamplesRoot, sample);
+                    this.AddTreeNode(perfTestSamplesRoot, sample);
                 }
             }
 
@@ -162,7 +160,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
 
             if (showcaseRoot.Nodes.Count > 0)
             {
-                _samplesTreeView.SelectedNode = showcaseRoot.Nodes[0];
+                this._samplesTreeView.SelectedNode = showcaseRoot.Nodes[0];
             }
         }
 
@@ -184,20 +182,24 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
             var sample = e.Node.Tag as HtmlSample;
             if (sample != null)
             {
-                _updateLock = true;
+                this._UpdateLock = true;
 
                 if (!HtmlRenderingHelper.IsRunningOnMono() && e.Node.Parent.Text != PerformanceSamplesTreeNodeName)
-                    SetColoredText(sample.Html);
+                {
+                    this.SetColoredText(sample.Html);
+                }
                 else
-                    _htmlEditor.Text = sample.Html;
+                {
+                    this._htmlEditor.Text = sample.Html;
+                }
 
                 Application.UseWaitCursor = true;
 
                 try
                 {
-                    _htmlPanel.AvoidImagesLateLoading = !sample.FullName.Contains("Many images");
+                    this._htmlPanel.AvoidImagesLateLoading = !sample.FullName.Contains("Many images");
 
-                    _htmlPanel.Text = sample.Html;
+                    this._htmlPanel.Text = sample.Html;
                 }
                 catch (Exception ex)
                 {
@@ -205,20 +207,20 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
                 }
 
                 Application.UseWaitCursor = false;
-                _updateLock = false;
+                this._UpdateLock = false;
 
-                UpdateWebBrowserHtml();
+                this.UpdateWebBrowserHtml();
             }
         }
 
         /// <summary>
-        /// On text change in the html editor update 
+        /// On text change in the html editor update
         /// </summary>
         private void OnHtmlEditorTextChanged(object sender, EventArgs e)
         {
-            if (!_updateLock)
+            if (!this._UpdateLock)
             {
-                _updateHtmlTimer.Change(1000, int.MaxValue);
+                this.UpdateHtmlTimer.Change(1000, int.MaxValue);
             }
         }
 
@@ -227,24 +229,23 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         private void OnUpdateHtmlTimerTick(object state)
         {
-            BeginInvoke(new MethodInvoker(() =>
+            this.BeginInvoke(new MethodInvoker(() =>
             {
-                _updateLock = true;
+                this._UpdateLock = true;
 
                 try
                 {
-                    _htmlPanel.Text = _htmlEditor.Text;
+                    this._htmlPanel.Text = this._htmlEditor.Text;
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString(), "Failed to render HTML");
                 }
 
-                //SyntaxHilight.AddColoredText(_htmlEditor.Text, _htmlEditor);
+                // SyntaxHilight.AddColoredText(_htmlEditor.Text, _htmlEditor);
+                this.UpdateWebBrowserHtml();
 
-                UpdateWebBrowserHtml();
-
-                _updateLock = false;
+                this._UpdateLock = false;
             }));
         }
 
@@ -254,31 +255,39 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// <returns>fixed html</returns>
         private string GetFixedHtml()
         {
-            var html = _htmlEditor.Text;
+            var html = this._htmlEditor.Text;
 
-            html = Regex.Replace(html, @"src=\""(\w.*?)\""", match =>
-            {
-                var img = HtmlRenderingHelper.TryLoadResourceImage(match.Groups[1].Value);
-                if (img != null)
+            html = Regex.Replace(
+                html,
+                @"src=\""(\w.*?)\""",
+                match =>
                 {
-                    var tmpFile = Path.GetTempFileName();
-                    img.Save(tmpFile, ImageFormat.Jpeg);
-                    return string.Format("src=\"{0}\"", tmpFile);
-                }
-                return match.Value;
-            }, RegexOptions.IgnoreCase);
+                    var img = HtmlRenderingHelper.TryLoadResourceImage(match.Groups[1].Value);
+                    if (img != null)
+                    {
+                        var tmpFile = Path.GetTempFileName();
+                        img.Save(tmpFile, ImageFormat.Jpeg);
+                        return string.Format("src=\"{0}\"", tmpFile);
+                    }
+                    return match.Value;
+                },
+                RegexOptions.IgnoreCase);
 
-            html = Regex.Replace(html, @"href=\""(\w.*?)\""", match =>
-            {
-                var stylesheet = DemoUtils.GetStylesheet(match.Groups[1].Value);
-                if (stylesheet != null)
+            html = Regex.Replace(
+                html,
+                @"href=\""(\w.*?)\""",
+                match =>
                 {
-                    var tmpFile = Path.GetTempFileName();
-                    File.WriteAllText(tmpFile, stylesheet);
-                    return string.Format("href=\"{0}\"", tmpFile);
-                }
-                return match.Value;
-            }, RegexOptions.IgnoreCase);
+                    var stylesheet = DemoUtils.GetStylesheet(match.Groups[1].Value);
+                    if (stylesheet != null)
+                    {
+                        var tmpFile = Path.GetTempFileName();
+                        File.WriteAllText(tmpFile, stylesheet);
+                        return string.Format("href=\"{0}\"", tmpFile);
+                    }
+                    return match.Value;
+                },
+                RegexOptions.IgnoreCase);
 
             return html;
         }
@@ -288,7 +297,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         private void OnReloadColorsLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            SetColoredText(_htmlEditor.Text);
+            this.SetColoredText(this._htmlEditor.Text);
         }
 
         /// <summary>
@@ -324,10 +333,10 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         private void SetColoredText(string text)
         {
-            var selectionStart = _htmlEditor.SelectionStart;
-            _htmlEditor.Clear();
-            _htmlEditor.Rtf = HtmlSyntaxHighlighter.Process(text);
-            _htmlEditor.SelectionStart = selectionStart;
+            var selectionStart = this._htmlEditor.SelectionStart;
+            this._htmlEditor.Clear();
+            this._htmlEditor.Rtf = HtmlSyntaxHighlighter.Process(text);
+            this._htmlEditor.SelectionStart = selectionStart;
         }
 
         #endregion

@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -72,12 +72,12 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Utilities
 
             // Create a device-independent bitmap and select it into our DC
             var info = new BitMapInfo();
-            info.biSize = Marshal.SizeOf(info);
-            info.biWidth = width;
-            info.biHeight = -height;
-            info.biPlanes = 1;
-            info.biBitCount = 32;
-            info.biCompression = 0; // BI_RGB
+            info.Size = Marshal.SizeOf(info);
+            info.Width = width;
+            info.Height = -height;
+            info.Planes = 1;
+            info.BitCount = 32;
+            info.Compression = 0; // BI_RGB
             IntPtr ppvBits;
             dib = CreateDIBSection(hdc, ref info, 0, out ppvBits, IntPtr.Zero, 0);
             SelectObject(memoryHdc, dib);
@@ -106,7 +106,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Utilities
         /// Retrieves the dimensions of the bounding rectangle of the specified window. The dimensions are given in screen coordinates that are relative to the upper-left corner of the screen.
         /// </summary>
         /// <remarks>
-        /// In conformance with conventions for the RECT structure, the bottom-right coordinates of the returned rectangle are exclusive. In other words, 
+        /// In conformance with conventions for the RECT structure, the bottom-right coordinates of the returned rectangle are exclusive. In other words,
         /// the pixel at (right, bottom) lies immediately outside the rectangle.
         /// </remarks>
         /// <param name="hWnd">A handle to the window.</param>
@@ -119,7 +119,7 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Utilities
         /// Retrieves the dimensions of the bounding rectangle of the specified window. The dimensions are given in screen coordinates that are relative to the upper-left corner of the screen.
         /// </summary>
         /// <remarks>
-        /// In conformance with conventions for the RECT structure, the bottom-right coordinates of the returned rectangle are exclusive. In other words, 
+        /// In conformance with conventions for the RECT structure, the bottom-right coordinates of the returned rectangle are exclusive. In other words,
         /// the pixel at (right, bottom) lies immediately outside the rectangle.
         /// </remarks>
         /// <param name="handle">A handle to the window.</param>
@@ -197,56 +197,56 @@ namespace TheArtOfDev.HtmlRenderer.WinForms.Utilities
 
         public BlendFunction(byte alpha)
         {
-            BlendOp = 0;
-            BlendFlags = 0;
-            AlphaFormat = 0;
-            SourceConstantAlpha = alpha;
+            this.BlendOp = 0;
+            this.BlendFlags = 0;
+            this.AlphaFormat = 0;
+            this.SourceConstantAlpha = alpha;
         }
     }
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct BitMapInfo
     {
-        public int biSize;
-        public int biWidth;
-        public int biHeight;
-        public short biPlanes;
-        public short biBitCount;
-        public int biCompression;
-        public int biSizeImage;
-        public int biXPelsPerMeter;
-        public int biYPelsPerMeter;
-        public int biClrUsed;
-        public int biClrImportant;
-        public byte bmiColors_rgbBlue;
-        public byte bmiColors_rgbGreen;
-        public byte bmiColors_rgbRed;
-        public byte bmiColors_rgbReserved;
+        public int Size;
+        public int Width;
+        public int Height;
+        public short Planes;
+        public short BitCount;
+        public int Compression;
+        public int SizeImage;
+        public int XPelsPerMeter;
+        public int YPelsPerMeter;
+        public int ClrUsed;
+        public int ClrImportant;
+        public byte ColorsRgbBlue;
+        public byte ColorsRgbGreen;
+        public byte ColorsRgbRed;
+        public byte ColorsRgbReserved;
     }
 
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    [StructLayout(LayoutKind.Sequential, CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
     internal struct TextMetric
     {
-        public int tmHeight;
-        public int tmAscent;
-        public int tmDescent;
-        public int tmInternalLeading;
-        public int tmExternalLeading;
-        public int tmAveCharWidth;
-        public int tmMaxCharWidth;
-        public int tmWeight;
-        public int tmOverhang;
-        public int tmDigitizedAspectX;
-        public int tmDigitizedAspectY;
-        public char tmFirstChar;
-        public char tmLastChar;
-        public char tmDefaultChar;
-        public char tmBreakChar;
-        public byte tmItalic;
-        public byte tmUnderlined;
-        public byte tmStruckOut;
-        public byte tmPitchAndFamily;
-        public byte tmCharSet;
+        public int Height;
+        public int Ascent;
+        public int Descent;
+        public int InternalLeading;
+        public int ExternalLeading;
+        public int AveCharWidth;
+        public int MaxCharWidth;
+        public int Weight;
+        public int Overhang;
+        public int DigitizedAspectX;
+        public int DigitizedAspectY;
+        public char FirstChar;
+        public char LastChar;
+        public char DefaultChar;
+        public char BreakChar;
+        public byte Italic;
+        public byte Underlined;
+        public byte StruckOut;
+        public byte PitchAndFamily;
+        public byte CharSet;
     }
 }
 #endif

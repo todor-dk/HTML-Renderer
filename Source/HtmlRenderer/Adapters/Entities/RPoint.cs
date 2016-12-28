@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -25,11 +25,9 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public static readonly RPoint Empty = new RPoint();
 
-        private double _x;
-        private double _y;
-
         static RPoint()
-        { }
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RPoint" /> class with the specified coordinates.
@@ -38,8 +36,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <param name="y">The vertical position of the point. </param>
         public RPoint(double x, double y)
         {
-            _x = x;
-            _y = y;
+            this.X = x;
+            this.Y = y;
         }
 
         /// <summary>
@@ -56,8 +54,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         {
             get
             {
-                if (Math.Abs(_x - 0.0) < 0.001)
-                    return Math.Abs(_y - 0.0) < 0.001;
+                if (Math.Abs(this.X - 0.0) < 0.001)
+                    return Math.Abs(this.Y - 0.0) < 0.001;
                 else
                     return false;
             }
@@ -70,11 +68,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         ///     The x-coordinate of this <see cref="RPoint" />.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public double X
-        {
-            get { return _x; }
-            set { _x = value; }
-        }
+        public double X { get; set; }
 
         /// <summary>
         ///     Gets or sets the y-coordinate of this <see cref="RPoint" />.
@@ -83,11 +77,7 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         ///     The y-coordinate of this <see cref="RPoint" />.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public double Y
-        {
-            get { return _y; }
-            set { _y = value; }
-        }
+        public double Y { get; set; }
 
         /// <summary>
         ///     Translates the <see cref="RPoint" /> by the specified
@@ -256,8 +246,8 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
             if (!(obj is RPoint))
                 return false;
             var pointF = (RPoint)obj;
-            if (pointF.X == X && pointF.Y == Y)
-                return pointF.GetType().Equals(GetType());
+            if (pointF.X == this.X && pointF.Y == this.Y)
+                return pointF.GetType().Equals(this.GetType());
             else
                 return false;
         }
@@ -283,11 +273,9 @@ namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
         /// <filterpriority>1</filterpriority>
         public override string ToString()
         {
-            return string.Format("{{X={0}, Y={1}}}", new object[]
-            {
-                _x,
-                _y
-            });
+            return string.Format(
+                "{{X={0}, Y={1}}}",
+                new object[] { this.X, this.Y });
         }
     }
 }

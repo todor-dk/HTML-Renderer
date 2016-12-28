@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -24,15 +24,14 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <summary>
         /// the name of the css class of the block
         /// </summary>
-        private readonly string _class;
+        private readonly string _Class;
 
         /// <summary>
         /// is the selector item has to be direct parent
         /// </summary>
-        private readonly bool _directParent;
+        private readonly bool _DirectParent;
 
         #endregion
-
 
         /// <summary>
         /// Creates a new block from the block's source
@@ -43,8 +42,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         {
             ArgChecker.AssertArgNotNullOrEmpty(@class, "@class");
 
-            _class = @class;
-            _directParent = directParent;
+            this._Class = @class;
+            this._DirectParent = directParent;
         }
 
         /// <summary>
@@ -52,7 +51,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public string Class
         {
-            get { return _class; }
+            get { return this._Class; }
         }
 
         /// <summary>
@@ -60,7 +59,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public bool DirectParent
         {
-            get { return _directParent; }
+            get { return this._DirectParent; }
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public override string ToString()
         {
-            return _class + (_directParent ? " > " : string.Empty);
+            return this._Class + (this._DirectParent ? " > " : string.Empty);
         }
     }
 }

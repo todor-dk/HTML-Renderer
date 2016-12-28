@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -30,10 +30,9 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// <summary>
         /// the private font used for the demo
         /// </summary>
-        private readonly PrivateFontCollection _privateFont = new PrivateFontCollection();
+        private readonly PrivateFontCollection PrivateFont = new PrivateFontCollection();
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -42,25 +41,25 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         {
             SamplesLoader.Init(HtmlRenderingHelper.IsRunningOnMono() ? "Mono" : "WinForms", typeof(HtmlRender).Assembly.GetName().Version.ToString());
 
-            InitializeComponent();
+            this.InitializeComponent();
 
-            Icon = GetIcon();
-            _openSampleFormTSB.Image = Common.Properties.Resources.form;
-            _showIEViewTSSB.Image = Common.Properties.Resources.browser;
-            _openInExternalViewTSB.Image = Common.Properties.Resources.chrome;
-            _useGeneratedHtmlTSB.Image = Common.Properties.Resources.code;
-            _generateImageSTB.Image = Common.Properties.Resources.image;
-            _generatePdfTSB.Image = Common.Properties.Resources.pdf;
-            _runPerformanceTSB.Image = Common.Properties.Resources.stopwatch;
+            this.Icon = GetIcon();
+            this._openSampleFormTSB.Image = Common.Properties.Resources.form;
+            this._showIEViewTSSB.Image = Common.Properties.Resources.browser;
+            this._openInExternalViewTSB.Image = Common.Properties.Resources.chrome;
+            this._useGeneratedHtmlTSB.Image = Common.Properties.Resources.code;
+            this._generateImageSTB.Image = Common.Properties.Resources.image;
+            this._generatePdfTSB.Image = Common.Properties.Resources.pdf;
+            this._runPerformanceTSB.Image = Common.Properties.Resources.stopwatch;
 
-            StartPosition = FormStartPosition.CenterScreen;
+            this.StartPosition = FormStartPosition.CenterScreen;
             var size = Screen.GetWorkingArea(Point.Empty);
-            Size = new Size((int)(size.Width * 0.7), (int)(size.Height * 0.8));
+            this.Size = new Size((int)(size.Width * 0.7), (int)(size.Height * 0.8));
 
-            LoadCustomFonts();
+            this.LoadCustomFonts();
 
-            _showIEViewTSSB.Enabled = !HtmlRenderingHelper.IsRunningOnMono();
-            _generatePdfTSB.Enabled = !HtmlRenderingHelper.IsRunningOnMono();
+            this._showIEViewTSSB.Enabled = !HtmlRenderingHelper.IsRunningOnMono();
+            this._generatePdfTSB.Enabled = !HtmlRenderingHelper.IsRunningOnMono();
         }
 
         /// <summary>
@@ -71,11 +70,13 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
             // load custom font font into private fonts collection
             var file = Path.GetTempFileName();
             File.WriteAllBytes(file, Resources.CustomFont);
-            _privateFont.AddFontFile(file);
+            this.PrivateFont.AddFontFile(file);
 
             // add the fonts to renderer
-            foreach (var fontFamily in _privateFont.Families)
+            foreach (var fontFamily in this.PrivateFont.Families)
+            {
                 HtmlRender.AddFontFamily(fontFamily);
+            }
         }
 
         /// <summary>
@@ -100,8 +101,8 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         private void OnShowIEView_ButtonClick(object sender, EventArgs e)
         {
-            _showIEViewTSSB.Checked = !_showIEViewTSSB.Checked;
-            _mainControl.ShowWebBrowserView(_showIEViewTSSB.Checked);
+            this._showIEViewTSSB.Checked = !this._showIEViewTSSB.Checked;
+            this._mainControl.ShowWebBrowserView(this._showIEViewTSSB.Checked);
         }
 
         /// <summary>
@@ -110,7 +111,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         private void OnOpenInExternalView_Click(object sender, EventArgs e)
         {
             var tmpFile = Path.ChangeExtension(Path.GetTempFileName(), ".htm");
-            File.WriteAllText(tmpFile, _mainControl.GetHtml());
+            File.WriteAllText(tmpFile, this._mainControl.GetHtml());
             Process.Start(tmpFile);
         }
 
@@ -119,9 +120,9 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         private void OnUseGeneratedHtml_Click(object sender, EventArgs e)
         {
-            _useGeneratedHtmlTSB.Checked = !_useGeneratedHtmlTSB.Checked;
-            _mainControl.UseGeneratedHtml = _useGeneratedHtmlTSB.Checked;
-            _mainControl.UpdateWebBrowserHtml();
+            this._useGeneratedHtmlTSB.Checked = !this._useGeneratedHtmlTSB.Checked;
+            this._mainControl.UseGeneratedHtml = this._useGeneratedHtmlTSB.Checked;
+            this._mainControl.UpdateWebBrowserHtml();
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         private void OnGenerateImage_Click(object sender, EventArgs e)
         {
-            using (var f = new GenerateImageForm(_mainControl.GetHtml()))
+            using (var f = new GenerateImageForm(this._mainControl.GetHtml()))
             {
                 f.ShowDialog();
             }
@@ -144,7 +145,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
             config.PageSize = PageSize.A4;
             config.SetMargins(20);
 
-            var doc = PdfGenerator.GeneratePdf(_mainControl.GetHtml(), config, null, DemoUtils.OnStylesheetLoad, HtmlRenderingHelper.OnImageLoadPdfSharp);
+            var doc = PdfGenerator.GeneratePdf(this._mainControl.GetHtml(), config, null, DemoUtils.OnStylesheetLoad, HtmlRenderingHelper.OnImageLoadPdfSharp);
             var tmpFile = Path.GetTempFileName();
             tmpFile = Path.GetFileNameWithoutExtension(tmpFile) + ".pdf";
             doc.Save(tmpFile);
@@ -156,21 +157,21 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
         /// </summary>
         private void OnRunPerformance_Click(object sender, EventArgs e)
         {
-            _mainControl.UpdateLock = true;
-            _toolStrip.Enabled = false;
+            this._mainControl.UpdateLock = true;
+            this._toolStrip.Enabled = false;
             Application.DoEvents();
 
             var msg = DemoUtils.RunSamplesPerformanceTest(html =>
             {
-                _mainControl.SetHtml(html);
+                this._mainControl.SetHtml(html);
                 Application.DoEvents(); // so paint will be called
             });
 
             Clipboard.SetDataObject(msg);
             MessageBox.Show(msg, "Test run results");
 
-            _mainControl.UpdateLock = false;
-            _toolStrip.Enabled = true;
+            this._mainControl.UpdateLock = false;
+            this._toolStrip.Enabled = true;
         }
     }
 }

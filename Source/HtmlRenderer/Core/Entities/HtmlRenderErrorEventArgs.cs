@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -22,17 +22,17 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <summary>
         /// error type that is reported
         /// </summary>
-        private readonly HtmlRenderErrorType _type;
+        private readonly HtmlRenderErrorType _Type;
 
         /// <summary>
         /// the error message
         /// </summary>
-        private readonly string _message;
+        private readonly string _Message;
 
         /// <summary>
         /// the exception that occurred (can be null)
         /// </summary>
-        private readonly Exception _exception;
+        private readonly Exception _Exception;
 
         /// <summary>
         /// Init.
@@ -42,9 +42,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// <param name="exception">optional: the exception that occurred</param>
         public HtmlRenderErrorEventArgs(HtmlRenderErrorType type, string message, Exception exception = null)
         {
-            _type = type;
-            _message = message;
-            _exception = exception;
+            this._Type = type;
+            this._Message = message;
+            this._Exception = exception;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public HtmlRenderErrorType Type
         {
-            get { return _type; }
+            get { return this._Type; }
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public string Message
         {
-            get { return _message; }
+            get { return this._Message; }
         }
 
         /// <summary>
@@ -68,12 +68,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities
         /// </summary>
         public Exception Exception
         {
-            get { return _exception; }
+            get { return this._Exception; }
         }
 
         public override string ToString()
         {
-            return string.Format("Type: {0}", _type);
+            return string.Format("Type: {0}", this._Type);
         }
     }
 }

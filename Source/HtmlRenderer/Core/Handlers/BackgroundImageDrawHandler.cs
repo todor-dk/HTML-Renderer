@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -33,7 +33,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
         public static void DrawBackgroundImage(RGraphics g, CssBox box, ImageLoadHandler imageLoadHandler, RRect rectangle)
         {
             // image size depends if specific rectangle given in image loader
-            var imgSize = new RSize(imageLoadHandler.Rectangle == RRect.Empty ? imageLoadHandler.Image.Width : imageLoadHandler.Rectangle.Width,
+            var imgSize = new RSize(
+                imageLoadHandler.Rectangle == RRect.Empty ? imageLoadHandler.Image.Width : imageLoadHandler.Rectangle.Width,
                 imageLoadHandler.Rectangle == RRect.Empty ? imageLoadHandler.Image.Height : imageLoadHandler.Rectangle.Height);
 
             // get the location by BackgroundPosition value
@@ -70,7 +71,6 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             g.PopClip();
         }
 
-
         #region Private methods
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             double left = rectangle.Left;
             if (backgroundPosition.IndexOf("left", StringComparison.OrdinalIgnoreCase) > -1)
             {
-                left = (rectangle.Left + .5f);
+                left = rectangle.Left + .5f;
             }
             else if (backgroundPosition.IndexOf("right", StringComparison.OrdinalIgnoreCase) > -1)
             {
@@ -93,7 +93,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             }
             else if (backgroundPosition.IndexOf("0", StringComparison.OrdinalIgnoreCase) < 0)
             {
-                left = (rectangle.Left + (rectangle.Width - imgSize.Width) / 2 + .5f);
+                left = rectangle.Left + ((rectangle.Width - imgSize.Width) / 2) + .5f;
             }
 
             double top = rectangle.Top;
@@ -107,7 +107,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Handlers
             }
             else if (backgroundPosition.IndexOf("0", StringComparison.OrdinalIgnoreCase) < 0)
             {
-                top = (rectangle.Top + (rectangle.Height - imgSize.Height) / 2 + .5f);
+                top = rectangle.Top + ((rectangle.Height - imgSize.Height) / 2) + .5f;
             }
 
             return new RPoint(left, top);

@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -23,17 +23,17 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
         /// <summary>
         /// Samples to showcase the HTML Renderer capabilities
         /// </summary>
-        private static readonly List<HtmlSample> _showcaseSamples = new List<HtmlSample>();
+        private static readonly List<HtmlSample> _ShowcaseSamples = new List<HtmlSample>();
 
         /// <summary>
         /// Samples to test the different features of HTML Renderer that they work correctly
         /// </summary>
-        private static readonly List<HtmlSample> _testSamples = new List<HtmlSample>();
+        private static readonly List<HtmlSample> _TestSamples = new List<HtmlSample>();
 
         /// <summary>
         /// Samples used to test extreme performance
         /// </summary>
-        private static readonly List<HtmlSample> _performanceSamples = new List<HtmlSample>();
+        private static readonly List<HtmlSample> _PerformanceSamples = new List<HtmlSample>();
 
         /// <summary>
         /// Init.
@@ -48,7 +48,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
         /// </summary>
         public static List<HtmlSample> ShowcaseSamples
         {
-            get { return _showcaseSamples; }
+            get { return _ShowcaseSamples; }
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
         /// </summary>
         public static List<HtmlSample> TestSamples
         {
-            get { return _testSamples; }
+            get { return _TestSamples; }
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
         /// </summary>
         public static List<HtmlSample> PerformanceSamples
         {
-            get { return _performanceSamples; }
+            get { return _PerformanceSamples; }
         }
 
         /// <summary>
@@ -92,16 +92,16 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Common
 
                             if (name.Contains("TestSamples."))
                             {
-                                _testSamples.Add(new HtmlSample(shortName, name, html));
+                                _TestSamples.Add(new HtmlSample(shortName, name, html));
                             }
                             else if (name.Contains("PerfSamples"))
                             {
-                                _performanceSamples.Add(new HtmlSample(shortName, name, html));
+                                _PerformanceSamples.Add(new HtmlSample(shortName, name, html));
                             }
                             else
                             {
                                 html = html.Replace("$$Platform$$", platform).Replace("$$Release$$", version);
-                                _showcaseSamples.Add(new HtmlSample(shortName, name, html));
+                                _ShowcaseSamples.Add(new HtmlSample(shortName, name, html));
                             }
                         }
                     }

@@ -6,13 +6,14 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -55,6 +56,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
                     stream.Read(assemblyRawBytes, 0, assemblyRawBytes.Length);
                     return Assembly.Load(assemblyRawBytes);
                 }
+
                 return null;
             }
         }

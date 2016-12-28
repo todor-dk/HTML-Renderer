@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -24,30 +24,30 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// <summary>
         /// The actual WPF brush instance.
         /// </summary>
-        private readonly Brush _brush;
+        private readonly Brush Brush;
 
         /// <summary>
         /// the width of the pen
         /// </summary>
-        private double _width;
+        private double _Width;
 
         /// <summary>
         /// the dash style of the pen
         /// </summary>
-        private DashStyle _dashStyle = DashStyles.Solid;
+        private DashStyle _DashStyle = DashStyles.Solid;
 
         /// <summary>
         /// Init.
         /// </summary>
         public PenAdapter(Brush brush)
         {
-            _brush = brush;
+            this.Brush = brush;
         }
 
         public override double Width
         {
-            get { return _width; }
-            set { _width = value; }
+            get { return this._Width; }
+            set { this._Width = value; }
         }
 
         public override RDashStyle DashStyle
@@ -57,22 +57,22 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
                 switch (value)
                 {
                     case RDashStyle.Solid:
-                        _dashStyle = DashStyles.Solid;
+                        this._DashStyle = DashStyles.Solid;
                         break;
                     case RDashStyle.Dash:
-                        _dashStyle = DashStyles.Dash;
+                        this._DashStyle = DashStyles.Dash;
                         break;
                     case RDashStyle.Dot:
-                        _dashStyle = DashStyles.Dot;
+                        this._DashStyle = DashStyles.Dot;
                         break;
                     case RDashStyle.DashDot:
-                        _dashStyle = DashStyles.DashDot;
+                        this._DashStyle = DashStyles.DashDot;
                         break;
                     case RDashStyle.DashDotDot:
-                        _dashStyle = DashStyles.DashDotDot;
+                        this._DashStyle = DashStyles.DashDotDot;
                         break;
                     default:
-                        _dashStyle = DashStyles.Solid;
+                        this._DashStyle = DashStyles.Solid;
                         break;
                 }
             }
@@ -83,8 +83,8 @@ namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
         /// </summary>
         public Pen CreatePen()
         {
-            var pen = new Pen(_brush, _width);
-            pen.DashStyle = _dashStyle;
+            var pen = new Pen(this.Brush, this._Width);
+            pen.DashStyle = this._DashStyle;
             return pen;
         }
     }

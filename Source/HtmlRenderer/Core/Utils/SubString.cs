@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -24,20 +24,19 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         /// <summary>
         /// the full string that this sub-string is part of
         /// </summary>
-        private readonly string _fullString;
+        private readonly string _FullString;
 
         /// <summary>
         /// the start index of the sub-string
         /// </summary>
-        private readonly int _startIdx;
+        private readonly int _StartIdx;
 
         /// <summary>
-        /// the length of the sub-string starting at <see cref="_startIdx"/>
+        /// the length of the sub-string starting at <see cref="_StartIdx"/>
         /// </summary>
-        private readonly int _length;
+        private readonly int _Length;
 
         #endregion
-
 
         /// <summary>
         /// Init sub-string that is the full string.
@@ -47,9 +46,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         {
             ArgChecker.AssertArgNotNull(fullString, "fullString");
 
-            _fullString = fullString;
-            _startIdx = 0;
-            _length = fullString.Length;
+            this._FullString = fullString;
+            this._StartIdx = 0;
+            this._Length = fullString.Length;
         }
 
         /// <summary>
@@ -67,9 +66,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
             if (length < 0 || startIdx + length > fullString.Length)
                 throw new ArgumentOutOfRangeException("length", "Must within fullString boundries");
 
-            _fullString = fullString;
-            _startIdx = startIdx;
-            _length = length;
+            this._FullString = fullString;
+            this._StartIdx = startIdx;
+            this._Length = length;
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         /// </summary>
         public string FullString
         {
-            get { return _fullString; }
+            get { return this._FullString; }
         }
 
         /// <summary>
@@ -85,15 +84,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         /// </summary>
         public int StartIdx
         {
-            get { return _startIdx; }
+            get { return this._StartIdx; }
         }
 
         /// <summary>
-        /// the length of the sub-string starting at <see cref="_startIdx"/>
+        /// the length of the sub-string starting at <see cref="_StartIdx"/>
         /// </summary>
         public int Length
         {
-            get { return _length; }
+            get { return this._Length; }
         }
 
         /// <summary>
@@ -105,9 +104,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         {
             get
             {
-                if (idx < 0 || idx > _length)
+                if (idx < 0 || idx > this._Length)
                     throw new ArgumentOutOfRangeException("idx", "must be within the string range");
-                return _fullString[_startIdx + idx];
+                return this._FullString[this._StartIdx + idx];
             }
         }
 
@@ -117,7 +116,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         /// <returns>true - empty string, false - otherwise</returns>
         public bool IsEmpty()
         {
-            return _length < 1;
+            return this._Length < 1;
         }
 
         /// <summary>
@@ -126,11 +125,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         /// <returns>true - empty or whitespace string, false - otherwise</returns>
         public bool IsEmptyOrWhitespace()
         {
-            for (int i = 0; i < _length; i++)
+            for (int i = 0; i < this._Length; i++)
             {
-                if (!char.IsWhiteSpace(_fullString, _startIdx + i))
+                if (!char.IsWhiteSpace(this._FullString, this._StartIdx + i))
                     return false;
             }
+
             return true;
         }
 
@@ -140,13 +140,14 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         /// <returns>true - empty or whitespace string, false - otherwise</returns>
         public bool IsWhitespace()
         {
-            if (_length < 1)
+            if (this._Length < 1)
                 return false;
-            for (int i = 0; i < _length; i++)
+            for (int i = 0; i < this._Length; i++)
             {
-                if (!char.IsWhiteSpace(_fullString, _startIdx + i))
+                if (!char.IsWhiteSpace(this._FullString, this._StartIdx + i))
                     return false;
             }
+
             return true;
         }
 
@@ -157,31 +158,31 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         /// <returns>new string that is the sub-string represented by this instance</returns>
         public string CutSubstring()
         {
-            return _length > 0 ? _fullString.Substring(_startIdx, _length) : string.Empty;
+            return this._Length > 0 ? this._FullString.Substring(this._StartIdx, this._Length) : string.Empty;
         }
 
         /// <summary>
-        /// Retrieves a substring from this instance. The substring starts at a specified character position and has a specified length. 
+        /// Retrieves a substring from this instance. The substring starts at a specified character position and has a specified length.
         /// </summary>
         /// <param name="startIdx">The zero-based starting character position of a substring in this instance.</param>
         /// <param name="length">The number of characters in the substring. </param>
-        /// <returns>A String equivalent to the substring of length length that begins at startIndex in this instance, or 
+        /// <returns>A String equivalent to the substring of length length that begins at startIndex in this instance, or
         /// Empty if startIndex is equal to the length of this instance and length is zero. </returns>
         public string Substring(int startIdx, int length)
         {
-            if (startIdx < 0 || startIdx > _length)
+            if (startIdx < 0 || startIdx > this._Length)
                 throw new ArgumentOutOfRangeException("startIdx");
-            if (length > _length)
+            if (length > this._Length)
                 throw new ArgumentOutOfRangeException("length");
-            if (startIdx + length > _length)
+            if (startIdx + length > this._Length)
                 throw new ArgumentOutOfRangeException("length");
 
-            return _fullString.Substring(_startIdx + startIdx, length);
+            return this._FullString.Substring(this._StartIdx + startIdx, length);
         }
 
         public override string ToString()
         {
-            return string.Format("Sub-string: {0}", _length > 0 ? _fullString.Substring(_startIdx, _length) : string.Empty);
+            return string.Format("Sub-string: {0}", this._Length > 0 ? this._FullString.Substring(this._StartIdx, this._Length) : string.Empty);
         }
     }
 }

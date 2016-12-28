@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -20,47 +20,47 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
 {
     public partial class SampleForm : Form
     {
-        private readonly Bitmap _background;
+        private readonly Bitmap Background;
 
         public SampleForm()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            Icon = DemoForm.GetIcon();
+            this.Icon = DemoForm.GetIcon();
 
-            _htmlLabel.Text = DemoUtils.SampleHtmlLabelText;
-            _htmlPanel.Text = DemoUtils.SampleHtmlPanelText;
+            this._htmlLabel.Text = DemoUtils.SampleHtmlLabelText;
+            this._htmlPanel.Text = DemoUtils.SampleHtmlPanelText;
 
-            _background = HtmlRenderingHelper.CreateImageForTransparentBackground();
+            this.Background = HtmlRenderingHelper.CreateImageForTransparentBackground();
         }
 
         private void OnHtmlLabelClick(object sender, EventArgs e)
         {
-            _pGrid.SelectedObject = _htmlLabel;
+            this._pGrid.SelectedObject = this._htmlLabel;
         }
 
         private void OnHtmlPanelClick(object sender, EventArgs e)
         {
-            _pGrid.SelectedObject = _htmlPanel;
+            this._pGrid.SelectedObject = this._htmlPanel;
         }
 
         private void OnHtmlLabelHostingPanelPaint(object sender, PaintEventArgs e)
         {
-            using (var b = new TextureBrush(_background, WrapMode.Tile))
+            using (var b = new TextureBrush(this.Background, WrapMode.Tile))
             {
-                e.Graphics.FillRectangle(b, _htmlLabelHostingPanel.ClientRectangle);
+                e.Graphics.FillRectangle(b, this._htmlLabelHostingPanel.ClientRectangle);
             }
         }
 
         private void OnButtonClick(object sender, EventArgs e)
         {
-            _htmlToolTip.SetToolTip(_changeTooltipButton, _htmlLabel.Text);
+            this._htmlToolTip.SetToolTip(this._changeTooltipButton, this._htmlLabel.Text);
         }
 
         private void OnPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            ((Control)_pGrid.SelectedObject).Refresh();
-            Refresh();
+            ((Control)this._pGrid.SelectedObject).Refresh();
+            this.Refresh();
         }
     }
 }

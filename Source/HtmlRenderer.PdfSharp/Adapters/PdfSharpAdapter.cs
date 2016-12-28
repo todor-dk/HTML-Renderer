@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -31,24 +31,23 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// <summary>
         /// Singleton instance of global adapter.
         /// </summary>
-        private static readonly PdfSharpAdapter _instance = new PdfSharpAdapter();
+        private static readonly PdfSharpAdapter _Instance = new PdfSharpAdapter();
 
         #endregion
-
 
         /// <summary>
         /// Init color resolve.
         /// </summary>
         private PdfSharpAdapter()
         {
-            AddFontFamilyMapping("monospace", "Courier New");
-            AddFontFamilyMapping("Helvetica", "Arial");
+            this.AddFontFamilyMapping("monospace", "Courier New");
+            this.AddFontFamilyMapping("Helvetica", "Arial");
 
             var families = new InstalledFontCollection();
 
             foreach (var family in families.Families)
             {
-                AddFontFamily(new FontFamilyAdapter(new XFontFamily(family.Name)));
+                this.AddFontFamily(new FontFamilyAdapter(new XFontFamily(family.Name)));
             }
         }
 
@@ -57,7 +56,7 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         /// </summary>
         public static PdfSharpAdapter Instance
         {
-            get { return _instance; }
+            get { return _Instance; }
         }
 
         protected override RColor GetColorInt(string colorName)
@@ -82,13 +81,21 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         {
             XBrush solidBrush;
             if (color == RColor.White)
+            {
                 solidBrush = XBrushes.White;
+            }
             else if (color == RColor.Black)
+            {
                 solidBrush = XBrushes.Black;
+            }
             else if (color.A < 1)
+            {
                 solidBrush = XBrushes.Transparent;
+            }
             else
+            {
                 solidBrush = new XSolidBrush(Utils.Convert(color));
+            }
 
             return new BrushAdapter(solidBrush);
         }
@@ -97,13 +104,22 @@ namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
         {
             XLinearGradientMode mode;
             if (angle < 45)
+            {
                 mode = XLinearGradientMode.ForwardDiagonal;
+            }
             else if (angle < 90)
+            {
                 mode = XLinearGradientMode.Vertical;
+            }
             else if (angle < 135)
+            {
                 mode = XLinearGradientMode.BackwardDiagonal;
+            }
             else
+            {
                 mode = XLinearGradientMode.Horizontal;
+            }
+
             return new BrushAdapter(new XLinearGradientBrush(Utils.Convert(rect), Utils.Convert(color1), Utils.Convert(color2), mode));
         }
 

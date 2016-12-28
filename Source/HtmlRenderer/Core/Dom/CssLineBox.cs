@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -28,33 +28,32 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
     {
         #region Fields and Consts
 
-        private readonly List<CssRect> _words;
-        private readonly CssBox _ownerBox;
-        private readonly Dictionary<CssBox, RRect> _rects;
-        private readonly List<CssBox> _relatedBoxes;
+        private readonly List<CssRect> _Words;
+        private readonly CssBox _OwnerBox;
+        private readonly Dictionary<CssBox, RRect> Rects;
+        private readonly List<CssBox> _RelatedBoxes;
 
         #endregion
-
 
         /// <summary>
         /// Creates a new LineBox
         /// </summary>
         public CssLineBox(CssBox ownerBox)
         {
-            _rects = new Dictionary<CssBox, RRect>();
-            _relatedBoxes = new List<CssBox>();
-            _words = new List<CssRect>();
-            _ownerBox = ownerBox;
-            _ownerBox.LineBoxes.Add(this);
+            this.Rects = new Dictionary<CssBox, RRect>();
+            this._RelatedBoxes = new List<CssBox>();
+            this._Words = new List<CssRect>();
+            this._OwnerBox = ownerBox;
+            this._OwnerBox.LineBoxes.Add(this);
         }
 
         /// <summary>
-        /// Gets a list of boxes related with the linebox. 
+        /// Gets a list of boxes related with the linebox.
         /// To know the words of the box inside this linebox, use the <see cref="WordsOf"/> method.
         /// </summary>
         public List<CssBox> RelatedBoxes
         {
-            get { return _relatedBoxes; }
+            get { return this._RelatedBoxes; }
         }
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public List<CssRect> Words
         {
-            get { return _words; }
+            get { return this._Words; }
         }
 
         /// <summary>
@@ -70,7 +69,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public CssBox OwnerBox
         {
-            get { return _ownerBox; }
+            get { return this._OwnerBox; }
         }
 
         /// <summary>
@@ -78,7 +77,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public Dictionary<CssBox, RRect> Rectangles
         {
-            get { return _rects; }
+            get { return this.Rects; }
         }
 
         /// <summary>
@@ -89,10 +88,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
             get
             {
                 double height = 0;
-                foreach (var rect in _rects)
+                foreach (var rect in this.Rects)
                 {
                     height = Math.Max(height, rect.Value.Height);
                 }
+
                 return height;
             }
         }
@@ -105,10 +105,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
             get
             {
                 double bottom = 0;
-                foreach (var rect in _rects)
+                foreach (var rect in this.Rects)
                 {
                     bottom = Math.Max(bottom, rect.Value.Bottom);
                 }
+
                 return bottom;
             }
         }
@@ -119,14 +120,14 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="word"></param>
         internal void ReportExistanceOf(CssRect word)
         {
-            if (!Words.Contains(word))
+            if (!this.Words.Contains(word))
             {
-                Words.Add(word);
+                this.Words.Add(word);
             }
 
-            if (!RelatedBoxes.Contains(word.OwnerBox))
+            if (!this.RelatedBoxes.Contains(word.OwnerBox))
             {
-                RelatedBoxes.Add(word.OwnerBox);
+                this.RelatedBoxes.Add(word.OwnerBox);
             }
         }
 
@@ -139,9 +140,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         {
             List<CssRect> r = new List<CssRect>();
 
-            foreach (CssRect word in Words)
+            foreach (CssRect word in this.Words)
+            {
                 if (word.OwnerBox.Equals(box))
                     r.Add(word);
+            }
 
             return r;
         }
@@ -172,22 +175,23 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                 b += bottomspacing;
             }
 
-
-            if (!Rectangles.ContainsKey(box))
+            if (!this.Rectangles.ContainsKey(box))
             {
-                Rectangles.Add(box, RRect.FromLTRB(x, y, r, b));
+                this.Rectangles.Add(box, RRect.FromLTRB(x, y, r, b));
             }
             else
             {
-                RRect f = Rectangles[box];
-                Rectangles[box] = RRect.FromLTRB(
-                    Math.Min(f.X, x), Math.Min(f.Y, y),
-                    Math.Max(f.Right, r), Math.Max(f.Bottom, b));
+                RRect f = this.Rectangles[box];
+                this.Rectangles[box] = RRect.FromLTRB(
+                    Math.Min(f.X, x),
+                    Math.Min(f.Y, y),
+                    Math.Max(f.Right, r),
+                    Math.Max(f.Bottom, b));
             }
 
             if (box.ParentBox != null && box.ParentBox.IsInline)
             {
-                UpdateRectangle(box.ParentBox, x, y, r, b);
+                this.UpdateRectangle(box.ParentBox, x, y, r, b);
             }
         }
 
@@ -196,9 +200,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         internal void AssignRectanglesToBoxes()
         {
-            foreach (CssBox b in Rectangles.Keys)
+            foreach (CssBox b in this.Rectangles.Keys)
             {
-                b.Rectangles.Add(this, Rectangles[b]);
+                b.Rectangles.Add(this, this.Rectangles[b]);
             }
         }
 
@@ -210,15 +214,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="baseline">baseline</param>
         internal void SetBaseLine(RGraphics g, CssBox b, double baseline)
         {
-            //TODO: Aqui me quede, checar poniendo "by the" con un font-size de 3em
-            List<CssRect> ws = WordsOf(b);
+            // TODO: Aqui me quede, checar poniendo "by the" con un font-size de 3em
+            List<CssRect> ws = this.WordsOf(b);
 
-            if (!Rectangles.ContainsKey(b))
+            if (!this.Rectangles.ContainsKey(b))
                 return;
 
-            RRect r = Rectangles[b];
+            RRect r = this.Rectangles[b];
 
-            //Save top of words related to the top of rectangle
+            // Save top of words related to the top of rectangle
             double gap = 0f;
 
             if (ws.Count > 0)
@@ -235,18 +239,18 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                 }
             }
 
-            //New top that words will have
-            //float newtop = baseline - (Height - OwnerBox.FontDescent - 3); //OLD
+            // New top that words will have
+            // float newtop = baseline - (Height - OwnerBox.FontDescent - 3); //OLD
             double newtop = baseline; // -GetBaseLineHeight(b, g); //OLD
 
             if (b.ParentBox != null &&
                 b.ParentBox.Rectangles.ContainsKey(this) &&
                 r.Height < b.ParentBox.Rectangles[this].Height)
             {
-                //Do this only if rectangle is shorter than parent's
+                // Do this only if rectangle is shorter than parent's
                 double recttop = newtop - gap;
                 RRect newr = new RRect(r.X, recttop, r.Width, r.Height);
-                Rectangles[b] = newr;
+                this.Rectangles[b] = newr;
                 b.OffsetRectangle(this, gap);
             }
 
@@ -265,11 +269,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <returns></returns>
         public bool IsLastSelectedWord(CssRect word)
         {
-            for (int i = 0; i < _words.Count - 1; i++)
+            for (int i = 0; i < this._Words.Count - 1; i++)
             {
-                if (_words[i] == word)
+                if (this._Words[i] == word)
                 {
-                    return !_words[i + 1].Selected;
+                    return !this._Words[i + 1].Selected;
                 }
             }
 
@@ -282,11 +286,12 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <returns></returns>
         public override string ToString()
         {
-            string[] ws = new string[Words.Count];
+            string[] ws = new string[this.Words.Count];
             for (int i = 0; i < ws.Length; i++)
             {
-                ws[i] = Words[i].Text;
+                ws[i] = this.Words[i].Text;
             }
+
             return string.Join(" ", ws);
         }
     }

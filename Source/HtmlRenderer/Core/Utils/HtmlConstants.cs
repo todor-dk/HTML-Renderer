@@ -6,7 +6,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
     internal static class HtmlConstants
     {
         public const string A = "a";
-        //        public const string ABBR = "ABBR";
+
+        // public const string ABBR = "ABBR";
         //        public const string ACRONYM = "ACRONYM";
         //        public const string ADDRESS = "ADDRESS";
         //        public const string APPLET = "APPLET";
@@ -21,13 +22,15 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         //        public const string BR = "BR";
         //        public const string BUTTON = "BUTTON";
         public const string Caption = "caption";
-        //        public const string CENTER = "CENTER";
+
+        // public const string CENTER = "CENTER";
         //        public const string CITE = "CITE";
         //        public const string CODE = "CODE";
         public const string Col = "col";
         public const string Colgroup = "colgroup";
         public const string Display = "display";
-        //        public const string DD = "DD";
+
+        // public const string DD = "DD";
         //        public const string DEL = "DEL";
         //        public const string DFN = "DFN";
         //        public const string DIR = "DIR";
@@ -37,7 +40,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         //        public const string EM = "EM";
         //        public const string FIELDSET = "FIELDSET";
         public const string Font = "font";
-        //        public const string FORM = "FORM";
+
+        // public const string FORM = "FORM";
         //        public const string FRAME = "FRAME";
         //        public const string FRAMESET = "FRAMESET";
         //        public const string H1 = "H1";
@@ -48,18 +52,21 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         //        public const string H6 = "H6";
         //        public const string HEAD = "HEAD";
         public const string Hr = "hr";
-        //        public const string HTML = "HTML";
+
+        // public const string HTML = "HTML";
         //        public const string I = "I";
         public const string Iframe = "iframe";
         public const string Img = "img";
-        //        public const string INPUT = "INPUT";
+
+        // public const string INPUT = "INPUT";
         //        public const string INS = "INS";
         //        public const string ISINDEX = "ISINDEX";
         //        public const string KBD = "KBD";
         //        public const string LABEL = "LABEL";
         //        public const string LEGEND = "LEGEND";
         public const string Li = "li";
-        //        public const string LINK = "LINK";
+
+        // public const string LINK = "LINK";
         //        public const string MAP = "MAP";
         //        public const string MENU = "MENU";
         //        public const string META = "META";
@@ -82,28 +89,33 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         //        public const string STRIKE = "STRIKE";
         //        public const string STRONG = "STRONG";
         public const string Style = "style";
-        //        public const string SUB = "SUB";
+
+        // public const string SUB = "SUB";
         //        public const string SUP = "SUP";
         public const string Table = "table";
         public const string Tbody = "tbody";
         public const string Td = "td";
-        //        public const string TEXTAREA = "TEXTAREA";
+
+        // public const string TEXTAREA = "TEXTAREA";
         public const string Tfoot = "tfoot";
         public const string Th = "th";
         public const string Thead = "thead";
-        //        public const string TITLE = "TITLE";
+
+        // public const string TITLE = "TITLE";
         public const string Tr = "tr";
-        //        public const string TT = "TT";
+
+        // public const string TT = "TT";
         //        public const string U = "U";
         //        public const string UL = "UL";
         //        public const string VAR = "VAR";
 
-        //        public const string abbr = "abbr";
+        // public const string abbr = "abbr";
         //        public const string accept = "accept";
         //        public const string accesskey = "accesskey";
         //        public const string action = "action";
         public const string Align = "align";
-        //        public const string alink = "alink";
+
+        // public const string alink = "alink";
         //        public const string alt = "alt";
         //        public const string archive = "archive";
         //        public const string axis = "axis";
@@ -113,40 +125,48 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         public const string Bordercolor = "bordercolor";
         public const string Cellpadding = "cellpadding";
         public const string Cellspacing = "cellspacing";
-        //        public const string char_ = "char";
+
+        // public const string char_ = "char";
         //        public const string charoff = "charoff";
         //        public const string charset = "charset";
         //        public const string checked_ = "checked";
         //        public const string cite = "cite";
         public const string Class = "class";
-        //        public const string classid = "classid";
+
+        // public const string classid = "classid";
         //        public const string clear = "clear";
         //        public const string code = "code";
         //        public const string codebase = "codebase";
         //        public const string codetype = "codetype";
         public const string Color = "color";
-        //        public const string cols = "cols";
+
+        // public const string cols = "cols";
         //        public const string colspan = "colspan";
         //        public const string compact = "compact";
-        public const string content = "content";
-        //        public const string coords = "coords";
+        public const string Content = "content";
+
+        // public const string coords = "coords";
         //        public const string data = "data";
         //        public const string datetime = "datetime";
         //        public const string declare = "declare";
         //        public const string defer = "defer";
         public const string Dir = "dir";
-        //        public const string disabled = "disabled";
+
+        // public const string disabled = "disabled";
         //        public const string enctype = "enctype";
         public const string Face = "face";
-        //        public const string for_ = "for";
+
+        // public const string for_ = "for";
         //        public const string frame = "frame";
         //        public const string frameborder = "frameborder";
         //        public const string headers = "headers";
         public const string Height = "height";
         public const string Href = "href";
-        //        public const string hreflang = "hreflang";
+
+        // public const string hreflang = "hreflang";
         public const string Hspace = "hspace";
-        //        public const string http_equiv = "http-equiv";
+
+        // public const string http_equiv = "http-equiv";
         //        public const string id = "id";
         //        public const string ismap = "ismap";
         //        public const string label = "label";
@@ -165,7 +185,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         //        public const string noresize = "noresize";
         //        public const string noshade = "noshade";
         public const string Nowrap = "nowrap";
-        //        public const string object_ = "object";
+
+        // public const string object_ = "object";
         //        public const string onblur = "onblur";
         //        public const string onchange = "onchange";
         //        public const string onclick = "onclick";
@@ -198,7 +219,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         //        public const string selected = "selected";
         //        public const string shape = "shape";
         public const string Size = "size";
-        //        public const string span = "span";
+
+        // public const string span = "span";
         //        public const string src = "src";
         //        public const string standby = "standby";
         //        public const string start = "start";
@@ -211,7 +233,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         //        public const string type = "type";
         //        public const string usemap = "usemap";
         public const string Valign = "valign";
-        //        public const string value = "value";
+
+        // public const string value = "value";
         //        public const string valuetype = "valuetype";
         //        public const string version = "version";
         //        public const string vlink = "vlink";
@@ -220,9 +243,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
 
         public const string Left = "left";
         public const string Right = "right";
-        //        public const string top = "top";
+
+        // public const string top = "top";
         public const string Center = "center";
-        //        public const string middle = "middle";
+
+        // public const string middle = "middle";
         //        public const string bottom = "bottom";
         public const string Justify = "justify";
     }

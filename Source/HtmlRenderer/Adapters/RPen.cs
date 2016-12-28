@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -15,7 +15,7 @@ using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 namespace TheArtOfDev.HtmlRenderer.Adapters
 {
     /// <summary>
-    /// Adapter for platform specific pen objects - used to draw graphics (lines, rectangles and paths) 
+    /// Adapter for platform specific pen objects - used to draw graphics (lines, rectangles and paths)
     /// </summary>
     public abstract class RPen
     {

@@ -6,7 +6,7 @@
 // like the days and months;
 // they die and are reborn,
 // like the four seasons."
-// 
+//
 // - Sun Tsu,
 // "The Art of War"
 
@@ -28,20 +28,19 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <summary>
         /// the image word of this image box
         /// </summary>
-        private readonly CssRectImage _imageWord;
+        private readonly CssRectImage ImageWord;
 
         /// <summary>
         /// handler used for image loading by source
         /// </summary>
-        private ImageLoadHandler _imageLoadHandler;
+        private ImageLoadHandler ImageLoadHandler;
 
         /// <summary>
         /// is image load is finished, used to know if no image is found
         /// </summary>
-        private bool _imageLoadingComplete;
+        private bool ImageLoadingComplete;
 
         #endregion
-
 
         /// <summary>
         /// Init.
@@ -51,8 +50,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         public CssBoxImage(CssBox parent, HtmlTag tag)
             : base(parent, tag)
         {
-            _imageWord = new CssRectImage(this);
-            Words.Add(_imageWord);
+            this.ImageWord = new CssRectImage(this);
+            this.Words.Add(this.ImageWord);
         }
 
         /// <summary>
@@ -60,7 +59,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public RImage Image
         {
-            get { return _imageWord.Image; }
+            get { return this.ImageWord.Image; }
         }
 
         /// <summary>
@@ -70,57 +69,57 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         protected override void PaintImp(RGraphics g)
         {
             // load image if it is in visible rectangle
-            if (_imageLoadHandler == null)
+            if (this.ImageLoadHandler == null)
             {
-                _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
-                _imageLoadHandler.LoadImage(GetAttribute("src"), HtmlTag != null ? HtmlTag.Attributes : null);
+                this.ImageLoadHandler = new ImageLoadHandler(this.HtmlContainer, this.OnLoadImageComplete);
+                this.ImageLoadHandler.LoadImage(this.GetAttribute("src"), this.HtmlTag != null ? this.HtmlTag.Attributes : null);
             }
 
-            var rect = CommonUtils.GetFirstValueOrDefault(Rectangles);
+            var rect = CommonUtils.GetFirstValueOrDefault(this.Rectangles);
             RPoint offset = RPoint.Empty;
 
-            if (!IsFixed)
-                offset = HtmlContainer.ScrollOffset;
+            if (!this.IsFixed)
+                offset = this.HtmlContainer.ScrollOffset;
 
             rect.Offset(offset);
 
             var clipped = RenderUtils.ClipGraphicsByOverflow(g, this);
 
-            PaintBackground(g, rect, true, true);
+            this.PaintBackground(g, rect, true, true);
             BordersDrawHandler.DrawBoxBorders(g, this, rect, true, true);
 
-            RRect r = _imageWord.Rectangle;
+            RRect r = this.ImageWord.Rectangle;
             r.Offset(offset);
-            r.Height -= ActualBorderTopWidth + ActualBorderBottomWidth + ActualPaddingTop + ActualPaddingBottom;
-            r.Y += ActualBorderTopWidth + ActualPaddingTop;
+            r.Height -= this.ActualBorderTopWidth + this.ActualBorderBottomWidth + this.ActualPaddingTop + this.ActualPaddingBottom;
+            r.Y += this.ActualBorderTopWidth + this.ActualPaddingTop;
             r.X = Math.Floor(r.X);
             r.Y = Math.Floor(r.Y);
 
-            if (_imageWord.Image != null)
+            if (this.ImageWord.Image != null)
             {
                 if (r.Width > 0 && r.Height > 0)
                 {
-                    if (_imageWord.ImageRectangle == RRect.Empty)
-                        g.DrawImage(_imageWord.Image, r);
+                    if (this.ImageWord.ImageRectangle == RRect.Empty)
+                        g.DrawImage(this.ImageWord.Image, r);
                     else
-                        g.DrawImage(_imageWord.Image, r, _imageWord.ImageRectangle);
+                        g.DrawImage(this.ImageWord.Image, r, this.ImageWord.ImageRectangle);
 
-                    if (_imageWord.Selected)
+                    if (this.ImageWord.Selected)
                     {
-                        g.DrawRectangle(GetSelectionBackBrush(g, true), _imageWord.Left + offset.X, _imageWord.Top + offset.Y, _imageWord.Width + 2, DomUtils.GetCssLineBoxByWord(_imageWord).LineHeight);
+                        g.DrawRectangle(this.GetSelectionBackBrush(g, true), this.ImageWord.Left + offset.X, this.ImageWord.Top + offset.Y, this.ImageWord.Width + 2, DomUtils.GetCssLineBoxByWord(this.ImageWord).LineHeight);
                     }
                 }
             }
-            else if (_imageLoadingComplete)
+            else if (this.ImageLoadingComplete)
             {
-                if (_imageLoadingComplete && r.Width > 19 && r.Height > 19)
+                if (this.ImageLoadingComplete && r.Width > 19 && r.Height > 19)
                 {
-                    RenderUtils.DrawImageErrorIcon(g, HtmlContainer, r);
+                    RenderUtils.DrawImageErrorIcon(g, this.HtmlContainer, r);
                 }
             }
             else
             {
-                RenderUtils.DrawImageLoadingIcon(g, HtmlContainer, r);
+                RenderUtils.DrawImageLoadingIcon(g, this.HtmlContainer, r);
                 if (r.Width > 19 && r.Height > 19)
                 {
                     g.DrawRectangle(g.GetPen(RColor.LightGray), r.X, r.Y, r.Width, r.Height);
@@ -137,23 +136,23 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="g">the device to use</param>
         internal override void MeasureWordsSize(RGraphics g)
         {
-            if (!_wordsSizeMeasured)
+            if (!this.WordsSizeMeasured)
             {
-                if (_imageLoadHandler == null && (HtmlContainer.AvoidAsyncImagesLoading || HtmlContainer.AvoidImagesLateLoading))
+                if (this.ImageLoadHandler == null && (this.HtmlContainer.AvoidAsyncImagesLoading || this.HtmlContainer.AvoidImagesLateLoading))
                 {
-                    _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnLoadImageComplete);
+                    this.ImageLoadHandler = new ImageLoadHandler(this.HtmlContainer, this.OnLoadImageComplete);
 
                     if (this.Content != null && this.Content != CssConstants.Normal)
-                        _imageLoadHandler.LoadImage(this.Content, HtmlTag != null ? HtmlTag.Attributes : null);
+                        this.ImageLoadHandler.LoadImage(this.Content, this.HtmlTag != null ? this.HtmlTag.Attributes : null);
                     else
-                        _imageLoadHandler.LoadImage(GetAttribute("src"), HtmlTag != null ? HtmlTag.Attributes : null);
+                        this.ImageLoadHandler.LoadImage(this.GetAttribute("src"), this.HtmlTag != null ? this.HtmlTag.Attributes : null);
                 }
 
-                MeasureWordSpacing(g);
-                _wordsSizeMeasured = true;
+                this.MeasureWordSpacing(g);
+                this.WordsSizeMeasured = true;
             }
 
-            CssLayoutEngine.MeasureImageSize(_imageWord);
+            CssLayoutEngine.MeasureImageSize(this.ImageWord);
         }
 
         /// <summary>
@@ -161,11 +160,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public override void Dispose()
         {
-            if (_imageLoadHandler != null)
-                _imageLoadHandler.Dispose();
+            if (this.ImageLoadHandler != null)
+                this.ImageLoadHandler.Dispose();
             base.Dispose();
         }
-
 
         #region Private methods
 
@@ -174,8 +172,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         private void SetErrorBorder()
         {
-            SetAllBorders(CssConstants.Solid, "2px", "#A0A0A0");
-            BorderRightColor = BorderBottomColor = "#E3E3E3";
+            this.SetAllBorders(CssConstants.Solid, "2px", "#A0A0A0");
+            this.BorderRightColor = this.BorderBottomColor = "#E3E3E3";
         }
 
         /// <summary>
@@ -186,22 +184,22 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="async">is the callback was called async to load image call</param>
         private void OnLoadImageComplete(RImage image, RRect rectangle, bool async)
         {
-            _imageWord.Image = image;
-            _imageWord.ImageRectangle = rectangle;
-            _imageLoadingComplete = true;
-            _wordsSizeMeasured = false;
+            this.ImageWord.Image = image;
+            this.ImageWord.ImageRectangle = rectangle;
+            this.ImageLoadingComplete = true;
+            this.WordsSizeMeasured = false;
 
-            if (_imageLoadingComplete && image == null)
+            if (this.ImageLoadingComplete && image == null)
             {
-                SetErrorBorder();
+                this.SetErrorBorder();
             }
 
-            if (!HtmlContainer.AvoidImagesLateLoading || async)
+            if (!this.HtmlContainer.AvoidImagesLateLoading || async)
             {
-                var width = new CssLength(Width);
-                var height = new CssLength(Height);
+                var width = new CssLength(this.Width);
+                var height = new CssLength(this.Height);
                 var layout = (width.Number <= 0 || width.Unit != CssUnit.Pixels) || (height.Number <= 0 || height.Unit != CssUnit.Pixels);
-                HtmlContainer.RequestRefresh(layout);
+                this.HtmlContainer.RequestRefresh(layout);
             }
         }
 
