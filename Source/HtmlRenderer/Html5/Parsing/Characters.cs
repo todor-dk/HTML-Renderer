@@ -26,6 +26,9 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         public const char ReplacementCharacter = '\uFFFD';
 
+        /// <summary>
+        /// One of: "tab" (U+0009), "LF" (U+000A), "FF" (U+000C), U+0020 SPACE.
+        /// </summary>
         public static bool IsSpaceCharacter(this char ch)
         {
             // The space characters, for the purposes of this specification, are:
@@ -33,9 +36,6 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             return (ch == Space) || (ch == Tab) || (ch == Lf) || (ch == Ff) || (ch == Cr);
         }
 
-        /// <summary>
-        /// One of: "tab" (U+0009), "LF" (U+000A), "FF" (U+000C), U+0020 SPACE.
-        /// </summary>
         public static bool IsWhiteSpaceCharacter(this char ch)
         {
             // The White_Space characters are those that have the Unicode property "White_Space"
@@ -100,7 +100,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         public static char ToLowercaseAsciiLetter(this char ch)
         {
-            if ((ch < 'A') || ('Z' > ch))
+            if ((ch < 'A') || ('Z' < ch))
                 return ch;
 
             // Add 0x0020 to the character's code point

@@ -417,88 +417,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             /// CDATA section state
             /// See: 8.2.4.68 CDATA section state (http://www.w3.org/TR/html5/syntax.html#tokenization)
             /// </summary>
-            CDataSection = 68,
-
-            /// <summary>
-            /// Tokenizing character references
-            /// See: 8.2.4.69 Tokenizing character references (http://www.w3.org/TR/html5/syntax.html#tokenization)
-            /// </summary>
-            TokenizingCharacterReferences = 69
+            CDataSection = 68
         }
 
-        private readonly HtmlStream HtmlStream;
-
         private readonly ITokenizerClient Client;
-
-        // The state machine must start in the data state.
-        private StateEnum State = StateEnum.Data;
-
-        /// <summary>
-        /// The current input character is the last character to have been consumed.
-        /// </summary>
-        private char CurrentInputCharacter;
-
-        /// <summary>
-        /// Indicates if <see cref="ConsumeNextInputCharacter"/> should return the last
-        /// consumed input character. The flag is then reset.
-        /// </summary>
-        private bool ShouldReconsumeInputCharacter = false;
-
-        /// <summary>
-        /// Buffer for constructing temporary strings (used by misc states).
-        /// </summary>
-        private readonly StringBuilder TempBuffer = new StringBuilder(1024);
-
-        /// <summary>
-        /// Buffer for constructing the attribute names.
-        /// </summary>
-        private readonly StringBuilder AttributeName = new StringBuilder(32);
-
-        /// <summary>
-        /// Buffer for constructing the attribute values.
-        /// </summary>
-        private readonly StringBuilder AttributeValue = new StringBuilder(32);
-
-        /// <summary>
-        /// Used when parsing attribute values
-        /// </summary>
-        private char AdditionalAllowedChar = Characters.EOF;
-
-        /// <summary>
-        /// The attribute value state that switched into the CharacterReferenceInAttributeValue state.
-        /// </summary>
-        private StateEnum BeforeCharacterReferenceInAttributeValueState;
-
-        /// <summary>
-        /// Buffer for constructing the tag names.
-        /// </summary>
-        private readonly StringBuilder TagName = new StringBuilder(32);
-
-        private bool TagIsSelfClosing = false;
-
-        /// <summary>
-        /// Buffer for constructing the end-tag names.
-        /// </summary>
-        private readonly StringBuilder EndTagName = new StringBuilder(32);
-
-        /// <summary>
-        /// Buffer for constructing the doc type names.
-        /// </summary>
-        private StringBuilder DocTypeName;
-
-        /// <summary>
-        /// Buffer for constructing the doc type public identifier.
-        /// </summary>
-        private StringBuilder DocTypePublicIdentifier;
-
-        /// <summary>
-        /// Buffer for constructing the doc type system identifier.
-        /// </summary>
-        private StringBuilder DocTypeSystemIdentifier;
-
-        private bool DocTypeForceQuirks = false;
-
-        private readonly StringBuilder CommentData = new StringBuilder();
 
         public Tokenizer(HtmlStream stream, ITokenizerClient client)
         {
@@ -509,9 +431,16 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             this.Client = client;
         }
 
+        #region Behavior and Logic
+
+        #region State related logic
+
+        // The state machine must start in the data state.
+        private StateEnum State = StateEnum.Data;
+
         public void Tokenize()
         {
-            while (true)
+            while (!this.EndOfFileReached)
             {
                 switch (this.State)
                 {
@@ -719,53 +648,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     case StateEnum.CDataSection:
                         this.HandleStateCDataSection();
                         break;
-                    case StateEnum.TokenizingCharacterReferences:
-                        this.HandleStateTokenizingCharacterReferences();
-                        break;
                     default:
                         throw new NotImplementedException();
                 }
             }
         }
 
-        private char ConsumeNextInputCharacter()
-        {
-            if (this.ShouldReconsumeInputCharacter)
-            {
-                this.ShouldReconsumeInputCharacter = false;
-                return this.CurrentInputCharacter;
-            }
-
-            char ch = this.HtmlStream.ReadChar();
-            this.CurrentInputCharacter = ch;
-            return ch;
-        }
-
-        private void ReconsumeInputCharacter()
-        {
-            this.ShouldReconsumeInputCharacter = true;
-        }
-
-        private void ReconsumeInputCharacters(string chars)
-        {
-            throw new NotImplementedException();
-        }
-
         private void SwitchTo(StateEnum state)
         {
-            /*
-            When the user agent leaves the attribute name state (and before emitting the tag token, if appropriate),
-            the complete attribute's name must be compared to the other attributes on the same token; if there is
-            already an attribute on the token with the exact same name, then this is a parse error and the new attribute
-            must be removed from the token.
-
-            NOTE: If an attribute is so removed from a token, it, along with the value that gets associated with it,
-            if any, are never subsequently used by the parser, and are therefore effectively discarded. Removing the
-            attribute in this way does not change its status as the "current attribute" for the purposes of the tokenizer,
-            however.
-            */
-
-            // TODO
             switch (state)
             {
                 case StateEnum.Data:
@@ -837,6 +727,18 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 case StateEnum.BeforeAttributeName:
                     break;
                 case StateEnum.AttributeName:
+                    /*
+                    When the user agent leaves the attribute name state (and before emitting the tag token, if appropriate),
+                    the complete attribute's name must be compared to the other attributes on the same token; if there is
+                    already an attribute on the token with the exact same name, then this is a parse error and the new attribute
+                    must be removed from the token.
+
+                    NOTE: If an attribute is so removed from a token, it, along with the value that gets associated with it,
+                    if any, are never subsequently used by the parser, and are therefore effectively discarded. Removing the
+                    attribute in this way does not change its status as the "current attribute" for the purposes of the tokenizer,
+                    however.
+                    */
+                    this.CheckForDuplicateName();
                     break;
                 case StateEnum.AfterAttributeName:
                     break;
@@ -855,6 +757,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 case StateEnum.SelfClosingStartTag:
                     break;
                 case StateEnum.BogusComment:
+                    // ... a comment token whose data is the concatenation of all the characters starting
+                    // from and including the character that caused the state machine to switch into the bogus comment state ...
+                    this.CommentData.Clear();
+                    this.CommentData.Append((this.CurrentInputCharacter == Characters.Null) ? Characters.ReplacementCharacter : this.CurrentInputCharacter);
                     break;
                 case StateEnum.MarkupDeclarationOpen:
                     break;
@@ -875,7 +781,6 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 case StateEnum.BeforeDocTypeName:
                     break;
                 case StateEnum.DocTypeName:
-                    this.DocTypeName = new StringBuilder();
                     break;
                 case StateEnum.AfterDocTypeName:
                     break;
@@ -905,8 +810,6 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     break;
                 case StateEnum.CDataSection:
                     break;
-                case StateEnum.TokenizingCharacterReferences:
-                    break;
                 default:
                     break;
             }
@@ -919,10 +822,103 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             this.Client.ParseError(error);
         }
 
-        private void EmitEndOfFile()
+        private bool EndOfFileReached;
+
+        #endregion
+
+        #region Character reading related logic
+
+        /// <summary>
+        /// The source HTML stream, where we read characters from.
+        /// </summary>
+        private readonly HtmlStream HtmlStream;
+
+        /// <summary>
+        /// The current input character is the last character to have been consumed.
+        /// </summary>
+        private char CurrentInputCharacter;
+
+        /// <summary>
+        /// Buffer of characters that are to be reconsumed. This may grow as needed.
+        /// </summary>
+        private char[] CharactersToReconsume = new char[10];
+
+        /// <summary>
+        /// Current count of valid characters in <see cref="CharactersToReconsume"/>.
+        /// </summary>
+        private int CharactersToReconsumeCount = 0;
+
+        /// <summary>
+        /// Buffer for constructing temporary strings (used by misc states).
+        /// </summary>
+        private readonly StringBuilder TempBuffer = new StringBuilder(1024);
+
+        private char ConsumeNextInputCharacter()
         {
-            throw new NotImplementedException();
+            if (this.CharactersToReconsumeCount > 0)
+            {
+                // Take the first character
+                this.CurrentInputCharacter = this.CharactersToReconsume[0];
+
+                // Decrement the count in the list
+                this.CharactersToReconsumeCount--;
+
+                // And shift the remaining characters to the left (if anything left in the array).
+                // We may need to optimize this algorithm if the performance penalty is too high.
+                if (this.CharactersToReconsumeCount > 0)
+                    Array.Copy(this.CharactersToReconsume, 1, this.CharactersToReconsume, 0, this.CharactersToReconsumeCount);
+
+                return this.CurrentInputCharacter;
+            }
+
+            char ch = this.HtmlStream.ReadChar();
+            this.CurrentInputCharacter = ch;
+            return ch;
         }
+
+        private string ConsumeNextInputCharacters(int count, bool replaceNulls)
+        {
+            if (count < 1)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            char[] buffer = new char[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                char ch = this.ConsumeNextInputCharacter();
+                buffer[i] = ch;
+                if (ch == Characters.EOF)
+                    return new string(buffer, 0, i + 1);
+                if ((ch == Characters.Null) && replaceNulls)
+                    buffer[i] = Characters.ReplacementCharacter;
+            }
+
+            return new string(buffer);
+        }
+
+        private void ReconsumeInputCharacter()
+        {
+            this.ReconsumeInputCharacter(this.CurrentInputCharacter);
+        }
+
+        private void ReconsumeInputCharacter(char ch)
+        {
+            if (this.CharactersToReconsumeCount >= this.CharactersToReconsume.Length)
+                Array.Resize(ref this.CharactersToReconsume, this.CharactersToReconsume.Length * 2);
+            this.CharactersToReconsume[this.CharactersToReconsumeCount] = ch;
+            this.CharactersToReconsumeCount++;
+        }
+
+        private void ReconsumeInputCharacters(string chars)
+        {
+            if (String.IsNullOrEmpty(chars))
+                return;
+
+            foreach (char ch in chars)
+                this.ReconsumeInputCharacter(ch);
+        }
+
+        #endregion
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EmitCharacter(char ch)
@@ -930,20 +926,37 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             this.Client.ReceiveCharacter(ch);
         }
 
-        private void EmitTag()
+        private void EmitEndOfFile()
         {
-            /*
-            When the user agent leaves the attribute name state (and before emitting the tag token, if appropriate),
-            the complete attribute's name must be compared to the other attributes on the same token; if there is
-            already an attribute on the token with the exact same name, then this is a parse error and the new attribute
-            must be removed from the token.
+            this.EndOfFileReached = true;
+            this.Client.ReceiveEndOfFile();
+        }
 
-            NOTE: If an attribute is so removed from a token, it, along with the value that gets associated with it,
-            if any, are never subsequently used by the parser, and are therefore effectively discarded. Removing the
-            attribute in this way does not change its status as the "current attribute" for the purposes of the tokenizer,
-            however.
-            */
-            throw new NotImplementedException();
+        #region DocType related logic
+
+        /// <summary>
+        /// Buffer for constructing the doc type names.
+        /// </summary>
+        private StringBuilder DocTypeName;
+
+        /// <summary>
+        /// Buffer for constructing the doc type public identifier.
+        /// </summary>
+        private StringBuilder DocTypePublicIdentifier;
+
+        /// <summary>
+        /// Buffer for constructing the doc type system identifier.
+        /// </summary>
+        private StringBuilder DocTypeSystemIdentifier;
+
+        private bool DocTypeForceQuirks = false;
+
+        private void NewDocType()
+        {
+            this.DocTypeForceQuirks = false;
+            this.DocTypeName = null;
+            this.DocTypePublicIdentifier = null;
+            this.DocTypeSystemIdentifier = null;
         }
 
         private void EmitDocType()
@@ -955,28 +968,189 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.DocTypeForceQuirks);
         }
 
-        private void EmitComment()
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
 
-        private void NewDocType()
-        {
-            this.DocTypeForceQuirks = false;
-            this.DocTypeName = null;
-            this.DocTypePublicIdentifier = null;
-            this.DocTypeSystemIdentifier = null;
-            throw new NotImplementedException();
-        }
+        #region Comment related logic
+
+        /// <summary>
+        /// Keeps the comment data while reading it.
+        /// </summary>
+        private readonly StringBuilder CommentData = new StringBuilder();
 
         private void NewComment()
         {
+            this.CommentData.Clear();
+        }
+
+        private void EmitComment()
+        {
+            // NB: We pass the ToString as function, because it is not sure they need
+            // the string data and that way we save memory garbage.
+            this.Client.ReceiveComment(this.CommentData.ToString);
+        }
+
+        #endregion
+
+        #region Tag related logic
+
+        /// <summary>
+        /// Buffer for constructing the tag names.
+        /// </summary>
+        private readonly StringBuilder TagName = new StringBuilder(32);
+
+        private bool TagIsSelfClosing = false;
+
+        private bool IsCurrentTagEndTag = false;
+
+        private void NewStartTag()
+        {
+            this.TagName.Clear();
+            this.TagIsSelfClosing = false;
+            this.IsCurrentTagEndTag = false;
+            this.CurrentTagAttributes.Clear();
+            this.HasCurrentAttribute = false;
         }
 
         private void NewEndTag()
         {
-            this.EndTagName.Clear();
+            this.TagName.Clear();
+            this.TagIsSelfClosing = false;
+            this.IsCurrentTagEndTag = true;
+            this.CurrentTagAttributes.Clear();
+            this.HasCurrentAttribute = false;
         }
+
+        private void EmitTag()
+        {
+            this.AddCurrentAttributeToList();
+            Attribute[] attributes = (this.CurrentTagAttributes.Count == 0) ? Array.Empty<Attribute>() : this.CurrentTagAttributes.ToArray();
+
+            if (this.IsCurrentTagEndTag)
+            {
+                // When an end tag token is emitted with attributes, that is a parse error.
+                if (attributes.Length != 0)
+                    this.ParseError(ParseErrors.InvalidAttribute);
+
+                // When an end tag token is emitted with its self - closing flag set, that is a parse error.
+                if (this.TagIsSelfClosing)
+                    this.ParseError(ParseErrors.InvalidTag);
+
+                this.Client.ReceiveEndTag(this.TagName.ToString(), this.TagIsSelfClosing, attributes);
+            }
+            else
+            {
+                this.LastStartTagName = this.TagName.ToString();
+                this.Client.ReceiveStartTag(this.LastStartTagName, this.TagIsSelfClosing, attributes);
+            }
+        }
+
+        private string LastStartTagName;
+
+        /// <summary>
+        /// An appropriate end tag token is an end tag token whose tag name matches the tag name of the
+        /// last start tag to have been emitted from this tokenizer, if any. If no start tag has been
+        /// emitted from this tokenizer, then no end tag token is appropriate.
+        /// </summary>
+        private bool IsCurrentEndTagAppropriateEndTag()
+        {
+            if (this.IsCurrentTagEndTag && (this.LastStartTagName == null))
+                return false;
+            if (this.TagName.Length != this.LastStartTagName.Length)
+                return false;
+            return this.TagName.ToString().Equals(this.LastStartTagName, StringComparison.Ordinal);
+        }
+
+        #endregion
+
+        #region Attribute related logic
+
+        /// <summary>
+        /// Buffer for constructing the attribute names.
+        /// </summary>
+        private readonly StringBuilder AttributeName = new StringBuilder(32);
+
+        /// <summary>
+        /// Buffer for constructing the attribute values.
+        /// </summary>
+        private readonly StringBuilder AttributeValue = new StringBuilder(32);
+
+        /// <summary>
+        /// Used when parsing attribute values
+        /// </summary>
+        private char AdditionalAllowedChar = Characters.EOF;
+
+        /// <summary>
+        /// The attribute value state that switched into the CharacterReferenceInAttributeValue state.
+        /// </summary>
+        private StateEnum BeforeCharacterReferenceInAttributeValueState;
+
+        /// <summary>
+        /// Indicates that there's currenty a new attribute.
+        /// </summary>
+        private bool HasCurrentAttribute;
+
+        private void NewAttribute()
+        {
+            this.AddCurrentAttributeToList();
+            this.HasCurrentAttribute = true;
+            this.AdditionalAllowedChar = Characters.EOF;
+        }
+
+        private void AddCurrentAttributeToList()
+        {
+            this.CheckForDuplicateName();
+
+            if (!this.HasCurrentAttribute)
+                return;
+
+            this.CurrentTagAttributes.Add(new Attribute(this.AttributeName.ToString(), this.AttributeValue.ToString()));
+            this.HasCurrentAttribute = false;
+        }
+
+        private void CheckForDuplicateName()
+        {
+            if (!this.HasCurrentAttribute)
+                return;
+
+            /*
+            When the user agent leaves the attribute name state (and before emitting the tag token, if appropriate),
+            the complete attribute's name must be compared to the other attributes on the same token; if there is
+            already an attribute on the token with the exact same name, then this is a parse error and the new attribute
+            must be removed from the token.
+
+            NOTE: If an attribute is so removed from a token, it, along with the value that gets associated with it,
+            if any, are never subsequently used by the parser, and are therefore effectively discarded. Removing the
+            attribute in this way does not change its status as the "current attribute" for the purposes of the tokenizer,
+            however.
+            */
+
+            string name = this.AttributeName.ToString();
+            if (this.CurrentTagAttributes.Any(attr => attr.Name.Equals(name, StringComparison.Ordinal)))
+            {
+                // Skip the current attribute.
+                // Setting HasCurrentAttribute to false will continue parsing,
+                // but the result will not be added to the current tag's attributes.
+                this.HasCurrentAttribute = false;
+            }
+        }
+
+        /// <summary>
+        /// Determines if there is an adjusted current node and it is not an element in the HTML namespace.
+        /// </summary>
+        /// <returns></returns>
+        private bool HasAdjustedNonHtmlElementCurrentNode()
+        {
+            // .. if there is an adjusted current node and it is ** NOT ** an element in the HTML namespace and ...
+            // TO-DO ... we currently do not support other elements EXCEPT ones in the HTML namespace,
+            // THEREFORE the current node will always be in the HTML namespace and this will always be FALSE!
+            return false;
+        }
+
+        internal readonly List<Parsing.Attribute> CurrentTagAttributes = new List<Parsing.Attribute>();
+
+        #endregion
+
+        #endregion
 
         #region State Handlers
 
@@ -1252,12 +1426,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch.IsUppercaseAsciiLetter())
             {
+                this.NewStartTag();
                 this.TagName.Clear();
                 this.TagName.Append(ch.ToLowercaseAsciiLetter());
                 this.SwitchTo(StateEnum.TagName);
             }
             else if (ch.IsLowercaseAsciiLetter())
             {
+                this.NewStartTag();
                 this.TagName.Clear();
                 this.TagName.Append(ch);
                 this.SwitchTo(StateEnum.TagName);
@@ -1300,15 +1476,22 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsUppercaseAsciiLetter())
             {
-                this.AttributeName.Clear();
-                this.AttributeName.Append(ch.ToLowercaseAsciiLetter());
+                this.NewEndTag();
+                this.TagName.Clear();
+                this.TagName.Append(ch.ToLowercaseAsciiLetter());
                 this.SwitchTo(StateEnum.TagName);
             }
             else if (ch.IsLowercaseAsciiLetter())
             {
-                this.AttributeName.Clear();
-                this.AttributeName.Append(ch);
+                this.NewEndTag();
+                this.TagName.Clear();
+                this.TagName.Append(ch);
                 this.SwitchTo(StateEnum.TagName);
+            }
+            else if (ch == '>')
+            {
+                this.ParseError(ParseErrors.InvalidTag);
+                this.SwitchTo(StateEnum.Data);
             }
             else if (ch == Characters.EOF)
             {
@@ -1351,7 +1534,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Append the current input character to the current tag token's tag name.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 this.SwitchTo(StateEnum.BeforeAttributeName);
             }
@@ -1432,6 +1615,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsUppercaseAsciiLetter())
             {
+                this.NewEndTag();
                 this.TagName.Clear();
                 this.TagName.Append(ch.ToLowercaseAsciiLetter());
                 this.TempBuffer.Append(ch);
@@ -1439,6 +1623,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch.IsLowercaseAsciiLetter())
             {
+                this.NewEndTag();
                 this.TagName.Clear();
                 this.TagName.Append(ch);
                 this.TempBuffer.Append(ch);
@@ -1482,7 +1667,39 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     token, and a character token for each of the characters in the temporary buffer (in the order they
                     were added to the buffer). Reconsume the current input character.
             */
-            throw new NotImplementedException();
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch.IsSpaceCharacter() && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.BeforeAttributeName);
+            }
+            else if ((ch == '/') && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.SelfClosingStartTag);
+            }
+            else if ((ch == '>') && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.Data);
+                this.EmitTag();
+            }
+            else if (ch.IsUppercaseAsciiLetter())
+            {
+                this.TagName.Append(ch.ToLowercaseAsciiLetter());
+                this.TempBuffer.Append(ch);
+            }
+            else if (ch.IsLowercaseAsciiLetter())
+            {
+                this.TagName.Append(ch);
+                this.TempBuffer.Append(ch);
+            }
+            else
+            {
+                this.SwitchTo(StateEnum.RcData);
+                this.EmitCharacter('<');
+                this.EmitCharacter('\u002F');
+                foreach (char c in this.TempBuffer.ToString())
+                    this.EmitCharacter(c);
+                this.ReconsumeInputCharacter();
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1534,14 +1751,16 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (ch.IsUppercaseAsciiLetter())
             {
                 this.NewEndTag();
-                this.EndTagName.Append(ch.ToLowercaseAsciiLetter());
+                this.TagName.Clear();
+                this.TagName.Append(ch.ToLowercaseAsciiLetter());
                 this.TempBuffer.Append(ch);
                 this.SwitchTo(StateEnum.RawTextEndTagName);
             }
             else if (ch.IsLowercaseAsciiLetter())
             {
                 this.NewEndTag();
-                this.EndTagName.Append(ch);
+                this.TagName.Clear();
+                this.TagName.Append(ch);
                 this.TempBuffer.Append(ch);
                 this.SwitchTo(StateEnum.RawTextEndTagName);
             }
@@ -1583,7 +1802,39 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     token, and a character token for each of the characters in the temporary buffer (in the order they
                     were added to the buffer). Reconsume the current input character.
             */
-            throw new NotImplementedException();
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch.IsSpaceCharacter() && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.BeforeAttributeName);
+            }
+            else if ((ch == '/') && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.SelfClosingStartTag);
+            }
+            else if ((ch == '>') && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.Data);
+                this.EmitTag();
+            }
+            else if (ch.IsUppercaseAsciiLetter())
+            {
+                this.TagName.Append(ch.ToLowercaseAsciiLetter());
+                this.TempBuffer.Append(ch);
+            }
+            else if (ch.IsLowercaseAsciiLetter())
+            {
+                this.TagName.Append(ch);
+                this.TempBuffer.Append(ch);
+            }
+            else
+            {
+                this.SwitchTo(StateEnum.RawText);
+                this.EmitCharacter('<');
+                this.EmitCharacter('\u002F');
+                foreach (char c in this.TempBuffer.ToString())
+                    this.EmitCharacter(c);
+                this.ReconsumeInputCharacter();
+            }
         }
 
         #region Scripts
@@ -1646,16 +1897,16 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (ch.IsUppercaseAsciiLetter())
             {
                 this.NewEndTag();
-                this.EndTagName.Clear();
-                this.EndTagName.Append(ch.ToLowercaseAsciiLetter());
+                this.TagName.Clear();
+                this.TagName.Append(ch.ToLowercaseAsciiLetter());
                 this.TempBuffer.Append(ch);
                 this.SwitchTo(StateEnum.ScriptDataEndTagName);
             }
             else if (ch.IsLowercaseAsciiLetter())
             {
                 this.NewEndTag();
-                this.EndTagName.Clear();
-                this.EndTagName.Append(ch);
+                this.TagName.Clear();
+                this.TagName.Append(ch);
                 this.TempBuffer.Append(ch);
                 this.SwitchTo(StateEnum.ScriptDataEndTagName);
             }
@@ -1694,9 +1945,42 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     character to the temporary buffer.
                 Anything else
                     Switch to the script data state. Emit a U+003C LESS-THAN SIGN character token, a U+002F SOLIDUS
-                    character token, and a character token for each of the characters in the temporary buffer (in the order they were added to the buffer). Reconsume the current input character.
+                    character token, and a character token for each of the characters in the temporary buffer (in the
+                    order they were added to the buffer). Reconsume the current input character.
             */
-            throw new NotImplementedException();
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch.IsSpaceCharacter() && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.BeforeAttributeName);
+            }
+            else if ((ch == '/') && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.SelfClosingStartTag);
+            }
+            else if ((ch == '>') && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.Data);
+                this.EmitTag();
+            }
+            else if (ch.IsUppercaseAsciiLetter())
+            {
+                this.TagName.Append(ch.ToLowercaseAsciiLetter());
+                this.TempBuffer.Append(ch);
+            }
+            else if (ch.IsLowercaseAsciiLetter())
+            {
+                this.TagName.Append(ch);
+                this.TempBuffer.Append(ch);
+            }
+            else
+            {
+                this.SwitchTo(StateEnum.ScriptData);
+                this.EmitCharacter('<');
+                this.EmitCharacter('\u002F');
+                foreach (char c in this.TempBuffer.ToString())
+                    this.EmitCharacter(c);
+                this.ReconsumeInputCharacter();
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1828,7 +2112,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.ParseError(ParseErrors.InvalidScript);
-                this.SwitchTo(StateEnum.ScriptData);
+                this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
             else
@@ -1881,7 +2165,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.ParseError(ParseErrors.InvalidScript);
-                this.SwitchTo(StateEnum.ScriptDataEscaped);
+                this.SwitchTo(StateEnum.Data);
                 this.EmitCharacter(ch);
             }
             else
@@ -1965,16 +2249,16 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (ch.IsUppercaseAsciiLetter())
             {
                 this.NewEndTag();
-                this.EndTagName.Clear();
-                this.EndTagName.Append(ch.ToLowercaseAsciiLetter());
+                this.TagName.Clear();
+                this.TagName.Append(ch.ToLowercaseAsciiLetter());
                 this.TempBuffer.Append(ch);
                 this.SwitchTo(StateEnum.ScriptDataEscapedEndTagName);
             }
             else if (ch.IsLowercaseAsciiLetter())
             {
                 this.NewEndTag();
-                this.EndTagName.Clear();
-                this.EndTagName.Append(ch);
+                this.TagName.Clear();
+                this.TagName.Append(ch);
                 this.TempBuffer.Append(ch);
                 this.SwitchTo(StateEnum.ScriptDataEscapedEndTagName);
             }
@@ -2016,7 +2300,39 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     character token, and a character token for each of the characters in the temporary buffer (in the order
                     they were added to the buffer). Reconsume the current input character.
             */
-            throw new NotImplementedException();
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch.IsSpaceCharacter() && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.BeforeAttributeName);
+            }
+            else if ((ch == '/') && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.SelfClosingStartTag);
+            }
+            else if ((ch == '>') && this.IsCurrentEndTagAppropriateEndTag())
+            {
+                this.SwitchTo(StateEnum.Data);
+                this.EmitTag();
+            }
+            else if (ch.IsUppercaseAsciiLetter())
+            {
+                this.TagName.Append(ch.ToLowercaseAsciiLetter());
+                this.TempBuffer.Append(ch);
+            }
+            else if (ch.IsLowercaseAsciiLetter())
+            {
+                this.TagName.Append(ch);
+                this.TempBuffer.Append(ch);
+            }
+            else
+            {
+                this.SwitchTo(StateEnum.ScriptDataEscaped);
+                this.EmitCharacter('<');
+                this.EmitCharacter('\u002F');
+                foreach (char c in this.TempBuffer.ToString())
+                    this.EmitCharacter(c);
+                this.ReconsumeInputCharacter();
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2044,7 +2360,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Switch to the script data escaped state. Reconsume the current input character.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter() || (ch == '/') || (ch == '>'))
+            if (ch.IsSpaceCharacter() || (ch == '/') || (ch == '>'))
             {
                 if (this.TempBuffer.ToString().Equals("script", StringComparison.OrdinalIgnoreCase))
                     this.SwitchTo(StateEnum.ScriptDataDoubleEscaped);
@@ -2271,12 +2587,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Switch to the script data double escaped state. Reconsume the current input character.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter() || (ch == '/') || (ch == '>'))
+            if (ch.IsSpaceCharacter() || (ch == '/') || (ch == '>'))
             {
                 if (String.Equals(this.TempBuffer.ToString(), "script", StringComparison.Ordinal))
                     this.SwitchTo(StateEnum.ScriptDataEscaped);
                 else
                     this.SwitchTo(StateEnum.ScriptDataDoubleEscaped);
+
                 this.EmitCharacter(ch);
             }
             else if (ch.IsUppercaseAsciiLetter())
@@ -2335,7 +2652,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     character, and its value to the empty string. Switch to the attribute name state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 // Ignore
             }
@@ -2350,6 +2667,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch.IsUppercaseAsciiLetter())
             {
+                this.NewAttribute();
                 this.AttributeName.Clear();
                 this.AttributeName.Append(ch.ToLowercaseAsciiLetter());
                 this.AttributeValue.Clear();
@@ -2358,6 +2676,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.Null)
             {
                 this.ParseError(ParseErrors.InvalidAttribute);
+                this.NewAttribute();
                 this.AttributeName.Clear();
                 this.AttributeName.Append(Characters.ReplacementCharacter);
                 this.AttributeValue.Clear();
@@ -2374,6 +2693,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 if ((ch == '\u0022') || (ch == '\u0027') || (ch == '<') || (ch == '='))
                     this.ParseError(ParseErrors.InvalidAttribute);
 
+                this.NewAttribute();
                 this.AttributeName.Clear();
                 this.AttributeName.Append(ch);
                 this.AttributeValue.Clear();
@@ -2423,7 +2743,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             however.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 this.SwitchTo(StateEnum.AfterAttributeName);
             }
@@ -2500,7 +2820,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     character, and its value to the empty string. Switch to the attribute name state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 // Ignore
             }
@@ -2519,6 +2839,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch.IsUppercaseAsciiLetter())
             {
+                this.NewAttribute();
                 this.AttributeName.Clear();
                 this.AttributeName.Append(ch.ToLowercaseAsciiLetter());
                 this.AttributeValue.Clear();
@@ -2527,6 +2848,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.Null)
             {
                 this.ParseError(ParseErrors.InvalidAttribute);
+                this.NewAttribute();
                 this.AttributeName.Clear();
                 this.AttributeName.Append(Characters.ReplacementCharacter);
                 this.AttributeValue.Clear();
@@ -2543,6 +2865,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 if ((ch == '\u0022') || (ch == '\u0027') || (ch == '<'))
                     this.ParseError(ParseErrors.InvalidAttribute);
 
+                this.NewAttribute();
                 this.AttributeName.Clear();
                 this.AttributeName.Append(ch);
                 this.AttributeValue.Clear();
@@ -2583,7 +2906,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     (unquoted) state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 // Ignote
             }
@@ -2750,7 +3073,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Append the current input character to the current attribute's value.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 this.SwitchTo(StateEnum.BeforeAttributeName);
             }
@@ -2825,7 +3148,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Parse error. Switch to the before attribute name state. Reconsume the character.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 this.SwitchTo(StateEnum.BeforeAttributeName);
             }
@@ -2906,7 +3229,20 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
             If the end of the file was reached, reconsume the EOF character.
             */
-            throw new NotImplementedException();
+            while (true)
+            {
+                char ch = this.ConsumeNextInputCharacter();
+                if ((ch == '>') || (ch == Characters.EOF))
+                {
+                    this.EmitComment();
+                    return;
+                }
+
+                if (ch == Characters.Null)
+                    this.CommentData.Append(Characters.ReplacementCharacter);
+                else
+                    this.CommentData.Append(ch);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2927,62 +3263,33 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             Otherwise, this is a parse error. Switch to the bogus comment state. The next character that is consumed,
             if any, is the first character that will be in the comment.
             */
-            char ch = this.ConsumeNextInputCharacter();
-            if (ch == '-')
+            string tmp = this.ConsumeNextInputCharacters(7, false);
+            if (tmp.StartsWith("--", StringComparison.Ordinal))
             {
-                ch = this.ConsumeNextInputCharacter();
-                if (ch == '-')
-                {
-                    this.NewComment();
-                    this.SwitchTo(StateEnum.CommentStart);
-                    return;
-                }
+                // We only need the first two chars. Reconsume the rest.
+                this.ReconsumeInputCharacters(tmp.Substring(2));
 
-                // Return the characters and fallback to the code below ...
-                this.ReconsumeInputCharacters("-" + ch.ToString());
+                this.NewComment();
+                this.CommentData.Clear();
+                this.SwitchTo(StateEnum.CommentStart);
             }
-            else if ((ch == 'D') || (ch == 'd'))
+            else if (tmp.Equals("DOCTYPE", StringComparison.OrdinalIgnoreCase))
             {
-                char[] consumed = new char[7];
-                consumed[0] = ch;
-                for (int i = 1; i < consumed.Length; i++)
-                {
-                    ch = this.ConsumeNextInputCharacter();
-                    consumed[i] = ch;
-                    if (!ch.IsAsciiLetter())
-                        break;
-                }
-
-                string doctype = new string(consumed);
-                if (doctype.Equals("DOCTYPE", StringComparison.OrdinalIgnoreCase))
-                {
-                    this.SwitchTo(StateEnum.DocType);
-                    return;
-                }
-
-                // Return the characters and fallback to the code below ...
-                this.ReconsumeInputCharacters(doctype);
+                this.SwitchTo(StateEnum.DocType);
             }
-            else if (ch == '[')
+            else if (this.HasAdjustedNonHtmlElementCurrentNode() && tmp.Equals("[CDATA[", StringComparison.Ordinal))
             {
-                // Handle: [CDATA[
-
-                // .. if there is an adjusted current node and it is ** NOT ** an element in the HTML namespace and ...
-                // TO-DO ... we currently do not support other elements EXCEPT ones in the HTML namespace,
-                // THEREFORE the current node will always be in the HTML namespace and this will always be FALSE!
-
-                // Return the character and fallback to the code below ...
-                this.ReconsumeInputCharacter();
+                this.SwitchTo(StateEnum.CDataSection);
             }
             else
             {
-                // Return the character and fallback to the code below ...
-                this.ReconsumeInputCharacter();
-            }
+                // Return the characters
+                this.ReconsumeInputCharacters(tmp);
 
-            this.ParseError(ParseErrors.InvalidMarkup);
-            this.SwitchTo(StateEnum.BogusComment);
-            this.NewComment();
+                this.ParseError(ParseErrors.InvalidMarkup);
+                this.SwitchTo(StateEnum.BogusComment);
+                this.NewComment();
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3303,9 +3610,9 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Parse error. Switch to the before DOCTYPE name state. Reconsume the character.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
-                this.SwitchTo(StateEnum.DocTypeName);
+                this.SwitchTo(StateEnum.BeforeDocTypeName);
             }
             else if (ch == Characters.EOF)
             {
@@ -3319,7 +3626,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else
             {
                 this.ParseError(ParseErrors.InvalidDocType);
-                this.SwitchTo(StateEnum.DocTypeName);
+                this.SwitchTo(StateEnum.BeforeDocTypeName);
                 this.ReconsumeInputCharacter();
             }
         }
@@ -3352,7 +3659,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     DOCTYPE name state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 // Ignore
             }
@@ -3377,6 +3684,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.NewDocType();
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.Data);
+                this.EmitDocType();
             }
             else if (ch == Characters.EOF)
             {
@@ -3421,7 +3729,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Append the current input character to the current DOCTYPE token's name.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 this.SwitchTo(StateEnum.AfterDocTypeName);
             }
@@ -3482,7 +3790,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     bogus DOCTYPE state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 // Ignore
             }
@@ -3501,14 +3809,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                if ((this.DocTypeName.Length == 6) && this.DocTypeName.ToString().Equals("PUBLIC", StringComparison.OrdinalIgnoreCase))
+                string tmp = this.ConsumeNextInputCharacters(5, false);
+                if (((ch == 'P') || (ch == 'p')) && tmp.Equals("UBLIC", StringComparison.OrdinalIgnoreCase))
                 {
-                    this.DocTypeName.Clear();
                     this.SwitchTo(StateEnum.AfterDocTypePublicKeyword);
                 }
-                else if ((this.DocTypeName.Length == 6) && this.DocTypeName.ToString().Equals("SYSTEM", StringComparison.OrdinalIgnoreCase))
+                else if (((ch == 'S') || (ch == 's')) && tmp.Equals("YSTEM", StringComparison.OrdinalIgnoreCase))
                 {
-                    this.DocTypeName.Clear();
                     this.SwitchTo(StateEnum.AfterDocTypeSystemKeyword);
                 }
                 else
@@ -3516,6 +3823,9 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.ParseError(ParseErrors.InvalidDocType);
                     this.DocTypeForceQuirks = true;
                     this.SwitchTo(StateEnum.BogusDocType);
+
+                    // Return the 5 characters we sampled, but consume still consume the one character at the start.
+                    this.ReconsumeInputCharacters(tmp);
                 }
             }
         }
@@ -3547,7 +3857,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 this.SwitchTo(StateEnum.BeforeDocTypePublicIdentifier);
             }
@@ -3613,7 +3923,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 // Ignore
             }
@@ -3778,7 +4088,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 this.SwitchTo(StateEnum.BetweenDocTypePublicAndSystemIdentifiers);
             }
@@ -3841,12 +4151,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 // Ignore
             }
             else if (ch == '>')
             {
+                this.SwitchTo(StateEnum.Data);
                 this.EmitDocType();
             }
             else if (ch == '\u0022')
@@ -3902,7 +4213,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 this.SwitchTo(StateEnum.BeforeDocTypeSystemIdentifier);
             }
@@ -3968,7 +4279,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 // Ignore
             }
@@ -4034,7 +4345,6 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 this.ParseError(ParseErrors.InvalidDocType);
                 this.DocTypeSystemIdentifier.Append(Characters.ReplacementCharacter);
-                this.SwitchTo(StateEnum.DocTypeSystemIdentifierSingleQuoted);
             }
             else if (ch == '>')
             {
@@ -4086,7 +4396,6 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 this.ParseError(ParseErrors.InvalidDocType);
                 this.DocTypeSystemIdentifier.Append(Characters.ReplacementCharacter);
-                this.SwitchTo(StateEnum.DocTypeSystemIdentifierSingleQuoted);
             }
             else if (ch == '>')
             {
@@ -4130,7 +4439,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     force-quirks flag to on.)
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsWhiteSpaceCharacter())
+            if (ch.IsSpaceCharacter())
             {
                 // Ignore
             }
@@ -4201,16 +4510,35 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
             If the end of the file was reached, reconsume the EOF character.
             */
-            throw new NotImplementedException();
-        }
+            this.SwitchTo(StateEnum.Data);
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void HandleStateTokenizingCharacterReferences()
-        {
-            /*
-            TO-DO
-            */
-            throw new NotImplementedException();
+            while (true)
+            {
+                char ch = this.ConsumeNextInputCharacter();
+
+                if (ch == ']')
+                {
+                    ch = this.ConsumeNextInputCharacter();
+                    if (ch == ']')
+                    {
+                        ch = this.ConsumeNextInputCharacter();
+                        if (ch == '>')
+                            return;
+
+                        this.EmitCharacter(']');
+                    }
+
+                    this.EmitCharacter(']');
+                }
+
+                if (ch == Characters.EOF)
+                {
+                    this.ReconsumeInputCharacter();
+                    return;
+                }
+
+                this.EmitCharacter(ch);
+            }
         }
 
         #region Character References
@@ -4234,7 +4562,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // U+0026 AMPERSAND
             // EOF
             // The additional allowed character, if there is one
-            if (ch.IsWhiteSpaceCharacter() || (ch == '<') || (ch == '&') || (ch == Characters.EOF) || (ch == additionalCharacter))
+            if (ch.IsSpaceCharacter() || (ch == '<') || (ch == '&') || (ch == Characters.EOF) || (ch == additionalCharacter))
             {
                 // Not a character reference. No characters are consumed, and nothing is returned. (This is not an error, either.)
                 this.ReconsumeInputCharacter();

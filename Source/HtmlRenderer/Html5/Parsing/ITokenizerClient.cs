@@ -12,6 +12,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         void ReceiveCharacter(char character);
 
+        void ReceiveEndOfFile();
+
         void ReceiveDocType(string name, string publicIdentifier, string systemIdentifier, bool forceQuirks);
+
+        void ReceiveComment(Func<string> data);
+
+        void ReceiveStartTag(string tagName, bool isSelfClosing, Attribute[] attributes);
+
+        void ReceiveEndTag(string tagName, bool isSelfClosing, Attribute[] attributes);
     }
 }

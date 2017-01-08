@@ -24,6 +24,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
     {
         public App()
         {
+            Html5.Parsing.XXTest.Test1();
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
         }
 
