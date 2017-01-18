@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 {
-    internal struct Token
+    internal interface IDomParserClient
     {
-        public readonly TokenType Type;
-
-        public readonly char Character;
+        void ParseError(ParseErrors error);
     }
 }

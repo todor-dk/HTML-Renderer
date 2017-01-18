@@ -24,6 +24,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         PrematureEndOfFile,
 
-        InvalidMarkup
+        InvalidMarkup,
+
+        UnexpectedTag,
+
+        UnespectedStartTag,
+
+        UnespectedEndTag,
     }
 }

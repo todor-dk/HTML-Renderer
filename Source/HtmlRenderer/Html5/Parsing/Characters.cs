@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,6 +30,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         /// <summary>
         /// One of: "tab" (U+0009), "LF" (U+000A), "FF" (U+000C), U+0020 SPACE.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsSpaceCharacter(this char ch)
         {
             // The space characters, for the purposes of this specification, are:
@@ -36,6 +38,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             return (ch == Space) || (ch == Tab) || (ch == Lf) || (ch == Ff) || (ch == Cr);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsWhiteSpaceCharacter(this char ch)
         {
             // The White_Space characters are those that have the Unicode property "White_Space"
@@ -67,6 +70,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             '\u2028', '\u2029', '\u202F', '\u205F', '\u3000'
         };
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsControlCharacter(this char ch)
         {
             // The control characters are those whose Unicode "General_Category" property has the value
@@ -93,11 +97,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             '\u009F'
         };
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsUppercaseAsciiLetter(this char ch)
         {
             return ('A' <= ch) && (ch <= 'Z');
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static char ToLowercaseAsciiLetter(this char ch)
         {
             if ((ch < 'A') || ('Z' < ch))
@@ -107,27 +113,32 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             return (char)(ch + '\u0020');
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLowercaseAsciiLetter(this char ch)
         {
             return ('a' <= ch) && (ch <= 'z');
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAsciiLetter(this char ch)
         {
             return (('a' <= ch) && (ch <= 'z')) || (('A' <= ch) && (ch <= 'Z'));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAsciiDigit(this char ch)
         {
             return ('0' <= ch) && (ch <= '9');
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAlphaNumericAsciiCharacter(this char ch)
         {
             // The alphanumeric ASCII characters are those that are either uppercase ASCII letters, lowercase ASCII letters, or ASCII digits.
             return IsLowercaseAsciiLetter(ch) || IsUppercaseAsciiLetter(ch) || IsAsciiDigit(ch);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAsciiHexDigit(this char ch)
         {
             // The ASCII hex digits are the characters in the ranges ASCII digits,
@@ -136,6 +147,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             return IsAsciiDigit(ch) || (('A' <= ch) && (ch <= 'F')) || (('a' <= ch) && (ch <= 'f'));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsUppercaseAsciiHexDigit(this char ch)
         {
             // The uppercase ASCII hex digits are the characters in the ranges ASCII digits
@@ -143,6 +155,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             return IsAsciiDigit(ch) || (('A' <= ch) && (ch <= 'F'));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsLowercaseAsciiHexDigit(this char ch)
         {
             // The lowercase ASCII hex digits are the characters in the ranges ASCII digits
@@ -150,16 +163,19 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             return IsAsciiDigit(ch) || (('a' <= ch) && (ch <= 'f'));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsInRange(this char ch, char start, char end)
         {
             return (start <= ch) && (ch <= end);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsInRange(this int ch, int start, int end)
         {
             return (start <= ch) && (ch <= end);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsOneOf(this char ch, params char[] characters)
         {
             if (characters == null)
@@ -174,6 +190,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsOneOf(this int ch, params int[] characters)
         {
             if (characters == null)
@@ -188,6 +205,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsOneOf(this char ch, string characters)
         {
             if (characters == null)
