@@ -420,16 +420,63 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             CDataSection = 68
         }
 
-        private readonly ITokenizerClient Client;
-
-        public Tokenizer(HtmlStream stream, ITokenizerClient client)
+        public Tokenizer(HtmlStream stream)
         {
             Contract.RequiresNotNull(stream, nameof(stream));
-            Contract.RequiresNotNull(client, nameof(client));
 
             this.HtmlStream = stream;
-            this.Client = client;
         }
+
+        #region Public Interface
+
+        public Token LastToken
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return this.CurrentToken;
+            }
+        }
+
+        private Token CurrentToken;
+
+        public Token GetNextToken()
+        {
+            // When a start tag token is emitted with its self-closing flag set,
+            // if the flag is not acknowledged when it is processed by the tree
+            // construction stage, that is a parse error.
+            if ((this.LastToken.Type == TokenType.StartTag) && this.LastToken.TagIsSelfClosing && !this.SelfClosingTagAcknowledged)
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
+
+            this.SelfClosingTagAcknowledged = false;
+            this.CurrentToken.ResetToken();
+
+            // Continue tokenizing until a token has been emitted.
+            while (this.CurrentToken.Type == TokenType.Unknown)
+            {
+                this.Tokenize();
+            }
+
+            return this.CurrentToken;
+        }
+
+        /// <summary>
+        /// Used by the tree parsing stage to inform the tokinzer that a
+        /// self-closing tag has been acknowledged.
+        /// </summary>
+        public void AcknowledgeSelfClosingTag()
+        {
+            this.SelfClosingTagAcknowledged = true;
+        }
+
+        private bool SelfClosingTagAcknowledged = false;
+
+        /// <summary>
+        /// Raised when a parse error occurs during tokanization of the HTML stream.
+        /// </summary>
+        public event EventHandler<ParseErrorEventArgs> ParseError;
+
+        #endregion
 
         #region Behavior and Logic
 
@@ -438,219 +485,217 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         // The state machine must start in the data state.
         private StateEnum State = StateEnum.Data;
 
-        public void Tokenize()
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Tokenize()
         {
-            while (!this.EndOfFileReached)
+            switch (this.State)
             {
-                switch (this.State)
-                {
-                    case StateEnum.Data:
-                        this.HandleStateData();
-                        break;
-                    case StateEnum.CharacterReferenceInData:
-                        this.HandleStateCharacterReferenceInData();
-                        break;
-                    case StateEnum.RcData:
-                        this.HandleStateRcData();
-                        break;
-                    case StateEnum.CharacterReferenceInRcData:
-                        this.HandleStateCharacterReferenceInRcData();
-                        break;
-                    case StateEnum.RawText:
-                        this.HandleStateRawText();
-                        break;
-                    case StateEnum.ScriptData:
-                        this.HandleStateScriptData();
-                        break;
-                    case StateEnum.PlainText:
-                        this.HandleStatePlainText();
-                        break;
-                    case StateEnum.TagOpen:
-                        this.HandleStateTagOpen();
-                        break;
-                    case StateEnum.EndTagOpen:
-                        this.HandleStateEndTagOpen();
-                        break;
-                    case StateEnum.TagName:
-                        this.HandleStateTagName();
-                        break;
-                    case StateEnum.RcDataLessThanSign:
-                        this.HandleStateRcDataLessThanSign();
-                        break;
-                    case StateEnum.RcDataEndTagOpen:
-                        this.HandleStateRcDataEndTagOpen();
-                        break;
-                    case StateEnum.RcDataEndTagName:
-                        this.HandleStateRcDataEndTagName();
-                        break;
-                    case StateEnum.RawTextLessThanSign:
-                        this.HandleStateRawTextLessThanSign();
-                        break;
-                    case StateEnum.RawTextEndTagOpen:
-                        this.HandleStateRawTextEndTagOpen();
-                        break;
-                    case StateEnum.RawTextEndTagName:
-                        this.HandleStateRawTextEndTagName();
-                        break;
-                    case StateEnum.ScriptDataLessThanSign:
-                        this.HandleStateScriptDataLessThanSign();
-                        break;
-                    case StateEnum.ScriptDataEndTagOpen:
-                        this.HandleStateScriptDataEndTagOpen();
-                        break;
-                    case StateEnum.ScriptDataEndTagName:
-                        this.HandleStateScriptDataEndTagName();
-                        break;
-                    case StateEnum.ScriptDataEscapeStart:
-                        this.HandleStateScriptDataEscapeStart();
-                        break;
-                    case StateEnum.ScriptDataEscapeStartDash:
-                        this.HandleStateScriptDataEscapeStartDash();
-                        break;
-                    case StateEnum.ScriptDataEscaped:
-                        this.HandleStateScriptDataEscaped();
-                        break;
-                    case StateEnum.ScriptDataEscapedDash:
-                        this.HandleStateScriptDataEscapedDash();
-                        break;
-                    case StateEnum.ScriptDataEscapedDashDash:
-                        this.HandleStateScriptDataEscapedDashDash();
-                        break;
-                    case StateEnum.ScriptDataEscapedLessThanSign:
-                        this.HandleStateScriptDataEscapedLessThanSign();
-                        break;
-                    case StateEnum.ScriptDataEscapedEndTagOpen:
-                        this.HandleStateScriptDataEscapedEndTagOpen();
-                        break;
-                    case StateEnum.ScriptDataEscapedEndTagName:
-                        this.HandleStateScriptDataEscapedEndTagName();
-                        break;
-                    case StateEnum.ScriptDataDoubleEscapeStart:
-                        this.HandleStateScriptDataDoubleEscapeStart();
-                        break;
-                    case StateEnum.ScriptDataDoubleEscaped:
-                        this.HandleStateScriptDataDoubleEscaped();
-                        break;
-                    case StateEnum.ScriptDataDoubleEscapedDash:
-                        this.HandleStateScriptDataDoubleEscapedDash();
-                        break;
-                    case StateEnum.ScriptDataDoubleEscapedDashDash:
-                        this.HandleStateScriptDataDoubleEscapedDashDash();
-                        break;
-                    case StateEnum.ScriptDataDoubleEscapedLessThanSign:
-                        this.HandleStateScriptDataDoubleEscapedLessThanSign();
-                        break;
-                    case StateEnum.ScriptDataDoubleEscapeEnd:
-                        this.HandleStateScriptDataDoubleEscapeEnd();
-                        break;
-                    case StateEnum.BeforeAttributeName:
-                        this.HandleStateBeforeAttributeName();
-                        break;
-                    case StateEnum.AttributeName:
-                        this.HandleStateAttributeName();
-                        break;
-                    case StateEnum.AfterAttributeName:
-                        this.HandleStateAfterAttributeName();
-                        break;
-                    case StateEnum.BeforeAttributeValue:
-                        this.HandleStateBeforeAttributeValue();
-                        break;
-                    case StateEnum.AttributeValueDoubleQuoted:
-                        this.HandleStateAttributeValueDoubleQuoted();
-                        break;
-                    case StateEnum.AttributeValueSingleQuoted:
-                        this.HandleStateAttributeValueSingleQuoted();
-                        break;
-                    case StateEnum.AttributeValueUnquoted:
-                        this.HandleStateAttributeValueUnquoted();
-                        break;
-                    case StateEnum.CharacterReferenceInAttributeValue:
-                        this.HandleStateCharacterReferenceInAttributeValue();
-                        break;
-                    case StateEnum.AfterAttributeValueQuoted:
-                        this.HandleStateAfterAttributeValueQuoted();
-                        break;
-                    case StateEnum.SelfClosingStartTag:
-                        this.HandleStateSelfClosingStartTag();
-                        break;
-                    case StateEnum.BogusComment:
-                        this.HandleStateBogusComment();
-                        break;
-                    case StateEnum.MarkupDeclarationOpen:
-                        this.HandleStateMarkupDeclarationOpen();
-                        break;
-                    case StateEnum.CommentStart:
-                        this.HandleStateCommentStart();
-                        break;
-                    case StateEnum.CommentStartDash:
-                        this.HandleStateCommentStartDash();
-                        break;
-                    case StateEnum.Comment:
-                        this.HandleStateComment();
-                        break;
-                    case StateEnum.CommentEndDash:
-                        this.HandleStateCommentEndDash();
-                        break;
-                    case StateEnum.CommentEnd:
-                        this.HandleStateCommentEnd();
-                        break;
-                    case StateEnum.CommentEndBang:
-                        this.HandleStateCommentEndBang();
-                        break;
-                    case StateEnum.DocType:
-                        this.HandleStateDocType();
-                        break;
-                    case StateEnum.BeforeDocTypeName:
-                        this.HandleStateBeforeDocTypeName();
-                        break;
-                    case StateEnum.DocTypeName:
-                        this.HandleStateDocTypeName();
-                        break;
-                    case StateEnum.AfterDocTypeName:
-                        this.HandleStateAfterDocTypeName();
-                        break;
-                    case StateEnum.AfterDocTypePublicKeyword:
-                        this.HandleStateAfterDocTypePublicKeyword();
-                        break;
-                    case StateEnum.BeforeDocTypePublicIdentifier:
-                        this.HandleStateBeforeDocTypePublicIdentifier();
-                        break;
-                    case StateEnum.DocTypePublicIdentifierDoubleQuoted:
-                        this.HandleStateDocTypePublicIdentifierDoubleQuoted();
-                        break;
-                    case StateEnum.DocTypePublicIdentifierSingleQuoted:
-                        this.HandleStateDocTypePublicIdentifierSingleQuoted();
-                        break;
-                    case StateEnum.AfterDocTypePublicIdentifier:
-                        this.HandleStateAfterDocTypePublicIdentifier();
-                        break;
-                    case StateEnum.BetweenDocTypePublicAndSystemIdentifiers:
-                        this.HandleStateBetweenDocTypePublicAndSystemIdentifiers();
-                        break;
-                    case StateEnum.AfterDocTypeSystemKeyword:
-                        this.HandleStateAfterDocTypeSystemKeyword();
-                        break;
-                    case StateEnum.BeforeDocTypeSystemIdentifier:
-                        this.HandleStateBeforeDocTypeSystemIdentifier();
-                        break;
-                    case StateEnum.DocTypeSystemIdentifierDoubleQuoted:
-                        this.HandleStateDocTypeSystemIdentifierDoubleQuoted();
-                        break;
-                    case StateEnum.DocTypeSystemIdentifierSingleQuoted:
-                        this.HandleStateDocTypeSystemIdentifierSingleQuoted();
-                        break;
-                    case StateEnum.AfterDocTypeSystemIdentifier:
-                        this.HandleStateAfterDocTypeSystemIdentifier();
-                        break;
-                    case StateEnum.BogusDocType:
-                        this.HandleStateBogusDocType();
-                        break;
-                    case StateEnum.CDataSection:
-                        this.HandleStateCDataSection();
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
+                case StateEnum.Data:
+                    this.HandleStateData();
+                    break;
+                case StateEnum.CharacterReferenceInData:
+                    this.HandleStateCharacterReferenceInData();
+                    break;
+                case StateEnum.RcData:
+                    this.HandleStateRcData();
+                    break;
+                case StateEnum.CharacterReferenceInRcData:
+                    this.HandleStateCharacterReferenceInRcData();
+                    break;
+                case StateEnum.RawText:
+                    this.HandleStateRawText();
+                    break;
+                case StateEnum.ScriptData:
+                    this.HandleStateScriptData();
+                    break;
+                case StateEnum.PlainText:
+                    this.HandleStatePlainText();
+                    break;
+                case StateEnum.TagOpen:
+                    this.HandleStateTagOpen();
+                    break;
+                case StateEnum.EndTagOpen:
+                    this.HandleStateEndTagOpen();
+                    break;
+                case StateEnum.TagName:
+                    this.HandleStateTagName();
+                    break;
+                case StateEnum.RcDataLessThanSign:
+                    this.HandleStateRcDataLessThanSign();
+                    break;
+                case StateEnum.RcDataEndTagOpen:
+                    this.HandleStateRcDataEndTagOpen();
+                    break;
+                case StateEnum.RcDataEndTagName:
+                    this.HandleStateRcDataEndTagName();
+                    break;
+                case StateEnum.RawTextLessThanSign:
+                    this.HandleStateRawTextLessThanSign();
+                    break;
+                case StateEnum.RawTextEndTagOpen:
+                    this.HandleStateRawTextEndTagOpen();
+                    break;
+                case StateEnum.RawTextEndTagName:
+                    this.HandleStateRawTextEndTagName();
+                    break;
+                case StateEnum.ScriptDataLessThanSign:
+                    this.HandleStateScriptDataLessThanSign();
+                    break;
+                case StateEnum.ScriptDataEndTagOpen:
+                    this.HandleStateScriptDataEndTagOpen();
+                    break;
+                case StateEnum.ScriptDataEndTagName:
+                    this.HandleStateScriptDataEndTagName();
+                    break;
+                case StateEnum.ScriptDataEscapeStart:
+                    this.HandleStateScriptDataEscapeStart();
+                    break;
+                case StateEnum.ScriptDataEscapeStartDash:
+                    this.HandleStateScriptDataEscapeStartDash();
+                    break;
+                case StateEnum.ScriptDataEscaped:
+                    this.HandleStateScriptDataEscaped();
+                    break;
+                case StateEnum.ScriptDataEscapedDash:
+                    this.HandleStateScriptDataEscapedDash();
+                    break;
+                case StateEnum.ScriptDataEscapedDashDash:
+                    this.HandleStateScriptDataEscapedDashDash();
+                    break;
+                case StateEnum.ScriptDataEscapedLessThanSign:
+                    this.HandleStateScriptDataEscapedLessThanSign();
+                    break;
+                case StateEnum.ScriptDataEscapedEndTagOpen:
+                    this.HandleStateScriptDataEscapedEndTagOpen();
+                    break;
+                case StateEnum.ScriptDataEscapedEndTagName:
+                    this.HandleStateScriptDataEscapedEndTagName();
+                    break;
+                case StateEnum.ScriptDataDoubleEscapeStart:
+                    this.HandleStateScriptDataDoubleEscapeStart();
+                    break;
+                case StateEnum.ScriptDataDoubleEscaped:
+                    this.HandleStateScriptDataDoubleEscaped();
+                    break;
+                case StateEnum.ScriptDataDoubleEscapedDash:
+                    this.HandleStateScriptDataDoubleEscapedDash();
+                    break;
+                case StateEnum.ScriptDataDoubleEscapedDashDash:
+                    this.HandleStateScriptDataDoubleEscapedDashDash();
+                    break;
+                case StateEnum.ScriptDataDoubleEscapedLessThanSign:
+                    this.HandleStateScriptDataDoubleEscapedLessThanSign();
+                    break;
+                case StateEnum.ScriptDataDoubleEscapeEnd:
+                    this.HandleStateScriptDataDoubleEscapeEnd();
+                    break;
+                case StateEnum.BeforeAttributeName:
+                    this.HandleStateBeforeAttributeName();
+                    break;
+                case StateEnum.AttributeName:
+                    this.HandleStateAttributeName();
+                    break;
+                case StateEnum.AfterAttributeName:
+                    this.HandleStateAfterAttributeName();
+                    break;
+                case StateEnum.BeforeAttributeValue:
+                    this.HandleStateBeforeAttributeValue();
+                    break;
+                case StateEnum.AttributeValueDoubleQuoted:
+                    this.HandleStateAttributeValueDoubleQuoted();
+                    break;
+                case StateEnum.AttributeValueSingleQuoted:
+                    this.HandleStateAttributeValueSingleQuoted();
+                    break;
+                case StateEnum.AttributeValueUnquoted:
+                    this.HandleStateAttributeValueUnquoted();
+                    break;
+                case StateEnum.CharacterReferenceInAttributeValue:
+                    this.HandleStateCharacterReferenceInAttributeValue();
+                    break;
+                case StateEnum.AfterAttributeValueQuoted:
+                    this.HandleStateAfterAttributeValueQuoted();
+                    break;
+                case StateEnum.SelfClosingStartTag:
+                    this.HandleStateSelfClosingStartTag();
+                    break;
+                case StateEnum.BogusComment:
+                    this.HandleStateBogusComment();
+                    break;
+                case StateEnum.MarkupDeclarationOpen:
+                    this.HandleStateMarkupDeclarationOpen();
+                    break;
+                case StateEnum.CommentStart:
+                    this.HandleStateCommentStart();
+                    break;
+                case StateEnum.CommentStartDash:
+                    this.HandleStateCommentStartDash();
+                    break;
+                case StateEnum.Comment:
+                    this.HandleStateComment();
+                    break;
+                case StateEnum.CommentEndDash:
+                    this.HandleStateCommentEndDash();
+                    break;
+                case StateEnum.CommentEnd:
+                    this.HandleStateCommentEnd();
+                    break;
+                case StateEnum.CommentEndBang:
+                    this.HandleStateCommentEndBang();
+                    break;
+                case StateEnum.DocType:
+                    this.HandleStateDocType();
+                    break;
+                case StateEnum.BeforeDocTypeName:
+                    this.HandleStateBeforeDocTypeName();
+                    break;
+                case StateEnum.DocTypeName:
+                    this.HandleStateDocTypeName();
+                    break;
+                case StateEnum.AfterDocTypeName:
+                    this.HandleStateAfterDocTypeName();
+                    break;
+                case StateEnum.AfterDocTypePublicKeyword:
+                    this.HandleStateAfterDocTypePublicKeyword();
+                    break;
+                case StateEnum.BeforeDocTypePublicIdentifier:
+                    this.HandleStateBeforeDocTypePublicIdentifier();
+                    break;
+                case StateEnum.DocTypePublicIdentifierDoubleQuoted:
+                    this.HandleStateDocTypePublicIdentifierDoubleQuoted();
+                    break;
+                case StateEnum.DocTypePublicIdentifierSingleQuoted:
+                    this.HandleStateDocTypePublicIdentifierSingleQuoted();
+                    break;
+                case StateEnum.AfterDocTypePublicIdentifier:
+                    this.HandleStateAfterDocTypePublicIdentifier();
+                    break;
+                case StateEnum.BetweenDocTypePublicAndSystemIdentifiers:
+                    this.HandleStateBetweenDocTypePublicAndSystemIdentifiers();
+                    break;
+                case StateEnum.AfterDocTypeSystemKeyword:
+                    this.HandleStateAfterDocTypeSystemKeyword();
+                    break;
+                case StateEnum.BeforeDocTypeSystemIdentifier:
+                    this.HandleStateBeforeDocTypeSystemIdentifier();
+                    break;
+                case StateEnum.DocTypeSystemIdentifierDoubleQuoted:
+                    this.HandleStateDocTypeSystemIdentifierDoubleQuoted();
+                    break;
+                case StateEnum.DocTypeSystemIdentifierSingleQuoted:
+                    this.HandleStateDocTypeSystemIdentifierSingleQuoted();
+                    break;
+                case StateEnum.AfterDocTypeSystemIdentifier:
+                    this.HandleStateAfterDocTypeSystemIdentifier();
+                    break;
+                case StateEnum.BogusDocType:
+                    this.HandleStateBogusDocType();
+                    break;
+                case StateEnum.CDataSection:
+                    this.HandleStateCDataSection();
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
@@ -817,12 +862,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             this.State = state;
         }
 
-        private void ParseError(ParseErrors error)
+        private void InformParseError(ParseError error)
         {
-            this.Client.ParseError(error);
+            this.ParseError?.Invoke(this, new Parsing.ParseErrorEventArgs(error));
         }
-
-        private bool EndOfFileReached;
 
         #endregion
 
@@ -923,13 +966,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EmitCharacter(char ch)
         {
-            this.Client.ReceiveCharacter(ch);
+            this.CurrentToken.SetCharacter(ch);
         }
 
         private void EmitEndOfFile()
         {
-            this.EndOfFileReached = true;
-            this.Client.ReceiveEndOfFile();
+            this.CurrentToken.SetEndOfFile();
         }
 
         #region DocType related logic
@@ -961,7 +1003,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         private void EmitDocType()
         {
-            this.Client.ReceiveDocType(
+            this.CurrentToken.SetDocType(
                 this.DocTypeName?.ToString(),
                 this.DocTypePublicIdentifier?.ToString(),
                 this.DocTypeSystemIdentifier?.ToString(),
@@ -986,7 +1028,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         {
             // NB: We pass the ToString as function, because it is not sure they need
             // the string data and that way we save memory garbage.
-            this.Client.ReceiveComment(this.CommentData.ToString);
+            this.CurrentToken.SetComment(this.CommentData.ToString);
         }
 
         #endregion
@@ -1023,24 +1065,25 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         private void EmitTag()
         {
             this.AddCurrentAttributeToList();
-            Attribute[] attributes = (this.CurrentTagAttributes.Count == 0) ? Array.Empty<Attribute>() : this.CurrentTagAttributes.ToArray();
+            Attribute[] attributes = (this.CurrentTagAttributes.Count == 0) ? Attribute.None : this.CurrentTagAttributes.ToArray();
 
             if (this.IsCurrentTagEndTag)
             {
                 // When an end tag token is emitted with attributes, that is a parse error.
                 if (attributes.Length != 0)
-                    this.ParseError(ParseErrors.InvalidAttribute);
+                    this.InformParseError(Parsing.ParseError.InvalidAttribute);
 
-                // When an end tag token is emitted with its self - closing flag set, that is a parse error.
+                // When an end tag token is emitted with its self-closing flag set, that is a parse error.
                 if (this.TagIsSelfClosing)
-                    this.ParseError(ParseErrors.InvalidTag);
+                    this.InformParseError(Parsing.ParseError.InvalidTag);
 
-                this.Client.ReceiveEndTag(this.TagName.ToString(), this.TagIsSelfClosing, attributes);
+                this.CurrentToken.SetEndTag(this.TagName.ToString(), this.TagIsSelfClosing, attributes);
             }
             else
             {
                 this.LastStartTagName = this.TagName.ToString();
-                this.Client.ReceiveStartTag(this.LastStartTagName, this.TagIsSelfClosing, attributes);
+                bool isSelfClosing = this.TagIsSelfClosing;
+                this.CurrentToken.SetStartTag(this.LastStartTagName, isSelfClosing, attributes);
             }
         }
 
@@ -1146,7 +1189,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             return false;
         }
 
-        internal readonly List<Parsing.Attribute> CurrentTagAttributes = new List<Parsing.Attribute>();
+        private readonly List<Parsing.Attribute> CurrentTagAttributes = new List<Parsing.Attribute>();
 
         #endregion
 
@@ -1182,7 +1225,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.NullCharacter);
+                this.InformParseError(Parsing.ParseError.NullCharacter);
                 this.EmitCharacter(ch);
             }
             else if (ch == Characters.EOF)
@@ -1251,7 +1294,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.NullCharacter);
+                this.InformParseError(Parsing.ParseError.NullCharacter);
                 this.EmitCharacter(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
@@ -1315,7 +1358,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.NullCharacter);
+                this.InformParseError(Parsing.ParseError.NullCharacter);
                 this.EmitCharacter(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
@@ -1350,7 +1393,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.NullCharacter);
+                this.InformParseError(Parsing.ParseError.NullCharacter);
                 this.EmitCharacter(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
@@ -1379,7 +1422,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             char ch = this.ConsumeNextInputCharacter();
             if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.NullCharacter);
+                this.InformParseError(Parsing.ParseError.NullCharacter);
                 this.EmitCharacter(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
@@ -1440,12 +1483,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '?')
             {
-                this.ParseError(ParseErrors.InvalidTag);
+                this.InformParseError(Parsing.ParseError.InvalidTag);
                 this.SwitchTo(StateEnum.BogusComment);
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidTag);
+                this.InformParseError(Parsing.ParseError.InvalidTag);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitCharacter('<');
                 this.ReconsumeInputCharacter();
@@ -1490,12 +1533,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidTag);
+                this.InformParseError(Parsing.ParseError.InvalidTag);
                 this.SwitchTo(StateEnum.Data);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidTag);
+                this.InformParseError(Parsing.ParseError.InvalidTag);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitCharacter('<');
                 this.EmitCharacter('\u002F');
@@ -1503,7 +1546,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidTag);
+                this.InformParseError(Parsing.ParseError.InvalidTag);
                 this.SwitchTo(StateEnum.BogusComment);
             }
         }
@@ -1553,12 +1596,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.NullCharacter);
+                this.InformParseError(Parsing.ParseError.NullCharacter);
                 this.TagName.Append(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.PrematureEndOfFile);
+                this.InformParseError(Parsing.ParseError.PrematureEndOfFile);
                 this.ReconsumeInputCharacter();
             }
             else
@@ -2060,13 +2103,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.EmitCharacter(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
                 this.SwitchTo(StateEnum.ScriptData);
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.ReconsumeInputCharacter();
             }
             else
@@ -2105,13 +2148,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.SwitchTo(StateEnum.ScriptDataEscaped);
                 this.EmitCharacter(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
@@ -2158,13 +2201,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.SwitchTo(StateEnum.ScriptDataEscaped);
                 this.EmitCharacter(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitCharacter(ch);
             }
@@ -2417,12 +2460,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.EmitCharacter(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
@@ -2464,13 +2507,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.SwitchTo(StateEnum.ScriptDataDoubleEscaped);
                 this.EmitCharacter(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
@@ -2519,13 +2562,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.SwitchTo(StateEnum.ScriptDataDoubleEscaped);
                 this.EmitCharacter(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidScript);
+                this.InformParseError(Parsing.ParseError.InvalidScript);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
@@ -2675,7 +2718,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.NewAttribute();
                 this.AttributeName.Clear();
                 this.AttributeName.Append(Characters.ReplacementCharacter);
@@ -2684,14 +2727,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
             else
             {
                 if ((ch == '\u0022') || (ch == '\u0027') || (ch == '<') || (ch == '='))
-                    this.ParseError(ParseErrors.InvalidAttribute);
+                    this.InformParseError(Parsing.ParseError.InvalidAttribute);
 
                 this.NewAttribute();
                 this.AttributeName.Clear();
@@ -2766,19 +2809,19 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.AttributeName.Append(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
             else
             {
                 if ((ch == '\u0027') || (ch == '<'))
-                    this.ParseError(ParseErrors.InvalidAttribute);
+                    this.InformParseError(Parsing.ParseError.InvalidAttribute);
 
                 this.AttributeName.Append(ch);
             }
@@ -2847,7 +2890,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.NewAttribute();
                 this.AttributeName.Clear();
                 this.AttributeName.Append(Characters.ReplacementCharacter);
@@ -2856,14 +2899,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
             else
             {
                 if ((ch == '\u0022') || (ch == '\u0027') || (ch == '<'))
-                    this.ParseError(ParseErrors.InvalidAttribute);
+                    this.InformParseError(Parsing.ParseError.InvalidAttribute);
 
                 this.NewAttribute();
                 this.AttributeName.Clear();
@@ -2925,26 +2968,26 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.AttributeValue.Append(Characters.ReplacementCharacter);
                 this.SwitchTo(StateEnum.AttributeValueUnquoted);
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitTag();
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
             else
             {
                 if ((ch == '<') || (ch == '=') || (ch == '\u0060'))
-                    this.ParseError(ParseErrors.InvalidAttribute);
+                    this.InformParseError(Parsing.ParseError.InvalidAttribute);
 
                 this.AttributeValue.Append(ch);
                 this.SwitchTo(StateEnum.AttributeValueUnquoted);
@@ -2982,12 +3025,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.AttributeValue.Append(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
@@ -3028,12 +3071,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.AttributeValue.Append(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
@@ -3090,19 +3133,19 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.AttributeValue.Append(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
             else
             {
                 if ((ch == '\u0022') || (ch == '\u0027') || (ch == '<') || (ch == '=') || (ch == '\u0060'))
-                    this.ParseError(ParseErrors.InvalidAttribute);
+                    this.InformParseError(Parsing.ParseError.InvalidAttribute);
 
                 this.AttributeValue.Append(ch);
             }
@@ -3163,13 +3206,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidAttribute);
+                this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.SwitchTo(StateEnum.BeforeAttributeName);
                 this.ReconsumeInputCharacter();
             }
@@ -3200,13 +3243,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidTag);
+                this.InformParseError(Parsing.ParseError.InvalidTag);
                 this.SwitchTo(StateEnum.Data);
                 this.ReconsumeInputCharacter();
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidTag);
+                this.InformParseError(Parsing.ParseError.InvalidTag);
                 this.SwitchTo(StateEnum.BeforeAttributeName);
                 this.ReconsumeInputCharacter();
             }
@@ -3286,7 +3329,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // Return the characters
                 this.ReconsumeInputCharacters(tmp);
 
-                this.ParseError(ParseErrors.InvalidMarkup);
+                this.InformParseError(Parsing.ParseError.InvalidMarkup);
                 this.SwitchTo(StateEnum.BogusComment);
                 this.NewComment();
             }
@@ -3317,19 +3360,19 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.CommentData.Append(Characters.ReplacementCharacter);
                 this.SwitchTo(StateEnum.Comment);
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
                 this.ReconsumeInputCharacter();
@@ -3367,20 +3410,20 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.CommentData.Append('-');
                 this.CommentData.Append(Characters.ReplacementCharacter);
                 this.SwitchTo(StateEnum.Comment);
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
                 this.ReconsumeInputCharacter();
@@ -3415,12 +3458,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.CommentData.Append(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
                 this.ReconsumeInputCharacter();
@@ -3455,14 +3498,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.CommentData.Append('-');
                 this.CommentData.Append(Characters.ReplacementCharacter);
                 this.SwitchTo(StateEnum.Comment);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
                 this.ReconsumeInputCharacter();
@@ -3504,7 +3547,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.CommentData.Append('-');
                 this.CommentData.Append('-');
                 this.CommentData.Append(Characters.ReplacementCharacter);
@@ -3512,24 +3555,24 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '!')
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.SwitchTo(StateEnum.CommentEndBang);
             }
             else if (ch == '-')
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.CommentData.Append('-');
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
                 this.ReconsumeInputCharacter();
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.CommentData.Append('-');
                 this.CommentData.Append('-');
                 this.CommentData.Append(ch);
@@ -3570,14 +3613,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.CommentData.Append("--!");
                 this.CommentData.Append(Characters.ReplacementCharacter);
                 this.SwitchTo(StateEnum.Comment);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidComment);
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
                 this.ReconsumeInputCharacter();
@@ -3616,7 +3659,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.NewDocType();
                 this.DocTypeForceQuirks = true;
@@ -3625,7 +3668,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.BeforeDocTypeName);
                 this.ReconsumeInputCharacter();
             }
@@ -3672,7 +3715,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.NewDocType();
                 this.DocTypeName = new StringBuilder();
                 this.DocTypeName.Append(Characters.ReplacementCharacter);
@@ -3680,7 +3723,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.NewDocType();
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.Data);
@@ -3688,7 +3731,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.NewDocType();
                 this.DocTypeForceQuirks = true;
@@ -3744,12 +3787,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeName.Append(Characters.ReplacementCharacter);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -3801,7 +3844,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -3820,7 +3863,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 }
                 else
                 {
-                    this.ParseError(ParseErrors.InvalidDocType);
+                    this.InformParseError(Parsing.ParseError.InvalidDocType);
                     this.DocTypeForceQuirks = true;
                     this.SwitchTo(StateEnum.BogusDocType);
 
@@ -3863,26 +3906,26 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '\u0022')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypePublicIdentifier = new StringBuilder();
                 this.SwitchTo(StateEnum.DocTypePublicIdentifierDoubleQuoted);
             }
             else if (ch == '\u0027')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypePublicIdentifier = new StringBuilder();
                 this.SwitchTo(StateEnum.DocTypePublicIdentifierSingleQuoted);
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.Data);
                 this.EmitDocType();
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -3890,7 +3933,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.BogusDocType);
             }
@@ -3939,14 +3982,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.Data);
                 this.EmitDocType();
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -3954,7 +3997,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.BogusDocType);
             }
@@ -3987,19 +4030,19 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypePublicIdentifier.Append(Characters.ReplacementCharacter);
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.Data);
                 this.EmitDocType();
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -4038,19 +4081,19 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypePublicIdentifier.Append(Characters.ReplacementCharacter);
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.Data);
                 this.EmitDocType();
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -4099,19 +4142,19 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '\u0022')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeSystemIdentifier = new StringBuilder();
                 this.SwitchTo(StateEnum.DocTypeSystemIdentifierDoubleQuoted);
             }
             else if (ch == '\u0027')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeSystemIdentifier = new StringBuilder();
                 this.SwitchTo(StateEnum.DocTypeSystemIdentifierSingleQuoted);
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -4119,7 +4162,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.BogusDocType);
             }
@@ -4172,7 +4215,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -4180,7 +4223,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.BogusDocType);
             }
@@ -4219,26 +4262,26 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '\u0022')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeSystemIdentifier = new StringBuilder();
                 this.SwitchTo(StateEnum.DocTypeSystemIdentifierDoubleQuoted);
             }
             else if (ch == '\u0027')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeSystemIdentifier = new StringBuilder();
                 this.SwitchTo(StateEnum.DocTypeSystemIdentifierSingleQuoted);
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.Data);
                 this.EmitDocType();
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -4246,7 +4289,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.BogusDocType);
             }
@@ -4295,14 +4338,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.Data);
                 this.EmitDocType();
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -4310,7 +4353,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.BogusDocType);
             }
@@ -4343,19 +4386,19 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeSystemIdentifier.Append(Characters.ReplacementCharacter);
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.Data);
                 this.EmitDocType();
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -4394,19 +4437,19 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.Null)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeSystemIdentifier.Append(Characters.ReplacementCharacter);
             }
             else if (ch == '>')
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.DocTypeForceQuirks = true;
                 this.SwitchTo(StateEnum.Data);
                 this.EmitDocType();
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -4450,7 +4493,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.EOF)
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
@@ -4458,7 +4501,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.ParseError(ParseErrors.InvalidDocType);
+                this.InformParseError(Parsing.ParseError.InvalidDocType);
                 this.SwitchTo(StateEnum.BogusDocType);
             }
         }
@@ -4621,7 +4664,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 {
                     consumedCharacters.Append(ch); // Reconsume last char.
                     this.ReconsumeInputCharacters(consumedCharacters.ToString());
-                    this.ParseError(ParseErrors.InvalidCharacterReference);
+                    this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
                     return null;
                 }
 
@@ -4633,7 +4676,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 else
                 {
                     // If it isn't, there is a parse error.
-                    this.ParseError(ParseErrors.InvalidCharacterReference);
+                    this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
                 }
 
                 // If one or more characters match the range, then take them all and interpret the
@@ -4648,7 +4691,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 if (replacementChar != '\u0000')
                 {
                     // The code-point is defined in the table.
-                    this.ParseError(ParseErrors.InvalidCharacterReference);
+                    this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
 
                     // Find the row with that number in the first column, and return a
                     // character token for the Unicode character given in the second column of that row.
@@ -4658,7 +4701,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 {
                     // Otherwise, if the number is in the range 0xD800 to 0xDFFF or is greater than 0x10FFFF,
                     // then this is a parse error. Return a U + FFFD REPLACEMENT CHARACTER character token.
-                    this.ParseError(ParseErrors.InvalidCharacterReference);
+                    this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
                     return Characters.ReplacementCharacter.ToString();
                 }
                 else
@@ -4684,7 +4727,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                             0xEFFFF, 0xFFFFE, 0xFFFFF, 0x10FFFE, 0x10FFFF))
 #pragma warning restore SA1117 // Parameters must be on same line or separate lines
                     {
-                        this.ParseError(ParseErrors.InvalidCharacterReference);
+                        this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
                     }
 
                     return Char.ConvertFromUtf32(codePoint);
@@ -4726,7 +4769,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     // sequence of one or more alphanumeric ASCII characters followed by a U + 003B SEMICOLON character(;),
                     // then this is a parse error.
                     if ((characterName.Length >= 2) && characterName.ToString().Substring(0, characterName.Length - 1).All(c => c.IsAsciiHexDigit()) && (characterName.ToString()[characterName.Length - 1] == ';'))
-                        this.ParseError(ParseErrors.InvalidCharacterReference);
+                        this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
 
                     return null;
                 }
@@ -4752,7 +4795,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                             // However, if this next character is in fact a "=" (U + 003D) character, then this is a parse error,
                             // because some legacy user agents will misinterpret the markup in those cases.
                             if (ch == '=')
-                                this.ParseError(ParseErrors.InvalidCharacterReference);
+                                this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
                             this.ReconsumeInputCharacters(consumedCharacters.ToString());
                         }
                     }
@@ -4760,7 +4803,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     // Otherwise, a character reference is parsed. If the last character matched is not a ";"(U + 003B) character,
                     // there is a parse error.
                     if (actualName[actualName.Length - 1] != ';')
-                        this.ParseError(ParseErrors.InvalidCharacterReference);
+                        this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
 
                     // Return one or two character tokens for the character(s) corresponding to the character reference name
                     // (as given by the second column of the named character references table).

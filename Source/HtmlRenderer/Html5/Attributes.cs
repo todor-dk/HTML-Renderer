@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
+namespace TheArtOfDev.HtmlRenderer.Html5
 {
-    internal interface IDomParserClient
+    internal static class Attributes
     {
-        void ParseError(ParseError error);
+        public const string Charset = "charset";
     }
 }

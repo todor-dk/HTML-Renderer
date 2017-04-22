@@ -8,6 +8,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 {
     internal struct Attribute
     {
+        public static readonly Attribute[] None = Array.Empty<Attribute>();
+
         public readonly string Name;
 
         public readonly string Value;
