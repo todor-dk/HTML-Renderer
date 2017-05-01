@@ -23,11 +23,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         {
             Contract.RequiresNotNull(parsingContext, nameof(parsingContext));
 
+            this.ActiveFormattingElements = new ActiveFormattingElementsList(this);
             this.ParsingContext = parsingContext;
             this.DomFactory = parsingContext.CreateDomFactory(this);
             this.ParsingState = new ParsingState();
             this.Tokenizer = new Tokenizer(html);
-            this.Tokenizer.ParseError += (s, e) => this.ParseError(e.ParseError);
+            this.Tokenizer.ParseError += (s, e) => this.InformParseError(e.ParseError);
         }
 
         #region Tokanization
@@ -37,11 +38,27 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         /// </summary>
         private Token Token;
 
+        private Token NextToken;
+
         public void Parse()
         {
             do
             {
-                this.Token = this.Tokenizer.GetNextToken();
+                // Do we have a stored "next-token"?
+                if (this.NextToken.Type != TokenType.Unknown)
+                {
+                    // Use the stored "next-token"
+                    this.Token = this.NextToken;
+
+                    // ... and mark it as "used"
+                    this.NextToken.ResetToken();
+                }
+                else
+                {
+                    // Get the token from the tokenizer.
+                    this.Token = this.Tokenizer.GetNextToken();
+                }
+
                 this.ProcessToken();
             }
             while (this.Token.Type != TokenType.EndOfFile);
@@ -51,7 +68,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         #region 8.2.3 Parse State
 
-        #region 8.2.3.1. The insertion mode. See: http://www.w3.org/TR/html5/syntax.html#the-insertion-mode
+        #region 8.2.3.1. The insertion mode. See: http://www.w3.org/TR/html51/syntax.html#the-insertion-mode
 
         /// <summary>
         /// The insertion mode is a state variable that controls the primary operation of the tree construction stage.
@@ -83,62 +100,223 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             AfterAfterFrameset
         }
 
+        /// <summary>
+        /// The insertion mode is a state variable that controls the primary operation of the tree construction stage.
+        /// Initially, the insertion mode is "initial". The insertion mode affects how tokens are processed
+        /// and whether CDATA sections are supported.
+        /// </summary>
         private InsertionModeEnum InsertionMode = InsertionModeEnum.Initial;
 
-        private InsertionModeEnum OriginalInsertionMode = InsertionModeEnum.Initial;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Switch(InsertionModeEnum mode)
+        {
+            this.InsertionMode = mode;
+        }
 
-        private InsertionModeEnum ActiveInsertionMode = InsertionModeEnum.Initial;
+        private void ProcessTokenUsing(InsertionModeEnum mode)
+        {
+            // When the algorithm below says that the user agent is to do something "using the rules
+            // for the m insertion mode", where m is one of these modes, the user agent must use the
+            // rules described under the m insertion mode's section, but must leave the insertion mode
+            // unchanged unless the rules in m themselves switch the insertion mode to a new value.
+
+            // NB: We just call the ProcessToken with the given "mode" instead of the current insertion
+            // mode and let it dispatch to the relevant handler for that insertion mode.
+            this.ProcessToken(mode);
+        }
+
+        /// <summary>
+        /// When the insertion mode is switched to "text" or "in table text",the original insertion mode
+        /// is also set. This is the insertion mode to which the tree construction stage will return.
+        /// NB: Setting the orig. mode is done explicitely by the handler logic in each step.
+        /// </summary>
+        private InsertionModeEnum OriginalInsertionMode = InsertionModeEnum.Initial;
 
         /// <summary>
         /// To parse nested template elements, a stack of template insertion modes is used. It is initially empty
         /// </summary>
         /// <remarks>
-        /// The current template insertion mode is the insertion mode that was most recently added to the stack of template insertion modes.
+        /// The current template insertion mode is the insertion mode that was most recently added to the stack
+        /// of template insertion modes. The algorithms in the sections below will push insertion modes onto this
+        /// stack, meaning that the specified insertion mode is to be added to the stack, and pop insertion modes
+        /// from the stack, which means that the most recently added insertion mode must be removed from the stack.
         /// </remarks>
         private readonly Stack<InsertionModeEnum> TemplateInsertionMode = new Stack<InsertionModeEnum>();
 
-        private void Switch(InsertionModeEnum mode)
+        private void ResetInsertionModeAppropriately()
         {
-            if (this.InsertionMode == mode)
-                return;
+            // When the steps below require the user agent to reset the insertion mode appropriately,
+            // it means the user agent must follow these steps:
 
-            // When the insertion mode is switched to "text" or "in table text",the original insertion mode
-            // is also set. This is the insertion mode to which the tree construction stage will return.
-            if ((mode == InsertionModeEnum.Text) || (mode == InsertionModeEnum.InTableText))
-                this.OriginalInsertionMode = this.InsertionMode;
+            // 1. Let last be false.
+            bool last = false;
 
-            // When the algorithm below says that the user agent is to do something "using the rules
-            // for the m insertion mode", where m is one of these modes, the user agent must use the
-            // rules described under the m insertion mode's section, but must leave the insertion mode
-            // unchanged unless the rules in m themselves switch the insertion mode to a new value.
-            this.InsertionMode = mode;
-            this.ActiveInsertionMode = mode;
-        }
+            // 2. Let node be the last node in the stack of open elements.
+            int i = this.OpenElements.Count - 1;
+            Element node = this.OpenElements[i];
 
-        private void Using(InsertionModeEnum mode, Action action)
-        {
-            // When the algorithm below says that the user agent is to do something "using the rules
-            // for the m insertion mode", where m is one of these modes, the user agent must use the
-            // rules described under the m insertion mode's section, but must leave the insertion mode
-            // unchanged unless the rules in m themselves switch the insertion mode to a new value.
-            this.ActiveInsertionMode = mode;
-            try
+            // Loop:
+            do
             {
-                action();
+                // 3. Loop: If node is the first node in the stack of open elements, then set last to true, and, if the parser
+                // was originally created as part of the HTML fragment parsing algorithm (fragment case), set node to the context
+                // element passed to that algorithm.
+                if (i == 0)
+                {
+                    last = true;
+                    if (this.ParsingContext.IsFragmentParsing)
+                        node = this.ParsingContext.FragmentContextElement;
+                }
+
+                // 4. If node is a select element, run these substeps:
+                if (node.Is(Tags.Select))
+                {
+                    // 1. If last is true, jump to the step below labeled done.
+                    if (!last)
+                    {
+                        // 2. Let ancestor be node.
+                        Element ancestor = node;
+
+                        do
+                        {
+                            // 3. Loop: If ancestor is the first node in the stack of open elements, jump to the step below labeled done.
+                            if (ancestor == this.OpenElements[0])
+                                break;
+
+                            // 4. Let ancestor be the node before ancestor in the stack of open elements.
+                            i--;
+                            ancestor = this.OpenElements[i];
+
+                            // 5. If ancestor is a template node, jump to the step below labeled done.
+                            if (ancestor.Is(Tags.Template))
+                                break;
+
+                            // 6. If ancestor is a table node, switch the insertion mode to "in select in table" and abort these steps.
+                            if (ancestor.Is(Tags.Table))
+                            {
+                                this.Switch(InsertionModeEnum.InSelectInTable);
+                                return;
+                            }
+
+                            // 7. Jump back to the step labeled loop.
+                        }
+                        while (true);
+                    }
+
+                    // 8. Done: Switch the insertion mode to "in select" and abort these steps.
+                    this.Switch(InsertionModeEnum.InSelect);
+                    return;
+                }
+
+                // 5. If node is a td or th element and last is false, then switch the insertion mode to "in cell" and abort these steps.
+                if (!last && node.Is(Tags.Td, Tags.Th))
+                {
+                    this.Switch(InsertionModeEnum.InCell);
+                    return;
+                }
+
+                // 6. If node is a tr element, then switch the insertion mode to "in row" and abort these steps.
+                if (node.Is(Tags.Tr))
+                {
+                    this.Switch(InsertionModeEnum.InRow);
+                    return;
+                }
+
+                // 7. If node is a tbody, thead, or tfoot element, then switch the insertion mode to "in table body" and abort these steps.
+                if (node.Is(Tags.TBody, Tags.THead, Tags.TFoot))
+                {
+                    this.Switch(InsertionModeEnum.InTableBody);
+                    return;
+                }
+
+                // 8. If node is a caption element, then switch the insertion mode to "in caption" and abort these steps.
+                if (node.Is(Tags.Caption))
+                {
+                    this.Switch(InsertionModeEnum.InCaption);
+                    return;
+                }
+
+                // 9. If node is a colgroup element, then switch the insertion mode to "in column group" and abort these steps.
+                if (node.Is(Tags.ColGroup))
+                {
+                    this.Switch(InsertionModeEnum.InColumnGroup);
+                    return;
+                }
+
+                // 10. If node is a table element, then switch the insertion mode to "in table" and abort these steps.
+                if (node.Is(Tags.Table))
+                {
+                    this.Switch(InsertionModeEnum.InTable);
+                    return;
+                }
+
+                // 11. If node is a template element, then switch the insertion mode to the current template insertion mode
+                // and abort these steps.
+                if (node.Is(Tags.Template))
+                {
+                    this.Switch(this.TemplateInsertionMode.Peek());
+                    return;
+                }
+
+                // 12. If node is a head element and last is false, then switch the insertion mode to "in head" and abort these steps.
+                if (!last && node.Is(Tags.Head))
+                {
+                    this.Switch(InsertionModeEnum.InHead);
+                    return;
+                }
+
+                // 13. If node is a body element, then switch the insertion mode to "in body" and abort these steps.
+                if (node.Is(Tags.Body))
+                {
+                    this.Switch(InsertionModeEnum.InBody);
+                    return;
+                }
+
+                // 14. If node is a frameset element, then switch the insertion mode to "in frameset" and abort these steps. (fragment case)
+                if (node.Is(Tags.Frameset))
+                {
+                    this.Switch(InsertionModeEnum.InFrameset);
+                    return;
+                }
+
+                // 15. If node is an html element, run these substeps:
+                if (node.Is(Tags.Html))
+                {
+                    // 1. If the head element pointer is null, switch the insertion mode to "before head"
+                    // and abort these steps. (fragment case)
+                    if (this.ParsingState.Head == null)
+                    {
+                        this.Switch(InsertionModeEnum.BeforeHead);
+                        return;
+                    }
+
+                    // 2. Otherwise, the head element pointer is not null, switch the insertion mode to "after head" and abort these steps.
+                    this.Switch(InsertionModeEnum.AfterHead);
+                    return;
+                }
+
+                // 16. If last is true, then switch the insertion mode to "in body" and abort these steps. (fragment case)
+                if (last)
+                {
+                    this.Switch(InsertionModeEnum.InBody);
+                    return;
+                }
+
+                // 17. Let node now be the node before node in the stack of open elements.
+                i--;
+                node = this.OpenElements[i];
+
+                // 18. Return to the step labeled loop.
             }
-            finally
-            {
-                // Restore the active insertion mode. This also takes care if the mode was switched.
-                this.ActiveInsertionMode = this.InsertionMode;
-            }
+            while (true);
         }
 
         #endregion
 
-        #region 8.2.3.2. The stack of open elements. See: http://www.w3.org/TR/html5/syntax.html#stack-of-open-elements
+        #region 8.2.3.2. The stack of open elements. See: http://www.w3.org/TR/html51/syntax.html#the-stack-of-open-elements
 
         /// <summary>
-        /// 8.2.3.2. The stack of open elements. See: http://www.w3.org/TR/html5/syntax.html#stack-of-open-elements
+        /// 8.2.3.2. The stack of open elements. See: http://www.w3.org/TR/html51/syntax.html#the-stack-of-open-elements
         /// </summary>
         /// <remarks>
         /// Initially, the stack of open elements is empty. The stack grows downwards;
@@ -151,8 +329,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         /// stack grows upwords. This means, the latest added element in most stacks is on the
         /// top of the stack while in the HTML specification, it is at the BOTTOM!
         /// </remarks>
-        private OpenElementsStack OpenElements = new OpenElementsStack();
+        private readonly OpenElementsStack OpenElements = new OpenElementsStack();
 
+        /// <summary>
+        /// Helper class that implements the "stack of open elements".
+        /// It exposes often-used helper methods.
+        /// NB: Be aware that the stack here grows "downwards" (not upwards).
+        /// </summary>
         private class OpenElementsStack
         {
             private readonly List<Element> Elements = new List<Element>();
@@ -181,6 +364,45 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.Elements.Remove(element);
             }
 
+            public void RemoveLast(string tagName)
+            {
+                for (int i = this.Elements.Count - 1; i >= 0; i--)
+                {
+                    if (this.Elements[i].Is(tagName))
+                    {
+                        this.Elements.RemoveAt(i);
+                        return;
+                    }
+                }
+            }
+
+            public Element Last(string tagName)
+            {
+                for (int i = this.Count - 1; i >= 0; i--)
+                {
+                    if (this.Elements[i].Is(tagName))
+                        return this.Elements[i];
+                }
+
+                return null;
+            }
+
+            public void Replace(Element existing, Element replacement)
+            {
+                Contract.RequiresNotNull(existing, nameof(existing));
+                Contract.RequiresNotNull(replacement, nameof(replacement));
+
+                // Do reverse, because chances are the <existing> is near the end.
+                for (int i = this.Elements.Count - 1; i >= 0; i--)
+                {
+                    if (this.Elements[i] == existing)
+                    {
+                        this.Elements[i] = replacement;
+                        return;
+                    }
+                }
+            }
+
             public bool Any(Func<Element, bool> predicate)
             {
                 return this.Elements.Any(predicate);
@@ -188,14 +410,69 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
             public bool Contains(string tagName)
             {
-                return this.Elements.Any(elem => elem.TagName == tagName);
+                return this.Elements.Any(elem => elem.Is(tagName));
             }
 
             public bool Contains(params string[] tagNames)
             {
                 if (tagNames == null)
                     return false;
-                return this.Elements.Any(elem => tagNames.Contains(elem.TagName));
+                return this.Elements.Any(elem => elem.Is(tagNames));
+            }
+
+            public bool Contains(Element element)
+            {
+                return this.Elements.Contains(element);
+            }
+
+            /// <summary>
+            /// Pop elements from the stack of open elements until an
+            /// <paramref name="tagName"/> element has been popped from the stack.
+            /// </summary>
+            /// <returns>
+            /// The element matches the given <paramref name="tagName"/>
+            /// </returns>
+            public Element PopUntil(string tagName)
+            {
+                while (true)
+                {
+                    Element elem = this.Pop();
+                    if (elem.Is(tagName))
+                        return elem;
+                }
+            }
+
+            /// <summary>
+            /// Pop elements from the stack of open elements until an
+            /// <paramref name="tagNames"/> element has been popped from the stack.
+            /// </summary>
+            /// <returns>
+            /// The element matches the given <paramref name="tagNames"/>
+            /// </returns>
+            public Element PopUntil(params string[] tagNames)
+            {
+                while (true)
+                {
+                    Element elem = this.Pop();
+                    if (elem.Is(tagNames))
+                        return elem;
+                }
+            }
+
+            /// <summary>
+            /// Pop elements from the stack of open elements until the given
+            /// <paramref name="element"/> has been popped from the stack.
+            /// </summary>
+            public void PopUntil(Element element)
+            {
+                Contract.RequiresNotNull(element, nameof(element));
+
+                while (true)
+                {
+                    Element elem = this.Pop();
+                    if (elem == element)
+                        return;
+                }
             }
 
             public Element Top
@@ -236,12 +513,38 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 }
             }
 
-            public bool HasElementInSpecificScope(string targetNode, params string[] list)
+            public Element ElementAbove(Element element)
             {
+                for (int i = this.Count - 1; i > 0; i--)
+                {
+                    if (this.Elements[i] == element)
+                        return this.Elements[i - 1];
+                }
+
+                return null;
+            }
+
+            public int LastIndexOf(Element element)
+            {
+                return this.Elements.LastIndexOf(element);
+            }
+
+            public void InsertBelow(Element newElement, Element referenceElement)
+            {
+                Contract.RequiresNotNull(newElement, nameof(newElement));
+
+                int idx = this.LastIndexOf(referenceElement) + 1;
+                this.Elements.Insert(idx, newElement);
+            }
+
+            private bool HasElementInSpecificScope(Predicate<Element> predicate, params string[] list)
+            {
+                Contract.RequiresNotNull(predicate, nameof(predicate));
+
                 if (list == null)
                     list = Array.Empty<string>();
 
-                // The stack of open elements is said to have an element target node in a specific scope consisting 
+                // The stack of open elements is said to have an element target node in a specific scope consisting
                 // of a list of element types list when the following algorithm terminates in a match state:
 
                 // 1. Initialize node to be the current node(the bottommost node of the stack).
@@ -251,11 +554,11 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     Element node = this.Elements[index];
 
                     // 2. If node is the target node, terminate in a match state.
-                    if (node.TagName == targetNode)
+                    if (predicate(node))
                         return true;
 
                     // 3. Otherwise, if node is one of the element types in list, terminate in a failure state.
-                    if (list.Contains(node.TagName))
+                    if (node.Is(list))
                         return false;
 
                     // 4. Otherwise, set node to the previous entry in the stack of open elements and return to step 2.
@@ -265,6 +568,61 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 }
 
                 return false;
+            }
+
+            private bool HasElementInSpecificScope(string targetNode, params string[] list)
+            {
+                return this.HasElementInSpecificScope(node => node.Is(targetNode), list);
+            }
+
+            public bool HasElementInScope(Predicate<Element> predicate)
+            {
+                return this.HasElementInSpecificScope(predicate, OpenElementsStack.ScopeTags);
+            }
+
+            public bool HasElementInScope(string targetNode)
+            {
+                return this.HasElementInSpecificScope(targetNode, OpenElementsStack.ScopeTags);
+            }
+
+            public bool HasElementInButtonScope(Predicate<Element> predicate)
+            {
+                return this.HasElementInSpecificScope(predicate, OpenElementsStack.ButtonScopeTags);
+            }
+
+            public bool HasElementInButtonScope(string targetNode)
+            {
+                return this.HasElementInSpecificScope(targetNode, OpenElementsStack.ButtonScopeTags);
+            }
+
+            public bool HasElementInListItemScope(Predicate<Element> predicate)
+            {
+                return this.HasElementInSpecificScope(predicate, OpenElementsStack.ListItemScopeTags);
+            }
+
+            public bool HasElementInListItemScope(string targetNode)
+            {
+                return this.HasElementInSpecificScope(targetNode, OpenElementsStack.ListItemScopeTags);
+            }
+
+            public bool HasElementInTableScope(Predicate<Element> predicate)
+            {
+                return this.HasElementInSpecificScope(predicate, OpenElementsStack.TableScopeTags);
+            }
+
+            public bool HasElementInTableScope(string targetNode)
+            {
+                return this.HasElementInSpecificScope(targetNode, OpenElementsStack.TableScopeTags);
+            }
+
+            public bool HasElementInSelectScope(Predicate<Element> predicate)
+            {
+                return this.HasElementInSpecificScope(predicate, OpenElementsStack.SelectScopeTags);
+            }
+
+            public bool HasElementInSelectScope(string targetNode)
+            {
+                return this.HasElementInSpecificScope(targetNode, OpenElementsStack.SelectScopeTags);
             }
 
             /// <summary>
@@ -283,7 +641,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // SVG_TODO ... SVG Tags
             };
 
-            internal static readonly string[] ItemScopeTags = ScopeTags.FailIfNull().With(Tags.Ol, Tags.Ul);
+            internal static readonly string[] ListItemScopeTags = ScopeTags.FailIfNull().With(Tags.Ol, Tags.Ul);
 
             internal static readonly string[] ButtonScopeTags = ScopeTags.FailIfNull().With(Tags.Button);
 
@@ -309,114 +667,430 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
         }
 
-        public bool IsCurrentNode(string tagName)
+        /// <summary>
+        /// The adjusted current node is the context element if the parser was created by the
+        /// HTML fragment parsing algorithm and the stack of open elements has only one element
+        /// in it (fragment case); otherwise, the adjusted current node is the current node.
+        /// </summary>
+        private Element AdjustedCurrentNode
         {
-            string currentNodeName = this.CurrentNode.TagName;
-            return currentNodeName == tagName;
-        }
-
-        public bool IsCurrentNode(string tagName1, string tagName2)
-        {
-            string currentNodeName = this.CurrentNode.TagName;
-            return (currentNodeName == tagName1) || (currentNodeName == tagName2);
-        }
-
-        public bool IsCurrentNode(params string[] tagNames)
-        {
-            if ((tagNames == null) || (tagNames.Length == 0))
-                return false;
-            string currentNodeName = this.CurrentNode.TagName;
-            for (int i = 0; i < tagNames.Length; i++)
+            get
             {
-                if (currentNodeName == tagNames[i])
-                    return true;
+                if (this.ParsingContext.IsFragmentParsing && (this.OpenElements.Count == 1))
+                    return this.ParsingContext.FragmentContextElement;
+                else
+                    return this.CurrentNode;
             }
-
-            return false;
         }
 
         #endregion
 
-        #region 8.2.3.3. The list of active formatting elements. See http://www.w3.org/TR/html5/syntax.html#the-list-of-active-formatting-elements
+        #region 8.2.3.3. The list of active formatting elements. See http://www.w3.org/TR/html51/syntax.html#the-list-of-active-formatting-elements
 
         /// <summary>
-        /// Push onto the list of active formatting elements.
+        /// The list contains elements in the formatting category, and markers.
+        /// Initially, the list of active formatting elements is empty.
+        /// It is used to handle mis-nested formatting element tags.
         /// </summary>
-        private void PushFormattingElement(Element element)
+        private readonly ActiveFormattingElementsList ActiveFormattingElements;
+
+        private class ActiveFormattingElementsList
         {
-            Contract.RequiresNotNull(element, nameof(element));
+            private readonly List<Entry> Entries = new List<Entry>();
 
-            // When the steps below require the user agent to *push onto the list of active formatting elements* an element
-            // element, the user agent must perform the following steps:
+            private readonly DomParser Parser;
 
-            // 1. If there are already three elements in the list of active formatting elements after the last marker,
-            // if any, or anywhere in the list if there are no markers, that have the same tag name, namespace,
-            // and attributes as element, then remove the earliest such element from the list of active formatting elements.
-            // For these purposes, the attributes must be compared as they were when the elements were created by the parser;
-            // two elements have the same attributes if all their parsed attributes can be paired such that the two attributes
-            // in each pair have identical names, namespaces, and values(the order of the attributes does not matter).
+            public ActiveFormattingElementsList(DomParser parser)
+            {
+                this.Parser = parser;
+            }
 
-            // NOTE: This is the Noah’s Ark clause.But with three per family instead of two.
+            private struct Entry
+            {
+                public static readonly Entry Marker = new Entry();
 
-            // 2. Add element to the list of active formatting elements.
-        }
+                private Element _Element;
 
-        /// <summary>
-        /// Reconstruct the active formatting elements.
-        /// </summary>
-        private void ReconstructFormattingElements()
-        {
-            // When the steps below require the user agent to *reconstruct the active formatting elements*, the user agent must
-            // perform the following steps:
-            // 1. If there are no entries in the list of active formatting elements, then there is nothing to reconstruct;
-            // stop this algorithm.
+                public Element Element
+                {
+                    get
+                    {
+#if DEBUG
+                        if (this._Element == null)
+                            throw new InvalidOperationException("This is a marker and Element is not available");
+#endif
+                        return this._Element;
+                    }
+                }
 
-            // 2. If the last (most recently added) entry in the list of active formatting elements is a marker, or if it is
-            // an element that is in the stack of open elements, then there is nothing to reconstruct; stop this algorithm.
+                private Token _Token;
 
-            // 3. Let entry be the last (most recently added) element in the list of active formatting elements.
+                /// <summary>
+                /// In addition, each element in the list of active formatting elements is
+                /// associated with the token for which it was created, so that further
+                /// elements can be created for that token if necessary.
+                /// NB: Sometimes alg. require from us to create new elements, but we don't
+                /// have access to this token. Then we fake it.
+                /// </summary>
+                public Token Token
+                {
+                    get
+                    {
+#if DEBUG
+                        if (this._Element == null)
+                            throw new InvalidOperationException("This is a marker and Token is not available");
+#endif
+                        return this._Token;
+                    }
+                }
 
-            // 4. Rewind: If there are no entries before entry in the list of active formatting elements, then jump to 
-            // the step labeled create.
+                public bool IsMarker
+                {
+                    get { return this._Element == null; }
+                }
 
-            // 5. Let entry be the entry one earlier than entry in the list of active formatting elements.
+                public Entry(Element element, Token token)
+                {
+                    this._Element = element;
+                    this._Token = token;
+                }
 
-            // 6. If entry is neither a marker nor an element that is also in the stack of open elements,
-            // go to the step labeled rewind.
-            // 7. Advance: Let entry be the element one later than entry in the list of active formatting elements.
+                public bool MatchesName(Element element)
+                {
+                    return (this._Element != null) && this._Element.Is(element);
+                }
 
-            // 8. Create: Insert an HTML element for the token for which the element entry was created,
-            // to obtain new element.
+                public bool MatchesNameAndAttributes(Element element)
+                {
+                    if ((this._Element == null) || !this._Element.Is(element))
+                        return false;
 
-            // 9. Replace the entry for entry in the list with an entry for new element.
+                    if (this._Element.Attributes.Count != element.Attributes.Count)
+                        return false;
 
-            // 10. If the entry for new element in the list of active formatting elements is not the last entry in the list,
-            // return to the step labeled advance.
+                    for (int i = 0; i < this._Element.Attributes.Count; i++)
+                    {
+                        bool found = false;
+                        Attr attr1 = this._Element.Attributes[i];
+                        for (int j = 0; j < element.Attributes.Count; j++)
+                        {
+                            Attr attr2 = element.Attributes[j];
+                            if (attr1.Name == attr2.Name)
+                            {
+                                if (attr1.Value != attr2.Value)
+                                    return false;
 
-            // This has the effect of reopening all the formatting elements that were opened in the current body, cell,
-            // or caption(whichever is youngest) that haven’t been explicitly closed.
+                                found = true;
+                            }
+                        }
 
-            // NOTE: The way this specification is written, the list of active formatting elements always consists of elements
-            // in chronological order with the least recently added element first and the most recently added element last
-            // (except for while steps 7 to 10 of the above algorithm are being executed, of course).
-        }
+                        if (!found)
+                            return false;
+                    }
 
-        /// <summary>
-        /// Clear the list of active formatting elements up to the last marker.
-        /// </summary>
-        private void ClearFormattingElementsUpToMarker()
-        {
-            // When the steps below require the user agent to clear the list of active formatting elements
-            // up to the last marker, the user agent must perform the following steps:
+                    return true;
+                }
+            }
 
-            // 1. Let entry be the last(most recently added) entry in the list of active formatting elements.
+            /// <summary>
+            /// Push onto the list of active formatting elements.
+            /// </summary>
+            public void PushFormattingElement(Element element)
+            {
+                Contract.RequiresNotNull(element, nameof(element));
 
-            // 2. Remove entry from the list of active formatting elements.
+                // When the steps below require the user agent to *push onto the list of active formatting elements* an element
+                // element, the user agent must perform the following steps:
 
-            // 3. If entry was a marker, then stop the algorithm at this point.
-            // The list has been cleared up to the last marker.
+                // 1. See RunNoahsArk() method.
+                this.RunNoahsArk(element);
 
-            // 4. Go to step 1.
+                // 2. Add element to the list of active formatting elements.
+                this.Entries.Add(new Entry(element, this.Parser.Token));
+            }
+
+            private void RunNoahsArk(Element element)
+            {
+                // See: http://www.w3.org/TR/html51/syntax.html#list-of-active-formatting-elements
+
+                // If there are already three elements in the list of active formatting elements after the last marker (if any),
+                // or anywhere in the list (if there are no markers) ... that have the same tag name, namespace,
+                // and attributes as element ... then remove the earliest such element from the list of active formatting elements.
+                //
+                // For these purposes, the attributes must be compared as they were when the elements were created by the parser;
+                // two elements have the same attributes if all their parsed attributes can be paired such that the two attributes
+                // in each pair have identical names, namespaces, and values(the order of the attributes does not matter).
+
+                // NOTE: This is the Noah’s Ark clause.But with three per family instead of two.
+
+                /* EXPLANATION: The above description in the HTML5 standard is shit! So, there is what they actually mean:
+
+                   Let's define the list of active elements. Each element is in this exmaple written a a tag. A marker as '|'.
+                   The list grows from left to right.
+
+                   <B> <I> <U> <B> | <B> <I> <S> <I> <B> | <B> <B> <U> <B> <I> <S> | <I> <B> <S> .... --->
+
+                   When matching, the element must match 100% (name, namespace, attributes). For clarity, this example only matches names.
+
+                   Mathcing is performed from the end backwords, i.e. from right to left *up until* the last marker.
+
+                   <B> <I> <U> <B> | <B> <I> <S> <I> <B> | <B> <B> <U> <B> <I> <S> | <I> <B> <S>
+                                                                                   |<---matching---
+
+                   If no marker exists, we match until the start of the list (the very left).
+
+                   Let's say that a <B> element is being pushed and the algorythm is looking for equal <B> elements.
+
+                   <B> <I> <U> <B> | <B> <I> <S> <I> <B> | <B> <B> <U> <B> <I> <S> | <I> <B> <S>
+                                                                                     ... *** ...
+
+                   There is ONE match. The rule says that there has to be THREE matches for us to take action.
+                   This means, we can just append the new <B> to the list. Result is therefor:
+
+                   <B> <I> <U> <B> | <B> <I> <S> <I> <B> | <B> <B> <U> <B> <I> <S> | <I> <B> <S> <B>
+
+
+                   Now, let's look if the list look differently (shorter version of the above).
+
+                   <B> <I> <U> <B> | <B> <I> <S> <I> <B> | <B> <B> <U> <B> <I> <S>
+                                                           *** *** ... *** ... ...
+
+                   Now, there are THREE matches. The algorythm says that we cannot just append to the end without
+                   removing an element. It has to be the earliest element (the left most element).
+                   Also note, there will never be more than THREE matching elements, or the algorythm is broken.
+
+                   <B> <I> <U> <B> | <B> <I> <S> <I> <B> | <B> <B> <U> <B> <I> <S>
+                                                           xxx *** ... *** ... ...
+
+                   The result after the append will look like:
+
+                   <B> <I> <U> <B> | <B> <I> <S> <I> <B> | <B> <U> <B> <I> <S> <B>
+                 */
+
+                // First, let's see if there are three elements that match name.
+                if (this.Entries.Count < 3)
+                    return;
+
+                int matches = 0;
+                for (int i = this.Entries.Count - 1; i >= 0; i--)
+                {
+                    if (this.Entries[i].IsMarker)
+                        break;
+                    if (this.Entries[i].MatchesName(element))
+                        matches++;
+                    if (matches == 3)
+                        break;
+                }
+
+                if (matches < 2)
+                    return; // No need to proceed. This will be the case 90% of the time.
+
+                // Second, look for full matches and remove the element if there are three matches.
+                matches = 0;
+                for (int i = this.Entries.Count - 1; i >= 0; i--)
+                {
+                    if (this.Entries[i].IsMarker)
+                        break;
+                    if (this.Entries[i].MatchesNameAndAttributes(element))
+                        matches++;
+
+                    if (matches == 3)
+                    {
+                        // That's the third match. It must be removed, and we are done!
+                        this.Entries.RemoveAt(i);
+                        return;
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Reconstruct the active formatting elements.
+            /// </summary>
+            public void ReconstructFormattingElements()
+            {
+                // When the steps below require the user agent to *reconstruct the active formatting elements*, the user agent must
+                // perform the following steps:
+
+                // 1. If there are no entries in the list of active formatting elements, then there is nothing to reconstruct;
+                // stop this algorithm.
+                int i = this.Entries.Count;
+                if (i == 0)
+                    return;
+
+                // 2. If the last (most recently added) entry in the list of active formatting elements is a marker, or if it is
+                // an element that is in the stack of open elements, then there is nothing to reconstruct; stop this algorithm.
+                i--;
+                Entry entry = this.Entries[i];
+                if (entry.IsMarker || this.Parser.OpenElements.Contains(entry.Element))
+                    return;
+
+                // 3. Let entry be the last (most recently added) element in the list of active formatting elements.
+
+                // 4. Rewind: If there are no entries before entry in the list of active formatting elements, then jump to
+                // the step labeled create.
+                Rewind:
+                if (i == 0)
+                    goto Create;
+
+                // 5. Let entry be the entry one earlier than entry in the list of active formatting elements.
+                i--;
+                entry = this.Entries[i];
+
+                // 6. If entry is neither a marker nor an element that is also in the stack of open elements,
+                // go to the step labeled rewind.
+                if (!entry.IsMarker && !this.Parser.OpenElements.Contains(entry.Element))
+                    goto Rewind;
+
+                // 7. Advance: Let entry be the element one later than entry in the list of active formatting elements.
+                Advance:
+                i++;
+                entry = this.Entries[i];
+
+                // 8. Create: Insert an HTML element for the token for which the element entry was created,
+                // to obtain new element.
+                Create:
+                Element element = this.Parser.DomFactory.InsertHtmlElement(entry.Token.TagName, entry.Token.TagAttributes);
+
+                // 9. Replace the entry for entry in the list with an entry for new element.
+                this.Entries[i] = new Entry(element, entry.Token);
+
+                // 10. If the entry for new element in the list of active formatting elements is not the last entry in the list,
+                // return to the step labeled advance.
+                if (i != (this.Entries.Count - 1))
+                    goto Advance;
+
+                // This has the effect of reopening all the formatting elements that were opened in the current body, cell,
+                // or caption(whichever is youngest) that haven’t been explicitly closed.
+
+                // NOTE: The way this specification is written, the list of active formatting elements always consists of elements
+                // in chronological order with the least recently added element first and the most recently added element last
+                // (except for while steps 7 to 10 of the above algorithm are being executed, of course).
+            }
+
+            /// <summary>
+            /// Clear the list of active formatting elements up to the last marker.
+            /// </summary>
+            public void ClearFormattingElementsUpToMarker()
+            {
+                // When the steps below require the user agent to clear the list of active formatting elements
+                // up to the last marker, the user agent must perform the following steps:
+                while (true)
+                {
+                    // 1. Let entry be the last(most recently added) entry in the list of active formatting elements.
+                    int i = this.Entries.Count - 1;
+                    Entry entry = this.Entries[i];
+
+                    // 2. Remove entry from the list of active formatting elements.
+                    this.Entries.RemoveAt(i);
+
+                    // 3. If entry was a marker, then stop the algorithm at this point.
+                    // The list has been cleared up to the last marker.
+                    if (entry.IsMarker)
+                        return;
+
+                    // 4. Go to step 1.
+                }
+            }
+
+            public Element ElementUpToLastMarker(string tagName)
+            {
+                for (int i = this.Entries.Count - 1; i >= 0; i--)
+                {
+                    Entry entry = this.Entries[i];
+                    if (entry.IsMarker)
+                        return null;
+                    if (entry.Element.Is(tagName))
+                        return entry.Element;
+                }
+
+                return null;
+            }
+
+            public bool ContainsUpToLastMarker(string tagName)
+            {
+                return this.ElementUpToLastMarker(tagName) != null;
+            }
+
+            public bool RemoveLast(string tagName)
+            {
+                for (int i = this.Entries.Count - 1; i >= 0; i--)
+                {
+                    Entry entry = this.Entries[i];
+                    if (!entry.IsMarker && entry.Element.Is(tagName))
+                    {
+                        this.Entries.RemoveAt(i);
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            public void InsertMarker()
+            {
+                this.Entries.Add(Entry.Marker);
+            }
+
+            public bool Contains(Element element)
+            {
+                return this.Entries.Any(entry => !entry.IsMarker && (entry.Element == element));
+            }
+
+            public void Remove(Element element)
+            {
+                this.Entries.RemoveAll(entry => !entry.IsMarker && (entry.Element == element));
+            }
+
+            public void Replace(Element existing, Element replacement)
+            {
+                Contract.RequiresNotNull(existing, nameof(existing));
+                Contract.RequiresNotNull(replacement, nameof(replacement));
+
+                // Do reverse, because chances are the <existing> is near the end.
+                for (int i = this.Entries.Count - 1; i >= 0; i--)
+                {
+                    Entry entry = this.Entries[i];
+                    if (!entry.IsMarker && (entry.Element == existing))
+                    {
+                        // ISSUE. Is it OK to take the token from the old entry? Should we also ASSERT the attributes as well?
+                        System.Diagnostics.Debug.Assert(entry.Token.TagName == replacement.TagName, "Is it OK to take the token from the old entry if they don't match?");
+
+                        this.Entries[i] = new Entry(replacement, entry.Token);
+                        return;
+                    }
+                }
+            }
+
+            public int IndexOf(Element element)
+            {
+                for (int i = 0; i < this.Entries.Count; i++)
+                {
+                    Entry entry = this.Entries[i];
+                    if (!entry.IsMarker && (entry.Element == element))
+                        return i;
+                }
+
+                return -1;
+            }
+
+            public int LastIndexOf(Element element)
+            {
+                for (int i = this.Entries.Count - 1; i >= 0; i--)
+                {
+                    Entry entry = this.Entries[i];
+                    if (!entry.IsMarker && (entry.Element == element))
+                        return i;
+                }
+
+                return -1;
+            }
+
+            public void Insert(Element element, Token token, int atIndex)
+            {
+                Contract.RequiresNotNull(element, nameof(element));
+
+                this.Entries.Insert(atIndex, new Entry(element, token));
+            }
         }
 
         #endregion
@@ -425,10 +1099,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         #region Tree Construction Helpers
 
-        private void ParseError(ParseError error)
-            {
-                throw new NotImplementedException();
-            }
+        private void InformParseError(ParseError error)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
 
@@ -436,7 +1110,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         private void ProcessToken()
         {
-            switch (this.ActiveInsertionMode)
+            this.ProcessToken(this.InsertionMode);
+        }
+
+        private void ProcessToken(InsertionModeEnum mode)
+        {
+            switch (mode)
             {
                 case InsertionModeEnum.Initial:
                     this.HandleTokenInInitialMode();
@@ -512,32 +1191,185 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
         }
 
+        #region 8.2.5.1. Creating and inserting nodes
+
+        /// <summary>
+        /// While the parser is processing a token, it can enable or disable foster parenting.
+        /// This affects the <see cref="AppropriatePlaceForInsertingNode"/> algorithm.
+        /// </summary>
+        private bool FosteringParent = false;
+
+        private AdjustedInsertLocation AppropriatePlaceForInsertingNode(Element overrideTarget = null)
+        {
+            // The appropriate place for inserting a node, optionally using a particular override target,
+            // is the position in an element returned by running the following steps:
+
+            // 1. If there was an override target specified, then let target be the override target.
+            // Otherwise, let target be the current node.
+            Element target = overrideTarget ?? this.CurrentNode;
+
+            // 2. Determine the adjusted insertion location using the first matching steps from the following list:
+            Element adjustedInsertLocationElement = null;
+            Element adjustedInsertLocationBeforeSibling = null;
+
+            // * If foster parenting is enabled and target is a table, tbody, tfoot, thead, or tr element
+            if (this.FosteringParent && target.Is(Tags.Table, Tags.TBody, Tags.TFoot, Tags.THead, Tags.Tr))
+            {
+                // NOTE: Foster parenting happens when content is misnested in tables.
+                // Run these substeps:
+                do
+                {
+                    // 1. Let last template be the last template element in the stack of open elements, if any.
+                    Element lastTemplate = this.OpenElements.Last(Tags.Template);
+
+                    // 2. Let last table be the last table element in the stack of open elements, if any.
+                    Element lastTable = this.OpenElements.Last(Tags.Table);
+
+                    // 3. If there is a last template and either there is no last table, or there is one, but
+                    // last template is lower (more recently added) than last table in the stack of open elements, then:
+                    // NB: "Lower" means more recent, i.e. higher index.
+                    if ((lastTemplate != null) && ((lastTable == null) || (this.OpenElements.LastIndexOf(lastTemplate) > this.OpenElements.LastIndexOf(lastTemplate))))
+                    {
+                        // let adjusted insertion location be inside last template’s template contents,
+                        // after its last child(if any), and abort these substeps.
+                        adjustedInsertLocationElement = lastTemplate;
+                        break;
+                    }
+
+                    // 4. If there is no last table, then let adjusted insertion location be inside the
+                    // first element in the stack of open elements (the html element), after its last child(if any),
+                    // and abort these substeps. (fragment case)
+                    if (lastTable == null)
+                    {
+                        adjustedInsertLocationElement = this.OpenElements[0];
+                        break;
+                    }
+
+                    // 5. If last table has a parent node, then let adjusted insertion location be inside last
+                    // table’s parent node, immediately before last table, and abort these substeps.
+                    if (lastTable.ParentNode != null)
+                    {
+                        adjustedInsertLocationElement = (Element)lastTable.ParentNode;
+                        adjustedInsertLocationBeforeSibling = lastTable;
+                        break;
+                    }
+
+                    // 6. Let previous element be the element immediately above last table in the stack of open elements.
+                    Element previousElement = this.OpenElements.ElementAbove(lastTable);
+
+                    // 7. Let adjusted insertion location be inside previous element, after its last child(if any).
+                    adjustedInsertLocationElement = previousElement;
+                } while (false);
+
+                // NOTE: These steps are involved in part because it’s possible for elements, the table element in this
+                // case in particular, to have been moved by a script around in the DOM, or indeed removed from the DOM
+                // entirely, after the element was inserted by the parser.
+
+                // NB: Should not happen to use, because we cannot run scripts ... but implement it in case we allow this later.
+            }
+
+            // * Otherwise
+            else
+            {
+                // Let adjusted insertion location be inside target, after its last child (if any).
+                adjustedInsertLocationElement = target;
+            }
+
+            // 3. If the adjusted insertion location is inside a template element, let it instead be inside
+            // the template element’s template contents, after its last child (if any).
+            if (adjustedInsertLocationElement.Is(Tags.Template))
+                throw new NotImplementedException();
+
+            // 4. Return the adjusted insertion location.
+            return new AdjustedInsertLocation(adjustedInsertLocationElement, adjustedInsertLocationBeforeSibling);
+        }
+
+        public struct AdjustedInsertLocation
+        {
+            public Element ParentElement { get; private set; }
+
+            /// <summary>
+            /// Insert the new node before this sibling element,
+            /// or append as the last child if this is not set.
+            /// </summary>
+            public Element BeforeSibling { get; private set; }
+
+            public AdjustedInsertLocation(Element parentElement, Element beforeSibling)
+                : this()
+            {
+                Contract.RequiresNotNull(parentElement, nameof(parentElement));
+
+                this.ParentElement = parentElement;
+                this.BeforeSibling = beforeSibling;
+            }
+        }
+
+        #endregion
+
+        #region 8.2.5.2. Parsing elements that contain only text
+
+        private void GenericRawTextElementParsingAlgorithm()
+        {
+            this.GenericTextElementParsingAlgorithm(Tokenizer.StateEnum.RawText);
+        }
+
+        private void GenericRcDataElementParsingAlgorithm()
+        {
+            this.GenericTextElementParsingAlgorithm(Tokenizer.StateEnum.RcData);
+        }
+
+        private void GenericTextElementParsingAlgorithm(Tokenizer.StateEnum state)
+        {
+            // The "generic raw text element parsing algorithm" and the "generic RCDATA element parsing algorithm"
+            // consist of the following steps.These algorithms are always invoked in response to a start tag token.
+
+            // 1. Insert an HTML element for the token.
+            this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+
+            // 2. If the algorithm that was invoked is the "generic raw text element parsing algorithm",
+            //    switch the tokenizer to the §8.2.4.5 RAWTEXT state; otherwise the algorithm invoked was
+            //    the "generic RCDATA element parsing algorithm", switch the tokenizer to the §8.2.4.3 RCDATA state.
+            this.Tokenizer.SwitchTo(state);
+
+            // 3. Let the original insertion mode be the current insertion mode.
+            this.OriginalInsertionMode = this.InsertionMode;
+
+            // 4. Then, switch the insertion mode to "text".
+            this.Switch(InsertionModeEnum.Text);
+        }
+
+        #endregion
+
         #region 8.2.5.3. Closing elements that have implied end tags
 
-        private void GenerateImpliedEndTag(string excludedTag = null)
+        private void GenerateImpliedEndTag(Predicate<Element> excludePredicate)
         {
+            Contract.RequiresNotNull(excludePredicate, nameof(excludePredicate));
+
             while (true)
             {
                 // When the steps below require the user agent to generate implied end tags, then, while the current node is a dd
                 // element, a dt element, an li element, an option element, an optgroup element, a p element, an rb element, an rp
                 // element, an rt element, or an rtc element, the user agent must pop the current node off the stack of open elements.
-                string tag = this.CurrentNode.TagName;
 
                 // If a step requires the user agent to generate implied end tags but lists an element to exclude from the process,
                 // then the user agent must perform the above steps as if that element was not in the above list.
-                if (tag == excludedTag)
+                if (excludePredicate(this.CurrentNode))
                     break; // Done!
 
-                if ((tag == Tags.Dd) || (tag == Tags.Dt) || (tag == Tags.Li) || (tag == Tags.Option) || (tag == Tags.OptGroup)
-                    || (tag == Tags.P) || (tag == Tags.Rb) || (tag == Tags.Rp) || (tag == Tags.Rt) || (tag == Tags.Rtc))
-                {
+                if (this.CurrentNode.Is(Tags.Dd, Tags.Dt, Tags.Li, Tags.Option, Tags.OptGroup, Tags.P, Tags.Rb, Tags.Rp, Tags.Rt, Tags.Rtc))
                     this.OpenElements.Pop();
-                }
                 else
-                {
                     break; // Done!
-                }
             }
+        }
+
+        private void GenerateImpliedEndTag(string excludedTag = null)
+        {
+            if (excludedTag == null)
+                this.GenerateImpliedEndTag(node => false);
+            else
+                this.GenerateImpliedEndTag(node => node.Is(excludedTag));
         }
 
         private void GenerateAllImpliedEndTagThoroughly()
@@ -549,13 +1381,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // an li element, an optgroup element, an option element, a p element, an rb element, an rp element,
                 // an rt element, an rtc element, a tbody element, a td element, a tfoot element, a th element, a thead
                 // element, or a tr element, the user agent must pop the current node off the stack of open elements.
-                string tag = this.CurrentNode.TagName;
-
-                if ((tag == Tags.Caption) || (tag == Tags.ColGroup) || (tag == Tags.Dd) || (tag == Tags.Dt)
-                    || (tag == Tags.Li) || (tag == Tags.OptGroup) || (tag == Tags.Option) || (tag == Tags.P)
-                    || (tag == Tags.Rb) || (tag == Tags.Rp) || (tag == Tags.Rt) || (tag == Tags.Rtc)
-                    || (tag == Tags.TBody) || (tag == Tags.Td) || (tag == Tags.TFoot) || (tag == Tags.Th)
-                    || (tag == Tags.THead) || (tag == Tags.Tr))
+                if (this.CurrentNode.Is(Tags.Caption, Tags.ColGroup, Tags.Dd, Tags.Dt, Tags.Li, Tags.OptGroup, Tags.Option,
+                    Tags.P, Tags.Rb, Tags.Rp, Tags.Rt, Tags.Rtc, Tags.TBody, Tags.Td, Tags.TFoot, Tags.Th, Tags.THead, Tags.Tr))
                 {
                     this.OpenElements.Pop();
                 }
@@ -650,7 +1477,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     else
                     {
                         // No match ... there is a parse error.
-                        this.ParseError(Parsing.ParseError.InvalidDocType);
+                        this.InformParseError(Parsing.ParseError.InvalidDocType);
                     }
 
                     // Conformance checkers may, based on the values(including presence or lack thereof) of the
@@ -933,7 +1760,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                         quirks = true;
 
                     if (quirks)
-                        this.DomFactory.SetQuirksMode(DomFactory.QuirksMode.On);
+                        this.DomFactory.SetQuirksMode(QuirksMode.On);
                 }
 
                 // Otherwise, if the document is not an iframe srcdoc document, and the DOCTYPE token matches one of the conditions
@@ -959,7 +1786,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                         quirks = true;
 
                     if (quirks)
-                        this.DomFactory.SetQuirksMode(DomFactory.QuirksMode.Limited);
+                        this.DomFactory.SetQuirksMode(QuirksMode.Limited);
                 }
 
                 // The system identifier and public identifier strings must be compared to the values given
@@ -976,8 +1803,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // If the document is not an iframe srcdoc document, then this is a parse error; set the Document to quirks mode.
                 if (!this.ParsingContext.IsIFrameSource)
                 {
-                    this.ParseError(Parsing.ParseError.UnexpectedTag);
-                    this.DomFactory.SetQuirksMode(DomFactory.QuirksMode.On);
+                    this.InformParseError(Parsing.ParseError.UnexpectedTag);
+                    this.DomFactory.SetQuirksMode(QuirksMode.On);
                 }
 
                 // In any case, switch the insertion mode to "before html", then reprocess the token.
@@ -1002,7 +1829,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.ParseError(Parsing.ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
             }
 
             // A comment token
@@ -1024,7 +1851,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // Create an element for the token in the HTML namespace, with the Document as the intended parent.
                 // Append it to the Document object. Put this element in the stack of open elements.
-                Element html = this.DomFactory.CreateElement(this.Token.TagName, this.Token.TagAttributes, true);
+                Element html = this.DomFactory.CreateElement(null, this.Token.TagName, this.Token.TagAttributes, true);
                 this.ParsingState.Html = html;
 
                 // If the Document is being loaded as part of navigation of a browsing context, then:
@@ -1051,7 +1878,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.EndTag)
             {
                 // Parse error. Ignore the token.
-                this.ParseError(Parsing.ParseError.UnexpectedEndTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // Anything else
@@ -1064,7 +1891,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // Create an html element whose ownerDocument is the Document object. Append it to the Document object.
                 // Put this element in the stack of open elements.
-                Element html = this.DomFactory.CreateElement(Tags.Html, Attribute.None, true);
+                // TODO: What is intended parent?
+                Element html = this.DomFactory.CreateElement(null, Tags.Html, Attribute.None, true);
                 this.ParsingState.Html = html;
 
                 // If the Document is being loaded as part of navigation of a browsing context, then:
@@ -1113,14 +1941,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.ParseError(Parsing.ParseError.UnexpectedDocType);
+                this.InformParseError(Parsing.ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
             else if (this.Token.IsStartTagNamed(Tags.Html))
             {
                 // Process the token using the rules for the "in body" insertion mode.
-                this.Using(InsertionModeEnum.InBody, this.ProcessToken);
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // A start tag whose tag name is "head"
@@ -1147,7 +1975,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.EndTag)
             {
                 // Parse error. Ignore the token.
-                this.ParseError(Parsing.ParseError.UnexpectedEndTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // Anything else
@@ -1203,14 +2031,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.ParseError(Parsing.ParseError.UnexpectedDocType);
+                this.InformParseError(Parsing.ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
             else if (this.Token.IsStartTagNamed(Tags.Html))
             {
                 // Process the token using the rules for the "in body" insertion mode.
-                this.Using(InsertionModeEnum.InBody, this.ProcessToken);
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // A start tag whose tag name is one of: "base", "basefont", "bgsound", "link"
@@ -1349,9 +2177,9 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // Parse error. Ignore the token.
                 if (this.Token.Type == TokenType.StartTag)
-                    this.ParseError(Parsing.ParseError.UnexpectedStartTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
                 else
-                    this.ParseError(Parsing.ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // Anything else
@@ -1389,14 +2217,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.ParseError(Parsing.ParseError.UnexpectedDocType);
+                this.InformParseError(Parsing.ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
             else if (this.Token.IsStartTagNamed(Tags.Html))
             {
                 // Process the token using the rules for the "in body" insertion mode.
-                this.Using(InsertionModeEnum.InBody, this.ProcessToken);
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // An end tag whose tag name is "noscript"
@@ -1417,7 +2245,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsCharacterWhitespace() || (this.Token.Type == TokenType.Comment) || this.Token.IsStartTagNamed(Tags.BaseFont, Tags.BgSound, Tags.Link, Tags.Meta, Tags.NoFrames, Tags.Style))
             {
                 // Process the token using the rules for the "in head" insertion mode.
-                this.Using(InsertionModeEnum.InHead, this.ProcessToken);
+                this.ProcessTokenUsing(InsertionModeEnum.InHead);
             }
 
             // An end tag whose tag name is "br"
@@ -1433,9 +2261,9 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // Parse error. Ignore the token.
                 if (this.Token.Type == TokenType.StartTag)
-                    this.ParseError(Parsing.ParseError.UnexpectedStartTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
                 else
-                    this.ParseError(Parsing.ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // Anything else
@@ -1447,7 +2275,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (anythingElse)
             {
                 // Parse error.
-                this.ParseError(Parsing.ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
                 // Pop the current node (which will be a noscript element) from the stack of open elements;
                 // the new current node will be a head element.
@@ -1492,14 +2320,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.ParseError(Parsing.ParseError.UnexpectedDocType);
+                this.InformParseError(Parsing.ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
             else if (this.Token.IsStartTagNamed(Tags.Html))
             {
                 // Process the token using the rules for the "in body" insertion mode.
-                this.Using(InsertionModeEnum.InBody, this.ProcessToken);
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // A start tag whose tag name is "body"
@@ -1530,13 +2358,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Base, Tags.BaseFont, Tags.BgSound, Tags.Link, Tags.Meta, Tags.NoFrames, Tags.Script, Tags.Style, Tags.Template, Tags.Title))
             {
                 // Parse error.
-                this.ParseError(Parsing.ParseError.UnexpectedStartTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
                 // Push the node pointed to by the head element pointer onto the stack of open elements.
                 this.OpenElements.Push(this.ParsingState.Head);
 
                 // Process the token using the rules for the "in head" insertion mode.
-                this.Using(InsertionModeEnum.InHead, this.ProcessToken);
+                this.ProcessTokenUsing(InsertionModeEnum.InHead);
 
                 // Remove the node pointed to by the head element pointer from the stack of open elements.
                 // (It might not be the current node at this point.)
@@ -1549,7 +2377,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsEndTagNamed(Tags.Template))
             {
                 // Process the token using the rules for the "in head" insertion mode.
-                this.Using(InsertionModeEnum.InHead, this.ProcessToken);
+                this.ProcessTokenUsing(InsertionModeEnum.InHead);
             }
 
             // An end tag whose tag name is one of: "body", "html", "br"
@@ -1564,7 +2392,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Head) || (this.Token.Type == TokenType.EndTag))
             {
                 // Parse error. Ignore the token.
-                this.ParseError(Parsing.ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
             }
 
             // Anything else
@@ -1597,11 +2425,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             the user agent must handle the token as follows:
             */
 
+            bool anyOtherEndTag = false;
+
             // A character token that is U+0000 NULL
             if (this.Token.IsCharacterNull())
             {
                 // Parse error. Ignore the token.
-                this.ParseError(Parsing.ParseError.NullCharacter);
+                this.InformParseError(Parsing.ParseError.NullCharacter);
             }
 
             // A character token that is one of U+0009 CHARACTER TABULATION, "LF" (U+000A),
@@ -1609,7 +2439,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsCharacterWhitespace())
             {
                 // Reconstruct the active formatting elements, if any.
-                this.ReconstructFormattingElements();
+                this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert the token's character.
                 this.DomFactory.InsertCharacter(this.Token.Character);
@@ -1619,7 +2449,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.Character)
             {
                 // Reconstruct the active formatting elements, if any.
-                this.ReconstructFormattingElements();
+                this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert the token's character.
                 this.DomFactory.InsertCharacter(this.Token.Character);
@@ -1639,14 +2469,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.ParseError(Parsing.ParseError.UnexpectedDocType);
+                this.InformParseError(Parsing.ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
             else if (this.Token.IsStartTagNamed(Tags.Html))
             {
                 // Parse error.
-                this.ParseError(Parsing.ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
                 // If there is a template element on the stack of open elements, then ignore the token.
                 if (this.OpenElements.Contains(Tags.Template))
@@ -1672,19 +2502,19 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Base, Tags.BaseFont, Tags.BgSound, Tags.Link, Tags.Meta, Tags.NoFrames, Tags.Script, Tags.Style, Tags.Template, Tags.Title) || this.Token.IsEndTagNamed(Tags.Template))
             {
                 // Process the token using the rules for the "in head" insertion mode.
-                this.Using(InsertionModeEnum.InHead, this.ProcessToken);
+                this.ProcessTokenUsing(InsertionModeEnum.InHead);
             }
 
             // A start tag whose tag name is "body"
             else if (this.Token.IsStartTagNamed(Tags.Body))
             {
                 // Parse error.
-                this.ParseError(Parsing.ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
                 // If the second element on the stack of open elements is not a body element, if the stack of open elements
                 // has only one node on it, or if there is a template element on the stack of open elements,
                 // then ignore the token. (fragment case)
-                if (((this.OpenElements.Count >= 2) && (this.OpenElements[1].TagName == Tags.Body)) ||
+                if (((this.OpenElements.Count >= 2) && !this.OpenElements[1].Is(Tags.Body)) ||
                     (this.OpenElements.Count == 1) || this.OpenElements.Contains(Tags.Template))
                     return;
 
@@ -1707,7 +2537,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Frameset))
             {
                 // Parse error.
-                this.ParseError(Parsing.ParseError.UnexpectedStartTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
                 throw new NotImplementedException();
 
@@ -1731,7 +2561,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // the "in template" insertion mode.
                 if (this.TemplateInsertionMode.Count != 0)
                 {
-                    this.Using(InsertionModeEnum.InTemplate, this.ProcessToken);
+                    this.ProcessTokenUsing(InsertionModeEnum.InTemplate);
                 }
                 else
                 {
@@ -1741,7 +2571,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     if (this.OpenElements.Contains(Tags.Dd, Tags.Dt, Tags.Li, Tags.P, Tags.TBody, Tags.Td, Tags.TFoot,
                         Tags.Th, Tags.THead, Tags.Tr, Tags.Body, Tags.Html))
                     {
-                        this.ParseError(Parsing.ParseError.PrematureEndOfFile);
+                        this.InformParseError(Parsing.ParseError.PrematureEndOfFile);
                     }
 
                     // Stop parsing.
@@ -1753,9 +2583,9 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsEndTagNamed(Tags.Body))
             {
                 // If the stack of open elements does not have a body element in scope, this is a parse error; ignore the token.
-                if (!this.OpenElements.HasElementInSpecificScope(Tags.Body, OpenElementsStack.ScopeTags))
+                if (!this.OpenElements.HasElementInScope(Tags.Body))
                 {
-                    this.ParseError(Parsing.ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -1763,10 +2593,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // a dt element, an li element, an optgroup element, an option element, a p element, an rb element,
                 // an rp element, an rt element, an rtc element, a tbody element, a td element, a tfoot element,
                 // a th element, a thead element, a tr element, the body element, or the html element, then this is a parse error.
-                if (this.OpenElements.Contains(Tags.Dd, Tags.Dt, Tags.Li, Tags.OptGroup, Tags.Option, Tags.P, Tags.Rb, Tags.Rp, 
+                if (this.OpenElements.Contains(Tags.Dd, Tags.Dt, Tags.Li, Tags.OptGroup, Tags.Option, Tags.P, Tags.Rb, Tags.Rp,
                     Tags.Rt, Tags.Rtc, Tags.TBody, Tags.Td, Tags.TFoot, Tags.Th, Tags.THead, Tags.Tr, Tags.Body, Tags.Html))
                 {
-                    this.ParseError(Parsing.ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                 }
 
                 // Switch the insertion mode to "after body".
@@ -1777,9 +2607,9 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsEndTagNamed(Tags.Html))
             {
                 // If the stack of open elements does not have a body element in scope, this is a parse error; ignore the token.
-                if (!this.OpenElements.HasElementInSpecificScope(Tags.Body, OpenElementsStack.ScopeTags))
+                if (!this.OpenElements.HasElementInScope(Tags.Body))
                 {
-                    this.ParseError(Parsing.ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -1790,7 +2620,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 if (this.OpenElements.Contains(Tags.Dd, Tags.Dt, Tags.Li, Tags.OptGroup, Tags.Option, Tags.P, Tags.Rb, Tags.Rp,
                     Tags.Rt, Tags.Rtc, Tags.TBody, Tags.Td, Tags.TFoot, Tags.Th, Tags.THead, Tags.Tr, Tags.Body, Tags.Html))
                 {
-                    this.ParseError(Parsing.ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                 }
 
                 // Switch the insertion mode to "after body".
@@ -1804,12 +2634,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // "dir", "div", "dl", "fieldset", "figcaption", "figure", "footer", "header", "hgroup", "main", "nav", "ol", "p",
             // "section", "summary", "ul"
             else if (this.Token.IsStartTagNamed(
-                Tags.Address, Tags.Article, Tags.Aside, Tags.BlockQuote, Tags.Center, Tags.Details,  Tags.Dialog, 
-                Tags.Dir, Tags.Div, Tags.Dl, Tags.FieldSet, Tags.FigCaption, Tags.Figure, Tags.Footer, Tags.Header,  Tags.HGroup,
+                Tags.Address, Tags.Article, Tags.Aside, Tags.BlockQuote, Tags.Center, Tags.Details, Tags.Dialog,
+                Tags.Dir, Tags.Div, Tags.Dl, Tags.FieldSet, Tags.FigCaption, Tags.Figure, Tags.Footer, Tags.Header, Tags.HGroup,
                 Tags.Main, Tags.Nav, Tags.Ol, Tags.P, Tags.Section, Tags.Summary, Tags.Ul))
             {
                 // If the stack of open elements has a p element in button scope, then close a p element.
-                if (this.OpenElements.HasElementInSpecificScope(Tags.P, OpenElementsStack.ButtonScopeTags))
+                if (this.OpenElements.HasElementInButtonScope(Tags.P))
                     this.ClosePElement();
 
                 // Insert an HTML element for the token.
@@ -1820,14 +2650,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.H1, Tags.H2, Tags.H3, Tags.H4, Tags.H5, Tags.H6))
             {
                 // If the stack of open elements has a p element in button scope, then close a p element.
-                if (this.OpenElements.HasElementInSpecificScope(Tags.P, OpenElementsStack.ButtonScopeTags))
+                if (this.OpenElements.HasElementInButtonScope(Tags.P))
                     this.ClosePElement();
 
                 // If the current node is an HTML element whose tag name is one of "h1", "h2", "h3", "h4", "h5", or "h6",
                 // then this is a parse error; pop the current node off the stack of open elements.
-                if (this.IsCurrentNode(Tags.H1, Tags.H2, Tags.H3, Tags.H4, Tags.H5, Tags.H6))
+                if (this.CurrentNode.Is(Tags.H1, Tags.H2, Tags.H3, Tags.H4, Tags.H5, Tags.H6))
                 {
-                    this.ParseError(Parsing.ParseError.UnexpectedStartTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
                     this.OpenElements.Pop();
                 }
 
@@ -1839,96 +2669,207 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Pre, Tags.Listing))
             {
                 // If the stack of open elements has a p element in button scope, then close a p element.
-                if (this.OpenElements.HasElementInSpecificScope(Tags.P, OpenElementsStack.ButtonScopeTags))
+                if (this.OpenElements.HasElementInButtonScope(Tags.P))
                     this.ClosePElement();
 
                 // Insert an HTML element for the token.
                 this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
 
-                //    If the next token is a "LF" (U+000A) character token, then ignore that token and move on to the
-                //    next one. (Newlines at the start of pre blocks are ignored as an authoring convenience.)
+                // If the next token is a "LF" (U+000A) character token, then ignore that token and move on to the
+                // next one. (Newlines at the start of pre blocks are ignored as an authoring convenience.)
+                this.NextToken = this.Tokenizer.GetNextToken();
+                if ((this.NextToken.Type == TokenType.Character) && (this.NextToken.Character == Characters.Lf))
+                {
+                    // This will "waste" the "next-token". Without this, the next "get token"
+                    // will return the "next-token" instead of asking the tokenizer.
+                    this.NextToken.ResetToken();
+                }
 
-                //    Set the frameset-ok flag to "not ok".
+                // Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
             }
 
             // A start tag whose tag name is "form"
             else if (this.Token.IsStartTagNamed(Tags.Form))
             {
-                //    If the form element pointer is not null, and there is no template element on the stack of open elements,
-                //    then this is a parse error; ignore the token.
+                // If the form element pointer is not null, and there is no template element on the stack of open elements,
+                // then this is a parse error; ignore the token.
+                if ((this.ParsingState.Form != null) && !this.OpenElements.Contains(Tags.Template))
+                {
+                    this.InformParseError(ParseError.UnexpectedStartTag);
+                    return;
+                }
 
-                //    Otherwise:
-                //        If the stack of open elements has a p element in button scope, then close a p element.
+                // Otherwise:
+                // If the stack of open elements has a p element in button scope, then close a p element.
+                if (this.OpenElements.HasElementInButtonScope(Tags.P))
+                    this.ClosePElement();
 
-                //    Insert an HTML element for the token, and, if there is no template element on the stack of
-                //    open elements, set the form element pointer to point to the element created.
+                // Insert an HTML element for the token, and, if there is no template element on the stack of
+                // open elements, set the form element pointer to point to the element created.
+                Element form = this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                if (!this.OpenElements.Contains(Tags.Template))
+                    this.ParsingState.Form = form;
             }
 
             // A start tag whose tag name is "li"
             else if (this.Token.IsStartTagNamed(Tags.Li))
             {
-                //    Run these steps:
-                //        1. Set the frameset-ok flag to "not ok".
-                //        2. Initialize node to be the current node (the bottommost node of the stack).
-                //        3. Loop: If node is an li element, then run these substeps:
-                //            1. Generate implied end tags, except for li elements.
-                //            2. If the current node is not an li element, then this is a parse error.
-                //            3. Pop elements from the stack of open elements until an li element has been popped from the stack.
-                //            4. Jump to the step labeled done below.
-                //        4. If node is in the special category, but is not an address, div, or p element,
-                //           then jump to the step labeled done below.
-                //        5. Otherwise, set node to the previous entry in the stack of open elements and return to the step labeled loop.
-                //        6. Done: If the stack of open elements has a p element in button scope, then close a p element.
-                //        7. Finally, insert an HTML element for the token.
+                // Run these steps:
+                // 1. Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
+
+                // 2. Initialize node to be the current node (the bottommost node of the stack).
+                int i = this.OpenElements.Count - 1;
+                Element node = this.OpenElements[i];
+
+                // 3. Loop:
+                while (true)
+                {
+                    // If node is an li element, then run these substeps:
+                    if (node.TagName == Tags.Li)
+                    {
+                        // 1. Generate implied end tags, except for li elements.
+                        this.GenerateImpliedEndTag(Tags.Li);
+
+                        // 2. If the current node is not an li element, then this is a parse error.
+                        if (!this.CurrentNode.Is(Tags.Li))
+                            this.InformParseError(ParseError.UnexpectedTag);
+
+                        // 3. Pop elements from the stack of open elements until an li element has been popped from the stack.
+                        this.OpenElements.PopUntil(Tags.Li);
+
+                        // 4. Jump to the step labeled done below.
+                        break;
+                    }
+
+                    // 4. If node is in the special category, but is not an address, div, or p element,
+                    //    then jump to the step labeled done below.
+                    if (node.IsSpecial() && !node.Is(Tags.Address, Tags.Div, Tags.P))
+                        break;
+
+                    // 5. Otherwise, set node to the previous entry in the stack of open elements and return to the step labeled loop.
+                    i--;
+                    node = this.OpenElements[i];
+                }
+
+                // 6. Done: If the stack of open elements has a p element in button scope, then close a p element.
+                if (this.OpenElements.HasElementInButtonScope(Tags.P))
+                    this.ClosePElement();
+
+                // 7. Finally, insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
             }
 
             // A start tag whose tag name is one of: "dd", "dt"
             else if (this.Token.IsStartTagNamed(Tags.Dd, Tags.Dt))
             {
-                //    Run these steps:
-                //        1. Set the frameset-ok flag to "not ok".
-                //        2. Initialize node to be the current node (the bottommost node of the stack).
-                //        3. Loop: If node is a dd element, then run these substeps:
-                //            1. Generate implied end tags, except for dd elements.
-                //            2. If the current node is not a dd element, then this is a parse error.
-                //            3. Pop elements from the stack of open elements until a dd element has been popped from the stack.
-                //            4. Jump to the step labeled done below.
-                //        4. If node is a dt element, then run these substeps:
-                //            1. Generate implied end tags, except for dt elements.
-                //            2. If the current node is not a dt element, then this is a parse error.
-                //            3. Pop elements from the stack of open elements until a dt element has been popped from the stack.
-                //            4. Jump to the step labeled done below.
-                //        5. If node is in the special category, but is not an address, div, or p element,
-                //           then jump to the step labeled done below.
-                //        6. Otherwise, set node to the previous entry in the stack of open elements and return to the step labeled loop.
-                //        7. Done: If the stack of open elements has a p element in button scope, then close a p element.
-                //        8. Finally, insert an HTML element for the token.
+                // Run these steps:
+                // 1. Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
+
+                // 2. Initialize node to be the current node (the bottommost node of the stack).
+                int i = this.OpenElements.Count - 1;
+                Element node = this.OpenElements[i];
+
+                // 3. Loop:
+                while (true)
+                {
+                    // If node is a dd element, then run these substeps:
+                    if (node.Is(Tags.Dd))
+                    {
+                        // 1. Generate implied end tags, except for dd elements.
+                        this.GenerateImpliedEndTag(Tags.Dd);
+
+                        // 2. If the current node is not a dd element, then this is a parse error.
+                        if (!this.CurrentNode.Is(Tags.Dd))
+                            this.InformParseError(ParseError.UnexpectedTag);
+
+                        // 3. Pop elements from the stack of open elements until a dd element has been popped from the stack.
+                        this.OpenElements.PopUntil(Tags.Dd);
+
+                        // 4. Jump to the step labeled done below.
+                        break;
+                    }
+
+                    // 4. If node is a dt element, then run these substeps:
+                    if (node.Is(Tags.Dt))
+                    {
+                        // 1. Generate implied end tags, except for dt elements.
+                        this.GenerateImpliedEndTag(Tags.Dt);
+
+                        // 2. If the current node is not a dt element, then this is a parse error.
+                        if (!this.CurrentNode.Is(Tags.Dt))
+                            this.InformParseError(ParseError.UnexpectedTag);
+
+                        // 3. Pop elements from the stack of open elements until a dt element has been popped from the stack.
+                        this.OpenElements.PopUntil(Tags.Dt);
+
+                        // 4. Jump to the step labeled done below.
+                        break;
+                    }
+
+                    // 5. If node is in the special category, but is not an address, div, or p element,
+                    // then jump to the step labeled done below.
+                    if (node.IsSpecial() && !node.Is(Tags.Address, Tags.Div, Tags.P))
+                        break;
+
+                    // 6. Otherwise, set node to the previous entry in the stack of open elements and return to the step labeled loop.
+                    i--;
+                    node = this.OpenElements[i];
+
+                }
+
+                // 7. Done: If the stack of open elements has a p element in button scope, then close a p element.
+                if (this.OpenElements.HasElementInButtonScope(Tags.P))
+                    this.ClosePElement();
+
+                // 8. Finally, insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
             }
 
             // A start tag whose tag name is "plaintext"
             else if (this.Token.IsStartTagNamed(Tags.PlainText))
             {
-                //    If the stack of open elements has a p element in button scope, then close a p element.
+                // If the stack of open elements has a p element in button scope, then close a p element.
+                if (this.OpenElements.HasElementInButtonScope(Tags.P))
+                    this.ClosePElement();
 
-                //    Insert an HTML element for the token.
+                // Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
 
-                //    Switch the tokenizer to the PLAINTEXT state.
+                // Switch the tokenizer to the PLAINTEXT state.
+                this.Tokenizer.SwitchTo(Tokenizer.StateEnum.PlainText);
 
-                //    NOTE: Once a start tag with the tag name "plaintext" has been seen, that will be the last
-                //    token ever seen other than character tokens (and the end-of-file token), because there is
-                //    no way to switch out of the PLAINTEXT state.
+                // NOTE: Once a start tag with the tag name "plaintext" has been seen, that will be the last
+                // token ever seen other than character tokens (and the end-of-file token), because there is
+                // no way to switch out of the PLAINTEXT state.
             }
 
             // A start tag whose tag name is "button"
             else if (this.Token.IsStartTagNamed(Tags.Button))
             {
-                //    1. If the stack of open elements has a button element in scope, then run these substeps:
-                //        1. Parse error.
-                //        2. Generate implied end tags.
-                //        3. Pop elements from the stack of open elements until a button element has been popped from the stack.
-                //    2. Reconstruct the active formatting elements, if any.
-                //    3. Insert an HTML element for the token.
-                //    4. Set the frameset-ok flag to "not ok".
+                // 1. If the stack of open elements has a button element in scope, then run these substeps:
+                if (this.OpenElements.HasElementInScope(Tags.Button))
+                {
+                    // 1. Parse error.
+                    this.InformParseError(ParseError.UnexpectedStartTag);
+
+                    // 2. Generate implied end tags.
+                    this.GenerateImpliedEndTag();
+
+                    // 3. Pop elements from the stack of open elements until a button element has been popped from the stack.
+                    this.OpenElements.PopUntil(Tags.Button);
+                }
+
+                // 2. Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
+
+                // 3. Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+
+                // 4. Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
             }
 
             // An end tag whose tag name is one of: "address", "article", "aside", "blockquote", "button", "center", "details",
@@ -1939,111 +2880,227 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 Tags.Dialog, Tags.Dir, Tags.Div, Tags.Dl, Tags.FieldSet, Tags.FigCaption, Tags.Figure, Tags.Footer, Tags.Header,
                 Tags.HGroup, Tags.Listing, Tags.Main, Tags.Nav, Tags.Ol, Tags.P, Tags.Section, Tags.Summary, Tags.Ul))
             {
-                //    If the stack of open elements does not have an element in scope that is an HTML element and with the same
-                //    tag name as that of the token, then this is a parse error; ignore the token.
+                // If the stack of open elements does not have an element in scope that is an HTML element and with the same
+                // tag name as that of the token, then this is a parse error; ignore the token.
+                if (!this.OpenElements.HasElementInScope(node => node.IsHtmlElement() && node.Is(this.Token.TagName)))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise, run these steps:
-                //        1. Generate implied end tags.
-                //        2. If the current node is not an HTML element with the same tag name as that of the token,
-                //           then this is a parse error.
-                //        3. Pop elements from the stack of open elements until an HTML element with the same tag name
-                //           as the token has been popped from the stack.
+                // Otherwise, run these steps:
+                // 1. Generate implied end tags.
+                this.GenerateImpliedEndTag();
+
+                // 2. If the current node is not an HTML element with the same tag name as that of the token,
+                // then this is a parse error.
+                if (!(this.CurrentNode.IsHtmlElement() && this.CurrentNode.Is(this.Token.TagName)))
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+
+                // 3. Pop elements from the stack of open elements until an HTML element with the same tag name
+                // as the token has been popped from the stack.
+                while (true)
+                {
+                    Element node = this.OpenElements.Pop();
+                    if (node.IsHtmlElement() && node.Is(this.Token.TagName))
+                        break;
+                }
             }
 
             // An end tag whose tag name is "form"
             else if (this.Token.IsEndTagNamed(Tags.Form))
             {
-                //    If there is no template element on the stack of open elements, then run these substeps:
-                //        1. Let node be the element that the form element pointer is set to, or null if it is not set to an element.
-                //        2. Set the form element pointer to null. Otherwise, let node be null.
-                //        3. If node is null or if the stack of open elements does not have node in scope, then this is a parse error;
-                //           abort these steps and ignore the token.
-                //        4. Generate implied end tags.
-                //        5. If the current node is not node, then this is a parse error.
-                //        6. Remove node from the stack of open elements.
+                // If there is no template element on the stack of open elements, then run these substeps:
+                if (!this.OpenElements.Contains(Tags.Template))
+                {
+                    // 1. Let node be the element that the form element pointer is set to, or null if it is not set to an element.
+                    Element node = this.ParsingState.Form;
 
-                //    If there is a template element on the stack of open elements, then run these substeps instead:
-                //        1. If the stack of open elements does not have a form element in scope, then this is a parse error;
-                //           abort these steps and ignore the token.
-                //        2. Generate implied end tags.
-                //        3. If the current node is not a form element, then this is a parse error.
-                //        4. Pop elements from the stack of open elements until a form element has been popped from the stack.
+                    // 2. Set the form element pointer to null. Otherwise, let node be null.
+                    this.ParsingState.Form = null;
+
+                    // 3. If node is null or if the stack of open elements does not have node in scope, then this is a parse error;
+                    // abort these steps and ignore the token.
+                    if ((node == null) || !this.OpenElements.HasElementInScope(n => n == node))
+                    {
+                        this.InformParseError(ParseError.UnexpectedEndTag);
+                        return;
+                    }
+
+                    // 4. Generate implied end tags.
+                    this.GenerateImpliedEndTag();
+
+                    // 5. If the current node is not node, then this is a parse error.
+                    if (this.CurrentNode != node)
+                        this.InformParseError(ParseError.UnexpectedEndTag);
+
+                    // 6. Remove node from the stack of open elements.
+                    this.OpenElements.Remove(node);
+                }
+                else
+                {
+                    // If there is a template element on the stack of open elements, then run these substeps instead:
+
+                    // 1. If the stack of open elements does not have a form element in scope, then this is a parse error;
+                    // abort these steps and ignore the token.
+                    if (!this.OpenElements.HasElementInScope(Tags.Form))
+                    {
+                        this.InformParseError(ParseError.UnexpectedEndTag);
+                        return;
+                    }
+
+                    // 2. Generate implied end tags.
+                    this.GenerateImpliedEndTag();
+
+                    // 3. If the current node is not a form element, then this is a parse error.
+                    if (!this.CurrentNode.Is(Tags.Form))
+                        this.InformParseError(ParseError.UnexpectedEndTag);
+
+                    // 4. Pop elements from the stack of open elements until a form element has been popped from the stack.
+                    this.OpenElements.PopUntil(Tags.Form);
+                }
             }
 
             // An end tag whose tag name is "p"
             else if (this.Token.IsEndTagNamed(Tags.P))
             {
-                //    If the stack of open elements does not have a p element in button scope, then this is a parse error;
-                //    insert an HTML element for a "p" start tag token with no attributes.
+                // If the stack of open elements does not have a p element in button scope, then this is a parse error;
+                // insert an HTML element for a "p" start tag token with no attributes.
+                if (!this.OpenElements.HasElementInButtonScope(Tags.P))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.DomFactory.InsertHtmlElement(Tags.P, Attribute.None);
+                }
 
-                //    Close a p element.
+                // Close a p element.
+                this.ClosePElement();
             }
 
             // An end tag whose tag name is "li"
             else if (this.Token.IsEndTagNamed(Tags.Li))
             {
-                //    If the stack of open elements does not have an li element in list item scope,
-                //    then this is a parse error; ignore the token.
+                // If the stack of open elements does not have an li element in list item scope,
+                // then this is a parse error; ignore the token.
+                if (!this.OpenElements.HasElementInListItemScope(Tags.Li))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise, run these steps:
-                //        1. Generate implied end tags, except for li elements.
-                //        2. If the current node is not an li element, then this is a parse error.
-                //        3. Pop elements from the stack of open elements until an li element has been popped from the stack.
+                // Otherwise, run these steps:
+                // 1. Generate implied end tags, except for li elements.
+                this.GenerateImpliedEndTag(Tags.Li);
+
+                // 2. If the current node is not an li element, then this is a parse error.
+                if (!this.CurrentNode.Is(Tags.Li))
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+
+                // 3. Pop elements from the stack of open elements until an li element has been popped from the stack.
+                this.OpenElements.PopUntil(Tags.Li);
             }
 
             // An end tag whose tag name is one of: "dd", "dt"
             else if (this.Token.IsEndTagNamed(Tags.Dd, Tags.Dt))
             {
-                //    If the stack of open elements does not have an element in scope that is an HTML element and with the
-                //    same tag name as that of the token, then this is a parse error; ignore the token.
+                // If the stack of open elements does not have an element in scope that is an HTML element and with the
+                // same tag name as that of the token, then this is a parse error; ignore the token.
+                if (!this.OpenElements.HasElementInScope(node => node.IsHtmlElement() && node.Is(this.Token.TagName)))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise, run these steps:
-                //        1. Generate implied end tags, except for HTML elements with the same tag name as the token.
-                //        2. If the current node is not an HTML element with the same tag name as that of the token,
-                //           then this is a parse error.
-                //        3. Pop elements from the stack of open elements until an HTML element with the same tag name
-                //           as the token has been popped from the stack.
+                // Otherwise, run these steps:
+                // 1. Generate implied end tags, except for HTML elements with the same tag name as the token.
+                this.GenerateImpliedEndTag(node => node.IsHtmlElement() && node.Is(this.Token.TagName));
+
+                // 2. If the current node is not an HTML element with the same tag name as that of the token,
+                // then this is a parse error.
+                if (!(this.CurrentNode.IsHtmlElement() && this.CurrentNode.Is(this.CurrentNode.TagName)))
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+
+                // 3. Pop elements from the stack of open elements until an HTML element with the same tag name
+                // as the token has been popped from the stack.
+                while (true)
+                {
+                    Element node = this.OpenElements.Pop();
+                    if (node.IsHtmlElement() && node.Is(this.Token.TagName))
+                        break;
+                }
             }
 
             // An end tag whose tag name is one of: "h1", "h2", "h3", "h4", "h5", "h6"
             else if (this.Token.IsEndTagNamed(Tags.H1, Tags.H2, Tags.H3, Tags.H4, Tags.H5, Tags.H6))
             {
-                //    If the stack of open elements does not have an element in scope that is an HTML element and whose tag
-                //    name is one of "h1", "h2", "h3", "h4", "h5", or "h6", then this is a parse error; ignore the token.
+                // If the stack of open elements does not have an element in scope that is an HTML element and whose tag
+                // name is one of "h1", "h2", "h3", "h4", "h5", or "h6", then this is a parse error; ignore the token.
+                if (!this.OpenElements.Any(node => node.IsHtmlElement() && node.Is(Tags.H1, Tags.H2, Tags.H3, Tags.H4, Tags.H5, Tags.H6)))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise, run these steps:
-                //        1. Generate implied end tags.
-                //        2. If the current node is not an HTML element with the same tag name as that of the token, then this
-                //           is a parse error.
-                //        3. Pop elements from the stack of open elements until an HTML element whose tag name is one of
-                //           "h1", "h2", "h3", "h4", "h5", or "h6" has been popped from the stack.
+                // Otherwise, run these steps:
+                // 1. Generate implied end tags.
+                this.GenerateImpliedEndTag();
+
+                // 2. If the current node is not an HTML element with the same tag name as that of the token, then this
+                // is a parse error.
+                if (!(this.CurrentNode.IsHtmlElement() && this.CurrentNode.Is(this.Token.TagName)))
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+
+                // 3. Pop elements from the stack of open elements until an HTML element whose tag name is one of
+                // "h1", "h2", "h3", "h4", "h5", or "h6" has been popped from the stack.
+                while (true)
+                {
+                    Element node = this.OpenElements.Pop();
+                    if (node.IsHtmlElement() && node.Is(Tags.H1, Tags.H2, Tags.H3, Tags.H4, Tags.H5, Tags.H6))
+                        break;
+                }
             }
 
             // An end tag whose tag name is "sarcasm"
             else if (this.Token.IsEndTagNamed(Tags.Sarcasm))
             {
-                //    Take a deep breath, then act as described in the "any other end tag" entry below.
+                // Take a deep breath, then act as described in the "any other end tag" entry below.
+                anyOtherEndTag = true;
             }
 
             // A start tag whose tag name is "a"
             else if (this.Token.IsStartTagNamed(Tags.A))
             {
-                //    If the list of active formatting elements contains an a element between the end of the
-                //    list and the last marker on the list (or the start of the list if there is no marker on the list),
-                //    then this is a parse error; run the adoption agency algorithm for the tag name "a", then remove that
-                //    element from the list of active formatting elements and the stack of open elements if the adoption agency
-                //    algorithm didn't already remove it (it might not have if the element is not in table scope).
+                // If the list of active formatting elements contains an <A> element between the end of the
+                // list and the last marker on the list (or the start of the list if there is no marker on the list),
+                // then this is a parse error; run the adoption agency algorithm for the tag name "a", then remove that
+                // element from the list of active formatting elements and the stack of open elements if the adoption agency
+                // algorithm didn't already remove it (it might not have if the element is not in table scope).
+                if (this.ActiveFormattingElements.ContainsUpToLastMarker(Tags.A))
+                {
+                    this.InformParseError(ParseError.UnexpectedStartTag);
+                    bool removed = this.RunAdoptionAgencyAlgorithm(Tags.A, ref anyOtherEndTag);
 
-                //        In the non-conforming stream <a href="a">a<table><a href="b">b</table>x, the first a element would be
-                //        closed upon seeing the second one, and the "x" character would be inside a link to "b", not to "a".
-                //        This is despite the fact that the outer a element is not in table scope (meaning that a regular </a>
-                //        end tag at the start of the table wouldn't close the outer a element). The result is that the two a
-                //        elements are indirectly nested inside each other — non-conforming markup will often result in
-                //        non-conforming DOMs when parsed.
+                    // ISSUE: If the RunAdoptionAgencyAlgorithm told us to "act as anyOtherEndTag", should we run the stuff below?
+                    this.ActiveFormattingElements.RemoveLast(Tags.A);
+                    if (!removed)
+                    {
+                        this.ActiveFormattingElements.RemoveLast(Tags.A);
+                        this.OpenElements.RemoveLast(Tags.A);
+                    }
+                }
 
-                //    Reconstruct the active formatting elements, if any.
+                // EXAMPLE:
+                // In the non-conforming stream <a href="a">a<table><a href="b">b</table>x, the first a element would be
+                // closed upon seeing the second one, and the "x" character would be inside a link to "b", not to "a".
+                // This is despite the fact that the outer a element is not in table scope (meaning that a regular </a>
+                // end tag at the start of the table wouldn't close the outer a element). The result is that the two a
+                // elements are indirectly nested inside each other — non-conforming markup will often result in
+                // non-conforming DOMs when parsed.
 
-                //    Insert an HTML element for the token. Push onto the list of active formatting elements that element.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
+
+                // Insert an HTML element for the token. Push onto the list of active formatting elements that element.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
             }
 
             // A start tag whose tag name is one of: "b", "big", "code", "em", "font", "i", "s", "small", "strike",
@@ -2052,21 +3109,34 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 Tags.B, Tags.Big, Tags.Code, Tags.Em, Tags.Font, Tags.I, Tags.S, Tags.Small, Tags.Strike,
                 Tags.Strong, Tags.Tt, Tags.U))
             {
-                //    Reconstruct the active formatting elements, if any.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
 
-                //    Insert an HTML element for the token. Push onto the list of active formatting elements that element.
+                // Insert an HTML element for the token. Push onto the list of active formatting elements that element.
+                Element elem = this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.ActiveFormattingElements.PushFormattingElement(elem);
             }
 
             // A start tag whose tag name is "nobr"
             else if (this.Token.IsStartTagNamed(Tags.Nobr))
             {
-                //    Reconstruct the active formatting elements, if any.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
 
-                //    If the stack of open elements has a nobr element in scope, then this is a parse error; run the adoption
-                //    agency algorithm for the tag name "nobr", then once again reconstruct the active formatting elements, if any.
+                // If the stack of open elements has a nobr element in scope, then this is a parse error; run the adoption
+                // agency algorithm for the tag name "nobr", then once again reconstruct the active formatting elements, if any.
+                if (this.OpenElements.HasElementInScope(Tags.Nobr))
+                {
+                    this.InformParseError(ParseError.UnexpectedStartTag);
+                    this.RunAdoptionAgencyAlgorithm(Tags.Nobr, ref anyOtherEndTag);
 
-                //    Insert an HTML element for the token. Push onto the list of active formatting elements that element.
+                    // ISSUE: If the RunAdoptionAgencyAlgorithm told us to "act as anyOtherEndTag", should we run the stuff below?
+                    this.ActiveFormattingElements.ReconstructFormattingElements();
+                }
 
+                // Insert an HTML element for the token. Push onto the list of active formatting elements that element.
+                Element elem = this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.ActiveFormattingElements.PushFormattingElement(elem);
             }
 
             // An end tag whose tag name is one of: "a", "b", "big", "code", "em", "font", "i", "nobr", "s", "small",
@@ -2075,246 +3145,324 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 Tags.A, Tags.B, Tags.Big, Tags.Code, Tags.Em, Tags.Font, Tags.I, Tags.Nobr, Tags.S, Tags.Small,
                 Tags.Strike, Tags.Strong, Tags.Tt, Tags.U))
             {
-                //    Run the adoption agency algorithm for the token's tag name.
+                // Run the adoption agency algorithm for the token's tag name.
+                this.RunAdoptionAgencyAlgorithm(this.Token.TagName, ref anyOtherEndTag);
             }
 
             // A start tag whose tag name is one of: "applet", "marquee", "object"
             else if (this.Token.IsStartTagNamed(Tags.Applet, Tags.Marquee, Tags.Object))
             {
-                //    Reconstruct the active formatting elements, if any.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
 
-                //    Insert an HTML element for the token.
+                // Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
 
-                //    Insert a marker at the end of the list of active formatting elements.
+                // Insert a marker at the end of the list of active formatting elements.
+                this.ActiveFormattingElements.InsertMarker();
 
-                //    Set the frameset-ok flag to "not ok".
+                // Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
             }
 
             // An end tag token whose tag name is one of: "applet", "marquee", "object"
             else if (this.Token.IsEndTagNamed(Tags.Applet, Tags.Marquee, Tags.Object))
             {
-                //    If the stack of open elements does not have an element in scope that is an HTML element and with the
-                //    same tag name as that of the token, then this is a parse error; ignore the token.
+                // If the stack of open elements does not have an element in scope that is an HTML element and with the
+                // same tag name as that of the token, then this is a parse error; ignore the token.
+                if (!this.OpenElements.Any(node => node.IsHtmlElement() && node.Is(this.Token.TagName)))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise, run these steps:
-                //        1. Generate implied end tags.
-                //        2. If the current node is not an HTML element with the same tag name as that of the token, then this
-                //           is a parse error.
-                //        3. Pop elements from the stack of open elements until an HTML element with the same tag name as the
-                //           token has been popped from the stack.
-                //        4. Clear the list of active formatting elements up to the last marker.
+                // Otherwise, run these steps:
+                // 1. Generate implied end tags.
+                this.GenerateImpliedEndTag();
+
+                // 2. If the current node is not an HTML element with the same tag name as that of the token, then this
+                // is a parse error.
+                if (!(this.CurrentNode.IsHtmlElement() && this.CurrentNode.Is(this.Token.TagName)))
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+
+                // 3. Pop elements from the stack of open elements until an HTML element with the same tag name as the
+                // token has been popped from the stack.
+                while (true)
+                {
+                    Element node = this.OpenElements.Pop();
+                    if (node.IsHtmlElement() && node.Is(this.Token.TagName))
+                        break;
+                }
+
+                // 4. Clear the list of active formatting elements up to the last marker.
+                this.ActiveFormattingElements.ClearFormattingElementsUpToMarker();
             }
 
             // A start tag whose tag name is "table"
             else if (this.Token.IsStartTagNamed(Tags.Table))
             {
-                //    If the Document is not set to quirks mode, and the stack of open elements has a p element
-                //    in button scope, then close a p element.
+                // If the Document is not set to quirks mode, and the stack of open elements has a p element
+                // in button scope, then close a p element.
+                if ((this.ParsingState.QuirksMode != QuirksMode.On) && this.OpenElements.HasElementInButtonScope(Tags.P))
+                    this.ClosePElement();
 
-                //    Insert an HTML element for the token.
+                // Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
 
-                //    Set the frameset-ok flag to "not ok".
+                // Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
 
-                //    Switch the insertion mode to "in table".
+                // Switch the insertion mode to "in table".
+                this.Switch(InsertionModeEnum.InTable);
             }
 
             // An end tag whose tag name is "br"
             else if (this.Token.IsEndTagNamed(Tags.Br))
             {
-                //    Parse error. Act as described in the next entry, as if this
-                //    was a "br" start tag token, rather than an end tag token.
+                // Parse error. Act as described in the next entry, as if this
+                // was a "br" start tag token, rather than an end tag token.
+                this.InformParseError(ParseError.UnexpectedEndTag);
+
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
+
+                // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, Attribute.None);
+                this.OpenElements.Pop();
+
+                // Acknowledge the token's self-closing flag, if it is set.
+                this.Tokenizer.AcknowledgeSelfClosingTag();
+
+                // Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
             }
 
             // A start tag whose tag name is one of: "area", "br", "embed", "img", "keygen", "wbr"
             else if (this.Token.IsStartTagNamed(Tags.Area, Tags.Br, Tags.Embed, Tags.Img, Tags.KeyGen, Tags.Wbr))
             {
-                //    Reconstruct the active formatting elements, if any.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
 
-                //    Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.OpenElements.Pop();
 
-                //    Acknowledge the token's self-closing flag, if it is set.
+                // Acknowledge the token's self-closing flag, if it is set.
+                if (this.Token.TagIsSelfClosing)
+                    this.Tokenizer.AcknowledgeSelfClosingTag();
 
-                //    Set the frameset-ok flag to "not ok".
+                // Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
             }
 
             // A start tag whose tag name is "input"
             else if (this.Token.IsStartTagNamed(Tags.Input))
             {
-                //    Reconstruct the active formatting elements, if any.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
 
-                //    Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.OpenElements.Pop();
 
-                //    Acknowledge the token's self-closing flag, if it is set.
+                // Acknowledge the token's self-closing flag, if it is set.
+                if (this.Token.TagIsSelfClosing)
+                    this.Tokenizer.AcknowledgeSelfClosingTag();
 
-                //    If the token does not have an attribute with the name "type", or if it does, but that attribute's value
-                //    is not an ASCII case-insensitive match for the string "hidden", then: set the frameset-ok flag to "not ok".
+                // If the token does not have an attribute with the name "type", or if it does, but that attribute's value
+                // is not an ASCII case-insensitive match for the string "hidden", then: set the frameset-ok flag to "not ok".
+                if (!this.Token.TagAttributes.Any(attr => (attr.Name == "type") && attr.Value.Equals("hidden", StringComparison.OrdinalIgnoreCase)))
+                    this.ParsingState.FramesetOk = false;
             }
 
             // A start tag whose tag name is one of: "param", "source", "track"
             else if (this.Token.IsStartTagNamed(Tags.Param, Tags.Source, Tags.Track))
             {
-                //    Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.OpenElements.Pop();
 
-                //    Acknowledge the token's self-closing flag, if it is set.
+                // Acknowledge the token's self-closing flag, if it is set.
+                if (this.Token.TagIsSelfClosing)
+                    this.Tokenizer.AcknowledgeSelfClosingTag();
             }
 
             // A start tag whose tag name is "hr"
             else if (this.Token.IsStartTagNamed(Tags.Hr))
             {
-                //    If the stack of open elements has a p element in button scope, then close a p element.
+                // If the stack of open elements has a p element in button scope, then close a p element.
+                if (this.OpenElements.Contains(Tags.P))
+                    this.ClosePElement();
 
-                //    Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.OpenElements.Pop();
 
-                //    Acknowledge the token's self-closing flag, if it is set.
+                // Acknowledge the token's self-closing flag, if it is set.
+                if (this.Token.TagIsSelfClosing)
+                    this.Tokenizer.AcknowledgeSelfClosingTag();
 
-                //    Set the frameset-ok flag to "not ok".
+                // Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
             }
 
             // A start tag whose tag name is "image"
             else if (this.Token.IsStartTagNamed(Tags.Image))
             {
-                //    Parse error. Change the token's tag name to "img" and reprocess it. (Don't ask.)
-            }
+                // Parse error.
+                this.InformParseError(ParseError.UnexpectedTag);
 
-            // A start tag whose tag name is "isindex"
-            else if (this.Token.IsStartTagNamed(Tags.IsIndex))
-            {
-                //    Parse error.
-
-                //    If there is no template element on the stack of open elements and the form element pointer
-                //    is not null, then ignore the token.
-
-                //    Otherwise:
-                //        Acknowledge the token's self-closing flag, if it is set.
-
-                //        Set the frameset-ok flag to "not ok".
-
-                //        If the stack of open elements has a p element in button scope, then close a p element.
-
-                //        Insert an HTML element for a "form" start tag token with no attributes, and, if there
-                //        is no template element on the stack of open elements, set the form element pointer to point
-                //        to the element created.
-
-                //        If the token has an attribute called "action", set the action attribute on the resulting form
-                //        element to the value of the "action" attribute of the token.
-
-                //        Insert an HTML element for an "hr" start tag token with no attributes. Immediately pop the
-                //        current node off the stack of open elements.
-
-                //        Reconstruct the active formatting elements, if any.
-
-                //        Insert an HTML element for a "label" start tag token with no attributes.
-
-                //        Insert characters (see below for what they should say).
-
-                //        Insert an HTML element for an "input" start tag token with all the attributes from the "isindex"
-                //        token except "name", "action", and "prompt", and with an attribute named "name" with the value
-                //        "isindex". (This creates an input element with the name attribute set to the magic balue "isindex".)
-                //        Immediately pop the current node off the stack of open elements.
-
-                //        Insert more characters (see below for what they should say).
-
-                //        Pop the current node (which will be the label element created earlier) off the stack of open elements.
-
-                //        Insert an HTML element for an "hr" start tag token with no attributes. Immediately pop the current node
-                //        off the stack of open elements.
-
-                //        Pop the current node (which will be the form element created earlier) off the stack of open elements, and,
-                //        if there is no template element on the stack of open elements, set the form element pointer back to null.
-
-                //        Prompt: If the token has an attribute with the name "prompt", then the first stream of characters must be
-                //        the same string as given in that attribute, and the second stream of characters must be empty. Otherwise,
-                //        the two streams of character tokens together should, together with the input element, express the
-                //        equivalent of "This is a searchable index. Enter search keywords: (input field)" in the user's preferred
-                //        language.
+                // Change the token's tag name to "img" and reprocess it. (Don't ask.)
+                this.Token.SetStartTag(Tags.Img, this.Token.TagIsSelfClosing, this.Token.TagAttributes);
+                this.ProcessToken();
             }
 
             // A start tag whose tag name is "textarea"
             else if (this.Token.IsStartTagNamed(Tags.TextArea))
             {
-                //    Run these steps:
-                //        1. Insert an HTML element for the token.
-                //        2. If the next token is a "LF" (U+000A) character token, then ignore that token and move on to the
-                //           next one. (Newlines at the start of textarea elements are ignored as an authoring convenience.)
-                //        3. Switch the tokenizer to the RCDATA state.
-                //        4. Let the original insertion mode be the current insertion mode.
-                //        5. Set the frameset-ok flag to "not ok".
-                //        6. Switch the insertion mode to "text".
+                // Run these steps:
+
+                // 1. Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+
+                // 2. If the next token is a "LF" (U+000A) character token, then ignore that token and move on to the
+                // next one. (Newlines at the start of textarea elements are ignored as an authoring convenience.)
+                this.NextToken = this.Tokenizer.GetNextToken();
+                if ((this.NextToken.Type == TokenType.Character) && (this.NextToken.Character == Characters.Lf))
+                {
+                    // This will "waste" the "next-token". Without this, the next "get token"
+                    // will return the "next-token" instead of asking the tokenizer.
+                    this.NextToken.ResetToken();
+                }
+
+                // 3. Switch the tokenizer to the RCDATA state.
+                this.Tokenizer.SwitchTo(Tokenizer.StateEnum.RcData);
+
+                // 4. Let the original insertion mode be the current insertion mode.
+                this.OriginalInsertionMode = this.InsertionMode;
+
+                // 5. Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
+
+                // 6. Switch the insertion mode to "text".
+                this.Switch(InsertionModeEnum.Text);
             }
 
             // A start tag whose tag name is "xmp"
             else if (this.Token.IsStartTagNamed(Tags.Xmp))
             {
-                //    If the stack of open elements has a p element in button scope, then close a p element.
+                // If the stack of open elements has a p element in button scope, then close a p element.
+                if (this.OpenElements.Contains(Tags.P))
+                    this.ClosePElement();
 
-                //    Reconstruct the active formatting elements, if any.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
 
-                //    Set the frameset-ok flag to "not ok".
+                // Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
 
-                //    Follow the generic raw text element parsing algorithm.
+                // Follow the generic raw text element parsing algorithm.
+                this.GenericRawTextElementParsingAlgorithm();
             }
 
             // A start tag whose tag name is "iframe"
             else if (this.Token.IsStartTagNamed(Tags.IFrame))
             {
-                //    Set the frameset-ok flag to "not ok".
+                // Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
 
-                //    Follow the generic raw text element parsing algorithm.
+                // Follow the generic raw text element parsing algorithm.
+                this.GenericRawTextElementParsingAlgorithm();
             }
 
             // A start tag whose tag name is "noembed"
             // A start tag whose tag name is "noscript", if the scripting flag is enabled
             else if (this.Token.IsStartTagNamed(Tags.NoEmbed) || (this.ParsingContext.Scripting && this.Token.IsStartTagNamed(Tags.NoScript)))
             {
-                //    Follow the generic raw text element parsing algorithm.
+                // Follow the generic raw text element parsing algorithm.
+                this.GenericRawTextElementParsingAlgorithm();
             }
 
             // A start tag whose tag name is "select"
             else if (this.Token.IsStartTagNamed(Tags.Select))
             {
-                //    Reconstruct the active formatting elements, if any.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
 
-                //    Insert an HTML element for the token.
+                // Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
 
-                //    Set the frameset-ok flag to "not ok".
+                // Set the frameset-ok flag to "not ok".
+                this.ParsingState.FramesetOk = false;
 
-                //    If the insertion mode is one of "in table", "in caption", "in table body", "in row",
-                //    or "in cell", then switch the insertion mode to "in select in table". Otherwise,
-                //    switch the insertion mode to "in select".
+                // If the insertion mode is one of "in table", "in caption", "in table body", "in row",
+                // or "in cell", then switch the insertion mode to "in select in table". Otherwise,
+                // switch the insertion mode to "in select".
+                InsertionModeEnum mode = this.InsertionMode;
+                if ((mode == InsertionModeEnum.InTable) || (mode == InsertionModeEnum.InCaption) ||
+                    (mode == InsertionModeEnum.InTableBody) || (mode == InsertionModeEnum.InRow) || (mode == InsertionModeEnum.InCell))
+                {
+                    this.Switch(InsertionModeEnum.InSelectInTable);
+                }
+                else
+                {
+                    this.Switch(InsertionModeEnum.InSelect);
+                }
             }
 
             // A start tag whose tag name is one of: "optgroup", "option"
             else if (this.Token.IsStartTagNamed(Tags.OptGroup, Tags.Option))
             {
-                //    If the current node is an option element, then pop the current node off the stack of open elements.
+                // If the current node is an option element, then pop the current node off the stack of open elements.
+                if (this.CurrentNode.Is(Tags.Option))
+                    this.OpenElements.Pop();
 
-                //    Reconstruct the active formatting elements, if any.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
 
-                //    Insert an HTML element for the token.
+                // Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
             }
 
             // A start tag whose tag name is one of: "rb", "rp", "rtc"
             else if (this.Token.IsStartTagNamed(Tags.Rb, Tags.Rp, Tags.Rtc))
             {
-                //    If the stack of open elements has a ruby element in scope, then generate implied end tags.
-                //    If the current node is not then a ruby element, this is a parse error.
+                // If the stack of open elements has a ruby element in scope, then generate implied end tags.
+                if (this.OpenElements.HasElementInScope(Tags.Ruby))
+                    this.GenerateImpliedEndTag();
 
-                //    Insert an HTML element for the token.
+                // If the current node is not then a ruby element, this is a parse error.
+                if (!this.CurrentNode.Is(Tags.Ruby))
+                    this.InformParseError(ParseError.UnexpectedTag);
+
+                // Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
             }
 
             // A start tag whose tag name is "rt"
             else if (this.Token.IsStartTagNamed(Tags.Rt))
             {
-                //    If the stack of open elements has a ruby element in scope, then generate implied end tags, except for
-                //    rtc elements. If the current node is not then a ruby element or an rtc element, this is a parse error.
+                // If the stack of open elements has a ruby element in scope, then generate implied end tags, except for
+                // rtc elements.
+                if (this.OpenElements.HasElementInScope(Tags.Ruby))
+                    this.GenerateImpliedEndTag(Tags.Rtc);
 
-                //    Insert an HTML element for the token.
+                // If the current node is not then a ruby element or an rtc element, this is a parse error.
+                if (!this.CurrentNode.Is(Tags.Ruby))
+                    this.InformParseError(ParseError.UnexpectedTag);
+
+                // Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
             }
 
             // A start tag whose tag name is "math"
             else if (this.Token.IsStartTagNamed(Tags.Math))
             {
-                //    Reconstruct the active formatting elements, if any.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
+
+                // MathML_TODO ... MathML Tags
+                throw new NotImplementedException();
 
                 //    Adjust MathML attributes for the token. (This fixes the case of MathML attributes that are not all lowercase.)
 
@@ -2329,7 +3477,11 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A start tag whose tag name is "svg"
             else if (this.Token.IsStartTagNamed(Tags.Svg))
             {
-                //    Reconstruct the active formatting elements, if any.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
+
+                // SVG_TODO ... SVG Tags
+                throw new NotImplementedException();
 
                 //    Adjust SVG attributes for the token. (This fixes the case of SVG attributes that are not all lowercase.)
 
@@ -2347,102 +3499,69 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 Tags.Caption, Tags.Col, Tags.ColGroup, Tags.Frame, Tags.Head, Tags.TBody, Tags.Td, Tags.TFoot,
                 Tags.Th, Tags.THead, Tags.Tr))
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedStartTag);
             }
 
             // Any other start tag
             else if (this.Token.Type == TokenType.StartTag)
             {
-                //    Reconstruct the active formatting elements, if any.
+                // Reconstruct the active formatting elements, if any.
+                this.ActiveFormattingElements.ReconstructFormattingElements();
 
-                //    Insert an HTML element for the token.
+                // Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
 
-                //    NOTE: This element will be an ordinary element.
+                // NOTE: This element will be an ordinary element.
             }
 
             // Any other end tag
             else if (this.Token.Type == TokenType.EndTag)
             {
-                //    Run these steps:
-                //        1. Initialize node to be the current node (the bottommost node of the stack).
-                //        2. Loop: If node is an HTML element with the same tag name as the token, then:
-                //            1. Generate implied end tags, except for HTML elements with the same tag name as the token.
-                //            2. If node is not the current node, then this is a parse error.
-                //            3. Pop all the nodes from the current node up to node, including node, then stop these steps.
-                //        3. Otherwise, if node is in the special category, then this is a parse error; ignore the token, and abort these steps.
-                //        4. Set node to the previous entry in the stack of open elements.
-                //        5. Return to the step labeled loop.
+                anyOtherEndTag = true;
             }
 
-            /*
-            
+            if (anyOtherEndTag)
+            {
+                // Run these steps:
+                // 1. Initialize node to be the current node (the bottommost node of the stack).
+                int i = this.OpenElements.Count - 1;
+                Element node = this.OpenElements[i];
 
-            The adoption agency algorithm, which takes as its only argument a tag name subject for which the
-            algorithm is being run, consists of the following steps:
-                1. If the current node is an HTML element whose tag name is subject, then run these substeps:
-                    1. Let element be the current node.
-                    2. Pop element off the stack of open elements.
-                    3. If element is also in the list of active formatting elements, remove the element from the list.
-                    4. Abort the adoption agency algorithm.
-                2. Let outer loop counter be zero.
-                3. Outer loop: If outer loop counter is greater than or equal to eight, then abort these steps.
-                4. Increment outer loop counter by one.
-                5. Let formatting element be the last element in the list of active formatting elements that:
-                    * is between the end of the list and the last scope marker in the list, if any,
-                      or the start of the list otherwise, and
-                    * has the tag name subject.
+                // Loop:
+                do
+                {
+                    // 2. If node is an HTML element with the same tag name as the token, then:
+                    if (node.Is(this.Token.TagName))
+                    {
+                        // 1. Generate implied end tags, except for HTML elements with the same tag name as the token.
+                        this.GenerateImpliedEndTag(this.Token.TagName);
 
-                    If there is no such element, then abort these steps and instead act as described in the
-                    "any other end tag" entry above.
-                6. If formatting element is not in the stack of open elements, then this is a parse error;
-                   remove the element from the list, and abort these steps.
-                7. If formatting element is in the stack of open elements, but the element is not in scope,
-                   then this is a parse error; abort these steps.
-                8. If formatting element is not the current node, this is a parse error. (But do not abort these steps.)
-                9. Let furthest block be the topmost node in the stack of open elements that is lower in the stack
-                   than formatting element, and is an element in the special category. There might not be one.
-                10. If there is no furthest block, then the UA must first pop all the nodes from the bottom of the
-                    stack of open elements, from the current node up to and including formatting element, then remove
-                    formatting element from the list of active formatting elements, and finally abort these steps.
-                11. Let common ancestor be the element immediately above formatting element in the stack of open elements.
-                12. Let a bookmark note the position of formatting element in the list of active formatting elements
-                    relative to the elements on either side of it in the list.
-                13. Let node and last node be furthest block. Follow these steps:
-                    1. Let inner loop counter be zero.
-                    2. Inner loop: Increment inner loop counter by one.
-                    3. Let node be the element immediately above node in the stack of open elements, or if node is no
-                       longer in the stack of open elements (e.g. because it got removed by this algorithm), the element
-                       that was immediately above node in the stack of open elements before node was removed.
-                    4. If node is formatting element, then go to the next step in the overall algorithm.
-                    5. If inner loop counter is greater than three and node is in the list of active formatting elements,
-                       then remove node from the list of active formatting elements.
-                    6. If node is not in the list of active formatting elements, then remove node from the stack of open
-                        elements and then go back to the step labeled inner loop.
-                    7. Create an element for the token for which the element node was created, in the HTML namespace, with
-                       common ancestor as the intended parent; replace the entry for node in the list of active formatting
-                       elements with an entry for the new element, replace the entry for node in the stack of open elements
-                       with an entry for the new element, and let node be the new element.
-                    8. If last node is furthest block, then move the aforementioned bookmark to be immediately after the new
-                       node in the list of active formatting elements.
-                    9. Insert last node into node, first removing it from its previous parent node if any.
-                    10. Let last node be node.
-                    11. Return to the step labeled inner loop.
-                14. Insert whatever last node ended up being in the previous step at the appropriate place for inserting a node,
-                    but using common ancestor as the override target.
-                15. Create an element for the token for which formatting element was created, in the HTML namespace,
-                    with furthest block as the intended parent.
-                16. Take all of the child nodes of furthest block and append them to the element created in the last step.
-                17. Append that new element to furthest block.
-                18. Remove formatting element from the list of active formatting elements, and insert the new element into
-                    the list of active formatting elements at the position of the aforementioned bookmark.
-                19. Remove formatting element from the stack of open elements, and insert the new element into the stack of
-                    open elements immediately below the position of furthest block in that stack.
-                20. Jump back to the step labeled outer loop.
+                        // 2. If node is not the current node, then this is a parse error.
+                        if (this.CurrentNode != node)
+                            this.InformParseError(ParseError.UnexpectedTag);
 
-                NOTE: This algorithm's name, the "adoption agency algorithm", comes from the way it causes elements to change
-                parents, and is in contrast with other possible algorithms for dealing with misnested content, which included
-                the "incest algorithm", the "secret affair algorithm", and the "Heisenberg algorithm".
-            */
+                        // 3. Pop all the nodes from the current node up to node, including node, then stop these steps.
+                        System.Diagnostics.Debug.Assert(this.OpenElements.Contains(node), "Broken algorithm? Are we suppose to pop everything?");
+                        this.OpenElements.PopUntil(node);
+                        return; // Stop there steps
+                    }
+
+                    // 3. Otherwise, if node is in the special category, then this is a parse error; ignore the token, and abort these steps.
+                    else if (node.IsSpecial())
+                    {
+                        this.InformParseError(ParseError.UnexpectedTag);
+                        return; // Abort these steps.
+                    }
+
+                    // 4. Set node to the previous entry in the stack of open elements.
+                    i--;
+                    node = this.OpenElements[i];
+
+                    // 5. Return to the step labeled loop.
+                }
+                while (true);
+            }
         }
 
         private void ClosePElement()
@@ -2454,13 +3573,231 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             this.GenerateImpliedEndTag(Tags.P);
 
             // 2. If the current node is not a p element, then this is a parse error.
-            if (!this.IsCurrentNode(Tags.P))
-                this.ParseError(Parsing.ParseError.UnexpectedTag);
+            if (!this.CurrentNode.Is(Tags.P))
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
             // 3. Pop elements from the stack of open elements until a p element has been popped from the stack.
-            while (this.OpenElements.Pop().TagName != Tags.P)
+            this.OpenElements.PopUntil(Tags.P);
+        }
+
+        /// <summary>
+        /// Runs the "adoption agency algorithm".
+        /// </summary>
+        /// <param name="subject">The tag that is the "subject" of the operation.</param>
+        /// <param name="anyOtherEndTag">Tells if we should act as described in the "any other end tag" entry above.</param>
+        /// <returns>True if the element was removed from the stack of open elements and the list of active formatting elements.</returns>
+        private bool RunAdoptionAgencyAlgorithm(string subject, ref bool anyOtherEndTag)
+        {
+            bool elementRemoved = false;
+
+            // The adoption agency algorithm, which takes as its only argument a tag name subject for which the
+            // algorithm is being run, consists of the following steps:
+
+            // 1. If the current node is an HTML element whose tag name is subject, then run these substeps:
+            if (this.CurrentNode.Is(subject))
             {
+                // 1. Let element be the current node.
+                Element element = this.CurrentNode;
+
+                // 2. Pop element off the stack of open elements.
+                this.OpenElements.Pop();
+
+                // 3. If element is also in the list of active formatting elements, remove the element from the list.
+                if (this.ActiveFormattingElements.Contains(element))
+                {
+                    this.ActiveFormattingElements.Remove(element);
+                    elementRemoved = true;
+                }
+
+                // 4. Abort the adoption agency algorithm.
+                return elementRemoved;
             }
+
+            // 2. Let outer loop counter be zero.
+            int outerLoopCounter = 0;
+
+            // Outer loop:
+            do
+            {
+                // 3. If outer loop counter is greater than or equal to eight, then abort these steps.
+                if (outerLoopCounter >= 8)
+                    return elementRemoved;
+
+                // 4. Increment outer loop counter by one.
+                outerLoopCounter++;
+
+                // 5. Let formatting element be the last element in the list of active formatting elements that:
+                //    * is between the end of the list and the last scope marker in the list, if any,
+                //        or the start of the list otherwise, and
+                //    * has the tag name subject.
+                Element formattingElement = this.ActiveFormattingElements.ElementUpToLastMarker(subject);
+
+                // If there is no such element, then abort these steps and instead act as described in the
+                // "any other end tag" entry above.
+                if (formattingElement == null)
+                {
+                    anyOtherEndTag = true;
+                    return elementRemoved;
+                }
+
+                // 6. If formatting element is not in the stack of open elements, then this is a parse error;
+                //    remove the element from the list, and abort these steps.
+                if (!this.OpenElements.Contains(formattingElement))
+                {
+                    this.ActiveFormattingElements.Remove(formattingElement);
+                    return true;
+                }
+
+                // 7. If formatting element is in the stack of open elements, but the element is not in scope,
+                //    then this is a parse error; abort these steps.
+                if (!this.OpenElements.HasElementInScope(elem => elem == formattingElement))
+                {
+                    this.InformParseError(ParseError.UnexpectedTag);
+                    return elementRemoved;
+                }
+
+                // 8. If formatting element is not the current node, this is a parse error. (But do not abort these steps.)
+                if (formattingElement != this.CurrentNode)
+                    this.InformParseError(ParseError.UnexpectedTag);
+
+                // 9. Let furthest block be the topmost node in the stack of open elements that is lower in the stack
+                //    than formatting element, and is an element in the special category. There might not be one.
+                Element furthestBlock = null;
+                bool formattingElementFound = false;
+
+                // NB: The spec says, "... that is lower in the stack ...", meaing BELOW or AFTER.
+                for (int j = 0; j < this.OpenElements.Count; j++)
+                {
+                    Element elem = this.OpenElements[j];
+                    if (formattingElementFound)
+                    {
+                        if (elem.IsSpecial())
+                        {
+                            furthestBlock = elem;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (elem == formattingElement)
+                            formattingElementFound = true;
+                    }
+                }
+
+                // 10. If there is no furthest block, then the UA must first pop all the nodes from the bottom of the
+                //    stack of open elements, from the current node up to and including formatting element, then remove
+                //    formatting element from the list of active formatting elements, and finally abort these steps.
+                if (furthestBlock == null)
+                {
+                    this.OpenElements.PopUntil(formattingElement);
+                    this.ActiveFormattingElements.Remove(formattingElement);
+                    return true;
+                }
+
+                // 11. Let common ancestor be the element immediately above formatting element in the stack of open elements.
+                Element commonAncestor = this.OpenElements.ElementAbove(formattingElement);
+
+                // 12. Let a bookmark note the position of formatting element in the list of active formatting elements
+                //     relative to the elements on either side of it in the list.
+                // ISSUE: Is index OK, or do we need an element instead (because stuff before the index shifts)???
+                int bookmarkIndex = this.ActiveFormattingElements.IndexOf(formattingElement);
+
+                // 13. Let node and last node be furthest block. Follow these steps:
+                Element node = furthestBlock;
+                Element lastNode = furthestBlock;
+
+                // Inner loop:
+                // 1. Let inner loop counter be zero.
+                int innerLoopCounter = 0;
+
+                Element nodeAboveNode = null;
+                do
+                {
+                    // 2. Increment inner loop counter by one.
+                    innerLoopCounter++;
+
+                    // 3. Let node be the element immediately above node in the stack of open elements, or if node is no
+                    //    longer in the stack of open elements (e.g. because it got removed by this algorithm), the element
+                    //    that was immediately above node in the stack of open elements before node was removed.
+                    node = this.OpenElements.Contains(node) ? this.OpenElements.ElementAbove(node) : nodeAboveNode;
+                    nodeAboveNode = this.OpenElements.ElementAbove(node);
+
+                    // 4. If node is formatting element, then go to the next step in the overall algorithm.
+                    if (node.IsFormatting())
+                        break;
+
+                    // 5. If inner loop counter is greater than three and node is in the list of active formatting elements,
+                    //    then remove node from the list of active formatting elements.
+                    if ((innerLoopCounter > 3) && this.ActiveFormattingElements.Contains(node))
+                        this.ActiveFormattingElements.Remove(node);
+
+                    // 6. If node is not in the list of active formatting elements, then remove node from the stack of open
+                    //    elements and then go back to the step labeled inner loop.
+                    if (!this.ActiveFormattingElements.Contains(node))
+                    {
+                        this.OpenElements.Remove(node);
+                        continue; // Inner loop
+                    }
+
+                    // 7. Create an element for the token for which the element node was created, in the HTML namespace, with
+                    //    common ancestor as the intended parent; replace the entry for node in the list of active formatting
+                    //    elements with an entry for the new element, replace the entry for node in the stack of open elements
+                    //    with an entry for the new element, and let node be the new element.
+                    Element newElement = this.DomFactory.CreateElement(commonAncestor, node.TagName,
+                        node.Attributes.Select(attr => new Attribute(attr.Name, attr.Value)).ToArray(), false);
+                    this.ActiveFormattingElements.Replace(node, newElement);
+                    this.OpenElements.Replace(node, newElement);
+                    node = newElement;
+
+                    // 8. If last node is furthest block, then move the aforementioned bookmark to be immediately after the new
+                    //    node in the list of active formatting elements.
+                    if (lastNode == furthestBlock)
+                        bookmarkIndex = this.ActiveFormattingElements.IndexOf(node) + 1;
+
+                    // 9. Insert last node into node, first removing it from its previous parent node if any.
+                    // ISSUE: Are we suppose to insert as the first or the last child?
+                    this.DomFactory.InsertChildNode(node, lastNode, true);
+
+                    // 10. Let last node be node.
+                    lastNode = node;
+
+                    // 11. Return to the step labeled inner loop.
+                } while (true);
+
+                // 14. Insert whatever last node ended up being in the previous step at the appropriate place for inserting a node,
+                //     but using common ancestor as the override target.
+                AdjustedInsertLocation location = this.AppropriatePlaceForInsertingNode(commonAncestor);
+                this.DomFactory.InsertElementAt(lastNode, location);
+
+                // 15. Create an element for the token for which formatting element was created, in the HTML namespace,
+                //    with furthest block as the intended parent.
+                Token newElementToken = new Token();
+                newElementToken.SetStartTag(formattingElement.TagName, false, node.Attributes.Select(attr => new Attribute(attr.Name, attr.Value)).ToArray());
+                Element newElement2 = this.DomFactory.CreateElement(furthestBlock, newElementToken.TagName, newElementToken.TagAttributes, false);
+
+                // 16. Take all of the child nodes of furthest block and append them to the element created in the last step.
+                foreach (Node child in furthestBlock.ChildNodes)
+                    this.DomFactory.InsertChildNode(newElement2, child, true);
+
+                // 17. Append that new element to furthest block.
+                this.DomFactory.InsertChildNode(furthestBlock, newElement2, false);
+
+                // 18. Remove formatting element from the list of active formatting elements, and insert the new element into
+                //     the list of active formatting elements at the position of the aforementioned bookmark.
+                this.ActiveFormattingElements.Remove(formattingElement);
+                this.ActiveFormattingElements.Insert(newElement2, newElementToken, bookmarkIndex);
+
+                // 19. Remove formatting element from the stack of open elements, and insert the new element into the stack of
+                //     open elements immediately below the position of furthest block in that stack.
+                this.OpenElements.Remove(formattingElement);
+                this.OpenElements.InsertBelow(newElement2, furthestBlock);
+
+                // 20. Jump back to the step labeled outer loop.
+            } while (true);
+
+            // NOTE: This algorithm's name, the "adoption agency algorithm", comes from the way it causes elements to change
+            // parents, and is in contrast with other possible algorithms for dealing with misnested content, which included
+            // the "incest algorithm", the "secret affair algorithm", and the "Heisenberg algorithm".
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2476,27 +3813,35 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A character token
             if (this.Token.Type == TokenType.Character)
             {
-                //    Insert the token's character.
+                // Insert the token's character.
+                this.DomFactory.InsertCharacter(this.Token.Character);
 
-                //    NOTE: This can never be a U+0000 NULL character; the tokenizer converts those
-                //    to U+FFFD REPLACEMENT CHARACTER characters.
+                // NOTE: This can never be a U+0000 NULL character; the tokenizer converts those
+                // to U+FFFD REPLACEMENT CHARACTER characters.
             }
 
             // An end-of-file token
             else if (this.Token.Type == TokenType.EndOfFile)
             {
-                //    Parse error.
+                // Parse error.
+                this.InformParseError(ParseError.PrematureEndOfFile);
 
-                //    If the current node is a script element, mark the script element as "already started".
+                // If the current node is a script element, mark the script element as "already started".
+                if (this.CurrentNode.Is(Tags.Script))
+                    FutureVersions.CurrentlyIrrelevant();
 
-                //    Pop the current node off the stack of open elements.
+                // Pop the current node off the stack of open elements.
+                this.OpenElements.Pop();
 
-                //    Switch the insertion mode to the original insertion mode and reprocess the token.
+                // Switch the insertion mode to the original insertion mode and reprocess the token.
+                this.Switch(this.OriginalInsertionMode);
+                this.ProcessToken();
             }
 
             // An end tag whose tag name is "script"
             else if (this.Token.IsEndTagNamed(Tags.Script))
             {
+                throw new NotImplementedException();
                 //    Perform a microtask checkpoint.
 
                 //    Provide a stable state.
@@ -2559,11 +3904,16 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // Any other end tag
             else if (this.Token.Type == TokenType.EndTag)
             {
-                //    Pop the current node off the stack of open elements.
+                // Pop the current node off the stack of open elements.
+                this.OpenElements.Pop();
 
-                //    Switch the insertion mode to the original insertion mode.
+                // Switch the insertion mode to the original insertion mode.
+                this.Switch(this.OriginalInsertionMode);
             }
         }
+
+        // Not really a token list, but char list
+        private readonly List<char> PendingTableCharacterTokens = new List<char>();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void HandleTokenInInTableMode()
@@ -2575,101 +3925,140 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             the user agent must handle the token as follows:
             */
 
+            bool anythingElse = false;
+
             // A character token, if the current node is table, tbody, tfoot, thead, or tr element
-            if ((this.Token.Type == TokenType.Character) && this.IsCurrentNode(Tags.Table, Tags.TBody, Tags.TFoot, Tags.THead, Tags.Tr))
+            if ((this.Token.Type == TokenType.Character) && this.CurrentNode.Is(Tags.Table, Tags.TBody, Tags.TFoot, Tags.THead, Tags.Tr))
             {
-                //    Let the pending table character tokens be an empty list of tokens.
+                // Let the pending table character tokens be an empty list of tokens.
+                this.PendingTableCharacterTokens.Clear();
 
-                //    Let the original insertion mode be the current insertion mode.
+                // Let the original insertion mode be the current insertion mode.
+                this.OriginalInsertionMode = this.InsertionMode;
 
-                //    Switch the insertion mode to "in table text" and reprocess the token.
+                // Switch the insertion mode to "in table text" and reprocess the token.
+                this.Switch(InsertionModeEnum.InTableText);
+                this.ProcessToken();
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
-                //    Insert a comment.
+                // Insert a comment.
+                this.DomFactory.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
             else if (this.Token.Type == TokenType.DocType)
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "caption"
             else if (this.Token.IsStartTagNamed(Tags.Caption))
             {
-                //    Clear the stack back to a table context. (See below.)
+                // Clear the stack back to a table context. (See below.)
+                this.ClearStackBackToTableContext();
 
-                //    Insert a marker at the end of the list of active formatting elements.
+                // Insert a marker at the end of the list of active formatting elements.
+                this.ActiveFormattingElements.InsertMarker();
 
-                //    Insert an HTML element for the token, then switch the insertion mode to "in caption".
+                // Insert an HTML element for the token, then switch the insertion mode to "in caption".
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.Switch(InsertionModeEnum.InCaption);
             }
 
             // A start tag whose tag name is "colgroup"
             else if (this.Token.IsStartTagNamed(Tags.ColGroup))
             {
-                //    Clear the stack back to a table context. (See below.)
+                // Clear the stack back to a table context. (See below.)
+                this.ClearStackBackToTableContext();
 
-                //    Insert an HTML element for the token, then switch the insertion mode to "in column group".
+                // Insert an HTML element for the token, then switch the insertion mode to "in column group".
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.Switch(InsertionModeEnum.InColumnGroup);
             }
 
             // A start tag whose tag name is "col"
             else if (this.Token.IsStartTagNamed(Tags.Col))
             {
-                //    Clear the stack back to a table context. (See below.)
+                // Clear the stack back to a table context. (See below.)
+                this.ClearStackBackToTableContext();
 
-                //    Insert an HTML element for a "colgroup" start tag token with no attributes, then switch the
-                //    insertion mode to "in column group".
+                // Insert an HTML element for a "colgroup" start tag token with no attributes, then switch the
+                // insertion mode to "in column group".
+                this.DomFactory.InsertHtmlElement(Tags.ColGroup, Attribute.None);
+                this.Switch(InsertionModeEnum.InColumnGroup);
 
-                //    Reprocess the current token.
+                // Reprocess the current token.
+                this.ProcessToken();
             }
 
             // A start tag whose tag name is one of: "tbody", "tfoot", "thead"
             else if (this.Token.IsStartTagNamed(Tags.TBody, Tags.TFoot, Tags.THead))
             {
-                //    Clear the stack back to a table context. (See below.)
+                // Clear the stack back to a table context. (See below.)
+                this.ClearStackBackToTableContext();
 
-                //    Insert an HTML element for the token, then switch the insertion mode to "in table body".
+                // Insert an HTML element for the token, then switch the insertion mode to "in table body".
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.Switch(InsertionModeEnum.InTableBody);
             }
 
             // A start tag whose tag name is one of: "td", "th", "tr"
             else if (this.Token.IsStartTagNamed(Tags.Td, Tags.Th, Tags.Tr))
             {
-                //    Clear the stack back to a table context. (See below.)
+                // Clear the stack back to a table context. (See below.)
+                this.ClearStackBackToTableContext();
 
-                //    Insert an HTML element for a "tbody" start tag token with no attributes,
-                //    then switch the insertion mode to "in table body".
+                // Insert an HTML element for a "tbody" start tag token with no attributes,
+                // then switch the insertion mode to "in table body".
+                this.DomFactory.InsertHtmlElement(Tags.TBody, Attribute.None);
+                this.Switch(InsertionModeEnum.InTableBody);
 
-                //    Reprocess the current token.
+                // Reprocess the current token.
+                this.ProcessToken();
             }
 
             // A start tag whose tag name is "table"
             else if (this.Token.IsStartTagNamed(Tags.Table))
             {
-                //    Parse error.
+                // Parse error.
+                this.InformParseError(ParseError.UnexpectedStartTag);
 
-                //    If the stack of open elements does not have a table element in table scope, ignore the token.
+                // If the stack of open elements does not have a table element in table scope, ignore the token.
+                if (!this.OpenElements.HasElementInTableScope(Tags.Table))
+                    return;
 
-                //    Otherwise:
-                //        Pop elements from this stack until a table element has been popped from the stack.
+                // Otherwise:
+                // Pop elements from this stack until a table element has been popped from the stack.
+                this.OpenElements.PopUntil(Tags.Table);
 
-                //        Reset the insertion mode appropriately.
+                // Reset the insertion mode appropriately.
+                this.ResetInsertionModeAppropriately();
 
-                //        Reprocess the token.
+                // Reprocess the token.
+                this.ProcessToken();
             }
 
             // An end tag whose tag name is "table"
             else if (this.Token.IsEndTagNamed(Tags.Table))
             {
-                //    If the stack of open elements does not have a table element in table scope, this is a parse error;
-                //    ignore the token.
+                // If the stack of open elements does not have a table element in table scope, this is a parse error;
+                // ignore the token.
+                if (!this.OpenElements.HasElementInTableScope(Tags.Table))
+                {
+                    this.InformParseError(ParseError.PrematureEndOfFile);
+                    return;
+                }
 
-                //    Otherwise:
-                //        Pop elements from this stack until a table element has been popped from the stack.
+                // Otherwise:
+                // Pop elements from this stack until a table element has been popped from the stack.
+                this.OpenElements.PopUntil(Tags.Table);
 
-                //        Reset the insertion mode appropriately.
+                // Reset the insertion mode appropriately.
+                this.ResetInsertionModeAppropriately();
             }
 
             // An end tag whose tag name is one of: "body", "caption", "col", "colgroup", "html", "tbody", "td",
@@ -2678,60 +4067,92 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 Tags.Body, Tags.Caption, Tags.Col, Tags.ColGroup, Tags.Html, Tags.TBody, Tags.Td,
                 Tags.TFoot, Tags.Th, Tags.THead, Tags.Tr))
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.PrematureEndOfFile);
             }
 
             // A start tag whose tag name is one of: "style", "script", "template"
             // An end tag whose tag name is "template"
             else if (this.Token.IsStartTagNamed(Tags.Style, Tags.Script, Tags.Template) || this.Token.IsEndTagNamed(Tags.Template))
             {
-                //    Process the token using the rules for the "in head" insertion mode.
+                // Process the token using the rules for the "in head" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InHead);
             }
 
             // A start tag whose tag name is "input"
             else if (this.Token.IsStartTagNamed(Tags.Input))
             {
-                //    If the token does not have an attribute with the name "type", or if it does, but that attribute's
-                //    value is not an ASCII case-insensitive match for the string "hidden", then: act as described in the
-                //    "anything else" entry below.
+                // If the token does not have an attribute with the name "type", or if it does, but that attribute's
+                // value is not an ASCII case-insensitive match for the string "hidden", then: act as described in the
+                // "anything else" entry below.
+                if (!this.Token.TagAttributes.Any(attr => (attr.Name == "type") && attr.Value.Equals("hidden", StringComparison.OrdinalIgnoreCase)))
+                {
+                    anythingElse = true;
+                }
 
-                //    Otherwise:
-                //        Parse error.
+                // Otherwise:
+                else
+                {
+                    // Parse error.
+                    this.InformParseError(ParseError.UnexpectedStartTag);
 
-                //        Insert an HTML element for the token.
+                    // Insert an HTML element for the token.
+                    this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
 
-                //        Pop that input element off the stack of open elements.
+                    // Pop that input element off the stack of open elements.
+                    this.OpenElements.Pop();
 
-                //        Acknowledge the token's self-closing flag, if it is set.
+                    // Acknowledge the token's self-closing flag, if it is set.
+                    if (this.Token.TagIsSelfClosing)
+                        this.Tokenizer.AcknowledgeSelfClosingTag();
+                }
             }
 
             // A start tag whose tag name is "form"
             else if (this.Token.IsStartTagNamed(Tags.Form))
             {
-                //    Parse error.
+                // Parse error.
+                this.InformParseError(ParseError.UnexpectedStartTag);
 
-                //    If there is a template element on the stack of open elements, or if the form element pointer
-                //    is not null, ignore the token.
+                // If there is a template element on the stack of open elements, or if the form element pointer
+                // is not null, ignore the token.
+                if (this.OpenElements.Contains(Tags.Template) || (this.ParsingState.Form != null))
+                    return;
 
-                //    Otherwise:
-                //        Insert an HTML element for the token, and set the form element pointer to point to the element created.
+                // Otherwise:
+                // Insert an HTML element for the token, and set the form element pointer to point to the element created.
+                Element form = this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.ParsingState.Form = form;
 
-                //        Pop that form element off the stack of open elements.
+                // Pop that form element off the stack of open elements.
+                this.OpenElements.Pop();
             }
 
             // An end-of-file token
             else if (this.Token.Type == TokenType.EndOfFile)
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // Anything else
             else
             {
-                //    Parse error. Enable foster parenting, process the token using the rules for the "in body"
-                //    insertion mode, and then disable foster parenting.
+                anythingElse = true;
             }
 
+            if (anythingElse)
+            {
+                // Parse error. Enable foster parenting, process the token using the rules for the "in body"
+                // insertion mode, and then disable foster parenting.
+                this.FosteringParent = true;
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
+                this.FosteringParent = false;
+            }
+        }
+
+        private void ClearStackBackToTableContext()
+        {
             /*
                  When the steps above require the UA to clear the stack back to a table context, it means that the
                  UA must, while the current node is not a table, template, or html element, pop elements from the
@@ -2739,6 +4160,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
                  NOTE: The current node being an html element after this process is a fragment case.
             */
+            while (!this.CurrentNode.Is(Tags.Table, Tags.Template, Tags.Html))
+            {
+                this.OpenElements.Pop();
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2754,26 +4179,46 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A character token that is U+0000 NULL
             if (this.Token.IsCharacterNull())
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.NullCharacter);
+                return;
             }
 
             // Any other character token
             else if (this.Token.Type == TokenType.Character)
             {
-                //    Append the character token to the pending table character tokens list.
+                // Append the character token to the pending table character tokens list.
+                this.PendingTableCharacterTokens.Add(this.Token.Character);
             }
 
             // Anything else
             else
             {
-                //    If any of the tokens in the pending table character tokens list are character
-                //    tokens that are not space characters, then reprocess the character tokens in the
-                //    pending table character tokens list using the rules given in the "anything else"
-                //    entry in the "in table" insertion mode.
+                // If any of the tokens in the pending table character tokens list are character
+                // tokens that are not space characters, then reprocess the character tokens in the
+                // pending table character tokens list using the rules given in the "anything else"
+                // entry in the "in table" insertion mode.
+                if (this.PendingTableCharacterTokens.Any(ch => !Characters.IsSpaceCharacter(ch)))
+                {
+                    // Logic below taken from: "in table" insertion mode, "anything else".
 
-                //    Otherwise, insert the characters given by the pending table character tokens list.
+                    // Parse error. Enable foster parenting, process the token using the rules for the "in body"
+                    // insertion mode, and then disable foster parenting.
+                    this.FosteringParent = true;
+                    this.ProcessTokenUsing(InsertionModeEnum.InBody);
+                    this.FosteringParent = false;
+                }
 
-                //    Switch the insertion mode to the original insertion mode and reprocess the token.
+                // Otherwise, insert the characters given by the pending table character tokens list.
+                else
+                {
+                    foreach (char ch in this.PendingTableCharacterTokens)
+                        this.DomFactory.InsertCharacter(ch);
+                }
+
+                // Switch the insertion mode to the original insertion mode and reprocess the token.
+                this.Switch(this.OriginalInsertionMode);
+                this.ProcessToken();
             }
         }
 
@@ -2790,19 +4235,30 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // An end tag whose tag name is "caption"
             if (this.Token.IsEndTagNamed(Tags.Caption))
             {
-                //    If the stack of open elements does not have a caption element in table scope,
-                //    this is a parse error; ignore the token. (fragment case)
+                // If the stack of open elements does not have a caption element in table scope,
+                // this is a parse error; ignore the token. (fragment case)
+                if (!this.OpenElements.HasElementInTableScope(Tags.Caption))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise:
-                //        Generate implied end tags.
+                // Otherwise:
+                // Generate implied end tags.
+                this.GenerateImpliedEndTag();
 
-                //        Now, if the current node is not a caption element, then this is a parse error.
+                // Now, if the current node is not a caption element, then this is a parse error.
+                if (!this.CurrentNode.Is(Tags.Caption))
+                    this.InformParseError(ParseError.UnexpectedEndTag);
 
-                //        Pop elements from this stack until a caption element has been popped from the stack.
+                // Pop elements from this stack until a caption element has been popped from the stack.
+                this.OpenElements.PopUntil(Tags.Caption);
 
-                //        Clear the list of active formatting elements up to the last marker.
+                // Clear the list of active formatting elements up to the last marker.
+                this.ActiveFormattingElements.ClearFormattingElementsUpToMarker();
 
-                //        Switch the insertion mode to "in table".
+                // Switch the insertion mode to "in table".
+                this.Switch(InsertionModeEnum.InTable);
             }
 
             // A start tag whose tag name is one of: "caption", "col", "colgroup", "tbody", "td", "tfoot", "th", "thead", "tr"
@@ -2811,30 +4267,42 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.Token.IsStartTagNamed(Tags.Caption, Tags.Col, Tags.ColGroup, Tags.TBody, Tags.Td, Tags.TFoot, Tags.Th, Tags.THead, Tags.Tr) ||
                 this.Token.IsEndTagNamed(Tags.Table))
             {
-                //    Parse error.
+                // Parse error.
+                if (this.Token.Type == TokenType.StartTag)
+                    this.InformParseError(ParseError.UnexpectedStartTag);
+                else
+                    this.InformParseError(ParseError.UnexpectedEndTag);
 
-                //    If the stack of open elements does not have a caption element in table scope, ignore the token. (fragment case)
+                // If the stack of open elements does not have a caption element in table scope, ignore the token. (fragment case)
+                if (!this.OpenElements.HasElementInTableScope(Tags.Caption))
+                    return;
 
-                //    Otherwise:
-                //        Pop elements from this stack until a caption element has been popped from the stack.
+                // Otherwise:
+                // Pop elements from this stack until a caption element has been popped from the stack.
+                this.OpenElements.PopUntil(Tags.Caption);
 
-                //        Clear the list of active formatting elements up to the last marker.
+                // Clear the list of active formatting elements up to the last marker.
+                this.ActiveFormattingElements.ClearFormattingElementsUpToMarker();
 
-                //        Switch the insertion mode to "in table".
+                // Switch the insertion mode to "in table".
+                this.Switch(InsertionModeEnum.InTable);
 
-                //        Reprocess the token.
+                // Reprocess the token.
+                this.ProcessToken();
             }
 
             // An end tag whose tag name is one of: "body", "col", "colgroup", "html", "tbody", "td", "tfoot", "th", "thead", "tr"
             else if (this.Token.IsEndTagNamed(Tags.Body, Tags.Col, Tags.ColGroup, Tags.Html, Tags.TBody, Tags.Td, Tags.TFoot, Tags.Th, Tags.THead, Tags.Tr))
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedEndTag);
             }
 
             // Anything else
             else
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
         }
 
@@ -2852,72 +4320,98 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // "FF" (U+000C), "CR" (U+000D), or U+0020 SPACE
             if (this.Token.IsCharacterWhitespace())
             {
-                //    Insert the character.
+                // Insert the character.
+                this.DomFactory.InsertCharacter(this.Token.Character);
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
-                //    Insert a comment.
+                // Insert a comment.
+                this.DomFactory.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
             else if (this.Token.Type == TokenType.DocType)
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
             else if (this.Token.IsStartTagNamed(Tags.Html))
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // A start tag whose tag name is "col"
             else if (this.Token.IsStartTagNamed(Tags.Col))
             {
-                //    Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.OpenElements.Pop();
 
-                //    Acknowledge the token's self-closing flag, if it is set.
+                // Acknowledge the token's self-closing flag, if it is set.
+                if (this.Token.TagIsSelfClosing)
+                    this.Tokenizer.AcknowledgeSelfClosingTag();
             }
 
             // An end tag whose tag name is "colgroup"
             else if (this.Token.IsEndTagNamed(Tags.ColGroup))
             {
-                //    If the current node is not a colgroup element, then this is a parse error; ignore the token.
+                // If the current node is not a colgroup element, then this is a parse error; ignore the token.
+                if (!this.CurrentNode.Is(Tags.ColGroup))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise, pop the current node from the stack of open elements. Switch the insertion mode to "in table".
+                // Otherwise, pop the current node from the stack of open elements. Switch the insertion mode to "in table".
+                this.OpenElements.Pop();
+                this.Switch(InsertionModeEnum.InTable);
             }
 
             // An end tag whose tag name is "col"
             else if (this.Token.IsEndTagNamed(Tags.Col))
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedEndTag);
             }
 
             // A start tag whose tag name is "template"
             // An end tag whose tag name is "template"
             else if (this.Token.IsStartTagNamed(Tags.Template) || this.Token.IsEndTagNamed(Tags.Template))
             {
-                //    Process the token using the rules for the "in head" insertion mode.
+                // Process the token using the rules for the "in head" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InHead);
             }
 
             // An end-of-file token
             else if (this.Token.Type == TokenType.EndOfFile)
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // Anything else
             else
             {
-                //    If the current node is not a colgroup element, then this is a parse error; ignore the token.
+                // If the current node is not a colgroup element, then this is a parse error; ignore the token.
+                if (!this.CurrentNode.Is(Tags.ColGroup))
+                {
+                    this.InformParseError(ParseError.UnexpectedTag);
+                    return;
+                }
 
-                //    Otherwise, pop the current node from the stack of open elements.
+                // Otherwise, pop the current node from the stack of open elements.
+                this.OpenElements.Pop();
 
-                //    Switch the insertion mode to "in table".
+                // Switch the insertion mode to "in table".
+                this.Switch(InsertionModeEnum.InTable);
 
-                //    Reprocess the token.
+                // Reprocess the token.
+                this.ProcessToken();
             }
         }
 
@@ -2934,33 +4428,49 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A start tag whose tag name is "tr"
             if (this.Token.IsStartTagNamed(Tags.Tr))
             {
-                //    Clear the stack back to a table body context. (See below.)
+                // Clear the stack back to a table body context. (See below.)
+                this.ClearStackBackToTableBodyContext();
 
-                //    Insert an HTML element for the token, then switch the insertion mode to "in row".
+                // Insert an HTML element for the token, then switch the insertion mode to "in row".
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.Switch(InsertionModeEnum.InRow);
             }
 
             // A start tag whose tag name is one of: "th", "td"
             else if (this.Token.IsStartTagNamed(Tags.Th, Tags.Td))
             {
-                //    Parse error.
+                // Parse error.
+                this.InformParseError(ParseError.UnexpectedStartTag);
 
-                //    Clear the stack back to a table body context. (See below.)
+                // Clear the stack back to a table body context. (See below.)
+                this.ClearStackBackToTableBodyContext();
 
-                //    Insert an HTML element for a "tr" start tag token with no attributes, then switch the insertion mode to "in row".
+                // Insert an HTML element for a "tr" start tag token with no attributes, then switch the insertion mode to "in row".
+                this.DomFactory.InsertHtmlElement(Tags.Tr, Attribute.None);
+                this.Switch(InsertionModeEnum.InRow);
 
-                //    Reprocess the current token.
+                // Reprocess the current token.
+                this.ProcessToken();
             }
 
             // An end tag whose tag name is one of: "tbody", "tfoot", "thead"
             else if (this.Token.IsEndTagNamed(Tags.TBody, Tags.TFoot, Tags.THead))
             {
-                //    If the stack of open elements does not have an element in table scope that is an HTML element
-                //    and with the same tag name as the token, this is a parse error; ignore the token.
+                // If the stack of open elements does not have an element in table scope that is an HTML element
+                // and with the same tag name as the token, this is a parse error; ignore the token.
+                if (!this.OpenElements.HasElementInTableScope(this.Token.TagName))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise:
-                //        Clear the stack back to a table body context. (See below.)
+                // Otherwise:
+                // Clear the stack back to a table body context. (See below.)
+                this.ClearStackBackToTableBodyContext();
 
-                //        Pop the current node from the stack of open elements. Switch the insertion mode to "in table".
+                // Pop the current node from the stack of open elements. Switch the insertion mode to "in table".
+                this.OpenElements.Pop();
+                this.Switch(InsertionModeEnum.InTable);
             }
 
             // A start tag whose tag name is one of: "caption", "col", "colgroup", "tbody", "tfoot", "thead"
@@ -2969,30 +4479,46 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.Token.IsStartTagNamed(Tags.Caption, Tags.Col, Tags.ColGroup, Tags.TBody, Tags.TFoot, Tags.THead) ||
                 this.Token.IsEndTagNamed(Tags.Table))
             {
-                //    If the stack of open elements does not have a tbody, thead, or tfoot element in table scope,
-                //    this is a parse error; ignore the token.
+                // If the stack of open elements does not have a tbody, thead, or tfoot element in table scope,
+                // this is a parse error; ignore the token.
+                if (!this.OpenElements.HasElementInTableScope(elem => elem.Is(Tags.TBody, Tags.THead, Tags.TFoot)))
+                {
+                    if (this.Token.Type == TokenType.StartTag)
+                        this.InformParseError(ParseError.UnexpectedStartTag);
+                    else
+                        this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise:
-                //        Clear the stack back to a table body context. (See below.)
+                // Otherwise:
+                // Clear the stack back to a table body context. (See below.)
+                this.ClearStackBackToTableBodyContext();
 
-                //        Pop the current node from the stack of open elements. Switch the insertion mode to "in table".
+                // Pop the current node from the stack of open elements. Switch the insertion mode to "in table".
+                this.OpenElements.Pop();
+                this.Switch(InsertionModeEnum.InTable);
 
-                //        Reprocess the token.
+                // Reprocess the token.
+                this.ProcessToken();
             }
 
             // An end tag whose tag name is one of: "body", "caption", "col", "colgroup", "html", "td", "th", "tr"
             else if (this.Token.IsEndTagNamed(Tags.Body, Tags.Caption, Tags.Col, Tags.ColGroup, Tags.Html, Tags.Td, Tags.Th, Tags.Tr))
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedEndTag);
             }
 
             // Anything else
             else
             {
-                //    Process the token using the rules for the "in table" insertion mode.
-
+                // Process the token using the rules for the "in table" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InTable);
             }
+        }
 
+        private void ClearStackBackToTableBodyContext()
+        {
             /*
                  When the steps above require the UA to clear the stack back to a table body context,
                  it means that the UA must, while the current node is not a tbody, tfoot, thead, template,
@@ -3000,6 +4526,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
                  NOTE: The current node being an html element after this process is a fragment case.
             */
+            while (!this.CurrentNode.Is(Tags.TBody, Tags.TFoot, Tags.THead, Tags.Template, Tags.Html))
+            {
+                this.OpenElements.Pop();
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3015,22 +4545,36 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A start tag whose tag name is one of: "th", "td"
             if (this.Token.IsStartTagNamed(Tags.Th, Tags.Td))
             {
-                //    Clear the stack back to a table row context. (See below.)
+                // Clear the stack back to a table row context. (See below.)
+                this.ClearStackBackToTableRowContext();
 
-                //    Insert an HTML element for the token, then switch the insertion mode to "in cell".
+                // Insert an HTML element for the token, then switch the insertion mode to "in cell".
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.Switch(InsertionModeEnum.InCell);
 
-                //    Insert a marker at the end of the list of active formatting elements.
+                // Insert a marker at the end of the list of active formatting elements.
+                this.ActiveFormattingElements.InsertMarker();
             }
 
             // An end tag whose tag name is "tr"
             else if (this.Token.IsEndTagNamed(Tags.Tr))
             {
-                //    If the stack of open elements does not have a tr element in table scope, this is a parse error; ignore the token.
+                // If the stack of open elements does not have a tr element in table scope, this is a parse error; ignore the token.
+                if (!this.OpenElements.HasElementInTableScope(Tags.Tr))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise:
-                //        Clear the stack back to a table row context. (See below.)
+                // Otherwise:
+                // Clear the stack back to a table row context. (See below.)
+                this.ClearStackBackToTableRowContext();
 
-                //        Pop the current node (which will be a tr element) from the stack of open elements. Switch the insertion mode to "in table body".
+                // Pop the current node (which will be a tr element) from the stack of open elements. 
+                this.OpenElements.Pop();
+
+                // Switch the insertion mode to "in table body".
+                this.Switch(InsertionModeEnum.InTableBody);
             }
 
             // A start tag whose tag name is one of: "caption", "col", "colgroup", "tbody", "tfoot", "thead", "tr"
@@ -3039,51 +4583,86 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.Token.IsStartTagNamed(Tags.Caption, Tags.Col, Tags.ColGroup, Tags.TBody, Tags.TFoot, Tags.THead, Tags.Tr) ||
                 this.Token.IsEndTagNamed(Tags.Table))
             {
-                //    If the stack of open elements does not have a tr element in table scope, this is a parse error; ignore the token.
+                // If the stack of open elements does not have a tr element in table scope, this is a parse error; ignore the token.
+                if (!this.OpenElements.HasElementInTableScope(Tags.Tr))
+                {
+                    if (this.Token.Type == TokenType.StartTag)
+                        this.InformParseError(ParseError.UnexpectedStartTag);
+                    else
+                        this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise:
-                //        Clear the stack back to a table row context. (See below.)
+                // Otherwise:
+                // Clear the stack back to a table row context. (See below.)
+                this.ClearStackBackToTableRowContext();
 
-                //        Pop the current node (which will be a tr element) from the stack of open elements. Switch the insertion mode to "in table body".
+                // Pop the current node (which will be a tr element) from the stack of open elements. 
+                this.OpenElements.Pop();
 
-                //        Reprocess the token.
+                // Switch the insertion mode to "in table body".
+                this.Switch(InsertionModeEnum.InTableBody);
+
+                // Reprocess the token.
+                this.ProcessToken();
             }
 
             // An end tag whose tag name is one of: "tbody", "tfoot", "thead"
             else if (this.Token.IsEndTagNamed(Tags.TBody, Tags.TFoot, Tags.THead))
             {
-                //    If the stack of open elements does not have an element in table scope that is an HTML element
-                //    and with the same tag name as the token, this is a parse error; ignore the token.
+                // If the stack of open elements does not have an element in table scope that is an HTML element
+                // and with the same tag name as the token, this is a parse error; ignore the token.
+                if (!this.OpenElements.HasElementInTableScope(this.Token.TagName))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    If the stack of open elements does not have a tr element in table scope, ignore the token.
+                // If the stack of open elements does not have a tr element in table scope, ignore the token.
+                if (!this.OpenElements.HasElementInTableScope(Tags.Tr))
+                    return;
 
-                //    Otherwise:
-                //        Clear the stack back to a table row context. (See below.)
+                // Otherwise:
+                // Clear the stack back to a table row context. (See below.)
+                this.ClearStackBackToTableRowContext();
 
-                //        Pop the current node (which will be a tr element) from the stack of open elements. Switch the insertion mode to "in table body".
+                // Pop the current node (which will be a tr element) from the stack of open elements. 
+                this.OpenElements.Pop();
 
-                //        Reprocess the token.
+                // Switch the insertion mode to "in table body".
+                this.Switch(InsertionModeEnum.InTableBody);
+
+                // Reprocess the token.
+                this.ProcessToken();
             }
 
             // An end tag whose tag name is one of: "body", "caption", "col", "colgroup", "html", "td", "th"
             else if (this.Token.IsEndTagNamed(Tags.Body, Tags.Caption, Tags.Col, Tags.ColGroup, Tags.Html, Tags.Td, Tags.Th))
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedEndTag);
             }
 
             // Anything else
             else
             {
-                //    Process the token using the rules for the "in table" insertion mode.
-
+                // Process the token using the rules for the "in table" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InTable);
             }
+        }
 
+        private void ClearStackBackToTableRowContext()
+        {
             /*
                  When the steps above require the UA to clear the stack back to a table row context, it means that the UA must,
                  while the current node is not a tr, template, or html element, pop elements from the stack of open elements.
 
                  NOTE: The current node being an html element after this process is a fragment case.
             */
+            while (!this.CurrentNode.Is(Tags.Tr, Tags.Template, Tags.Html))
+            {
+                this.OpenElements.Pop();
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3099,66 +4678,102 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // An end tag whose tag name is one of: "td", "th"
             if (this.Token.IsEndTagNamed(Tags.Td, Tags.Th))
             {
-                //    If the stack of open elements does not have an element in table scope that is an HTML element and
-                //    with the same tag name as that of the token, then this is a parse error; ignore the token.
+                // If the stack of open elements does not have an element in table scope that is an HTML element and
+                // with the same tag name as that of the token, then this is a parse error; ignore the token.
+                if (!this.OpenElements.HasElementInTableScope(this.Token.TagName))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise:
-                //        Generate implied end tags.
+                // Otherwise:
+                // Generate implied end tags.
+                this.GenerateImpliedEndTag();
 
-                //        Now, if the current node is not an HTML element with the same tag name as the token,
-                //        then this is a parse error.
+                // Now, if the current node is not an HTML element with the same tag name as the token,
+                // then this is a parse error.
+                if (!this.CurrentNode.Is(this.Token.TagName))
+                    this.InformParseError(ParseError.UnexpectedEndTag);
 
-                //        Pop elements from the stack of open elements stack until an HTML element with the same
-                //        tag name as the token has been popped from the stack.
+                // Pop elements from the stack of open elements stack until an HTML element with the same
+                // tag name as the token has been popped from the stack.
+                this.OpenElements.PopUntil(this.Token.TagName);
 
-                //        Clear the list of active formatting elements up to the last marker.
+                // Clear the list of active formatting elements up to the last marker.
+                this.ActiveFormattingElements.ClearFormattingElementsUpToMarker();
 
-                //        Switch the insertion mode to "in row".
+                // Switch the insertion mode to "in row".
+                this.Switch(InsertionModeEnum.InRow);
             }
 
             // A start tag whose tag name is one of: "caption", "col", "colgroup", "tbody", "td", "tfoot", "th", "thead", "tr"
             else if (this.Token.IsStartTagNamed(Tags.Caption, Tags.Col, Tags.ColGroup, Tags.TBody, Tags.Td, Tags.TFoot, Tags.Th, Tags.THead, Tags.Tr))
             {
-                //    If the stack of open elements does not have a td or th element in table scope, then this is a parse error;
-                //    ignore the token. (fragment case)
+                // If the stack of open elements does not have a td or th element in table scope, then this is a parse error;
+                // ignore the token. (fragment case)
+                if (!this.OpenElements.HasElementInTableScope(elem => elem.Is(Tags.Td, Tags.Th)))
+                {
+                    this.InformParseError(ParseError.UnexpectedStartTag);
+                    return;
+                }
 
-                //    Otherwise, close the cell (see below) and reprocess the token.
+                // Otherwise, close the cell (see below) and reprocess the token.
+                this.CloseTableCells();
+                this.ProcessToken();
             }
 
             // An end tag whose tag name is one of: "body", "caption", "col", "colgroup", "html"
             else if (this.Token.IsEndTagNamed(Tags.Body, Tags.Caption, Tags.Col, Tags.ColGroup, Tags.Html))
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedEndTag);
             }
 
             // An end tag whose tag name is one of: "table", "tbody", "tfoot", "thead", "tr"
             else if (this.Token.IsEndTagNamed(Tags.Table, Tags.TBody, Tags.TFoot, Tags.THead, Tags.Tr))
             {
-                //    If the stack of open elements does not have an element in table scope that is an HTML element
-                //    and with the same tag name as that of the token, then this is a parse error; ignore the token.
+                // If the stack of open elements does not have an element in table scope that is an HTML element
+                // and with the same tag name as that of the token, then this is a parse error; ignore the token.
+                if (!this.OpenElements.HasElementInTableScope(this.Token.TagName))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise, close the cell (see below) and reprocess the token.
+                // Otherwise, close the cell (see below) and reprocess the token.
+                this.CloseTableCells();
+                this.ProcessToken();
             }
 
             // Anything else
             else
             {
-                //    Process the token using the rules for the "in body" insertion mode.
-
-
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
+        }
 
-            /*
-                 Where the steps above say to close the cell, they mean to run the following algorithm:
-                 1. Generate implied end tags.
-                 2. If the current node is not now a td element or a th element, then this is a parse error.
-                 3. Pop elements from the stack of open elements stack until a td element or a th element has been popped from the stack.
-                 4. Clear the list of active formatting elements up to the last marker.
-                 5. Switch the insertion mode to "in row".
+        private void CloseTableCells()
+        {
+            // Where the steps above say to close the cell, they mean to run the following algorithm:
+            // 1. Generate implied end tags.
+            this.GenerateImpliedEndTag();
 
-                 NOTE: The stack of open elements cannot have both a td and a th element in table scope at the same time,
-                 nor can it have neither when the close the cell algorithm is invoked.
-            */
+            // 2. If the current node is not now a td element or a th element, then this is a parse error.
+            if (!this.CurrentNode.Is(Tags.Td, Tags.Th))
+                this.InformParseError(ParseError.UnexpectedTag);
+
+            // 3. Pop elements from the stack of open elements stack until a td element or a th element has been popped from the stack.
+            this.OpenElements.PopUntil(Tags.Td, Tags.Th);
+
+            // 4. Clear the list of active formatting elements up to the last marker.
+            this.ActiveFormattingElements.ClearFormattingElementsUpToMarker();
+
+            // 5. Switch the insertion mode to "in row".
+            this.Switch(InsertionModeEnum.InRow);
+
+            // NOTE: The stack of open elements cannot have both a td and a th element in table scope at the same time,
+            // nor can it have neither when the close the cell algorithm is invoked.
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3174,123 +4789,165 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A character token that is U+0000 NULL
             if (this.Token.IsCharacterNull())
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.NullCharacter);
             }
 
             // Any other character token
             else if (this.Token.Type == TokenType.Character)
             {
-                //    Insert the token's character.
+                // Insert the token's character.
+                this.DomFactory.InsertCharacter(this.Token.Character);
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
-                //    Insert a comment.
+                // Insert a comment.
+                this.DomFactory.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
             else if (this.Token.Type == TokenType.DocType)
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
             else if (this.Token.IsStartTagNamed(Tags.Html))
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // A start tag whose tag name is "option"
             else if (this.Token.IsStartTagNamed(Tags.Option))
             {
-                //    If the current node is an option element, pop that node from the stack of open elements.
+                // If the current node is an option element, pop that node from the stack of open elements.
+                if (this.CurrentNode.Is(Tags.Option))
+                    this.OpenElements.Pop();
 
-                //    Insert an HTML element for the token.
+                // Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
             }
 
             // A start tag whose tag name is "optgroup"
             else if (this.Token.IsStartTagNamed(Tags.OptGroup))
             {
-                //    If the current node is an option element, pop that node from the stack of open elements.
+                // If the current node is an option element, pop that node from the stack of open elements.
+                if (this.CurrentNode.Is(Tags.Option))
+                    this.OpenElements.Pop();
 
-                //    If the current node is an optgroup element, pop that node from the stack of open elements.
+                // If the current node is an optgroup element, pop that node from the stack of open elements.
+                if (this.CurrentNode.Is(Tags.OptGroup))
+                    this.OpenElements.Pop();
 
-                //    Insert an HTML element for the token.
+                // Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
             }
 
             // An end tag whose tag name is "optgroup"
             else if (this.Token.IsEndTagNamed(Tags.OptGroup))
             {
-                //    First, if the current node is an option element, and the node immediately before it in the stack
-                //    of open elements is an optgroup element, then pop the current node from the stack of open elements.
+                // First, if the current node is an option element, and the node immediately before it in the stack
+                // of open elements is an optgroup element, then pop the current node from the stack of open elements.
+                if (this.CurrentNode.Is(Tags.Option) && this.OpenElements[this.OpenElements.Count - 2].Is(Tags.OptGroup))
+                    this.OpenElements.Pop();
 
-                //    If the current node is an optgroup element, then pop that node from the stack of open elements.
-                //    Otherwise, this is a parse error; ignore the token.
+                // If the current node is an optgroup element, then pop that node from the stack of open elements.
+                // Otherwise, this is a parse error; ignore the token.
+                if (this.CurrentNode.Is(Tags.OptGroup))
+                    this.OpenElements.Pop();
+                else
+                    this.InformParseError(ParseError.UnexpectedEndTag);
             }
 
             // An end tag whose tag name is "option"
             else if (this.Token.IsEndTagNamed(Tags.Option))
             {
-                //    If the current node is an option element, then pop that node from the stack of open elements.
-                //    Otherwise, this is a parse error; ignore the token.
+                // If the current node is an option element, then pop that node from the stack of open elements.
+                // Otherwise, this is a parse error; ignore the token.
+                if (this.CurrentNode.Is(Tags.Option))
+                    this.OpenElements.Pop();
+                else
+                    this.InformParseError(ParseError.UnexpectedEndTag);
             }
 
             // An end tag whose tag name is "select"
             else if (this.Token.IsEndTagNamed(Tags.Select))
             {
-                //    If the stack of open elements does not have a select element in select scope, this is a parse error;
-                //    ignore the token. (fragment case)
+                // If the stack of open elements does not have a select element in select scope, this is a parse error;
+                // ignore the token. (fragment case)
+                if (!this.OpenElements.HasElementInTableScope(Tags.Select))
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise:
-                //        Pop elements from the stack of open elements until a select element has been popped from the stack.
+                // Otherwise:
+                // Pop elements from the stack of open elements until a select element has been popped from the stack.
+                this.OpenElements.PopUntil(Tags.Select);
 
-                //        Reset the insertion mode appropriately.
+                // Reset the insertion mode appropriately.
+                this.ResetInsertionModeAppropriately();
             }
 
             // A start tag whose tag name is "select"
             else if (this.Token.IsStartTagNamed(Tags.Select))
             {
-                //    Parse error.
+                // Parse error.
+                this.InformParseError(ParseError.UnexpectedStartTag);
 
-                //    Pop elements from the stack of open elements until a select element has been popped from the stack.
+                // Pop elements from the stack of open elements until a select element has been popped from the stack.
+                this.OpenElements.PopUntil(Tags.Select);
 
-                //    Reset the insertion mode appropriately.
+                // Reset the insertion mode appropriately.
+                this.ResetInsertionModeAppropriately();
 
-                //    It just gets treated like an end tag.
+                // NOTE: It just gets treated like an end tag.
             }
 
             // A start tag whose tag name is one of: "input", "keygen", "textarea"
             else if (this.Token.IsStartTagNamed(Tags.Input, Tags.KeyGen, Tags.TextArea))
             {
-                //    Parse error.
+                // Parse error.
+                this.InformParseError(ParseError.UnexpectedStartTag);
 
-                //    If the stack of open elements does not have a select element in select scope, ignore the token. (fragment case)
+                // If the stack of open elements does not have a select element in select scope, ignore the token. (fragment case)
+                if (!this.OpenElements.HasElementInSelectScope(Tags.Select))
+                    return;
 
-                //    Pop elements from the stack of open elements until a select element has been popped from the stack.
+                // Pop elements from the stack of open elements until a select element has been popped from the stack.
+                this.OpenElements.PopUntil(Tags.Select);
 
-                //    Reset the insertion mode appropriately.
+                // Reset the insertion mode appropriately.
+                this.ResetInsertionModeAppropriately();
 
-                //    Reprocess the token.
+                // Reprocess the token.
+                this.ProcessToken();
             }
 
             // A start tag whose tag name is one of: "script", "template"
             // An end tag whose tag name is "template"
             else if (this.Token.IsStartTagNamed(Tags.Script, Tags.Template) || this.Token.IsEndTagNamed(Tags.Template))
             {
-                //    Process the token using the rules for the "in head" insertion mode.
+                // Process the token using the rules for the "in head" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InHead);
             }
 
             // An end-of-file token
             else if (this.Token.Type == TokenType.EndOfFile)
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // Anything else
             else
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedTag);
             }
         }
 
@@ -3307,35 +4964,46 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A start tag whose tag name is one of: "caption", "table", "tbody", "tfoot", "thead", "tr", "td", "th"
             if (this.Token.IsStartTagNamed(Tags.Caption, Tags.Table, Tags.TBody, Tags.TFoot, Tags.THead, Tags.Tr, Tags.Td, Tags.Th))
             {
-                //    Parse error.
+                // Parse error.
+                this.InformParseError(ParseError.UnexpectedStartTag);
 
-                //    Pop elements from the stack of open elements until a select element has been popped from the stack.
+                // Pop elements from the stack of open elements until a select element has been popped from the stack.
+                this.OpenElements.PopUntil(Tags.Select);
 
-                //    Reset the insertion mode appropriately.
+                // Reset the insertion mode appropriately.
+                this.ResetInsertionModeAppropriately();
 
-                //    Reprocess the token.
+                // Reprocess the token.
+                this.ProcessToken();
             }
 
             // An end tag whose tag name is one of: "caption", "table", "tbody", "tfoot", "thead", "tr", "td", "th"
             else if (this.Token.IsEndTagNamed(Tags.Caption, Tags.Table, Tags.TBody, Tags.TFoot, Tags.THead, Tags.Tr, Tags.Td, Tags.Th))
             {
-                //    Parse error.
+                // Parse error.
+                this.InformParseError(ParseError.UnexpectedEndTag);
 
-                //    If the stack of open elements does not have an element in table scope that is an HTML element
-                //    and with the same tag name as that of the token, then ignore the token.
+                // If the stack of open elements does not have an element in table scope that is an HTML element
+                // and with the same tag name as that of the token, then ignore the token.
+                if (!this.OpenElements.HasElementInTableScope(this.Token.TagName))
+                    return;
 
-                //    Otherwise:
-                //        Pop elements from the stack of open elements until a select element has been popped from the stack.
+                // Otherwise:
+                // Pop elements from the stack of open elements until a select element has been popped from the stack.
+                this.OpenElements.PopUntil(Tags.Section);
 
-                //        Reset the insertion mode appropriately.
+                // Reset the insertion mode appropriately.
+                this.ResetInsertionModeAppropriately();
 
-                //        Reprocess the token.
+                // Reprocess the token.
+                this.ProcessToken();
             }
 
             // Anything else
             else
             {
-                //    Process the token using the rules for the "in select" insertion mode.
+                // Process the token using the rules for the "in select" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InSelect);
             }
         }
 
@@ -3354,7 +5022,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A DOCTYPE token
             if ((this.Token.Type == TokenType.Character) || (this.Token.Type == TokenType.Comment) || (this.Token.Type == TokenType.DocType))
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // A start tag whose tag name is one of: "base", "basefont", "bgsound", "link", "meta", "noframes", "script",
@@ -3362,87 +5031,120 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // An end tag whose tag name is "template"
             else if (
                 this.Token.IsStartTagNamed(
-                    Tags.Base, Tags.BaseFont, Tags.BgSound, Tags.Link, Tags.Meta, Tags.NoFrames, Tags.Script, 
+                    Tags.Base, Tags.BaseFont, Tags.BgSound, Tags.Link, Tags.Meta, Tags.NoFrames, Tags.Script,
                     Tags.Style, Tags.Template, Tags.Title) ||
                 this.Token.IsEndTagNamed(Tags.Template))
             {
-                //    Process the token using the rules for the "in head" insertion mode.
+                // Process the token using the rules for the "in head" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InHead);
             }
 
             // A start tag whose tag name is one of: "caption", "colgroup", "tbody", "tfoot", "thead"
             else if (this.Token.IsStartTagNamed(Tags.Caption, Tags.ColGroup, Tags.TBody, Tags.TFoot, Tags.THead))
             {
-                //    Pop the current template insertion mode off the stack of template insertion modes.
+                // Pop the current template insertion mode off the stack of template insertion modes.
+                this.TemplateInsertionMode.Pop();
 
-                //    Push "in table" onto the stack of template insertion modes so that it is the new current template insertion mode.
+                // Push "in table" onto the stack of template insertion modes so that it is the new current template insertion mode.
+                this.TemplateInsertionMode.Push(InsertionModeEnum.InTable);
 
-                //    Switch the insertion mode to "in table", and reprocess the token.
+                // Switch the insertion mode to "in table", and reprocess the token.
+                this.Switch(InsertionModeEnum.InTable);
+                this.ProcessToken();
             }
 
             // A start tag whose tag name is "col"
             else if (this.Token.IsStartTagNamed(Tags.Col))
             {
-                //    Pop the current template insertion mode off the stack of template insertion modes.
+                // Pop the current template insertion mode off the stack of template insertion modes.
+                this.TemplateInsertionMode.Pop();
 
-                //    Push "in column group" onto the stack of template insertion modes so that it is the new
-                //    current template insertion mode.
+                // Push "in column group" onto the stack of template insertion modes so that it is the new
+                // current template insertion mode.
+                this.TemplateInsertionMode.Push(InsertionModeEnum.InColumnGroup);
 
-                //    Switch the insertion mode to "in column group", and reprocess the token.
+                // Switch the insertion mode to "in column group", and reprocess the token.
+                this.Switch(InsertionModeEnum.InColumnGroup);
+                this.ProcessToken();
             }
 
             // A start tag whose tag name is "tr"
             else if (this.Token.IsStartTagNamed(Tags.Tr))
             {
-                //    Pop the current template insertion mode off the stack of template insertion modes.
+                // Pop the current template insertion mode off the stack of template insertion modes.
+                this.TemplateInsertionMode.Pop();
 
-                //    Push "in table body" onto the stack of template insertion modes so that it is the new
-                //    current template insertion mode.
+                // Push "in table body" onto the stack of template insertion modes so that it is the new
+                // current template insertion mode.
+                this.TemplateInsertionMode.Push(InsertionModeEnum.InTableBody);
 
-                //    Switch the insertion mode to "in table body", and reprocess the token.
+                // Switch the insertion mode to "in table body", and reprocess the token.
+                this.Switch(InsertionModeEnum.InTableBody);
+                this.ProcessToken();
             }
 
             // A start tag whose tag name is one of: "td", "th"
             else if (this.Token.IsStartTagNamed(Tags.Td, Tags.Th))
             {
-                //    Pop the current template insertion mode off the stack of template insertion modes.
+                // Pop the current template insertion mode off the stack of template insertion modes.
+                this.TemplateInsertionMode.Pop();
 
-                //    Push "in row" onto the stack of template insertion modes so that it is the new current template insertion mode.
+                // Push "in row" onto the stack of template insertion modes so that it is the new current template insertion mode.
+                this.TemplateInsertionMode.Push(InsertionModeEnum.InRow);
 
-                //    Switch the insertion mode to "in row", and reprocess the token.
+                // Switch the insertion mode to "in row", and reprocess the token.
+                this.Switch(InsertionModeEnum.InRow);
+                this.ProcessToken();
             }
 
             // Any other start tag
             else if (this.Token.Type == TokenType.StartTag)
             {
-                //    Pop the current template insertion mode off the stack of template insertion modes.
+                // Pop the current template insertion mode off the stack of template insertion modes.
+                this.TemplateInsertionMode.Pop();
 
-                //    Push "in body" onto the stack of template insertion modes so that it is the new current template insertion mode.
+                // Push "in body" onto the stack of template insertion modes so that it is the new current template insertion mode.
+                this.TemplateInsertionMode.Push(InsertionModeEnum.InBody);
 
-                //    Switch the insertion mode to "in body", and reprocess the token.
+                // Switch the insertion mode to "in body", and reprocess the token.
+                this.Switch(InsertionModeEnum.InBody);
+                this.ProcessToken();
             }
 
             // Any other end tag
             else if (this.Token.Type == TokenType.EndTag)
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedEndTag);
             }
 
             // An end-of-file token
             else if (this.Token.Type == TokenType.EndOfFile)
             {
-                //    If there is no template element on the stack of open elements, then stop parsing. (fragment case)
+                // If there is no template element on the stack of open elements, then stop parsing. (fragment case)
+                if (!this.OpenElements.Contains(Tags.Template))
+                {
+                    this.StopParsing();
+                    return;
+                }
 
-                //    Otherwise, this is a parse error.
+                // Otherwise, this is a parse error.
+                this.InformParseError(ParseError.PrematureEndOfFile);
 
-                //    Pop elements from the stack of open elements until a template element has been popped from the stack.
+                // Pop elements from the stack of open elements until a template element has been popped from the stack.
+                this.OpenElements.PopUntil(Tags.Template);
 
-                //    Clear the list of active formatting elements up to the last marker.
+                // Clear the list of active formatting elements up to the last marker.
+                this.ActiveFormattingElements.ClearFormattingElementsUpToMarker();
 
-                //    Pop the current template insertion mode off the stack of template insertion modes.
+                // Pop the current template insertion mode off the stack of template insertion modes.
+                this.TemplateInsertionMode.Pop();
 
-                //    Reset the insertion mode appropriately.
+                // Reset the insertion mode appropriately.
+                this.ResetInsertionModeAppropriately();
 
-                //    Reprocess the token.
+                // Reprocess the token.
+                this.ProcessToken();
             }
         }
 
@@ -3460,46 +5162,59 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // "FF" (U+000C), "CR" (U+000D), or U+0020 SPACE
             if (this.Token.IsCharacterWhitespace())
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
-                //    Insert a comment as the last child of the first element in the stack of open elements (the html element).
+                // Insert a comment as the last child of the first element in the stack of open elements (the html element).
+                throw new NotImplementedException();
             }
 
             // A DOCTYPE token
             else if (this.Token.Type == TokenType.DocType)
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
             else if (this.Token.IsStartTagNamed(Tags.Html))
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // An end tag whose tag name is "html"
             else if (this.Token.IsEndTagNamed(Tags.Html))
             {
-                //    If the parser was originally created as part of the HTML fragment parsing algorithm,
-                //    this is a parse error; ignore the token. (fragment case)
+                // If the parser was originally created as part of the HTML fragment parsing algorithm,
+                // this is a parse error; ignore the token. (fragment case)
+                if (this.ParsingContext.IsFragmentParsing)
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise, switch the insertion mode to "after after body".
+                // Otherwise, switch the insertion mode to "after after body".
+                this.Switch(InsertionModeEnum.AfterAfterBody);
             }
 
             // An end-of-file token
             else if (this.Token.Type == TokenType.EndOfFile)
             {
-                //    Stop parsing.
+                // Stop parsing.
+                this.StopParsing();
             }
 
             // Anything else
             else
             {
-                //    Parse error. Switch the insertion mode to "in body" and reprocess the token.
+                // Parse error. Switch the insertion mode to "in body" and reprocess the token.
+                this.InformParseError(ParseError.UnexpectedTag);
+                this.Switch(InsertionModeEnum.InBody);
             }
         }
 
@@ -3517,72 +5232,94 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // "FF" (U+000C), "CR" (U+000D), or U+0020 SPACE
             if (this.Token.IsCharacterWhitespace())
             {
-                //    Insert the character.
+                // Insert the character.
+                this.DomFactory.InsertCharacter(this.Token.Character);
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
-                //    Insert a comment.
+                // Insert a comment.
+                this.DomFactory.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
             else if (this.Token.Type == TokenType.DocType)
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
             else if (this.Token.IsStartTagNamed(Tags.Html))
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // A start tag whose tag name is "frameset"
             else if (this.Token.IsStartTagNamed(Tags.Frameset))
             {
-                //    Insert an HTML element for the token.
+                // Insert an HTML element for the token.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
             }
 
             // An end tag whose tag name is "frameset"
             else if (this.Token.IsEndTagNamed(Tags.Frameset))
             {
-                //    If the current node is the root html element, then this is a parse error; ignore the token. (fragment case)
+                // If the current node is the root html element, then this is a parse error; ignore the token. (fragment case)
+                if (this.CurrentNode == this.OpenElements[0])
+                {
+                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    return;
+                }
 
-                //    Otherwise, pop the current node from the stack of open elements.
+                // Otherwise, pop the current node from the stack of open elements.
+                this.OpenElements.Pop();
 
-                //    If the parser was not originally created as part of the HTML fragment parsing algorithm (fragment case),
-                //    and the current node is no longer a frameset element, then switch the insertion mode to "after frameset".
+                // If the parser was not originally created as part of the HTML fragment parsing algorithm (fragment case),
+                // and the current node is no longer a frameset element, then switch the insertion mode to "after frameset".
+                if (!this.ParsingContext.IsFragmentParsing && !this.CurrentNode.Is(Tags.Frameset))
+                    this.Switch(InsertionModeEnum.AfterFrameset);
             }
 
             // A start tag whose tag name is "frame"
             else if (this.Token.IsStartTagNamed(Tags.Frame))
             {
-                //    Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
+                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.OpenElements.Pop();
 
-                //    Acknowledge the token's self-closing flag, if it is set.
+                // Acknowledge the token's self-closing flag, if it is set.
+                if (this.Token.TagIsSelfClosing)
+                    this.Tokenizer.AcknowledgeSelfClosingTag();
             }
 
             // A start tag whose tag name is "noframes"
             else if (this.Token.IsStartTagNamed(Tags.NoFrames))
             {
-                //    Process the token using the rules for the "in head" insertion mode.
+                // Process the token using the rules for the "in head" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InHead);
             }
 
             // An end-of-file token
             else if (this.Token.Type == TokenType.EndOfFile)
             {
-                //    If the current node is not the root html element, then this is a parse error.
+                // If the current node is not the root html element, then this is a parse error.
+                if (this.CurrentNode != this.OpenElements[0])
+                    this.InformParseError(ParseError.PrematureEndOfFile);
 
-                //    The current node can only be the root html element in the fragment case.
+                // NOTE: The current node can only be the root html element in the fragment case.
 
-                //    Stop parsing.
+                // Stop parsing.
+                this.StopParsing();
             }
 
             // Anything else
             else
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedTag);
             }
 
         }
@@ -3601,49 +5338,57 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // "FF" (U+000C), "CR" (U+000D), or U+0020 SPACE
             if (this.Token.IsCharacterWhitespace())
             {
-                //    Insert the character.
+                // Insert the character.
+                this.DomFactory.InsertCharacter(this.Token.Character);
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
-                //    Insert a comment.
+                // Insert a comment.
+                this.DomFactory.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
             else if (this.Token.Type == TokenType.DocType)
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
             else if (this.Token.IsStartTagNamed(Tags.Html))
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // An end tag whose tag name is "html"
             else if (this.Token.IsEndTagNamed(Tags.Html))
             {
-                //    Switch the insertion mode to "after after frameset".
+                // Switch the insertion mode to "after after frameset".
+                this.Switch(InsertionModeEnum.AfterAfterFrameset);
             }
 
             // A start tag whose tag name is "noframes"
             else if (this.Token.IsStartTagNamed(Tags.NoFrames))
             {
-                //    Process the token using the rules for the "in head" insertion mode.
+                // Process the token using the rules for the "in head" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InHead);
             }
 
             // An end-of-file token
             else if (this.Token.Type == TokenType.EndOfFile)
             {
-                //    Stop parsing.
+                // Stop parsing.
+                this.StopParsing();
             }
 
             // Anything else
             else
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedTag);
             }
         }
 
@@ -3660,7 +5405,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A comment token
             if (this.Token.Type == TokenType.Comment)
             {
-                //    Insert a comment as the last child of the Document object.
+                // Insert a comment as the last child of the Document object.
+                throw new NotImplementedException();
             }
 
             // A DOCTYPE token
@@ -3669,19 +5415,24 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A start tag whose tag name is "html"
             else if ((this.Token.Type == TokenType.DocType) || this.Token.IsCharacterWhitespace() || this.Token.IsStartTagNamed(Tags.Html))
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // An end-of-file token
             else if (this.Token.Type == TokenType.EndOfFile)
             {
-                //    Stop parsing.
+                // Stop parsing.
+                this.StopParsing();
             }
 
             // Anything else
             else
             {
-                //    Parse error. Switch the insertion mode to "in body" and reprocess the token.
+                // Parse error. Switch the insertion mode to "in body" and reprocess the token.
+                this.InformParseError(ParseError.UnexpectedTag);
+                this.Switch(InsertionModeEnum.InBody);
+                this.ProcessToken();
             }
         }
 
@@ -3698,7 +5449,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A comment token
             if (this.Token.Type == TokenType.Comment)
             {
-                //    Insert a comment as the last child of the Document object.
+                // Insert a comment as the last child of the Document object.
+                throw new NotImplementedException();
             }
 
             // A DOCTYPE token
@@ -3707,25 +5459,29 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // A start tag whose tag name is "html"
             else if ((this.Token.Type == TokenType.DocType) || this.Token.IsCharacterWhitespace() || this.Token.IsStartTagNamed(Tags.Html))
             {
-                //    Process the token using the rules for the "in body" insertion mode.
+                // Process the token using the rules for the "in body" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InBody);
             }
 
             // An end-of-file token
             else if (this.Token.Type == TokenType.EndOfFile)
             {
-                //    Stop parsing.
+                // Stop parsing.
+                this.StopParsing();
             }
 
             // A start tag whose tag name is "noframes"
             else if (this.Token.IsStartTagNamed(Tags.NoFrames))
             {
-                //    Process the token using the rules for the "in head" insertion mode.
+                // Process the token using the rules for the "in head" insertion mode.
+                this.ProcessTokenUsing(InsertionModeEnum.InHead);
             }
 
             // Anything else
             else
             {
-                //    Parse error. Ignore the token.
+                // Parse error. Ignore the token.
+                this.InformParseError(ParseError.UnexpectedTag);
             }
         }
 

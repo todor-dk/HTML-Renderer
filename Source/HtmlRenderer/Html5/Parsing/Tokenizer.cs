@@ -9,7 +9,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 {
     internal class Tokenizer
     {
-        private enum StateEnum
+        internal enum StateEnum
         {
             /// <summary>
             /// Data state
@@ -699,7 +699,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
         }
 
-        private void SwitchTo(StateEnum state)
+        internal void SwitchTo(StateEnum state)
         {
             switch (state)
             {

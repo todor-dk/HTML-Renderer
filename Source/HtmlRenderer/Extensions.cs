@@ -36,7 +36,7 @@ namespace TheArtOfDev.HtmlRenderer
             return result;
         }
 
-        public static TItem FailIfNull<TItem>(this TItem self)
+        public static TItem[] FailIfNull<TItem>(this TItem[] self)
         {
             if (self == null)
                 throw new NullReferenceException();

@@ -9,23 +9,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 {
     public class ParsingState
     {
-        #region 8.2.3.3. The list of active formatting elements. See http://www.w3.org/TR/html5/syntax.html#the-list-of-active-formatting-elements
-
-        /// <summary>
-        /// 8.2.3.3. The list of active formatting elements.
-        /// Initially, the list of active formatting elements is empty. It is used to handle mis-nested formatting element tags.
-        /// </summary>
-        /// <remarks>
-        /// The list contains elements in the formatting category, and markers. The markers are inserted when entering applet elements,
-        /// buttons, object elements, marquees, table cells, and table captions, and are used to prevent formatting from "leaking" into
-        /// applet elements, buttons, object elements, marquees, and tables.
-        /// <para/>
-        /// In addition, each element in the list of active formatting elements is associated with the token for which it was created, 
-        /// so that further elements can be created for that token if necessary.
-        /// </remarks>
-        public List<Element> ActiveFormattingElements = new List<Element>();
-
-        #endregion
+        public QuirksMode QuirksMode;
 
         #region 8.2.3.4. The element pointers See: http://www.w3.org/TR/html5/syntax.html#the-element-pointers
 

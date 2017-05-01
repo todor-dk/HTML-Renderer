@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using TheArtOfDev.HtmlRenderer.Dom;
@@ -195,6 +196,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5
 
         public const string Rtc = "rtc";
 
+        public const string Ruby = "ruby";
+
         public const string Svg = "svg";
 
         public const string IFrame = "iframe";
@@ -229,16 +232,16 @@ namespace TheArtOfDev.HtmlRenderer.Html5
 
         public const string Xml = "xmp";
 
-        public static readonly string[] AllTags = new string[]
-        {
-            A, Address, Applet, Area, Article, Aside, B, Base, BaseFont, BgSound, Big, BlockQuote, Body, Br, Button,
-            Caption, Center, Code, Col, ColGroup, Dd, Details, Dialog, Dir, Div, Dl, Dt, Em, Embed, FieldSet, FigCaption,
-            Figure, Font, Footer, Form, Frame, Frameset, H1, H2, H3, H4, H5, H6, Head, Header, HGroup, Hr, Html, I,
-            IFrame, Image, Img, Input, IsIndex, KeyGen, Li, Link, Listing, Main, Marquee, Math, Menu, MenuItem, Meta,
-            Nav, Nobr, NoEmbed, NoFrames, NoScript, Object, Ol, OptGroup, Option, P, Param, PlainText, Pre, Rb, Rp, Rt, Rtc,
-            S, Sarcasm, Script, Section, Select, Small, Source, Strike, Strong, Style, Summary, Svg, Table, TBody, Td,
-            Template, TextArea, TFoot, Th, THead, Title, Tr, Track, Tt, U, Ul, Wbr, Xml, Xmp
-        };
+        //public static readonly string[] AllTags = new string[]
+        //{
+        //    A, Address, Applet, Area, Article, Aside, B, Base, BaseFont, BgSound, Big, BlockQuote, Body, Br, Button,
+        //    Caption, Center, Code, Col, ColGroup, Dd, Details, Dialog, Dir, Div, Dl, Dt, Em, Embed, FieldSet, FigCaption,
+        //    Figure, Font, Footer, Form, Frame, Frameset, H1, H2, H3, H4, H5, H6, Head, Header, HGroup, Hr, Html, I,
+        //    IFrame, Image, Img, Input, IsIndex, KeyGen, Li, Link, Listing, Main, Marquee, Math, Menu, MenuItem, Meta,
+        //    Nav, Nobr, NoEmbed, NoFrames, NoScript, Object, Ol, OptGroup, Option, P, Param, PlainText, Pre, Rb, Rp, Rt, Rtc,
+        //    S, Sarcasm, Script, Section, Select, Small, Source, Strike, Strong, Style, Summary, Svg, Table, TBody, Td,
+        //    Template, TextArea, TFoot, Th, THead, Title, Tr, Track, Tt, U, Ul, Wbr, Xml, Xmp
+        //};
 
         /// <summary>
         /// The following elements have varying levels of special parsing rules.
@@ -251,6 +254,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5
             Head, Header, Hr, Html, IFrame, Img, Input, Li, Link, Listing, Main, Marquee, Menu, MenuItem, Meta, Nav, NoEmbed, NoFrames,
             NoScript, Object, Ol, P, Param, PlainText, Pre, Script, Section, Select, Source, Style, Summary, Table, TBody, Td, Template,
             TextArea, TFoot, Th, THead, Title, Tr, Track, Ul, Wbr, Xmp
+            // MathML_TODO ... MathML Tags
+            // SVG_TODO ... SVG Tags
         };
 
         /// <summary>
@@ -290,7 +295,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5
         {
             for (int i = 0; i < Tags.FormattingTags.Length; i++)
             {
-                if (Tags.SpecialTags[i] == tagName)
+                if (Tags.FormattingTags[i] == tagName)
                     return true;
             }
 
@@ -301,6 +306,69 @@ namespace TheArtOfDev.HtmlRenderer.Html5
         {
             Contract.RequiresNotNull(self, nameof(self));
             return Tags.IsFormatting(self.TagName);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool Is(this Element self, Element other)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+            if (other == null)
+                return false;
+            return self.TagName == other.TagName;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool Is(this Element self, string tagName)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+            return self.TagName == tagName;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool Is(this Element self, string tagName1, string tagName2)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+            return (self.TagName == tagName1) || (self.TagName == tagName2);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool Is(this Element self, string tagName1, string tagName2, string tagName3)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+            return (self.TagName == tagName1) || (self.TagName == tagName2) || (self.TagName == tagName3);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool Is(this Element self, params string[] tagNames)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+            if ((tagNames == null) || (tagNames.Length == 0))
+                return false;
+
+            for (int i = 0; i < tagNames.Length; i++)
+            {
+                if (self.TagName == tagNames[i])
+                    return true;
+            }
+
+            return false;
+        }
+
+        internal static bool IsHtmlElement(this Element self)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+
+            // See: http://www.w3.org/TR/html51/infrastructure.html#html-element
+
+            // The term "HTML elements", when used in this specification, refers to any
+            // element in that namespace, and thus refers to both HTML and XHTML elements.
+
+            // Except where otherwise stated, all elements defined or mentioned in this
+            // specification are in the HTML namespace ("https://www.w3.org/1999/xhtml"),
+            // and all attributes defined or mentioned in this specification have no namespace.
+
+            // Currently, we do not support other namespaces. MathML_TODO SVG_TODO.
+            return true;
         }
     }
 }

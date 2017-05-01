@@ -26,19 +26,12 @@ namespace TheArtOfDev.HtmlRenderer.Dom
 
         public void SetQuirksMode(QuirksMode mode)
         {
+            this.Parser.ParsingState.QuirksMode = mode;
         }
 
-        public enum QuirksMode
+        public Element CreateElement(Element intendedParent, string tagName, Html5.Parsing.Attribute[] attributes, bool addToStack)
         {
-            On,
-
-            Limited,
-
-            Off
-        }
-
-        public Element CreateElement(string name, Html5.Parsing.Attribute[] attributes, bool addToStack)
-        {
+            Contract.RequiresNotNull(intendedParent, nameof(intendedParent));
             // See: http://www.w3.org/TR/html5/syntax.html#create-an-element-for-the-token
             return null;
         }
@@ -54,7 +47,17 @@ namespace TheArtOfDev.HtmlRenderer.Dom
             return null;
         }
 
+        public void InsertElementAt(Element element, DomParser.AdjustedInsertLocation location)
+        {
+
+        }
+
         public void InsertCharacter(char ch)
+        {
+
+        }
+
+        public void InsertChildNode(Element parent, Node child, bool unparentIfNeeded)
         {
 
         }

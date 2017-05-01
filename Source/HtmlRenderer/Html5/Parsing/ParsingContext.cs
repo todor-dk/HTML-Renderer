@@ -44,6 +44,11 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             get { return false; }
         }
 
+        public Element FragmentContextElement
+        {
+            get { return null; }
+        }
+
         internal DomFactory CreateDomFactory(DomParser parser)
         {
             Contract.RequiresNotNull(parser, nameof(parser));
