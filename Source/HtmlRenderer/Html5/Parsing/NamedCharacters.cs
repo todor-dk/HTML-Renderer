@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 {
+    /// <summary>
+    /// Helper class containing functionality related to named characters.
+    /// See: http://www.w3.org/TR/html51/syntax.html#named-character-references
+    /// </summary>
     internal static class NamedCharacters
     {
         private static readonly IReadOnlyDictionary<string, string> CompleteNameMap;
@@ -90,8 +94,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         {
             Dictionary<string, string> chars = new Dictionary<string, string>(StringComparer.Ordinal);
 
-            // See: http://www.w3.org/TR/html5/syntax.html#named-character-references
-            // See: http://www.w3.org/TR/html5/entities.json
+            // See: http://www.w3.org/TR/html51/syntax.html#named-character-references
+            // See: http://www.w3.org/TR/html51/entities.json
             chars.Add("Aacute;", "\u00C1");
             chars.Add("Aacute", "\u00C1");
             chars.Add("aacute;", "\u00E1");

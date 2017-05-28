@@ -11,6 +11,8 @@ namespace TheArtOfDev.HtmlRenderer.Dom
     {
         public string TagName { get; private set; }
 
+        public string NamespaceUri { get; private set; }
+
         public override string NodeName
         {
             get

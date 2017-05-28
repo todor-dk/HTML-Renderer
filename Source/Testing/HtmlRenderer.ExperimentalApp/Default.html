@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script type="text/javascript">
+        function analyzeDocument()
+        {
+            var r = document.getElementById('ResultContainer');
+            r.innerText = '';
+            var s = visitNode(document, '', 0);
+            r.innerText = s;
+        }
+
+        function visitBasicProperties(node, s, indent)
+        {
+            for (var i = 0; i < indent; i++) {
+                s = s + '    ';
+            }
+            s = s + 'nodeType = ' + node.nodeType + '\n';
+
+            for (var i = 0; i < indent; i++) {
+                s = s + '    ';
+            }
+            s = s + 'nodeName = ' + node.nodeName + '\n';
+            return s;
+        }
+
+        function visitNodeProperties(node, s, indent, ignoredProperties)
+        {
+            for (var pn in node) {
+                var v = node[pn];
+                if (v == null)
+                    continue;
+                if (typeof v === 'function')
+                    continue;
+
+                if (typeof v === 'number')
+                    continue;
+                if (typeof v === 'string')
+                    continue;
+                if (typeof v === 'boolean')
+                    continue;
+
+                if (['innerHTML', 'innerText', 'outerHTML', 'outerText', 'textContent', 'nodeType', 'nodeName'].indexOf(pn) >= 0)
+                    continue;
+
+                if (['ATTRIBUTE_NODE', 'CDATA_SECTION_NODE', 'COMMENT_NODE', 'DOCUMENT_FRAGMENT_NODE', 'DOCUMENT_NODE', 'DOCUMENT_POSITION_CONTAINED_BY',
+'DOCUMENT_POSITION_CONTAINS', 'DOCUMENT_POSITION_DISCONNECTED', 'DOCUMENT_POSITION_FOLLOWING', 'DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC',
+'DOCUMENT_POSITION_PRECEDING', 'DOCUMENT_TYPE_NODE', 'ELEMENT_NODE', 'ENTITY_NODE', 'ENTITY_REFERENCE_NODE', 'NOTATION_NODE',
+'PROCESSING_INSTRUCTION_NODE', 'TEXT_NODE'].indexOf(pn) >= 0)
+                    continue;
+
+                if (ignoredProperties.indexOf(pn) >= 0)
+                    continue;
+
+                for (var i = 0; i < indent; i++) {
+                    s = s + '    ';
+                }
+
+                var t = Object.prototype.toString.call(v);
+                s = s + pn + ' = ' + t + ' : ' + v + '\n';
+            }
+
+            return s;
+        }
+
+        function visitNode(node, s, indent)
+        {
+            s = visitBasicProperties(node, s, indent);
+
+            switch (node.nodeType) {
+                case document.ELEMENT_NODE:
+                    s = visitElementNode(node, s, indent);
+                    break;
+                case document.ATTRIBUTE_NODE:
+                    s = visitAttributeNode(node, s, indent);
+                    break;
+                case document.TEXT_NODE:
+                    s = visitTextNode(node, s, indent);
+                    break;
+                case document.DOCUMENT_NODE:
+                    s = visitDocumentNode(node, s, indent);
+                    break;
+                case document.DOCUMENT_TYPE_NODE:
+                    s = visitDocumentTypeNode(node, s, indent);
+                    break;
+                default:
+                    s = s + '?????????????\n';
+            }
+            return s;
+        }
+
+        function visitNodeChildren(node, s, indent)
+        {
+            for (var i = 0; i < node.childNodes.length; i++) {
+                var child = node.childNodes[i];
+                s = visitNode(child, s, indent);
+                s = s + '\n';
+            }
+
+            return s;
+        }
+
+        function visitAttributes(elem, s, indent) {
+            for (var i = 0; i < elem.attributes.length; i++) {
+                var child = elem.attributes[i];
+                s = visitNode(child, s, indent);
+                s = s + '\n';
+            }
+
+            return s;
+        }
+
+        function visitElementNode(node, s, indent) {
+            s = visitNodeProperties(node, s, indent, ['text']);
+
+            s = visitAttributes(node, s, indent + 1);
+            return visitNodeChildren(node, s, indent + 1);
+        }
+
+        function visitAttributeNode(node, s, indent) {
+            s = visitNodeProperties(node, s, indent, []);
+
+            return visitNodeChildren(node, s, indent + 1);
+        }
+
+        function visitTextNode(node, s, indent)
+        {
+            return visitNodeProperties(node, s, indent, ['wholeText', 'nodeValue', 'data']);
+        }
+
+        function visitDocumentNode(node, s, indent)
+        {
+            s = visitNodeProperties(node, s, indent, []);
+
+            return visitNodeChildren(node, s, indent + 1);
+        }
+
+        function visitDocumentTypeNode(node, s, indent) {
+            s = visitNodeProperties(node, s, indent, []);
+
+            // return visitNodeChildren(node, s, indent + 1);
+            return s;
+        }
+    </script>
+</head>
+<body>
+    <a href="javascript:void(0)" onclick="analyzeDocument();">Analyze Doc.</a>
+    <p>An example of this technique appears in the movie &lt;"12&nbsp;Angry&nbsp;Men."&gt;</p>
+    <a href="https://www.w3schools.com">This is a link</a> 
+    <img src="http://www.gettyimages.com/gi-resources/images/Embed/new/embed2.jpg" alt="W3Schools.com" width="104" height="142"> 
+    <div id="ResultContainer" style="color: dimgray"></div>
+</body>
+</html>

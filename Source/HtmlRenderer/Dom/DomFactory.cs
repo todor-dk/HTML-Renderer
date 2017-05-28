@@ -7,59 +7,51 @@ using TheArtOfDev.HtmlRenderer.Html5.Parsing;
 
 namespace TheArtOfDev.HtmlRenderer.Dom
 {
-    internal class DomFactory
+    internal abstract class DomFactory
     {
-        public readonly DomParser Parser;
+        public abstract void SetQuirksMode(QuirksMode mode);
 
-        public DomFactory(DomParser parser)
-        {
-            Contract.RequiresNotNull(parser, nameof(parser));
-            this.Parser = parser;
-        }
+        /// <summary>
+        /// Append a DocumentType node to the Document node.
+        /// Associate the DocumentType node with the Document object so that it is
+        /// returned as the value of the doctype attribute of the Document object.
+        /// </summary>
+        public abstract void AppendDocType(string name, string publicIdentifier, string systemIdentifier);
 
-        public void AppendDocType(string name, string publicIdentifier, string systemIdentifier)
-        {
-            // Append a DocumentType node to the Document node. Associate
-            // the DocumentType node with the Document object so that it is returned as the value of the doctype
-            // attribute of the Document object.
-        }
+        public abstract Element CreateElement(Document document, string namespaceUri, string tagName, Html5.Parsing.Attribute[] attributes);
 
-        public void SetQuirksMode(QuirksMode mode)
-        {
-            this.Parser.ParsingState.QuirksMode = mode;
-        }
+        public abstract void AppendElement(Element parentElement, Element element);
 
-        public Element CreateElement(Element intendedParent, string tagName, Html5.Parsing.Attribute[] attributes, bool addToStack)
-        {
-            Contract.RequiresNotNull(intendedParent, nameof(intendedParent));
-            // See: http://www.w3.org/TR/html5/syntax.html#create-an-element-for-the-token
-            return null;
-        }
-
-        public void InsertComment(string data)
-        {
-            // See: http://www.w3.org/TR/html5/syntax.html#insert-a-comment
-        }
-
-        public Element InsertHtmlElement(string name, Html5.Parsing.Attribute[] attributes)
-        {
-            // See: http://www.w3.org/TR/html5/syntax.html#insert-an-html-element
-            return null;
-        }
-
-        public void InsertElementAt(Element element, DomParser.AdjustedInsertLocation location)
-        {
-
-        }
-
-        public void InsertCharacter(char ch)
-        {
-
-        }
+        public abstract void InsertElementBefore(Element parentElement, Element element, Element referenceElement);
 
         public void InsertChildNode(Element parent, Node child, bool unparentIfNeeded)
         {
 
         }
+
+        public void AssociateWithForm(Element element, Element form)
+        {
+            // Nothing here.
+        }
+
+        public void InvokeResetAlgorithm(Element element)
+        {
+            // Nothing here.
+
+            // See: http://www.w3.org/TR/html51/sec-forms.html#reset-algorithm
+
+            // This resets <input>, <keygen>, <output>, <select> and <textarea>.
+            // The alg. is element specific. We don't need to implement this, because we have no interactivity.
+        }
+
+        public void StopParsing()
+        {
+            // Nothing here.
+
+            // See: http://www.w3.org/TR/html51/syntax.html#stopped
+
+            // There are a lot of steps to make the doc interactive. But this is irrelevant for us!
+        }
+
     }
 }

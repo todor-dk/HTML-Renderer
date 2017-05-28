@@ -15,21 +15,27 @@ namespace TheArtOfDev.HtmlRenderer.Dom
 
         public abstract NodeType NodeType { get; }
 
-        public Node ParentNode { get; private set; }
+        public abstract Node ParentNode { get; }
 
-        public readonly IReadOnlyList<Node> ChildNodes = new List<Node>();
+        public abstract IReadOnlyList<Node> ChildNodes { get; }
 
-        public Node FirstChild { get; private set; }
+        public abstract Node FirstChild { get; }
 
-        public Node LastChild { get; private set; }
+        public abstract Node LastChild { get; }
 
-        public Node PreviousSibling { get; private set; }
+        public abstract Node PreviousSibling { get; }
 
-        public Node NextSibling { get; private set; }
+        public abstract Node NextSibling { get; }
 
-        public readonly IReadOnlyList<Attr> Attributes = new List<Attr>();
+        public abstract IReadOnlyList<Attr> Attributes { get; }
 
         public Document OwnerDocument { get; private set; }
+
+        public Node(Document ownerDocument)
+        {
+            Contract.RequiresNotNull(ownerDocument, nameof(ownerDocument));
+            this.OwnerDocument = ownerDocument;
+        }
 
         public Node InsertBefore(Node newChild, Node referenceChild)
         {

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 {
+    /// <summary>
+    /// Helper class containing character related helper functions.
+    /// </summary>
     internal static class Characters
     {
         public const char EOF = '\uFFFF';

@@ -106,6 +106,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5
 
         public const string Form = "form";
 
+        public const string Label = "label";
+
         public const string Li = "li";
 
         public const string Dd = "dd";
@@ -151,6 +153,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5
         public const string Marquee = "marquee";
 
         public const string Object = "object";
+
+        public const string Output = "output";
 
         public const string Table = "table";
 
@@ -232,8 +236,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5
 
         public const string Xml = "xmp";
 
-        //public static readonly string[] AllTags = new string[]
-        //{
+        // public static readonly string[] AllTags = new string[]
+        // {
         //    A, Address, Applet, Area, Article, Aside, B, Base, BaseFont, BgSound, Big, BlockQuote, Body, Br, Button,
         //    Caption, Center, Code, Col, ColGroup, Dd, Details, Dialog, Dir, Div, Dl, Dt, Em, Embed, FieldSet, FigCaption,
         //    Figure, Font, Footer, Form, Frame, Frameset, H1, H2, H3, H4, H5, H6, Head, Header, HGroup, Hr, Html, I,
@@ -241,7 +245,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5
         //    Nav, Nobr, NoEmbed, NoFrames, NoScript, Object, Ol, OptGroup, Option, P, Param, PlainText, Pre, Rb, Rp, Rt, Rtc,
         //    S, Sarcasm, Script, Section, Select, Small, Source, Strike, Strong, Style, Summary, Svg, Table, TBody, Td,
         //    Template, TextArea, TFoot, Th, THead, Title, Tr, Track, Tt, U, Ul, Wbr, Xml, Xmp
-        //};
+        // };
 
         /// <summary>
         /// The following elements have varying levels of special parsing rules.
@@ -254,6 +258,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5
             Head, Header, Hr, Html, IFrame, Img, Input, Li, Link, Listing, Main, Marquee, Menu, MenuItem, Meta, Nav, NoEmbed, NoFrames,
             NoScript, Object, Ol, P, Param, PlainText, Pre, Script, Section, Select, Source, Style, Summary, Table, TBody, Td, Template,
             TextArea, TFoot, Th, THead, Title, Tr, Track, Ul, Wbr, Xmp
+            
             // MathML_TODO ... MathML Tags
             // SVG_TODO ... SVG Tags
         };
@@ -369,6 +374,85 @@ namespace TheArtOfDev.HtmlRenderer.Html5
 
             // Currently, we do not support other namespaces. MathML_TODO SVG_TODO.
             return true;
+        }
+
+        internal static bool IsMathMlTextIntegrationPoint(this Element self)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+
+            // See: http://www.w3.org/TR/html51/syntax.html#mathml-text-integration-point
+            // A node is a MathML text integration point if it is one of the following elements:
+
+            // An <mi> element in the MathML namespace
+            // An <mo> element in the MathML namespace
+            // An <mn> element in the MathML namespace
+            // An <ms> element in the MathML namespace
+            // An <mtext> element in the MathML namespace
+
+            // MathML_TODO...MathML Tags
+            return false;
+        }
+
+        internal static bool IsHtmlIntegrationPoint(this Element self)
+        {
+            // See: http://www.w3.org/TR/html51/syntax.html#html-integration-point
+            // A node is an HTML integration point if it is one of the following elements:
+
+            // An <annotation-xml> element in the MathML namespace whose start tag token had an attribute with
+            // the name "encoding" whose value was an ASCII case-insensitive match for the string "text/html"
+
+            // An <annotation-xml> element in the MathML namespace whose start tag token had an attribute with
+            // the name "encoding" whose value was an ASCII case-insensitive match for the string "application/xhtml+xml"
+
+            // A <foreignObject> element in the SVG namespace
+
+            // A <desc> element in the SVG namespace
+
+            // A <title> element in the SVG namespace
+
+            // MathML_TODO...MathML Tags
+            // SVG_TODO ... SVG Tags
+            return false;
+        }
+
+        /// <summary>
+        /// Denotes elements that can be affected when a *form* element is reset.
+        /// </summary>
+        public static bool IsResettable(this Element self)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+
+            // See: http://www.w3.org/TR/html51/sec-forms.html#resettable-element
+
+            // input keygen output select textarea
+            return self.Is(Tags.Input, Tags.KeyGen, Tags.Output, Tags.Select, Tags.TextArea);
+        }
+
+        /// <summary>
+        /// A number of the elements are form-associated elements, which means they can have a form owner.
+        /// </summary>
+        public static bool IsFormAssociated(this Element self)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+
+            // See: http://www.w3.org/TR/html51/sec-forms.html#form-associated-elements
+
+            // button fieldset input keygen label object output select textarea img
+            return self.Is(Tags.Button, Tags.FieldSet, Tags.Input, Tags.KeyGen, Tags.Label, Tags.Object, Tags.Output, Tags.Section, Tags.TextArea, Tags.Img);
+        }
+
+        /// <summary>
+        /// Denotes elements that have a form content attribute, and a matching form IDL attribute, that allow authors
+        /// to specify an explicit form owner.
+        /// </summary>
+        public static bool IsReassociateable(this Element self)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+
+            // See: http://www.w3.org/TR/html51/sec-forms.html#reassociateable-element
+
+            // button fieldset input keygen object output select textarea
+            return self.Is(Tags.Button, Tags.FieldSet, Tags.Input, Tags.KeyGen, Tags.Object, Tags.Output, Tags.Section, Tags.TextArea);
         }
     }
 }

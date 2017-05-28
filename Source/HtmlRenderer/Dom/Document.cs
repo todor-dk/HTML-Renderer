@@ -9,6 +9,8 @@ namespace TheArtOfDev.HtmlRenderer.Dom
     // See: http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html#i-Document
     public class Document : Node
     {
+        public QuirksMode QuirksMode { get; internal set; }
+
         public DocumentType DocumentType
         {
             get
@@ -78,7 +80,5 @@ namespace TheArtOfDev.HtmlRenderer.Dom
         {
             throw new NotImplementedException();
         }
-
-        
     }
 }

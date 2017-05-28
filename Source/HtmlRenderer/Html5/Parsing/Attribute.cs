@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 {
+    /// <summary>
+    /// Represents an attribute of a parsed tag. This is used to comminucate
+    /// information from the <see cref="Tokenizer"/> to the <see cref="DomParser"/>.
+    /// Eventually, this will be converted to DOM element attributes.
+    /// </summary>
     internal struct Attribute
     {
         public static readonly Attribute[] None = Array.Empty<Attribute>();

@@ -15,30 +15,29 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         public readonly DomFactory DomFactory;
 
-        public readonly ParsingState ParsingState;
-
         private readonly Tokenizer Tokenizer;
 
-        public DomParser(ParsingContext parsingContext, HtmlStream html)
+        public void ParseDocument(ParsingContext parsingContext, HtmlStream html)
+        {
+            Contract.RequiresNotNull(parsingContext, nameof(parsingContext));
+            Contract.RequiresNotNull(html, nameof(html));
+
+            DomParser parser = new Parsing.DomParser(parsingContext, html);
+            parser.Parse();
+        }
+
+        private DomParser(ParsingContext parsingContext, HtmlStream html)
         {
             Contract.RequiresNotNull(parsingContext, nameof(parsingContext));
 
             this.ActiveFormattingElements = new ActiveFormattingElementsList(this);
             this.ParsingContext = parsingContext;
-            this.DomFactory = parsingContext.CreateDomFactory(this);
-            this.ParsingState = new ParsingState();
+            this.DomFactory = parsingContext.GetDomFactory();
             this.Tokenizer = new Tokenizer(html);
             this.Tokenizer.ParseError += (s, e) => this.InformParseError(e.ParseError);
         }
 
         #region Tokanization
-
-        /// <summary>
-        /// Contains information about the last token received from the <see cref="Tokenizer"/>.
-        /// </summary>
-        private Token Token;
-
-        private Token NextToken;
 
         public void Parse()
         {
@@ -59,7 +58,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.Token = this.Tokenizer.GetNextToken();
                 }
 
-                this.ProcessToken();
+                this.DispatchToken();
             }
             while (this.Token.Type != TokenType.EndOfFile);
         }
@@ -284,7 +283,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 {
                     // 1. If the head element pointer is null, switch the insertion mode to "before head"
                     // and abort these steps. (fragment case)
-                    if (this.ParsingState.Head == null)
+                    if (this.Head == null)
                     {
                         this.Switch(InsertionModeEnum.BeforeHead);
                         return;
@@ -949,7 +948,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // 8. Create: Insert an HTML element for the token for which the element entry was created,
                 // to obtain new element.
                 Create:
-                Element element = this.Parser.DomFactory.InsertHtmlElement(entry.Token.TagName, entry.Token.TagAttributes);
+                Element element = this.Parser.InsertHtmlElement(entry.Token.TagName, entry.Token.TagAttributes);
 
                 // 9. Replace the entry for entry in the list with an entry for new element.
                 this.Entries[i] = new Entry(element, entry.Token);
@@ -1095,6 +1094,51 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         #endregion
 
+        #region 8.2.3.4. The element pointers. See: http://www.w3.org/TR/html51/syntax.html#the-element-pointers
+
+        /// <summary>
+        /// Initially, the head element is null. Once a head element has been parsed (whether
+        /// implicitly or explicitly) the head element gets set to point to this node.
+        /// </summary>
+        private Element Head;
+
+        /// <summary>
+        /// Initially, the form element is null. The form element points to the last form element
+        /// that was opened and whose end tag has not yet been seen. It is used to make form controls
+        /// associate with forms in the face of dramatically bad markup, for historical reasons.
+        /// It is ignored inside template elements.
+        /// </summary>
+        private Element Form;
+
+        #endregion
+
+        #region 8.2.3.5. Other parsing state flags. See: http://www.w3.org/TR/html51/syntax.html#other-parsing-state-flags
+
+        /// <summary>
+        /// ALWAYS DISABLED. We do not support scripting!
+        /// The scripting flag is set to "enabled" if scripting was enabled for the Document with
+        /// which the parser is associated when the parser was created, and "disabled" otherwise.
+        /// </summary>
+        private bool Scripting
+        {
+            get
+            {
+                // NOTE: The scripting flag can be enabled even when the parser was originally created for the HTML fragment
+                // parsing algorithm, even though script elements don't execute in that case.
+
+                // NOTE: This .Net implementation will probably NEVER implement scripting and therefore this will always be false.
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// The frameset-ok flag is set to "ok" when the parser is created.
+        /// It is set to "not ok" after certain tokens are seen.
+        /// </summary>
+        private bool FramesetOk { get; set; } = true;
+
+        #endregion
+
         #endregion
 
         #region Tree Construction Helpers
@@ -1108,6 +1152,67 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         #region 8.2.5 Tree construction
 
+        /// <summary>
+        /// Contains information about the last token received from the <see cref="Tokenizer"/>.
+        /// </summary>
+        private Token Token;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void DispatchToken()
+        {
+            // As each token is emitted from the tokenizer, the user agent must follow the appropriate
+            // steps from the following list, known as the tree construction dispatcher:
+
+            // Process the token according to the rules given in the section corresponding to the
+            // current insertion mode in HTML content, if:
+
+            // If the stack of open elements is empty
+            if (this.OpenElements.Count == 0)
+                this.ProcessToken();
+
+            // If the adjusted current node is an element in the HTML namespace
+            else if (this.AdjustedCurrentNode.IsHtmlElement())
+                this.ProcessToken();
+
+            // If the adjusted current node is a MathML text integration point and the token
+            // is a start tag whose tag name is neither "mglyph" nor "malignmark"
+            else if (this.AdjustedCurrentNode.IsMathMlTextIntegrationPoint() && (this.Token.Type == TokenType.StartTag) && (this.Token.TagName != "mglyph") && (this.Token.TagName != "malignmark"))
+                this.ProcessToken();
+
+            // If the adjusted current node is a MathML text integration point and the token is a character token
+            else if (this.AdjustedCurrentNode.IsMathMlTextIntegrationPoint() && (this.Token.Type == TokenType.Character))
+                this.ProcessToken();
+
+            // If the adjusted current node is an <annotation-xml> element in the MathML namespace and
+            // the token is a start tag whose tag name is "svg"
+            else if (this.AdjustedCurrentNode.Is("annotation-xml") && (this.Token.Type == TokenType.StartTag) && (this.Token.TagName == "svg"))
+                this.ProcessToken();
+
+            // If the adjusted current node is an HTML integration point and the token is a start tag
+            else if (this.AdjustedCurrentNode.IsHtmlIntegrationPoint() && (this.Token.Type == TokenType.StartTag))
+                this.ProcessToken();
+
+            // If the adjusted current node is an HTML integration point and the token is a character token
+            else if (this.AdjustedCurrentNode.IsHtmlIntegrationPoint() && (this.Token.Type == TokenType.Character))
+                this.ProcessToken();
+
+            // If the token is an end-of-file token
+            else if (this.Token.Type == TokenType.EndOfFile)
+                this.ProcessToken();
+
+            // Otherwise
+            // Process the token according to the rules given in the section for parsing tokens in foreign content.
+            else
+                this.ProcessTokenInForeignContent();
+        }
+
+        /// <summary>
+        /// The next token is the token that is about to be processed by the tree construction dispatcher
+        /// (even if the token is subsequently just ignored). See: http://www.w3.org/TR/html51/syntax.html#next-token
+        /// </summary>
+        private Token NextToken;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ProcessToken()
         {
             this.ProcessToken(this.InsertionMode);
@@ -1196,11 +1301,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         /// <summary>
         /// While the parser is processing a token, it can enable or disable foster parenting.
         /// This affects the <see cref="AppropriatePlaceForInsertingNode"/> algorithm.
+        /// See: http://www.w3.org/TR/html51/syntax.html#foster-parent
         /// </summary>
         private bool FosteringParent = false;
 
         private AdjustedInsertLocation AppropriatePlaceForInsertingNode(Element overrideTarget = null)
         {
+            // See: http://www.w3.org/TR/html51/syntax.html#appropriate-place-for-inserting-a-node
+
             // The appropriate place for inserting a node, optionally using a particular override target,
             // is the position in an element returned by running the following steps:
 
@@ -1212,32 +1320,33 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             Element adjustedInsertLocationElement = null;
             Element adjustedInsertLocationBeforeSibling = null;
 
-            // * If foster parenting is enabled and target is a table, tbody, tfoot, thead, or tr element
+            // * If foster parenting is enabled and target is a <table>, <tbody>, <tfoot>, <thead>, or <tr> element
             if (this.FosteringParent && target.Is(Tags.Table, Tags.TBody, Tags.TFoot, Tags.THead, Tags.Tr))
             {
                 // NOTE: Foster parenting happens when content is misnested in tables.
                 // Run these substeps:
                 do
                 {
-                    // 1. Let last template be the last template element in the stack of open elements, if any.
+                    // 1. Let *last template* be the last <template> element in the stack of open elements, if any.
                     Element lastTemplate = this.OpenElements.Last(Tags.Template);
 
-                    // 2. Let last table be the last table element in the stack of open elements, if any.
+                    // 2. Let *last table* be the last <table> element in the stack of open elements, if any.
                     Element lastTable = this.OpenElements.Last(Tags.Table);
 
-                    // 3. If there is a last template and either there is no last table, or there is one, but
-                    // last template is lower (more recently added) than last table in the stack of open elements, then:
+                    // 3. If there is a *last template* and either there is no *last table*, or there is one, but
+                    // *last template* is lower (more recently added) than *last table* in the stack of open elements, then:
                     // NB: "Lower" means more recent, i.e. higher index.
-                    if ((lastTemplate != null) && ((lastTable == null) || (this.OpenElements.LastIndexOf(lastTemplate) > this.OpenElements.LastIndexOf(lastTemplate))))
+                    if ((lastTemplate != null) && ((lastTable == null) || (this.OpenElements.LastIndexOf(lastTemplate) > this.OpenElements.LastIndexOf(lastTable))))
                     {
-                        // let adjusted insertion location be inside last template’s template contents,
+                        // let *adjusted insertion location* be inside *last template*’s template contents,
                         // after its last child(if any), and abort these substeps.
+                        // ISSUE: Spec says "template contents" ... this is obviously not the <template> itself, or ???
                         adjustedInsertLocationElement = lastTemplate;
                         break;
                     }
 
-                    // 4. If there is no last table, then let adjusted insertion location be inside the
-                    // first element in the stack of open elements (the html element), after its last child(if any),
+                    // 4. If there is no *last table*, then let *adjusted insertion location* be inside the
+                    // first element in the stack of open elements (the <html> element), after its last child(if any),
                     // and abort these substeps. (fragment case)
                     if (lastTable == null)
                     {
@@ -1245,8 +1354,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                         break;
                     }
 
-                    // 5. If last table has a parent node, then let adjusted insertion location be inside last
-                    // table’s parent node, immediately before last table, and abort these substeps.
+                    // 5. If *last table* has a parent node, then let *adjusted insertion location* be inside 
+                    // *last table*’s parent node, immediately before *last table*, and abort these substeps.
                     if (lastTable.ParentNode != null)
                     {
                         adjustedInsertLocationElement = (Element)lastTable.ParentNode;
@@ -1254,12 +1363,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                         break;
                     }
 
-                    // 6. Let previous element be the element immediately above last table in the stack of open elements.
+                    // 6. Let *previous element* be the element immediately above *last table* in the stack of open elements.
                     Element previousElement = this.OpenElements.ElementAbove(lastTable);
 
-                    // 7. Let adjusted insertion location be inside previous element, after its last child(if any).
+                    // 7. Let *adjusted insertion location* be inside *previous element*, after its last child(if any).
                     adjustedInsertLocationElement = previousElement;
-                } while (false);
+                }
+                while (false);
 
                 // NOTE: These steps are involved in part because it’s possible for elements, the table element in this
                 // case in particular, to have been moved by a script around in the DOM, or indeed removed from the DOM
@@ -1271,16 +1381,16 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // * Otherwise
             else
             {
-                // Let adjusted insertion location be inside target, after its last child (if any).
+                // Let *adjusted insertion location* be inside *target*, after its last child (if any).
                 adjustedInsertLocationElement = target;
             }
 
-            // 3. If the adjusted insertion location is inside a template element, let it instead be inside
-            // the template element’s template contents, after its last child (if any).
+            // 3. If the *adjusted insertion location* is inside a *template* element, let it instead be inside
+            // the <template> element’s template contents, after its last child (if any).
             if (adjustedInsertLocationElement.Is(Tags.Template))
                 throw new NotImplementedException();
 
-            // 4. Return the adjusted insertion location.
+            // 4. Return the *adjusted insertion location*.
             return new AdjustedInsertLocation(adjustedInsertLocationElement, adjustedInsertLocationBeforeSibling);
         }
 
@@ -1304,6 +1414,150 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
         }
 
+        private Element CreateElement(Element intendedParent, string namespaceUri, string tagName, Html5.Parsing.Attribute[] attributes)
+        {
+            Contract.RequiresNotNull(intendedParent, nameof(intendedParent));
+
+            // See: http://www.w3.org/TR/html51/syntax.html#create-an-element-for-the-token
+            // When the steps below require the user agent to create an element for a token in a particular
+            // *given namespace* and with a particular *intended parent*, the user agent must run the following steps:
+
+            // 1. Create a node implementing the interface appropriate for the element type corresponding to the
+            // tag name of the token in *given namespace* (as given in the specification that defines that element,
+            // e.g., for an a element in the HTML namespace, this specification defines it to be the HTMLAnchorElement
+            // interface), with the tag name being the name of that element, with the node being in the given namespace,
+            // and with the attributes on the node being those given in the given token.
+
+            // The interface appropriate for an element in the HTML namespace that is not defined in this specification
+            // (or other applicable specifications) is HTMLUnknownElement. Elements in other namespaces whose interface
+            // is not defined by that namespace’s specification must use the interface Element.
+
+            // The node document of the newly created element must be the node document of the intended parent.
+            Element elem = this.DomFactory.CreateElement(intendedParent.OwnerDocument, namespaceUri, tagName, attributes);
+
+            // 2. If the newly created element has an *xmlns* attribute in the *XMLNS namespace* whose value is not
+            // exactly the same as the element’s namespace, that is a parse error. Similarly, if the newly created
+            // element has an *xmlns:xlink* attribute in the *XMLNS namespace* whose value is not the *XLink namespace*,
+            // that is a parse error.
+            string attribValue = elem.GetAttribute(Attributes.Xmlns);
+            if ((attribValue != null) && (attribValue != elem.NamespaceUri))
+                this.InformParseError(ParseError.WrongNamespace);
+
+            attribValue = elem.GetAttribute(Attributes.XmlnsXlink);
+            if ((attribValue != null) && (attribValue != Namespaces.Xlink))
+                this.InformParseError(ParseError.WrongNamespace);
+
+            // 3. If the newly created element is a resettable element, invoke its reset algorithm. (This initializes the
+            // element’s value and checkedness based on the element’s attributes.)
+            if (Tags.IsResettable(elem))
+                this.DomFactory.InvokeResetAlgorithm(elem);
+
+            // 4. If the element is a form-associated element, and the form element pointer is not null, and there is no
+            // template element on the stack of open elements, and the newly created element is either not reassociateable
+            // or doesn’t have a form attribute, and the intended parent is in the same home subtree as the element pointed
+            // to by the form element pointer, associate the newly created element with the form element pointed to by the
+            // form element pointer, and suppress the running of the reset the form owner algorithm when the parser
+            // subsequently attempts to insert the element.
+            if (Tags.IsFormAssociated(elem) && (this.Form != null) && !this.OpenElements.Contains(Tags.Template)
+                && (!Tags.IsReassociateable(elem) || (elem.GetAttribute(Attributes.Form) == null))
+                && intendedParent.IsInSameSubtree(this.Form))
+            {
+                this.DomFactory.AssociateWithForm(elem, this.Form);
+
+                // TODO: suppress the running of the reset the form owner algorithm
+            }
+
+            // 5. Return the newly created element.
+            return elem;
+        }
+
+        private Element InsertForeignElement(string namespaceUri, string tagName, Attribute[] attributes)
+        {
+            // See: http://www.w3.org/TR/html51/syntax.html#insert-a-foreign-element
+            // When the steps below require the user agent to insert a foreign element for a token
+            // in a given namespace, the user agent must run these steps:
+
+            // 1. Let the "adjusted insertion location" be the appropriate place for inserting a node.
+            AdjustedInsertLocation adjustedInsertLocation = this.AppropriatePlaceForInsertingNode();
+
+            // 2. Create an element for the token in the given namespace, with the intended parent being
+            // the element in which the adjusted insertion location finds itself.
+            Element elem = this.CreateElement(adjustedInsertLocation.ParentElement, namespaceUri, tagName, attributes);
+
+            // 3. If it is possible to insert an element at the adjusted insertion location,
+            // then insert the newly created element at the adjusted insertion location.
+
+            // NOTE: If the adjusted insertion location cannot accept more elements, e.g., because it’s a Document
+            // that already has an element child, then the newly created element is dropped on the floor.
+            if (adjustedInsertLocation.BeforeSibling != null)
+                this.DomFactory.InsertElementBefore(adjustedInsertLocation.ParentElement, elem, adjustedInsertLocation.BeforeSibling);
+            else
+                this.DomFactory.AppendElement(adjustedInsertLocation.ParentElement, elem);
+
+            // 4. Push the element onto the stack of open elements so that it is the new current node.
+            this.OpenElements.Push(elem);
+
+            // 5. Return the newly created element.
+            return elem;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private Element InsertHtmlElement(string name, Attribute[] attributes)
+        {
+            // See: http://www.w3.org/TR/html51/syntax.html#insert-an-html-element
+
+            // When the steps below require the user agent to insert an HTML element for a token,
+            // the user agent must insert a foreign element for the token, in the HTML namespace.
+            return this.InsertForeignElement(Namespaces.Html, name, attributes);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private Element InsertHtmlElementForToken()
+        {
+            return this.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+        }
+
+        public void InsertCharacter(char ch)
+        {
+            // See: http://www.w3.org/TR/html51/syntax.html#insert-characters
+
+            // When the steps below require the user agent to insert a character while processing a token,
+            // the user agent must run the following steps:
+
+            // 1. Let data be the characters passed to the algorithm, or, if no characters were explicitly specified,
+            //    the character of the character token being processed.
+
+            // 2. Let the adjusted insertion location be the appropriate place for inserting a node.
+            //    If the adjusted insertion location is in a <Document> node, then abort these steps.
+
+            // NOTE: The DOM will not let Document nodes have Text node children, so they are dropped on the floor.
+
+            // 3. If there is a Text node immediately before the adjusted insertion location,
+            //    then append data to that Text node’s data.
+
+            // 4. Otherwise, create a new Text node whose data is data and whose node document
+            //    is the same as that of the element in which the adjusted insertion location finds itself,
+            //    and insert the newly created node at the adjusted insertion location.
+        }
+
+        public void InsertComment(string data)
+        {
+            // See: http://www.w3.org/TR/html51/syntax.html#insert-a-comment
+
+            // When the steps below require the user agent to insert a comment while processing a comment token,
+            // optionally with an explicitly insertion position position, the user agent must run the following steps:
+
+            // 1. Let data be the data given in the comment token being processed.
+
+            // 2. If position was specified, then let the adjusted insertion location be position.
+            //    Otherwise, let adjusted insertion location be the appropriate place for inserting a node.
+
+            // 3. Create a Comment node whose data attribute is set to data and whose node document is the
+            //    same as that of the node in which the adjusted insertion location finds itself.
+
+            // 4. Insert the newly created node at the adjusted insertion location.
+        }
+
         #endregion
 
         #region 8.2.5.2. Parsing elements that contain only text
@@ -1324,7 +1578,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // consist of the following steps.These algorithms are always invoked in response to a start tag token.
 
             // 1. Insert an HTML element for the token.
-            this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+            this.InsertHtmlElementForToken();
 
             // 2. If the algorithm that was invoked is the "generic raw text element parsing algorithm",
             //    switch the tokenizer to the §8.2.4.5 RAWTEXT state; otherwise the algorithm invoked was
@@ -1851,8 +2105,9 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // Create an element for the token in the HTML namespace, with the Document as the intended parent.
                 // Append it to the Document object. Put this element in the stack of open elements.
-                Element html = this.DomFactory.CreateElement(null, this.Token.TagName, this.Token.TagAttributes, true);
-                this.ParsingState.Html = html;
+                Element html = this.CreateElement(this.ParsingContext.Document.DocumentElement, Namespaces.Html, this.Token.TagName, this.Token.TagAttributes);
+                this.DomFactory.AppendElement(this.ParsingContext.Document.DocumentElement, html);
+                this.OpenElements.Push(html);
 
                 // If the Document is being loaded as part of navigation of a browsing context, then:
                 // if the newly created element has a manifest attribute whose value is not the empty string,
@@ -1889,11 +2144,11 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
             if (anythingElse)
             {
-                // Create an html element whose ownerDocument is the Document object. Append it to the Document object.
+                // Create an html element whose node document is the Document object. Append it to the Document object.
                 // Put this element in the stack of open elements.
-                // TODO: What is intended parent?
-                Element html = this.DomFactory.CreateElement(null, Tags.Html, Attribute.None, true);
-                this.ParsingState.Html = html;
+                Element html = this.DomFactory.CreateElement(this.ParsingContext.Document, Namespaces.Html, Tags.Html, Attribute.None);
+                this.DomFactory.AppendElement(this.ParsingContext.Document.DocumentElement, html);
+                this.OpenElements.Push(html);
 
                 // If the Document is being loaded as part of navigation of a browsing context, then:
                 // run the application cache selection algorithm with no manifest, passing it the Document object.
@@ -1934,7 +2189,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment.
-                this.DomFactory.InsertComment(this.Token.CommentData);
+                this.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
@@ -1955,10 +2210,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Head))
             {
                 // Insert an HTML element for the token.
-                Element head = this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                Element head = this.InsertHtmlElementForToken();
 
                 // Set the head element pointer to the newly created head element.
-                this.ParsingState.Head = head;
+                this.Head = head;
 
                 // Switch the insertion mode to "in head".
                 this.Switch(InsertionModeEnum.InHead);
@@ -1987,10 +2242,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (anythingElse)
             {
                 // Insert an HTML element for a "head" start tag token with no attributes.
-                Element head = this.DomFactory.InsertHtmlElement(Tags.Head, Attribute.None);
+                Element head = this.InsertHtmlElement(Tags.Head, Attribute.None);
 
                 // Set the head element pointer to the newly created head element.
-                this.ParsingState.Head = head;
+                this.Head = head;
 
                 // Switch the insertion mode to "in head".
                 this.Switch(InsertionModeEnum.InHead);
@@ -2017,14 +2272,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (this.Token.IsCharacterWhitespace())
             {
                 // Insert the character.
-                this.DomFactory.InsertCharacter(this.Token.Character);
+                this.InsertCharacter(this.Token.Character);
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment.
-                this.DomFactory.InsertComment(this.Token.CommentData);
+                this.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
@@ -2045,7 +2300,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Base, Tags.BaseFont, Tags.BgSound, Tags.Link))
             {
                 // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.OpenElements.Pop();
 
                 // Acknowledge the token's self-closing flag, if it is set.
@@ -2057,7 +2312,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Meta))
             {
                 // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
-                Element meta = this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                Element meta = this.InsertHtmlElementForToken();
                 this.OpenElements.Pop();
 
                 // Acknowledge the token's self-closing flag, if it is set.
@@ -2085,17 +2340,17 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
             // A start tag whose tag name is "noscript", if the scripting flag is enabled
             // A start tag whose tag name is one of: "noframes", "style"
-            else if ((this.ParsingContext.Scripting && this.Token.IsStartTagNamed(Tags.NoScript)) || this.Token.IsStartTagNamed(Tags.NoFrames, Tags.Style))
+            else if ((this.Scripting && this.Token.IsStartTagNamed(Tags.NoScript)) || this.Token.IsStartTagNamed(Tags.NoFrames, Tags.Style))
             {
                 // Follow the generic raw text element parsing algorithm.
                 this.ParseElement(ParsingAlgorithm.GenericRawText);
             }
 
             // A start tag whose tag name is "noscript", if the scripting flag is disabled
-            else if (!this.ParsingContext.Scripting && this.Token.IsStartTagNamed(Tags.NoScript))
+            else if (!this.Scripting && this.Token.IsStartTagNamed(Tags.NoScript))
             {
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // Switch the insertion mode to "in head noscript".
                 this.Switch(InsertionModeEnum.InHeadNoscript);
@@ -2143,7 +2398,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Template))
             {
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // Insert a marker at the end of the list of active formatting elements.
 
@@ -2306,14 +2561,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (this.Token.IsCharacterWhitespace())
             {
                 // Insert the character.
-                this.DomFactory.InsertCharacter(this.Token.Character);
+                this.InsertCharacter(this.Token.Character);
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment.
-                this.DomFactory.InsertComment(this.Token.CommentData);
+                this.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
@@ -2334,10 +2589,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Body))
             {
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(Tags.Body, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
 
                 // Switch the insertion mode to "in body".
                 this.Switch(InsertionModeEnum.InBody);
@@ -2347,7 +2602,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Frameset))
             {
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(Tags.Frameset, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // Switch the insertion mode to "in frameset".
                 this.Switch(InsertionModeEnum.InFrameset);
@@ -2361,14 +2616,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
                 // Push the node pointed to by the head element pointer onto the stack of open elements.
-                this.OpenElements.Push(this.ParsingState.Head);
+                this.OpenElements.Push(this.Head);
 
                 // Process the token using the rules for the "in head" insertion mode.
                 this.ProcessTokenUsing(InsertionModeEnum.InHead);
 
                 // Remove the node pointed to by the head element pointer from the stack of open elements.
                 // (It might not be the current node at this point.)
-                this.OpenElements.Remove(this.ParsingState.Head);
+                this.OpenElements.Remove(this.Head);
 
                 // NOTE: The head element pointer cannot be null at this point.
             }
@@ -2405,7 +2660,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (anythingElse)
             {
                 // Insert an HTML element for a "body" start tag token with no attributes.
-                this.DomFactory.InsertHtmlElement(Tags.Body, Attribute.None);
+                this.InsertHtmlElement(Tags.Body, Attribute.None);
 
                 // Switch the insertion mode to "in body".
                 this.Switch(InsertionModeEnum.InBody);
@@ -2442,7 +2697,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert the token's character.
-                this.DomFactory.InsertCharacter(this.Token.Character);
+                this.InsertCharacter(this.Token.Character);
             }
 
             // Any other character token
@@ -2452,17 +2707,17 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert the token's character.
-                this.DomFactory.InsertCharacter(this.Token.Character);
+                this.InsertCharacter(this.Token.Character);
 
                 // Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment.
-                this.DomFactory.InsertComment(this.Token.CommentData);
+                this.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
@@ -2521,7 +2776,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // Otherwise, set the frameset-ok flag to "not ok"; then, for each attribute on the token, check to see if
                 // the attribute is already present on the body element (the second element) on the stack of open elements,
                 // and if it is not, add the attribute and its corresponding value to that element.
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
                 if (this.Token.TagAttributes.Length != 0)
                 {
                     Element body = this.OpenElements[1];
@@ -2643,7 +2898,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.ClosePElement();
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
             }
 
             // A start tag whose tag name is one of: "h1", "h2", "h3", "h4", "h5", "h6"
@@ -2662,7 +2917,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 }
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
             }
 
             // A start tag whose tag name is one of: "pre", "listing"
@@ -2673,7 +2928,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.ClosePElement();
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // If the next token is a "LF" (U+000A) character token, then ignore that token and move on to the
                 // next one. (Newlines at the start of pre blocks are ignored as an authoring convenience.)
@@ -2686,7 +2941,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 }
 
                 // Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
             }
 
             // A start tag whose tag name is "form"
@@ -2694,7 +2949,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // If the form element pointer is not null, and there is no template element on the stack of open elements,
                 // then this is a parse error; ignore the token.
-                if ((this.ParsingState.Form != null) && !this.OpenElements.Contains(Tags.Template))
+                if ((this.Form != null) && !this.OpenElements.Contains(Tags.Template))
                 {
                     this.InformParseError(ParseError.UnexpectedStartTag);
                     return;
@@ -2707,9 +2962,9 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
                 // Insert an HTML element for the token, and, if there is no template element on the stack of
                 // open elements, set the form element pointer to point to the element created.
-                Element form = this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                Element form = this.InsertHtmlElementForToken();
                 if (!this.OpenElements.Contains(Tags.Template))
-                    this.ParsingState.Form = form;
+                    this.Form = form;
             }
 
             // A start tag whose tag name is "li"
@@ -2717,7 +2972,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // Run these steps:
                 // 1. Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
 
                 // 2. Initialize node to be the current node (the bottommost node of the stack).
                 int i = this.OpenElements.Count - 1;
@@ -2758,7 +3013,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.ClosePElement();
 
                 // 7. Finally, insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
             }
 
             // A start tag whose tag name is one of: "dd", "dt"
@@ -2766,7 +3021,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // Run these steps:
                 // 1. Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
 
                 // 2. Initialize node to be the current node (the bottommost node of the stack).
                 int i = this.OpenElements.Count - 1;
@@ -2817,7 +3072,6 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     // 6. Otherwise, set node to the previous entry in the stack of open elements and return to the step labeled loop.
                     i--;
                     node = this.OpenElements[i];
-
                 }
 
                 // 7. Done: If the stack of open elements has a p element in button scope, then close a p element.
@@ -2825,7 +3079,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.ClosePElement();
 
                 // 8. Finally, insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
             }
 
             // A start tag whose tag name is "plaintext"
@@ -2836,7 +3090,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.ClosePElement();
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // Switch the tokenizer to the PLAINTEXT state.
                 this.Tokenizer.SwitchTo(Tokenizer.StateEnum.PlainText);
@@ -2866,10 +3120,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // 3. Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // 4. Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
             }
 
             // An end tag whose tag name is one of: "address", "article", "aside", "blockquote", "button", "center", "details",
@@ -2914,10 +3168,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 if (!this.OpenElements.Contains(Tags.Template))
                 {
                     // 1. Let node be the element that the form element pointer is set to, or null if it is not set to an element.
-                    Element node = this.ParsingState.Form;
+                    Element node = this.Form;
 
                     // 2. Set the form element pointer to null. Otherwise, let node be null.
-                    this.ParsingState.Form = null;
+                    this.Form = null;
 
                     // 3. If node is null or if the stack of open elements does not have node in scope, then this is a parse error;
                     // abort these steps and ignore the token.
@@ -2969,7 +3223,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 if (!this.OpenElements.HasElementInButtonScope(Tags.P))
                 {
                     this.InformParseError(ParseError.UnexpectedEndTag);
-                    this.DomFactory.InsertHtmlElement(Tags.P, Attribute.None);
+                    this.InsertHtmlElement(Tags.P, Attribute.None);
                 }
 
                 // Close a p element.
@@ -3100,7 +3354,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert an HTML element for the token. Push onto the list of active formatting elements that element.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                Element elem = this.InsertHtmlElementForToken();
+                this.ActiveFormattingElements.PushFormattingElement(elem);
             }
 
             // A start tag whose tag name is one of: "b", "big", "code", "em", "font", "i", "s", "small", "strike",
@@ -3113,7 +3368,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert an HTML element for the token. Push onto the list of active formatting elements that element.
-                Element elem = this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                Element elem = this.InsertHtmlElementForToken();
                 this.ActiveFormattingElements.PushFormattingElement(elem);
             }
 
@@ -3135,7 +3390,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 }
 
                 // Insert an HTML element for the token. Push onto the list of active formatting elements that element.
-                Element elem = this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                Element elem = this.InsertHtmlElementForToken();
                 this.ActiveFormattingElements.PushFormattingElement(elem);
             }
 
@@ -3156,13 +3411,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // Insert a marker at the end of the list of active formatting elements.
                 this.ActiveFormattingElements.InsertMarker();
 
                 // Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
             }
 
             // An end tag token whose tag name is one of: "applet", "marquee", "object"
@@ -3203,14 +3458,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // If the Document is not set to quirks mode, and the stack of open elements has a p element
                 // in button scope, then close a p element.
-                if ((this.ParsingState.QuirksMode != QuirksMode.On) && this.OpenElements.HasElementInButtonScope(Tags.P))
+                if ((this.ParsingContext.Document.QuirksMode != QuirksMode.On) && this.OpenElements.HasElementInButtonScope(Tags.P))
                     this.ClosePElement();
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
 
                 // Switch the insertion mode to "in table".
                 this.Switch(InsertionModeEnum.InTable);
@@ -3227,14 +3482,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, Attribute.None);
+                this.InsertHtmlElementForToken();
                 this.OpenElements.Pop();
 
                 // Acknowledge the token's self-closing flag, if it is set.
                 this.Tokenizer.AcknowledgeSelfClosingTag();
 
                 // Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
             }
 
             // A start tag whose tag name is one of: "area", "br", "embed", "img", "keygen", "wbr"
@@ -3244,7 +3499,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.OpenElements.Pop();
 
                 // Acknowledge the token's self-closing flag, if it is set.
@@ -3252,7 +3507,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.Tokenizer.AcknowledgeSelfClosingTag();
 
                 // Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
             }
 
             // A start tag whose tag name is "input"
@@ -3262,7 +3517,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.OpenElements.Pop();
 
                 // Acknowledge the token's self-closing flag, if it is set.
@@ -3272,14 +3527,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // If the token does not have an attribute with the name "type", or if it does, but that attribute's value
                 // is not an ASCII case-insensitive match for the string "hidden", then: set the frameset-ok flag to "not ok".
                 if (!this.Token.TagAttributes.Any(attr => (attr.Name == "type") && attr.Value.Equals("hidden", StringComparison.OrdinalIgnoreCase)))
-                    this.ParsingState.FramesetOk = false;
+                    this.FramesetOk = false;
             }
 
             // A start tag whose tag name is one of: "param", "source", "track"
             else if (this.Token.IsStartTagNamed(Tags.Param, Tags.Source, Tags.Track))
             {
                 // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.OpenElements.Pop();
 
                 // Acknowledge the token's self-closing flag, if it is set.
@@ -3295,7 +3550,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.ClosePElement();
 
                 // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.OpenElements.Pop();
 
                 // Acknowledge the token's self-closing flag, if it is set.
@@ -3303,7 +3558,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.Tokenizer.AcknowledgeSelfClosingTag();
 
                 // Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
             }
 
             // A start tag whose tag name is "image"
@@ -3323,7 +3578,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // Run these steps:
 
                 // 1. Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // 2. If the next token is a "LF" (U+000A) character token, then ignore that token and move on to the
                 // next one. (Newlines at the start of textarea elements are ignored as an authoring convenience.)
@@ -3342,7 +3597,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.OriginalInsertionMode = this.InsertionMode;
 
                 // 5. Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
 
                 // 6. Switch the insertion mode to "text".
                 this.Switch(InsertionModeEnum.Text);
@@ -3359,7 +3614,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
 
                 // Follow the generic raw text element parsing algorithm.
                 this.GenericRawTextElementParsingAlgorithm();
@@ -3369,7 +3624,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.IFrame))
             {
                 // Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
 
                 // Follow the generic raw text element parsing algorithm.
                 this.GenericRawTextElementParsingAlgorithm();
@@ -3377,7 +3632,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
             // A start tag whose tag name is "noembed"
             // A start tag whose tag name is "noscript", if the scripting flag is enabled
-            else if (this.Token.IsStartTagNamed(Tags.NoEmbed) || (this.ParsingContext.Scripting && this.Token.IsStartTagNamed(Tags.NoScript)))
+            else if (this.Token.IsStartTagNamed(Tags.NoEmbed) || (this.Scripting && this.Token.IsStartTagNamed(Tags.NoScript)))
             {
                 // Follow the generic raw text element parsing algorithm.
                 this.GenericRawTextElementParsingAlgorithm();
@@ -3390,10 +3645,10 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // Set the frameset-ok flag to "not ok".
-                this.ParsingState.FramesetOk = false;
+                this.FramesetOk = false;
 
                 // If the insertion mode is one of "in table", "in caption", "in table body", "in row",
                 // or "in cell", then switch the insertion mode to "in select in table". Otherwise,
@@ -3421,7 +3676,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
             }
 
             // A start tag whose tag name is one of: "rb", "rp", "rtc"
@@ -3436,7 +3691,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.InformParseError(ParseError.UnexpectedTag);
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
             }
 
             // A start tag whose tag name is "rt"
@@ -3452,7 +3707,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.InformParseError(ParseError.UnexpectedTag);
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
             }
 
             // A start tag whose tag name is "math"
@@ -3510,7 +3765,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
 
                 // NOTE: This element will be an ordinary element.
             }
@@ -3590,6 +3845,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         {
             bool elementRemoved = false;
 
+            // See: http://www.w3.org/TR/html51/syntax.html#closing-misnested-formatting-elements
             // The adoption agency algorithm, which takes as its only argument a tag name subject for which the
             // algorithm is being run, consists of the following steps:
 
@@ -3743,8 +3999,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     //    common ancestor as the intended parent; replace the entry for node in the list of active formatting
                     //    elements with an entry for the new element, replace the entry for node in the stack of open elements
                     //    with an entry for the new element, and let node be the new element.
-                    Element newElement = this.DomFactory.CreateElement(commonAncestor, node.TagName,
-                        node.Attributes.Select(attr => new Attribute(attr.Name, attr.Value)).ToArray(), false);
+                    Element newElement = this.CreateElement(commonAncestor, Namespaces.Html, node.TagName,
+                        node.Attributes.Select(attr => new Attribute(attr.Name, attr.Value)).ToArray());
                     this.ActiveFormattingElements.Replace(node, newElement);
                     this.OpenElements.Replace(node, newElement);
                     node = newElement;
@@ -3767,13 +4023,17 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // 14. Insert whatever last node ended up being in the previous step at the appropriate place for inserting a node,
                 //     but using common ancestor as the override target.
                 AdjustedInsertLocation location = this.AppropriatePlaceForInsertingNode(commonAncestor);
-                this.DomFactory.InsertElementAt(lastNode, location);
+                if (location.BeforeSibling != null)
+                    this.DomFactory.InsertElementBefore(location.ParentElement, lastNode, location.BeforeSibling);
+                else
+                    this.DomFactory.AppendElement(location.ParentElement, lastNode);
+
 
                 // 15. Create an element for the token for which formatting element was created, in the HTML namespace,
                 //    with furthest block as the intended parent.
                 Token newElementToken = new Token();
                 newElementToken.SetStartTag(formattingElement.TagName, false, node.Attributes.Select(attr => new Attribute(attr.Name, attr.Value)).ToArray());
-                Element newElement2 = this.DomFactory.CreateElement(furthestBlock, newElementToken.TagName, newElementToken.TagAttributes, false);
+                Element newElement2 = this.CreateElement(furthestBlock, Namespaces.Html, newElementToken.TagName, newElementToken.TagAttributes);
 
                 // 16. Take all of the child nodes of furthest block and append them to the element created in the last step.
                 foreach (Node child in furthestBlock.ChildNodes)
@@ -3814,7 +4074,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (this.Token.Type == TokenType.Character)
             {
                 // Insert the token's character.
-                this.DomFactory.InsertCharacter(this.Token.Character);
+                this.InsertCharacter(this.Token.Character);
 
                 // NOTE: This can never be a U+0000 NULL character; the tokenizer converts those
                 // to U+FFFD REPLACEMENT CHARACTER characters.
@@ -3945,7 +4205,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment.
-                this.DomFactory.InsertComment(this.Token.CommentData);
+                this.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
@@ -3965,7 +4225,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ActiveFormattingElements.InsertMarker();
 
                 // Insert an HTML element for the token, then switch the insertion mode to "in caption".
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.Switch(InsertionModeEnum.InCaption);
             }
 
@@ -3976,7 +4236,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ClearStackBackToTableContext();
 
                 // Insert an HTML element for the token, then switch the insertion mode to "in column group".
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.Switch(InsertionModeEnum.InColumnGroup);
             }
 
@@ -3988,7 +4248,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
                 // Insert an HTML element for a "colgroup" start tag token with no attributes, then switch the
                 // insertion mode to "in column group".
-                this.DomFactory.InsertHtmlElement(Tags.ColGroup, Attribute.None);
+                this.InsertHtmlElement(Tags.ColGroup, Attribute.None);
                 this.Switch(InsertionModeEnum.InColumnGroup);
 
                 // Reprocess the current token.
@@ -4002,7 +4262,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ClearStackBackToTableContext();
 
                 // Insert an HTML element for the token, then switch the insertion mode to "in table body".
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.Switch(InsertionModeEnum.InTableBody);
             }
 
@@ -4014,7 +4274,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
                 // Insert an HTML element for a "tbody" start tag token with no attributes,
                 // then switch the insertion mode to "in table body".
-                this.DomFactory.InsertHtmlElement(Tags.TBody, Attribute.None);
+                this.InsertHtmlElement(Tags.TBody, Attribute.None);
                 this.Switch(InsertionModeEnum.InTableBody);
 
                 // Reprocess the current token.
@@ -4097,7 +4357,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.InformParseError(ParseError.UnexpectedStartTag);
 
                     // Insert an HTML element for the token.
-                    this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                    this.InsertHtmlElementForToken();
 
                     // Pop that input element off the stack of open elements.
                     this.OpenElements.Pop();
@@ -4116,13 +4376,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
                 // If there is a template element on the stack of open elements, or if the form element pointer
                 // is not null, ignore the token.
-                if (this.OpenElements.Contains(Tags.Template) || (this.ParsingState.Form != null))
+                if (this.OpenElements.Contains(Tags.Template) || (this.Form != null))
                     return;
 
                 // Otherwise:
                 // Insert an HTML element for the token, and set the form element pointer to point to the element created.
-                Element form = this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
-                this.ParsingState.Form = form;
+                Element form = this.InsertHtmlElementForToken();
+                this.Form = form;
 
                 // Pop that form element off the stack of open elements.
                 this.OpenElements.Pop();
@@ -4213,7 +4473,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 else
                 {
                     foreach (char ch in this.PendingTableCharacterTokens)
-                        this.DomFactory.InsertCharacter(ch);
+                        this.InsertCharacter(ch);
                 }
 
                 // Switch the insertion mode to the original insertion mode and reprocess the token.
@@ -4321,14 +4581,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (this.Token.IsCharacterWhitespace())
             {
                 // Insert the character.
-                this.DomFactory.InsertCharacter(this.Token.Character);
+                this.InsertCharacter(this.Token.Character);
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment.
-                this.DomFactory.InsertComment(this.Token.CommentData);
+                this.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
@@ -4349,7 +4609,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Col))
             {
                 // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.OpenElements.Pop();
 
                 // Acknowledge the token's self-closing flag, if it is set.
@@ -4432,7 +4692,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ClearStackBackToTableBodyContext();
 
                 // Insert an HTML element for the token, then switch the insertion mode to "in row".
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.Switch(InsertionModeEnum.InRow);
             }
 
@@ -4446,7 +4706,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ClearStackBackToTableBodyContext();
 
                 // Insert an HTML element for a "tr" start tag token with no attributes, then switch the insertion mode to "in row".
-                this.DomFactory.InsertHtmlElement(Tags.Tr, Attribute.None);
+                this.InsertHtmlElement(Tags.Tr, Attribute.None);
                 this.Switch(InsertionModeEnum.InRow);
 
                 // Reprocess the current token.
@@ -4549,7 +4809,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.ClearStackBackToTableRowContext();
 
                 // Insert an HTML element for the token, then switch the insertion mode to "in cell".
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.Switch(InsertionModeEnum.InCell);
 
                 // Insert a marker at the end of the list of active formatting elements.
@@ -4570,7 +4830,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // Clear the stack back to a table row context. (See below.)
                 this.ClearStackBackToTableRowContext();
 
-                // Pop the current node (which will be a tr element) from the stack of open elements. 
+                // Pop the current node (which will be a tr element) from the stack of open elements.
                 this.OpenElements.Pop();
 
                 // Switch the insertion mode to "in table body".
@@ -4597,7 +4857,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // Clear the stack back to a table row context. (See below.)
                 this.ClearStackBackToTableRowContext();
 
-                // Pop the current node (which will be a tr element) from the stack of open elements. 
+                // Pop the current node (which will be a tr element) from the stack of open elements.
                 this.OpenElements.Pop();
 
                 // Switch the insertion mode to "in table body".
@@ -4626,7 +4886,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // Clear the stack back to a table row context. (See below.)
                 this.ClearStackBackToTableRowContext();
 
-                // Pop the current node (which will be a tr element) from the stack of open elements. 
+                // Pop the current node (which will be a tr element) from the stack of open elements.
                 this.OpenElements.Pop();
 
                 // Switch the insertion mode to "in table body".
@@ -4797,14 +5057,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.Character)
             {
                 // Insert the token's character.
-                this.DomFactory.InsertCharacter(this.Token.Character);
+                this.InsertCharacter(this.Token.Character);
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment.
-                this.DomFactory.InsertComment(this.Token.CommentData);
+                this.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
@@ -4829,7 +5089,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.OpenElements.Pop();
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
             }
 
             // A start tag whose tag name is "optgroup"
@@ -4844,7 +5104,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     this.OpenElements.Pop();
 
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
             }
 
             // An end tag whose tag name is "optgroup"
@@ -5233,14 +5493,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (this.Token.IsCharacterWhitespace())
             {
                 // Insert the character.
-                this.DomFactory.InsertCharacter(this.Token.Character);
+                this.InsertCharacter(this.Token.Character);
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment.
-                this.DomFactory.InsertComment(this.Token.CommentData);
+                this.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
@@ -5261,7 +5521,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Frameset))
             {
                 // Insert an HTML element for the token.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
             }
 
             // An end tag whose tag name is "frameset"
@@ -5287,7 +5547,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Frame))
             {
                 // Insert an HTML element for the token. Immediately pop the current node off the stack of open elements.
-                this.DomFactory.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
+                this.InsertHtmlElementForToken();
                 this.OpenElements.Pop();
 
                 // Acknowledge the token's self-closing flag, if it is set.
@@ -5321,7 +5581,6 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // Parse error. Ignore the token.
                 this.InformParseError(ParseError.UnexpectedTag);
             }
-
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -5339,14 +5598,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             if (this.Token.IsCharacterWhitespace())
             {
                 // Insert the character.
-                this.DomFactory.InsertCharacter(this.Token.Character);
+                this.InsertCharacter(this.Token.Character);
             }
 
             // A comment token
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment.
-                this.DomFactory.InsertComment(this.Token.CommentData);
+                this.InsertComment(this.Token.CommentData);
             }
 
             // A DOCTYPE token
@@ -5487,6 +5746,15 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
         #endregion
 
+        #region 8.2.5.5. The rules for parsing tokens in foreign content
+
+        private void ProcessTokenInForeignContent()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         private enum ParsingAlgorithm
         {
             GenericRcData,
@@ -5507,7 +5775,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         /// </summary>
         private void StopParsing()
         {
-            throw new NotImplementedException();
+            while (this.OpenElements.Count > 0)
+            {
+                this.OpenElements.Pop();
+            }
+
+            // A lot of steps irrelevant to us.
+            this.DomFactory.StopParsing();
         }
 
         #endregion

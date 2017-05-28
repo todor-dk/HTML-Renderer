@@ -35,8 +35,25 @@ namespace TheArtOfDev.HtmlRenderer.Dom
             }
         }
 
+        public override Node ParentNode
+        {
+            get { return null; }
+        }
+
+        public override Node PreviousSibling
+        {
+            get { return null; }
+        }
+
+        public override Node NextSibling
+        {
+            get { return null; }
+        }
+
         public bool Specified { get; private set; }
 
         public string Value { get; private set; }
+
+        public Element OwnerElement { get; private set; }
     }
 }
