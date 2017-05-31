@@ -6,79 +6,49 @@ using System.Threading.Tasks;
 
 namespace TheArtOfDev.HtmlRenderer.Dom
 {
-    // See: http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html#i-Document
-    public class Document : Node
+    // See: http://www.w3.org/TR/2015/REC-dom-20151119/#interface-document
+    public interface Document : Node, NonElementParentNode, ParentNode
     {
-        public QuirksMode QuirksMode { get; internal set; }
+        QuirksMode QuirksMode { get; }
 
-        public DocumentType DocumentType
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        DomImplementation DomImplementation { get; }
 
-        public Element DocumentElement
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        string Url { get; }
 
-        public override string NodeName
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        string DocumentUri { get; }
 
-        public override string NodeValue
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        string Origin { get; }
 
-        public override NodeType NodeType
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        string CompatMode { get; }
 
-        public Attr CreateAttribute(string name)
-        {
-            throw new NotImplementedException();
-        }
+        string CharacterSet { get; }
 
-        public object CreateCDataSection(string data)
-        {
-            throw new NotImplementedException();
-        }
+        string ContentType { get; }
 
-        public Comment CreateComment(string data)
-        {
-            throw new NotImplementedException();
-        }
+        DocumentType DocType { get; }
 
-        public Element CreateElement(string tagName)
-        {
-            throw new NotImplementedException();
-        }
+        Element DocumentElement { get; }
 
-        public Text CreateTextNode(string data)
-        {
-            throw new NotImplementedException();
-        }
+        HtmlCollection GetElementsByTagName(string localName);
 
-        public Element GetElementById(string elementId)
-        {
-            throw new NotImplementedException();
-        }
+        HtmlCollection GetElementsByTagNameNS(string @namespace, string localName);
+
+        HtmlCollection GetElementsByClassName(string className);
+
+        Element CreateElement(string localName);
+
+        Element CreateElementNS(string @namespace, string qualifiedName);
+
+        DocumentFragment CreateDocumentFragment();
+
+        Text CreateTextNode(string data);
+
+        Comment CreateComment(string data);
+
+        ProcessingInstruction CreateProcessingInstruction(string target, string data);
+
+        Node ImportNode(Node node, bool deep = false);
+
+        Node AdoptNode(Node node);
     }
 }

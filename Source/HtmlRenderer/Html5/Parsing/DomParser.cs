@@ -767,23 +767,13 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     if (this._Element.Attributes.Count != element.Attributes.Count)
                         return false;
 
-                    for (int i = 0; i < this._Element.Attributes.Count; i++)
+                    foreach (Attr attr in this._Element.Attributes)
                     {
-                        bool found = false;
-                        Attr attr1 = this._Element.Attributes[i];
-                        for (int j = 0; j < element.Attributes.Count; j++)
-                        {
-                            Attr attr2 = element.Attributes[j];
-                            if (attr1.Name == attr2.Name)
-                            {
-                                if (attr1.Value != attr2.Value)
-                                    return false;
+                        Attr candidate = element.Attributes.GetNamedItemNS(attr.NamespaceUri, attr.LocalName) as Attr;
+                        if (candidate == null)
+                            return false;
 
-                                found = true;
-                            }
-                        }
-
-                        if (!found)
+                        if (attr.Value != candidate.Value)
                             return false;
                     }
 
@@ -1354,7 +1344,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                         break;
                     }
 
-                    // 5. If *last table* has a parent node, then let *adjusted insertion location* be inside 
+                    // 5. If *last table* has a parent node, then let *adjusted insertion location* be inside
                     // *last table*’s parent node, immediately before *last table*, and abort these substeps.
                     if (lastTable.ParentNode != null)
                     {

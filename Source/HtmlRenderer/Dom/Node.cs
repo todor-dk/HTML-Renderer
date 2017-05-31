@@ -6,65 +6,124 @@ using System.Threading.Tasks;
 
 namespace TheArtOfDev.HtmlRenderer.Dom
 {
-    // See: http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html#ID-1950641247
-    public abstract class Node
+    // See: http://www.w3.org/TR/2015/REC-dom-20151119/#interface-node
+    public interface Node
     {
-        public abstract string NodeName { get; }
+        /// <summary>
+        /// Returns the type of node.
+        /// </summary>
+        NodeType NodeType { get; }
 
-        public abstract string NodeValue { get; }
+        /// <summary>
+        /// Returns a string appropriate for the type of node.
+        /// </summary>
+        string NodeName { get; }
 
-        public abstract NodeType NodeType { get; }
+        /// <summary>
+        /// Returns the absolute base URL of a node.
+        /// </summary>
+        /// <remarks>
+        /// The base URL of a document defaults to the document's address.
+        /// The base URL of an element in HTML normally equals the base URL of the document the node is in.
+        /// <para/>
+        /// If the document contains xml:base attributes (which you shouldn't do in HTML documents),
+        /// the element.baseURI takes the xml:base attributes of element's parents into account when
+        /// computing the base URL.
+        /// NB: We do not support xml:base
+        /// </remarks>
+        string BaseUri { get; }
 
-        public abstract Node ParentNode { get; }
+        /// <summary>
+        /// Returns the top-level document object for this node.
+        /// If this property is used on a node that is itself a <see cref="Document"/>, the result is null.
+        /// </summary>
+        Document OwnerDocument { get; }
 
-        public abstract IReadOnlyList<Node> ChildNodes { get; }
+        /// <summary>
+        /// Returns the parent of the specified node in the DOM tree. The parent of an <see cref="Element"/>
+        /// is an <see cref="Element"/> node, a <see cref="Document"/> node, <see cref="DocumentFragment"/> node.
+        /// <see cref="Document"/> and <see cref="DocumentFragment"/> nodes can never have a parent,
+        /// so ParentNode will always return null.
+        /// </summary>
+        Node ParentNode { get; }
 
-        public abstract Node FirstChild { get; }
+        /// <summary>
+        /// Returns the node's parent <see cref="Element"/>, or null if the node either has no parent,
+        /// or its parent is of a type different than Element.
+        /// </summary>
+        Element ParentElement { get; }
 
-        public abstract Node LastChild { get; }
+        /// <summary>
+        /// Returns a bool value indicating whether the current Node has child nodes or not.
+        /// </summary>
+        /// <returns>True of the current node has children, otherwise false.</returns>
+        bool HasChildren();
 
-        public abstract Node PreviousSibling { get; }
+        /// <summary>
+        /// Returns a live collection of child nodes of the given element where the first child node is assigned index 0.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="ChildNodes"/> includes all direct child nodes, including non-element nodes like text and comment nodes.
+        /// To get a collection of only elements, use <see cref="ParentNode.Children"/> instead.
+        /// </remarks>
+        NodeList ChildNodes { get; }
 
-        public abstract Node NextSibling { get; }
+        /// <summary>
+        /// Returns the node's first child in the tree, or null if the node is childless. If the node is a Document,
+        /// it returns the first node in the list of its direct children.
+        /// </summary>
+        Node FirstChild { get; }
 
-        public abstract IReadOnlyList<Attr> Attributes { get; }
+        /// <summary>
+        /// Returns the last child of the node. If its parent is an element, then the child is generally an element node,
+        /// a text node, or a comment node. It returns null if there are no child elements.
+        /// </summary>
+        Node LastChild { get; }
 
-        public Document OwnerDocument { get; private set; }
+        /// <summary>
+        /// Returns the node immediately preceding the specified one in its parent's <see cref="ChildNodes"/> list,
+        /// or null if the specified node is the first in that list.
+        /// </summary>
+        Node PreviousSibling { get; }
 
-        public Node(Document ownerDocument)
-        {
-            Contract.RequiresNotNull(ownerDocument, nameof(ownerDocument));
-            this.OwnerDocument = ownerDocument;
-        }
+        /// <summary>
+        /// Returns the node immediately following the specified one in its parent's <see cref="ChildNodes"/> list,
+        /// or null if the specified node is the last node in that list.
+        /// </summary>
+        Node NextSibling { get; }
 
-        public Node InsertBefore(Node newChild, Node referenceChild)
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// The value of this node, depending on its type.
+        /// For <see cref="Text"/> and <see cref="Comment"/>, this is the textual <see cref="CharacterData.Data"/> of the node.
+        /// For other nodes, this is null.
+        /// </summary>
+        string NodeValue { get; set; }
 
-        public Node ReplaceChild(Node newChild, Node oldChild)
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// The text content of a node and its descendants.
+        /// </summary>
+        string TextContent { get; set; }
 
-        public Node RemoveChild(Node oldChild)
-        {
-            throw new NotImplementedException();
-        }
+        void Normalize();
 
-        public Node AppendChild(Node newChild)
-        {
-            throw new NotImplementedException();
-        }
+        Node CloneNode(bool deep = false);
 
-        public bool HasChildNodes()
-        {
-            return this.ChildNodes.Count != 0;
-        }
+        DocumentPosition CompareDocumentPosition(Node other);
 
-        public void Normalize()
-        {
-            throw new NotImplementedException();
-        }
+        bool Contains(Node other);
+
+        string LookupPrefix(string @namespace);
+
+        string LookupNamespaceUri(string prefix);
+
+        string IsDefaultNamespace(string @namespace);
+
+        Node InsertBefore(Node node, Node child);
+
+        Node AppendChild(Node node);
+
+        Node ReplaceChild(Node node, Node child);
+
+        Node RemoveChild(Node child);
     }
 }

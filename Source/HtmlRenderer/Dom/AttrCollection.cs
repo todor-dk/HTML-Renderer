@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace TheArtOfDev.HtmlRenderer.Dom
 {
-    // See: http://www.w3.org/TR/2015/REC-dom-20151119/#interface-documentfragment
-    public interface DocumentFragment : Node, NonElementParentNode, ParentNode
+    public interface AttrCollection : NamedNodeMap, IEnumerable<Attr>
     {
+        int Count { get; }
     }
 }

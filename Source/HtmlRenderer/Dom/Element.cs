@@ -6,50 +6,45 @@ using System.Threading.Tasks;
 
 namespace TheArtOfDev.HtmlRenderer.Dom
 {
-    // See: http://www.w3.org/TR/2000/REC-DOM-Level-2-Core-20001113/core.html#ID-745549614
-    public class Element : Node
+    // See: http://www.w3.org/TR/2015/REC-dom-20151119/#interface-element
+    public interface Element : Node, ParentNode, NonDocumentTypeChildNode, ChildNode
     {
-        public string TagName { get; private set; }
+        string NamespaceUri { get; }
 
-        public string NamespaceUri { get; private set; }
+        string Prefix { get; }
 
-        public override string NodeName
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        string LocalName { get; }
 
-        public override string NodeValue
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        string TagName { get; }
 
-        public override NodeType NodeType
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
+        string Id { get; set; }
 
-        public string GetAttribute(string name)
-        {
-            throw new NotImplementedException();
-        }
+        string ClassName { get; set; }
 
-        public void SetAttribute(string name, string value)
-        {
-            throw new NotImplementedException();
-        }
+        DomTokenList ClassList { get; }
 
-        public void RemoveAttribute(string name)
-        {
-            throw new NotImplementedException();
-        }
+        AttrCollection Attributes { get; }
+
+        string GetAttribute(string name);
+
+        string GetAttributeNS(string @namespace, string localName);
+
+        void SetAttribute(string name, string value);
+
+        void SetAttributeNS(string @namespace, string name, string value);
+
+        void RemoveAttribute(string name);
+
+        void RemoveAttributeNS(string @namespace, string localName);
+
+        bool HasAttribute(string name);
+
+        bool HasAttributeNS(string @namespace, string localName);
+
+        HtmlCollection GetElementsByTagName(string localName);
+
+        HtmlCollection GetElementsByTagNameNS(string @namespace, string localName);
+
+        HtmlCollection GetElementsByClassName(string classNames);
     }
 }

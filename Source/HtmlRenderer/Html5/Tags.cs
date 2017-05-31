@@ -258,7 +258,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5
             Head, Header, Hr, Html, IFrame, Img, Input, Li, Link, Listing, Main, Marquee, Menu, MenuItem, Meta, Nav, NoEmbed, NoFrames,
             NoScript, Object, Ol, P, Param, PlainText, Pre, Script, Section, Select, Source, Style, Summary, Table, TBody, Td, Template,
             TextArea, TFoot, Th, THead, Title, Tr, Track, Ul, Wbr, Xmp
-            
+
             // MathML_TODO ... MathML Tags
             // SVG_TODO ... SVG Tags
         };
