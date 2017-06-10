@@ -13,11 +13,32 @@ namespace TheArtOfDev.HtmlRenderer.Dom
     public enum DocumentPosition
     {
         None = 0,
+
+        /// <summary>
+        /// Set when node and other are not in the same tree.
+        /// </summary>
         Disconnected = 1,
+
+        /// <summary>
+        /// Set when other is preceding node.
+        /// </summary>
         Preceding = 2,
+
+        /// <summary>
+        /// Set when other is following node.
+        /// </summary>
         Following = 4,
+
+        /// <summary>
+        /// Set when other is an ancestor of node.
+        /// </summary>
         Contains = 8,
+
+        /// <summary>
+        /// Set when other is a descendant of node.
+        /// </summary>
         ContainedBy = 16,
+
         ImplementationSpecific = 32
     }
 }

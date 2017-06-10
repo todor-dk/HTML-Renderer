@@ -9,10 +9,16 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
 {
     internal sealed class Document : ParentNode, Dom.Document
     {
-        public Document(string baseUri)
+        private readonly BrowsingContext BrowsingContext;
+
+        public Document(BrowsingContext browsingContext, string baseUri)
             : base(null)
         {
+            Contract.RequiresNotNull(browsingContext, nameof(browsingContext));
+
+            this.BrowsingContext = browsingContext;
             this._BaseUri = baseUri;
+            this.DomImplementation = new DomImplementation(this);
         }
 
         private string _BaseUri;
@@ -48,6 +54,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
 
         public Dom.DomImplementation DomImplementation { get; private set; }
 
+        #region Node interface overrides
+
         /// <summary>
         /// Returns a string appropriate for the type of node.
         /// </summary>
@@ -64,6 +72,18 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
             get { return NodeType.Document; }
         }
 
+        /// <summary>
+        /// Returns a duplicate of this node.
+        /// </summary>
+        /// <param name="deep">True if the children of the node should also be cloned, or false to clone only the specified node.</param>
+        /// <returns>A new node that is a clone this node.</returns>
+        public override Dom.Node CloneNode(bool deep = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         public string Origin { get; private set; }
 
         public QuirksMode QuirksMode { get; private set; }
@@ -72,12 +92,20 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
 
         public Dom.Node AdoptNode(Dom.Node node)
         {
-            throw new NotImplementedException();
+            // 1. If node is a document, throw a "NotSupportedError" exception.
+            if (node is Document)
+                throw new Dom.Exceptions.NotSupportedException();
+
+            // 2. Adopt node into the context object.
+            ((Node)node).Adopt(this);
+
+            // 3. Return node.
+            return node;
         }
 
         public Dom.Comment CreateComment(string data)
         {
-            throw new NotImplementedException();
+            return new Comment(this, data);
         }
 
         public Dom.DocumentFragment CreateDocumentFragment()
@@ -102,7 +130,7 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
 
         public Dom.Text CreateTextNode(string data)
         {
-            throw new NotImplementedException();
+            return new Text(this, data);
         }
 
         public Dom.Element GetElementById(string elementId)

@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script src="DomTools.js"></script>
+    <script>
+        var uri = 'api/keywords';
+
+        // Key 1: 38d6f422f3dc4d18aee88e958cdc40cd
+        // Key 2: 14df86e18bdc47f9b317e029463e8269
+
+        function Click() {
+            $.getJSON(uri)
+                    .done(function (data) {
+                        // On success, 'data' contains a list of keywords.
+                        $.each(data, function (id, keyword) {
+                            FindKeywordUrls(id, keyword);
+                        });
+
+                        alert('Done! ' + data.length);
+                    });
+        }
+
+        function FindKeywordUrls(id, keyword)
+        {
+            //if (keyword.IsResolved)
+            //    return;
+
+            //alert(id + " : " + keyword.Text + ' : ' + keyword.Urls);
+
+            keyword.Urls = GetUrlsForKeyword(keyword.Text);
+
+            var c = document.getElementById('progress');
+            c.innerText = keyword.Urls;
+
+            $.ajax({
+                type: "PUT",
+                url: 'api/keywords/' + id,
+                data: JSON.stringify(keyword),
+                contentType: "application/json;charset=utf-8",
+                success: function (data, status, xhr) {
+                    //alert("The result is : " + status + ": " + data);
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        function GetUrlsForKeyword(keyword)
+        {
+            var res = '';
+            for (var i = 0; i < 50; i++)
+            {
+                document.getElementById('subprogress').innerText = (i + 1) + ' / 50';
+                res += GetUrlsForKeywordStart(keyword, i * 10);
+            }
+            return res;
+        }
+
+        function GetUrlsForKeywordStart(keyword, start)
+        {
+            // https://www.google.com/#q=test&start=20&spf=1496585916634
+
+            var url = 'https://www.google.com/#q=' + encodeURIComponent(keyword); // + '&start=20&spf=1496585916634
+            var url = 'https://www.google.com/search?q=' + encodeURIComponent(keyword) + '&start=' + start + '&fp=1&tch=1&ech=1'
+
+            var base64 = $.ajax({
+                type: 'POST',
+                url: 'api/downloader/',
+                dataType: 'json',
+                data: {"Url":url},
+                //contentType: "application/json;charset=utf-8",
+                async: false,
+            }).responseText;
+
+            base64 = eval(base64);
+            var bytes = base64js.toByteArray(base64);
+            var html = new TextDecoderLite('utf-8').decode(bytes);
+
+            var res = '';
+            while (true) {
+                var idx = html.indexOf('/*\"\"*/');
+                if (idx < 0)
+                    break;
+
+                var json = html.substr(0, idx);
+                html = html.substr(idx + 6);
+
+                var data = JSON.parse(json);
+
+                res = res + data.d;
+            }
+
+            return parseGoogleResults(res);
+        }
+
+        function parseGoogleResults(html)
+        {
+            var doc = document.implementation.createHTMLDocument("example");
+            doc.documentElement.innerHTML = html;
+
+            var res = '';
+            var div = doc.getElementById('ires');
+            if (div == null)
+                return res;
+            var ol = div.firstElementChild;
+            if (ol == null)
+                return res;
+            for (var i = 0; i < ol.childElementCount; i++) {
+                var gdiv = ol.children[i];
+                if (gdiv.tagName.toLowerCase() != 'div')
+                    continue;
+
+                var h3 = gdiv.firstElementChild;
+                if ((h3 == null) || (h3.tagName.toLowerCase() != 'h3'))
+                    continue;
+
+                var a = h3.firstElementChild;
+                if ((a == null) || (a.tagName.toLowerCase() != 'a'))
+                    continue;
+
+                var href = a.href;
+                if (href == null)
+                    continue;
+
+                var idx = href.indexOf('?');
+                if (idx < 0)
+                    continue;
+                href = href.substr(idx + 1);
+
+                var parts = href.split('&');
+                for (var j = 0; j < parts.length; j++)
+                {
+                    var pair = parts[j].split('=');
+                    if (pair[0] == 'q')
+                    {
+                        var url = decodeURIComponent(pair[1]);
+                        res += url + '\n';
+                    }
+                }
+            }
+
+            return res;
+        }
+  </script>
+</head>
+<body>
+    <a href="javascript:void(0)" onclick="Click();">Test</a>
+    <div id="progress"></div>
+    <div id="subprogress"></div>
+</body>
+</html>

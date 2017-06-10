@@ -11,6 +11,11 @@ namespace TheArtOfDev.HtmlRenderer.Dom
     {
         Text SplitText(int offset);
 
+        /// <summary>
+        /// Returns the full text of all Text nodes logically adjacent to this node.
+        /// The text is concatenated in document order.  This allows to specify any
+        /// text node and obtain all adjacent text as a single string.
+        /// </summary>
         string WholeText { get; }
     }
 }

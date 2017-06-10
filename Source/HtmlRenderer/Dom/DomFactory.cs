@@ -26,7 +26,7 @@ namespace TheArtOfDev.HtmlRenderer.Dom
 
         public void InsertChildNode(Element parent, Node child, bool unparentIfNeeded)
         {
-
+            
         }
 
         public void AssociateWithForm(Element element, Element form)

@@ -13,22 +13,22 @@ namespace TheArtOfDev.HtmlRenderer.Dom
     {
         /// <summary>
         /// Returns the child elements.
-        /// The children attribute must return an HTMLCollection collection rooted at the context object matching only element children.
+        /// The children attribute returns an HTMLCollection collection rooted at the context object matching only element children.
         /// </summary>
         HtmlCollection Children { get; }
 
         /// <summary>
-        /// The firstElementChild attribute must return the first child that is an element, and null otherwise.
+        /// Returns the first child that is an element, and null otherwise.
         /// </summary>
         Element FirstElementChild { get; }
 
         /// <summary>
-        /// The lastElementChild attribute must return the last child that is an element, and null otherwise.
+        /// Returns the last child that is an element, and null otherwise.
         /// </summary>
         Element LastElementChild { get; }
 
         /// <summary>
-        /// The childElementCount attribute must return the number of children of the context object that are elements.
+        /// Returns the number of children of the context object that are elements.
         /// </summary>
         int ChildElementCount { get; }
     }

@@ -12,7 +12,7 @@ namespace TheArtOfDev.HtmlRenderer.Dom
     public interface ChildNode
     {
         /// <summary>
-        /// Removes node.
+        /// Removes this node from its parent children list.
         /// </summary>
         void Remove();
     }
