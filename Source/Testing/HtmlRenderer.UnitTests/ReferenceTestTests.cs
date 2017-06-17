@@ -10,24 +10,30 @@ namespace HtmlRenderer.UnitTests
     public class ReferenceTestTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void ReferenceFromDataAndEquality()
         {
             var root = TextReader.FromData(Acid1Dom);
+            Assert.IsNotNull(root);
+
+            var eq = root.CompareWith(root, new TestLib.Dom.CompareContext());
+            Assert.IsTrue(eq);
+        }
+
+        [TestMethod]
+        public void ReferenceCloningAndEquality()
+        {
+            var root = TextReader.FromData(Acid1Dom);
+            Assert.IsNotNull(root);
 
             System.IO.MemoryStream stream = new System.IO.MemoryStream();
             BinaryWriter.Save(root, stream);
 
             stream.Position = 0;
             var root2 = BinaryReader.FromStream(stream);
+            Assert.IsNotNull(root2);
 
-            var eq = root.CompareWith(root, new TestLib.Dom.CompareContext());
-
-            var eq2 = root.CompareWith(root2, new TestLib.Dom.CompareContext());
-
-            var visitor = new TestLib.CodeGeneration.CodeGeneratorVisitor();
-            root.Accept(visitor);
-            var str = visitor.ToString();
-            System.IO.File.WriteAllText(@"c:\temp\acid.txt", str);
+            var eq = root.CompareWith(root2, new TestLib.Dom.CompareContext());
+            Assert.IsTrue(eq);
         }
 
         [TestMethod]
@@ -35,14 +41,33 @@ namespace HtmlRenderer.UnitTests
         {
             BrowsingContext context = new BrowsingContext();
             Document doc = CreateAcidDom(context);
+            Assert.IsNotNull(doc);
+        }
+
+        [TestMethod]
+        public void CreateAcidDomFromCodeAndReferenceEquality()
+        {
+            BrowsingContext context = new BrowsingContext();
+            Document doc = CreateAcidDom(context);
+            Assert.IsNotNull(doc);
+
+            var root = TextReader.FromData(Acid1Dom);
+            Assert.IsNotNull(root);
+
+            var cc = new TestLib.Dom.CompareContext();
+            cc.IgnoreBaseUriExceptForElementAndDocument = true;
+            cc.IgnoreChildrenPropertiesExceptForElement = true; // IE only support child elements for element nodes (not other)
+            cc.IgnoreDocumentUri = true;
+            var eq = root.CompareWith(doc, cc);
+            Assert.IsTrue(eq);
         }
 
         public static Document CreateAcidDom(BrowsingContext context)
         {
-            Document doc = context.CreateDocument("http://localhost:14873/DomAnalyzer.html");
+            Document doc = context.CreateHtmlDocument("http://localhost:14873/DomAnalyzer.html", "utf-8");
 
             // DocType !!!
-            DocumentType doctype = doc.DomImplementation.CreateDocumentType("html", String.Empty, String.Empty);
+            DocumentType doctype = doc.Implementation.CreateDocumentType("html", String.Empty, String.Empty);
             doc.AppendChild(doctype);
 
             Element html = doc.CreateElement("html");
@@ -57,12 +82,13 @@ namespace HtmlRenderer.UnitTests
             Element style = doc.CreateElement("style");
             head.AppendChild(style);
             style.SetAttribute("type", "text/css");
-            style.AppendChild(doc.CreateTextNode("\n/* last modified: 1 Dec 98 */ \t\n\nhtml {\nfont: 10px / 1 Verdana, sans - serif;\nbackground - color: blue;\ncolor: white;\n}\n\nbody {\nmargin: 1.5em;\nborder: .5em solid black;\npadding: 0;\nwidth: 48em;\nbackground - color: white;\n}\n\ndl {\nmargin: 0;\nborder: 0;\npadding: .5em;\n}\n\ndt { \nbackground - color: rgb(204, 0, 0);\nmargin: 0; \npadding: 1em;\nwidth: 10.638 %; /* refers to parent element's width of 47em. = 5em or 50px */\nheight: 28em;\nborder: .5em solid black;\nfloat: left;\n}\n\ndd {\nfloat: right;\nmargin: 0 0 0 1em;\nborder: 1em solid black;\npadding: 1em;\nwidth: 34em;\nheight: 27em;\n}\n\nul {\nmargin: 0;\nborder: 0;\npadding: 0;\n}\n\nli {\ndisplay: block; /* i.e., suppress marker */\ncolor: black;\nheight: 9em;\nwidth: 5em;\nmargin: 0;\nborder: .5em solid black;\npadding: 1em;\nfloat: left;\nbackground - color: #FC0;\n}\n\n#bar {\nbackground-color: black;\ncolor: white;\nwidth: 41.17%; /* = 14em */\nborder: 0;\nmargin: 0 1em;\n}\n\n#baz {\nmargin: 1em 0;\nborder: 0;\npadding: 1em;\nwidth: 10em;\nheight: 10em;\nbackground-color: black;\ncolor: white;\n}\n\nform { \nmargin: 0;\ndisplay: inline;\n}\n\np { \nmargin: 0;\n}\n\nform p {\nline-height: 1.9;\n}\n\nblockquote {\nmargin: 1em 1em 1em 2em;\nborder-width: 1em 1.5em 2em .5em;\nborder-style: solid;\nborder-color: black;\npadding: 1em 0;\nwidth: 5em;\nheight: 9em;\nfloat: left;\nbackground-color: #FC0;\ncolor: black;\n}\n\naddress {\nfont-style: normal;\n}\n\nh1 {\nbackground-color: black;\ncolor: white;\nfloat: left;\nmargin: 1em 0;\nborder: 0;\npadding: 1em;\nwidth: 10em;\nheight: 10em;\nfont-weight: normal;\nfont-size: 1em;\n}\n  "));
+            style.AppendChild(doc.CreateTextNode("\n/* last modified: 1 Dec 98 */ \t\n\nhtml {\nfont: 10px/1 Verdana, sans-serif;\nbackground-color: blue;\ncolor: white;\n}\n\nbody {\nmargin: 1.5em;\nborder: .5em solid black;\npadding: 0;\nwidth: 48em;\nbackground-color: white;\n}\n\ndl {\nmargin: 0;\nborder: 0;\npadding: .5em;\n}\n\ndt { \nbackground-color: rgb(204,0,0);\nmargin: 0; \npadding: 1em;\nwidth: 10.638%; /* refers to parent element's width of 47em. = 5em or 50px */\nheight: 28em;\nborder: .5em solid black;\nfloat: left;\n}\n\ndd {\nfloat: right;\nmargin: 0 0 0 1em;\nborder: 1em solid black;\npadding: 1em;\nwidth: 34em;\nheight: 27em;\n}\n\nul {\nmargin: 0;\nborder: 0;\npadding: 0;\n}\n\nli {\ndisplay: block; /* i.e., suppress marker */\ncolor: black;\nheight: 9em;\nwidth: 5em;\nmargin: 0;\nborder: .5em solid black;\npadding: 1em;\nfloat: left;\nbackground-color: #FC0;\n}\n\n#bar {\nbackground-color: black;\ncolor: white;\nwidth: 41.17%; /* = 14em */\nborder: 0;\nmargin: 0 1em;\n}\n\n#baz {\nmargin: 1em 0;\nborder: 0;\npadding: 1em;\nwidth: 10em;\nheight: 10em;\nbackground-color: black;\ncolor: white;\n}\n\nform { \nmargin: 0;\ndisplay: inline;\n}\n\np { \nmargin: 0;\n}\n\nform p {\nline-height: 1.9;\n}\n\nblockquote {\nmargin: 1em 1em 1em 2em;\nborder-width: 1em 1.5em 2em .5em;\nborder-style: solid;\nborder-color: black;\npadding: 1em 0;\nwidth: 5em;\nheight: 9em;\nfloat: left;\nbackground-color: #FC0;\ncolor: black;\n}\n\naddress {\nfont-style: normal;\n}\n\nh1 {\nbackground-color: black;\ncolor: white;\nfloat: left;\nmargin: 1em 0;\nborder: 0;\npadding: 1em;\nwidth: 10em;\nheight: 10em;\nfont-weight: normal;\nfont-size: 1em;\n}\n  "));
             head.AppendChild(doc.CreateTextNode("\n\t"));
             html.AppendChild(doc.CreateTextNode("\n\t"));
 
             // BODY
             Element body = doc.CreateElement("body");
+            html.AppendChild(body);
             body.AppendChild(doc.CreateTextNode("\n\t\t"));
             Element dl = doc.CreateElement("dl");
             body.AppendChild(dl);

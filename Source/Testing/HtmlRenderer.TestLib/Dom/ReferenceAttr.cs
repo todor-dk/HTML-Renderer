@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheArtOfDev.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
     public sealed class ReferenceAttr
     {
-        public ReferenceAttr()
+        public ReferenceAttr(ReferenceElement owner, string namespaceUri, string prefix, string localName, string name, string value)
         {
-
-        }
-
-        public ReferenceAttr(string namespaceUri, string prefix, string localName, string name, string value)
-        {
+            this.OwnerElement = owner;
             this.NamespaceUri = namespaceUri;
             this.Prefix = prefix;
             this.LocalName = localName;
@@ -47,7 +44,30 @@ namespace HtmlRenderer.TestLib.Dom
                 return false;
             if (this.NamespaceUri != other.NamespaceUri)
                 return false;
-            if (!this.OwnerElement.Compare(other.OwnerElement, context))
+            if (!this.OwnerElement.CompareReference(other.OwnerElement, context))
+                return false;
+            if (this.Prefix != other.Prefix)
+                return false;
+            if (this.Value != other.Value)
+                return false;
+
+            return true;
+        }
+
+        public bool CompareWith(Attr other, CompareContext context)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
+
+            if (this.LocalName != other.LocalName)
+                return false;
+            if (this.Name != other.Name)
+                return false;
+            if (this.NamespaceUri != other.NamespaceUri)
+                return false;
+            if (!this.OwnerElement.CompareDom(other.OwnerElement, context))
                 return false;
             if (this.Prefix != other.Prefix)
                 return false;

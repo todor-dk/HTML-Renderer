@@ -11,7 +11,7 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
     internal abstract class ParentNode : Node, Dom.ParentNode, Dom.NodeList, Dom.HtmlCollection
     {
         // This contains the child nodes and elements. See ElementChildren for further description.
-        private readonly ElementChildren _Children = new ElementChildren();
+        protected ElementChildren _Children = new ElementChildren();
 
         public ParentNode(Document document)
             : base(document)
@@ -47,7 +47,7 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// </summary>
         public override Dom.Node LastChild
         {
-            get { return this._Children.GetNode(this._Children.GetNodeCount()); }
+            get { return this._Children.GetNode(this._Children.GetNodeCount() - 1); }
         }
 
         /// <summary>
@@ -110,6 +110,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <exception cref="NotFoundException">If <paramref name="child"/>'s <see cref="Node.ParentNode"/> is not this node.</exception>
         public override Dom.Node RemoveChild(Dom.Node child)
         {
+            Contract.RequiresNotNull(child, nameof(child));
+
             return this.PreRemoveNode((Node)child);
         }
 
@@ -121,6 +123,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <returns>The inserted node.</returns>
         public override Dom.Node InsertBefore(Dom.Node newChild, Dom.Node referenceChild)
         {
+            Contract.RequiresNotNull(newChild, nameof(newChild));
+
             return this.PreInsertNode((Node)newChild, (Node)referenceChild);
         }
 
@@ -133,6 +137,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <returns>The appended child.</returns>
         public override Dom.Node AppendChild(Dom.Node node)
         {
+            Contract.RequiresNotNull(node, nameof(node));
+
             return this.PreInsertNode((Node)node, null);
         }
 
@@ -355,6 +361,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <returns></returns>
         Dom.Element HtmlCollection.NamedItem(string name)
         {
+            Contract.RequiresNotNull(name, nameof(name));
+
             return this._Children.GetNamedElement(name);
         }
 

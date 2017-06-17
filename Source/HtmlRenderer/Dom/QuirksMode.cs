@@ -8,10 +8,10 @@ namespace TheArtOfDev.HtmlRenderer.Dom
 {
     public enum QuirksMode
     {
-        On,
+        Quirks,
 
         Limited,
 
-        Off
+        NoQuirks
     }
 }

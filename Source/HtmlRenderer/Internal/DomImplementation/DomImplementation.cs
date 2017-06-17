@@ -26,14 +26,19 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <returns>A new DocumentType associated with the Document of this DomImplementation.</returns>
         public Dom.DocumentType CreateDocumentType(string qualifiedName, string publicId, string systemId)
         {
+            Contract.RequiresNotNull(qualifiedName, nameof(qualifiedName));
+            Contract.RequiresNotNull(publicId, nameof(publicId));
+            Contract.RequiresNotNull(systemId, nameof(systemId));
+
             // See: http://www.w3.org/TR/2015/REC-dom-20151119/#dom-domimplementation-createdocumenttype
 
             // 1. If qualifiedName does not match the Name production, throw an "InvalidCharacterError" exception.
-            // TO-DO
-            Contract.RequiresNotEmptyOrWhiteSpace(qualifiedName, nameof(qualifiedName));
+            if (!qualifiedName.IsName())
+                throw new Dom.Exceptions.InvalidCharacterException();
 
             // 2. If qualifiedName does not match the QName production, throw a "NamespaceError" exception.
-            // TO-DO
+            if (!qualifiedName.IsQName())
+                throw new Dom.Exceptions.NamespaceException();
 
             // 3. Return a new doctype, with qualifiedName as its name, publicId as its public ID, and systemId
             //    as its system ID, and with its node document set to the associated document of the context object.

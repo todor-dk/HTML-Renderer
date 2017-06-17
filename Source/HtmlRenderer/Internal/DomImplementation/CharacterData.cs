@@ -66,6 +66,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <param name="data">The string to add to the comment node.</param>
         public void AppendData(string data)
         {
+            Contract.RequiresNotNull(data, nameof(data));
+
             this.ReplaceData(this.Length, 0, data);
         }
 
@@ -89,6 +91,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <param name="data">Specifies the string to insert.</param>
         public void InsertData(int offset, string data)
         {
+            Contract.RequiresNotNull(data, nameof(data));
+
             this.ReplaceData(offset, 0, data);
         }
 
@@ -102,6 +106,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <param name="data">Specifies the string to insert.</param>
         public void ReplaceData(int offset, int count, string data)
         {
+            Contract.RequiresNotNull(data, nameof(data));
+
             // See: http://www.w3.org/TR/2015/REC-dom-20151119/#concept-cd-replace
             // To replace data of node node with offset offset, count count, and data data, run these steps:
             data = data ?? String.Empty;

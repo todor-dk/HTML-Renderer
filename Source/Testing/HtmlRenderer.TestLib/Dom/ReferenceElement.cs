@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheArtOfDev.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
@@ -31,7 +32,7 @@ namespace HtmlRenderer.TestLib.Dom
 
             int attribs = reader.ReadInt("Attributes");
             for (int i = 0; i < attribs; i++)
-                this.Attributes.Add(reader.ReadAttrib());
+                this.Attributes.Add(reader.ReadAttrib(this));
         }
 
         public string NamespaceUri { get; private set; }
@@ -74,7 +75,7 @@ namespace HtmlRenderer.TestLib.Dom
             if (!this.CompareWithParentNode(other, context))
                 return false;
 
-            if (!this.Attributes.CompareCollection(other.Attributes, context))
+            if (!this.Attributes.CompareReferenceCollection(other.Attributes, context))
                 return false;
             if (this.ClassList.ArraysEquals(other.ClassList))
                 return false;
@@ -86,16 +87,76 @@ namespace HtmlRenderer.TestLib.Dom
                 return false;
             if (this.NamespaceUri != other.NamespaceUri)
                 return false;
-            if (!this.NextElementSibling.Compare(other.NextElementSibling, context))
+            if (!this.NextElementSibling.CompareReference(other.NextElementSibling, context))
                 return false;
             if (this.Prefix != other.Prefix)
                 return false;
-            if (!this.PreviousElementSibling.Compare(other.PreviousElementSibling, context))
+            if (!this.PreviousElementSibling.CompareReference(other.PreviousElementSibling, context))
                 return false;
             if (this.TagName != other.TagName)
                 return false;
 
             return true;
+        }
+
+        public override bool CompareWith(Node other, CompareContext context)
+        {
+            return this.CompareWithElement(other as Element, context);
+        }
+
+        internal bool CompareWithElement(Element other, CompareContext context)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
+
+            if (!this.CompareWithParentNode(other, context))
+                return false;
+
+            if (!this.Attributes.CompareDomCollection(other.Attributes, context))
+                return false;
+            //if (this.ClassList.ArraysEquals(other.ClassList))
+            //    return false;
+            if (this.ClassName != other.ClassName)
+                return false;
+            if (this.Id != other.Id)
+                return false;
+            if (this.LocalName != other.LocalName)
+                return false;
+            if (this.NamespaceUri != other.NamespaceUri)
+                return false;
+            if (!this.NextElementSibling.CompareDom(other.NextElementSibling, context))
+                return false;
+            if (this.Prefix != other.Prefix)
+                return false;
+            if (!this.PreviousElementSibling.CompareDom(other.PreviousElementSibling, context))
+                return false;
+            if (this.TagName != other.TagName)
+                return false;
+
+            return true;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append('<');
+            sb.Append(this.TagName);
+
+            foreach (var attr in this.Attributes)
+            {
+                sb.Append(' ');
+                sb.Append(attr.Name);
+                sb.Append("=\"");
+                sb.Append(attr.Value);
+                sb.Append("\"");
+            }
+
+            if (this.ChildNodes.Count == 0)
+                sb.Append(" /");
+            sb.Append('>');
+            return sb.ToString();
         }
     }
 }

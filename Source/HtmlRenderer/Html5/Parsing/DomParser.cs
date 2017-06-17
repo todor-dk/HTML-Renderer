@@ -2004,7 +2004,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                         quirks = true;
 
                     if (quirks)
-                        this.DomFactory.SetQuirksMode(QuirksMode.On);
+                        this.DomFactory.SetQuirksMode(QuirksMode.Quirks);
                 }
 
                 // Otherwise, if the document is not an iframe srcdoc document, and the DOCTYPE token matches one of the conditions
@@ -2048,7 +2048,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 if (!this.ParsingContext.IsIFrameSource)
                 {
                     this.InformParseError(Parsing.ParseError.UnexpectedTag);
-                    this.DomFactory.SetQuirksMode(QuirksMode.On);
+                    this.DomFactory.SetQuirksMode(QuirksMode.Quirks);
                 }
 
                 // In any case, switch the insertion mode to "before html", then reprocess the token.
@@ -3448,7 +3448,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // If the Document is not set to quirks mode, and the stack of open elements has a p element
                 // in button scope, then close a p element.
-                if ((this.ParsingContext.Document.QuirksMode != QuirksMode.On) && this.OpenElements.HasElementInButtonScope(Tags.P))
+                if ((this.ParsingContext.Document.QuirksMode != QuirksMode.Quirks) && this.OpenElements.HasElementInButtonScope(Tags.P))
                     this.ClosePElement();
 
                 // Insert an HTML element for the token.

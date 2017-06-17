@@ -83,7 +83,7 @@ namespace HtmlRenderer.TestLib.Dom.Persisting
             this.ResolveNode(nodeId, setter);
         }
 
-        public override ReferenceAttr ReadAttrib()
+        public override ReferenceAttr ReadAttrib(ReferenceElement owner)
         {
             string line = this.Reader.ReadLine()?.Trim();
             if (line == null)
@@ -97,7 +97,7 @@ namespace HtmlRenderer.TestLib.Dom.Persisting
             string name = this.ReadString("Name");
             string value = this.ReadString("Value");
 
-            return new ReferenceAttr(namespaceUri, prefix, localName, name, value);
+            return new ReferenceAttr(owner, namespaceUri, prefix, localName, name, value);
         }
 
         public override string[] ReadStringList(string name)

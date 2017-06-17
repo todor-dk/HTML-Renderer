@@ -11,5 +11,11 @@ namespace HtmlRenderer.TestLib.Dom
         internal readonly HashSet<ReferenceNode> ComparedNodes = new HashSet<ReferenceNode>();
 
         internal readonly Dictionary<ReferenceNode, bool> CompareResults = new Dictionary<ReferenceNode, bool>();
+
+        public bool IgnoreBaseUriExceptForElementAndDocument;
+
+        public bool IgnoreChildrenPropertiesExceptForElement;
+
+        public bool IgnoreDocumentUri;
     }
 }

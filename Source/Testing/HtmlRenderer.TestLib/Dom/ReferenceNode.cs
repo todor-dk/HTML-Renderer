@@ -88,13 +88,13 @@ namespace HtmlRenderer.TestLib.Dom
 
             if (this.BaseUri != other.BaseUri)
                 return false;
-            if (!this.ChildNodes.CompareCollection(other.ChildNodes, context))
+            if (!this.ChildNodes.CompareReferenceCollection(other.ChildNodes, context))
                 return false;
-            if (!this.FirstChild.Compare(other.FirstChild, context))
+            if (!this.FirstChild.CompareReference(other.FirstChild, context))
                 return false;
-            if (!this.LastChild.Compare(other.LastChild, context))
+            if (!this.LastChild.CompareReference(other.LastChild, context))
                 return false;
-            if (!this.NextSibling.Compare(other.NextSibling, context))
+            if (!this.NextSibling.CompareReference(other.NextSibling, context))
                 return false;
             if (this.NodeName != other.NodeName)
                 return false;
@@ -102,13 +102,52 @@ namespace HtmlRenderer.TestLib.Dom
                 return false;
             if (this.NodeValue != other.NodeValue)
                 return false;
-            if (!this.OwnerDocument.Compare(other.OwnerDocument, context))
+            if (!this.OwnerDocument.CompareReference(other.OwnerDocument, context))
                 return false;
-            if (!this.ParentElement.Compare(other.ParentElement, context))
+            if (!this.ParentElement.CompareReference(other.ParentElement, context))
                 return false;
-            if (!this.ParentNode.Compare(other.ParentNode, context))
+            if (!this.ParentNode.CompareReference(other.ParentNode, context))
                 return false;
-            if (!this.PreviousSibling.Compare(other.PreviousSibling, context))
+            if (!this.PreviousSibling.CompareReference(other.PreviousSibling, context))
+                return false;
+            if (this.TextContent != other.TextContent)
+                return false;
+
+            return true;
+        }
+
+        public abstract bool CompareWith(Node other, CompareContext context);
+
+        internal bool CompareWithNode(Node other, CompareContext context)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
+
+            if ((this.BaseUri != other.BaseUri) && !context.IgnoreBaseUriExceptForElementAndDocument && !((this is ReferenceElement) || (this is ReferenceDocument)))
+                return false;
+                if (!this.ChildNodes.CompareDomCollection(other.ChildNodes, context))
+                return false;
+            if (!this.FirstChild.CompareDom(other.FirstChild, context))
+                return false;
+            if (!this.LastChild.CompareDom(other.LastChild, context))
+                return false;
+            if (!this.NextSibling.CompareDom(other.NextSibling, context))
+                return false;
+            if (this.NodeName != other.NodeName)
+                return false;
+            if (this.NodeType != other.NodeType)
+                return false;
+            if (this.NodeValue != other.NodeValue)
+                return false;
+            if (!this.OwnerDocument.CompareDom(other.OwnerDocument, context))
+                return false;
+            if (!this.ParentElement.CompareDom(other.ParentElement, context))
+                return false;
+            if (!this.ParentNode.CompareDom(other.ParentNode, context))
+                return false;
+            if (!this.PreviousSibling.CompareDom(other.PreviousSibling, context))
                 return false;
             if (this.TextContent != other.TextContent)
                 return false;

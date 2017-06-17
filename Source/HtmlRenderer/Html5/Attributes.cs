@@ -14,6 +14,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5
 
         public const string XmlnsXlink = "xmlns:xlink";
 
+        public const string Class = "class";
+
         public const string Form = "form";
+
+        public const string Id = "id";
+
+        public const string Name = "name";
     }
 }

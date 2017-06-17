@@ -12,6 +12,7 @@ namespace HtmlRenderer.TestLib.Dom
         public ReferenceDocument(Persisting.IReader reader, TheArtOfDev.HtmlRenderer.Dom.NodeType type)
             : base(reader, type)
         {
+            this.QuirksMode = QuirksMode.NoQuirks;
             this.Url = reader.ReadString("URL");
             this.DocumentUri = reader.ReadString("DocumentURI");
             this.Origin = reader.ReadString("Origin");
@@ -67,11 +68,48 @@ namespace HtmlRenderer.TestLib.Dom
                 return false;
             if (this.ContentType != other.ContentType)
                 return false;
-            if (!this.DocType.Compare(other.DocType, context))
+            if (!this.DocType.CompareReference(other.DocType, context))
                 return false;
-            if (!this.DocumentElement.Compare(other.DocumentElement, context))
+            if (!this.DocumentElement.CompareReference(other.DocumentElement, context))
                 return false;
             if (this.DocumentUri != other.DocumentUri)
+                return false;
+            if (this.Origin != other.Origin)
+                return false;
+            if (this.QuirksMode != other.QuirksMode)
+                return false;
+            if (this.Url != other.Url)
+                return false;
+
+            return true;
+        }
+
+        public override bool CompareWith(Node other, CompareContext context)
+        {
+            return this.CompareWithDocument(other as Document, context);
+        }
+
+        internal bool CompareWithDocument(Document other, CompareContext context)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
+
+            if (!this.CompareWithParentNode(other, context))
+                return false;
+
+            if (this.CharacterSet != other.CharacterSet)
+                return false;
+            if (this.CompatMode != other.CompatMode)
+                return false;
+            if (this.ContentType != other.ContentType)
+                return false;
+            if (!this.DocType.CompareDom(other.DocType, context))
+                return false;
+            if (!this.DocumentElement.CompareDom(other.DocumentElement, context))
+                return false;
+            if (!context.IgnoreDocumentUri && (this.DocumentUri != other.DocumentUri))
                 return false;
             if (this.Origin != other.Origin)
                 return false;

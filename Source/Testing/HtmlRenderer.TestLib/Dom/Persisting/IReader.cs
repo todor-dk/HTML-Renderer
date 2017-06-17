@@ -18,7 +18,7 @@ namespace HtmlRenderer.TestLib.Dom.Persisting
 
         void ReadElement(string name, Action<ReferenceElement> setter);
 
-        ReferenceAttr ReadAttrib();
+        ReferenceAttr ReadAttrib(ReferenceElement owner);
 
         string[] ReadStringList(string name);
 

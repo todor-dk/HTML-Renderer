@@ -221,14 +221,23 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
 
         internal Element GetNamedElement(string name)
         {
+            // See: http://www.w3.org/TR/2015/REC-dom-20151119/#dom-htmlcollection-nameditem
+            // 1. If key is the empty string, return null.
+            if (String.IsNullOrEmpty(name))
+                return null;
+
             // Brute force ... we may optimize in the future
             IEnumerator<Element> enumerator = this.GetElementEnumerator();
             while (enumerator.MoveNext())
             {
+                // 2. Return the first element in the collection for which at least one of the following is true:
+                //      * it has an ID which is key. 
+                //      * it has a name attribute whose value is key;
                 if (enumerator.Current.IsNamed(name))
                     return enumerator.Current;
             }
 
+            // ... or null if there is no such element.
             return null;
         }
 

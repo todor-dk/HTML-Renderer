@@ -73,6 +73,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
 
         Dom.Element HtmlCollection.NamedItem(string name)
         {
+            Contract.RequiresNotNull(name, nameof(name));
+
             return null;
         }
 

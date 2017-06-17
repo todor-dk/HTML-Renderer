@@ -14,9 +14,9 @@ namespace TheArtOfDev.HtmlRenderer
             get { return false; }
         }
 
-        public Dom.Document CreateDocument(string baseUri)
+        public Dom.Document CreateHtmlDocument(string baseUri, string characterSet)
         {
-            return new Internal.DomImplementation.Document(this, baseUri);
+            return new Internal.DomImplementation.HtmlDocument(this, baseUri, characterSet);
         }
     }
 }

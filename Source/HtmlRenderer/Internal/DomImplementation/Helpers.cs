@@ -11,7 +11,16 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         public static string GetTextContent(this Node self)
         {
             // The concatenation of data of all the Text node descendants of the context object, in tree order.
-            throw new NotImplementedException();
+            StringBuilder sb = new StringBuilder();
+            self.Accept(
+                node =>
+                {
+                    Text text = node as Text;
+                    if (text != null)
+                        sb.Append(text.Data);
+                },
+                true);
+            return sb.ToString();
         }
 
         public static string SetTextContent(this Node self, string data)

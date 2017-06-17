@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheArtOfDev.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
@@ -24,6 +25,24 @@ namespace HtmlRenderer.TestLib.Dom
         }
 
         internal bool CompareWithComment(ReferenceComment other, CompareContext context)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
+
+            if (!this.CompareWithCharacterData(other, context))
+                return false;
+
+            return true;
+        }
+
+        public override bool CompareWith(Node other, CompareContext context)
+        {
+            return this.CompareWithComment(other as Comment, context);
+        }
+
+        internal bool CompareWithComment(Comment other, CompareContext context)
         {
             if (Object.ReferenceEquals(this, other))
                 return true;

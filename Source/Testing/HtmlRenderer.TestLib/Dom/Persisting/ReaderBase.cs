@@ -16,7 +16,7 @@ namespace HtmlRenderer.TestLib.Dom.Persisting
 
         protected ReferenceNode Root;
 
-        public abstract ReferenceAttr ReadAttrib();
+        public abstract ReferenceAttr ReadAttrib(ReferenceElement owner);
 
         public void ReadElement(string name, Action<ReferenceElement> setter)
         {

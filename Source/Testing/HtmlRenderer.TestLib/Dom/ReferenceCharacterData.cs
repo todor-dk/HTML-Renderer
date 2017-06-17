@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheArtOfDev.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
@@ -39,10 +40,35 @@ namespace HtmlRenderer.TestLib.Dom
                 return false;
             if (this.Length != other.Length)
                 return false;
-            if (!this.NextElementSibling.Compare(other.NextElementSibling, context))
+            if (!this.NextElementSibling.CompareReference(other.NextElementSibling, context))
                 return false;
-            if (!this.PreviousElementSibling.Compare(other.PreviousElementSibling, context))
+            if (!this.PreviousElementSibling.CompareReference(other.PreviousElementSibling, context))
                 return false;
+
+            return true;
+        }
+
+        internal bool CompareWithCharacterData(CharacterData other, CompareContext context)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
+
+            if (!this.CompareWithNode(other, context))
+                return false;
+
+            if (this.Data != other.Data)
+                return false;
+            if (this.Length != other.Length)
+                return false;
+            if (!context.IgnoreChildrenPropertiesExceptForElement)
+            {
+                if (!this.NextElementSibling.CompareDom(other.NextElementSibling, context))
+                    return false;
+                if (!this.PreviousElementSibling.CompareDom(other.PreviousElementSibling, context))
+                    return false;
+            }
 
             return true;
         }

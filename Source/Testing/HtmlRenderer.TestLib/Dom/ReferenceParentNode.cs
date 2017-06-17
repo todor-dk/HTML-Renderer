@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheArtOfDev.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
@@ -43,12 +44,37 @@ namespace HtmlRenderer.TestLib.Dom
 
             if (this.ChildElementCount != other.ChildElementCount)
                 return false;
-            if (!this.Children.CompareCollection(other.Children, context))
+            if (!this.Children.CompareReferenceCollection(other.Children, context))
                 return false;
-            if (!this.FirstElementChild.Compare(other.FirstElementChild, context))
+            if (!this.FirstElementChild.CompareReference(other.FirstElementChild, context))
                 return false;
-            if (!this.LastElementChild.Compare(other.LastElementChild, context))
+            if (!this.LastElementChild.CompareReference(other.LastElementChild, context))
                 return false;
+
+            return true;
+        }
+
+        internal bool CompareWithParentNode(ParentNode other, CompareContext context)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
+
+            if (!this.CompareWithNode((Node)other, context))
+                return false;
+
+            if (!context.IgnoreChildrenPropertiesExceptForElement || (this is ReferenceElement))
+            {
+                if (this.ChildElementCount != other.ChildElementCount)
+                    return false;
+                if (!this.Children.CompareDomCollection(other.Children, context))
+                    return false;
+                if (!this.FirstElementChild.CompareDom(other.FirstElementChild, context))
+                    return false;
+                if (!this.LastElementChild.CompareDom(other.LastElementChild, context))
+                    return false;
+            }
 
             return true;
         }

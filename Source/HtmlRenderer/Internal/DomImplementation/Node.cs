@@ -159,6 +159,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <returns>The appended child.</returns>
         public virtual Dom.Node AppendChild(Dom.Node node)
         {
+            Contract.RequiresNotNull(node, nameof(node));
+
             throw new Dom.Exceptions.HierarchyRequestException();
         }
 
@@ -272,6 +274,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <returns>The inserted node.</returns>
         public virtual Dom.Node InsertBefore(Dom.Node newChild, Dom.Node referenceChild)
         {
+            Contract.RequiresNotNull(newChild, nameof(newChild));
+
             throw new Dom.Exceptions.HierarchyRequestException();
         }
 
@@ -367,6 +371,8 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <exception cref="NotFoundException">If <paramref name="child"/>'s <see cref="Node.ParentNode"/> is not this node.</exception>
         public virtual Dom.Node RemoveChild(Dom.Node child)
         {
+            Contract.RequiresNotNull(child, nameof(child));
+
             // If child's parent is not parent, throw a "NotFoundError" exception.
             // Well, it cannot be here in the base class. See overrides.
             throw new Dom.Exceptions.NotFoundException();
@@ -380,6 +386,9 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         /// <returns>The replaced node. This is the same node as oldChild.</returns>
         public virtual Dom.Node ReplaceChild(Dom.Node newChild, Dom.Node existingChild)
         {
+            Contract.RequiresNotNull(newChild, nameof(newChild));
+            Contract.RequiresNotNull(existingChild, nameof(existingChild));
+
             // See: http://www.w3.org/TR/2015/REC-dom-20151119/#concept-node-replace
             // To replace a child with node within a parent, run these steps:
 
@@ -471,6 +480,17 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         internal Document Document
         {
             get { return (Document)this.OwnerDocument ?? (this as Document); }
+        }
+
+        internal void Accept(Action<Node> visitor, bool childrenOnly = false)
+        {
+            if (!childrenOnly)
+                visitor(this);
+
+            (this.FirstChild as Node)?.Accept(visitor, false);
+
+            if (!childrenOnly)
+                (this.NextSibling as Node)?.Accept(visitor, false);
         }
 
         #endregion
