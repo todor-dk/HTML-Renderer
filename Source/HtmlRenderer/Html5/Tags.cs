@@ -285,7 +285,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5
         internal static bool IsSpecial(this Element self)
         {
             Contract.RequiresNotNull(self, nameof(self));
-            return Tags.IsSpecial(self.TagName);
+            return Tags.IsSpecial(self.GetTagName());
         }
 
         /// <summary>
@@ -310,7 +310,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5
         internal static bool IsFormatting(this Element self)
         {
             Contract.RequiresNotNull(self, nameof(self));
-            return Tags.IsFormatting(self.TagName);
+            return Tags.IsFormatting(self.GetTagName());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -319,28 +319,28 @@ namespace TheArtOfDev.HtmlRenderer.Html5
             Contract.RequiresNotNull(self, nameof(self));
             if (other == null)
                 return false;
-            return self.TagName == other.TagName;
+            return self.GetTagName() == other.GetTagName();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool Is(this Element self, string tagName)
         {
             Contract.RequiresNotNull(self, nameof(self));
-            return self.TagName == tagName;
+            return self.GetTagName() == tagName;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool Is(this Element self, string tagName1, string tagName2)
         {
             Contract.RequiresNotNull(self, nameof(self));
-            return (self.TagName == tagName1) || (self.TagName == tagName2);
+            return (self.GetTagName() == tagName1) || (self.GetTagName() == tagName2);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool Is(this Element self, string tagName1, string tagName2, string tagName3)
         {
             Contract.RequiresNotNull(self, nameof(self));
-            return (self.TagName == tagName1) || (self.TagName == tagName2) || (self.TagName == tagName3);
+            return (self.GetTagName() == tagName1) || (self.GetTagName() == tagName2) || (self.GetTagName() == tagName3);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -352,7 +352,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5
 
             for (int i = 0; i < tagNames.Length; i++)
             {
-                if (self.TagName == tagNames[i])
+                if (self.GetTagName() == tagNames[i])
                     return true;
             }
 

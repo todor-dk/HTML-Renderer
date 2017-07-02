@@ -98,12 +98,9 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         }
 
         /// <summary>
-        /// Not Implemented. See: http://www.w3.org/TR/2015/REC-dom-20151119/#dom-document-contenttype
+        /// Returns the documents content type. See: http://www.w3.org/TR/2015/REC-dom-20151119/#dom-document-contenttype
         /// </summary>
-        public string ContentType
-        {
-            get { return null; }
-        }
+        public abstract string ContentType { get; }
 
         /// <summary>
         /// Returns the child of the document that is a <see cref="DocumentType"/>, and null otherwise.

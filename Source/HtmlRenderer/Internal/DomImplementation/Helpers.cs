@@ -206,7 +206,6 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
             // var associatedHost = (b as DocumentFragment)?
 
             // Note: The DocumentFragment node's host concept is useful for HTML's template element and the ShadowRoot object and impacts the pre - insert and replace algorithms.
-
             return false;
         }
 

@@ -55,19 +55,17 @@ namespace HtmlRenderer.UnitTests
             Assert.IsNotNull(root);
 
             var cc = new TestLib.Dom.CompareContext();
-            cc.IgnoreBaseUriExceptForElementAndDocument = true;
-            cc.IgnoreChildrenPropertiesExceptForElement = true; // IE only support child elements for element nodes (not other)
-            cc.IgnoreDocumentUri = true;
+            cc.IgnoreDocumentOrigin = true;
             var eq = root.CompareWith(doc, cc);
             Assert.IsTrue(eq);
         }
 
         public static Document CreateAcidDom(BrowsingContext context)
         {
-            Document doc = context.CreateHtmlDocument("http://localhost:14873/DomAnalyzer.html", "utf-8");
+            Document doc = context.CreateHtmlDocument("http://localhost/Test/acid1.htm", "windows-1252");
 
             // DocType !!!
-            DocumentType doctype = doc.Implementation.CreateDocumentType("html", String.Empty, String.Empty);
+            DocumentType doctype = doc.Implementation.CreateDocumentType("html", "-//W3C//DTD HTML 4.0//EN", "http://www.w3.org/TR/REC-html40/strict.dtd");
             doc.AppendChild(doctype);
 
             Element html = doc.CreateElement("html");
@@ -85,7 +83,7 @@ namespace HtmlRenderer.UnitTests
             style.AppendChild(doc.CreateTextNode("\n/* last modified: 1 Dec 98 */ \t\n\nhtml {\nfont: 10px/1 Verdana, sans-serif;\nbackground-color: blue;\ncolor: white;\n}\n\nbody {\nmargin: 1.5em;\nborder: .5em solid black;\npadding: 0;\nwidth: 48em;\nbackground-color: white;\n}\n\ndl {\nmargin: 0;\nborder: 0;\npadding: .5em;\n}\n\ndt { \nbackground-color: rgb(204,0,0);\nmargin: 0; \npadding: 1em;\nwidth: 10.638%; /* refers to parent element's width of 47em. = 5em or 50px */\nheight: 28em;\nborder: .5em solid black;\nfloat: left;\n}\n\ndd {\nfloat: right;\nmargin: 0 0 0 1em;\nborder: 1em solid black;\npadding: 1em;\nwidth: 34em;\nheight: 27em;\n}\n\nul {\nmargin: 0;\nborder: 0;\npadding: 0;\n}\n\nli {\ndisplay: block; /* i.e., suppress marker */\ncolor: black;\nheight: 9em;\nwidth: 5em;\nmargin: 0;\nborder: .5em solid black;\npadding: 1em;\nfloat: left;\nbackground-color: #FC0;\n}\n\n#bar {\nbackground-color: black;\ncolor: white;\nwidth: 41.17%; /* = 14em */\nborder: 0;\nmargin: 0 1em;\n}\n\n#baz {\nmargin: 1em 0;\nborder: 0;\npadding: 1em;\nwidth: 10em;\nheight: 10em;\nbackground-color: black;\ncolor: white;\n}\n\nform { \nmargin: 0;\ndisplay: inline;\n}\n\np { \nmargin: 0;\n}\n\nform p {\nline-height: 1.9;\n}\n\nblockquote {\nmargin: 1em 1em 1em 2em;\nborder-width: 1em 1.5em 2em .5em;\nborder-style: solid;\nborder-color: black;\npadding: 1em 0;\nwidth: 5em;\nheight: 9em;\nfloat: left;\nbackground-color: #FC0;\ncolor: black;\n}\n\naddress {\nfont-style: normal;\n}\n\nh1 {\nbackground-color: black;\ncolor: white;\nfloat: left;\nmargin: 1em 0;\nborder: 0;\npadding: 1em;\nwidth: 10em;\nheight: 10em;\nfont-weight: normal;\nfont-size: 1em;\n}\n  "));
             head.AppendChild(doc.CreateTextNode("\n\t"));
             html.AppendChild(doc.CreateTextNode("\n\t"));
-
+            
             // BODY
             Element body = doc.CreateElement("body");
             html.AppendChild(body);
@@ -194,7 +192,7 @@ namespace HtmlRenderer.UnitTests
         public const string Acid1Dom = @"NodeId : 0
 NodeType : 9
 NodeName : #document
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : null 
 ParentNode : null 
 ParentElement : null 
@@ -205,23 +203,23 @@ NextSibling : null
 NodeValue : === null
 TextContent : === null
 ChildNodes : 2 : 1, 2
-ChildElementCount : undefined
-FirstElementChild : undefined 
-LastElementChild : undefined 
-Children : undefined 
-URL : http://localhost:14873/DomAnalyzer.html
-DocumentURI : === undefined
-Origin : === undefined
+ChildElementCount : 1
+FirstElementChild : 2
+LastElementChild : 2
+Children : 1 : 2
+URL : http://localhost/Test/acid1.htm
+DocumentURI : http://localhost/Test/acid1.htm
+Origin : http://localhost
 CompatMode : CSS1Compat
-CharacterSet : utf-8
-ContentType : === undefined
+CharacterSet : windows-1252
+ContentType : text/html
 DocType : 1
 DocumentElement : 2
 
 NodeId : 1
 NodeType : 10
 NodeName : html
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 0
 ParentElement : null 
@@ -233,13 +231,13 @@ NodeValue : === null
 TextContent : === null
 ChildNodes : 0 : 
 Name : html
-PublicId : === empty
-SystemId : === empty
+PublicId : -//W3C//DTD HTML 4.0//EN
+SystemId : http://www.w3.org/TR/REC-html40/strict.dtd
 
 NodeId : 2
 NodeType : 1
 NodeName : HTML
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 0
 ParentElement : null 
@@ -268,7 +266,7 @@ Attributes : 0
 NodeId : 3
 NodeType : 1
 NodeName : HEAD
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 2
 ParentElement : 2
@@ -297,7 +295,7 @@ Attributes : 0
 NodeId : 4
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 3
 ParentElement : 3
@@ -308,8 +306,8 @@ NextSibling : 5
 NodeValue : == CgkJ
 TextContent : == CgkJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : 5
 Data : == CgkJ
 Length : 3
 WholeText : == CgkJ
@@ -317,7 +315,7 @@ WholeText : == CgkJ
 NodeId : 5
 NodeType : 1
 NodeName : TITLE
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 3
 ParentElement : 3
@@ -346,7 +344,7 @@ Attributes : 0
 NodeId : 6
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 5
 ParentElement : 5
@@ -357,8 +355,8 @@ NextSibling : null
 NodeValue : == CgkJCSBkaXNwbGF5L2JveC9mbG9hdC9jbGVhciB0ZXN0IAoJCQ==
 TextContent : == CgkJCSBkaXNwbGF5L2JveC9mbG9hdC9jbGVhciB0ZXN0IAoJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : null 
 Data : == CgkJCSBkaXNwbGF5L2JveC9mbG9hdC9jbGVhciB0ZXN0IAoJCQ==
 Length : 37
 WholeText : == CgkJCSBkaXNwbGF5L2JveC9mbG9hdC9jbGVhciB0ZXN0IAoJCQ==
@@ -366,7 +364,7 @@ WholeText : == CgkJCSBkaXNwbGF5L2JveC9mbG9hdC9jbGVhciB0ZXN0IAoJCQ==
 NodeId : 7
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 3
 ParentElement : 3
@@ -377,8 +375,8 @@ NextSibling : 8
 NodeValue : == CiAJ
 TextContent : == CiAJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 5
+NextElementSibling : 8
 Data : == CiAJ
 Length : 3
 WholeText : == CiAJ
@@ -386,7 +384,7 @@ WholeText : == CiAJ
 NodeId : 8
 NodeType : 1
 NodeName : STYLE
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 3
 ParentElement : 3
@@ -421,7 +419,7 @@ Value : text/css
 NodeId : 9
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 8
 ParentElement : 8
@@ -432,8 +430,8 @@ NextSibling : null
 NodeValue : == Ci8qIGxhc3QgbW9kaWZpZWQ6IDEgRGVjIDk4ICovIAkKCmh0bWwgewpmb250OiAxMHB4LzEgVmVyZGFuYSwgc2Fucy1zZXJpZjsKYmFja2dyb3VuZC1jb2xvcjogYmx1ZTsKY29sb3I6IHdoaXRlOwp9Cgpib2R5IHsKbWFyZ2luOiAxLjVlbTsKYm9yZGVyOiAuNWVtIHNvbGlkIGJsYWNrOwpwYWRkaW5nOiAwOwp3aWR0aDogNDhlbTsKYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7Cn0KCmRsIHsKbWFyZ2luOiAwOwpib3JkZXI6IDA7CnBhZGRpbmc6IC41ZW07Cn0KCmR0IHsgCmJhY2tncm91bmQtY29sb3I6IHJnYigyMDQsMCwwKTsKbWFyZ2luOiAwOyAKcGFkZGluZzogMWVtOwp3aWR0aDogMTAuNjM4JTsgLyogcmVmZXJzIHRvIHBhcmVudCBlbGVtZW50J3Mgd2lkdGggb2YgNDdlbS4gPSA1ZW0gb3IgNTBweCAqLwpoZWlnaHQ6IDI4ZW07CmJvcmRlcjogLjVlbSBzb2xpZCBibGFjazsKZmxvYXQ6IGxlZnQ7Cn0KCmRkIHsKZmxvYXQ6IHJpZ2h0OwptYXJnaW46IDAgMCAwIDFlbTsKYm9yZGVyOiAxZW0gc29saWQgYmxhY2s7CnBhZGRpbmc6IDFlbTsKd2lkdGg6IDM0ZW07CmhlaWdodDogMjdlbTsKfQoKdWwgewptYXJnaW46IDA7CmJvcmRlcjogMDsKcGFkZGluZzogMDsKfQoKbGkgewpkaXNwbGF5OiBibG9jazsgLyogaS5lLiwgc3VwcHJlc3MgbWFya2VyICovCmNvbG9yOiBibGFjazsKaGVpZ2h0OiA5ZW07CndpZHRoOiA1ZW07Cm1hcmdpbjogMDsKYm9yZGVyOiAuNWVtIHNvbGlkIGJsYWNrOwpwYWRkaW5nOiAxZW07CmZsb2F0OiBsZWZ0OwpiYWNrZ3JvdW5kLWNvbG9yOiAjRkMwOwp9CgojYmFyIHsKYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7CmNvbG9yOiB3aGl0ZTsKd2lkdGg6IDQxLjE3JTsgLyogPSAxNGVtICovCmJvcmRlcjogMDsKbWFyZ2luOiAwIDFlbTsKfQoKI2JheiB7Cm1hcmdpbjogMWVtIDA7CmJvcmRlcjogMDsKcGFkZGluZzogMWVtOwp3aWR0aDogMTBlbTsKaGVpZ2h0OiAxMGVtOwpiYWNrZ3JvdW5kLWNvbG9yOiBibGFjazsKY29sb3I6IHdoaXRlOwp9Cgpmb3JtIHsgCm1hcmdpbjogMDsKZGlzcGxheTogaW5saW5lOwp9CgpwIHsgCm1hcmdpbjogMDsKfQoKZm9ybSBwIHsKbGluZS1oZWlnaHQ6IDEuOTsKfQoKYmxvY2txdW90ZSB7Cm1hcmdpbjogMWVtIDFlbSAxZW0gMmVtOwpib3JkZXItd2lkdGg6IDFlbSAxLjVlbSAyZW0gLjVlbTsKYm9yZGVyLXN0eWxlOiBzb2xpZDsKYm9yZGVyLWNvbG9yOiBibGFjazsKcGFkZGluZzogMWVtIDA7CndpZHRoOiA1ZW07CmhlaWdodDogOWVtOwpmbG9hdDogbGVmdDsKYmFja2dyb3VuZC1jb2xvcjogI0ZDMDsKY29sb3I6IGJsYWNrOwp9CgphZGRyZXNzIHsKZm9udC1zdHlsZTogbm9ybWFsOwp9CgpoMSB7CmJhY2tncm91bmQtY29sb3I6IGJsYWNrOwpjb2xvcjogd2hpdGU7CmZsb2F0OiBsZWZ0OwptYXJnaW46IDFlbSAwOwpib3JkZXI6IDA7CnBhZGRpbmc6IDFlbTsKd2lkdGg6IDEwZW07CmhlaWdodDogMTBlbTsKZm9udC13ZWlnaHQ6IG5vcm1hbDsKZm9udC1zaXplOiAxZW07Cn0KICA=
 TextContent : == Ci8qIGxhc3QgbW9kaWZpZWQ6IDEgRGVjIDk4ICovIAkKCmh0bWwgewpmb250OiAxMHB4LzEgVmVyZGFuYSwgc2Fucy1zZXJpZjsKYmFja2dyb3VuZC1jb2xvcjogYmx1ZTsKY29sb3I6IHdoaXRlOwp9Cgpib2R5IHsKbWFyZ2luOiAxLjVlbTsKYm9yZGVyOiAuNWVtIHNvbGlkIGJsYWNrOwpwYWRkaW5nOiAwOwp3aWR0aDogNDhlbTsKYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7Cn0KCmRsIHsKbWFyZ2luOiAwOwpib3JkZXI6IDA7CnBhZGRpbmc6IC41ZW07Cn0KCmR0IHsgCmJhY2tncm91bmQtY29sb3I6IHJnYigyMDQsMCwwKTsKbWFyZ2luOiAwOyAKcGFkZGluZzogMWVtOwp3aWR0aDogMTAuNjM4JTsgLyogcmVmZXJzIHRvIHBhcmVudCBlbGVtZW50J3Mgd2lkdGggb2YgNDdlbS4gPSA1ZW0gb3IgNTBweCAqLwpoZWlnaHQ6IDI4ZW07CmJvcmRlcjogLjVlbSBzb2xpZCBibGFjazsKZmxvYXQ6IGxlZnQ7Cn0KCmRkIHsKZmxvYXQ6IHJpZ2h0OwptYXJnaW46IDAgMCAwIDFlbTsKYm9yZGVyOiAxZW0gc29saWQgYmxhY2s7CnBhZGRpbmc6IDFlbTsKd2lkdGg6IDM0ZW07CmhlaWdodDogMjdlbTsKfQoKdWwgewptYXJnaW46IDA7CmJvcmRlcjogMDsKcGFkZGluZzogMDsKfQoKbGkgewpkaXNwbGF5OiBibG9jazsgLyogaS5lLiwgc3VwcHJlc3MgbWFya2VyICovCmNvbG9yOiBibGFjazsKaGVpZ2h0OiA5ZW07CndpZHRoOiA1ZW07Cm1hcmdpbjogMDsKYm9yZGVyOiAuNWVtIHNvbGlkIGJsYWNrOwpwYWRkaW5nOiAxZW07CmZsb2F0OiBsZWZ0OwpiYWNrZ3JvdW5kLWNvbG9yOiAjRkMwOwp9CgojYmFyIHsKYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7CmNvbG9yOiB3aGl0ZTsKd2lkdGg6IDQxLjE3JTsgLyogPSAxNGVtICovCmJvcmRlcjogMDsKbWFyZ2luOiAwIDFlbTsKfQoKI2JheiB7Cm1hcmdpbjogMWVtIDA7CmJvcmRlcjogMDsKcGFkZGluZzogMWVtOwp3aWR0aDogMTBlbTsKaGVpZ2h0OiAxMGVtOwpiYWNrZ3JvdW5kLWNvbG9yOiBibGFjazsKY29sb3I6IHdoaXRlOwp9Cgpmb3JtIHsgCm1hcmdpbjogMDsKZGlzcGxheTogaW5saW5lOwp9CgpwIHsgCm1hcmdpbjogMDsKfQoKZm9ybSBwIHsKbGluZS1oZWlnaHQ6IDEuOTsKfQoKYmxvY2txdW90ZSB7Cm1hcmdpbjogMWVtIDFlbSAxZW0gMmVtOwpib3JkZXItd2lkdGg6IDFlbSAxLjVlbSAyZW0gLjVlbTsKYm9yZGVyLXN0eWxlOiBzb2xpZDsKYm9yZGVyLWNvbG9yOiBibGFjazsKcGFkZGluZzogMWVtIDA7CndpZHRoOiA1ZW07CmhlaWdodDogOWVtOwpmbG9hdDogbGVmdDsKYmFja2dyb3VuZC1jb2xvcjogI0ZDMDsKY29sb3I6IGJsYWNrOwp9CgphZGRyZXNzIHsKZm9udC1zdHlsZTogbm9ybWFsOwp9CgpoMSB7CmJhY2tncm91bmQtY29sb3I6IGJsYWNrOwpjb2xvcjogd2hpdGU7CmZsb2F0OiBsZWZ0OwptYXJnaW46IDFlbSAwOwpib3JkZXI6IDA7CnBhZGRpbmc6IDFlbTsKd2lkdGg6IDEwZW07CmhlaWdodDogMTBlbTsKZm9udC13ZWlnaHQ6IG5vcm1hbDsKZm9udC1zaXplOiAxZW07Cn0KICA=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : null 
 Data : == Ci8qIGxhc3QgbW9kaWZpZWQ6IDEgRGVjIDk4ICovIAkKCmh0bWwgewpmb250OiAxMHB4LzEgVmVyZGFuYSwgc2Fucy1zZXJpZjsKYmFja2dyb3VuZC1jb2xvcjogYmx1ZTsKY29sb3I6IHdoaXRlOwp9Cgpib2R5IHsKbWFyZ2luOiAxLjVlbTsKYm9yZGVyOiAuNWVtIHNvbGlkIGJsYWNrOwpwYWRkaW5nOiAwOwp3aWR0aDogNDhlbTsKYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7Cn0KCmRsIHsKbWFyZ2luOiAwOwpib3JkZXI6IDA7CnBhZGRpbmc6IC41ZW07Cn0KCmR0IHsgCmJhY2tncm91bmQtY29sb3I6IHJnYigyMDQsMCwwKTsKbWFyZ2luOiAwOyAKcGFkZGluZzogMWVtOwp3aWR0aDogMTAuNjM4JTsgLyogcmVmZXJzIHRvIHBhcmVudCBlbGVtZW50J3Mgd2lkdGggb2YgNDdlbS4gPSA1ZW0gb3IgNTBweCAqLwpoZWlnaHQ6IDI4ZW07CmJvcmRlcjogLjVlbSBzb2xpZCBibGFjazsKZmxvYXQ6IGxlZnQ7Cn0KCmRkIHsKZmxvYXQ6IHJpZ2h0OwptYXJnaW46IDAgMCAwIDFlbTsKYm9yZGVyOiAxZW0gc29saWQgYmxhY2s7CnBhZGRpbmc6IDFlbTsKd2lkdGg6IDM0ZW07CmhlaWdodDogMjdlbTsKfQoKdWwgewptYXJnaW46IDA7CmJvcmRlcjogMDsKcGFkZGluZzogMDsKfQoKbGkgewpkaXNwbGF5OiBibG9jazsgLyogaS5lLiwgc3VwcHJlc3MgbWFya2VyICovCmNvbG9yOiBibGFjazsKaGVpZ2h0OiA5ZW07CndpZHRoOiA1ZW07Cm1hcmdpbjogMDsKYm9yZGVyOiAuNWVtIHNvbGlkIGJsYWNrOwpwYWRkaW5nOiAxZW07CmZsb2F0OiBsZWZ0OwpiYWNrZ3JvdW5kLWNvbG9yOiAjRkMwOwp9CgojYmFyIHsKYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7CmNvbG9yOiB3aGl0ZTsKd2lkdGg6IDQxLjE3JTsgLyogPSAxNGVtICovCmJvcmRlcjogMDsKbWFyZ2luOiAwIDFlbTsKfQoKI2JheiB7Cm1hcmdpbjogMWVtIDA7CmJvcmRlcjogMDsKcGFkZGluZzogMWVtOwp3aWR0aDogMTBlbTsKaGVpZ2h0OiAxMGVtOwpiYWNrZ3JvdW5kLWNvbG9yOiBibGFjazsKY29sb3I6IHdoaXRlOwp9Cgpmb3JtIHsgCm1hcmdpbjogMDsKZGlzcGxheTogaW5saW5lOwp9CgpwIHsgCm1hcmdpbjogMDsKfQoKZm9ybSBwIHsKbGluZS1oZWlnaHQ6IDEuOTsKfQoKYmxvY2txdW90ZSB7Cm1hcmdpbjogMWVtIDFlbSAxZW0gMmVtOwpib3JkZXItd2lkdGg6IDFlbSAxLjVlbSAyZW0gLjVlbTsKYm9yZGVyLXN0eWxlOiBzb2xpZDsKYm9yZGVyLWNvbG9yOiBibGFjazsKcGFkZGluZzogMWVtIDA7CndpZHRoOiA1ZW07CmhlaWdodDogOWVtOwpmbG9hdDogbGVmdDsKYmFja2dyb3VuZC1jb2xvcjogI0ZDMDsKY29sb3I6IGJsYWNrOwp9CgphZGRyZXNzIHsKZm9udC1zdHlsZTogbm9ybWFsOwp9CgpoMSB7CmJhY2tncm91bmQtY29sb3I6IGJsYWNrOwpjb2xvcjogd2hpdGU7CmZsb2F0OiBsZWZ0OwptYXJnaW46IDFlbSAwOwpib3JkZXI6IDA7CnBhZGRpbmc6IDFlbTsKd2lkdGg6IDEwZW07CmhlaWdodDogMTBlbTsKZm9udC13ZWlnaHQ6IG5vcm1hbDsKZm9udC1zaXplOiAxZW07Cn0KICA=
 Length : 1502
 WholeText : == Ci8qIGxhc3QgbW9kaWZpZWQ6IDEgRGVjIDk4ICovIAkKCmh0bWwgewpmb250OiAxMHB4LzEgVmVyZGFuYSwgc2Fucy1zZXJpZjsKYmFja2dyb3VuZC1jb2xvcjogYmx1ZTsKY29sb3I6IHdoaXRlOwp9Cgpib2R5IHsKbWFyZ2luOiAxLjVlbTsKYm9yZGVyOiAuNWVtIHNvbGlkIGJsYWNrOwpwYWRkaW5nOiAwOwp3aWR0aDogNDhlbTsKYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7Cn0KCmRsIHsKbWFyZ2luOiAwOwpib3JkZXI6IDA7CnBhZGRpbmc6IC41ZW07Cn0KCmR0IHsgCmJhY2tncm91bmQtY29sb3I6IHJnYigyMDQsMCwwKTsKbWFyZ2luOiAwOyAKcGFkZGluZzogMWVtOwp3aWR0aDogMTAuNjM4JTsgLyogcmVmZXJzIHRvIHBhcmVudCBlbGVtZW50J3Mgd2lkdGggb2YgNDdlbS4gPSA1ZW0gb3IgNTBweCAqLwpoZWlnaHQ6IDI4ZW07CmJvcmRlcjogLjVlbSBzb2xpZCBibGFjazsKZmxvYXQ6IGxlZnQ7Cn0KCmRkIHsKZmxvYXQ6IHJpZ2h0OwptYXJnaW46IDAgMCAwIDFlbTsKYm9yZGVyOiAxZW0gc29saWQgYmxhY2s7CnBhZGRpbmc6IDFlbTsKd2lkdGg6IDM0ZW07CmhlaWdodDogMjdlbTsKfQoKdWwgewptYXJnaW46IDA7CmJvcmRlcjogMDsKcGFkZGluZzogMDsKfQoKbGkgewpkaXNwbGF5OiBibG9jazsgLyogaS5lLiwgc3VwcHJlc3MgbWFya2VyICovCmNvbG9yOiBibGFjazsKaGVpZ2h0OiA5ZW07CndpZHRoOiA1ZW07Cm1hcmdpbjogMDsKYm9yZGVyOiAuNWVtIHNvbGlkIGJsYWNrOwpwYWRkaW5nOiAxZW07CmZsb2F0OiBsZWZ0OwpiYWNrZ3JvdW5kLWNvbG9yOiAjRkMwOwp9CgojYmFyIHsKYmFja2dyb3VuZC1jb2xvcjogYmxhY2s7CmNvbG9yOiB3aGl0ZTsKd2lkdGg6IDQxLjE3JTsgLyogPSAxNGVtICovCmJvcmRlcjogMDsKbWFyZ2luOiAwIDFlbTsKfQoKI2JheiB7Cm1hcmdpbjogMWVtIDA7CmJvcmRlcjogMDsKcGFkZGluZzogMWVtOwp3aWR0aDogMTBlbTsKaGVpZ2h0OiAxMGVtOwpiYWNrZ3JvdW5kLWNvbG9yOiBibGFjazsKY29sb3I6IHdoaXRlOwp9Cgpmb3JtIHsgCm1hcmdpbjogMDsKZGlzcGxheTogaW5saW5lOwp9CgpwIHsgCm1hcmdpbjogMDsKfQoKZm9ybSBwIHsKbGluZS1oZWlnaHQ6IDEuOTsKfQoKYmxvY2txdW90ZSB7Cm1hcmdpbjogMWVtIDFlbSAxZW0gMmVtOwpib3JkZXItd2lkdGg6IDFlbSAxLjVlbSAyZW0gLjVlbTsKYm9yZGVyLXN0eWxlOiBzb2xpZDsKYm9yZGVyLWNvbG9yOiBibGFjazsKcGFkZGluZzogMWVtIDA7CndpZHRoOiA1ZW07CmhlaWdodDogOWVtOwpmbG9hdDogbGVmdDsKYmFja2dyb3VuZC1jb2xvcjogI0ZDMDsKY29sb3I6IGJsYWNrOwp9CgphZGRyZXNzIHsKZm9udC1zdHlsZTogbm9ybWFsOwp9CgpoMSB7CmJhY2tncm91bmQtY29sb3I6IGJsYWNrOwpjb2xvcjogd2hpdGU7CmZsb2F0OiBsZWZ0OwptYXJnaW46IDFlbSAwOwpib3JkZXI6IDA7CnBhZGRpbmc6IDFlbTsKd2lkdGg6IDEwZW07CmhlaWdodDogMTBlbTsKZm9udC13ZWlnaHQ6IG5vcm1hbDsKZm9udC1zaXplOiAxZW07Cn0KICA=
@@ -441,7 +439,7 @@ WholeText : == Ci8qIGxhc3QgbW9kaWZpZWQ6IDEgRGVjIDk4ICovIAkKCmh0bWwgewpmb250OiAxM
 NodeId : 10
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 3
 ParentElement : 3
@@ -452,8 +450,8 @@ NextSibling : null
 NodeValue : == Cgk=
 TextContent : == Cgk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 8
+NextElementSibling : null 
 Data : == Cgk=
 Length : 2
 WholeText : == Cgk=
@@ -461,7 +459,7 @@ WholeText : == Cgk=
 NodeId : 11
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 2
 ParentElement : 2
@@ -472,8 +470,8 @@ NextSibling : 12
 NodeValue : == Cgk=
 TextContent : == Cgk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 3
+NextElementSibling : 12
 Data : == Cgk=
 Length : 2
 WholeText : == Cgk=
@@ -481,7 +479,7 @@ WholeText : == Cgk=
 NodeId : 12
 NodeType : 1
 NodeName : BODY
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 2
 ParentElement : 2
@@ -510,7 +508,7 @@ Attributes : 0
 NodeId : 13
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 12
 ParentElement : 12
@@ -521,8 +519,8 @@ NextSibling : 14
 NodeValue : == CgkJ
 TextContent : == CgkJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : 14
 Data : == CgkJ
 Length : 3
 WholeText : == CgkJ
@@ -530,7 +528,7 @@ WholeText : == CgkJ
 NodeId : 14
 NodeType : 1
 NodeName : DL
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 12
 ParentElement : 12
@@ -559,7 +557,7 @@ Attributes : 0
 NodeId : 15
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 14
 ParentElement : 14
@@ -570,8 +568,8 @@ NextSibling : 16
 NodeValue : == CgkJCQ==
 TextContent : == CgkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : 16
 Data : == CgkJCQ==
 Length : 4
 WholeText : == CgkJCQ==
@@ -579,7 +577,7 @@ WholeText : == CgkJCQ==
 NodeId : 16
 NodeType : 1
 NodeName : DT
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 14
 ParentElement : 14
@@ -608,7 +606,7 @@ Attributes : 0
 NodeId : 17
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 16
 ParentElement : 16
@@ -619,8 +617,8 @@ NextSibling : null
 NodeValue : == CgkJCSB0b2dnbGUgCgkJCQ==
 TextContent : == CgkJCSB0b2dnbGUgCgkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : null 
 Data : == CgkJCSB0b2dnbGUgCgkJCQ==
 Length : 16
 WholeText : == CgkJCSB0b2dnbGUgCgkJCQ==
@@ -628,7 +626,7 @@ WholeText : == CgkJCSB0b2dnbGUgCgkJCQ==
 NodeId : 18
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 14
 ParentElement : 14
@@ -639,8 +637,8 @@ NextSibling : 19
 NodeValue : == CgkJCQ==
 TextContent : == CgkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 16
+NextElementSibling : 19
 Data : == CgkJCQ==
 Length : 4
 WholeText : == CgkJCQ==
@@ -648,7 +646,7 @@ WholeText : == CgkJCQ==
 NodeId : 19
 NodeType : 1
 NodeName : DD
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 14
 ParentElement : 14
@@ -677,7 +675,7 @@ Attributes : 0
 NodeId : 20
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 19
 ParentElement : 19
@@ -688,8 +686,8 @@ NextSibling : 21
 NodeValue : == CgkJCQ==
 TextContent : == CgkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : 21
 Data : == CgkJCQ==
 Length : 4
 WholeText : == CgkJCQ==
@@ -697,7 +695,7 @@ WholeText : == CgkJCQ==
 NodeId : 21
 NodeType : 1
 NodeName : UL
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 19
 ParentElement : 19
@@ -726,7 +724,7 @@ Attributes : 0
 NodeId : 22
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 21
 ParentElement : 21
@@ -737,8 +735,8 @@ NextSibling : 23
 NodeValue : == CgkJCQk=
 TextContent : == CgkJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : 23
 Data : == CgkJCQk=
 Length : 5
 WholeText : == CgkJCQk=
@@ -746,7 +744,7 @@ WholeText : == CgkJCQk=
 NodeId : 23
 NodeType : 1
 NodeName : LI
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 21
 ParentElement : 21
@@ -775,7 +773,7 @@ Attributes : 0
 NodeId : 24
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 23
 ParentElement : 23
@@ -786,8 +784,8 @@ NextSibling : null
 NodeValue : == CgkJCQkgdGhlIHdheSAKCQkJCQ==
 TextContent : == CgkJCQkgdGhlIHdheSAKCQkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : null 
 Data : == CgkJCQkgdGhlIHdheSAKCQkJCQ==
 Length : 19
 WholeText : == CgkJCQkgdGhlIHdheSAKCQkJCQ==
@@ -795,7 +793,7 @@ WholeText : == CgkJCQkgdGhlIHdheSAKCQkJCQ==
 NodeId : 25
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 21
 ParentElement : 21
@@ -806,8 +804,8 @@ NextSibling : 26
 NodeValue : == CgkJCQk=
 TextContent : == CgkJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 23
+NextElementSibling : 26
 Data : == CgkJCQk=
 Length : 5
 WholeText : == CgkJCQk=
@@ -815,7 +813,7 @@ WholeText : == CgkJCQk=
 NodeId : 26
 NodeType : 1
 NodeName : LI
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 21
 ParentElement : 21
@@ -850,7 +848,7 @@ Value : bar
 NodeId : 27
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 26
 ParentElement : 26
@@ -861,8 +859,8 @@ NextSibling : 28
 NodeValue : == CgkJCQk=
 TextContent : == CgkJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : 28
 Data : == CgkJCQk=
 Length : 5
 WholeText : == CgkJCQk=
@@ -870,7 +868,7 @@ WholeText : == CgkJCQk=
 NodeId : 28
 NodeType : 1
 NodeName : P
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 26
 ParentElement : 26
@@ -899,7 +897,7 @@ Attributes : 0
 NodeId : 29
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 28
 ParentElement : 28
@@ -910,8 +908,8 @@ NextSibling : null
 NodeValue : == CgkJCQkgdGhlIHdvcmxkIGVuZHMgCgkJCQk=
 TextContent : == CgkJCQkgdGhlIHdvcmxkIGVuZHMgCgkJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : null 
 Data : == CgkJCQkgdGhlIHdvcmxkIGVuZHMgCgkJCQk=
 Length : 26
 WholeText : == CgkJCQkgdGhlIHdvcmxkIGVuZHMgCgkJCQk=
@@ -919,7 +917,7 @@ WholeText : == CgkJCQkgdGhlIHdvcmxkIGVuZHMgCgkJCQk=
 NodeId : 30
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 26
 ParentElement : 26
@@ -930,8 +928,8 @@ NextSibling : 31
 NodeValue : == CgkJCQk=
 TextContent : == CgkJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 28
+NextElementSibling : 31
 Data : == CgkJCQk=
 Length : 5
 WholeText : == CgkJCQk=
@@ -939,7 +937,7 @@ WholeText : == CgkJCQk=
 NodeId : 31
 NodeType : 1
 NodeName : == Rk9STQ==
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 26
 ParentElement : 26
@@ -980,7 +978,7 @@ Value : get
 NodeId : 32
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 31
 ParentElement : 31
@@ -991,8 +989,8 @@ NextSibling : 33
 NodeValue : == CgkJCQkJ
 TextContent : == CgkJCQkJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : 33
 Data : == CgkJCQkJ
 Length : 6
 WholeText : == CgkJCQkJ
@@ -1000,7 +998,7 @@ WholeText : == CgkJCQkJ
 NodeId : 33
 NodeType : 1
 NodeName : P
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 31
 ParentElement : 31
@@ -1029,7 +1027,7 @@ Attributes : 0
 NodeId : 34
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 33
 ParentElement : 33
@@ -1040,8 +1038,8 @@ NextSibling : 35
 NodeValue : == CgkJCQkJIGJhbmcgCgkJCQkJ
 TextContent : == CgkJCQkJIGJhbmcgCgkJCQkJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : 35
 Data : == CgkJCQkJIGJhbmcgCgkJCQkJ
 Length : 18
 WholeText : == CgkJCQkJIGJhbmcgCgkJCQkJ
@@ -1049,7 +1047,7 @@ WholeText : == CgkJCQkJIGJhbmcgCgkJCQkJ
 NodeId : 35
 NodeType : 1
 NodeName : INPUT
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 33
 ParentElement : 33
@@ -1077,15 +1075,15 @@ Attributes : 3
 
 NamespaceURI : === null
 Prefix : === null
-LocalName : name
-Name : name
-Value : foo
-
-NamespaceURI : === null
-Prefix : === null
 LocalName : type
 Name : type
 Value : radio
+
+NamespaceURI : === null
+Prefix : === null
+LocalName : name
+Name : name
+Value : foo
 
 NamespaceURI : === null
 Prefix : === null
@@ -1096,7 +1094,7 @@ Value : off
 NodeId : 36
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 33
 ParentElement : 33
@@ -1107,8 +1105,8 @@ NextSibling : null
 NodeValue : == CgkJCQkJ
 TextContent : == CgkJCQkJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 35
+NextElementSibling : null 
 Data : == CgkJCQkJ
 Length : 6
 WholeText : == CgkJCQkJ
@@ -1116,7 +1114,7 @@ WholeText : == CgkJCQkJ
 NodeId : 37
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 31
 ParentElement : 31
@@ -1127,8 +1125,8 @@ NextSibling : 38
 NodeValue : == CgkJCQkJ
 TextContent : == CgkJCQkJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 33
+NextElementSibling : 38
 Data : == CgkJCQkJ
 Length : 6
 WholeText : == CgkJCQkJ
@@ -1136,7 +1134,7 @@ WholeText : == CgkJCQkJ
 NodeId : 38
 NodeType : 1
 NodeName : P
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 31
 ParentElement : 31
@@ -1165,7 +1163,7 @@ Attributes : 0
 NodeId : 39
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 38
 ParentElement : 38
@@ -1176,8 +1174,8 @@ NextSibling : 40
 NodeValue : == CgkJCQkJIHdoaW1wZXIgCgkJCQkJ
 TextContent : == CgkJCQkJIHdoaW1wZXIgCgkJCQkJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : 40
 Data : == CgkJCQkJIHdoaW1wZXIgCgkJCQkJ
 Length : 21
 WholeText : == CgkJCQkJIHdoaW1wZXIgCgkJCQkJ
@@ -1185,7 +1183,7 @@ WholeText : == CgkJCQkJIHdoaW1wZXIgCgkJCQkJ
 NodeId : 40
 NodeType : 1
 NodeName : INPUT
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 38
 ParentElement : 38
@@ -1213,15 +1211,15 @@ Attributes : 3
 
 NamespaceURI : === null
 Prefix : === null
-LocalName : name
-Name : name
-Value : foo2
-
-NamespaceURI : === null
-Prefix : === null
 LocalName : type
 Name : type
 Value : radio
+
+NamespaceURI : === null
+Prefix : === null
+LocalName : name
+Name : name
+Value : foo2
 
 NamespaceURI : === null
 Prefix : === null
@@ -1232,7 +1230,7 @@ Value : on
 NodeId : 41
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 38
 ParentElement : 38
@@ -1243,8 +1241,8 @@ NextSibling : null
 NodeValue : == CgkJCQkJ
 TextContent : == CgkJCQkJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 40
+NextElementSibling : null 
 Data : == CgkJCQkJ
 Length : 6
 WholeText : == CgkJCQkJ
@@ -1252,7 +1250,7 @@ WholeText : == CgkJCQkJ
 NodeId : 42
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 31
 ParentElement : 31
@@ -1263,8 +1261,8 @@ NextSibling : null
 NodeValue : == CgkJCQk=
 TextContent : == CgkJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 38
+NextElementSibling : null 
 Data : == CgkJCQk=
 Length : 5
 WholeText : == CgkJCQk=
@@ -1272,7 +1270,7 @@ WholeText : == CgkJCQk=
 NodeId : 43
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 26
 ParentElement : 26
@@ -1283,8 +1281,8 @@ NextSibling : null
 NodeValue : == CgkJCQk=
 TextContent : == CgkJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 31
+NextElementSibling : null 
 Data : == CgkJCQk=
 Length : 5
 WholeText : == CgkJCQk=
@@ -1292,7 +1290,7 @@ WholeText : == CgkJCQk=
 NodeId : 44
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 21
 ParentElement : 21
@@ -1303,8 +1301,8 @@ NextSibling : 45
 NodeValue : == CgkJCQk=
 TextContent : == CgkJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 26
+NextElementSibling : 45
 Data : == CgkJCQk=
 Length : 5
 WholeText : == CgkJCQk=
@@ -1312,7 +1310,7 @@ WholeText : == CgkJCQk=
 NodeId : 45
 NodeType : 1
 NodeName : LI
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 21
 ParentElement : 21
@@ -1341,7 +1339,7 @@ Attributes : 0
 NodeId : 46
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 45
 ParentElement : 45
@@ -1352,8 +1350,8 @@ NextSibling : null
 NodeValue : == CgkJCQkgaSBncm93IG9sZCAKCQkJCQ==
 TextContent : == CgkJCQkgaSBncm93IG9sZCAKCQkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : null 
 Data : == CgkJCQkgaSBncm93IG9sZCAKCQkJCQ==
 Length : 22
 WholeText : == CgkJCQkgaSBncm93IG9sZCAKCQkJCQ==
@@ -1361,7 +1359,7 @@ WholeText : == CgkJCQkgaSBncm93IG9sZCAKCQkJCQ==
 NodeId : 47
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 21
 ParentElement : 21
@@ -1372,8 +1370,8 @@ NextSibling : 48
 NodeValue : == CgkJCQk=
 TextContent : == CgkJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 45
+NextElementSibling : 48
 Data : == CgkJCQk=
 Length : 5
 WholeText : == CgkJCQk=
@@ -1381,7 +1379,7 @@ WholeText : == CgkJCQk=
 NodeId : 48
 NodeType : 1
 NodeName : LI
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 21
 ParentElement : 21
@@ -1416,7 +1414,7 @@ Value : baz
 NodeId : 49
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 48
 ParentElement : 48
@@ -1427,8 +1425,8 @@ NextSibling : null
 NodeValue : == CgkJCQkgcGx1b3Q/IAoJCQkJ
 TextContent : == CgkJCQkgcGx1b3Q/IAoJCQkJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : null 
 Data : == CgkJCQkgcGx1b3Q/IAoJCQkJ
 Length : 18
 WholeText : == CgkJCQkgcGx1b3Q/IAoJCQkJ
@@ -1436,7 +1434,7 @@ WholeText : == CgkJCQkgcGx1b3Q/IAoJCQkJ
 NodeId : 50
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 21
 ParentElement : 21
@@ -1447,8 +1445,8 @@ NextSibling : null
 NodeValue : == CgkJCQ==
 TextContent : == CgkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 48
+NextElementSibling : null 
 Data : == CgkJCQ==
 Length : 4
 WholeText : == CgkJCQ==
@@ -1456,7 +1454,7 @@ WholeText : == CgkJCQ==
 NodeId : 51
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 19
 ParentElement : 19
@@ -1467,8 +1465,8 @@ NextSibling : 52
 NodeValue : == CgkJCQ==
 TextContent : == CgkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 21
+NextElementSibling : 52
 Data : == CgkJCQ==
 Length : 4
 WholeText : == CgkJCQ==
@@ -1476,7 +1474,7 @@ WholeText : == CgkJCQ==
 NodeId : 52
 NodeType : 1
 NodeName : BLOCKQUOTE
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 19
 ParentElement : 19
@@ -1505,7 +1503,7 @@ Attributes : 0
 NodeId : 53
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 52
 ParentElement : 52
@@ -1516,8 +1514,8 @@ NextSibling : 54
 NodeValue : == CgkJCQk=
 TextContent : == CgkJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : 54
 Data : == CgkJCQk=
 Length : 5
 WholeText : == CgkJCQk=
@@ -1525,7 +1523,7 @@ WholeText : == CgkJCQk=
 NodeId : 54
 NodeType : 1
 NodeName : ADDRESS
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 52
 ParentElement : 52
@@ -1554,7 +1552,7 @@ Attributes : 0
 NodeId : 55
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 54
 ParentElement : 54
@@ -1565,8 +1563,8 @@ NextSibling : null
 NodeValue : == CgkJCQkJIGJhciBtYWlkcywgCgkJCQk=
 TextContent : == CgkJCQkJIGJhciBtYWlkcywgCgkJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : null 
 Data : == CgkJCQkJIGJhciBtYWlkcywgCgkJCQk=
 Length : 23
 WholeText : == CgkJCQkJIGJhciBtYWlkcywgCgkJCQk=
@@ -1574,7 +1572,7 @@ WholeText : == CgkJCQkJIGJhciBtYWlkcywgCgkJCQk=
 NodeId : 56
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 52
 ParentElement : 52
@@ -1585,8 +1583,8 @@ NextSibling : null
 NodeValue : == CgkJCQ==
 TextContent : == CgkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 54
+NextElementSibling : null 
 Data : == CgkJCQ==
 Length : 4
 WholeText : == CgkJCQ==
@@ -1594,7 +1592,7 @@ WholeText : == CgkJCQ==
 NodeId : 57
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 19
 ParentElement : 19
@@ -1605,8 +1603,8 @@ NextSibling : 58
 NodeValue : == CgkJCQ==
 TextContent : == CgkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 52
+NextElementSibling : 58
 Data : == CgkJCQ==
 Length : 4
 WholeText : == CgkJCQ==
@@ -1614,7 +1612,7 @@ WholeText : == CgkJCQ==
 NodeId : 58
 NodeType : 1
 NodeName : H1
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 19
 ParentElement : 19
@@ -1643,7 +1641,7 @@ Attributes : 0
 NodeId : 59
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 58
 ParentElement : 58
@@ -1654,8 +1652,8 @@ NextSibling : null
 NodeValue : == CgkJCQkgc2luZyB0byBtZSwgZXJiYXJtZSBkaWNoIAoJCQk=
 TextContent : == CgkJCQkgc2luZyB0byBtZSwgZXJiYXJtZSBkaWNoIAoJCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : null 
 Data : == CgkJCQkgc2luZyB0byBtZSwgZXJiYXJtZSBkaWNoIAoJCQk=
 Length : 35
 WholeText : == CgkJCQkgc2luZyB0byBtZSwgZXJiYXJtZSBkaWNoIAoJCQk=
@@ -1663,7 +1661,7 @@ WholeText : == CgkJCQkgc2luZyB0byBtZSwgZXJiYXJtZSBkaWNoIAoJCQk=
 NodeId : 60
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 19
 ParentElement : 19
@@ -1674,8 +1672,8 @@ NextSibling : null
 NodeValue : == CgkJCQ==
 TextContent : == CgkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 58
+NextElementSibling : null 
 Data : == CgkJCQ==
 Length : 4
 WholeText : == CgkJCQ==
@@ -1683,7 +1681,7 @@ WholeText : == CgkJCQ==
 NodeId : 61
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 14
 ParentElement : 14
@@ -1694,8 +1692,8 @@ NextSibling : null
 NodeValue : == CgkJ
 TextContent : == CgkJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 19
+NextElementSibling : null 
 Data : == CgkJ
 Length : 3
 WholeText : == CgkJ
@@ -1703,7 +1701,7 @@ WholeText : == CgkJ
 NodeId : 62
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 12
 ParentElement : 12
@@ -1714,8 +1712,8 @@ NextSibling : 63
 NodeValue : == CgkJ
 TextContent : == CgkJ
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 14
+NextElementSibling : 63
 Data : == CgkJ
 Length : 3
 WholeText : == CgkJ
@@ -1723,7 +1721,7 @@ WholeText : == CgkJ
 NodeId : 63
 NodeType : 1
 NodeName : P
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 12
 ParentElement : 12
@@ -1758,7 +1756,7 @@ Value : color: black; font-size: 1em; line-height: 1.3em; clear: both
 NodeId : 64
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 63
 ParentElement : 63
@@ -1769,8 +1767,8 @@ NextSibling : 65
 NodeValue : == CgkJIFRoaXMgaXMgYSBub25zZW5zaWNhbCBkb2N1bWVudCwgYnV0IHN5bnRhY3RpY2FsbHkgdmFsaWQgSFRNTCA0LjAuIEFsbCAxMDAlLWNvbmZvcm1hbnQgQ1NTMSBhZ2VudHMgc2hvdWxkIGJlIGFibGUgdG8gcmVuZGVyIHRoZSBkb2N1bWVudCBlbGVtZW50cyBhYm92ZSB0aGlzIHBhcmFncmFwaCBpbmRpc3Rpbmd1aXNoYWJseSAodG8gdGhlIHBpeGVsKSBmcm9tIHRoaXMgCgkJCQ==
 TextContent : == CgkJIFRoaXMgaXMgYSBub25zZW5zaWNhbCBkb2N1bWVudCwgYnV0IHN5bnRhY3RpY2FsbHkgdmFsaWQgSFRNTCA0LjAuIEFsbCAxMDAlLWNvbmZvcm1hbnQgQ1NTMSBhZ2VudHMgc2hvdWxkIGJlIGFibGUgdG8gcmVuZGVyIHRoZSBkb2N1bWVudCBlbGVtZW50cyBhYm92ZSB0aGlzIHBhcmFncmFwaCBpbmRpc3Rpbmd1aXNoYWJseSAodG8gdGhlIHBpeGVsKSBmcm9tIHRoaXMgCgkJCQ==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : 65
 Data : == CgkJIFRoaXMgaXMgYSBub25zZW5zaWNhbCBkb2N1bWVudCwgYnV0IHN5bnRhY3RpY2FsbHkgdmFsaWQgSFRNTCA0LjAuIEFsbCAxMDAlLWNvbmZvcm1hbnQgQ1NTMSBhZ2VudHMgc2hvdWxkIGJlIGFibGUgdG8gcmVuZGVyIHRoZSBkb2N1bWVudCBlbGVtZW50cyBhYm92ZSB0aGlzIHBhcmFncmFwaCBpbmRpc3Rpbmd1aXNoYWJseSAodG8gdGhlIHBpeGVsKSBmcm9tIHRoaXMgCgkJCQ==
 Length : 217
 WholeText : == CgkJIFRoaXMgaXMgYSBub25zZW5zaWNhbCBkb2N1bWVudCwgYnV0IHN5bnRhY3RpY2FsbHkgdmFsaWQgSFRNTCA0LjAuIEFsbCAxMDAlLWNvbmZvcm1hbnQgQ1NTMSBhZ2VudHMgc2hvdWxkIGJlIGFibGUgdG8gcmVuZGVyIHRoZSBkb2N1bWVudCBlbGVtZW50cyBhYm92ZSB0aGlzIHBhcmFncmFwaCBpbmRpc3Rpbmd1aXNoYWJseSAodG8gdGhlIHBpeGVsKSBmcm9tIHRoaXMgCgkJCQ==
@@ -1778,7 +1776,7 @@ WholeText : == CgkJIFRoaXMgaXMgYSBub25zZW5zaWNhbCBkb2N1bWVudCwgYnV0IHN5bnRhY3RpY
 NodeId : 65
 NodeType : 1
 NodeName : A
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 63
 ParentElement : 63
@@ -1813,7 +1811,7 @@ Value : sec5526c.gif
 NodeId : 66
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 65
 ParentElement : 65
@@ -1824,8 +1822,8 @@ NextSibling : null
 NodeValue : reference rendering,
 TextContent : reference rendering,
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : null 
 Data : reference rendering,
 Length : 20
 WholeText : reference rendering,
@@ -1833,7 +1831,7 @@ WholeText : reference rendering,
 NodeId : 67
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 63
 ParentElement : 63
@@ -1844,8 +1842,8 @@ NextSibling : 68
 NodeValue : == CgkJIChleGNlcHQgZm9udCByYXN0ZXJpemF0aW9uIGFuZCBmb3JtIHdpZGdldHMpLiBBbGwgZGlzY3JlcGFuY2llcyBzaG91bGQgYmUgdHJhY2VhYmxlIHRvIENTUzEgaW1wbGVtZW50YXRpb24gc2hvcnRjb21pbmdzLiBPbmNlIHlvdSBoYXZlIGZpbmlzaGVkIGV2YWx1YXRpbmcgdGhpcyB0ZXN0LCB5b3UgY2FuIHJldHVybiB0byB0aGUg
 TextContent : == CgkJIChleGNlcHQgZm9udCByYXN0ZXJpemF0aW9uIGFuZCBmb3JtIHdpZGdldHMpLiBBbGwgZGlzY3JlcGFuY2llcyBzaG91bGQgYmUgdHJhY2VhYmxlIHRvIENTUzEgaW1wbGVtZW50YXRpb24gc2hvcnRjb21pbmdzLiBPbmNlIHlvdSBoYXZlIGZpbmlzaGVkIGV2YWx1YXRpbmcgdGhpcyB0ZXN0LCB5b3UgY2FuIHJldHVybiB0byB0aGUg
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 65
+NextElementSibling : 68
 Data : == CgkJIChleGNlcHQgZm9udCByYXN0ZXJpemF0aW9uIGFuZCBmb3JtIHdpZGdldHMpLiBBbGwgZGlzY3JlcGFuY2llcyBzaG91bGQgYmUgdHJhY2VhYmxlIHRvIENTUzEgaW1wbGVtZW50YXRpb24gc2hvcnRjb21pbmdzLiBPbmNlIHlvdSBoYXZlIGZpbmlzaGVkIGV2YWx1YXRpbmcgdGhpcyB0ZXN0LCB5b3UgY2FuIHJldHVybiB0byB0aGUg
 Length : 192
 WholeText : == CgkJIChleGNlcHQgZm9udCByYXN0ZXJpemF0aW9uIGFuZCBmb3JtIHdpZGdldHMpLiBBbGwgZGlzY3JlcGFuY2llcyBzaG91bGQgYmUgdHJhY2VhYmxlIHRvIENTUzEgaW1wbGVtZW50YXRpb24gc2hvcnRjb21pbmdzLiBPbmNlIHlvdSBoYXZlIGZpbmlzaGVkIGV2YWx1YXRpbmcgdGhpcyB0ZXN0LCB5b3UgY2FuIHJldHVybiB0byB0aGUg
@@ -1853,7 +1851,7 @@ WholeText : == CgkJIChleGNlcHQgZm9udCByYXN0ZXJpemF0aW9uIGFuZCBmb3JtIHdpZGdldHMpL
 NodeId : 68
 NodeType : 1
 NodeName : A
-BaseUri : http://localhost:14873/DomAnalyzer.html
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 63
 ParentElement : 63
@@ -1888,7 +1886,7 @@ Value : sec5526c.htm
 NodeId : 69
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 68
 ParentElement : 68
@@ -1899,8 +1897,8 @@ NextSibling : null
 NodeValue : parent page
 TextContent : parent page
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : null 
+NextElementSibling : null 
 Data : parent page
 Length : 11
 WholeText : parent page
@@ -1908,7 +1906,7 @@ WholeText : parent page
 NodeId : 70
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 63
 ParentElement : 63
@@ -1919,8 +1917,8 @@ NextSibling : null
 NodeValue : == LiAKCQk=
 TextContent : == LiAKCQk=
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 68
+NextElementSibling : null 
 Data : == LiAKCQk=
 Length : 5
 WholeText : == LiAKCQk=
@@ -1928,7 +1926,7 @@ WholeText : == LiAKCQk=
 NodeId : 71
 NodeType : 3
 NodeName : #text
-BaseUri : === null
+BaseUri : http://localhost/Test/acid1.htm
 OwnerDocument : 0
 ParentNode : 12
 ParentElement : 12
@@ -1939,8 +1937,8 @@ NextSibling : null
 NodeValue : == CgkKCg==
 TextContent : == CgkKCg==
 ChildNodes : 0 : 
-PreviousElementSibling : undefined 
-NextElementSibling : undefined 
+PreviousElementSibling : 63
+NextElementSibling : null 
 Data : == CgkKCg==
 Length : 4
 WholeText : == CgkKCg==

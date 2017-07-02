@@ -9,37 +9,50 @@ using TheArtOfDev.HtmlRenderer.Dom;
 
 namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 {
-    internal class DomParser
+    public class DomParser
     {
-        public readonly ParsingContext ParsingContext;
+        private readonly ParsingContext ParsingContext;
 
-        public readonly DomFactory DomFactory;
+        private readonly Document Document;
+
+        private readonly DomFactory DomFactory;
 
         private readonly Tokenizer Tokenizer;
 
-        public void ParseDocument(ParsingContext parsingContext, HtmlStream html)
+        public static Document ParseDocument(ParsingContext parsingContext, HtmlStream html)
         {
             Contract.RequiresNotNull(parsingContext, nameof(parsingContext));
             Contract.RequiresNotNull(html, nameof(html));
 
-            DomParser parser = new Parsing.DomParser(parsingContext, html);
+            DomFactory domFactory = parsingContext.GetDomFactory();
+
+            // TODO: Charset is hard-coded.
+            Document document = domFactory.CreateDocument(parsingContext.Url, "windows-1252");
+
+            DomParser parser = new DomParser(parsingContext, document, domFactory, html);
             parser.Parse();
+
+            return document;
         }
 
-        private DomParser(ParsingContext parsingContext, HtmlStream html)
+        private DomParser(ParsingContext parsingContext, Document document, DomFactory domFactory, HtmlStream html)
         {
             Contract.RequiresNotNull(parsingContext, nameof(parsingContext));
+            Contract.RequiresNotNull(document, nameof(document));
+            Contract.RequiresNotNull(domFactory, nameof(domFactory));
+            Contract.RequiresNotNull(html, nameof(html));
 
             this.ActiveFormattingElements = new ActiveFormattingElementsList(this);
             this.ParsingContext = parsingContext;
-            this.DomFactory = parsingContext.GetDomFactory();
+            this.Document = document;
+            this.DomFactory = domFactory;
             this.Tokenizer = new Tokenizer(html);
             this.Tokenizer.ParseError += (s, e) => this.InformParseError(e.ParseError);
         }
 
         #region Tokanization
 
-        public void Parse()
+        private void Parse()
         {
             do
             {
@@ -1042,7 +1055,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     if (!entry.IsMarker && (entry.Element == existing))
                     {
                         // ISSUE. Is it OK to take the token from the old entry? Should we also ASSERT the attributes as well?
-                        System.Diagnostics.Debug.Assert(entry.Token.TagName == replacement.TagName, "Is it OK to take the token from the old entry if they don't match?");
+                        System.Diagnostics.Debug.Assert(entry.Token.TagName == replacement.GetTagName(), "Is it OK to take the token from the old entry if they don't match?");
 
                         this.Entries[i] = new Entry(replacement, entry.Token);
                         return;
@@ -1150,6 +1163,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void DispatchToken()
         {
+            // See: http://www.w3.org/TR/html51/syntax.html#tree-construction
+
             // As each token is emitted from the tokenizer, the user agent must follow the appropriate
             // steps from the following list, known as the tree construction dispatcher:
 
@@ -1404,7 +1419,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             }
         }
 
-        private Element CreateElement(Element intendedParent, string namespaceUri, string tagName, Html5.Parsing.Attribute[] attributes)
+        private Element CreateElement(Node intendedParent, string namespaceUri, string tagName, Html5.Parsing.Attribute[] attributes)
         {
             Contract.RequiresNotNull(intendedParent, nameof(intendedParent));
 
@@ -1423,7 +1438,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             // is not defined by that namespace’s specification must use the interface Element.
 
             // The node document of the newly created element must be the node document of the intended parent.
-            Element elem = this.DomFactory.CreateElement(intendedParent.OwnerDocument, namespaceUri, tagName, attributes);
+            Document doc = (intendedParent as Document) ?? intendedParent.OwnerDocument;
+            Element elem = this.DomFactory.CreateElement(doc, namespaceUri, tagName, attributes);
 
             // 2. If the newly created element has an *xmlns* attribute in the *XMLNS namespace* whose value is not
             // exactly the same as the element’s namespace, that is a parse error. Similarly, if the newly created
@@ -1507,7 +1523,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             return this.InsertHtmlElement(this.Token.TagName, this.Token.TagAttributes);
         }
 
-        public void InsertCharacter(char ch)
+        private void InsertCharacter(char ch)
         {
             // See: http://www.w3.org/TR/html51/syntax.html#insert-characters
 
@@ -1516,21 +1532,35 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
             // 1. Let data be the characters passed to the algorithm, or, if no characters were explicitly specified,
             //    the character of the character token being processed.
+            string data = new string(ch, 1);
 
             // 2. Let the adjusted insertion location be the appropriate place for inserting a node.
-            //    If the adjusted insertion location is in a <Document> node, then abort these steps.
+            AdjustedInsertLocation adjustedInsertionLocation = this.AppropriatePlaceForInsertingNode();
 
+            // 3. If the adjusted insertion location is in a Document node, then abort these steps.
+            // ISSUE - BUG - TODO: ParentElement is an Element and never a Document! Do we have a bug in the implementation?
             // NOTE: The DOM will not let Document nodes have Text node children, so they are dropped on the floor.
+            if (adjustedInsertionLocation.ParentElement is Document)
+                return;
 
-            // 3. If there is a Text node immediately before the adjusted insertion location,
+            // 4. If there is a Text node immediately before the adjusted insertion location,
             //    then append data to that Text node’s data.
-
-            // 4. Otherwise, create a new Text node whose data is data and whose node document
-            //    is the same as that of the element in which the adjusted insertion location finds itself,
-            //    and insert the newly created node at the adjusted insertion location.
+            Node node = (adjustedInsertionLocation.BeforeSibling != null) ? adjustedInsertionLocation.BeforeSibling.PreviousSibling : adjustedInsertionLocation.ParentElement.LastChild;
+            Text textNode = node as Text;
+            if (textNode != null)
+            {
+                textNode.AppendData(data);
+            }
+            else
+            {
+                // Otherwise, create a new Text node whose data is data and whose node document is the same
+                // as that of the element in which the adjusted insertion location finds itself, and insert
+                // the newly created node at the adjusted insertion location.
+                this.DomFactory.InsertText(adjustedInsertionLocation, data);
+            }
         }
 
-        public void InsertComment(string data)
+        private void InsertComment(string data)
         {
             // See: http://www.w3.org/TR/html51/syntax.html#insert-a-comment
 
@@ -1546,6 +1576,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             //    same as that of the node in which the adjusted insertion location finds itself.
 
             // 4. Insert the newly created node at the adjusted insertion location.
+            throw new NotImplementedException();
         }
 
         #endregion
@@ -1739,6 +1770,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // the DocumentType node with the Document object so that it is returned as the value of the doctype
                 // attribute of the Document object.
                 this.DomFactory.AppendDocType(
+                    this.Document,
                     this.Token.DocTypeName ?? String.Empty,
                     this.Token.DocTypePublicIdentifier ?? String.Empty,
                     this.Token.DocTypeSystemIdentifier ?? String.Empty);
@@ -2004,7 +2036,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                         quirks = true;
 
                     if (quirks)
-                        this.DomFactory.SetQuirksMode(QuirksMode.Quirks);
+                        this.DomFactory.SetQuirksMode(this.Document, QuirksMode.Quirks);
                 }
 
                 // Otherwise, if the document is not an iframe srcdoc document, and the DOCTYPE token matches one of the conditions
@@ -2030,7 +2062,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                         quirks = true;
 
                     if (quirks)
-                        this.DomFactory.SetQuirksMode(QuirksMode.Limited);
+                        this.DomFactory.SetQuirksMode(this.Document, QuirksMode.Limited);
                 }
 
                 // The system identifier and public identifier strings must be compared to the values given
@@ -2048,7 +2080,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 if (!this.ParsingContext.IsIFrameSource)
                 {
                     this.InformParseError(Parsing.ParseError.UnexpectedTag);
-                    this.DomFactory.SetQuirksMode(QuirksMode.Quirks);
+                    this.DomFactory.SetQuirksMode(this.Document, QuirksMode.Quirks);
                 }
 
                 // In any case, switch the insertion mode to "before html", then reprocess the token.
@@ -2095,8 +2127,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // Create an element for the token in the HTML namespace, with the Document as the intended parent.
                 // Append it to the Document object. Put this element in the stack of open elements.
-                Element html = this.CreateElement(this.ParsingContext.Document.DocumentElement, Namespaces.Html, this.Token.TagName, this.Token.TagAttributes);
-                this.DomFactory.AppendElement(this.ParsingContext.Document.DocumentElement, html);
+                Element html = this.CreateElement(this.Document, Namespaces.Html, this.Token.TagName, this.Token.TagAttributes);
+                this.DomFactory.AppendElement(this.Document, html);
                 this.OpenElements.Push(html);
 
                 // If the Document is being loaded as part of navigation of a browsing context, then:
@@ -2136,8 +2168,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // Create an html element whose node document is the Document object. Append it to the Document object.
                 // Put this element in the stack of open elements.
-                Element html = this.DomFactory.CreateElement(this.ParsingContext.Document, Namespaces.Html, Tags.Html, Attribute.None);
-                this.DomFactory.AppendElement(this.ParsingContext.Document.DocumentElement, html);
+                Element html = this.DomFactory.CreateElement(this.Document, Namespaces.Html, Tags.Html, Attribute.None);
+                this.DomFactory.AppendElement(this.Document, html);
                 this.OpenElements.Push(html);
 
                 // If the Document is being loaded as part of navigation of a browsing context, then:
@@ -2325,7 +2357,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Title))
             {
                 // Follow the generic RCDATA element parsing algorithm.
-                this.ParseElement(ParsingAlgorithm.GenericRcData);
+                this.GenericRcDataElementParsingAlgorithm();
             }
 
             // A start tag whose tag name is "noscript", if the scripting flag is enabled
@@ -2333,7 +2365,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if ((this.Scripting && this.Token.IsStartTagNamed(Tags.NoScript)) || this.Token.IsStartTagNamed(Tags.NoFrames, Tags.Style))
             {
                 // Follow the generic raw text element parsing algorithm.
-                this.ParseElement(ParsingAlgorithm.GenericRawText);
+                this.GenericRawTextElementParsingAlgorithm();
             }
 
             // A start tag whose tag name is "noscript", if the scripting flag is disabled
@@ -2789,14 +2821,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // If the stack of open elements has only one node on it, or if the second element on the stack of open
                 // elements is not a body element, then ignore the token. (fragment case)
 
-                //    If the frameset-ok flag is set to "not ok", ignore the token.
+                // If the frameset-ok flag is set to "not ok", ignore the token.
 
-                //    Otherwise, run the following steps:
-                //        1. Remove the second element on the stack of open elements from its parent node, if it has one.
-                //        2. Pop all the nodes from the bottom of the stack of open elements, from the current node up to,
-                //           but not including, the root html element.
-                //        3. Insert an HTML element for the token.
-                //        4. Switch the insertion mode to "in frameset".
+                // Otherwise, run the following steps:
+                // 1. Remove the second element on the stack of open elements from its parent node, if it has one.
+                // 2. Pop all the nodes from the bottom of the stack of open elements, from the current node up to,
+                // but not including, the root html element.
+                // 3. Insert an HTML element for the token.
+                // 4. Switch the insertion mode to "in frameset".
             }
 
             // An end-of-file token
@@ -2838,7 +2870,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // a dt element, an li element, an optgroup element, an option element, a p element, an rb element,
                 // an rp element, an rt element, an rtc element, a tbody element, a td element, a tfoot element,
                 // a th element, a thead element, a tr element, the body element, or the html element, then this is a parse error.
-                if (this.OpenElements.Contains(Tags.Dd, Tags.Dt, Tags.Li, Tags.OptGroup, Tags.Option, Tags.P, Tags.Rb, Tags.Rp,
+                if (!this.OpenElements.Contains(Tags.Dd, Tags.Dt, Tags.Li, Tags.OptGroup, Tags.Option, Tags.P, Tags.Rb, Tags.Rp,
                     Tags.Rt, Tags.Rtc, Tags.TBody, Tags.Td, Tags.TFoot, Tags.Th, Tags.THead, Tags.Tr, Tags.Body, Tags.Html))
                 {
                     this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
@@ -2972,7 +3004,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 while (true)
                 {
                     // If node is an li element, then run these substeps:
-                    if (node.TagName == Tags.Li)
+                    if (node.GetTagName() == Tags.Li)
                     {
                         // 1. Generate implied end tags, except for li elements.
                         this.GenerateImpliedEndTag(Tags.Li);
@@ -3122,7 +3154,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsEndTagNamed(
                 Tags.Address, Tags.Article, Tags.Aside, Tags.BlockQuote, Tags.Button, Tags.Center, Tags.Details,
                 Tags.Dialog, Tags.Dir, Tags.Div, Tags.Dl, Tags.FieldSet, Tags.FigCaption, Tags.Figure, Tags.Footer, Tags.Header,
-                Tags.HGroup, Tags.Listing, Tags.Main, Tags.Nav, Tags.Ol, Tags.P, Tags.Section, Tags.Summary, Tags.Ul))
+                Tags.HGroup, Tags.Listing, Tags.Main, Tags.Nav, Tags.Ol, Tags.Pre, Tags.Section, Tags.Summary, Tags.Ul))
             {
                 // If the stack of open elements does not have an element in scope that is an HTML element and with the same
                 // tag name as that of the token, then this is a parse error; ignore the token.
@@ -3260,7 +3292,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
                 // 2. If the current node is not an HTML element with the same tag name as that of the token,
                 // then this is a parse error.
-                if (!(this.CurrentNode.IsHtmlElement() && this.CurrentNode.Is(this.CurrentNode.TagName)))
+                if (!(this.CurrentNode.IsHtmlElement() && this.CurrentNode.Is(this.CurrentNode.GetTagName())))
                     this.InformParseError(ParseError.UnexpectedEndTag);
 
                 // 3. Pop elements from the stack of open elements until an HTML element with the same tag name
@@ -3448,7 +3480,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             {
                 // If the Document is not set to quirks mode, and the stack of open elements has a p element
                 // in button scope, then close a p element.
-                if ((this.ParsingContext.Document.QuirksMode != QuirksMode.Quirks) && this.OpenElements.HasElementInButtonScope(Tags.P))
+                if ((this.Document.QuirksMode != QuirksMode.Quirks) && this.OpenElements.HasElementInButtonScope(Tags.P))
                     this.ClosePElement();
 
                 // Insert an HTML element for the token.
@@ -3709,14 +3741,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // MathML_TODO ... MathML Tags
                 throw new NotImplementedException();
 
-                //    Adjust MathML attributes for the token. (This fixes the case of MathML attributes that are not all lowercase.)
+                // Adjust MathML attributes for the token. (This fixes the case of MathML attributes that are not all lowercase.)
 
-                //    Adjust foreign attributes for the token. (This fixes the use of namespaced attributes, in particular XLink.)
+                // Adjust foreign attributes for the token. (This fixes the use of namespaced attributes, in particular XLink.)
 
-                //    Insert a foreign element for the token, in the MathML namespace.
+                // Insert a foreign element for the token, in the MathML namespace.
 
-                //    If the token has its self-closing flag set, pop the current node off the stack of open elements and acknowledge
-                //    the token's self-closing flag.
+                // If the token has its self-closing flag set, pop the current node off the stack of open elements and acknowledge
+                // the token's self-closing flag.
             }
 
             // A start tag whose tag name is "svg"
@@ -3728,14 +3760,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 // SVG_TODO ... SVG Tags
                 throw new NotImplementedException();
 
-                //    Adjust SVG attributes for the token. (This fixes the case of SVG attributes that are not all lowercase.)
+                // Adjust SVG attributes for the token. (This fixes the case of SVG attributes that are not all lowercase.)
 
-                //    Adjust foreign attributes for the token. (This fixes the use of namespaced attributes, in particular XLink in SVG.)
+                // Adjust foreign attributes for the token. (This fixes the use of namespaced attributes, in particular XLink in SVG.)
 
-                //    Insert a foreign element for the token, in the SVG namespace.
+                // Insert a foreign element for the token, in the SVG namespace.
 
-                //    If the token has its self-closing flag set, pop the current node off the stack of open elements
-                //    and acknowledge the token's self-closing flag.
+                // If the token has its self-closing flag set, pop the current node off the stack of open elements
+                // and acknowledge the token's self-closing flag.
             }
 
             // A start tag whose tag name is one of: "caption", "col", "colgroup", "frame", "head", "tbody", "td", "tfoot",
@@ -3911,7 +3943,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 Element furthestBlock = null;
                 bool formattingElementFound = false;
 
-                // NB: The spec says, "... that is lower in the stack ...", meaing BELOW or AFTER.
+                // NB: The spec says, "... that is lower in the stack ...", meaning BELOW or AFTER.
                 for (int j = 0; j < this.OpenElements.Count; j++)
                 {
                     Element elem = this.OpenElements[j];
@@ -3989,7 +4021,7 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                     //    common ancestor as the intended parent; replace the entry for node in the list of active formatting
                     //    elements with an entry for the new element, replace the entry for node in the stack of open elements
                     //    with an entry for the new element, and let node be the new element.
-                    Element newElement = this.CreateElement(commonAncestor, Namespaces.Html, node.TagName,
+                    Element newElement = this.CreateElement(commonAncestor, Namespaces.Html, node.GetTagName(),
                         node.Attributes.Select(attr => new Attribute(attr.Name, attr.Value)).ToArray());
                     this.ActiveFormattingElements.Replace(node, newElement);
                     this.OpenElements.Replace(node, newElement);
@@ -4002,13 +4034,15 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
                     // 9. Insert last node into node, first removing it from its previous parent node if any.
                     // ISSUE: Are we suppose to insert as the first or the last child?
-                    this.DomFactory.InsertChildNode(node, lastNode, true);
+                    // ANSWER: It doesn't matter. The parent <node> is newly created and is therefore empty.
+                    this.DomFactory.AppendChildNode(node, lastNode, true);
 
                     // 10. Let last node be node.
                     lastNode = node;
 
                     // 11. Return to the step labeled inner loop.
-                } while (true);
+                }
+                while (true);
 
                 // 14. Insert whatever last node ended up being in the previous step at the appropriate place for inserting a node,
                 //     but using common ancestor as the override target.
@@ -4018,19 +4052,18 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 else
                     this.DomFactory.AppendElement(location.ParentElement, lastNode);
 
-
                 // 15. Create an element for the token for which formatting element was created, in the HTML namespace,
                 //    with furthest block as the intended parent.
                 Token newElementToken = new Token();
-                newElementToken.SetStartTag(formattingElement.TagName, false, node.Attributes.Select(attr => new Attribute(attr.Name, attr.Value)).ToArray());
+                newElementToken.SetStartTag(formattingElement.GetTagName(), false, node.Attributes.Select(attr => new Attribute(attr.Name, attr.Value)).ToArray());
                 Element newElement2 = this.CreateElement(furthestBlock, Namespaces.Html, newElementToken.TagName, newElementToken.TagAttributes);
 
                 // 16. Take all of the child nodes of furthest block and append them to the element created in the last step.
                 foreach (Node child in furthestBlock.ChildNodes)
-                    this.DomFactory.InsertChildNode(newElement2, child, true);
+                    this.DomFactory.AppendChildNode(newElement2, child, true);
 
                 // 17. Append that new element to furthest block.
-                this.DomFactory.InsertChildNode(furthestBlock, newElement2, false);
+                this.DomFactory.AppendChildNode(furthestBlock, newElement2, false);
 
                 // 18. Remove formatting element from the list of active formatting elements, and insert the new element into
                 //     the list of active formatting elements at the position of the aforementioned bookmark.
@@ -4043,7 +4076,8 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
                 this.OpenElements.InsertBelow(newElement2, furthestBlock);
 
                 // 20. Jump back to the step labeled outer loop.
-            } while (true);
+            }
+            while (true);
 
             // NOTE: This algorithm's name, the "adoption agency algorithm", comes from the way it causes elements to change
             // parents, and is in contrast with other possible algorithms for dealing with misnested content, which included
@@ -4092,40 +4126,41 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsEndTagNamed(Tags.Script))
             {
                 throw new NotImplementedException();
-                //    Perform a microtask checkpoint.
 
-                //    Provide a stable state.
+                // Perform a microtask checkpoint.
 
-                //    Let script be the current node (which will be a script element).
+                // Provide a stable state.
 
-                //    Pop the current node off the stack of open elements.
+                // Let script be the current node (which will be a script element).
 
-                //    Switch the insertion mode to the original insertion mode.
+                // Pop the current node off the stack of open elements.
 
-                //    Let the old insertion point have the same value as the current insertion point. Let the insertion
-                //    point be just before the next input character.
+                // Switch the insertion mode to the original insertion mode.
 
-                //    Increment the parser's script nesting level by one.
+                // Let the old insertion point have the same value as the current insertion point. Let the insertion
+                // point be just before the next input character.
 
-                //    Prepare the script. This might cause some script to execute, which might cause new characters to be
-                //    inserted into the tokenizer, and might cause the tokenizer to output more tokens, resulting in a
-                //    reentrant invocation of the parser.
+                // Increment the parser's script nesting level by one.
 
-                //    Decrement the parser's script nesting level by one. If the parser's script nesting level is zero,
-                //    then set the parser pause flag to false.
+                // Prepare the script. This might cause some script to execute, which might cause new characters to be
+                // inserted into the tokenizer, and might cause the tokenizer to output more tokens, resulting in a
+                // reentrant invocation of the parser.
 
-                //    Let the insertion point have the value of the old insertion point. (In other words, restore the insertion
-                //    point to its previous value. This value might be the "undefined" value.)
+                // Decrement the parser's script nesting level by one. If the parser's script nesting level is zero,
+                // then set the parser pause flag to false.
 
-                //    At this stage, if there is a pending parsing-blocking script, then:
+                // Let the insertion point have the value of the old insertion point. (In other words, restore the insertion
+                // point to its previous value. This value might be the "undefined" value.)
+
+                // At this stage, if there is a pending parsing-blocking script, then:
                 //        - If the script nesting level is not zero:
                 //            Set the parser pause flag to true, and abort the processing of any nested invocations
                 //            of the tokenizer, yielding control back to the caller. (Tokenization will resume when
                 //            the caller returns to the "outer" tree construction stage.)
-
+                //
                 //            NOTE: The tree construction stage of this particular parser is being called reentrantly,
                 //            say from a call to document.write().
-
+                //
                 //        - Otherwise:
                 //            Run these steps:
                 //                1. Let the script be the pending parsing-blocking script. There is no
@@ -5744,16 +5779,6 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
         }
 
         #endregion
-
-        private enum ParsingAlgorithm
-        {
-            GenericRcData,
-            GenericRawText
-        }
-
-        private void ParseElement(ParsingAlgorithm algorithm)
-        {
-        }
 
         #endregion
 

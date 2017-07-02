@@ -116,7 +116,6 @@ namespace HtmlRenderer.TestLib
             return true;
         }
 
-
         public static bool CompareReferenceCollection<TNode>(this IReadOnlyList<TNode> a, IReadOnlyList<TNode> b, CompareContext context)
             where TNode : ReferenceNode
         {
@@ -150,7 +149,7 @@ namespace HtmlRenderer.TestLib
             for (int i = 0; i < a.Count; i++)
             {
                 ReferenceAttr aa = a[i];
-                ReferenceAttr ab = b[i];
+                ReferenceAttr ab = b.FirstOrDefault(e => e.CompareName(aa, context));
                 if ((a == null) && (b == null))
                     continue;
 
@@ -173,8 +172,8 @@ namespace HtmlRenderer.TestLib
 
             for (int i = 0; i < a.Count; i++)
             {
-                ReferenceAttr aa = a[i];
                 Attr ab = b.Item(i);
+                ReferenceAttr aa = a.FirstOrDefault(e => e.CompareName(ab, context));
                 if ((a == null) && (b == null))
                     continue;
 

@@ -148,29 +148,43 @@ DomTools = (function () {
         this.output = "";
 
         this.analyzeDocument = function (doc) {
-            // Create a tree walker
-            var treeWalker = doc.createTreeWalker(
-              doc,
-              NodeFilter.SHOW_ALL,
-              { acceptNode: function (node) { return NodeFilter.FILTER_ACCEPT; } },
-              false
-            );
-
             // Give each node an ID.
             var i = 0;
-            var node;
-            doc.___analyzerId = i;
-            i++;
-            while (node = treeWalker.nextNode()) {
+            this.walkNodes(doc, function (node) {
                 node.___analyzerId = i;
                 i++;
-            }
+            });
 
-            treeWalker.currentNode = doc;
-            this.analyzeNode(doc);
+            var self = this;
+            this.walkNodes(doc, function (node) {
+                self.analyzeNode(node);
+            });
+        }
+
+        this.walkNodesXX = function (doc, callback) {
+            // Create a tree walker
+            var treeWalker = doc.createTreeWalker(
+                doc,
+                NodeFilter.SHOW_ALL,
+                { acceptNode: function (node) { return NodeFilter.FILTER_ACCEPT; } },
+                false
+            );
+
+            callback(doc);
+
+            var node;
             while (node = treeWalker.nextNode()) {
-                this.analyzeNode(node);
+                callback(node);
             }
+        }
+
+        this.walkNodes = function (node, callback) {
+            if (node === null)
+                return;
+
+            callback(node);
+            this.walkNodes(node.firstChild, callback);
+            this.walkNodes(node.nextSibling, callback);
         }
 
         this.analyzeNode = function (node) {
@@ -401,7 +415,7 @@ DomTools = (function () {
 
         this.needsEncoding = function (text) {
             // If any ASCII 0-31 and 128-65535 we need encoding
-            return /[\x00-\x1F\x80-\xFFFF]/.test(text) || text.startsWith('==') || (text[0] === ' ') || (text[text.length - 1] == ' ');
+            return /[\x00-\x1F\x80-\xFFFF]/.test(text) || ((text.length >= 2) && (text[0] === '=') && (text[1] === '=')) || (text[0] === ' ') || (text[text.length - 1] == ' ');
         }
     }
 

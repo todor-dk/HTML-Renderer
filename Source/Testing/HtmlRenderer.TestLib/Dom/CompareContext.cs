@@ -17,5 +17,8 @@ namespace HtmlRenderer.TestLib.Dom
         public bool IgnoreChildrenPropertiesExceptForElement;
 
         public bool IgnoreDocumentUri;
+
+        public bool IgnoreDocumentOrigin;
+        
     }
 }

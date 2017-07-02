@@ -111,7 +111,7 @@ namespace HtmlRenderer.TestLib.Dom
                 return false;
             if (!context.IgnoreDocumentUri && (this.DocumentUri != other.DocumentUri))
                 return false;
-            if (this.Origin != other.Origin)
+            if (!context.IgnoreDocumentOrigin && (this.Origin != other.Origin))
                 return false;
             if (this.QuirksMode != other.QuirksMode)
                 return false;

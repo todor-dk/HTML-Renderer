@@ -235,7 +235,7 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
             // 12. Let nodes be node's children if node is a DocumentFragment node, and a list containing solely node otherwise.
             Node[] nodes = (node is DocumentFragment) ? ((DocumentFragment)node).ChildNodes.Cast<Node>().ToArray() : new Node[] { node };
 
-            // 13. Queue a mutation record of "childList" for target parent with addedNodes nodes, removedNodes a list solely containing child, nextSibling reference child, and previousSibling child's previous sibling. 
+            // 13. Queue a mutation record of "childList" for target parent with addedNodes nodes, removedNodes a list solely containing child, nextSibling reference child, and previousSibling child's previous sibling.
             // TODO: Implement observers
 
             // 14. Return child.

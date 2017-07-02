@@ -231,7 +231,7 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
             while (enumerator.MoveNext())
             {
                 // 2. Return the first element in the collection for which at least one of the following is true:
-                //      * it has an ID which is key. 
+                //      * it has an ID which is key.
                 //      * it has a name attribute whose value is key;
                 if (enumerator.Current.IsNamed(name))
                     return enumerator.Current;
@@ -595,7 +595,6 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         {
             public ComplexContentCollection(Node[] existingNodes)
             {
-
             }
 
             public int Count
@@ -630,7 +629,6 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
 
             public void InsertNode(ParentNode parent, Node newChild, Node referenceChild)
             {
-
             }
 
             public object RemoveNode(Node node)

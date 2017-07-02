@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheArtOfDev.HtmlRenderer.Dom;
 
 namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 {
@@ -14,20 +15,12 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 
             StringHtmlStream stream = new StringHtmlStream(html);
 
-            Tokenizer tokenizer = new Tokenizer(stream);
-            tokenizer.ParseError += (s, e) => Console.Write("**** PARSE ERROR {0} ****", e.ParseError);
-            Token token;
-            do
-            {
-                token = tokenizer.GetNextToken();
-                EmitToken(token);
-            }
-            while (token.Type != TokenType.EndOfFile);
+            BrowsingContext browsingContext = new BrowsingContext();
 
-            //ParsingContext ctx = new ParsingContext();
+            ParsingContext parsingContext = browsingContext.GetDocumentParsingContext("about:blank");
 
-            //DomParser parser = new Parsing.DomParser(ctx);
-            //parser.Parse(stream);
+            Document document = DomParser.ParseDocument(parsingContext, stream);
+
         }
 
         private static void EmitToken(Token token)

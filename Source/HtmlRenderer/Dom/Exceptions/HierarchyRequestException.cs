@@ -16,7 +16,7 @@ namespace TheArtOfDev.HtmlRenderer.Dom.Exceptions
         /// Initializes a new instance of the <see cref="HierarchyRequestException"/> class.
         /// </summary>
         public HierarchyRequestException()
-            : this ("The operation would yield an incorrect node tree.")
+            : this("The operation would yield an incorrect node tree.")
         {
         }
 

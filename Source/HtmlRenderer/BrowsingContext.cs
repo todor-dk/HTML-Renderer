@@ -18,5 +18,10 @@ namespace TheArtOfDev.HtmlRenderer
         {
             return new Internal.DomImplementation.HtmlDocument(this, baseUri, characterSet);
         }
+
+        public Html5.Parsing.ParsingContext GetDocumentParsingContext(string url)
+        {
+            return new Internal.DomImplementation.DocumentParsingContext(this, url);
+        }
     }
 }

@@ -9,6 +9,11 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
 {
     internal sealed class HtmlDocument : Document
     {
+        public override string ContentType
+        {
+            get { return "text/html"; }
+        }
+
         public HtmlDocument(BrowsingContext browsingContext, string location, string characterSet)
             : base(browsingContext, location, characterSet)
         {

@@ -10,7 +10,6 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
     {
         public static void CurrentlyIrrelevant()
         {
-
         }
     }
 }

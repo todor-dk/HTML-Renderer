@@ -38,15 +38,10 @@ namespace HtmlRenderer.TestLib.Dom
             if (other == null)
                 return false;
 
-            if (this.LocalName != other.LocalName)
+            if (!this.CompareName(other, context))
                 return false;
-            if (this.Name != other.Name)
-                return false;
-            if (this.NamespaceUri != other.NamespaceUri)
-                return false;
+            
             if (!this.OwnerElement.CompareReference(other.OwnerElement, context))
-                return false;
-            if (this.Prefix != other.Prefix)
                 return false;
             if (this.Value != other.Value)
                 return false;
@@ -54,7 +49,7 @@ namespace HtmlRenderer.TestLib.Dom
             return true;
         }
 
-        public bool CompareWith(Attr other, CompareContext context)
+        public bool CompareName(ReferenceAttr other, CompareContext context)
         {
             if (Object.ReferenceEquals(this, other))
                 return true;
@@ -67,11 +62,44 @@ namespace HtmlRenderer.TestLib.Dom
                 return false;
             if (this.NamespaceUri != other.NamespaceUri)
                 return false;
-            if (!this.OwnerElement.CompareDom(other.OwnerElement, context))
-                return false;
             if (this.Prefix != other.Prefix)
                 return false;
+
+            return true;
+        }
+
+        public bool CompareWith(Attr other, CompareContext context)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
+
+            if (!this.CompareName(other, context))
+                return false;
+
+            if (!this.OwnerElement.CompareDom(other.OwnerElement, context))
+                return false;
             if (this.Value != other.Value)
+                return false;
+
+            return true;
+        }
+
+        public bool CompareName(Attr other, CompareContext context)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+            if (other == null)
+                return false;
+
+            if (this.LocalName != other.LocalName)
+                return false;
+            if (this.Name != other.Name)
+                return false;
+            if (this.NamespaceUri != other.NamespaceUri)
+                return false;
+            if (this.Prefix != other.Prefix)
                 return false;
 
             return true;

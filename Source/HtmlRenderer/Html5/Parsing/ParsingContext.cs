@@ -7,17 +7,15 @@ using TheArtOfDev.HtmlRenderer.Dom;
 
 namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
 {
-    public class ParsingContext
+    public abstract class ParsingContext
     {
-        public Document Document
+        public ParsingContext(string url)
         {
-            get { throw new NotImplementedException(); }
+            Contract.RequiresNotEmptyOrWhiteSpace(url, nameof(url));
+            this.Url = url;
         }
 
-        //public Element DocumentElement
-        //{
-        //    get { throw new NotImplementedException(); }
-        //}
+        public string Url { get; private set; }
 
         // http://www.w3.org/TR/html51/semantics-embedded-content.html#iframe-iframe-srcdoc-document
         public bool IsIFrameSource
@@ -36,9 +34,6 @@ namespace TheArtOfDev.HtmlRenderer.Html5.Parsing
             get { return null; }
         }
 
-        internal DomFactory GetDomFactory()
-        {
-            throw new NotImplementedException();
-        }
+        internal abstract DomFactory GetDomFactory();
     }
 }

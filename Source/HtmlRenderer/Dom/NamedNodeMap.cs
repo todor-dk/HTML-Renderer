@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace TheArtOfDev.HtmlRenderer.Dom
 {
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable SA1302 // Interface names must begin with I
     public interface NamedNodeMap
+#pragma warning restore SA1302 // Interface names must begin with I
+#pragma warning restore IDE1006 // Naming Styles
     {
         /// <summary>
         /// Returns the indexth item in the map. If index is greater than or equal to the number of nodes in this map, this returns null.

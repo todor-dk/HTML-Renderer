@@ -13,7 +13,7 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
     {
         // This contains the attributes of the element. See ElementAttributes for further description.
         private ElementAttributes _Attributes = new ElementAttributes();
-        
+
         public Element(Document document)
             : base(document)
         {
@@ -113,9 +113,9 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
 
                 throw new NotImplementedException();
 
-                //attr = (ClassAttr) this.CreateAttribute(null, null, Html5.Attributes.Class, Html5.Attributes.Class, null);
-                //this._Attributes.Append(this, attr);
-                //return attr;
+                // attr = (ClassAttr) this.CreateAttribute(null, null, Html5.Attributes.Class, Html5.Attributes.Class, null);
+                // this._Attributes.Append(this, attr);
+                // return attr;
             }
         }
 
@@ -189,7 +189,7 @@ namespace TheArtOfDev.HtmlRenderer.Internal.DomImplementation
         }
 
         /// <summary>
-        /// Returns the value of a specified attribute on the element or null if no attribute exists. 
+        /// Returns the value of a specified attribute on the element or null if no attribute exists.
         /// </summary>
         /// <param name="name">The name of the attribute whose value you want to get</param>
         /// <returns>The value of the attribute named <paramref name="name"/> or null if no attribute exists with the given name.</returns>

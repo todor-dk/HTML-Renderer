@@ -9,14 +9,14 @@ namespace TheArtOfDev.HtmlRenderer.Html5
 {
     internal static class Extensions
     {
-        public static bool IsInSameSubtree(this Element self, Element node)
+        public static bool IsInSameSubtree(this Node self, Node node)
         {
             // A node’s home subtree is the subtree rooted at that node’s root element.
             // When a node is in a Document, its home subtree is that Document's tree.
             return self.GetRoot() == node.GetRoot();
         }
 
-        public static Node GetRoot(this Element self)
+        public static Node GetRoot(this Node self)
         {
             Contract.RequiresNotNull(self, nameof(self));
 
@@ -28,6 +28,19 @@ namespace TheArtOfDev.HtmlRenderer.Html5
                     return node;
                 node = parent;
             }
+        }
+
+        public static string GetTagName(this Element self)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+
+            string qualifiedName;
+            if (self.Prefix != null)
+                qualifiedName = self.Prefix + ":" + self.LocalName;
+            else
+                qualifiedName = self.LocalName;
+
+            return qualifiedName;
         }
     }
 }

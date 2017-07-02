@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 namespace TheArtOfDev.HtmlRenderer.Dom
 {
     // See: http://www.w3.org/TR/2015/REC-dom-20151119/#interface-element
+#pragma warning disable IDE1006 // Naming Styles
+#pragma warning disable SA1302 // Interface names must begin with I
     public interface Element : Node, ParentNode, NonDocumentTypeChildNode, ChildNode
+#pragma warning restore SA1302 // Interface names must begin with I
+#pragma warning restore IDE1006 // Naming Styles
     {
         /// <summary>
         /// Returns the namespace URI of the element, or null if the element is not in a namespace.

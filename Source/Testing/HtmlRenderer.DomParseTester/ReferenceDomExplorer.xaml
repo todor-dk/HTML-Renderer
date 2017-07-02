@@ -1,0 +1,54 @@
+﻿<Window
+    x:Class="HtmlRenderer.DomParseTester.ReferenceDomExplorer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:HtmlRenderer.DomParseTester"
+    xmlns:i="clr-namespace:HtmlRenderer.DomParseTester.Internal"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dom="clr-namespace:HtmlRenderer.TestLib.Dom;assembly=HtmlRenderer.TestLib"
+    Title="ReferenceDomExplorer"
+    Width="800"
+    Height="800"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <i:TextConverter x:Key="TextConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Click="Load_Click" Header="Load" />
+                <Separator />
+                <MenuItem Click="Exit_Click" Header="Exit" />
+            </MenuItem>
+        </Menu>
+
+        <TreeView Name="DomTree" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type dom:ReferenceDocument}" ItemsSource="{Binding Path=ChildNodes}">
+                    <TextBlock><Run Text="{Binding Path=NodeName, Mode=OneWay}" FontWeight="Bold" /></TextBlock>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type dom:ReferenceDocumentFragment}" ItemsSource="{Binding Path=ChildNodes}">
+                    <TextBlock><Run Text="{Binding Path=NodeName, Mode=OneWay}" FontWeight="Bold" /></TextBlock>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type dom:ReferenceElement}" ItemsSource="{Binding Path=ChildNodes}">
+                    <TextBlock>&lt;<Run Text="{Binding Path=NodeName, Mode=OneWay}" FontWeight="Bold" Foreground="DarkViolet" />&gt;</TextBlock>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type dom:ReferenceText}" ItemsSource="{Binding Path=ChildNodes}">
+                    <TextBlock><Run Text="{Binding Path=NodeName, Mode=OneWay}" FontWeight="Bold" Foreground="DimGray" />: <Run Text="{Binding Path=Data, Mode=OneWay, Converter={StaticResource TextConverter}}" /></TextBlock>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type dom:ReferenceComment}" ItemsSource="{Binding Path=ChildNodes}">
+                    <TextBlock><Run Text="{Binding Path=NodeName, Mode=OneWay}" FontWeight="Bold" Foreground="DarkGreen" />: <Run Text="{Binding Path=Data, Mode=OneWay, Converter={StaticResource TextConverter}}" /></TextBlock>
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type dom:ReferenceDocumentType}" ItemsSource="{Binding Path=ChildNodes}">
+                    <TextBlock>&lt;!DOCTYPE <Run Text="{Binding Path=NodeName, Mode=OneWay}" /> <Run Text="{Binding Path=PublicId, Mode=OneWay}" /> <Run Text="{Binding Path=SystemId, Mode=OneWay}" />&gt;</TextBlock>
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+    </Grid>
+</Window>
