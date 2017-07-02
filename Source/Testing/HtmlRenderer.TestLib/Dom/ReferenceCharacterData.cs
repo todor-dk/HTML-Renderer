@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TheArtOfDev.HtmlRenderer.Dom;
+using Scientia.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
     public abstract class ReferenceCharacterData : ReferenceNode
     {
-        public ReferenceCharacterData(Persisting.IReader reader, TheArtOfDev.HtmlRenderer.Dom.NodeType type)
+        public ReferenceCharacterData(Persisting.IReader reader, Scientia.HtmlRenderer.Dom.NodeType type)
             : base(reader, type)
         {
             reader.ReadElement("PreviousElementSibling", elem => this.PreviousElementSibling = elem);

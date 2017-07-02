@@ -10,9 +10,9 @@
 // - Sun Tsu,
 // "The Art of War"
 
-using TheArtOfDev.HtmlRenderer.Core.Entities;
+using Scientia.HtmlRenderer.Core.Entities;
 
-namespace TheArtOfDev.HtmlRenderer.Core.Dom
+namespace Scientia.HtmlRenderer.Core.Dom
 {
     /// <summary>
     /// CSS boxes that have ":hover" selector on them.

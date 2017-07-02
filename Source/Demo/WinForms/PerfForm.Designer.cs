@@ -1,6 +1,6 @@
-using TheArtOfDev.HtmlRenderer.WinForms;
+using Scientia.HtmlRenderer.WinForms;
 
-namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
+namespace Scientia.HtmlRenderer.Demo.WinForms
 {
     partial class PerfForm
     {

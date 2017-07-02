@@ -19,11 +19,11 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using TheArtOfDev.HtmlRenderer.Core.Entities;
-using TheArtOfDev.HtmlRenderer.Demo.Common;
-using TheArtOfDev.HtmlRenderer.WPF;
+using Scientia.HtmlRenderer.Core.Entities;
+using Scientia.HtmlRenderer.Demo.Common;
+using Scientia.HtmlRenderer.WPF;
 
-namespace TheArtOfDev.HtmlRenderer.Demo.WPF
+namespace Scientia.HtmlRenderer.Demo.WPF
 {
     /// <summary>
     /// Interaction logic for MainControl.xaml

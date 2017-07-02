@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TheArtOfDev.HtmlRenderer.Demo.Common.Properties {
+namespace Scientia.HtmlRenderer.Demo.Common.Properties {
     using System;
     
     

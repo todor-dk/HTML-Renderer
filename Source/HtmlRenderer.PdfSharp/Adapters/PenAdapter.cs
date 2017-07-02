@@ -10,11 +10,11 @@
 // - Sun Tsu,
 // "The Art of War"
 
-using TheArtOfDev.HtmlRenderer.Adapters;
-using TheArtOfDev.HtmlRenderer.Adapters.Entities;
+using Scientia.HtmlRenderer.Adapters;
+using Scientia.HtmlRenderer.Adapters.Entities;
 using PdfSharp.Drawing;
 
-namespace TheArtOfDev.HtmlRenderer.PdfSharp.Adapters
+namespace Scientia.HtmlRenderer.PdfSharp.Adapters
 {
     /// <summary>
     /// Adapter for WinForms pens objects for core.

@@ -12,11 +12,11 @@
 
 using System;
 using System.Collections.Generic;
-using TheArtOfDev.HtmlRenderer.Adapters;
-using TheArtOfDev.HtmlRenderer.Adapters.Entities;
-using TheArtOfDev.HtmlRenderer.Core.Utils;
+using Scientia.HtmlRenderer.Adapters;
+using Scientia.HtmlRenderer.Adapters.Entities;
+using Scientia.HtmlRenderer.Core.Utils;
 
-namespace TheArtOfDev.HtmlRenderer.Core.Handlers
+namespace Scientia.HtmlRenderer.Core.Handlers
 {
     /// <summary>
     /// Utilities for fonts and fonts families handling.

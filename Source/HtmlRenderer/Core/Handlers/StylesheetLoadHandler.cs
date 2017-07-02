@@ -14,10 +14,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using TheArtOfDev.HtmlRenderer.Core.Entities;
-using TheArtOfDev.HtmlRenderer.Core.Utils;
+using Scientia.HtmlRenderer.Core.Entities;
+using Scientia.HtmlRenderer.Core.Utils;
 
-namespace TheArtOfDev.HtmlRenderer.Core.Handlers
+namespace Scientia.HtmlRenderer.Core.Handlers
 {
     /// <summary>
     /// Handler for loading a stylesheet data.

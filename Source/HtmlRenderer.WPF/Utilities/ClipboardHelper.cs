@@ -14,7 +14,7 @@ using System;
 using System.Text;
 using System.Windows;
 
-namespace TheArtOfDev.HtmlRenderer.WPF.Utilities
+namespace Scientia.HtmlRenderer.WPF.Utilities
 {
     /// <summary>
     /// Helper to encode and set HTML fragment to clipboard.<br/>

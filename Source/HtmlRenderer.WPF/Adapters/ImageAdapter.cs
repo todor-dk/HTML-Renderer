@@ -11,9 +11,9 @@
 // "The Art of War"
 
 using System.Windows.Media.Imaging;
-using TheArtOfDev.HtmlRenderer.Adapters;
+using Scientia.HtmlRenderer.Adapters;
 
-namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
+namespace Scientia.HtmlRenderer.WPF.Adapters
 {
     /// <summary>
     /// Adapter for WPF Image object for core.

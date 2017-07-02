@@ -16,14 +16,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using TheArtOfDev.HtmlRenderer.Adapters.Entities;
-using TheArtOfDev.HtmlRenderer.Core;
-using TheArtOfDev.HtmlRenderer.Core.Entities;
-using TheArtOfDev.HtmlRenderer.Core.Utils;
-using TheArtOfDev.HtmlRenderer.WPF.Adapters;
-using TheArtOfDev.HtmlRenderer.WPF.Utilities;
+using Scientia.HtmlRenderer.Adapters.Entities;
+using Scientia.HtmlRenderer.Core;
+using Scientia.HtmlRenderer.Core.Entities;
+using Scientia.HtmlRenderer.Core.Utils;
+using Scientia.HtmlRenderer.WPF.Adapters;
+using Scientia.HtmlRenderer.WPF.Utilities;
 
-namespace TheArtOfDev.HtmlRenderer.WPF
+namespace Scientia.HtmlRenderer.WPF
 {
     /// <summary>
     /// Low level handling of Html Renderer logic, this class is used by <see cref="HtmlParser"/>,

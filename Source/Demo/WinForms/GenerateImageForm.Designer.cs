@@ -1,4 +1,4 @@
-﻿namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
+﻿namespace Scientia.HtmlRenderer.Demo.WinForms
 {
     partial class GenerateImageForm
     {

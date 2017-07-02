@@ -15,7 +15,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 
-namespace TheArtOfDev.HtmlRenderer.Demo.WPF
+namespace Scientia.HtmlRenderer.Demo.WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -24,7 +24,6 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
     {
         public App()
         {
-            Html5.Parsing.XXTest.Test1();
             AppDomain.CurrentDomain.AssemblyResolve += OnResolveAssembly;
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TheArtOfDev.HtmlRenderer.Dom;
+using Scientia.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
@@ -14,7 +14,7 @@ namespace HtmlRenderer.TestLib.Dom
             this.Attributes = new ReferenceAttrList();
         }
 
-        public ReferenceElement(Persisting.IReader reader, TheArtOfDev.HtmlRenderer.Dom.NodeType type)
+        public ReferenceElement(Persisting.IReader reader, Scientia.HtmlRenderer.Dom.NodeType type)
             : base(reader, type)
         {
             this.Attributes = new ReferenceAttrList();

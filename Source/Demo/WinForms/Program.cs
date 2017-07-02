@@ -17,7 +17,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
+namespace Scientia.HtmlRenderer.Demo.WinForms
 {
     internal static class Program
     {

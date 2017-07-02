@@ -12,12 +12,12 @@
 
 using System;
 using System.Collections.Generic;
-using TheArtOfDev.HtmlRenderer.Adapters;
-using TheArtOfDev.HtmlRenderer.Core.Entities;
-using TheArtOfDev.HtmlRenderer.Core.Parse;
-using TheArtOfDev.HtmlRenderer.Core.Utils;
+using Scientia.HtmlRenderer.Adapters;
+using Scientia.HtmlRenderer.Core.Entities;
+using Scientia.HtmlRenderer.Core.Parse;
+using Scientia.HtmlRenderer.Core.Utils;
 
-namespace TheArtOfDev.HtmlRenderer.Core
+namespace Scientia.HtmlRenderer.Core
 {
     /// <summary>
     /// Holds parsed stylesheet css blocks arranged by media and classes.<br/>

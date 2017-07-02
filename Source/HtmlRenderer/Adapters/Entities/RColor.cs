@@ -5,7 +5,7 @@
 using System;
 using System.Text;
 
-namespace TheArtOfDev.HtmlRenderer.Adapters.Entities
+namespace Scientia.HtmlRenderer.Adapters.Entities
 {
     /// <summary>
     /// Represents an ARGB (alpha, red, green, blue) color.

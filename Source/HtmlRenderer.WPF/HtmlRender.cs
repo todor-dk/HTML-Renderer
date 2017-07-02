@@ -14,13 +14,13 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using TheArtOfDev.HtmlRenderer.Core;
-using TheArtOfDev.HtmlRenderer.Core.Entities;
-using TheArtOfDev.HtmlRenderer.Core.Utils;
-using TheArtOfDev.HtmlRenderer.WPF.Adapters;
-using TheArtOfDev.HtmlRenderer.WPF.Utilities;
+using Scientia.HtmlRenderer.Core;
+using Scientia.HtmlRenderer.Core.Entities;
+using Scientia.HtmlRenderer.Core.Utils;
+using Scientia.HtmlRenderer.WPF.Adapters;
+using Scientia.HtmlRenderer.WPF.Utilities;
 
-namespace TheArtOfDev.HtmlRenderer.WPF
+namespace Scientia.HtmlRenderer.WPF
 {
     /// <summary>
     /// Standalone static class for simple and direct HTML rendering.<br/>

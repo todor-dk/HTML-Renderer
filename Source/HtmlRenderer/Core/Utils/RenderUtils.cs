@@ -10,11 +10,11 @@
 // - Sun Tsu,
 // "The Art of War"
 
-using TheArtOfDev.HtmlRenderer.Adapters;
-using TheArtOfDev.HtmlRenderer.Adapters.Entities;
-using TheArtOfDev.HtmlRenderer.Core.Dom;
+using Scientia.HtmlRenderer.Adapters;
+using Scientia.HtmlRenderer.Adapters.Entities;
+using Scientia.HtmlRenderer.Core.Dom;
 
-namespace TheArtOfDev.HtmlRenderer.Core.Utils
+namespace Scientia.HtmlRenderer.Core.Utils
 {
     /// <summary>
     /// Provides some drawing functionality

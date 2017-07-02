@@ -13,12 +13,12 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using TheArtOfDev.HtmlRenderer.Adapters;
-using TheArtOfDev.HtmlRenderer.Adapters.Entities;
-using TheArtOfDev.HtmlRenderer.Core.Utils;
-using TheArtOfDev.HtmlRenderer.WPF.Utilities;
+using Scientia.HtmlRenderer.Adapters;
+using Scientia.HtmlRenderer.Adapters.Entities;
+using Scientia.HtmlRenderer.Core.Utils;
+using Scientia.HtmlRenderer.WPF.Utilities;
 
-namespace TheArtOfDev.HtmlRenderer.WPF.Adapters
+namespace Scientia.HtmlRenderer.WPF.Adapters
 {
     /// <summary>
     /// Adapter for WPF context menu for core.

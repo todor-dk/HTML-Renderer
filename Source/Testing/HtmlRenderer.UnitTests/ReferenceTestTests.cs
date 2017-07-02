@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using HtmlRenderer.TestLib.Dom.Persisting;
-using TheArtOfDev.HtmlRenderer.Dom;
-using TheArtOfDev.HtmlRenderer;
+using Scientia.HtmlRenderer.Dom;
+using Scientia.HtmlRenderer;
 
 namespace HtmlRenderer.UnitTests
 {

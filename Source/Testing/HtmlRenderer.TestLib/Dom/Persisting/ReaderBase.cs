@@ -33,17 +33,17 @@ namespace HtmlRenderer.TestLib.Dom.Persisting
         protected ReferenceNode ReadNode(int type)
         {
             if (type == 1)
-                return new ReferenceElement(this, TheArtOfDev.HtmlRenderer.Dom.NodeType.Element);
+                return new ReferenceElement(this, Scientia.HtmlRenderer.Dom.NodeType.Element);
             else if (type == 3)
-                return new ReferenceText(this, TheArtOfDev.HtmlRenderer.Dom.NodeType.Text);
+                return new ReferenceText(this, Scientia.HtmlRenderer.Dom.NodeType.Text);
             else if (type == 8)
-                return new ReferenceComment(this, TheArtOfDev.HtmlRenderer.Dom.NodeType.Comment);
+                return new ReferenceComment(this, Scientia.HtmlRenderer.Dom.NodeType.Comment);
             else if (type == 9)
-                return new ReferenceDocument(this, TheArtOfDev.HtmlRenderer.Dom.NodeType.Document);
+                return new ReferenceDocument(this, Scientia.HtmlRenderer.Dom.NodeType.Document);
             else if (type == 10)
-                return new ReferenceDocumentType(this, TheArtOfDev.HtmlRenderer.Dom.NodeType.DocumentType);
+                return new ReferenceDocumentType(this, Scientia.HtmlRenderer.Dom.NodeType.DocumentType);
             else if (type == 11)
-                return new ReferenceDocumentFragment(this, TheArtOfDev.HtmlRenderer.Dom.NodeType.DocumentFragment);
+                return new ReferenceDocumentFragment(this, Scientia.HtmlRenderer.Dom.NodeType.DocumentFragment);
             else
                 throw new NotImplementedException();
         }

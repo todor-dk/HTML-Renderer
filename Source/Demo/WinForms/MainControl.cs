@@ -16,11 +16,11 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using TheArtOfDev.HtmlRenderer.Core.Entities;
-using TheArtOfDev.HtmlRenderer.Demo.Common;
+using Scientia.HtmlRenderer.Core.Entities;
+using Scientia.HtmlRenderer.Demo.Common;
 using Timer = System.Threading.Timer;
 
-namespace TheArtOfDev.HtmlRenderer.Demo.WinForms
+namespace Scientia.HtmlRenderer.Demo.WinForms
 {
     public partial class MainControl : UserControl
     {

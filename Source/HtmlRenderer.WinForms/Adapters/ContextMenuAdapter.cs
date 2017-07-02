@@ -12,12 +12,12 @@
 
 using System;
 using System.Windows.Forms;
-using TheArtOfDev.HtmlRenderer.Adapters.Entities;
-using TheArtOfDev.HtmlRenderer.Core.Utils;
-using TheArtOfDev.HtmlRenderer.Adapters;
-using TheArtOfDev.HtmlRenderer.WinForms.Utilities;
+using Scientia.HtmlRenderer.Adapters.Entities;
+using Scientia.HtmlRenderer.Core.Utils;
+using Scientia.HtmlRenderer.Adapters;
+using Scientia.HtmlRenderer.WinForms.Utilities;
 
-namespace TheArtOfDev.HtmlRenderer.WinForms.Adapters
+namespace Scientia.HtmlRenderer.WinForms.Adapters
 {
     /// <summary>
     /// Adapter for WinForms context menu for core.

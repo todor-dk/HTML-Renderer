@@ -12,7 +12,7 @@
 
 using System.IO;
 
-namespace TheArtOfDev.HtmlRenderer.Demo.Common
+namespace Scientia.HtmlRenderer.Demo.Common
 {
     /// <summary>
     /// Get font, image and text resources for HtmlRenderer demo.

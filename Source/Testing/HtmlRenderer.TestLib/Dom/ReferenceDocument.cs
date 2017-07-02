@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TheArtOfDev.HtmlRenderer.Dom;
+using Scientia.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
     public sealed class ReferenceDocument : ReferenceParentNode
     {
-        public ReferenceDocument(Persisting.IReader reader, TheArtOfDev.HtmlRenderer.Dom.NodeType type)
+        public ReferenceDocument(Persisting.IReader reader, Scientia.HtmlRenderer.Dom.NodeType type)
             : base(reader, type)
         {
             this.QuirksMode = QuirksMode.NoQuirks;
