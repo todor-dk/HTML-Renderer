@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Walmart Seller Center</title>
+	<base href="/" />
+
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="dist/1499474126412/app/css/app.css" />
+
+	<!-- FAVICON -->
+    <link rel="shortcut icon" href="dist/1499474126412/assets/images/favicon.png" />
+
+    <!-- ENV detection -->
+    <script type="text/javascript">
+		(function () {
+			'use strict';
+			window.mp = {};
+			var data, xhr = new XMLHttpRequest();
+			xhr.open('GET', '/resource/config/mixpanelKey', false);
+			xhr.send(null);
+			xhr.status === 200 ? (data = JSON.parse(xhr.responseText), window.mp.wmtoken = data.payload) : window.mp.wmtoken = '';
+		})();
+    </script>
+
+    <!-- MIXPANEL -->
+    	<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);mixpanel.init(window.mp.wmtoken, { track_pageview: false });
+    	</script>
+    	<script src="dist/1499474126412/app/js/vendor/sheetjs/jszip.js"></script>
+</head>
+<body>
+	<!-- TOP HEADER -->
+	<header data-ng-if="(MPP.loginObj.loggedIn || MPP.isLandingPg || MPP.isFirstTimeUser)">
+		<wm-topnav></wm-topnav>
+		<wm-checklist data-ng-if="MPP.loginObj.isOnboarded"></wm-checklist>
+	</header>
+
+	<!-- WRAPPER -->
+	<section data-ng-cloak class="wm-main-wrapper" data-ng-class="{'margined': (MPP.loginObj.loggedIn || MPP.isFirstTimeUser)}" >
+		<!-- LEFT NAV -->
+		<leftnav data-ng-cloak class="wm-lt-container" data-ng-if="MPP.loginObj.loggedIn && MPP.loginObj.isOnboarded"></leftnav>
+
+		<!-- MAIN CONTENT -->
+		<div data-ng-cloak class="wm-rt-container" data-ng-class="{'login-bg': MPP.isLoginPg}">
+			<section data-ng-cloak data-ng-class="{'logged-in': MPP.loginObj.loggedIn}" class="wm-main-content" data-ui-view></section>
+			<serverside-err-banner data-ng-if="MPP.loginObj.loggedIn || MPP.isFirstTimeUser"></serverside-err-banner>
+		</div>
+	</section>
+
+	<!-- SPINNER -->
+	<div class="spinner-backdrop" data-ng-if="MPP.loading">
+		<div class="spinner"></div>
+	</div>
+
+	<!-- MODAL -->
+	<wm-modal></wm-modal>
+
+	<!-- GROWL -->
+	<div growl></div>
+
+	<!-- FOOTER -->
+	<wm-footer></wm-footer>
+
+	<!-- JS -->
+	<script data-main="dist/1499474126412/app/js/main" src="dist/1499474126412/app/js/vendor/require.js"></script>
+</body>
+</html>

@@ -20,5 +20,25 @@ namespace HtmlRenderer.DomParseTester
             foreach (TItem item in collection)
                 self.Add(item);
         }
+
+        public static bool ArraysEquals<TItem>(this TItem[] a, TItem[] b)
+            where TItem : IEquatable<TItem>
+        {
+            if (a == b)
+                return true;
+            if ((a == null) || (b == null))
+                return false;
+
+            if (a.Length != b.Length)
+                return false;
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (!a[i].Equals(b[i]))
+                    return false;
+            }
+
+            return true;
+        }
     }
 }

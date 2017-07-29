@@ -1,0 +1,1881 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+           
+<!-- <!DOCTYPE html> -->
+
+<html>
+
+<head>
+<title>Eden Prairie Football Association</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/Feeds/News/?org=EDENPRAIRIEFOOTBALL.COM" />
+
+
+
+<script LANGUAGE="JavaScript" type="text/javascript">
+engine = null;
+if (window.navigator.appName == "Microsoft Internet Explorer")
+{
+   // This is an IE browser. What mode is the engine in?
+   if (document.documentMode) // IE8 or later
+      engine = document.documentMode;
+   else // IE 5-7
+   {
+      engine = 5; // Assume quirks mode unless proven otherwise
+      if (document.compatMode)
+      {
+         if (document.compatMode == "CSS1Compat")
+            engine = 7; // standards mode
+      }
+      // There is no test for IE6 standards mode because that mode  
+      // was replaced by IE7 standards mode; there is no emulation.
+   }
+   // the engine variable now contains the document compatibility mode.
+}
+
+
+
+
+var wInst = window
+var bOpen = false
+
+var imgPlay = new Image();
+imgPlay.src = "https://s3.amazonaws.com/la-web-assets/public/images/buttons/play.gif"
+var imgPause = new Image();
+imgPause.src = "https://s3.amazonaws.com/la-web-assets/public/images/buttons/stop.gif"
+
+
+// Set slideShowSpeed (milliseconds)
+var slideShowSpeed = 5000
+
+// Duration of crossfade (seconds)
+var crossFadeDuration = 3
+</script> 
+
+<link rel="stylesheet" type="text/css" href="css/widgets_headlines.css" />
+
+
+
+
+<style type="text/css">
+ .galleria-height {
+        height: 390px;
+        overflow: hidden;   
+    }
+.slideshow-div { margin-bottom: 10px; }
+
+
+.article694619 {
+	background-color: #FFFFFF;
+	color: #000000;	
+}
+
+.article694619 a {
+	color: #000080;
+	text-decoration: none; 
+	font-family: Arial; 
+	font-weight: bolder;
+}
+
+.article694619 a:hover {
+	text-decoration: underline; 
+	color: #000080;
+}	
+
+
+
+.centered { 
+	margin: 0 auto; 
+}
+
+
+.News {
+	width: 100%;
+}
+
+
+</style>
+
+
+
+<link href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="/js/jquery-1.10.2.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="/js/jquery.timepicker_old.min.js"></script>
+<script src="/js/bootstrap23.min.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<!-- bxSlider Javascript file -->
+<script src="/js/bxSlider/jquery.bxslider.js"></script>
+
+<!--Color Picker-->
+<script src="/js/colpick-jQuery-Color-Picker-master/js/colpick.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".colpick-input").focus(function(event) {
+            var input = $(this);
+            var initValue = input.val();
+            if (initValue){
+                initValue = initValue.replace("#", "");
+            }
+            input.colpick({
+                color: initValue,
+                submit: false,
+                colorScheme:'dark',
+                layout:'hex',
+                onChange: function(hsb, hex){
+                    input.val("#"+hex);
+                    colpickCallback();
+                }
+            });
+        });
+    })
+</script>
+
+<!--Date picker-->
+<script type="text/ecmascript">
+    $(function () {
+        $(".jq_ui_date").datepicker({
+            showButtonPanel: true,
+            changeMonth: true,
+            changeYear: true,
+ 
+            dateFormat: "mm/dd/yy"
+        });
+    });
+</script>
+
+<!--Admin/public view toggle-->
+<script type="text/javascript">
+    $(function(){
+        var admin = $("#admin-view");
+        var pub = $("#public-view");
+        if (typeof(CKEDITOR) != "undefined"){
+            var instances = [];
+            for (i in CKEDITOR.instances){
+                var inst = CKEDITOR.instances[i].name;
+                instances.push(inst);
+            }
+        }
+
+        admin.on("click", function(){
+            if (!$(this).hasClass("active")){
+                $(this).addClass("btn-primary");
+                pub.removeClass("btn-primary");
+            }
+            $(".admin-ctrl").show();
+            $("#navlist > ul > li > a > strike").parent("a").show();
+            $("a.expired").show();
+            $("strike.expired-article").parents("div[class*='article']").show();
+            $("strike.expired-headline").parents("table.headline-table").show();
+            $("strike.expired-article-newspage").parents("div.glasstop").show();
+            $("strike.expired-headline-newspage").parents("div[class*='art']").show();
+            $("td.news_headline_text_cell > a > strike").parents("div.listitem").show();
+            if (typeof(CKEDITOR) != "undefined"){
+                for (i=0; i<instances.length; i++){
+                    var inst = instances[i];
+                    div = $("#"+inst);
+                    div.attr("contenteditable", true);
+                    CKEDITOR.inline(inst);
+                }
+            }
+        });
+
+        pub.on("click", function(){
+            if (!$(this).hasClass("active")){
+                $(this).addClass("btn-primary");
+                admin.removeClass("btn-primary");
+            }
+            $(".admin-ctrl").hide();
+            $("#navlist > ul > li > a > strike").parent("a").hide();
+            $("a.expired").hide();
+            $("strike.expired-article").parents("div[class*='article']").hide();
+            $("strike.expired-headline").parents("table.headline-table").hide();
+            $("strike.expired-article-newspage").parents("div.glasstop").hide();
+            $("strike.expired-headline-newspage").parents("div[class*='art']").hide();
+            $("td.news_headline_text_cell > a > strike").parents("div.listitem").hide();
+            if (typeof(CKEDITOR) != "undefined"){
+                for (i=0; i<instances.length; i++){
+                    var inst = instances[i];
+                    div = $("#"+inst);
+                    CKEDITOR.instances[inst].destroy();
+                    div.attr("contenteditable", false);
+                }
+            }
+        });
+    });
+</script>
+<script src="/js/jquery.bootstrap-growl.min.js"></script>
+
+<!--Login bar admin controls-->
+<script type="text/javascript">
+  $(function(){
+
+    $("#login-link").click(function(){
+      setTimeout(function(){
+        $('#UserName').focus();
+      }, 0);
+    });
+    
+    $("#admin-tools").click(function(){
+      $("#admin-tray").slideToggle("fast", function(){
+        if ($("#admin-tray").is(":visible")){
+          $("#admin-caret").attr('class', 'fa fa-caret-down');
+        }else{
+          $("#admin-caret").attr('class', 'fa fa-caret-right');
+        }
+      });
+    });
+
+    $("td.admin-tool-cell").hover(function() {
+      $(this).children('.dropdown').toggleClass('open');
+    }, function() {
+      $(this).children('.dropdown').toggleClass('open');
+    });
+
+  });
+
+  function auth(){
+    $("#login-button").addClass('disabled').text("Authenticating...");
+  }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $("#nag").popover();
+
+        if(typeof String.prototype.trim !== 'function') {
+            String.prototype.trim = function() {
+                return this.replace(/^\s+|\s+$/g, '');
+            };
+        };
+    });//end function
+
+    function nagPopover(){}
+
+
+</script>
+
+<!--Appearance Panel Script-->
+<script type="text/javascript">
+    $(function(){
+        var btn = $("#appearance_panel_btn");
+        var icon = $("#appearance_panel_btn>i");
+        var panel_spans = $("ul.appearance_panel li span");
+        btn.on("click", function(){
+            icon.toggleClass("fa-caret-left fa-caret-right");
+            panel_spans.toggle();
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    /*!
+ * jQuery-ajaxTransport-XDomainRequest - v1.0.2 - 2014-05-02
+ * https://github.com/MoonScript/jQuery-ajaxTransport-XDomainRequest
+ * Copyright (c) 2014 Jason Moon (@JSONMOON)
+ * Licensed MIT (/blob/master/LICENSE.txt)
+ */
+    (function(a){if(typeof define==='function'&&define.amd){define(['jquery'],a)}else{a(jQuery)}}(function($){if($.support.cors||!$.ajaxTransport||!window.XDomainRequest){return}var n=/^https?:\/\//i;var o=/^get|post$/i;var p=new RegExp('^'+location.protocol,'i');$.ajaxTransport('* text html xml json',function(j,k,l){if(!j.crossDomain||!j.async||!o.test(j.type)||!n.test(j.url)||!p.test(j.url)){return}var m=null;return{send:function(f,g){var h='';var i=(k.dataType||'').toLowerCase();m=new XDomainRequest();if(/^\d+$/.test(k.timeout)){m.timeout=k.timeout}m.ontimeout=function(){g(500,'timeout')};m.onload=function(){var a='Content-Length: '+m.responseText.length+'\r\nContent-Type: '+m.contentType;var b={code:200,message:'success'};var c={text:m.responseText};try{if(i==='html'||/text\/html/i.test(m.contentType)){c.html=m.responseText}else if(i==='json'||(i!=='text'&&/\/json/i.test(m.contentType))){try{c.json=$.parseJSON(m.responseText)}catch(e){b.code=500;b.message='parseerror'}}else if(i==='xml'||(i!=='text'&&/\/xml/i.test(m.contentType))){var d=new ActiveXObject('Microsoft.XMLDOM');d.async=false;try{d.loadXML(m.responseText)}catch(e){d=undefined}if(!d||!d.documentElement||d.getElementsByTagName('parsererror').length){b.code=500;b.message='parseerror';throw'Invalid XML: '+m.responseText;}c.xml=d}}catch(parseMessage){throw parseMessage;}finally{g(b.code,b.message,c,a)}};m.onprogress=function(){};m.onerror=function(){g(500,'error',{text:m.responseText})};if(k.data){h=($.type(k.data)==='string')?k.data:$.param(k.data)}m.open(j.type,j.url);m.send(h)},abort:function(){if(m){m.abort()}}}})}));
+</script>
+
+
+<script type="text/javascript">
+
+
+</script>
+
+<!--Tracking-->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-2070627-2', 'auto');
+  ga('send', 'pageview');
+
+    var trackOutboundLink = function(url, campaign) {
+       ga('send', 'event', campaign, 'click', url, {
+         'transport': 'beacon',
+         //'hitCallback': function(){document.location = url;}
+       });
+    }
+</script>
+
+<!--apiLoader-->
+<script type="text/javascript">
+    function apiLoader(view){
+        if (view == "hide"){
+            $("#loader_").addClass('zoomOut').removeClass('zoomIn').hide();
+        }else{
+            $("#loader_").addClass('zoomIn').show();
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    // $(function(){
+    //     $( ".sortable" ).sortable({
+    //       handle: ".panel-body",
+    //       placeholder: "panel-placeholder"
+    //     });
+    // });
+</script>
+
+
+
+<script type="text/javascript" src="/js/moment.js"></script>
+<script src="/Tools/Masonary/jquery.masonry.min.js"></script>
+<script src="/Tools/Masonary/js/modernizr-transitions.js"></script>
+<link href="//leagueathletics.com/js/galleria/themes/classic/galleria.classic.css" rel="stylesheet" />
+<script src="//leagueathletics.com/js/galleria/galleria-1.2.9.min.js"></script>
+<script src="//leagueathletics.com/js/galleria/themes/classic/galleria.classic.min.js"></script>
+
+<script>
+    $(function(){
+       $(".carousel-control").hide();    
+       $("#myCarousel").hover(
+            function(){
+                $(".carousel-control").fadeIn();    
+            },
+            function(){
+                $(".carousel-control").hide();
+            }
+        );
+    });
+</script>
+
+
+<link href="https://s3.amazonaws.com/la-web-assets/public/images/fonts/oswald-font.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/js/jquery.marquee/css/jquery.marquee.min.css">
+<!-- Copyright (c) 2000-2017 by LeagueAthletics.com, LLC. Tel: (877) 932-6747, email: info@LeagueAthletics.com -->
+<!-- No portion of this web site may be used without written permission -->
+
+
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<!-- Custom meta tags -->
+
+	<meta name="description" content="">
+	<meta name="keywords" content="Football, EPFA, Eden Prairie Football Association, /Registration/FamilyAccounts.asp?org=EDENPRAIRIEFOOTBALL.COM, 55347, Score, athletic, league, association, team, sports, website, coach, schedule, scores, messages, player statistics">
+
+<link rel="shortcut icon" type="image/ico" href="https://s3.amazonaws.com/la-web-assets/public/images/favicon/football/favicon.ico" />	
+
+
+
+<!-- styles -->
+<link href="/css/jquery.timepicker.css" rel="stylesheet" />
+<link href="/css/datepicker.css" rel="stylesheet" />
+<link href="/css/bootstrap23.min.css" rel="stylesheet">
+<!--<link href="/css/FontAwesome4/css/font-awesome.min.css" rel="stylesheet">
+<style type="text/css">@import url("/mobile/assets/css/font-awesome.css");</style>-->
+<link href="/css/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- Scoreslider CSS file -->
+<link href="/js/bxSlider/jquery.bxslider.css" rel="stylesheet" />
+
+<!--Color Picker Css-->
+<link rel="stylesheet" href="/js/colpick-jQuery-Color-Picker-master/css/colpick.css" />
+<style type="text/css">
+	div.colpick{
+		z-index: 1;
+		-webkit-border-radius: 0;
+		-moz-border-radius: 0;
+		border-radius: 0;
+	}
+
+	.colpick_dark{
+		background-color: rgba(0,0,0,0.6);
+	}
+
+	.colpick_hex_field input{
+		right: 0;
+	}
+</style>
+
+
+<!-- 1 -->
+
+<!--Includes standard CSS as well as base styles-->
+<style type="text/css">
+	/* Standard Styles */
+	@import url(//fonts.googleapis.com/css?family=Open+Sans:400,300,700);
+	@import url(//fonts.googleapis.com/css?family=Oswald:400,300,700);
+	@import url(//fonts.googleapis.com/css?family=Roboto:400,300,700);
+	@import url(//fonts.googleapis.com/css?family=Exo:300,400,700|Titillium+Web:400,300,700);    
+
+	
+
+	
+</style>
+
+
+
+<link rel="stylesheet" type="text/css" href="/Framework/Basestyles.css">
+<link rel="stylesheet" type="text/css"  href="https://s3.amazonaws.com/files.leagueathletics.com/Text/CSS/2282_Custom.css">
+
+<style type="text/css">
+
+</style>
+
+
+
+<!--Stock Theme CSS files-->
+<style type="text/css">
+
+/* Rounded 1 - Round Head */
+
+
+/* TOP NAV */
+#topnav{
+  background-image: -moz-linear-gradient(top,  #FFFFFF 0%, #CCCCCC 100%); /* FF3.6+ */
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FFFFFF), color-stop(100%,#CCCCCC)); /* Chrome,Safari4+ */
+  background-image: -webkit-linear-gradient(top,  #FFFFFF 0%,#CCCCCC 100%); /* Chrome10+,Safari5.1+ */
+  background-image: -o-linear-gradient(top,  #FFFFFF 0%,#CCCCCC 100%); /* Opera 11.10+ */
+  background-image: -ms-linear-gradient(top,  #FFFFFF 0%,#CCCCCC 100%); /* IE10+ */
+  background-image: linear-gradient(to bottom,  #FFFFFF 0%,#CCCCCC 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#CCCCCC',GradientType=0 ); /* IE6-9 */ 
+  background-position: top left;  
+  background-repeat: repeat-x;
+}
+
+#navdropdown a.menutab,
+#navdropdown a.menutab:visited{
+	background-image: -moz-linear-gradient(top,  #FFFFFF 0%, #CCCCCC 100%); /* FF3.6+ */
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FFFFFF), color-stop(100%,#CCCCCC)); /* Chrome,Safari4+ */
+  background-image: -webkit-linear-gradient(top,  #FFFFFF 0%,#CCCCCC 100%); /* Chrome10+,Safari5.1+ */
+  background-image: -o-linear-gradient(top,  #FFFFFF 0%,#CCCCCC 100%); /* Opera 11.10+ */
+  background-image: -ms-linear-gradient(top,  #FFFFFF 0%,#CCCCCC 100%); /* IE10+ */
+  background-image: linear-gradient(to bottom,  #FFFFFF 0%,#CCCCCC 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#CCCCCC',GradientType=0 ); /* IE6-9 */	
+  border-left: 1px solid #FFFFFF;
+  border-right: 1px solid #FFFFFF;
+	background-position: top left;	
+	background-repeat: repeat-x;	
+  font-weight: 700;
+}
+
+#navdropdown li:hover a.menutab{
+    background-image: -moz-linear-gradient(top,  #FF3333 0%, #990000 100%); /* FF3.6+ */
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FF3333), color-stop(100%,#990000)); /* Chrome,Safari4+ */
+    background-image: -webkit-linear-gradient(top,  #FF3333 0%,#990000 100%); /* Chrome10+,Safari5.1+ */
+    background-image: -o-linear-gradient(top,  #FF3333 0%,#990000 100%); /* Opera 11.10+ */
+    background-image: -ms-linear-gradient(top,  #FF3333 0%,#990000 100%); /* IE10+ */
+    background-image: linear-gradient(to bottom,  #FF3333 0%,#990000 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FF3333', endColorstr='#990000',GradientType=0 ); /* IE6-9 */
+    background-position: top left;  
+    background-repeat: repeat-x;
+}
+
+#navdropdown a.tabselect,
+#navdropdown a.tabselect:visited,
+#navdropdown a.tabselect:hover{
+  background-image: -moz-linear-gradient(top,  #FF3333 0%, #990000 100%); /* FF3.6+ */
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FF3333), color-stop(100%,#990000)); /* Chrome,Safari4+ */
+  background-image: -webkit-linear-gradient(top,  #FF3333 0%,#990000 100%); /* Chrome10+,Safari5.1+ */
+  background-image: -o-linear-gradient(top,  #FF3333 0%,#990000 100%); /* Opera 11.10+ */
+  background-image: -ms-linear-gradient(top,  #FF3333 0%,#990000 100%); /* IE10+ */
+  background-image: linear-gradient(to bottom,  #FF3333 0%,#990000 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FF3333', endColorstr='#990000',GradientType=0 ); /* IE6-9 */ 
+  background-position: top left;  
+  background-repeat: repeat-x;
+  font-weight: 700;
+}
+
+#navdropdown td:first-child a.menutab{
+  border-left: 0;
+}
+
+#navdropdown td:last-child a.menutab{
+  border-right: 0;
+}
+
+#navdropdown li a{
+    background-color: #CC0000;
+}
+
+#navdropdown li a:hover{
+    background-color: #FF3333;
+}
+/* END TOP NAV */
+
+/* SIDE NAV */
+#navlist{
+  background: #CCCCCC;
+}
+
+#navlist li:first-child > a:first-child{
+    border-top: 0;
+}
+
+#navlist li:last-child > a:first-child{
+    border-bottom: 0;
+}
+
+#navlist a,
+#navlist a:visited{
+    background-position: top left;  
+    background-repeat: repeat-x;
+    border-top: 1px solid #FFFFFF;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+#navlist a:hover{
+    background-color: #CC0000;
+    color: #FFFFFF;
+    background-position: top left;  
+    background-repeat: repeat-x;
+    border-top: 1px solid #FF3333;
+    border-bottom: 1px solid #CCCCCC;
+}
+
+#navlist .select,
+#navlist .select:visited,
+#navlist .select:hover{
+    border-top: 1px solid #FF3333;
+    background-position: top left;  
+    background-repeat: repeat-x;
+}
+
+.leftNavLogoDiv{
+  margin-bottom: 8px;
+}
+/* END SIDE NAV */
+
+table.TitleBar, td.TitleBar, div.TitleBar{
+		filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr='#FFFFFFFF', EndColorStr='#FFCCCCCC');
+		background-image: url('http://files.LeagueAthletics.com/Images/Buttons/Gradients/1FFFFFF.jpg');
+		background-position: top left;	
+		background-repeat: x;	
+}
+
+.RegNowBtn{
+    background-image: none;
+    background-color: #FFFFFF;
+}
+
+.firstdiv .navbar-inner{
+  background-image: -moz-linear-gradient(top,  #FFFFFF 0%, #CCCCCC 100%); /* FF3.6+ */
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FFFFFF), color-stop(100%,#CCCCCC)); /* Chrome,Safari4+ */
+  background-image: -webkit-linear-gradient(top,  #FFFFFF 0%,#CCCCCC 100%); /* Chrome10+,Safari5.1+ */
+  background-image: -o-linear-gradient(top,  #FFFFFF 0%,#CCCCCC 100%); /* Opera 11.10+ */
+  background-image: -ms-linear-gradient(top,  #FFFFFF 0%,#CCCCCC 100%); /* IE10+ */
+  background-image: linear-gradient(to bottom,  #FFFFFF 0%,#CCCCCC 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#CCCCCC',GradientType=0 ); /* IE6-9 */ 
+  border: 1px solid #CCCCCC;
+  box-shadow: 0 0 0;
+}
+
+.firstdiv .navbar-inner .brand{
+    color: #000000;
+}
+
+.firstdiv .navbar .dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus, .dropdown-submenu:hover>a, .dropdown-submenu:focus>a{
+    background-image: none;
+    background-color: #CC0000;
+    color: #FFFFFF;
+}
+
+.firstdiv .navbar .nav>li>a,
+.firstdiv .navbar .nav li.dropdown.open>.dropdown-toggle, .navbar .nav li.dropdown.active>.dropdown-toggle, .navbar .nav li.dropdown.open.active>.dropdown-toggle{
+  color: #000000;
+  text-shadow: 0 0 0;
+}
+
+.firstdiv .navbar .nav li.dropdown>.dropdown-toggle .caret{
+  border-top-color: #000000;
+  border-bottom-color: #000000;
+}
+
+/* Labels and Badges */
+.label,
+.badge {
+  display: inline-block;
+  padding: 2px 4px;
+  font-size: 12.69px;
+  font-weight: bold;
+  line-height: 14px;
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.label {
+  -webkit-border-radius: 3px;
+     -moz-border-radius: 3px;
+          border-radius: 3px;
+}
+
+.badge {
+  padding-right: 9px;
+  padding-left: 9px;
+  -webkit-border-radius: 9px;
+     -moz-border-radius: 9px;
+          border-radius: 9px;
+}
+</style>
+
+<!--Remove border radii if not using a rounded style-->
+
+<link href="/css/noborderradii.css" rel="stylesheet" />
+
+
+<!--Custom Advanced CSS styles-->
+<style type="text/css">
+	
+</style>
+
+<!--Set the sessionID for the user-->
+<script LANGUAGE="JavaScript" type="text/javascript">
+	var assocID = 2282;
+	var sessionID = "B8CF7DC8%2D8939%2D47AB%2DB108%2D34E8FD5763AE";
+
+	function menuOn(ctrl) {
+		if (ctrl.style.backgroundColor != "#000000") {
+			ctrl.style.backgroundColor = "#FFFFFF";
+			ctrl.style.cursor="hand";
+		}
+	}
+
+	function menuOff(ctrl) {
+		ctrl.style.backgroundColor = "";
+		ctrl.style.cursor="auto";
+	}
+</script>
+
+<!--[if lt IE 9]>
+    <script src="/mobile/assets/dist/html5shiv.js"></script>  
+<![endif]-->
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<link rel="stylesheet" href="/css/animate.css">
+
+
+<style type="text/css">
+    .firstdiv{
+        min-width: auto;
+    }
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+<style type="text/css">
+a.carousel-control,
+a.carousel-control:hover,
+a.carousel-control:active {
+    text-decoration:none;
+    background: #FFFFFF;
+    color:#000000;
+    top: 50%;
+    border:none;
+    font-weight: normal;
+    opacity: 1;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    font-family: Arial;
+}
+
+.carousel-indicators li {
+    background-color: #FFFFFF;
+    opacity: 0.75;
+}
+
+.carousel-indicators .active {
+    background-color: #CC0000;
+}
+
+body {
+    line-height: normal;
+}
+
+.LAPageContent { 
+	background-color: ; 
+}
+
+
+</style>
+
+<!--inits the score slider-->
+
+</head>
+
+  
+
+<body onUnload="closeCommentary();">
+<!--Start Navigation-->
+
+
+
+<script type="text/javascript">
+
+  var logedIn = 0;
+  if (document.getElementById("oMissionStatement")) {
+    if (logedIn == 0) document.getElementById("oMissionStatement").style.display = "none"
+  }
+
+function closeCommentary() {}
+  
+function setCookie(cookieName, cookieValue, nDays) {
+  var today = new Date();
+  var expire = new Date();
+  if (nDays == null || nDays == 0) nDays = 0;
+
+  expire.setTime(today.getTime() + (3600000 * 24 * nDays));
+
+  document.cookie = cookieName + "=" + encodeURIComponent(cookieValue)
+          + ";expires=" + expire.toGMTString()
+          + ";path=/"; //;HttpOnly;secure;";
+}
+
+//When the form is submitted, pass the info to ajax
+function loginGo(){
+
+    var user = $("#UserName").val();
+    if (user == 'User Name / Email' || user == '') {
+        document.location.href = "/CPanel/Password.asp?user=" + encodeURIComponent(user) + "&org=EDENPRAIRIEFOOTBALL.COM"
+    } else {
+
+        var password = $("#TheKey").val();
+        if (password == 'Password') 
+            password = "";
+
+        login(user, password);
+    }
+
+}
+
+    //Login script moved to included scripts
+function login(user, key) {
+    
+    auth();
+
+    //var service = "https://api.leagueathletics.com/api/login?user=" + encodeURIComponent(user) + "&key=" + encodeURIComponent(key) + "&n=true&associd=2282"
+    var service = "https://api.leagueathletics.com/api/login?user=" + encodeURIComponent(user) + "&key=" + encodeURIComponent(key) + "&n=true&associd=2282"
+    //var service = "https://api.leagueathletics.com/api/login?user=" + encodeURIComponent(user) + "&key=" + encodeURIComponent(key) + "&n=true&org=EDENPRAIRIEFOOTBALL.COM"
+    
+    $.ajax({
+        url: service,
+        global: true,
+        dataType: "jsonp",
+        cache: false,
+        jsonpCallback: "callback",
+        success: function(x) {
+
+            $("#login-button").text("Transferring...");
+            $("#UserName, #TheKey").val("");
+
+            var sRole = "";
+            if (x.rights) sRole = x.rights.ARole2282;
+
+            if (key.length == 0 && x.error.length == 0 && x.msg.length > 0 ) {
+
+                document.location.href = "/CPanel/Password.asp?org=EDENPRAIRIEFOOTBALL.COM&msg=" + x.msg;
+
+            } else if (x.sessionID && (sRole || x.rights.TargetPage)) { 
+                
+                var loc = location.href.toLowerCase();
+                var domain = "https://LeagueAthletics.com";
+                if (loc.indexOf("dev.leagueathletics.com") > -1) 
+                    domain = "https://dev.LeagueAthletics.com";
+
+                if (x.rights.TargetPage && !sRole) {
+                    return location.href = domain + x.rights.TargetPage;
+                };//end if
+
+                if (sRole == "Member" || sRole == "BoardForum" || !sRole) {
+                    
+                    if (loc.indexOf("/roster.asp") == -1) {
+                        //location.href = domain + "/Registration/Family.asp?edit=1&AdultID=" + x.rights.MemberID2282 + "&org=EDENPRAIRIEFOOTBALL.COM"
+                        
+                        location.href = domain + "/Registration/FamilyAccounts.asp?snid=" + x.sessionID + "&org=EDENPRAIRIEFOOTBALL.COM"
+                        
+
+                        var test = '';
+                    } else {
+                        gotoSecureURL(x.sessionID);
+                    }
+
+                } else if (sRole == "Official") {
+                    location.href = domain + "/OfficialsHome.asp?snid=" + x.sessionID + "&org=EDENPRAIRIEFOOTBALL.COM";
+
+                } else {
+                    gotoSecureURL(x.sessionID);
+                }                
+            } else {
+
+                document.location.href = "/CPanel/Password.asp?org=EDENPRAIRIEFOOTBALL.COM&msg=" + x.error;
+                
+            }
+        },
+        error: function(x, error, message) {
+          
+            $("#UserName, #TheKey").val("");
+            document.location.href = "/CPanel/Password.asp?org=EDENPRAIRIEFOOTBALL.COM&msg=" + x.error;
+
+        }
+    });
+}
+
+
+// Redirects to a secure LA address version of the current page.
+function gotoSecureURL(sessionID) {
+
+    // Get their currrent URL
+    var loc = location.href;
+    
+    //If they login from the Password page, take them to the homepage.
+    if (loc.toLowerCase().indexOf("/cpanel/password.asp") != -1){
+    	loc = loc.toLowerCase().replace("/cpanel/password.asp", "/default.asp");
+    }
+
+    //If they login from SecretWord.asp, take them to the selected page
+    if (loc.toLowerCase().indexOf("/secretword.asp?file=teamdocs.asp") != -1){
+        loc = loc.toLowerCase().replace("/secretword.asp?file=teamdocs.asp&", "/teamdocs.asp?");
+    }else if (loc.toLowerCase().indexOf("/secretword.asp?file=schedule.asp") != -1){
+        loc = loc.toLowerCase().replace("/secretword.asp?file=schedule.asp&", "/schedule.asp?");
+    }else if (loc.toLowerCase().indexOf("/secretword.asp?file=pictures.asp") != -1){
+        loc = loc.toLowerCase().replace("/secretword.asp?file=pictures.asp", "/pictures.asp");
+    }else if (loc.toLowerCase().indexOf("/secretword.asp") != -1){
+        loc = loc.toLowerCase().replace("/secretword.asp", "/roster.asp");
+    }
+    // Replace the host name portion with LeagueAthletics.com
+    var host = location.hostname.toLowerCase();
+    if (host.indexOf("dev.leagueathletics.com") == -1)
+        loc = loc.replace(host, "LeagueAthletics.com");
+
+    // Change protocal to https or add it if not present.
+    loc = loc.replace("http://", "https://");                
+    if (loc.indexOf("https://") == -1 )
+        loc = "https://" + loc;    
+                
+    // Add org= parameter if not already there.
+    if (loc.indexOf("org=") == -1) {
+        if (loc.indexOf("?") == -1) {
+            loc += "?";
+        } else {
+            loc += "&";
+        }               
+
+        loc += "org=EDENPRAIRIEFOOTBALL.COM";
+    }
+
+    // Strip off any existing snid= values.
+    var iSnid = loc.indexOf("snid=");
+    if (iSnid >= 0) {
+        var iNd = loc.indexOf("&", iSnid + 1)
+        if (iNd == -1) iNd = loc.length - 1;
+        loc = loc.substr(0, iSnid) + loc.substr(iNd);
+    }
+
+    // Redirect to secure version of the page.
+    var aLoc = loc.split("#");
+    var hashLocation = aLoc[1] || '';
+    if (hashLocation) hashLocation = '#' + hashLocation;
+    var tempLoc = aLoc[0] + "&snid=" + sessionID + hashLocation;
+    location.href = tempLoc;
+    //location.href = loc + "&snid=" + sessionID;
+}
+
+
+//Growl at them
+function growl(msg, status) {
+    var msg = msg;
+    $.bootstrapGrowl(msg, {
+        ele: 'body', // which element to append to
+        type: status, // (null, 'info', 'error', 'success')
+        offset: { from: 'top', amount: 40 }, // 'top', or 'bottom'
+        align: 'right', // ('left', 'right', or 'center')
+        width: 320, // (integer, or 'auto')
+        delay: 10000,
+        allow_dismiss: true,
+        stackup_spacing: 10 // spacing between consecutively stacked growls.
+    });
+}
+</script>
+
+<!--Misson statement-->
+
+<div id="oMissionStatement"></div>
+
+<div id="login-bar" class="navbar navbar-static-top tabbed">
+  <div>
+    <ul class="nav pull-right">
+      <li class="dropdown">
+           
+          <a href="https://LeagueAthletics.com/CPanel/Password.asp?org=EDENPRAIRIEFOOTBALL.COM" id="login-link">Sign in</a>
+
+          <!--<a href="javascript:void(0);" id="login-link" class="dropdown-toggle" data-toggle="dropdown">Sign in</a>
+          <ul id="login-form" class="dropdown-menu" style="margin-right: 10px;">
+            <li>
+              <div style="padding: 5px 10px;">
+          
+          <form class="form" id="LogIn"
+          name="LogIn"
+          method="post"          
+          action="javascript:loginGo();"
+          accept-charset="utf-8"
+          style="margin: 0px; padding: 0px;">
+
+                  <input type="hidden" name="TargetPage" value="/Default.asp">
+                  <input name="Time" type="hidden" value="60485.96">
+                  <input class="input-block-level" type="text" name="UserName" id="UserName" value="" title="Enter your user name or email address to log in" placeholder="Email" />
+          
+                  <input class="input-block-level" type="password" name="TheKey" value="" title="Enter an administration password or your personal password to log in as a member." id="TheKey" placeholder="Password" size="12" autocomplete="off" />
+
+                  <input type="hidden" name="Password" id="Password" title="Enter an administration password or your personal password to log in as a member." value="Password" size="12" autocomplete="off" />
+        
+                  <input type="text" name="LAClubID" id="LAClubID" class="LAfly" size="12">
+          
+                  <button id="login-button" class="btn btn-primary" type="submit">
+                    Sign In
+                  </button><br><br>
+                  <a style="color: #fff;" href="/CPanel/PasswordReset.asp?org=EDENPRAIRIEFOOTBALL.COM">forgot?</a>
+                </form>  
+              </div>
+            </li>
+          </ul> -->
+        </li><!--Login dropdown-->
+    </ul>
+  </div>
+</div>
+
+
+
+<!-- Start Appearance Panel -->
+
+<!-- End Appearance Panel -->
+
+
+<table class="LASponsorArea" border="0" align="center" cellspacing="0" cellpadding="0">
+
+
+
+</table>
+
+
+<div id="LAPageBackground">
+
+
+
+<table id="Container" align="center" border="0" cellpadding="0" cellspacing="0" width="1000" style="position: relative; clear: both; z-index: 1;"> 
+
+  <tr>
+    <td valign="top">
+      
+<script language="javascript" type=text/javascript>
+function searchFocus(obj) {
+	gTopBarHasFocus = true;
+	
+	if (obj.value == "Site Search") {
+		obj.value = "";
+		obj.style.color = "#000000";
+//		obj.style.fontWeight = "bold";
+	}
+}
+</script>
+
+<!--MenuBar.asp Start-->
+
+<a NAME="Page_Top"></a>
+
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td valign="top" height="100%">
+
+
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="height: 100%; ">
+				<tr>
+					<td valign="top">
+
+
+						<table width='100%' border='0' cellpadding='0' cellspacing='0'>
+							<tr>
+								<td>
+									<!--This is where the banner and horiz nav start-->
+									<table border="0" cellpadding="0" cellspacing="0" style="width:100%; padding-top:0;" >
+	
+		<!--Banner Start-->
+		<tr>
+		<td id="oBanner"  align='Center' valign="middle" style="z-index: 0;"      
+				onmouseover="document.getElementById('oTopBar').style.visibility='visible';  return true;"        
+				onmouseout="if (!gTopBarHasFocus) document.getElementById('oTopBar').style.visibility='hidden';">
+			<div id="menuBarPageBanner" style="position: relative; z-index: 0;">
+				
+				<img id="menuBarPageBannerImg" src='http://files.LeagueAthletics.com/Images/Logos/2282_banner.png' border="0" alt='Eden Prairie Football Association, Football, Score, Field'>
+			
+		<!--  -->
+
+		
+
+		<script type="text/javascript">
+		var gTopBarHasFocus = false;
+		</script>
+
+		
+		<div id="oTopBar" style="display: none;"></div>
+		
+
+
+
+
+
+      
+			</div>
+		</td>
+		</tr>
+
+  <tr>
+
+	<!--TopNav.asp Start-->    
+    <td>
+
+    <div id='navdropdown'>
+
+      <table id="topnav" border='0' cellpadding='0' cellspacing='0' >
+
+        <tr>
+
+          <td nowrap >
+            <ul>
+              <li style='z-index: 1000;'>
+
+                <a class='tabselect' href='/Default.asp?org=EDENPRAIRIEFOOTBALL.COM'>&nbsp;ABOUT EPFA&nbsp;</a>
+<ul><li><a id='News' class='select' href="/Default.asp?org=EDENPRAIRIEFOOTBALL.COM">Home</a></li><li><a id='23391' href='/Page.asp?n=23391&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+About Us</a>
+</li>
+<li><a id='13776' href='/Page.asp?n=13776&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Philosophy</a>
+</li>
+<li><a id='13779' href='/Page.asp?n=13779&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+FAQs</a>
+</li>
+<li><a id='142367' href='/Contacts.asp?n=142367&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Board Contacts</a>
+</li>
+<li><a id='14888' href='/Page.asp?n=14888&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Board Meeting Schedule</a>
+</li>
+<li><a id='13819' href='/Page.asp?n=13819&amp;org=EDENPRAIRIEFOOTBALL.COM' target='_blank' title=''>
+Referees</a>
+</li>
+<li><a id='133258' href='/Documents.asp?n=133258&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Documents</a>
+</li>
+<li><a id='31460' href='/Page.asp?n=31460&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+EPHS Football Schedules</a>
+</li>
+<li><a id='145543' href='/Contacts.asp?n=145543&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Contacts</a>
+</li>
+<li><a id='154682' href='/Pictures.asp?n=154682&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Pictures</a>
+</li>
+<li><a id='BackFeed' href="/Support/BF6.asp?org=EDENPRAIRIEFOOTBALL.COM">&#70;eed&#98;ack</a></li><li><a id='Links' href="/Links.asp?org=EDENPRAIRIEFOOTBALL.COM">Links</a></li><li><a id='MyAccount' href="/Registration/Signin.asp?edit=1&amp;org=EDENPRAIRIEFOOTBALL.COM">Edit My Account</a></li>
+
+
+  </ul>
+  
+
+              </li>
+            </ul>
+          </td>
+    <td nowrap>
+      <ul>
+        <li style='z-index: 998;'>
+          <a class='menutab' href='/Bulletins.asp?org=EDENPRAIRIEFOOTBALL.COM'>
+          &nbsp;TEAM&nbsp;</a>
+
+    <ul>
+      <!--<li class="seperator">&nbsp;</li>-->
+      <li>
+        <a  href="/Bulletins.asp?org=EDENPRAIRIEFOOTBALL.COM"><div class='MenuX'>
+        Choose a&nbsp;Team</div></a>
+<ul><li><a href='/Bulletins.asp?MyTeam=NULL&amp;division=4126&amp;org=EDENPRAIRIEFOOTBALL.COM'><div class='MenuX'>3rd Grade</div></a><ul ><li><a href='/Bulletins.asp?MyTeam=689306&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP3-1</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689307&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP3-2</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689308&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP3-3</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689309&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP3-4</a></li>
+</ul></li>
+<li><a href='/Bulletins.asp?MyTeam=NULL&amp;division=4127&amp;org=EDENPRAIRIEFOOTBALL.COM'><div class='MenuX'>4th Grade</div></a><ul ><li><a href='/Bulletins.asp?MyTeam=689310&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP4-1</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689311&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP4-2</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689312&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP4-3</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689313&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP4-4</a></li>
+</ul></li>
+<li><a href='/Bulletins.asp?MyTeam=NULL&amp;division=4130&amp;org=EDENPRAIRIEFOOTBALL.COM'><div class='MenuX'>5th Grade</div></a><ul ><li><a href='/Bulletins.asp?MyTeam=689314&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP5-1</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689315&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP5-2</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689316&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP5-3</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689317&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP5-4</a></li>
+</ul></li>
+<li><a href='/Bulletins.asp?MyTeam=NULL&amp;division=4131&amp;org=EDENPRAIRIEFOOTBALL.COM'><div class='MenuX'>6th Grade</div></a><ul ><li><a href='/Bulletins.asp?MyTeam=689320&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP6-1</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689318&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP6-2</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689319&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP6-3</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689321&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP6-4</a></li>
+</ul></li>
+<li><a href='/Bulletins.asp?MyTeam=NULL&amp;division=4132&amp;org=EDENPRAIRIEFOOTBALL.COM'><div class='MenuX'>7th Grade</div></a><ul ><li><a href='/Bulletins.asp?MyTeam=689324&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP7-1</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689322&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP7-2</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689323&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP7-3</a></li>
+</ul></li>
+<li><a href='/Bulletins.asp?MyTeam=NULL&amp;division=4133&amp;org=EDENPRAIRIEFOOTBALL.COM'><div class='MenuX'>8th Grade</div></a><ul ><li><a href='/Bulletins.asp?MyTeam=689325&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP8-1</a></li>
+<li><a href='/Bulletins.asp?MyTeam=689326&amp;org=EDENPRAIRIEFOOTBALL.COM'>EP8-2</a></li>
+</ul></li>
+</ul>
+      </li>
+      
+
+
+      <li>
+        <a  href="/Schedule.asp?org=EDENPRAIRIEFOOTBALL.COM">
+        Schedule</a>
+      </li>
+  
+
+
+      <!--<li class="seperator">&nbsp;</li>-->
+
+
+      <li>
+        <a  href="/Standings.asp?org=EDENPRAIRIEFOOTBALL.COM" title="Click to view league standings">
+         Standings</a>
+      </li>
+
+      <li>
+        <a  href="/TeamsSelect.asp?org=EDENPRAIRIEFOOTBALL.COM" title="Click to create a schedule for multiple teams">
+        Multi-Schedule</a>
+      </li>
+
+
+    </ul>
+        </li>
+      </ul>
+    </td>
+    <td nowrap>
+      <ul>
+        <li style='z-index: 997;'>
+          <a  class='menutab' href='/Page.asp?n=153096&org=EDENPRAIRIEFOOTBALL.COM' >
+          &nbsp;&nbsp;PARENTS&nbsp;&nbsp;</a>
+    <ul><li><a id='153096' href='/Page.asp?n=153096&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Important dates for 2017</a>
+</li>
+<li style='display: none;'><a class='expired' href='/Page.asp?n=50056&amp;org=EDENPRAIRIEFOOTBALL.COM'  title='Hidden Page. See Page Properties.'>
+Picture Schedule</a>
+</li>
+<li><a id='46712' href='/Page.asp?n=46712&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Financial Aid / Scholarships</a>
+</li>
+<li><a id='50416' href='/Page.asp?n=50416&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Refund Policy</a>
+</li>
+<li style='display: none;'><a class='expired' href='/Page.asp?n=128103&amp;org=EDENPRAIRIEFOOTBALL.COM'  title='Hidden Page. See Page Properties.'>
+Playing Nights</a>
+</li>
+<li style='display: none;'><a class='expired' href='/Page.asp?n=128102&amp;org=EDENPRAIRIEFOOTBALL.COM'  title='Hidden Page. See Page Properties.'>
+What to Expect</a>
+</li>
+<li><a id='13780' href='/Page.asp?n=13780&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Weight Restriction</a>
+</li>
+<li><a id='57831' href='/Page.asp?n=57831&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Rules</a>
+</li>
+<li><a id='128104' href='/FacilityList.asp?n=128104&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Fields</a>
+</li>
+</ul>        </li>
+      </ul>
+    </td>
+    <td nowrap>
+      <ul>
+        <li style='z-index: 996;'>
+          <a  class='menutab' href='/Page.asp?n=57501&org=EDENPRAIRIEFOOTBALL.COM' >
+          &nbsp;&nbsp;COACHES/COMMISSIONERS&nbsp;&nbsp;</a>
+    <ul><li><a id='57501' href='/HeyCoach.asp?n=57501&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Coaches Corner&nbsp;<i class='icon-lock' style='color:#000000; line-height:12px;'></i></a>
+</li>
+<li><a id='128067' href='/Documents.asp?n=128067&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Documents&nbsp;<i class='icon-lock' style='color:#000000; line-height:12px;'></i></a>
+</li>
+<li><a id='128073' href='/FacilityList.asp?n=128073&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Fields</a>
+</li>
+<li><a id='128072' href='/Page.asp?n=128072&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Rules</a>
+</li>
+<li><a id='128095' href='/TeamContacts.asp?n=128095&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Team Contacts</a>
+</li>
+</ul>        </li>
+      </ul>
+    </td>
+    <td nowrap>
+      <ul>
+        <li style='z-index: 995;'>
+          <a  class='menutab' href='/Page.asp?n=13775&org=EDENPRAIRIEFOOTBALL.COM' >
+          &nbsp;&nbsp;EVENTS/PROMOTIONS&nbsp;&nbsp;</a>
+    <ul><li style='display: none;'><a class='expired' href='/Page.asp?n=20335&amp;org=EDENPRAIRIEFOOTBALL.COM'  title='Hidden Page. See Page Properties.'>
+Apparel</a>
+</li>
+<li><a id='13775' href='/Page.asp?n=13775&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Mike Grant Summer Camps</a>
+</li>
+<li><a id='112236' href='/Page.asp?n=112236&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Other Football Camps</a>
+</li>
+</ul>        </li>
+      </ul>
+    </td>
+    <td nowrap>
+      <ul>
+        <li style='z-index: 994;'>
+          <a  class='menutab' href='/Page.asp?n=128071&org=EDENPRAIRIEFOOTBALL.COM' >
+          &nbsp;&nbsp;REGISTER ONLINE&nbsp;&nbsp;</a>
+    <ul class='lastTab'><li><a id='128071' href='/Registration/Default.asp?n=128071&amp;org=EDENPRAIRIEFOOTBALL.COM'  title=''>
+Online registration</a>
+</li>
+</ul>        </li>
+      </ul>
+    </td>
+</tr></table></div>
+
+    </td>
+  </tr>
+
+
+</table>
+
+</td></tr>
+</table>
+
+
+    <table class="bodyTable" border="0" cellpadding="0" cellspacing="0" width="100%" bordercolor="#CC0000" style="background-color: #E3E3E3; padding: 10px 8px;">
+        
+  <tr>
+        
+  </tr>
+  
+  <tr>
+
+    
+
+  
+<script type="text/javascript">
+  var logedIn = 0;
+  if (document.getElementById("ClientClubs")) {
+    if (logedIn == 0) document.getElementById("ClientClubs").style.display = "none"
+  }
+  
+  if (document.getElementById("oMissionStatement")) {
+    if (logedIn == 0) document.getElementById("oMissionStatement").style.display = "none"
+  }
+  
+  if (document.getElementById("ClientClubsByState")) {
+    if (logedIn == 0) document.getElementById("ClientClubsByState").style.display = "none"
+  }
+  
+  
+  
+</script>    
+
+  <td id="PageBody"  valign="top" bordercolor="#FFFFFF" class="LAPageContent" style="min-height: 700px; height: 700px;">
+
+
+<noscript>
+    <div id="scriptWarning" class="scriptWarning">
+         For full functionality of this site it is necessary to enable JavaScript.
+         Here are the <a class="scriptWarning" href="http://www.enable-javascript.com/" target="_blank">
+         instructions how to enable JavaScript in your web browser</a>.
+    </div>
+</noscript>
+
+
+<!--End Navigation-->
+ 
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #E3E3E3; min-height: 100%;">
+        
+                             
+        <tr>
+          <td valign="top" align="center" style="padding-top: 0px;">          
+          
+          <div 
+            style="position: relative;" 
+            
+            onmouseover="//document.getElementById('HomePageAppearanceX').style.display='block';"
+            onmouseout="//document.getElementById('HomePageAppearanceX').style.display='none';"
+            
+          >
+        
+
+        <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+		  <div align="left">
+		   <div class="NewsMargin">
+		    <table id="NewsTable" border="0" cellpadding="0" cellspacing="0" width="100%" align="left">
+<tr><td><div class='article694619' style='position: relative; overflow: hidden;margin: 0px 0px 10px 0px; '>   <div class='NewsTitleBar Headline5'>     <a name='694619'></a><b>       New homepage 2017   </b></div><div style='padding: 8px; '><p style="text-align: center;"><img alt="" src="data:image/png;base64,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" /></p>
+
+<p style="text-align: center;"><span style="font-size:18px;"><strong>A Championship Tradition</strong></span></p>
+
+<p>&nbsp;</p>
+
+<p style="text-align: center;"><span style="font-size:18px;"><strong>STATE TITLES: 1996, 1997, 2000, 2002, 2006, 2007, 2011, 2012, 2013, 2014</strong></span></p>
+
+<p style="text-align: center;"><span style="font-size:18px;"><em>The Eden Prairie Football Association is the youth football feeder program (grades 3-8) for the 10-time State Champion Eden Prairie Eagles</em></span></p>
+
+<p align="center"><span style="font-size:18px;"><a href="https://leagueathletics.com/Registration/Default.asp?n=128071&amp;org=EDENPRAIRIEFOOTBALL.COM"><u>Register now for Fall 2017 Football Season!</u></a></span></p>
+
+<p align="center"><span style="font-size:18px;"><a href="https://leagueathletics.com/Registration/Default.asp?n=128071&amp;org=EDENPRAIRIEFOOTBALL.COM"><u>Register NOW for Summer Mike Grant and Blake Freese&#39;s Football Camps!</u></a></span></p>
+
+<p align="center">&nbsp;</p>
+
+<p align="center"><span style="font-size:20px;"><span style="color: rgb(0, 128, 0);">The 7 on 7 passing tournament and Flag Football has been rescheduled to Friday, July 21st from 6 to 10 PM on Turf A, B and Stadium Fields (under the lights!).</span> <a href="http://leagueathletics.com/Documents.asp?n=133258&amp;org=EDENPRAIRIEFOOTBALL.COM"><span style="color: rgb(0, 0, 255);">Sign up form here.</span></a></span></p>
+
+<p><iframe allowfullscreen="" frameborder="0" height="315" src="https://www.youtube.com/embed/_4MMIvfzBSE" width="560"></iframe></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+<br><div style='height: 14px;'><div class='pull-left'><span style='font-size:x-small;'>by 
+<SCRIPT TYPE='text/javascript'>
+    em="gmail.com";
+    em="swigtiers" + '&#64;' + em;
+    ename="";
+    ename="Marty Cloutier" + '' + ename;
+    document.write('<' + 'a href="mai' + 'lto:' + em + "?subject=New homepage 2017" + '" title="Click to email this person">' + ename + '<' + '/a>');
+</SCRIPT> posted 05/29/2017</span></div><script type='text/javascript'>var addthis_pub='donmalin';</script><script type='text/javascript'>var addthis_share = {url_transforms : { shorten: { twitter: 'bitly', facebook: 'bitly' } } }</script><div class='pull-right'><a href='https://www.addthis.com/bookmark.php?v=20' onmouseover="return addthis_open(this, '', 'https://LeagueAthletics.com/Default.asp?org=EDENPRAIRIEFOOTBALL.COM#694619', 'New homepage 2017')" onmouseout='addthis_close()' onclick='return addthis_sendto()' style='color:#000; text-decoration:none;'>Share <i class='fa fa-share-square-o'></i></a><script type='text/javascript' src='https://s7.addthis.com/js/200/addthis_widget.js'></script></div></div></td></tr>           
+          </table>
+          </div>
+          
+       
+          
+
+         </div></td></tr></table></td><td valign="top" style="width:250px;">
+
+             <div class="widget">
+                 <a href="http://on.si.com/awesometeamn" target="_blank">
+                    <img src="https://s3.amazonaws.com/la-web-assets/public/images/capri/web-banner.png" />
+                 </a>
+             </div>
+
+              <div class="widget">
+                  <!--<a class="btn btn-club" style="text-decoration:none; background-color: #DEDEDE; border-bottom-color: #DEDEDE; color:#000000; width:223px; height:40px; font-size:18px; line-height:40px;" href="/Registration/Default.asp?org=EDENPRAIRIEFOOTBALL.COM" title="Online registration is now open!">
+                    Register Now
+                   </a>-->
+                   <a style="text-decoration:none; color:#000000;" href="/Registration/Default.asp?org=EDENPRAIRIEFOOTBALL.COM" title="Online registration is now open!  Click here to sign up right away.">
+                        <div class="RegNowBtn" style="background-color:#DEDEDE;">
+                            <div class="RegNowText">
+                                Register Now
+                            </div>
+
+                        </div>
+                   </a>
+               </div>
+
+
+              <div class="widget">
+                <table border="0" cellpadding="0" width="250">
+		
+               <tr>
+                 <td>
+                   <div class="galleria-widget"></div>
+                 </td>
+               </tr>
+             </table>
+           </div>
+               
+<style type="text/css">
+	.galleria-widget .galleria-container{
+		background: #FFFFFF;
+	}
+
+	.galleria-widget{
+		height: 250px;
+	}
+  
+</style>               
+<script type="text/javascript">
+	$(function(){
+		var promise = getPictures();
+		promise.success(function(data){
+			var path = data.path;
+			var pictures = data.pictures;
+			var array = [];
+			$.each(pictures, function(i){
+				var obj = {};
+				obj.image = path + pictures[i].web;
+				obj.description = pictures[i].caption;
+				obj.link = "/Picture.asp?id="+pictures[i].id+"&org=EDENPRAIRIEFOOTBALL.COM";
+				array.push(obj);
+			});
+
+			Galleria.run('.galleria-widget', {
+			    dataSource: array,
+			    autoplay: true,
+			    height: 250,
+			    carousel: false,
+			    thumbnails: false,
+			    showInfo: false,
+			    showCounter: false,
+			    pause: 3000,
+			    autoHover: true,
+			    pauseOnInteraction: false,
+			    transition: "fadeslide"
+			});
+		})
+	})
+
+	function getPictures(){
+		return $.ajax({
+		    url: 'https://api.leagueathletics.com/api/pictures/',
+			data: {associd: 2282}
+		});
+	}
+</script>
+
+              <div class="widget">
+                <table border="0" cellpadding="0" width="250">
+
+
+               <tr>
+                 <td class="RightColWidget" style="background-color:#DEDEDE; border-width:1px;">
+                   <div class="WeatherContainer" id="oWeatherBox" style="height: 210px; max-height: 210px;">
+                     Loading Weather...
+                   </div>
+                 </td>
+               </tr>
+               
+
+
+<style TYPE="text/css">
+</style>
+
+<script language="javascript">
+
+    var strWeatherURL = "/WeatherAjax2.asp?zip=55347&bgcolor=#DEDEDE&fgcolor=#000000&style=1&tzo=-5&days="
+
+</script>
+               </table>
+               </div>               
+
+              <div class="widget">
+                <table border="0" cellpadding="0" width="250">
+
+               <tr>
+                 <td>
+                   <table style="width:100%;">
+                    <tr>
+                        <td style="
+                            color:#000000;
+                            background-color:#FFFFFF;
+                            font-family: Arial;
+                            height: 30px;
+                            vertical-align:middle;
+                            padding-left:8px;
+                            padding-right:8px;
+                            text-transform:uppercase;
+                            ">
+                            <b>Link Logos</b>
+                        </td>
+                    </tr>               
+                   </table>
+                 </td>
+               </tr>
+
+               <tr>
+                 <td class="RightColWidget Logolist" style="background-color:#DEDEDE;">
+                    <br><a href='http://ephsboosters.com/index.html' target='new'><img class='Logoimg' src='http://files.LeagueAthletics.com/Images/Links/2282/7474.jpg' border='0' alt='EPHS Booster Club'></a><br><br><a href='http://www.positivecoach.org/' target='new'><img class='Logoimg' src='http://files.LeagueAthletics.com/Images/Links/2282/13281.jpg' border='0' alt='Positive Coaching Alliance'></a><br><br><a href='http://www.osrpt.com/' target='new'><img class='Logoimg' src='http://files.LeagueAthletics.com/Images/Links/2282/13268.jpg' border='0' alt='OSR'></a><br><br>
+                 </td>
+               </tr>	
+               </table>
+               </div>
+
+
+
+
+               <div class="widget">
+               <table border="0" cellspacing="0" cellpadding="0" width="100%">
+               <tr>
+
+                 <td align=center height="100%"> <!-- bordercolor='#000000' style='height: 100%; border-top-style: solid; border-top-width: 1px;border-left-style: solid; border-left-width: 1px;'>&nbsp; -->
+
+
+                 </td>
+               </tr>
+               </table>
+               </div>
+               
+             
+               
+       
+             <!--</div>  Container -->
+             
+             </td></tr></table>
+             
+                        </td>
+                        <!--PageBody-->
+                      </tr>
+                    </table>
+                    <!--BodyTable-->
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <!--Start .footer -->
+
+
+
+    <tr>
+      <td>
+        <div class="footer" style="display:block;">
+          <div class="footer-inner">
+
+      	 
+              <div class="footer-logo">
+                <a href="http://LeagueAthletics.com" target="_blank">
+                   <img src="https://s3.amazonaws.com/la-web-assets/public/images/logospacer.png" alt="" style="float:left" border="0"></a>
+                
+ 
+     			
+            
+
+      <!--
+      -->    
+        </div>
+<!--10.142.1.87-->
+      	 
+              
+          <div class="footer-text">
+            &copy; 2017 LeagueAthletics.com, LLC.
+            
+      	          
+              and <strong>Eden Prairie Football Association (2282)</strong>. 
+             
+
+            All rights reserved.&nbsp;&nbsp;
+            <span class="footer-text" style="float:none;"><strong>Visitor #</strong></span>&nbsp;<span class="footer-servertype"><strong>1,539,479</strong></span>
+            <br/>Server<strong>&nbsp;<span class="footer-servertype">1:</span></strong> in <strong><span class="footer-servertype">0.47</span>s</strong>.&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;
+              
+              <a class="footer-a" href="https://subscription.timeinc.com/storefront/privacy/siplay/generic_privacy_new.html"target="_blank">Privacy</a>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;
+              
+              <a class="footer-a" href="https://subscription.timeinc.com/storefront/privacy/siplay/privacy_terms_service.html" target="_blank">Terms</a>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;
+              <a class="footer-a" href="../Help/user-guide/index.shtml" target="_new">User Guide</a>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;
+              <a class="footer-a" href="../licenses.asp?org=EDENPRAIRIEFOOTBALL.COM">Legal</a>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;
+              
+              <a class="footer-a" href="../Support/BF6.asp?org=EDENPRAIRIEFOOTBALL.COM">Contact us</a>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;
+              
+
+              <a href="../mobile_promo.asp?org=EDENPRAIRIEFOOTBALL.COM" style="color: #FF6600; font-weight: bolder;"> 
+                
+                Get the Mobile App&nbsp;
+                  <i class="fa fa-mobile-phone" style='display: inline;'></i>&nbsp;
+              </a>
+
+
+                  <img src="https://t.sportstechinfo.com/visitors/logo.php?domain=leagueathletics.com" width="1" height="1"/>
+              
+
+                    
+              <br />
+                
+            <br />
+
+          </div>
+          
+          <div class="footer-text" style="text-align:right; float:right; padding-top:0px" nowrap>
+            
+            <a href="http://siplay.com" target="_blank" title="powered by Sports Illustrated Play">
+            <img src="https://s3.amazonaws.com/la-web-assets/public/images/logos/siplay/siplay_logo_over_black.png" border="0" alt="powered by Sports Illustrated Play" style="height: 45px; padding-top: 5px;"></a>
+          </div>
+
+      	<script type="text/javascript">
+              var logedIn = 0;
+              if (document.getElementById("ClientClubs")) {
+                  if (logedIn == 0) document.getElementById("ClientClubs").style.display = "none";
+              }
+          
+              if (document.getElementById("ClientClubsByState")) {
+                  if (logedIn == 0) document.getElementById("ClientClubsByState").style.display = "none";
+              }
+          </script>  
+                    
+         
+          
+          
+         </div>
+        </div>
+      </td>
+    </tr>
+    <!--.footer-->
+  </table>
+  <!--table#Container-->
+</div>
+<!--div#LAPageBackground-->
+
+<!---Promo Modal ---> 
+
+
+
+            
+    <div id="newPrivacy" class="modal hide fade" role="dialog" aria-labelledby="newPrivacyLabel" aria-hidden="true" style="width:360px; height: 116px; top: 75%; left: 300px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-header" style="height: 14px;">
+                <button id="privacyDismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true" style="margin-top: -4px;">x</button>
+                <p id="newPrivacyLabel"><b>New Privacy Policy</b></p>
+            </div>
+            <div class="modal-body" style="margin-top: -4px;">   
+                We have made changes to our 
+                <a id="privacyLink1" href="https://subscription.timeinc.com/storefront/privacy/siplay/generic_privacy_new.html" target="_blank">Privacy Policy</a>.  
+                By using this site you agree to the 
+                <a id="privacyLink2" href="https://subscription.timeinc.com/storefront/privacy/siplay/generic_privacy_new.html" target="_blank">Privacy Policy</a>                  
+                and 
+                <a id="termsLink" href="https://subscription.timeinc.com/storefront/privacy/siplay/privacy_terms_service.html" target="_blank">Terms of Service</a>.  
+            </div>
+        </div>
+    </div>
+
+
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Check cookie to see if they've seen this before.
+
+        });
+
+        // Handle clicks to the privacy policy page
+        $("a#privacyLink1").click(function () { dismisPrivacy() });
+        $("a#privacyLink2").click(function () { dismisPrivacy() });
+        $("a#termsLink").click(function () { dismisPrivacy() });
+
+        function dismisPrivacy() {
+
+            // Hide the modal
+            $('#newPrivacy').modal('hide');
+
+            // Set the cookie
+            $.cookie("readSIPPrivacy", "Done", { path: '/', expires: 365 });
+
+            return true;
+        };
+
+        // Handle dismissal of the modal
+        $("button#privacyDismiss").click(function() {
+            // Set the cookie
+            $.cookie("readSIPPrivacy", "Done", { path: '/', expires: 365 });
+        });
+    </script>
+
+<!---end promo modal --->
+
+
+             </div>
+        </tr>
+      </table>
+
+
+<!--Results Modal-->
+<div id="resultModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 id="resultDate">Event Result</h3>
+  </div>
+  <div class="modal-body">
+        <table style="width:100%;">
+            <tr>
+                <td id="resultHome" class="subhead"></td>
+                <td id="resultHomeScore" class="subhead"></td>
+            </tr>
+            <tr>
+                <td id="resultAway" class="subhead"></td>
+                <td id="resultAwayScore" class="subhead"></td>
+            </tr>
+        </table>
+        <hr>
+        <span id="resultCommentary"></span>
+  </div>
+</div>
+<!--End Result Modal-->
+ 
+
+<script type="text/javascript">
+
+    var loadMasonry = function () {
+        var columWidth = 323;
+        if (engine != 5 && engine != 8) {
+            var $widgetContainer = $('#widgetContainer');
+		
+            $widgetContainer.imagesLoaded( function(){
+
+                $widgetContainer.masonry({		  
+                    itemSelector : '.widget',
+                    columnWidth : columWidth,
+                    isAnimated: !Modernizr.csstransitions,
+                    isFitWidth: false 
+                });
+            });
+        };
+    };
+    
+    
+</script>
+<script type="text/javascript">
+    $('.to-top').click(function(){
+        $("html, body").animate({ scrollTop: 0 }, 750);
+    });
+</script>
+<script type="text/javascript">
+    function showResult(id){
+        $.ajax({
+            url: "/app/GetEvent/default.asp?eventid=" + id + "&org=EDENPRAIRIEFOOTBALL.COM",
+            dataType: "xml",
+            success: function(x){
+                var event = x.getElementsByTagName("Event");
+                event = event[0];
+                date = event.childNodes[3].childNodes[0].nodeValue;
+                $("#resultDate").text(date);
+                home_name = event.childNodes[21].childNodes[3].childNodes[0].nodeValue;
+                $("#resultHome").text(home_name);
+                if (event.childNodes[21].childNodes[11].hasChildNodes()) {
+                    home_score = event.childNodes[21].childNodes[11].childNodes[0].nodeValue;
+                } else {
+                    home_score = "";
+                }
+                $("#resultHomeScore").text(home_score);
+                away_name = event.childNodes[23].childNodes[3].childNodes[0].nodeValue;
+                $("#resultAway").text(away_name);
+                if (event.childNodes[23].childNodes[11].hasChildNodes()) {
+                    away_score = event.childNodes[23].childNodes[11].childNodes[0].nodeValue;
+                } else {
+                    away_score = "";
+                }
+                $("#resultAwayScore").text(away_score);
+                if (event.childNodes[17].hasChildNodes()){
+                    commentary = event.childNodes[17].childNodes[0].nodeValue;
+                }else{
+                    commentary = "";
+                }
+                $("#resultCommentary").html(commentary);
+                $("#resultModal").modal("show");
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
+
+<script type="text/javascript">
+// Module level flag that tells us if XMLPosts are happening
+var ajaxBusy = false;
+
+	
+	// Now get the weather after waiting for the calendar to finish loading
+	wait4Post();
+
+	
+function wait4Post() {
+	if (!ajaxBusy) {
+		xmlhttpPost(strWeatherURL, document.getElementById("oWeatherBox"));
+	} else {
+		setTimeout("wait4Post()",100);
+	}
+}
+
+
+function xmlhttpPost(strURL, obj) {
+	var xmlHttpReq = false;
+	var self = this;
+	var status = "NA";
+
+	// Set busy flag so no one else calls us till we? done.
+	ajaxBusy = true;
+
+	// Mozilla/Safari
+	if (window.XMLHttpRequest) {
+		self.xmlHttpReq = new XMLHttpRequest();
+	}
+	// IE
+	else if (window.ActiveXObject) {
+		self.xmlHttpReq = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+    
+	var randNum = Math.floor(Math.random() * 1001);
+	strURL = strURL + '&ajax=True&rnd=' + randNum;
+
+	self.xmlHttpReq.open('GET', strURL, true);
+	self.xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+	self.xmlHttpReq.onreadystatechange = function() {
+		if (self.xmlHttpReq.readyState == 4) {
+			// Firefox throws an error on status code 401 - timeout.  Catch it!
+			try{status = self.xmlHttpReq.status;}catch(e){}			
+
+			if (status == 200) {
+				obj.innerHTML = self.xmlHttpReq.responseText;
+			} else {
+				//alert(self.xmlHttpReq.responseText)
+			}
+
+			self.xmlHttpReq = null;
+			ajaxBusy = false;	// We? done!
+		}
+	}
+ 
+	self.xmlHttpReq.send(null);
+}
+
+	
+	try{window.top.location.href != window.location.href;} 
+	catch(e){
+		setCloaked();
+	}
+
+function setCloaked() {
+	var xmlHttpReq = false;
+	
+	// Mozilla/Safari
+	if (window.XMLHttpRequest) {
+		self.xmlHttpReq = new XMLHttpRequest();
+	}
+	// IE
+	else if (window.ActiveXObject) {
+		self.xmlHttpReq = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	var randNum = Math.floor(Math.random() * 1001);
+	var strURL = '/CPanel/SetCloaked.asp?rnd=' + randNum + "&n=2282"
+
+	self.xmlHttpReq.open('GET', strURL, false);
+	self.xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  
+	self.xmlHttpReq.send(null);
+}
+
+$(function(){
+
+//    var pageBodyWidth = $("#PageBody").width();
+//    $("#PageBody").width(pageBodyWidth);
+    
+//    var widgetCols = Math.floor(width / 260);    
+//    var newsWidth = widgetCols * 260 - 260;
+//    
+//    var width = $("#widgetContainer").css('width')
+//alert(width)
+//    $(".News").css('width', width);
+
+
+    //alert($("#widgetContainer").css('width'));
+});
+</script>
+
+
+<!-- Exec Time: 0.4453125 URL='/Default.asp|' -->

@@ -1,0 +1,810 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
+<head>
+<script src="sample/jquery-1.8.3.js"></script>
+<link href="sample/allegro.css?v=22416" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+    var int;
+    var int2 = 0;
+    function onloadx(dirLNK) {
+        int = window.setInterval(function () { clock() }, 4500);
+        var t = setTimeout(function () { $('#redCATtag').show(); $('#redCATinside').children().hide(); $('#redCATinside').animate({ width: 165, padding: 10 }, 500, function () { $('#redCATinside').children().show(); $('#redCATopen').hide(); }); }, 3000)
+        if (dirLNK == "" || dirLNK == null) { }
+        else if (dirLNK == "LIT") {
+            whatNEW('L');
+        }
+        else {
+            newPRODany(dirLNK);
+        }
+    }
+    function clock() {
+        if (!$('#featLIST1').is(":hidden")) {
+            f1();
+        }
+        else if (!$('#featLIST2').is(":hidden")) {
+            f2();
+        }
+        else if (!$('#featLIST3').is(":hidden")) {
+            f3();
+        }
+        else if (!$('#featLIST4').is(":hidden")) {
+            f4();
+        }
+        else if (!$('#featLIST5').is(":hidden")) {
+            f5();
+        }
+    }
+    function f1() {
+        $('#featLIST1').hide();
+        $('#featLIST2').show().fadeOut(0).fadeIn(400);
+        $('#featLIST3').hide();
+        $('#featLIST4').hide();
+        $('#featLIST5').hide();
+        $('#act1').removeClass('actFILL').addClass('actBLANK');
+        $('#act2').removeClass('actBLANK').addClass('actFILL');
+        $('#act3').removeClass('actFILL').addClass('actBLANK');
+        $('#act4').removeClass('actFILL').addClass('actBLANK');
+        $('#act5').removeClass('actFILL').addClass('actBLANK');
+    }
+    function f2() {
+        $('#featLIST1').hide();
+        $('#featLIST2').hide();
+        $('#featLIST3').show().fadeOut(0).fadeIn(400); ;
+        $('#featLIST4').hide();
+        $('#featLIST5').hide();
+        $('#act1').removeClass('actFILL').addClass('actBLANK');
+        $('#act2').removeClass('actFILL').addClass('actBLANK');
+        $('#act3').removeClass('actBLANK').addClass('actFILL');
+        $('#act4').removeClass('actFILL').addClass('actBLANK');
+        $('#act5').removeClass('actFILL').addClass('actBLANK');
+    }
+    function f3() {
+        $('#featLIST1').hide();
+        $('#featLIST2').hide();
+        $('#featLIST3').hide();
+        $('#featLIST4').show().fadeOut(0).fadeIn(400); ;
+        $('#featLIST5').hide();
+        $('#act1').removeClass('actFILL').addClass('actBLANK');
+        $('#act2').removeClass('actFILL').addClass('actBLANK');
+        $('#act3').removeClass('actFILL').addClass('actBLANK');
+        $('#act4').removeClass('actBLANK').addClass('actFILL');
+        $('#act5').removeClass('actFILL').addClass('actBLANK');
+    }
+    function f4() {
+        $('#featLIST1').hide();
+        $('#featLIST2').hide();
+        $('#featLIST3').hide();
+        $('#featLIST4').hide();
+        $('#featLIST5').show().fadeOut(0).fadeIn(400); ;
+        $('#act1').removeClass('actFILL').addClass('actBLANK');
+        $('#act2').removeClass('actFILL').addClass('actBLANK');
+        $('#act3').removeClass('actFILL').addClass('actBLANK');
+        $('#act4').removeClass('actFILL').addClass('actBLANK');
+        $('#act5').removeClass('actBLANK').addClass('actFILL');
+    }
+    function f5() {
+        $('#featLIST1').show().fadeOut(0).fadeIn(400); ;
+        $('#featLIST2').hide();
+        $('#featLIST3').hide();
+        $('#featLIST4').hide();
+        $('#featLIST5').hide();
+        $('#act5').removeClass('actFILL').addClass('actBLANK');
+        $('#act1').removeClass('actBLANK').addClass('actFILL');
+        $('#act2').removeClass('actFILL').addClass('actBLANK');
+        $('#act3').removeClass('actFILL').addClass('actBLANK');
+        $('#act4').removeClass('actFILL').addClass('actBLANK');
+    }
+    function fx(pass) {
+        if (pass == 3) {
+            int = window.clearInterval(int);
+            int2 = 1;
+            $('#actX').removeClass('actPAUSE').addClass('actPLAY');
+
+        } else {
+            if (int2 == 0) {
+                int = window.clearInterval(int);
+                int2 = 1;
+                $('#actX').removeClass('actPAUSE').addClass('actPLAY');
+            } else {
+                onloadx();
+                int2 = 0;
+                $('#actX').removeClass('actPLAY').addClass('actPAUSE');
+            }
+        }
+
+    }
+    function newPROD() {
+        $('#notIFRAME').hide();
+        $('#yesIFRAME').show();
+        $('#newsIFRAME').hide();
+        window.frames["myIFRAME"].location = "../asp/new_products_list2013.aspx";
+    }
+
+    function newVID() {
+        $('#notIFRAME').hide();
+        $('#yesIFRAME').show();
+        $('#newsIFRAME').hide();
+        window.frames["myIFRAME"].location = "../asp/video_list_2013.aspx";
+    }
+
+    function newPRODfea(prod) {
+        $('#notIFRAME').hide();
+        $('#yesIFRAME').show();
+        $('#newsIFRAME').hide();
+        window.frames["myIFRAME"].location = "../asp/product_detail2013.aspx?prodid=" + prod.toString();
+    }
+
+    function newPRODpdf(prod) {
+        $('#notIFRAME').hide();
+        $('#yesIFRAME').show();
+        $('#newsIFRAME').hide();
+        window.frames["myIFRAME"].location = "../asp/pdf.aspx?prodID=" + prod.toString();
+    }
+
+    function newPRODany(prod) {
+        $('#notIFRAME').hide();
+        $('#yesIFRAME').show();
+        $('#newsIFRAME').hide();
+        window.frames["myIFRAME"].location = prod.toString();
+    }
+
+    function whatNEW(doc) {
+        $('#notIFRAME').hide();
+        $('#yesIFRAME').hide();
+        $('#newsIFRAME').show();
+        $('#nav_MENU').hide();
+
+        $('#newsIFRAME_news').hide();
+        $('#newsIFRAME_lit').hide();
+        if (doc == 'L') {
+            $('#newsIFRAME_lit').show();
+        }
+        if (doc == 'N') {
+            $('#newsIFRAME_news').show();
+        }
+    }
+
+    function navMENUhi() {
+        $('#nav_MENU').show();
+    }
+    function navMENUbye() {
+        $('#nav_MENU').hide();
+        $('#notIFRAME').hide();
+        $('#yesIFRAME').show();
+        $('#newsIFRAME').hide();
+    }
+    function testif() {
+        //alert('iframe test');
+        if ($('#yesIFRAME').is(":visible")) {
+            $('#yesIFRAME').hide();
+            $('#notIFRAME').show();
+        }
+    }
+</script>
+
+<style type="text/css">
+      
+a.menuitemx          {background: url(graphics/interface/grey_gradient2.jpg) repeat-x left bottom;color: white; font: bold 10px Arial; text-decoration: none; padding: 3px 0 0px 10px; position: relative; width: auto; display: block }
+
+.glossymenu    { margin: 5px 0; padding: 0; border:none; width: 168px; text-align:left; font: italic bold 11px Arial;}
+
+.glossymenu a.menuCLICK          { cursor:pointer; color: white; font:italic bold 11px Arial; text-decoration: none; padding: 3px 0 3px 10px; position: relative; width: auto; display: block }
+
+.glossymenu a.menuCLICK:visited, .glossymenu .menuitem:active{
+color: white;
+}
+
+.glossymenu a.menuCLICK .statusicon{ /*CSS for icon image that gets dynamically added to headers*/
+position: absolute;
+top: 5px;
+right: 5px;
+border: none;
+}
+
+.glossymenu a.menuitem:hover{
+}
+
+.glossymenu div.submenu { background-color: black; display:none;}
+
+.glossymenu div.submenu ul{ /*UL of each sub menu*/
+list-style-type: none;
+margin: 0;
+padding: 0;
+}
+
+.glossymenu div.submenu ul li { border: none }
+
+.glossymenu div.submenu ul li a    { color: #A5A5A5; font: bold 10px Arial; text-decoration: none; padding: 1px 0 1px 15px; display: block }
+
+.glossymenu div.submenu ul li a:hover  { color:#FFFFFF !important; }
+
+
+#redCATtag    {display:none;}
+.glossymenuNAV    { margin: 5px 0; padding: 0; border:none; width: 620px; text-align:left; font: italic bold 11px Arial;}
+
+.glossymenuNAV a.menuCLICK          { cursor:pointer; color: white; font:italic bold 13px Arial; text-decoration: none; padding: 3px 0 3px 10px; position: relative; width: auto; display: block }
+
+.glossymenuNAV a.menuCLICK:visited, .glossymenuNAV .menuitem:active{
+color: white;
+}
+
+.glossymenuNAV a.menuCLICK .statusicon{ /*CSS for icon image that gets dynamically added to headers*/
+position: absolute;
+top: 5px;
+right: 5px;
+border: none;
+}
+
+.glossymenuNAV a.menuitem:hover{ 
+}
+
+.glossymenuNAV div.n_submenu { background-color: black; display:block;}
+
+.glossymenuNAV div.n_submenu ul{ /*UL of each sub menu*/
+list-style-type: none;
+margin: 0;
+padding: 0;
+}
+
+.glossymenuNAV div.n_submenu ul li { border: none }
+
+.glossymenuNAV div.n_submenu ul li a    { color: #FFFFFF; font: bold 10px Arial; text-decoration: none; padding: 1px 0 1px 15px; display: block }
+
+.glossymenuNAV div.n_submenu ul li a:hover  { color: #3366cc; color: #6A6A6A  }
+</style>
+
+<style type="text/css">
+
+a:link {
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: none;
+}
+a:active {
+	text-decoration: none;
+}
+.botmenu {
+    color:White;
+}
+.style1 {color: #CC0000}
+
+</style>
+<script type="text/javascript">
+    function menuOPEN(id) {
+        var menOpen = "#menudiv";
+        var menCol = new Array("", "#007DC3", "#936FB1", "#B1005D", "#F6A01A", "#0067B1", "#EF3E42", "#EF3E42", "#54B848", "#00A0AF", "", "#cccc00");
+        $('div.submenu:visible').slideUp(300);
+        menOpen2 = menOpen + id;
+        $(menOpen2).slideDown(300);
+
+        var menPage = "/asp/subcategory_list2013.aspx?categoryName=" + id;
+        myiframe = window.frames["myIFRAME"];
+        myiframe.location.replace(menPage);
+        var menHD = "#menuhd" + id;
+
+        $('.glossymenu a.menuCLICK').css("color", "#FFFFFF");
+        $(menHD).css("color", menCol[id]);
+
+        $('.glossymenu div.submenu ul li a').css('color', '#A5A5A5');
+        navMENUbye();
+    }
+
+    function menuOPEN2(id) {
+        var menOpen = "#menudiv";
+        menOpen2 = menOpen + id
+        if ($(menOpen2).is(":visible")) {
+        } else {
+
+            var menCol = new Array("", "#007DC3", "#936FB1", "#B1005D", "#F6A01A", "#0067B1", "#EF3E42", "#EF3E42", "#54B848", "#00A0AF", "", "#cccc00");
+            $('div.submenu:visible').slideUp(300);
+            menOpen2 = menOpen + id;
+            $(menOpen2).slideDown(300);
+
+            var menHD = "#menuhd" + id;
+
+            $('.glossymenu a.menuCLICK').css("color", "#FFFFFF");
+            $(menHD).css("color", menCol[id]);
+
+            $('.glossymenu div.submenu ul li a').css('color', '#A5A5A5');
+        }
+        navMENUbye();
+    }
+    
+</script>
+</head>
+<body onload="onloadx('');">
+<center>
+<div class="nums"><p class="numsTXT">USA&nbsp;&nbsp;800.622.3530&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;INTERNATIONAL&nbsp;&nbsp;864.846.8740&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;FOLLOW US&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.facebook.com/AllegroIndustries" target=_blank><img class="findus" src="sample/fb24.png" border=none></a>&nbsp;&nbsp;&nbsp;<a href="https://twitter.com/AllegroInd" target=_blank><img class="findus" src="sample/twitter24.png" border=none></a>&nbsp;&nbsp;&nbsp;<a href="http://www.youtube.com/user/AllegroIndustries" target=_blank><img class="findus" src="sample/YouTube-social-square_red_24px.png" border=none></a></p>
+</div>
+<div class="navDIV">
+<table class="navDIV">
+<tr>
+<td>
+<div class="navDIVinner" onclick="javascript:window.location.href='../index.aspx';">&nbsp;</div>
+</td><td>
+<div class="navSPAN" onclick="navMENUhi();">PRODUCTS</div>
+<div class="glossymenuNAV" id="nav_MENU" onclick="$('#nav_MENU').hide();">
+<div class="navCLS"><span class="navCLSspan" onclick="$('#nav_MENU').hide();">X</span></div>
+<table class="navMENUtbl"><tr><td>
+<a class="menuCLICK" id="n_menuhd1" onclick="menuOPEN(1);" title="RESPIRATORS" target="myIFRAME">RESPIRATORS</a>
+<div class="n_submenu" id="n_menudiv1">
+                <ul>
+                <li><a title="Accessories" href="/asp/products_list2013.aspx?prodID=11" target="myIFRAME" onclick="menuOPEN(1);">Accessories</a></li>
+                <li><a title="Air Sources, HP" href="/asp/products_list2013.aspx?prodID=8" target="myIFRAME" onclick="menuOPEN(1);">Air Sources HP</a></li>
+                <li><a title="Ambient Air Pumps" href="/asp/products_list2013.aspx?prodID=3" target="myIFRAME" onclick="menuOPEN(1);">Ambient Air Pumps</a></li>
+                <li><a title="Blasting" href="/asp/subcategory_list2015.aspx?categoryName=1&SF=7xx40" target="myIFRAME" onclick="menuOPEN(1);">Blasting</a></li>
+                	<li><a title="SAR Helmets" href="/asp/products_list2013.aspx?prodID=7" target="myIFRAME" onclick="menuOPEN(1);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Helmets</a></li>
+                	<li><a title="SAR Systems" href="/asp/products_list2013.aspx?prodID=40" target="myIFRAME" onclick="menuOPEN(1);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Systems</a></li>
+                <li><a title="Cleaning" href="/asp/products_list2013.aspx?prodID=10" target="myIFRAME" onclick="menuOPEN(1);">Cleaning</a></li>
+                <li><a title="Fit Testing" href="/asp/products_list2013.aspx?prodID=9" target="myIFRAME" onclick="menuOPEN(1);">Fit Testing</a></li>
+                <li><a title="Hoods" href="/asp/subcategory_list2015.aspx?categoryName=1&SF=1xx2" target="myIFRAME" onclick="menuOPEN(1);">Hoods</a></li>
+                	<li><a title="SAR Hoods" href="/asp/products_list2013.aspx?prodID=1" target="myIFRAME" onclick="menuOPEN(1);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hoods</a></li>
+                	<li><a title="SAR Hood Systems" href="/asp/products_list2013.aspx?prodID=2" target="myIFRAME" onclick="menuOPEN(1);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hood Systems</a></li>
+                <li><a title="Masks" href="/asp/subcategory_list2015.aspx?categoryName=1&SF=6xx4" target="myIFRAME" onclick="menuOPEN(1);">Masks</a></li>
+                	<li><a title="SAR Masks" href="/asp/products_list2013.aspx?prodID=6" target="myIFRAME" onclick="menuOPEN(1);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Masks</a></li>
+                	<li><a title="SAR Mask Systems" href="/asp/products_list2013.aspx?prodID=4" target="myIFRAME" onclick="menuOPEN(1);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Mask Systems</a></li>
+                <li><a title="Shields and Headtops" href="/asp/subcategory_list2015.aspx?categoryName=1&SF=53xx54xx42xx5" target="myIFRAME" onclick="menuOPEN(1);">Shields and Headtops</a></li>
+	               	<li><a title="PAPR Headtops" href="/asp/products_list2013.aspx?prodID=53" target="myIFRAME" onclick="menuOPEN(1);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PAPR Headtops</a></li>
+	               	<li><a title="PAPR Systems" href="/asp/products_list2013.aspx?prodID=54" target="myIFRAME" onclick="menuOPEN(1);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PAPR Systems</a></li>
+	               	<li><a title="SAR Shields" href="/asp/products_list2013.aspx?prodID=42" target="myIFRAME" onclick="menuOPEN(1);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Shields</a></li>
+                	<li><a title="SAR Shield Systems" href="/asp/products_list2013.aspx?prodID=5" target="myIFRAME" onclick="menuOPEN(1);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Shield Systems</a></li>
+                <li><a title="Storage and Carry Bags" href="/asp/products_list2013.aspx?prodID=12" target="myIFRAME" onclick="menuOPEN(1);">Storage and Carry Bags</a></li>
+                </ul>
+</div>
+</td><td>
+<a class="menuCLICK" id="n_menuhd11" onclick="menuOPEN(11);" title="WELDING" target="myIFRAME">WELDING</a>
+<div class="n_submenu" id="n_menudiv11">
+                <ul>
+                <li><a title="Accessories" href="/asp/products_list2013.aspx?prodID=48" target="myIFRAME" onclick="menuOPEN(11);">Accessories</a></li>
+                <li><a title="Browguards-Eyewear" href="/asp/products_list2013.aspx?prodID=50" target="myIFRAME" onclick="menuOPEN(11);">Browguards-Eyewear</a></li>
+                <li><a title="Fume Extractor" href="/asp/products_list2013.aspx?prodID=51" target="myIFRAME" onclick="menuOPEN(11);">Fume Extractor</a></li>
+                <li><a title="PAPR Headtops" href="/asp/products_list2013.aspx?prodID=47" target="myIFRAME" onclick="menuOPEN(11);">PAPR Headtops</a></li>
+                <li><a title="PAPR Systems" href="/asp/products_list2013.aspx?prodID=46" target="myIFRAME" onclick="menuOPEN(11);">PAPR Systems</a></li>
+                <li><a title="SAR Welding Helmets" href="/asp/products_list2013.aspx?prodID=39" target="myIFRAME" onclick="menuOPEN(11);">SAR Welding Helmets</a></li>
+                <li><a title="SAR Welding Systems" href="/asp/products_list2013.aspx?prodID=41" target="myIFRAME" onclick="menuOPEN(11);">SAR Welding Systems</a></li>
+                <li><a title="Welding Shield (Non-Respirator)" href="/asp/products_list2013.aspx?prodID=52" target="myIFRAME" onclick="menuOPEN(11);">Welding Shield (Non-Respirator)</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="n_menuhd4" onclick="menuOPEN(4);" title="BLOWERS" target="myIFRAME">BLOWERS</a>
+<div class="n_submenu" id="n_menudiv4">
+                <ul>
+                <li><a title="Accessories" href="/asp/products_list2013.aspx?prodID=21" target="myIFRAME" onclick="menuOPEN(4);">Accessories</a></li>
+                <li><a title="Air Bags" href="/asp/products_list2013.aspx?prodID=17" target="myIFRAME" onclick="menuOPEN(4);">Air Bags</a></li>
+                <li><a title="Axial" href="/asp/products_list2013.aspx?prodID=18" target="myIFRAME" onclick="menuOPEN(4);">Axial</a></li>
+                <li><a title="Blower Selector" href="/asp/products_list2013.aspx?prodID=36" target="myIFRAME" onclick="menuOPEN(4);">Blower Selector</a></li>
+                <li><a title="Carpet" href="/asp/products_list2013.aspx?prodID=22" target="myIFRAME" onclick="menuOPEN(4);">Carpet</a></li>
+                <li><a title="Centrifugal" href="/asp/products_list2013.aspx?prodID=19" target="myIFRAME" onclick="menuOPEN(4);">Centrifugal</a></li>
+                <li><a title="Ducting" href="/asp/products_list2013.aspx?prodID=23" target="myIFRAME" onclick="menuOPEN(4);">Ducting</a></li>
+                <li><a title="Manhole Ventilation Passthru (MVP)" href="/asp/products_list2013.aspx?prodID=38" target="myIFRAME" onclick="menuOPEN(4);">Manhole Ventilation Passthru (MVP)</a></li>
+                <li><a title="Pneumatic (Jet Fans)" href="/asp/products_list2013.aspx?prodID=37" target="myIFRAME" onclick="menuOPEN(4);">Pneumatic (Jet Fans)</a></li>
+                <li><a title="Venturi" href="/asp/products_list2013.aspx?prodID=20" target="myIFRAME" onclick="menuOPEN(4);">Venturi</a></li>
+                </ul>
+</div>
+</td><td>
+<a class="menuCLICK" id="n_menuhd5" onclick="menuOPEN(5);" title="CONFINED SPACE" target="myIFRAME">CONFINED SPACE</a>
+<div class="n_submenu" id="n_menudiv5">
+                <ul>
+                <li><a title="Accessories" href="/asp/products_list2013.aspx?prodID=26" target="myIFRAME" onclick="menuOPEN(5);">Accessories</a></li>
+                <li><a title="Manhole Products" href="/asp/products_list2013.aspx?prodID=43" target="myIFRAME" onclick="menuOPEN(5);">Manhole Products</a></li>
+                <li><a title="Pumps" href="/asp/products_list2013.aspx?prodID=44" target="myIFRAME" onclick="menuOPEN(5);">Pumps</a></li>
+                <li><a title="Work Tents and Heaters" href="/asp/products_list2013.aspx?prodID=25" target="myIFRAME" onclick="menuOPEN(5);">Work Tents and Heaters</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="n_menuhd2" onclick="menuOPEN(2);" title="AED STORAGE" target="myIFRAME">AED STORAGE</a>
+<div class="n_submenu" id="n_menudiv2">
+                <ul>
+                <li><a title="Defribillator Storage" href="/asp/products_list2013.aspx?prodID=14" target="myIFRAME" onclick="menuOPEN(2);">Defribillator Storage</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="n_menuhd3" onclick="menuOPEN(3);" title="SAMPLING PRODUCTS" target="myIFRAME">SAMPLING PRODUCTS</a>
+<div class="n_submenu" id="n_menudiv3">
+                <ul>
+                <li><a title="Cassettes" href="/asp/products_list2013.aspx?prodID=15" target="myIFRAME" onclick="menuOPEN(3);">Cassettes</a></li>
+                <li><a title="Pumps" href="/asp/products_list2013.aspx?prodID=16" target="myIFRAME" onclick="menuOPEN(3);">Pumps</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="n_menuhd6" onclick="menuOPEN(6);" title="ERGONOMICS" target="myIFRAME">ERGONOMICS</a>
+<div class="n_submenu" id="n_menudiv6">
+                <ul>
+                <li><a title="Back Support" href="/asp/products_list2013.aspx?prodID=27" target="myIFRAME" onclick="menuOPEN(6);">Back Support</a></li>
+                <li><a title="Wrist & Elbow Support" href="/asp/products_list2013.aspx?prodID=28" target="myIFRAME" onclick="menuOPEN(6);">Wrist & Elbow Support</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="n_menuhd7" onclick="menuOPEN(7);" title="KNEE PROTECTION" target="myIFRAME">KNEE PROTECTION</a>
+<div class="n_submenu" id="n_menudiv7">
+                
+</div>
+<a class="menuCLICK" id="n_menuhd8" onclick="menuOPEN(8);" title="SEASONAL CLIMATE CONTROL" target="myIFRAME">SEASONAL CLIMATE CONTROL</a>
+<div class="n_submenu" id="n_menudiv8">
+                <ul>
+                <li><a title="Cooling Products" href="/asp/products_list2013.aspx?prodID=31" target="myIFRAME" onclick="menuOPEN(8);">Cooling Products</a></li>
+                <li><a title="Hardhat Accessories" href="/asp/products_list2013.aspx?prodID=45" target="myIFRAME" onclick="menuOPEN(8);">Hardhat Accessories</a></li>
+				</ul>
+</div>
+<a class="menuCLICK" id="n_menuhd9" onclick="menuOPEN(9);" title="LENS CARE" target="myIFRAME">LENS CARE</a>
+<div class="n_submenu" id="n_menudiv9">
+<ul><li></li></ul>
+</div>
+</td></tr></table>
+</div>
+</td><td>
+<div class="navSPAN" onclick="newPROD();navMENUbye();">FEATURED PRODUCTS</div>
+</td><td>
+<div class="navSPAN" onclick="newVID();navMENUbye();">VIDEO SUPPORT</div>
+</td><td>
+<div class="navSPAN" onclick="whatNEW('N');">NEWS</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="searchBAR">
+<form action="../asp/full_search2013.aspx" method="post" name="searchform" target="myIFRAME">
+<span class="searchSpan">
+<input id="find" name="find" type="search" placeholder="Search"/><input id="searchSubmit" type="submit" value="" onclick="navMENUbye();$('#notIFRAME').hide();$('#yesIFRAME').show();"/>
+</span>
+</form>
+</div>
+<div class="newBOD">
+    <div id="notIFRAME">
+    <div id="redCATtag">
+    <div id="redCATinside">
+   <span><a href="docs/catalog/2017-18_Catalog_LO.pdf" target="_new"><img width='80px' src="graphics/news/catalog.jpg" border=none /></a></span>
+   <br>
+    <span>2017-18 Catalog is here!</span>
+    <p />
+    <hr style="color:#FFFFFF;background-color:#FFFFFF;height:1px;border:none;" />
+   <p />
+   <p />
+   <a href='javascript:window.open("../vid/vidYT.aspx?video=19","vid","toolbar=no,resizable=no,height=500,width=750")'>
+   <p />
+   <p />
+   <img width='80px' src='vid/EZAir.jpg' />
+   </a>
+   <br>
+   <span>EZ Air PAPR 9935 Series<p /><p />Click on the image to view the video.</span>
+    <p />
+    <p />
+    <p />
+    <div class="navCLS"><span class="navCLSspan" onclick="$('#redCATinside').animate({width:4,'padding-left':0,'padding-right':0},500,function(){$('#redCATinside').hide();});$('#redCATinside').children().hide();">CLOSE</span></div>
+</div>
+</div>
+    <div class="activeBUBBLE">
+    <table class="active">
+    <tr>
+    <td class='pausebut'>
+    <div class="actPAUSE" id="actX" onclick="fx();">&nbsp;</div>
+    </td><td>
+    <div class="actFILL" id="act1" onclick="f5();fx(3);">&nbsp;</div>
+    </td><td>
+    <div class="actBLANK" id="act2" onclick="f1();fx(3);">&nbsp;</div>
+    </td><td>
+    <div class="actBLANK" id="act3" onclick="f2();fx(3);">&nbsp;</div>
+    </td><td>
+    <div class="actBLANK" id="act4" onclick="f3();fx(3);">&nbsp;</div>
+    </td><td>
+    <div class="actBLANK" id="act5" onclick="f4();fx(3);">&nbsp;</div>
+    </td>
+    </tr>
+    </table>
+    </div>
+    <div id="featLIST1" onclick="newPRODfea(459);">
+    <span class="feat">
+    <div class="feat1">PORTABLE WELDING<br />FUME EXTRACTOR</div>
+    <p/>
+    <div class="feat2">THE MOST VERSATILE AND PORTABLE<br />FUME EXTRACTOR AVAILABLE</div>
+    <p/>
+    <div class="feat3">LEARN MORE&nbsp;></div>
+    </span>
+    <img src="sample/ALLEG-17-19_Web-home-feature_940x320_Fume-Extractor_9450_020217.jpg" style="margin-top:10px;cursor:pointer;">
+    </div>
+
+    <div id="featLIST2" style="display:none;" onclick="newPRODfea(237);">
+    <span class="feat">
+    <div class="feat1">OUR UPDATED 8" COM-PAX-IAL<br>BLOWER SYSTEM</div>
+    <p/>
+    <div class="feat2">INDUSTRY LEADING COMPACT SIZE AND WEIGHT</div>
+    <p/>
+    <div class="feat3">LEARN MORE&nbsp;></div>
+    </span>
+    <img src="sample/ALLEG-17-19_Web-home-feature_940x320_Blower_9533-15_020217.jpg" style="margin-top:10px;cursor:pointer;">
+    </div>
+
+    <div id="featLIST3" style="display:none;" onclick="newPRODfea(410);">
+    <span class="feat">
+    <div class="feat1">PERFORMANCE PROVEN<br />WELDING SAR</div>
+    <p/>
+    <div class="feat2">OUR DELUXE SUPPLIED AIR SHIELD<br>AND BLUE WELDING HELMET</div>
+    <p/>
+    <div class="feat3">LEARN MORE&nbsp;></div>
+    </span>
+    <img src="sample/ALLEG-17-19_Web-home-feature_940x320_SAR_9904-W_020217.jpg" style="margin-top:10px;cursor:pointer;">
+    </div>
+
+    <div id="featLIST4" style="display:none;" onclick="newPRODfea(318);">
+    <span class="feat">
+    <div class="feat1">ALL-IN-ONE METAL<br />BLOWER SYSTEM</div>
+    <p/>
+    <div class="feat2">OUR 8" AIRBAG BLOWER<br>INCLUDES EVERYTHING YOU'LL NEED</div>
+    <p/>
+    <div class="feat3">LEARN MORE&nbsp;></div>
+    </span>
+    <img src="sample/ALLEG-17-19_Web-home-feature_940x320_Air-Bag_9535-08_020217.jpg" style="margin-top:10px;cursor:pointer;">
+    </div>
+
+    <div id="featLIST5" style="display:none;" onclick="newPRODfea(440);">
+    <span class="feat">
+    <div class="feat1">COST EFFECTIVE<br />WELDING PAPR</div>
+    <p/>
+    <div class="feat2">OUR DELUXE EZ AIR POWERED <br />AIR PURIFYING RESPIRATOR</div>
+    <p/>
+    <div class="feat3">LEARN MORE&nbsp;></div>
+    </span>
+    <img src="sample/ALLEG_Web-home-feature_1_940x320_Aug17_2015.jpg" style="margin-top:10px;cursor:pointer;">
+    </div>
+
+    <hr class="newHR">
+    <table class="panel4">
+    <tr>
+    <td>
+	    <div class="panel4box" onclick="menuOPEN(4);"><img src="sample/ALLEG_hp_230x180_box_1_Aug14.jpg">
+	    <div class="panel4text"><p class="panel4P" onclick="menuOPEN(4);">BLOWERS ></p></div>
+	    </div>
+    </td>
+    <td>
+	    <div class="panel4box" onclick="menuOPEN(1);"><img src="sample/ALLEG_hp_230x180_box_2_Aug14.jpg">
+	    <div class="panel4text"><p class="panel4P" onclick="menuOPEN(1);">RESPIRATORS ></p></div>
+	    </div>
+    </td>
+    <td>
+	    <div class="panel4box" onclick="newPROD();navMENUbye();"><img src="sample/ALLEG_hp_230x180_box_3_Aug14.jpg">
+	    <div class="panel4text" onclick="newPROD();navMENUbye();"><p class="panel4P">FEATURED PRODUCTS ></p></div>
+	    </div>
+    </td>
+    <td>
+	    <div class="panel4box" onclick="newVID();"><img src="sample/ALLEG_hp_230x180_box_4_Aug14.jpg">
+	    <div class="panel4text"><p class="panel4P" onclick="newVID();">VIDEO SUPPORT ></p></div>
+	    </div>
+    </td>
+    </tr>
+    </table>
+    <hr class="newHR">
+    <div class="newFoot"> <a href="https://play.google.com/store/apps/details?id=com.allegro.allegroblower&hl=en" target="_blank"><img src="graphics/gplay.gif" height="35px" /></a>&nbsp;&nbsp;&nbsp;<a href="https://itunes.apple.com/us/app/allegro-cfm-blower-selector/id830692719" target="_blank"><img src="graphics/apstore.gif" height="35px"/></a>&nbsp;&nbsp;&nbsp;<span class="appNote">Download our CFM Blower Selector app today!</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="appNote"><a href='javascript:window.open("../vid/vidYT.aspx?video=18","vid","toolbar=no,resizable=no,height=500,width=750")'>
+<span style="color:#ffffff;width:250px;text-align:right;display:inline-block;vertical-align:top;line-height:20px;">Allegro Facility Expansion! (Extended Version)&nbsp;</span><img width="90px" src='vid/whs1.jpg' />
+   </a></span></div>
+    <!--
+    <div class="foot26">
+    ALLEGRO CELEBRATES 26 YEARS OF EXCELLENCE IN SAFETY
+    </div>
+    -->
+    </div>
+    <div id="yesIFRAME">
+    <table><tr>
+    <td valign='top'>
+    <div class="menuDIV">
+     <div class="glossymenu">
+<a class="menuCLICK" id="menuhd0" href="../index.aspx" target="_top">HOME</a>
+<a class="menuCLICK" id="menuhd1" onclick="menuOPEN(1);" title="RESPIRATORS" target="myIFRAME">RESPIRATORS</a>
+<div class="submenu" id="menudiv1">
+                <ul>
+                <li><a title="Accessories" href="/asp/products_list2013.aspx?prodID=11" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Accessories</a></li>
+                <li><a title="Air Sources, HP" href="/asp/products_list2013.aspx?prodID=8" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Air Sources HP</a></li>
+                <li><a title="Ambient Air Pumps" href="/asp/products_list2013.aspx?prodID=3" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Ambient Air Pumps</a></li>
+                <li><a title="Blasting" href="/asp/subcategory_list2015.aspx?categoryName=1&SF=7xx40" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Blasting</a></li>
+                	<li><a title="SAR Helmets" href="/asp/products_list2013.aspx?prodID=7" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Helmets</a></li>
+                	<li><a title="SAR Systems" href="/asp/products_list2013.aspx?prodID=40" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Systems</a></li>
+                <li><a title="Cleaning" href="/asp/products_list2013.aspx?prodID=10" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Cleaning</a></li>
+                <li><a title="Fit Testing" href="/asp/products_list2013.aspx?prodID=9" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Fit Testing</a></li>
+                <li><a title="Hoods" href="/asp/subcategory_list2015.aspx?categoryName=1&SF=1xx2" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Hoods</a></li>
+                	<li><a title="SAR Hoods" href="/asp/products_list2013.aspx?prodID=1" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Hoods</a></li>
+                	<li><a title="SAR Hood Systems" href="/asp/products_list2013.aspx?prodID=2" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Hood Systems</a></li>
+               <li><a title="Masks" href="/asp/subcategory_list2015.aspx?categoryName=1&SF=6xx4" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Masks</a></li>
+                	<li><a title="SAR Masks" href="/asp/products_list2013.aspx?prodID=6" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Masks</a></li>
+                	<li><a title="SAR Mask Systems" href="/asp/products_list2013.aspx?prodID=4" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Mask Systems</a></li>
+                <li><a title="Shields" href="/asp/subcategory_list2015.aspx?categoryName=1&SF=53xx54xx42xx5" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Shields</a></li>
+	               	<li><a title="PAPR Headtops" href="/asp/products_list2013.aspx?prodID=53" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PAPR Headtops</a></li>
+	               	<li><a title="PAPR Systems" href="/asp/products_list2013.aspx?prodID=54" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PAPR Systems</a></li>
+ 	               	<li><a title="SAR Shields" href="/asp/products_list2013.aspx?prodID=42" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Shields</a></li>
+                	<li><a title="SAR Shield Systems" href="/asp/products_list2013.aspx?prodID=5" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SAR Shield Systems</a></li>
+                <li><a title="Storage and Carry Bags" href="/asp/products_list2013.aspx?prodID=12" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Storage and Carry Bags</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="menuhd11" onclick="menuOPEN(11);" title="WELDING" target="myIFRAME">WELDING</a>
+<div class="submenu" id="menudiv11">
+                <ul>
+                <li><a title="Accessories" href="/asp/products_list2013.aspx?prodID=48" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Accessories</a></li>
+                <li><a title="Browguards-Eyewear" href="/asp/products_list2013.aspx?prodID=50" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Browguards-Eyewear</a></li>
+                <li><a title="Fume Extractor" href="/asp/products_list2013.aspx?prodID=51" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Fume Extractor</a></li>
+                <li><a title="PAPR Headtops" href="/asp/products_list2013.aspx?prodID=47" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">PAPR Headtops</a></li>
+                <li><a title="PAPR Systems" href="/asp/products_list2013.aspx?prodID=46" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">PAPR Systems</a></li>
+                <li><a title="SAR Welding Helmets" href="/asp/products_list2013.aspx?prodID=39" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">SAR Welding Helmets</a></li>
+                <li><a title="SAR Welding Systems" href="/asp/products_list2013.aspx?prodID=41" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">SAR Welding Systems</a></li>
+                <li><a title="Welding Shield (Non-Respirator)" href="/asp/products_list2013.aspx?prodID=52" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Welding Shield (Non-Respirator)</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="menuhd4" onclick="menuOPEN(4);" title="BLOWERS" target="myIFRAME">BLOWERS</a>
+<div class="submenu" id="menudiv4">
+                <ul>
+                <li><a title="Accessories" href="/asp/products_list2013.aspx?prodID=21" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Accessories</a></li>
+                <li><a title="Air Bags" href="/asp/products_list2013.aspx?prodID=17" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Air Bags</a></li>
+                <li><a title="Axial" href="/asp/products_list2013.aspx?prodID=18" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Axial</a></li>
+                <li><a title="Blower Selector" href="/asp/products_list2013.aspx?prodID=36" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Blower Selector</a></li>
+                <li><a title="Carpet" href="/asp/products_list2013.aspx?prodID=22" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Carpet</a></li>
+                <li><a title="Centrifugal" href="/asp/products_list2013.aspx?prodID=19" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Centrifugal</a></li>
+                <li><a title="Ducting" href="/asp/products_list2013.aspx?prodID=23" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Ducting</a></li>
+                <li><a title="Manhole Ventilation Passthru (MVP)" href="/asp/products_list2013.aspx?prodID=38" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Manhole Ventilation Passthru (MVP)</a></li>
+                <li><a title="Pneumatic (Jet Fans)" href="/asp/products_list2013.aspx?prodID=37" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Pneumatic (Jet Fans)</a></li>
+                <li><a title="Venturi" href="/asp/products_list2013.aspx?prodID=20" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Venturi</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="menuhd5" onclick="menuOPEN(5);" title="CONFINED SPACE" target="myIFRAME">CONFINED SPACE</a>
+<div class="submenu" id="menudiv5">
+                <ul>
+                <li><a title="Accessories" href="/asp/products_list2013.aspx?prodID=26" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Accessories</a></li>
+                <li><a title="Manhole Products" href="/asp/products_list2013.aspx?prodID=43" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Manhole Products</a></li>
+                <li><a title="Pumps" href="/asp/products_list2013.aspx?prodID=44" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Pumps</a></li>
+                <li><a title="Work Tents and Heaters" href="/asp/products_list2013.aspx?prodID=25" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Work Tents and Heaters</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="menuhd2" onclick="menuOPEN(2);" title="AED STORAGE" target="myIFRAME">AED STORAGE</a>
+<div class="submenu" id="menudiv2">
+                <ul>
+                <li><a title="Defribillator Storage" href="/asp/products_list2013.aspx?prodID=14" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Defribillator Storage</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="menuhd3" onclick="menuOPEN(3);" title="SAMPLING PRODUCTS" target="myIFRAME">SAMPLING PRODUCTS</a>
+<div class="submenu" id="menudiv3">
+                <ul>
+                <li><a title="Cassettes" href="/asp/products_list2013.aspx?prodID=15" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Cassettes</a></li>
+                <li><a title="Pumps" href="/asp/products_list2013.aspx?prodID=16" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Pumps</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="menuhd6" onclick="menuOPEN(6);" title="ERGONOMICS" target="myIFRAME">ERGONOMICS</a>
+<div class="submenu" id="menudiv6">
+                <ul>
+                <li><a title="Back Support" href="/asp/products_list2013.aspx?prodID=27" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Back Support</a></li>
+                <li><a title="Wrist & Elbow Support" href="/asp/products_list2013.aspx?prodID=28" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Wrist & Elbow Support</a></li>
+                </ul>
+</div>
+<a class="menuCLICK" id="menuhd7" onclick="menuOPEN(7);" title="KNEE PROTECTION" target="myIFRAME">KNEE PROTECTION</a>
+<div class="submenu" id="menudiv7">
+
+</div>
+<a class="menuCLICK" id="menuhd8" onclick="menuOPEN(8);" title="SEASONAL CLIMATE CONTROL" target="myIFRAME">SEASONAL CLIMATE CONTROL</a>
+<div class="submenu" id="menudiv8">
+                <ul>
+                <li><a title="Cooling Products" href="/asp/products_list2013.aspx?prodID=31" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Cooling Products</a></li>
+                <li><a title="Hardhat Accessories" href="/asp/products_list2013.aspx?prodID=45" target="myIFRAME" onclick="$('.glossymenu div.submenu ul li a').css('color','#A5A5A5');$(this).css('color','#FFFFFF');navMENUbye();">Hardhat Accessories</a></li>
+				</ul>
+</div>
+<a class="menuCLICK" id="menuhd9" onclick="menuOPEN(9);" title="LENS CARE" target="myIFRAME">LENS CARE</a>
+<div class="submenu" id="menudiv9">
+<ul><li></li></ul>
+</div>
+</div>
+    </div>
+    </td>
+    <td><iframe id="myIFRAME" name="myIFRAME" style="overflow:auto;" src='html/comingsoon.html?dt=21916'></iframe></td>
+    </tr></table>
+    
+    </div>
+    <div id="newsIFRAME">
+    <table class="newsTBL" id="newsIFRAME_news">
+    <td class="c1">
+    <div class="latNEW">LATEST NEWS</div>
+    <div class="latNEW2">PAPR</div>
+    <div class="latNEW3">We are expanding our current Welding product offerings by introducing our brand new line of PAPR products! Included are several new helmet designs, complete systems, various filters as well as an assortment of accessories. Browse our website today and see which products best suit your needs!</div>
+    <p />
+    <div class="latNEWlnk"><a class="newLNK" href="asp/pdf.aspx?prodID=EZ_Air_PAPR_System_PR" target="_new">PRESS RELEASE ></a></div>
+    <br>
+    <img height="300px" src='graphics/news/news1.jpg' />
+    </td>
+    <td class="c2">
+    <div class="new1"><span class="newIMG"><a href="index.aspx?prodid=439"><img src="graphics/news/news_sm1.jpg" border=none /></a></span><span class="newTXT">EZ Air PAPR</span></div>
+    <hr class="newsHR" />
+    <div class="new1"><span class="newIMG"><a href="index.aspx?prodid=440"><img src="graphics/news/news_sm2.jpg" border=none /></a></span><span class="newTXT">EZ Air Deluxe PAPR</span></div>
+    <hr class="newsHR" />
+    <div class="new1"><span class="newIMG"><a href="index.aspx?prodid=441"><img width='75px' src="graphics/products_175x175/09934-000.jpg" border=none /></a></span><span class="newTXT">EZ Air Pro Shield PAPR</span></div>
+    <hr class="newsHR" />
+    <div class="new1"><span class="newIMG"><a href="index.aspx?prodid=442"><img src="graphics/news/news_sm3.jpg" border=none /></a></span><span class="newTXT">EZ Air Pro Blue Welding Helmet</span></div>
+    <hr class="newsHR" />
+    <div class="new1"><span class="newIMG"><a href="index.aspx?prodid=443"><img src="graphics/news/news_sm4.jpg" border=none /></a></span><span class="newTXT">EZ Air Pro Black Welding Helmet</span></div>
+   </td>
+    <td class="c2">
+    <div class="new1"><span class="newIMG"><a href="index.aspx?prodid=459"><img width='75px' src="graphics/news/news_sm5.jpg" border=none /></a></span><span class="newTXT">Portable Fume Extractor</span></div>
+    <hr class="newsHR" />
+    <div class="new1"><span class="newIMG"><a href="index.aspx?prodid=457"><img width='75px' src="graphics/products_175x175/006HL-1101.jpg" border=none /></a></span><span class="newTXT">Hollywood Goggles</span></div>
+    <hr class="newsHR" />
+    <div class="new1"><span class="newIMG"><a href="index.aspx?prodid=453"><img width='75px' src="graphics/products_175x175/006BG-000.jpg" border=none /></a></span><span class="newTXT">Browguard </span></div>
+    <hr class="newsHR" />
+    <div class="new1"><span class="newIMG"><a href="index.aspx?prodid=450"><img width='75px' src="graphics/products_175x175/00600-540.jpg" border=none /></a></span><span class="newTXT">Economy Welding Shield</span></div>
+    <hr class="newsHR" />
+    <div class="new1"><span class="newIMG"><a href="index.aspx?prodid=451"><img width='75px' src="graphics/products_175x175/00600-810.jpg" border=none /></a></span><span class="newTXT">Deluxe Welding Shield</span></div>
+    </td>
+    </table>
+    <table class="newsTBL" id="newsIFRAME_lit">
+    <tr><td colspan=3><div class="latNEW">ELECTRONIC LITERATURE</div></td></tr>
+    <td class="c1a">
+    <div class="new2lit"><span class="newTXT2a">2017/2018 CATALOG</span><p /><span class="newIMG2"><a href="docs/catalog/2017-18_Catalog_LO.pdf" target="_new"><img src="graphics/news/catalog.jpg" border=none /></a><p />Click <strong><a class='pdflink' href="docs/catalog/2017-18_Catalog_HI.pdf" target="_new">HERE</a></strong> for Hi-Res version.</span></div>
+    <hr class="newsHR" />
+    <div class="new2lit"><span class="newTXT2a">2014/2015 CATALOG (Spanish Version)</span><p /><span class="newIMG2"><a href="docs/catalog/2014-15 Allegro Catalog_A4_Spanish_030216_WEBw.pdf" target="_new"><img src="graphics/news/14catalog.jpg" border=none /></a><p />Click <strong><a class='pdflink' href="docs/catalog/2014-15 Allegro Catalog_A4_Spanish_030216_PRINTw.pdf" target="_new">HERE</a></strong> for Hi-Res version.</span></div>
+    </td>
+    <td class="c2a">
+    <div class="new2lit"><span class="newTXT2a">Abrasive Blasting Offerings</span><p /><span class="newIMG2"><a href="docs/catalog/AbrasveBlastingFlyer081814_LO2.pdf" target="_new"><img src="graphics/news/abrasive.jpg" border=none /></a></span></div>
+    <hr class="newsHR" />
+    <div class="new2lit"><span class="newTXT2a">Abrasive Blasting Offerings (Spanish Version)</span><p /><span class="newIMG2"><a href="docs/catalog/Abrasive Blasting Flyer_A4_Spanish_020816_PRINTw.pdf" target="_new"><img src="graphics/news/abrasive.jpg" border=none /></a></span></div>
+    </td>
+    <td class="c3a">
+    <div class="new2lit"><span class="newTXT2a">PAPR Brochure</span><p /><span class="newIMG2"><a href="docs/catalog/PAPRBrochure 011916_HI2.pdf" target="_new"><img src="graphics/news/PAPR_Brochure.jpg" border=none /></a></span></div>
+    <hr class="newsHR" />
+    <div class="new2lit"><span class="newTXT2a">PAPR Brochure<br /> (Spanish Version)</span><p /><span class="newIMG2"><img src="graphics/news/PAPR_Brochuresoon.jpg" border=none /></span></div>
+    </td>
+    </table>
+    </div>
+</div>
+<div class="botFOOT">
+<table class="botFOOT">
+<tr>
+<td class="botFOOTlist" onclick="newPRODany('../html/about_us.html');" title="About Allegro">
+ABOUT ALLEGRO
+</td>
+<td class="botFOOTlist"><a class="a_foot" href="../docs/Fit_Test_Record_Form.pdf" target="_new" title="Fit Test Form">
+FIT TEST FORM</a>
+</td>
+<td class="botFOOTlist"  onclick="newPRODany('../asp/msds_list.aspx');" title="SDS Listing">
+SDS LISTING
+</td>
+<td class="botFOOTlist" onclick="newPRODany('../html/warranty/warranty_descp.html');" title="Warranty">
+WARRANTY
+</td>
+<td class="copyRIGHT" rowspan=4>
+COPYRIGHT 2015 ALLEGRO INDUSTRIES, ALL RIGHTS RESERVED.
+</td>
+</tr>
+<tr>
+<td class="botFOOTlist" onclick="newPRODany('/asp/product_detail2013.aspx?prodID=377');" title="Blower Selector">
+BLOWER SELECTOR
+</td>
+<td class="botFOOTlist"><a class="a_foot" href="imgdb/indeximg.aspx" title="Image Database">
+IMAGE DATABASE</a>
+</td>
+<td class="botFOOTlist" onclick="newPRODany('../asp/parts_list.aspx');" title="Parts Listing">
+PARTS LISTING
+</td>
+<td class="botFOOTlist" onclick="newPRODany('../asp/contact.aspx');" title="Warranty Form">
+WARRANTY FORM
+</td>
+
+</tr>
+<tr>
+<td class="botFOOTlist"  onclick="newPRODany('../html/Contact_us/index_content.html');" title="Contact Us">
+CONTACT US
+</td>
+<td class="botFOOTlist"><a class="a_foot" onclick="whatNEW('L');" title="Interactive Literature">
+ELECTRONIC LITERATURE</a>
+</td>
+<td class="botFOOTlist"><a class="a_foot" href="../docs/Allegro_Ind_Product_Certifications_Markings.pdf" target="_new" title="Fit Test Form">
+PRODUCT CERTS/MARKINGS</a>
+</td>
+
+</tr>
+<tr>
+<td class="botFOOTlist"   onclick="newPRODany('../html/faq_contents.html');" title="FAQ">
+FAQ
+</td>
+<td class="botFOOTlist" onclick="newPRODany('../html/links.html');" title="Links">
+LINKS
+</td>
+<td class="botFOOTlist" onclick="newPRODany('../asp/lt_request_contents.aspx');" title="Request Catalog">
+REQUEST LITERATURE
+</td>
+</tr>
+</table>
+</div>
+</body>
+</html>

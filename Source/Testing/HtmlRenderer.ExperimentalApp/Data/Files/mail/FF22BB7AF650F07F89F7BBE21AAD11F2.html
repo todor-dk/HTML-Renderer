@@ -1,0 +1,397 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> <!-- TODO: internationalize -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/wizard.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/magicmail.css" media="all" />
+    <!--[if IE]><link rel="stylesheet" type="text/css" href="css/magicmail-ie.css" /><![endif]-->
+
+    
+        <link rel="stylesheet" type="text/css" href="html_files/user.css" media="all" />
+    
+    <script type="text/javascript" src="./includes/global_javascript.js"></script>
+    <title>MagicMail Mail Server: Landing Page</title>
+</head>
+<body class="LoginBody">
+    <div id="Promo">
+            </div>
+    <div id="LoginWrapper">
+                <div id="LoginInfo"> <!-- any information that the customer may wish to display -->
+<img src="pics/product_logo_big.png" />
+<br>
+<br>
+<h2>Welcome to Localtel Webmail!</h2>
+<p class="main_wiz">
+From here you can log in to your webmail or personal email settings.
+</p>
+<p class="main_wiz">
+Please login by entering your <b>full email address</b> and password.
+</p>
+<p>
+Webmail Lite is recommended for Dialup connections or older Web browsers.
+</p>
+<p>
+Tuxedo is an advanced next generation AJAX webmail that is recommended for High Speed connections with newer web browsers (IE7+, Firefox2+, Chrome, Safari)
+</p>
+<p>
+<small><i>* You MUST have cookies enabled to use this system.</i></small>
+</p>
+
+        </div>
+    <div id="Login">
+        <div id="LoginHeader">
+        <h3>Sign in</h3>
+        </div>
+        
+
+<script type="text/javascript">
+var MM_LP_EMAIL_NAME_ONLY_DOMAIN = undefined;
+
+//! call back to validate the sanity of the form input.
+/*!
+ * @return bool whether form has valid data.
+ *
+ * @author Anonymous
+ * @author William Storey <william@linuxmagic.com>
+ *
+ * we check the entered email and the password.
+ *
+ * if either are found valid, we focus the input field to the problem
+ * field.
+ *
+ * TODO: trim whitespace from email/password prior to checking these.
+ */
+function checkForm(theForm) {
+    // normally we enforce requiring a full email address to log in.
+    // however, we have an option that allows logging in without specifying
+    // the domain. this is the case if we have an 'email name only domain'
+    // defined.
+    if (MM_LP_EMAIL_NAME_ONLY_DOMAIN !== undefined) {
+        // in this case, check only that we have a non-zero length name.
+        if (theForm['email'].value.length === 0) {
+            // say the same message that they need to enter their email
+            // login. this is not strictly true as we permit non-full email
+            // addresses... but perhaps better to be consistent.
+            alert("Please enter your full email address, for example, "
+                + " person@isp.com");
+            theForm["email"].focus();
+            return false;
+        }
+
+    // otherwise, require a full email address - look for an '@'
+    // TODO: this could be much more thorough...
+    } else {
+        if (theForm["email"].value.indexOf('@') == -1) {
+            alert("Please enter your full email address, for example, "
+                + " person@isp.com");
+            theForm["email"].focus();
+            return false;
+        }
+    }
+
+    if (theForm["password"].value.length==0) {
+        alert("Please enter your password, being careful to use the proper case.");
+        theForm["password"].focus();
+        return false;
+    }
+
+    return true;
+}
+
+function validateAuth(theForm) {
+    // first check the form has valid data (login and password are
+    // entered as required).
+    if (!checkForm(theForm)) {
+        return false;
+    }
+
+    // TODO: use jquery ajax abstraction.
+    var page_request = false;
+    document.body.style.cursor = "wait";
+
+    if (window.XMLHttpRequest) {    // mozilla, safari etc.
+        page_request = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {  // IE
+        try {
+            page_request = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch(e) {
+            try {
+                page_request = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch(e) {
+                show_error("Your Browser does not support AJAX");
+                return false;
+            }
+        }
+    } else {
+        show_error("Your Browser does not support AJAX");
+        return false;
+    }
+
+    // set up the callback handler.
+    page_request.onreadystatechange=function() {
+        if (page_request.readyState == 4) {
+            if (page_request.status == 200) {
+                var response = page_request.responseText;
+                if (response == '0') {
+                    document.body.style.cursor = "auto";
+                    handle_success();
+                } else {
+                    show_error(response.substring(1,response.length));
+                }
+            } else {
+                show_error('authentication module not found');
+            }
+            document.body.style.cursor = "auto";
+        }
+    }
+
+    page_request.open("POST","/authenticate.php",true);
+    page_request.setRequestHeader(
+        'Content-Type',
+        'application/x-www-form-urlencoded; charset=UTF-8'
+    );
+
+    // we may be permitting non-full email address login. if this is the
+    // case, and we appear to not have a full email address, append the
+    // domain.
+    var requestEmail = theForm.email.value;
+    if (MM_LP_EMAIL_NAME_ONLY_DOMAIN !== undefined
+        && theForm.email.value.indexOf('@') === -1) {
+        requestEmail = theForm.email.value + '@'
+            + MM_LP_EMAIL_NAME_ONLY_DOMAIN;
+    }
+
+    // TODO: encrypt the pass and set script to decrypt - layers of
+    //   protection are nice!
+    var datablock = "email=" + encodeURIComponent(requestEmail);
+    datablock += "&password=" + encodeURIComponent(theForm.password.value);
+    // we want to tell authenticate.php which interface we're logging into
+    // for the purposes of logging.
+    datablock += "&logSource=" + encodeURIComponent(theForm.loginto.value);
+    // add a small workaround for logging successes when going to settings
+    // page. why is this necessary? because after successful authentication
+    // against the authentication module, we will be treated as already
+    // logged into the user interface, so we do not trigger a login log
+    // message at the point of form submission. the webmail clients,
+    // on the other hand, do have separate login routines such that a
+    // login log message will be written.
+    if (theForm.loginto.value === 'lp_mailsettings') {
+        datablock += "&logsuccess=1";
+    }
+
+    page_request.send(datablock);
+}
+
+function show_error(msg) {
+    var obj = document.getElementById('login-error');
+    var formobj = document.getElementById('login-form');
+    if (obj) {
+        // Set the password field to be blank
+        formobj["password"].value = '';
+
+        // Set the focus on the email address field
+        formobj["email"].focus();
+        formobj["email"].select();
+
+        // Set error message
+        obj.innerHTML = msg;
+        obj.style.display = 'block';
+
+        // Fade-Out the error message
+        setTimeout("fadeOut('login-error', '100')", 120000);
+    }
+}
+
+function fadeOut(fadeLayer,opacity) {
+    if (opacity == 0) {
+        document.getElementById(fadeLayer).style.display = "none";
+        document.getElementById(fadeLayer).style.opacity = 100;
+        return;
+     }
+
+    if (opacity > 0) {
+         document.getElementById(fadeLayer).style.opacity = opacity / 100;
+    }
+    if (opacity > 0) {
+        opacity -= 10;
+        if (opacity < 0) {
+            opacity = 0;
+        }
+
+        setTimeout("fadeOut('" + fadeLayer + "'," + opacity + ")",250);
+    }
+
+}
+
+function handle_success() {
+    var formobj = document.getElementById('login-form');
+    if (!formobj) {
+        show_error("Javascript Error: Unable to get form handler");<!-- TODO: internationalize -->
+        return;
+    }
+    var theForm = document.forms["login-form"];
+    if (theForm['rememberme'].checked) {
+        save_login_info(theForm['email'].value,theForm['loginto'].value);
+    } else {
+        save_login_info('','');
+    }
+
+    var theTarget = theForm['loginto'].value;
+
+    var targetUrl = '';
+
+    // we may be permitting non-full email address login. if this is the
+    // case, and we appear to not have a full email address, append the
+    // domain.
+    var requestEmail = theForm.email.value;
+    if (MM_LP_EMAIL_NAME_ONLY_DOMAIN !== undefined
+        && theForm.email.value.indexOf('@') === -1) {
+        requestEmail = theForm.email.value + '@'
+            + MM_LP_EMAIL_NAME_ONLY_DOMAIN;
+        // to nicely avoid showing the full email address for a moment
+        // when logging in without a full email address, use a hidden
+        // input to hold the full email address.
+        theForm.email.name = 'email_visible';
+        theForm.hidden_email.value = requestEmail;
+        theForm.hidden_email.name = 'email';
+    }
+
+    // no validate onsubmit now - we submit directly.
+    theForm.onsubmit = 'return true;';
+
+    if (theTarget == 'lp_webmaillite') {
+        targetUrl = '/webmail/src/redirect.php';
+        theForm['email'].name = 'login_username';
+        theForm['password'].name = 'secretkey';
+        theForm['logSource'].name = 'logIntoSource';
+        theForm.action = targetUrl;
+        theForm.submit();
+        return;
+    }
+    if (theTarget == 'lp_tuxedo') {
+        targetUrl = '/tuxedo/index.php';
+        theForm['email'].name = '_user';
+        theForm['password'].name = '_pass';
+        theForm['logSource'].name = '_logIntoSource';
+        theForm.action = targetUrl;
+        theForm.submit();
+        return;
+    }
+    if (theTarget == 'lp_mailsettings') {
+        targetUrl += '/login.php';
+        theForm.action = targetUrl;
+        theForm.submit();
+        return;
+    }
+
+    show_error("Target not handled");
+}
+
+function save_login_info(loginid, choice) {
+    var date = new Date();
+    var days = 15;
+
+    // set expires time
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+
+    document.cookie = "mm_emailloginid=" + loginid + "; expires=" + date.toGMTString() + "; path=/";
+    document.cookie = "mm_emailchoice=" + choice + "; expires=" + date.toGMTString() + "; path=/";
+}
+
+window.onload = function() {
+    var theForm = document.forms["login-form"];
+    theForm['email'].focus();
+
+    var ca = document.cookie.split(';');
+    for(var i=0; i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf('mm_emailloginid=') == 0) {
+            theForm["email"].value = c.substring('mm_emailloginid='.length,c.length);
+        } else if(c.indexOf('mm_emailchoice=') == 0) {
+            for (var j = 0; j < theForm.loginto.length; j++) {
+                if (theForm["loginto"][j].value == c.substring('mm_emailchoice='.length,c.length)) {
+                    theForm["loginto"][j].selected = true;
+                }
+            }
+        }
+    }
+    if (theForm["email"].value.length > 0) {
+        theForm["rememberme"].checked = true;
+    }
+    document.getElementById("tz").value = detectTimeZone();
+}
+
+</script>
+
+<form id="login-form"
+      name="login-form"
+      method="post"
+      target="_top"
+      onsubmit="validateAuth(this);return false;"
+      >
+    <input type="hidden" name="_action" value="login" />
+    <input type="hidden" name="_timezone" id="tz" value="" />
+
+    <input type="hidden" name="hidden_email" value="">
+    <input type="hidden" name="hidden_password" value="">
+
+    <div class="InputBox">
+        <span class="InputLabel">Email Address:</span><!-- TODO: internationalize -->
+        <input type="text" id="login-email" autocorrect="off" autocapitalize="none" name="email" />
+    </div>
+    <div class="InputBox">
+        <input type="hidden" name="logSource" value="landingPage">
+        <span class="InputLabel">Password:</span>
+        <input id="login-password" type="password" name="password" /><br />
+        <a href="/recover-password.php" target="_NEW">Forgot your password?</a> <!-- TODO: internationalize -->
+    </div>
+    <div class="InputBox">
+        <span class="InputLabel">Go to:</span><!-- TODO: internationalize -->
+        <select id="loginto" name="loginto">
+<option value="lp_mailsettings">Mail Settings</option><option value="lp_webmaillite">Webmail Lite</option><option value="lp_tuxedo">Tuxedo</option>        </select>
+        <p>
+            <span class="InputLabel">Remember my choice: <input id="RememberMe" type="checkbox" name="rememberme" /></span>
+        </p>
+    </div>
+    <div class="SubmitButton">
+        <input type="submit" value="Sign in" />
+    </div>
+    <div id="PoweredBadge">
+        <a href="http://magicmail.linuxmagic.com" target="_blank">
+            <img src="/pics/powered_by2.png" alt="Powered By MagicMail" border="0" />
+        </a>
+    </div>
+    <div id="login-error" class="error"></div>
+</form>
+        <div id="LoginFooter">
+        <!-- BEGIN login_footer.html.  To create your own footer, edit or create /var/www/magicmail/html_files/login_footer.html -->
+        </div>
+    </div>
+    <br />
+    <div id="Footer">
+        <!-- $Header: /web/programmers/cvs/magicmailphp/magicmaillib/php/html_files/EN/company_footer.html,v 1.1 2005/03/26 01:02:04 michael Exp $ -->
+
+<!-- =================================================================== -->
+<!-- This is the FOOTER section of the website -->
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr align="center" class="MagicCompanyFooter">
+          <td>MagicMail Server is brought to you by LocalTel<br>
+	  	341 Grant Rd. East Wenatchee, WA 98802<br>
+	        Support: 509-888-5700 or Customer Service: 509-888-8888<br>
+		<a href="mailto:support@nwi.net">support@nwi.net</a></td>
+        </tr>
+      </table>
+      <!-- END OF Footer -->
+<!-- =================================================================== -->
+        <br/>
+        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr class="MagicCopyRight" align="center">
+            <td align="center">Copyright &copy; <a href="http://www.linuxmagic.com" target="_new">LinuxMagic&trade; Inc.</a> 2002-2017 All Rights Reserved.</td>
+        </tr>
+        </table>
+    </div> <!--  end Footer -->
+</div>
+</body>
+</html>

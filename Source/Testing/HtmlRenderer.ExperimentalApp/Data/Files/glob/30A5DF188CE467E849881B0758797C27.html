@@ -1,0 +1,861 @@
+
+<HTML>
+<HEAD>
+<TITLE>File::Glob - Perl extension for BSD glob routine</TITLE>
+
+
+<style type="text/css">
+<!--
+input,body,p,table,td,tr,th,ul,li,ol,dl,dt,dd {
+	font-family:verdana;
+	font-size:10pt;
+	}
+a:link		{color: #0000ff}
+a:visited 	{color: #666666}
+a:active 	{color: #ff0000}
+
+
+h1 {
+	font: bold large verdana;
+	color: black;
+}
+
+
+h2 {
+	font: bold large verdana;
+	color: maroon;
+}
+
+
+h3 {
+	font: bold medium verdana;
+    	color: blue;
+}
+
+
+h4 {
+	font: bold small verdana;
+    	color: maroon;
+}
+
+
+h5 {
+	font: bold small verdana;
+    	color: blue;
+}
+
+
+h6 {
+	font: bold small verdana;
+    	color: black;
+}
+
+td.foot {
+ 	font: medium sans-serif;
+ 	color: #eeeeee;
+	background-color="#cc0066"
+}
+
+code {
+	font: courier, monospace;
+}
+
+
+pre {
+	font: courier, monospace;
+}
+
+
+p.indent {
+	font-family:verdana;
+	color: black;
+	background-color: white;
+    list-style-type : circle;
+    list-style-position : inside;
+    margin-left : 16.0pt;
+}
+
+pre.programlisting
+{
+    font-size : 9.0pt;
+    list-style-type : disc;
+    margin-left : 16.0pt;
+    margin-top : -14.0pt;
+}
+
+
+.banner {
+	background-color: "#cccccc";
+	font: bold medium verdana;
+
+}
+//-->
+</style>
+</head>
+<body bgcolor="#ffffff" id="b1" name="b1"><table border=0><tr><td valign=top><fdse:robot value="none">
+
+<p ALIGN=center><a href="http://www.ActiveState.com" target="_top"><img src="/perl/images/aslogo.gif" border="0" width="136" height="60" alt="ActiveState!"></a></p>
+<div nowrap>
+<h4 ALIGN=center>ActivePerl Documentation<BR>Table of Contents</h4>
+<FORM METHOD=get ACTION=/perl/search/search.pl>
+<INPUT TYPE="hidden" NAME="p:pm" VALUE="1">
+
+
+<P ALIGN=center><INPUT NAME=q SIZE=15><INPUT TYPE=submit VALUE="Search"></P>
+<P ALIGN=center>(<A HREF="http://demo.nickname.net/demo/axs/ax-admin.pl">Usage Statistics</A>)<BR>(<A HREF="/perl/about.txt">about this ver</A>)</P>
+</FORM>
+
+<script type="text/javascript">
+<!--
+	document.write('<img src="/perl/ax.pl?mode=img&ref=');
+	document.write( escape( document.referrer ) );
+	document.write('" height="1" width="1" alt="" />');
+// -->
+</script><noscript>
+	<img src="/perl/ax.pl?mode=img" height="1" width="1" alt="" />
+</noscript>
+
+
+
+<hr>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Getting Started<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/perlmain.html">Welcome To ActivePerl</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/RELEASE.html">Release Notes</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/readme.html">Readme</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/CHANGES.html">ActivePerl Change Log</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Install Notes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Linux/Install.html">Linux</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Solaris/Install.html">Solaris</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Windows/Install.html">Windows</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> ActivePerl Components<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/Components/Descriptions.html">Overview</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/ActivePerl-faq2.html">PPM</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Windows Specifics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/OLE/Browser/Browser.html" target="_blank">OLE Browser</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/Components/Windows/PerlScript.html">PerlScript</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/Components/Windows/PerlISAPI.html">Perl for ISAPI</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Pod/PerlEz.html">PerlEZ</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> ActivePerl FAQ<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/ActivePerl-faq.html">Introduction</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/ActivePerl-faq1.html">Availability &amp; Install</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/ActivePerl-faq2.html">Using PPM</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/ActivePerl-faq3.html">Docs &amp; Support</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Windows Specifics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Windows/ActivePerl-Winfaq2.html">Perl for ISAPI</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Windows/ActivePerl-Winfaq4.html">Windows 9X/NT/2000</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Windows/ActivePerl-Winfaq5.html">Quirks</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Windows/ActivePerl-Winfaq6.html">Web Server Config</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Windows/ActivePerl-Winfaq7.html">Web programming</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Windows/ActivePerl-Winfaq8.html">Programming</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Windows/ActivePerl-Winfaq9.html">Modules &amp; Samples</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Windows/ActivePerl-Winfaq10.html">Embedding &amp; Extending</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/faq/Windows/ActivePerl-Winfaq12.html">Using OLE with Perl</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Windows Scripting<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/Windows/active_server_pages.html">Active Server Pages</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/Windows/windows_script_host.html">Windows Script Host</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/Windows/windows_script_components.html">Windows Script Components</a><br>
+
+<H4>Core Perl Documentation</H4>
+<hr>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perl.html">perl</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfaq.html">perlfaq</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perltoc.html">perltoc</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlbook.html">perlbook</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlsyn.html">perlsyn</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perldata.html">perldata</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlop.html">perlop</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlreftut.html">perlreftut</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perldsc.html">perldsc</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perllol.html">perllol</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perllexwarn.html">perllexwarn</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perldebug.html">perldebug</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlrun.html">perlrun</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfunc.html">perlfunc</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlopentut.html">perlopentut</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlvar.html">perlvar</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlsub.html">perlsub</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlmod.html">perlmod</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlpod.html">perlpod</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlstyle.html">perlstyle</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlmodlib.html">perlmodlib</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlmodinstall.html">perlmodinstall</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perltrap.html">perltrap</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlport.html">perlport</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlsec.html">perlsec</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlref.html">perlref</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlre.html">perlre</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlform.html">perlform</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perllocale.html">perllocale</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlunicode.html">perlunicode</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlboot.html">perlboot</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perltoot.html">perltoot</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perltootc.html">perltootc</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlobj.html">perlobj</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlbot.html">perlbot</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perltie.html">perltie</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlipc.html">perlipc</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlnumber.html">perlnumber</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfork.html">perlfork</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlthrtut.html">perlthrtut</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perldiag.html">perldiag</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfaq1.html">perlfaq1</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfaq2.html">perlfaq2</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfaq3.html">perlfaq3</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfaq4.html">perlfaq4</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfaq5.html">perlfaq5</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfaq6.html">perlfaq6</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfaq7.html">perlfaq7</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfaq8.html">perlfaq8</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfaq9.html">perlfaq9</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlcompile.html">perlcompile</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlembed.html">perlembed</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlxstut.html">perlxstut</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlxs.html">perlxs</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlguts.html">perlguts</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlcall.html">perlcall</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlfilter.html">perlfilter</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perldbmfilter.html">perldbmfilter</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlapi.html">perlapi</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlintern.html">perlintern</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlapio.html">perlapio</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perltodo.html">perltodo</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlhack.html">perlhack</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlhist.html">perlhist</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perldelta.html">perldelta</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perl5005delta.html">perl5005delta</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perl5004delta.html">perl5004delta</a><br>
+<br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlamiga.html">perlamiga</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlcygwin.html">perlcygwin</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perldos.html">perldos</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlhpux.html">perlhpux</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlmachten.html">perlmachten</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlos2.html">perlos2</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlos390.html">perlos390</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlvms.html">perlvms</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/perlwin32.html">perlwin32</a><br>
+<H4>Pragmas</H4>
+<hr>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/attributes.html">attributes</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/attrs.html">attrs</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/autouse.html">autouse</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/base.html">base</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/blib.html">blib</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/bytes.html">bytes</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/charnames.html">charnames</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/constant.html">constant</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/diagnostics.html">diagnostics</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/fields.html">fields</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/filetest.html">filetest</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/integer.html">integer</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/less.html">less</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/lib.html">lib</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/locale.html">locale</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/lwpcook.html">lwpcook</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/open.html">open</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ops.html">ops</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/overload.html">overload</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/perllocal.html">perllocal</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/re.html">re</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/sigtrap.html">sigtrap</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/strict.html">strict</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/subs.html">subs</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/utf8.html">utf8</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/vars.html">vars</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/warnings.html">warnings</a><br>
+<H4>Libraries</H4>
+<hr>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> ActivePerl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/ActivePerl/DocTools.html">DocTools</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/ActivePerl/DocTools/TOC.html">TOC</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/ActivePerl/DocTools/TOC/RDF.html">RDF</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/AnyDBM_File.html">AnyDBM_File</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Archive<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Archive/Tar.html">Tar</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/AutoLoader.html">AutoLoader</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/AutoSplit.html">AutoSplit</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B.html">B</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Asmdata.html">Asmdata</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Assembler.html">Assembler</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Bblock.html">Bblock</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Bytecode.html">Bytecode</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/C.html">C</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/CC.html">CC</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Debug.html">Debug</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Deparse.html">Deparse</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Disassembler.html">Disassembler</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Lint.html">Lint</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Showlex.html">Showlex</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Stackobj.html">Stackobj</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Terse.html">Terse</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/B/Xref.html">Xref</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Benchmark.html">Benchmark</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Bundle<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Bundle/LWP.html">LWP</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ByteLoader.html">ByteLoader</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Carp.html">Carp</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Carp/Heavy.html">Heavy</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/CGI.html">CGI</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/CGI/Apache.html">Apache</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/CGI/Carp.html">Carp</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/CGI/Cookie.html">Cookie</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/CGI/Fast.html">Fast</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/CGI/Pretty.html">Pretty</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/CGI/Push.html">Push</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/CGI/Switch.html">Switch</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Class<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Class/Struct.html">Struct</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Compress<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Compress/Zlib.html">Zlib</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Config.html">Config</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/CPAN.html">CPAN</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/CPAN/FirstTime.html">FirstTime</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/CPAN/Nox.html">Nox</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Cwd.html">Cwd</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Data/Dumper.html">Dumper</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/DB.html">DB</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Devel<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Devel/DProf.html">DProf</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Devel/Peek.html">Peek</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Devel/SelfStubber.html">SelfStubber</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Digest.html">Digest</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Digest/HMAC.html">HMAC</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Digest/HMAC_MD5.html">HMAC_MD5</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Digest/HMAC_SHA1.html">HMAC_SHA1</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Digest/MD2.html">MD2</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Digest/MD5.html">MD5</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Digest/SHA1.html">SHA1</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/DirHandle.html">DirHandle</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Dumpvalue.html">Dumpvalue</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/DynaLoader.html">DynaLoader</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/English.html">English</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Env.html">Env</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Errno.html">Errno</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Exporter.html">Exporter</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Exporter/Heavy.html">Heavy</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> ExtUtils<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/Command.html">Command</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/Embed.html">Embed</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/Install.html">Install</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/Installed.html">Installed</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/Liblist.html">Liblist</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/MakeMaker.html">MakeMaker</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/Manifest.html">Manifest</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/Miniperl.html">Miniperl</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/Mkbootstrap.html">Mkbootstrap</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/Mksymlists.html">Mksymlists</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/MM_Cygwin.html">MM_Cygwin</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/MM_OS2.html">MM_OS2</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/MM_Unix.html">MM_Unix</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/MM_VMS.html">MM_VMS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/MM_Win32.html">MM_Win32</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/Packlist.html">Packlist</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ExtUtils/testlib.html">testlib</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Fatal.html">Fatal</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Fcntl.html">Fcntl</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> File<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Basename.html">Basename</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/CheckTree.html">CheckTree</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Compare.html">Compare</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Copy.html">Copy</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/File/CounterFile.html">CounterFile</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/DosGlob.html">DosGlob</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Find.html">Find</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Glob.html">Glob</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/File/Listing.html">Listing</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Path.html">Path</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Spec.html">Spec</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Spec/Functions.html">Functions</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Spec/Mac.html">Mac</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Spec/OS2.html">OS2</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Spec/Unix.html">Unix</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Spec/VMS.html">VMS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/Spec/Win32.html">Win32</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/File/stat.html">stat</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/FileCache.html">FileCache</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/FileHandle.html">FileHandle</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/FindBin.html">FindBin</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Font<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Font/AFM.html">AFM</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Getopt<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Getopt/Long.html">Long</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Getopt/Std.html">Std</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> HTML<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/AsSubs.html">AsSubs</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/Element.html">Element</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/Entities.html">Entities</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/Filter.html">Filter</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/Form.html">Form</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/FormatPS.html">FormatPS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/Formatter.html">Formatter</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/FormatText.html">FormatText</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/HeadParser.html">HeadParser</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/LinkExtor.html">LinkExtor</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/Parse.html">Parse</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/Parser.html">Parser</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/TokeParser.html">TokeParser</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTML/TreeBuilder.html">TreeBuilder</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> HTTP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTTP/Cookies.html">Cookies</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTTP/Daemon.html">Daemon</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTTP/Date.html">Date</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTTP/Headers.html">Headers</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTTP/Headers/Util.html">Util</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTTP/Message.html">Message</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTTP/Negotiate.html">Negotiate</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTTP/Request.html">Request</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTTP/Request/Common.html">Common</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTTP/Response.html">Response</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/HTTP/Status.html">Status</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> I18N<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/I18N/Collate.html">Collate</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IO.html">IO</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IO/Dir.html">Dir</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IO/File.html">File</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IO/Handle.html">Handle</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IO/Pipe.html">Pipe</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IO/Poll.html">Poll</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IO/Seekable.html">Seekable</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IO/Select.html">Select</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IO/Socket.html">Socket</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IO/Socket/INET.html">INET</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IO/Socket/UNIX.html">UNIX</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> IPC<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IPC/Msg.html">Msg</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IPC/Open2.html">Open2</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IPC/Open3.html">Open3</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IPC/Semaphore.html">Semaphore</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/IPC/SysV.html">SysV</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/LWP.html">LWP</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/LWP/Debug.html">Debug</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/LWP/MediaTypes.html">MediaTypes</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/LWP/MemberMixin.html">MemberMixin</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/LWP/Protocol.html">Protocol</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/LWP/RobotUA.html">RobotUA</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/LWP/Simple.html">Simple</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/LWP/UserAgent.html">UserAgent</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Math<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Math/BigFloat.html">BigFloat</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Math/BigInt.html">BigInt</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Math/Complex.html">Complex</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Math/Trig.html">Trig</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/MD5.html">MD5</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> MIME<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/MIME/Base64.html">Base64</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/MIME/QuotedPrint.html">QuotedPrint</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/NDBM_File.html">NDBM_File</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Net<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/Cmd.html">Cmd</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/Config.html">Config</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/Domain.html">Domain</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/DummyInetd.html">DummyInetd</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/FTP.html">FTP</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Net/hostent.html">hostent</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/libnetFAQ.html">libnetFAQ</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Net/netent.html">netent</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/Netrc.html">Netrc</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/NNTP.html">NNTP</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/PH.html">PH</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Net/Ping.html">Ping</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/POP3.html">POP3</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Net/protoent.html">protoent</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Net/servent.html">servent</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/SMTP.html">SMTP</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/SNPP.html">SNPP</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Net/Time.html">Time</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/O.html">O</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/ODBM_File.html">ODBM_File</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Opcode.html">Opcode</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Pod<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/Checker.html">Checker</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/Find.html">Find</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/Html.html">Html</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/InputObjects.html">InputObjects</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/Man.html">Man</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/Parser.html">Parser</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/ParseUtils.html">ParseUtils</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/Plainer.html">Plainer</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/Select.html">Select</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/Text.html">Text</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/Text/Color.html">Color</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/Text/Termcap.html">Termcap</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Pod/Usage.html">Usage</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/POSIX.html">POSIX</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/PPM.html">PPM</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/PPM/SOAPClient.html">SOAPClient</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/PPM/SOAPServer.html">SOAPServer</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Safe.html">Safe</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/SDBM_File.html">SDBM_File</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Search<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Search/Dict.html">Dict</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/SelectSaver.html">SelectSaver</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/SelfLoader.html">SelfLoader</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SHA.html">SHA</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Shell.html">Shell</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP.html">SOAP</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Defs.html">Defs</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Envelope.html">Envelope</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/EnvelopeMaker.html">EnvelopeMaker</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/GenericHashSerializer.html">GenericHashSerializer</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/GenericInputStream.html">GenericInputStream</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/GenericScalarSerializer.html">GenericScalarSerializer</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Lite.html">Lite</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/OutputStream.html">OutputStream</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Packager.html">Packager</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Parser.html">Parser</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Transport<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Transport/HTTP.html">HTTP</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Transport/HTTP/Apache.html">Apache</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Transport/HTTP/CGI.html">CGI</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Transport/HTTP/Client.html">Client</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Transport/HTTP/Server.html">Server</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Transport/LOCAL.html">LOCAL</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Transport/MAILTO.html">MAILTO</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Transport/POP3.html">POP3</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/Transport/TCP.html">TCP</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/SOAP/TypeMapper.html">TypeMapper</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Socket.html">Socket</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Symbol.html">Symbol</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Sys<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Sys/Hostname.html">Hostname</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Sys/Syslog.html">Syslog</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Term<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Term/ANSIColor.html">ANSIColor</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Term/Cap.html">Cap</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Term/Complete.html">Complete</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Term/ReadLine.html">ReadLine</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Test.html">Test</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Test/Harness.html">Harness</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Text<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Text/Abbrev.html">Abbrev</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Text/ParseWords.html">ParseWords</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Text/Soundex.html">Soundex</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Text/Tabs.html">Tabs</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Text/Wrap.html">Wrap</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Thread.html">Thread</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Thread/Queue.html">Queue</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Thread/Semaphore.html">Semaphore</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Thread/Signal.html">Signal</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Thread/Specific.html">Specific</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Tie<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Tie/Array.html">Array</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Tie/Handle.html">Handle</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Tie/Hash.html">Hash</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Tie/RefHash.html">RefHash</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Tie/Scalar.html">Scalar</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Tie/SubstrHash.html">SubstrHash</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Time<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Time/gmtime.html">gmtime</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Time/Local.html">Local</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Time/localtime.html">localtime</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Time/tm.html">tm</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> UDDI<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/UDDI/Lite.html">Lite</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/UNIVERSAL.html">UNIVERSAL</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/URI.html">URI</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/URI/data.html">data</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/URI/Escape.html">Escape</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/URI/file.html">file</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/URI/Heuristic.html">Heuristic</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/URI/ldap.html">ldap</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/URI/URL.html">URL</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/URI/WithBase.html">WithBase</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> User<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/User/grent.html">grent</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/User/pwent.html">pwent</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/Win32.html">Win32</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/AuthenticateUser.html">AuthenticateUser</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/ChangeNotify.html">ChangeNotify</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/Clipboard.html">Clipboard</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/Console.html">Console</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/Event.html">Event</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/EventLog.html">EventLog</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/File.html">File</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/FileSecurity.html">FileSecurity</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/Internet.html">Internet</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/IPC.html">IPC</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/Mutex.html">Mutex</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/NetAdmin.html">NetAdmin</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/NetResource.html">NetResource</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/ODBC.html">ODBC</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/OLE.html">OLE</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/OLE/Const.html">Const</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/OLE/Enum.html">Enum</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/OLE/NEWS.html">NEWS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/OLE/NLS.html">NLS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/OLE/TPJ.html">TPJ</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/OLE/Variant.html">Variant</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/PerfLib.html">PerfLib</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/Pipe.html">Pipe</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/Process.html">Process</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/Registry.html">Registry</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/Semaphore.html">Semaphore</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/Service.html">Service</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/Sound.html">Sound</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32/TieRegistry.html">TieRegistry</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> Win32API<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32API/File.html">File</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32API/Net.html">Net</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/Win32API/Registry.html">Registry</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> WWW<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/WWW/RobotRules.html">RobotRules</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/WWW/RobotRules/AnyDBM_File.html">AnyDBM_File</a><br>
+<img src="/perl/images/folder.gif" width="15" height="13" alt="*"> XML<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/XML/Element.html">Element</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/XML/Parser.html">Parser</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/XML/Parser/Expat.html">Expat</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/XML/PPD.html">PPD</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/XML/PPMConfig.html">PPMConfig</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/site/lib/XML/ValidatingElement.html">ValidatingElement</a><br>
+<img src="/perl/images/page.gif" width="12" height="15" alt="*"> <a href="/perl/lib/XSLoader.html">XSLoader</a><br>
+</div>
+</FDSE:ROBOT></TD><TD WIDTH=2 BGCOLOR="#cccccc"><BR></TD><TD VALIGN="top">
+
+
+
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;File::Glob - Perl extension for BSD glob routine</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+<A NAME="__index__"></A>
+<!-- INDEX BEGIN -->
+
+<UL>
+
+	<LI><A HREF="#name">NAME</A></LI><LI><A HREF="#supportedplatforms">SUPPORTED PLATFORMS</A></LI>
+
+	<LI><A HREF="#synopsis">SYNOPSIS</A></LI>
+	<LI><A HREF="#description">DESCRIPTION</A></LI>
+	<LI><A HREF="#diagnostics">DIAGNOSTICS</A></LI>
+	<LI><A HREF="#notes">NOTES</A></LI>
+	<LI><A HREF="#author">AUTHOR</A></LI>
+</UL>
+<!-- INDEX END -->
+
+<HR>
+<P>
+<H1><A NAME="name">NAME</A></H1>
+<P>File::Glob - Perl extension for BSD glob routine</P>
+<P>
+<HR>
+<H1><A NAME="supportedplatforms">SUPPORTED PLATFORMS</A></H1>
+<UL>
+<LI>Linux</LI>
+<LI>Solaris</LI>
+<LI>Windows</LI>
+</UL>
+
+<HR>
+<H1><A NAME="synopsis">SYNOPSIS</A></H1>
+<PRE>
+  use File::Glob ':glob';
+  @list = bsd_glob('*.[ch]');
+  $homedir = bsd_glob('~gnat', GLOB_TILDE | GLOB_ERR);
+  if (GLOB_ERROR) {
+    # an error occurred reading $homedir
+  }</PRE>
+<PRE>
+  ## override the core glob (CORE::glob() does this automatically
+  ## by default anyway, since v5.6.0)
+  use File::Glob ':globally';
+  my @sources = &lt;*.{c,h,y}&gt;</PRE>
+<PRE>
+  ## override the core glob, forcing case sensitivity
+  use File::Glob qw(:globally :case);
+  my @sources = &lt;*.{c,h,y}&gt;</PRE>
+<PRE>
+  ## override the core glob forcing case insensitivity
+  use File::Glob qw(:globally :nocase);
+  my @sources = &lt;*.{c,h,y}&gt;</PRE>
+<P>
+<HR>
+<H1><A NAME="description">DESCRIPTION</A></H1>
+<P>File::Glob::bsd_glob() implements the FreeBSD <A HREF="../../lib/Pod/perlfunc.html#item_glob"><CODE>glob(3)</CODE></A> routine, which is
+a superset of the POSIX <A HREF="../../lib/Pod/perlfunc.html#item_glob"><CODE>glob()</CODE></A> (described in IEEE Std 1003.2 ``POSIX.2'').
+<CODE>bsd_glob()</CODE> takes a mandatory <CODE>pattern</CODE> argument, and an optional
+<CODE>flags</CODE> argument, and returns a list of filenames matching the
+pattern, with interpretation of the pattern modified by the <CODE>flags</CODE>
+variable.</P>
+<P>Since v5.6.0, Perl's CORE::glob() is implemented in terms of bsd_glob().
+Note that they don't share the same prototype--CORE::glob() only accepts
+a single argument.  Due to historical reasons, CORE::glob() will also
+split its argument on whitespace, treating it as multiple patterns,
+whereas <CODE>bsd_glob()</CODE> considers them as one pattern.</P>
+<P>The POSIX defined flags for <CODE>bsd_glob()</CODE> are:</P>
+<DL>
+<DT><STRONG><A NAME="item_GLOB_ERR"><CODE>GLOB_ERR</CODE></A></STRONG><BR>
+<DD>
+Force <CODE>bsd_glob()</CODE> to return an error when it encounters a directory it
+cannot open or read.  Ordinarily <CODE>bsd_glob()</CODE> continues to find matches.
+<P></P>
+<DT><STRONG><A NAME="item_GLOB_MARK"><CODE>GLOB_MARK</CODE></A></STRONG><BR>
+<DD>
+Each pathname that is a directory that matches the pattern has a slash
+appended.
+<P></P>
+<DT><STRONG><A NAME="item_GLOB_NOCASE"><CODE>GLOB_NOCASE</CODE></A></STRONG><BR>
+<DD>
+By default, file names are assumed to be case sensitive; this flag
+makes <CODE>bsd_glob()</CODE> treat case differences as not significant.
+<P></P>
+<DT><STRONG><A NAME="item_GLOB_NOCHECK"><CODE>GLOB_NOCHECK</CODE></A></STRONG><BR>
+<DD>
+If the pattern does not match any pathname, then <CODE>bsd_glob()</CODE> returns a list
+consisting of only the pattern.  If <A HREF="#item_GLOB_QUOTE"><CODE>GLOB_QUOTE</CODE></A> is set, its effect
+is present in the pattern returned.
+<P></P>
+<DT><STRONG><A NAME="item_GLOB_NOSORT"><CODE>GLOB_NOSORT</CODE></A></STRONG><BR>
+<DD>
+By default, the pathnames are sorted in ascending ASCII order; this
+flag prevents that sorting (speeding up bsd_glob()).
+<P></P></DL>
+<P>The FreeBSD extensions to the POSIX standard are the following flags:</P>
+<DL>
+<DT><STRONG><A NAME="item_GLOB_BRACE"><CODE>GLOB_BRACE</CODE></A></STRONG><BR>
+<DD>
+Pre-process the string to expand <CODE>{pat,pat,...}</CODE> strings like csh(1).
+The pattern '{}' is left unexpanded for historical reasons (and <CODE>csh(1)</CODE>
+does the same thing to ease typing of <CODE>find(1)</CODE> patterns).
+<P></P>
+<DT><STRONG><A NAME="item_GLOB_NOMAGIC"><CODE>GLOB_NOMAGIC</CODE></A></STRONG><BR>
+<DD>
+Same as <A HREF="#item_GLOB_NOCHECK"><CODE>GLOB_NOCHECK</CODE></A> but it only returns the pattern if it does not
+contain any of the special characters ``*'', ``?'' or ``[''.  <CODE>NOMAGIC</CODE> is
+provided to simplify implementing the historic <CODE>csh(1)</CODE> globbing
+behaviour and should probably not be used anywhere else.
+<P></P>
+<DT><STRONG><A NAME="item_GLOB_QUOTE"><CODE>GLOB_QUOTE</CODE></A></STRONG><BR>
+<DD>
+Use the backslash ('\') character for quoting: every occurrence of a
+backslash followed by a character in the pattern is replaced by that
+character, avoiding any special interpretation of the character.
+(But see below for exceptions on DOSISH systems).
+<P></P>
+<DT><STRONG><A NAME="item_GLOB_TILDE"><CODE>GLOB_TILDE</CODE></A></STRONG><BR>
+<DD>
+Expand patterns that start with '~' to user name home directories.
+<P></P>
+<DT><STRONG><A NAME="item_GLOB_CSH"><CODE>GLOB_CSH</CODE></A></STRONG><BR>
+<DD>
+For convenience, <A HREF="#item_GLOB_CSH"><CODE>GLOB_CSH</CODE></A> is a synonym for
+<CODE>GLOB_BRACE | GLOB_NOMAGIC | GLOB_QUOTE | GLOB_TILDE</CODE>.
+<P></P></DL>
+<P>The POSIX provided <CODE>GLOB_APPEND</CODE>, <CODE>GLOB_DOOFFS</CODE>, and the FreeBSD
+extensions <CODE>GLOB_ALTDIRFUNC</CODE>, and <CODE>GLOB_MAGCHAR</CODE> flags have not been
+implemented in the Perl version because they involve more complex
+interaction with the underlying C structures.</P>
+<P>
+<HR>
+<H1><A NAME="diagnostics">DIAGNOSTICS</A></H1>
+<P><CODE>bsd_glob()</CODE> returns a list of matching paths, possibly zero length.  If an
+error occurred, &amp;File::Glob::GLOB_ERROR will be non-zero and <A HREF="../../lib/Pod/perlvar.html#item_%24%21"><CODE>$!</CODE></A> will be
+set.  &amp;File::Glob::GLOB_ERROR is guaranteed to be zero if no error occurred,
+or one of the following values otherwise:</P>
+<DL>
+<DT><STRONG><A NAME="item_GLOB_NOSPACE"><CODE>GLOB_NOSPACE</CODE></A></STRONG><BR>
+<DD>
+An attempt to allocate memory failed.
+<P></P>
+<DT><STRONG><A NAME="item_GLOB_ABEND"><CODE>GLOB_ABEND</CODE></A></STRONG><BR>
+<DD>
+The glob was stopped because an error was encountered.
+<P></P></DL>
+<P>In the case where <CODE>bsd_glob()</CODE> has found some matching paths, but is
+interrupted by an error, it will return a list of filenames <STRONG>and</STRONG>
+set &amp;File::Glob::ERROR.</P>
+<P>Note that <CODE>bsd_glob()</CODE> deviates from POSIX and FreeBSD <A HREF="../../lib/Pod/perlfunc.html#item_glob"><CODE>glob(3)</CODE></A> behaviour
+by not considering <CODE>ENOENT</CODE> and <CODE>ENOTDIR</CODE> as errors - <CODE>bsd_glob()</CODE> will
+continue processing despite those errors, unless the <A HREF="#item_GLOB_ERR"><CODE>GLOB_ERR</CODE></A> flag is
+set.</P>
+<P>Be aware that all filenames returned from File::Glob are tainted.</P>
+<P>
+<HR>
+<H1><A NAME="notes">NOTES</A></H1>
+<UL>
+<LI>
+If you want to use multiple patterns, e.g. <CODE>bsd_glob &quot;a* b*&quot;</CODE>, you should
+probably throw them in a set as in <CODE>bsd_glob &quot;{a*,b*}&quot;</CODE>.  This is because
+the argument to <CODE>bsd_glob()</CODE> isn't subjected to parsing by the C shell.
+Remember that you can use a backslash to escape things.
+<P></P>
+<LI>
+On DOSISH systems, backslash is a valid directory separator character.
+In this case, use of backslash as a quoting character (via GLOB_QUOTE)
+interferes with the use of backslash as a directory separator. The
+best (simplest, most portable) solution is to use forward slashes for
+directory separators, and backslashes for quoting. However, this does
+not match ``normal practice'' on these systems. As a concession to user
+expectation, therefore, backslashes (under GLOB_QUOTE) only quote the
+glob metacharacters '[', ']', '{', '}', '-', '~', and backslash itself.
+All other backslashes are passed through unchanged.
+<P></P>
+<LI>
+Win32 users should use the real slash.  If you really want to use
+backslashes, consider using Sarathy's File::DosGlob, which comes with
+the standard Perl distribution.
+<P></P></UL>
+<P>
+<HR>
+<H1><A NAME="author">AUTHOR</A></H1>
+<P>The Perl interface was written by Nathan Torkington &lt;<A HREF="mailto:gnat@frii.com">gnat@frii.com</A>&gt;,
+and is released under the artistic license.  Further modifications were
+made by Greg Bacon &lt;<A HREF="mailto:gbacon@cs.uah.edu">gbacon@cs.uah.edu</A>&gt; and Gurusamy Sarathy
+&lt;<A HREF="mailto:gsar@activestate.com">gsar@activestate.com</A>&gt;.  The C glob code has the
+following copyright:</P>
+<PRE>
+    Copyright (c) 1989, 1993 The Regents of the University of California.
+    All rights reserved.</PRE>
+<PRE>
+    This code is derived from software contributed to Berkeley by
+    Guido van Rossum.</PRE>
+<PRE>
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions
+    are met:</PRE>
+<PRE>
+    1. Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
+    2. Redistributions in binary form must reproduce the above copyright
+       notice, this list of conditions and the following disclaimer in the
+       documentation and/or other materials provided with the distribution.
+    3. Neither the name of the University nor the names of its contributors
+       may be used to endorse or promote products derived from this software
+       without specific prior written permission.</PRE>
+<PRE>
+    THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+    ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+    OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+    OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+    SUCH DAMAGE.</PRE>
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH=100%>
+<TR><TD CLASS=block VALIGN=MIDDLE WIDTH=100% BGCOLOR="#cccccc">
+<FONT SIZE=+1><STRONG><P CLASS=block>&nbsp;File::Glob - Perl extension for BSD glob routine</P></STRONG></FONT>
+</TD></TR>
+</TABLE>
+
+
+
+</TD></TR></TABLE>
+</BODY></HTML>
+
+

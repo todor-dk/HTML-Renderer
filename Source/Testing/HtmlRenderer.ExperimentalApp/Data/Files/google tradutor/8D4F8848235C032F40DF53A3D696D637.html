@@ -1,0 +1,316 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head><meta http-equiv="Content-Type" content="Type=text/html; charset=utf-8"> <title>Barra Google: acuerdo de T&eacute;rminos y condiciones</title> <link href="/tools/dlpage/res/toolbar/toolbar.css" rel="stylesheet" type="text/css"> <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin">  <link rel="icon" type="image/ico" href="/toolbar/favico.ico"> <script type="text/javascript" src="/tools/dlpage/res/c/gu-util.js">
+  
+</script> <script type="text/javascript">
+  // Set up the global update.installscript namespace.
+  if (!window.update) {
+    update = {};
+  }
+  if (!window.update.installscript) {
+    update.installscript = {};
+  }
+
+  
+  
+  function runTagParamsHook(tag, opt_guid) {return tag;}
+  
+  function runThankYouQueryHook(query) {return query;}
+  
+  function runGetAppsPageHook(apps) {return apps;}
+
+  
+  var referer = null;
+
+  
+  
+     update.installscript.updater_expts = '';
+  
+  
+  
+    update.installscript.app_expts = '';
+  
+
+
+  function resetButtons(name) {
+    var buttons = document.getElementsByName(name);
+    for (i = 0; i < buttons.length; ++i) {
+      buttons[i].disabled = false;
+    }
+  }
+  function showThrobber(isVisible) {
+    var divThrobber = document.getElementById('throbber');
+    var imgThrobber = document.getElementById('throbber-img');
+    if (!divThrobber || !imgThrobber) {
+      return;
+    }
+    if (!isVisible) {
+      divThrobber.style.display = 'none';
+    }
+    
+    imgThrobber.src = isVisible ?
+      
+         "/tools/dlpage/res/c/image/loading-16.gif"
+      
+        : "";
+    if (isVisible) {
+      divThrobber.style.display = 'inline';
+    }
+  }
+  
+  function getThankyouUrl(extraQuery) {
+    var thankYouPath = "thankyou.html";
+    if (areStatsEnabled()) {
+      extraQuery += '&statcb=';
+    }
+    var query = "?hl\x3des\x26brand\x3dGGHP\x26" + extraQuery;
+    if (query.length > 0 && query.charAt(0) != '?') {
+      query = '?' + query;
+    }
+    query = runThankYouQueryHook(query);
+    return thankYouPath + query;
+  }
+  function queueThankyou(timeout, queryString, opt_navDocument) {
+    var page = getThankyouUrl(queryString);
+    var doc = opt_navDocument || this.document;
+
+    function navigateToThankyou() {
+      showThrobber(false);
+      resetButtons("submitbutton");
+      doc.location.href = page;
+    }
+
+    if (!timeout) {
+      navigateToThankyou();
+      return;
+    }
+
+    setTimeout(navigateToThankyou, timeout);
+  }
+  function getApps() {
+    var apps = new Array();
+    
+    
+    
+    
+      apps.push(_GU_createAppInfo(
+          "{F69EABDD-A4BB-4555-BE7E-1EA5F59BBA24}",
+          "Barra Google",
+          "true",
+          runTagParamsHook(
+              "\x26brand\x3dGGHP",
+              "{F69EABDD-A4BB-4555-BE7E-1EA5F59BBA24}"),
+          update.installscript.app_expts));
+    
+    
+    
+    
+    return runGetAppsPageHook(apps);
+  }
+  function areStatsEnabled() {
+    var statcb = document.getElementById("statcb");
+    return (statcb && statcb.checked);
+  }
+  function isDownloadTaggingEnabled() {
+    
+    return true;
+  }
+  function getDownloadPath() {
+    
+      
+        return "/toolbar/GoogleToolbarSetup.exe";
+      
+    
+  }
+  function buildDownloadUrl(statEnable, opt_buildDownloadPath, opt_filePath) {
+     
+
+    var defaultDownloadPath = isDownloadTaggingEnabled() ?
+        _GU_buildDlPath : _GU_buildDlPathNoTag;
+    var buildDownloadPath = opt_buildDownloadPath || defaultDownloadPath;
+    var filePath = opt_filePath || getDownloadPath();
+    var dlServer =
+    "http://dl.google.com";
+    return buildDownloadPath(getApps(),
+                             "es",
+                             statEnable,
+                             dlServer,
+                             filePath,
+                             update.installscript.updater_expts);
+  }
+  function downloadAndThankYou(delayTime, statEnable, opt_navDocument,
+                               opt_buildDownloadPath, opt_filePath) {
+    
+    if (navigator.appVersion.indexOf('Chrome/') != -1 ||
+        navigator.appVersion.indexOf('Safari/') != -1) {
+      queueThankyou(0, '', opt_navDocument);
+      return;
+    }
+
+    var method = getInstallSource();
+    sendDlPagePing("install", method);
+
+    queueThankyou(delayTime, '', opt_navDocument);
+
+    var downloadUri =
+        buildDownloadUrl(statEnable, opt_buildDownloadPath, opt_filePath);
+
+    if (method === 'clickonce' ||
+        navigator.userAgent.indexOf('Firefox/') != -1) {
+      var windowFeatures = 'toolbar=0,location=no,directories=0,status=0,scrollbars=no,resizable=0,width=1,height=1,top=0,left=0';
+      window.open(downloadUri, '_blank', windowFeatures);
+      window.focus();
+    } else {
+      location.href = downloadUri;
+    }
+
+    showThrobber(true);
+  }
+  function installViaDownload(opt_navDocument) {
+    downloadAndThankYou(4000, areStatsEnabled(), opt_navDocument);
+  }
+  function isClickOnceEnabled() {
+    
+    return true;
+  }
+  function isOneClickEnabled() {
+    return true;
+  }
+  function installViaClickOnce(opt_navDocument) {
+    
+    downloadAndThankYou(10000, areStatsEnabled(), opt_navDocument, _GU_buildClickOncePath, "/update2/installers/clickonce/GoogleInstaller_es.application");
+  }
+  function installViaOneClick(opt_navDocument) {
+    showThrobber(true);
+    window.google.update.oneclick.install(
+      getApps(),
+      "es",
+      areStatsEnabled(),
+      function() {queueThankyou(4000, '\x26oneclickinstalled=', opt_navDocument);},
+      function(hr) {installViaDownload(opt_navDocument);},
+      update.installscript.updater_expts);
+  }
+  function getInstallSource() {
+    
+      if (isOneClickEnabled() && _GU_isOneClickAvailable()) {
+        return 'oneclick';
+      } else if (isClickOnceEnabled() && _GU_isClickOnceAvailable()) {
+        return 'clickonce';
+      } else {
+        return 'download';
+      }
+    
+  }
+  function installApp(opt_navDocument) {
+    
+
+    var method = getInstallSource();
+    if (method === 'oneclick') {
+      installViaOneClick(opt_navDocument);
+    } else if (method === 'clickonce') {
+      installViaClickOnce(opt_navDocument);
+    } else {
+      installViaDownload(opt_navDocument);
+    }
+  }
+  
+  function sendDlPagePing(stage, installSource) {
+    var img = new Image();
+    var extra = GU_buildGlobalExtra(
+          "es",
+          areStatsEnabled(),
+          update.installscript.updater_expts);
+    var tag = GU_BuildTag(getApps(), extra);
+    img.src = '//tools.google.com/service/update2/dlpageping?' +
+        tag +
+        '&stage=' + stage +
+        '&installsource=' + installSource;
+  }
+  function downloadInstaller(opt_pageName) {
+    var hasStatcb =
+    
+      false;
+    
+    location.href = buildDownloadUrl(hasStatcb);
+
+    var pageName = opt_pageName || "install";
+    var installMethod = getInstallSource();
+    sendDlPagePing(pageName, installMethod);
+  }
+  var pageTracker;  
+  function doSubmit() {
+    var installMethod = getInstallSource();
+    if (typeof _gaq != 'undefined') {
+      _gaq.push(['_trackPageview'], '/ty/retry_' + installMethod);
+    } else if (pageTracker) {
+      pageTracker._trackPageview("/ty/retry_" + installMethod);
+    }
+    downloadInstaller("retry");
+  }
+  
+  
+  
+  _GU_OnloadHandlerAdd(
+    function() {
+      if (isOneClickEnabled()) {
+      _GU_SetupOneClick();
+      }
+    }, 0); // front of list
+  
+  _GU_OnloadHandlerAdd(
+    function(pagename) {
+      sendDlPagePing(pagename, getInstallSource());
+    });  // added to end of body.onload handler list
+
+
+</script>  <script type="text/javascript">
+  function goCancelled() {
+    this.document.location.href =
+      "http://www.google.com/intl/es/toolbar/ie/index.html?hl\x3des\x26brand\x3dGGHP\x26";
+  }
+
+  function getConfigOptions() {
+    var tagParams = '\x26installdataindex\x3d';
+    try {
+      tagParams += (document.configOptions && document.configOptions.cboption2.checked) ? 'home_set' : 'home_asknot';
+      tagParams += (document.configOptions && document.configOptions.cboption1.checked) ? '_search_set' : '_search_asknot';
+      return tagParams;
+    } catch (e) {
+      return '\x26installdataindex\x3dhome_asknot_search_asknot';
+    }
+  }
+  function runTagParamsHook(tag, opt_guid) {
+    return tag + getConfigOptions();
+  }
+  function runThankYouQueryHook(query) {
+    if (query == "") {
+      return '?' + getConfigOptions();
+    }
+    else {
+      return query + getConfigOptions();
+    }
+  }
+
+</script> <script type="text/javascript" src="//www.google.com/js/gweb/analytics/doubletrack.js"></script></head> <body onload="_GU_OnloadBody(&#39;eula&#39;);" dir="ltr" class="std"><script type="text/javascript">
+    gweb.analytics.DoubleTrack.track('floodlight', {
+        src: 2542116,
+        type: 'searc340',
+        cat: 'tb1'
+    });
+  </script> <div class="maia-header" id="maia-header"><div class="maia-aux"><h1><a href="http://www.google.com/intl/es/toolbar/ie/index.html"><img alt="Google" src="//www.google.com/images/logos/google_logo_41.png"> Barra Google</a></h1></div></div> <div class="maia-aux eula"><noscript><div class="maia-notification">Para descargar este software necesitas un navegador compatible con JavaScript. <a href="http://www.google.com/support/bin/answer.py?answer=23852&hl=es">Haz clic aquí si deseas consultar las instrucciones</a> para habilitar JavaScript en el navegador.</div></noscript>   <h1 class="maia-super">Instala la barra Google</h1> <div id="tos"><iframe frameborder="0" src="//www.google.com/intl/es/toolbar/ie/tos_es.html"></iframe> <br> <p><a href="//www.google.com/intl/es/policies/terms/">Versi&oacute;n para imprimir</a></p> <p>Las estadísticas de uso enviadas por la barra Google no están asociadas a tu información personal y se pueden inhabilitar a través de las opciones de la barra Google. <br />Al descargar este producto, aceptas los <a href="http://www.google.com/intl/es/policies/terms/">Términos y condiciones</a> anteriores y la <a href="http://www.google.com/intl/es/policies/privacy/">Política de privacidad</a>.</p> <form action="" method="GET" class="config-options" name="configOptions"><h2 class="settings">Configura tus opciones de búsqueda</h2> <ul><li><label><input type="checkbox" name="cboption1" checked value="set"> Establecer Google como motor de b&uacute;squeda predeterminado en Internet Explorer e informarme de los cambios</label></li> <li><label><input type="checkbox" name="cboption2" checked value="set"> Establecer Google como mi p&aacute;gina principal</label></li></ul></form> <div class="eula-buttons"><div id="throbber"><img id="throbber-img" width="16" height="16" alt="" src="/tools/dlpage/res/c/image/loading-16.gif"></div> <button id="submit1" name="submitbutton" type="submit" class="maia-button" onclick="this.disabled=true;installApp();">Aceptar e instalar</button> <button name="Button" type="button" onclick="goCancelled();" class="maia-button maia-button-secondary">Cancelar</button></div></div></div> <div id="maia-signature"></div> <div class="maia-footer" id="maia-footer"><div id="maia-footer-local"><div class="maia-aux"><p><a href="http://support.google.com/toolbar/?hl=es">Centro de asistencia de la barra Google</a></p></div></div> <div id="maia-footer-global"><div class="maia-aux"><ul><li><a href="http://www.google.com/">Google</a></li> <li><a href="http://www.google.com/intl/es/policies/">Condiciones y privacidad</a></li></ul></div></div></div>  <script type="text/javascript">
+  var gaJsHost = (("https:" == document.location.protocol) ?
+      "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost +
+      "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script> <script type="text/javascript">
+  
+  if (typeof _gat != "undefined") {
+    var path = "/dlpage/toolbar/";
+    
+      var pageTracker = _gat._getTracker("UA-18002-1");
+      if (path) {
+        pageTracker._setCookiePath(path);
+      }
+      pageTracker._trackPageview();
+    
+    
+  }
+  </script></body></html>

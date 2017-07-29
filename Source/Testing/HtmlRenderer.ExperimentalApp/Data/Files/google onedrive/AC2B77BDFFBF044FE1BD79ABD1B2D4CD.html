@@ -1,0 +1,474 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!doctype html>
+<html itemscope="" itemtype="http://schema.org/WebPage">
+<head>
+<meta charset=utf-8>
+  <title>GoodSync for OneDrive Office 365</title>
+<meta name="description" content="This page will walk you through setting up a sync or backup job between Microsoft OneDrive and GoodSync.">
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" type="text/css" href="/stylesheets/gsp.css">
+<script type="text/javascript">
+    function tDay(day) {
+        var day_arr = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        return day_arr[day];
+    }
+    function tMonth(month) {
+        var month_arr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return month_arr[month];
+    }
+    function t2(num) {
+        return (num < 10 ? "0" + num : num);
+    }
+    function cookieDate(date) {
+        var d = new Date();
+        d.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+        return tDay(d.getDay()) + ", " + t2(d.getDate()) + "-" + tMonth(d.getMonth()) + "-" + t2(d.getFullYear() - 2000) + " " + t2(d.getHours()) + ":" + t2(d.getMinutes()) + ":" + t2(d.getSeconds()) + " GMT";
+    }
+
+    function affidInit() {
+        var arr, arrp, str, theday, coo, coo1, i;
+        affid = "------";
+        str = document.location.search.slice(1);
+        if (str !== "") {
+            arr = str.split("&");
+            for (i = 0; i < arr.length; i = i + 1) {
+                arrp = arr[i].split("=");
+                if (arrp[0] === "affid") {
+                    affid = arrp[1].slice(0,5).toLowerCase();
+                    if (affid.match(/\w\w\w\w\w/)) {
+                        theday = new Date();
+                        theday.setTime(theday.getTime() + 24 * 60 * 60 * 1000 * 60); // 60 days
+                        document.cookie = "affid=" + affid + "; path=/; expires=" + cookieDate(theday);
+                        document.cookie = "affid=" + affid + "; domain=.roboform.com; path=/; expires=" + cookieDate(theday);
+                    } else {
+                        affid = "------";
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (affid === "------") {
+            affid = "";
+            coo = document.cookie.split("; ");
+            for (i = 0; i < coo.length; i = i + 1) {
+                coo1 = coo[i].split("=");
+                if (coo1[0] === "affid") {
+                    affid = coo1[1].slice(0, 5).toLowerCase();
+                }
+            }
+        }
+    }
+
+    function discountInit() {
+        var expDays = 1, dc, arr, arrp, str, theday, i;
+        str = document.location.search.slice(1);
+        if (str !== "") {
+            arr = str.split("&");
+            for (i = 0; i < arr.length; i++) {
+                arrp = arr[i].split("=");
+                if (arrp[0] === "dc") {
+                    dc = arrp[1];
+                    theday = new Date();
+                    theday.setTime(theday.getTime() + 24 * 60 * 60 * 1000 * expDays);
+                    theday = cookieDate(theday);
+                    document.cookie = "dc=" + dc + "; path=/; expires=" + theday;
+                    document.cookie = "dc=" + dc + "; domain=.roboform.com; path=/; expires=" + theday;
+                    break;
+                }
+            }
+        }
+    }
+    affidInit();
+    discountInit();
+</script>
+
+
+
+</head>
+<body>
+
+
+<script>
+  dataLayer = [{
+    'pageCategory': 'consumer',
+    'pageType': 'content',
+    'ClientOS': 'windows',
+    'pageLang': 'en'
+  }];
+</script>
+
+
+<noscript>
+<iframe src="//www.googletagmanager.com/ns.html?id=GTM-MT7WB8" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MT7WB8');
+</script>
+
+
+<div id="stickylang-container"><div id="stickyheader-wrapper"><div id="sh-wtop"><div class="b-lang" id="langclick"><a class="b-langzzcurr" href="#"><span data-lang="en" class="b-langzzname">English</span> <em class="b-caret"></em></a><ul class="b-langzzlist" id="picklang"><li>
+<a href="" class="us">English</a></li>
+<li><a href="/de" class="de">Deutsch</a></li>
+<li><a href="/es" class="es">Espa&#241;ol</a></li>
+<li><a href="/fr" class="fr">Fran&#231;ais</a></li>
+<li><a href="/it" class="it">Italiano</a></li>
+<li><a href="/jp" class="jp">&#26085;&#26412;&#35486;</a></li>
+<li><a href="/nl" class="nl">Nederlands</a></li>
+<li><a href="/dk" class="da">Danish</a></li>
+<li><a href="/ru" class="ru">Pycc&#1082;&#1080;&#1081;</a></li>
+<li><a href="/tr" class="tr">T&uuml;rk&#231;e</a></li>
+<li><a href="/cn" class="cn">&#20013;&#25991;&#65288;&#31616;&#20307;&#65289;</a></li>
+<li><a href="/translate">More...</a></li></ul></div></div></div></div>
+<div id="shc">
+  <header id="lkeeper" class="wrapper">
+    <a href="/" id="slogolink"><div class="stickylogo"><img src="/gsp/img/gs_nav_logo.png" alt="Goodsync Logo" style="width:212px;" /></div></a>
+    <nav class="quickfooter"><ul id="qflist">
+    <li class="qfli"><a href="/how-it-works" class="qflia">HOW IT WORKS</a></li>
+    <li class="qfli"><a href="/platforms" class="qflia">PLATFORMS</a></li>
+    <li class="qfli"><a href="/business" class="qflia">FOR BUSINESS</a></li>
+    <li class="qfli"><a href="/support" class="qflia">SUPPORT</a></li>
+    <li class="qfli"><a href="/download" class="qflia" style="color: #6bd426;">DOWNLOAD</a></li>
+    <li class="qfli"><a href="https://www.goodsync.com/php/pums/rfprepay.php?lic=goodsync&amp;lang=en" id="dlbtn" class="qflia" style="color: #ffb915;">PURCHASE</a></li>
+    </ul></nav>
+  </header>
+</div>
+<div class="clearfix"></div>
+
+
+
+<div id="content" class="clearfix">
+  <div id="left">
+    <div class="title">How to Sync</div>
+    <ul class="menu howitworks">
+      <li class="__index_sel__"><a href="/how-to-sync">Overview</a></li>
+    </ul>
+    <div class="title">Sync Direct P2P</div>
+    <ul class="menu howitworks">
+      <li class="__gsconn_win_sel__"><a href="/how-to-sync-windows-computers-p2p">Direct Sync: Windows</a></li>
+      <li class="__gsconn_mac_sel__"><a href="/how-to-sync-mac-computers-p2p">Direct Sync: Mac</a></li>
+      <li class="__livemesh_alt_sel__"><a href="/live-mesh-alternative">LiveMesh Alternative</a></li>
+    </ul>
+    <div class="title">Sync With The Cloud</div>
+    <ul class="menu howitworks">
+      <li class="__gdrive_sel__"><a href="/how-to-sync-google-drive">Google Drive</a></li>
+      <li class="__acd_sel__"><a href="/how-to-sync-amazon-cloud-drive">Amazon Cloud Drive</a></li>
+      <li class="__s3_sel__"><a href="/how-to-sync-amazon-s3">Amazon S3</a></li>
+      <li class="selected"><a href="/how-to-sync-onedrive-office365">OneDrive/Office 365</a></li>
+      <li class="__azure_sel__"><a href="/how-to-sync-windows-azure">Windows Azure</a></li>
+      <li class="__dropbox_sel__"><a href="/how-to-sync-dropbox">Dropbox</a></li>
+      <li class="__ftp_sel__"><a href="/how-to-sync-ftp-server">FTP / SFTP Servers</a></li>
+      <li class="__webdav_sel__"><a href="/how-to-sync-webdav-server">WebDAV Servers</a></li>
+    </ul>
+    <div class="title">Sync Applications</div>
+    <ul class="menu howitworks">
+      <li class="__outlook_sel__"><a href="/how-to-sync-outlook-pst-files">Outlook PST</a></li>
+      <li class="__thunderbird_sel__"><a href="/how-to-sync-mozilla-thunderbird-files">Thunderbird Mail</a></li>
+      <li class="__quicken_sel__"><a href="/how-to-sync-quicken">Quicken</a></li>
+      <li class="__quickbooks_sel__"><a href="/how-to-sync-quickbooks">QuickBooks</a></li>
+    </ul>
+    <div class="title">Sync With Devices</div>
+    <ul class="menu howitworks">
+      <li class="__iphone_sel__"><a href="/how-to-sync-iphone">iOS</a></li>
+      <li class="__androidsync_sel__"><a href="/how-to-sync-android">Android</a></li>
+      <li class="__winphone_sel__"><a href="/how-to-sync-windows-phone">Windows Phone</a></li>
+    </ul>
+  </div>
+  <div id="right">
+    <div class="how_it_works">
+
+
+
+<div class="syncapplications">
+  <h1>GoodSync for OneDrive Office 365</h1>
+  <p>
+    With GoodSync, anyone with a Windows account can sync and backup their Microsoft drive files with their desktop to the cloud.
+  </p>
+  <p>
+	<b>
+		***In version 10, One Drive Office 365 replaces the following older file systems:<br />
+		OneDrive Consumer, OneDrive Pro (SharePoint), Office 365, and SkyDrive file systems
+	</b>
+  </p>
+  <h2 style="margin-bottom:30px; ">How to sync via Microsoft OneDrive</h2>
+  <ol>
+    <li style="margin-bottom:30px; ">
+      Start GoodSync and click "<b>Please click here to select Folder</b>" on the Left.
+      <img src="/images/screenshots/windows/applications/browse.png" alt="Please click here to select Folder" class="smalltop" style="width:600px" />
+    </li>
+    <li style="margin-bottom:30px; ">
+      Once the Left Folder Window opens select <b>OneDrive Office365</b>.
+      <img src="/images/screenshots/windows/applications/onedrive-office365.png" alt="Screenshot of instructions for MS OneDrive" class="smalltop" style="width:600px" />
+    </li>
+	<li style="margin-bottom:30px; ">
+		A browser window will open providing a sign to your account.  Enter your user ID for any Microsoft account and select <b>Next</b>.
+		<img src="/images/screenshots/windows/applications/onedrive-office365-signin.png" alt="Screenshot of instructions for MS OneDrive" class="smalltop" style="width:600px" />
+	</li>
+	<li style="margin-bottom:30px; ">
+		Your browser should now forward you to the Sign in for the respective account.  Please enter your Email/Phone and Password for authentication, and then select <b>Sign in</b>.<br /><br />
+		(OneDrive/Office 365)
+		<img src="/images/screenshots/windows/applications/onedrive-office365-signin-onedrive.png" alt="Screenshot of instructions for MS OneDrive" class="smalltop" style="width:600px; margin-top:0px;" /><br /><br />
+		(SharePoint)
+		<img src="/images/screenshots/windows/applications/onedrive-office365-signin-sharepoint.png" alt="Screenshot of instructions for MS OneDrive" class="smalltop" style="width:600px; margin-top:0px;" />
+	</li>
+	<li style="margin-bottom:30px; ">
+		If this is your first time using GoodSync with OneDrive/Office365/SharePoint, you’ll see the following screen. Please click <b>Yes</b> to allow GoodSync to access your account.
+		<img src="/images/screenshots/windows/applications/onedrive-office365-auth.png" alt="Screenshot of instructions for MS OneDrive" class="smalltop" style="width:600px" />
+	</li>
+	<li style="margin-bottom:30px; ">You will get a message in your browser "<b>Discovery access granted. You can return to GoodSync now.</b>".</li>
+	<li style="margin-bottom:30px; ">
+		From the GoodSync server list, select the server you want to use and click <b>Go</b>. If you have more than one account listed, please make sure you have selected the right account.
+		<img src="/images/screenshots/windows/applications/onedrive-office365-list.png" alt="Screenshot of instructions for MS OneDrive" class="smalltop" style="width:600px" />
+	</li>
+	<li style="margin-bottom:30px; ">The folders from your OneDrive account should now appear on your Folder popup. Select the folder you want to back up or sync. Click <b>OK</b>.</li>
+	<li style="margin-bottom:30px; ">Select "<b>Please click here to select folder</b>" on the Right to select the destination folder where you would like to backup/sync and select <b>OK</b>.</li>
+	<li style="margin-bottom:30px; ">
+		Please ensure that your job type is correct. Go to Job > Options > (Job Type)<br />
+		Synchronization (2-Way)<br />
+		Left to Right backup (1-Way)<br />
+		Right to Left backup (1-Way)
+	</li>
+	<li style="margin-bottom:30px; ">Start the sync/backup process by clicking the <b>Analyze</b> button.</li>
+	<li style="margin-bottom:30px; ">Examine the file copy actions that Analyze proposes and make sure they are correct.</li>
+	<li>Click the <b>Sync</b> button to complete the proposed changes.</li>
+  </ol>
+</div>
+
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<div id="letsconnect">
+  <div id="connectinner">
+    <div style="display:inline-block; float:left; font-family: 'Cabin', sans-serif; font-weight: bold; color:white; font-size:25px; padding-top:12px; ">Let's Connect:</div>
+    <div style="display:inline-block; float:left; margin-left:20px;">
+      <a href="http://www.facebook.com/GoodSync" target="_blank"><div class="lcsprite f_off"></div></a>
+      <a href="http://twitter.com/GoodSync" target="_blank"><div class="lcsprite t_off"></div></a>
+      <a href="http://www.youtube.com/sibersystems" target="_blank"><div class="lcsprite y_off"></div></a>
+    </div>
+  </div>
+</div>
+<div id="newfoot">
+  <div id="newfootinner">
+    <div class="newfootcol">
+      <ul class="newfoot">
+        <li>Products</li>
+        <li><a href="/file-sync">File Synchronization</a></li>
+        <li><a href="/backup-software">File Backup</a></li>
+        <li><a href="/for-windows-desktop">GoodSync for Windows</a></li>
+        <li><a href="/for-mac-desktop">GoodSync for Mac</a></li>
+        <li><a href="/for-iphone-ipad-ios">GoodSync for iOS</a></li>
+        <li><a href="/for-android">GoodSync for Android</a></li>
+      </ul>
+    </div>
+    <div class="newfootcol">
+      <ul class="newfoot">
+        <li>Follow Us</li>
+        <li><a href="http://twitter.com/GoodSync" target="_BLANK"><img alt="Follow us on Twitter!" src="/images/icons/twitter.jpg"> Twitter</a></li>
+        <li><a href="http://facebook.com/GoodSync" target="_BLANK"><img alt="Follow us on Facebook!" src="/images/icons/facebook.jpg"> Facebook</a></li>
+        <li><a href="/press-releases">Press Releases</a></li>
+      </ul>
+    </div>
+    <div class="newfootcol">
+      <ul class="newfoot">
+        <li>Support</li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/tutorial">Tutorial</a></li>
+        <li><a href="/manual">Manual</a></li>
+        <li><a href="/translate">Languages</a></li>
+      </ul>
+    </div>
+    <div class="newfootcol">
+      <ul class="newfoot">
+        <li>Company</li>
+        <li><a href="/about-us">About Us</a></li>
+        <li><a href="/awards-and-reviews">Awards and Reviews</a></li>
+        <li><a href="https://goodsync-blog.siber.com" target="_BLANK">Blog</a></li>
+        <li><a href="/locations">Contact Us</a></li>
+        <li><a href="/resellers">Resellers</a></li>
+        <li><a href="/affiliates">Affiliates</a></li>
+        <li><a href="https://www.roboform.com/password-manager">Password Manager</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">
+    <br>Copyright &copy; 2009 - 2017 Siber Systems, Inc. All rights reserved.<br>11781 Lee Jackson Hwy, Suite 380; Fairfax, VA 22033; USA<br><br><br>
+    <a target="_blank" title="Siber Systems, Inc BBB Business Review" href="http://www.bbb.org/washington-dc-eastern-pa/business-reviews/computers-hardware-software-and-services/siber-systems-inc-in-fairfax-va-7004423/#bbbonlineclick"><img alt="Siber Systems, Inc BBB Business Review" style="border: 0;" src="/images/logos/bbb_siber.png"></a>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+
+var doc = document.documentElement;
+var shc = document.getElementById("shc");
+window.onscroll = function() {
+  var yscroll = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+  if(yscroll >= 100){
+    shc.className = 'stick';
+  } else {
+    shc.className = '';
+  }
+}
+
+
+var langbtnvisible = false;
+
+function langClicked(evt) {
+
+  if(langbtnvisible == false) {
+    document.getElementById("picklang").style.display="block";
+    langbtnvisible = true;
+  } else {
+    document.getElementById("picklang").style.display="none";
+    langbtnvisible = false;
+  }
+}
+
+var langbtn = document.getElementById("langclick");
+if(langbtn) {
+  if(langbtn.addEventListener) {
+    langbtn.addEventListener("click", langClicked, false);
+  } else {
+    langbtn.attachEvent("onclick", langClicked);
+  }
+}
+
+
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+           c = c.substring(1);
+        }
+        if (c.indexOf(name) != -1) {
+           return c.substring(name.length,c.length);
+        }
+    }
+    return "";
+}
+
+var affidCookie = getCookie("affid");
+
+if(affidCookie) {
+  var links = document.getElementsByTagName('a');
+  for(var i = 0; i< links.length; i++){
+    if(links[i].href == "https://www.goodsync.com/download/GoodSync-v10-Setup.exe") {
+      var string = links[i].href;
+      var newstring = "-" + affidCookie + ".exe"
+      var newstring1 = string.replace(".exe",newstring);
+      var newstring2 = newstring1.replace("/download/", "/download/affs/");
+      links[i].setAttribute('href', newstring2);
+    }
+
+    if(links[i].href == "https://www.goodsync.com/download/GoodSync-v10-Setup-Portable.exe") {
+      var string = links[i].href;
+      var newstring = "-" + affidCookie + ".exe"
+      var newstring1 = string.replace(".exe",newstring);
+      var newstring2 = newstring1.replace("/download/", "/download/affs/");
+      links[i].setAttribute('href', newstring2);
+    }
+
+    if(links[i].href == "https://www.goodsync.com/download/goodsync-v10-mac.dmg") {
+      var string = links[i].href;
+      var newstring = "-" + affidCookie + ".dmg"
+      var newstring1 = string.replace(".dmg", newstring);
+      var newstring2 = newstring1.replace("/download/", "/download/affs/");
+      links[i].setAttribute('href', newstring2);
+    }
+
+    if(links[i].href == "https://www.goodsync.com/download/goodsync-v10-2go-mac.dmg") {
+      var string = links[i].href;
+      var newstring = "-" + affidCookie + ".dmg"
+      var newstring1 = string.replace(".dmg", newstring);
+      var newstring2 = newstring1.replace("/download/", "/download/affs/");
+      links[i].setAttribute('href', newstring2);
+    }
+
+  }
+}
+
+
+var dcCookie = getCookie("dc");
+
+if(dcCookie){
+  var links = document.getElementsByTagName('a');
+  for(var i = 0; i< links.length; i++){
+
+    if(links[i].href == "https://www.goodsync.com/php/pums/rfprepay.php?lic=goodsync"){
+      var dcstring = links[i].href;
+      var newdcstring = dcstring + "&dc=" + dcCookie;
+      links[i].setAttribute('href', newdcstring);
+    }
+
+    if(links[i].href == "https://www.goodsync.com/php/pums/rfprepay.php?lic=goodsync&lang=en"){
+      var dcstring = links[i].href;
+      var newdcstring = dcstring + "&dc=" + dcCookie;
+      links[i].setAttribute('href', newdcstring);
+    }
+
+    if(links[i].href == "http://buy.goodsync.com"){
+      var dcstring = links[i].href;
+      var newdcstring = dcstring + "&dc=" + dcCookie;
+      links[i].setAttribute('href', newdcstring);
+    }
+
+    if(links[i].href == "https://www.goodsync.com/php/pums/rfprepay.php?lic=goodsync2go"){
+      var dcstring = links[i].href;
+      var newdcstring = dcstring + "&dc=" + dcCookie;
+      links[i].setAttribute('href', newdcstring);
+    }
+
+    if(links[i].href == "https://www.goodsync.com/php/pums/rfprepay.php?lic=goodsync-mac"){
+      var dcstring = links[i].href;
+      var newdcstring = dcstring + "&dc=" + dcCookie;
+      links[i].setAttribute('href', newdcstring);
+    }
+
+    if(links[i].href == "https://www.goodsync.com/php/pums/rfprepay.php?lic=gs_enterprise"){
+      var dcstring = links[i].href;
+      var newdcstring = dcstring + "&dc=" + dcCookie;
+      links[i].setAttribute('href', newdcstring);
+    }
+
+    if(links[i].href == "https://www.goodsync.com/php/pums/rfprepay.php?lic=goodsync_promo"){
+      var dcstring = links[i].href;
+      var newdcstring = dcstring + "&dc=" + dcCookie;
+      links[i].setAttribute('href', newdcstring);
+    }
+
+  }
+}
+
+</script>
+
+</body>
+</html>

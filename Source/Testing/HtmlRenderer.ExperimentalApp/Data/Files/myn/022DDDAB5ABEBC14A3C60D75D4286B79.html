@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type='text/javascript'>var _sf_startpt=(new Date()).getTime()</script>
+<meta charset="utf-8"><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"VwcFV1RSGwACVVlVAQU="};window.NREUM||(NREUM={}),__nr_require=function(t,e,n){function r(n){if(!e[n]){var o=e[n]={exports:{}};t[n][0].call(o.exports,function(e){var o=t[n][1][e];return r(o||e)},o,o.exports)}return e[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({1:[function(t,e,n){function r(t){try{c.console&&console.log(t)}catch(e){}}var o,i=t("ee"),a=t(12),c={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(c.console=!0,o.indexOf("dev")!==-1&&(c.dev=!0),o.indexOf("nr_dev")!==-1&&(c.nrDev=!0))}catch(s){}c.nrDev&&i.on("internal-error",function(t){r(t.stack)}),c.dev&&i.on("fn-err",function(t,e,n){r(n.stack)}),c.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(c,function(t,e){return t}).join(", ")))},{}],2:[function(t,e,n){function r(t,e,n,r,o){try{d?d-=1:i("err",[o||new UncaughtException(t,e,n)])}catch(c){try{i("ierr",[c,s.now(),!0])}catch(u){}}return"function"==typeof f&&f.apply(this,a(arguments))}function UncaughtException(t,e,n){this.message=t||"Uncaught error with no additional information",this.sourceURL=e,this.line=n}function o(t){i("err",[t,s.now()])}var i=t("handle"),a=t(13),c=t("ee"),s=t("loader"),f=window.onerror,u=!1,d=0;s.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(l){"stack"in l&&(t(5),t(4),"addEventListener"in window&&t(3),s.xhrWrappable&&t(6),u=!0)}c.on("fn-start",function(t,e,n){u&&(d+=1)}),c.on("fn-err",function(t,e,n){u&&(this.thrown=!0,o(n))}),c.on("fn-end",function(){u&&!this.thrown&&d>0&&(d-=1)}),c.on("internal-error",function(t){i("ierr",[t,s.now(),!0])})},{}],3:[function(t,e,n){function r(t){for(var e=t;e&&!e.hasOwnProperty(u);)e=Object.getPrototypeOf(e);e&&o(e)}function o(t){c.inPlace(t,[u,d],"-",i)}function i(t,e){return t[1]}var a=t("ee").get("events"),c=t(15)(a,!0),s=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";e.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,e){var n=t[1],r=s(n,"nr@wrapped",function(){function t(){if("function"==typeof n.handleEvent)return n.handleEvent.apply(n,arguments)}var e={object:t,"function":n}[typeof n];return e?c(e,"fn-",null,e.name||"anonymous"):n});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],4:[function(t,e,n){var r=t("ee").get("raf"),o=t(15)(r),i="equestAnimationFrame";e.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],5:[function(t,e,n){function r(t,e,n){t[0]=a(t[0],"fn-",null,n)}function o(t,e,n){this.method=n,this.timerDuration=isNaN(t[1])?0:+t[1],t[0]=a(t[0],"fn-",this,n)}var i=t("ee").get("timer"),a=t(15)(i),c="setTimeout",s="setInterval",f="clearTimeout",u="-start",d="-";e.exports=i,a.inPlace(window,[c,"setImmediate"],c+d),a.inPlace(window,[s],s+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(s+u,r),i.on(c+u,o)},{}],6:[function(t,e,n){function r(t,e){d.inPlace(e,["onreadystatechange"],"fn-",c)}function o(){var t=this,e=u.context(t);t.readyState>3&&!e.resolved&&(e.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,w,"fn-",c)}function i(t){g.push(t),h&&(b?b.then(a):v?v(a):(E=-E,O.data=E))}function a(){for(var t=0;t<g.length;t++)r([],g[t]);g.length&&(g=[])}function c(t,e){return e}function s(t,e){for(var n in t)e[n]=t[n];return e}t(3);var f=t("ee"),u=f.get("xhr"),d=t(15)(u),l=NREUM.o,p=l.XHR,h=l.MO,m=l.PR,v=l.SI,y="readystatechange",w=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],g=[];e.exports=u;var x=window.XMLHttpRequest=function(t){var e=new p(t);try{u.emit("new-xhr",[e],e),e.addEventListener(y,o,!1)}catch(n){try{u.emit("internal-error",[n])}catch(r){}}return e};if(s(p,x),x.prototype=p.prototype,d.inPlace(x.prototype,["open","send"],"-xhr-",c),u.on("send-xhr-start",function(t,e){r(t,e),i(e)}),u.on("open-xhr-start",r),h){var b=m&&m.resolve();if(!v&&!m){var E=1,O=document.createTextNode(E);new h(a).observe(O,{characterData:!0})}}else f.on("fn-end",function(t){t[0]&&t[0].type===y||a()})},{}],7:[function(t,e,n){function r(t){var e=this.params,n=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<d;r++)t.removeEventListener(u[r],this.listener,!1);if(!e.aborted){if(n.duration=a.now()-this.startTime,4===t.readyState){e.status=t.status;var i=o(t,this.lastSize);if(i&&(n.rxSize=i),this.sameOrigin){var s=t.getResponseHeader("X-NewRelic-App-Data");s&&(e.cat=s.split(", ").pop())}}else e.status=0;n.cbTime=this.cbTime,f.emit("xhr-done",[t],t),c("xhr",[e,n,this.startTime])}}}function o(t,e){var n=t.responseType;if("json"===n&&null!==e)return e;var r="arraybuffer"===n||"blob"===n||"json"===n?t.response:t.responseText;return h(r)}function i(t,e){var n=s(e),r=t.params;r.host=n.hostname+":"+n.port,r.pathname=n.pathname,t.sameOrigin=n.sameOrigin}var a=t("loader");if(a.xhrWrappable){var c=t("handle"),s=t(8),f=t("ee"),u=["load","error","abort","timeout"],d=u.length,l=t("id"),p=t(11),h=t(10),m=window.XMLHttpRequest;a.features.xhr=!0,t(6),f.on("new-xhr",function(t){var e=this;e.totalCbs=0,e.called=0,e.cbTime=0,e.end=r,e.ended=!1,e.xhrGuids={},e.lastSize=null,p&&(p>34||p<10)||window.opera||t.addEventListener("progress",function(t){e.lastSize=t.loaded},!1)}),f.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),f.on("open-xhr-end",function(t,e){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&e.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),f.on("send-xhr-start",function(t,e){var n=this.metrics,r=t[0],o=this;if(n&&r){var i=h(r);i&&(n.txSize=i)}this.startTime=a.now(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof e.onload))&&o.end(e)}catch(n){try{f.emit("internal-error",[n])}catch(r){}}};for(var c=0;c<d;c++)e.addEventListener(u[c],this.listener,!1)}),f.on("xhr-cb-time",function(t,e,n){this.cbTime+=t,e?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof n.onload||this.end(n)}),f.on("xhr-load-added",function(t,e){var n=""+l(t)+!!e;this.xhrGuids&&!this.xhrGuids[n]&&(this.xhrGuids[n]=!0,this.totalCbs+=1)}),f.on("xhr-load-removed",function(t,e){var n=""+l(t)+!!e;this.xhrGuids&&this.xhrGuids[n]&&(delete this.xhrGuids[n],this.totalCbs-=1)}),f.on("addEventListener-end",function(t,e){e instanceof m&&"load"===t[0]&&f.emit("xhr-load-added",[t[1],t[2]],e)}),f.on("removeEventListener-end",function(t,e){e instanceof m&&"load"===t[0]&&f.emit("xhr-load-removed",[t[1],t[2]],e)}),f.on("fn-start",function(t,e,n){e instanceof m&&("onload"===n&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=a.now()))}),f.on("fn-end",function(t,e){this.xhrCbStart&&f.emit("xhr-cb-time",[a.now()-this.xhrCbStart,this.onload,e],e)})}},{}],8:[function(t,e,n){e.exports=function(t){var e=document.createElement("a"),n=window.location,r={};e.href=t,r.port=e.port;var o=e.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=e.hostname||n.hostname,r.pathname=e.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!e.protocol||":"===e.protocol||e.protocol===n.protocol,a=e.hostname===document.domain&&e.port===n.port;return r.sameOrigin=i&&(!e.hostname||a),r}},{}],9:[function(t,e,n){function r(){}function o(t,e,n){return function(){return i(t,[f.now()].concat(c(arguments)),e?null:this,n),e?void 0:this}}var i=t("handle"),a=t(12),c=t(13),s=t("ee").get("tracer"),f=t("loader"),u=NREUM;"undefined"==typeof window.newrelic&&(newrelic=u);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],l="api-",p=l+"ixn-";a(d,function(t,e){u[e]=o(l+e,!0,"api")}),u.addPageAction=o(l+"addPageAction",!0),u.setCurrentRouteName=o(l+"routeName",!0),e.exports=newrelic,u.interaction=function(){return(new r).get()};var h=r.prototype={createTracer:function(t,e){var n={},r=this,o="function"==typeof e;return i(p+"tracer",[f.now(),t,n],r),function(){if(s.emit((o?"":"no-")+"fn-start",[f.now(),r,o],n),o)try{return e.apply(this,arguments)}finally{s.emit("fn-end",[f.now()],n)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,e){h[e]=o(p+e)}),newrelic.noticeError=function(t){"string"==typeof t&&(t=new Error(t)),i("err",[t,f.now()])}},{}],10:[function(t,e,n){e.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(e){return}}}},{}],11:[function(t,e,n){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),e.exports=r},{}],12:[function(t,e,n){function r(t,e){var n=[],r="",i=0;for(r in t)o.call(t,r)&&(n[i]=e(r,t[r]),i+=1);return n}var o=Object.prototype.hasOwnProperty;e.exports=r},{}],13:[function(t,e,n){function r(t,e,n){e||(e=0),"undefined"==typeof n&&(n=t?t.length:0);for(var r=-1,o=n-e||0,i=Array(o<0?0:o);++r<o;)i[r]=t[e+r];return i}e.exports=r},{}],14:[function(t,e,n){e.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],15:[function(t,e,n){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(13),a="nr@original",c=Object.prototype.hasOwnProperty,s=!1;e.exports=function(t,e){function n(t,e,n,o){function nrWrapper(){var r,a,c,s;try{a=this,r=i(arguments),c="function"==typeof n?n(r,a):n||{}}catch(f){l([f,"",[r,a,o],c])}u(e+"start",[r,a,o],c);try{return s=t.apply(a,r)}catch(d){throw u(e+"err",[r,a,d],c),d}finally{u(e+"end",[r,a,s],c)}}return r(t)?t:(e||(e=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,e,o,i){o||(o="");var a,c,s,f="-"===o.charAt(0);for(s=0;s<e.length;s++)c=e[s],a=t[c],r(a)||(t[c]=n(a,f?c+o:o,i,c))}function u(n,r,o){if(!s||e){var i=s;s=!0;try{t.emit(n,r,o,e)}catch(a){l([a,n,r,o])}s=i}}function d(t,e){if(Object.defineProperty&&Object.keys)try{var n=Object.keys(t);return n.forEach(function(n){Object.defineProperty(e,n,{get:function(){return t[n]},set:function(e){return t[n]=e,e}})}),e}catch(r){l([r])}for(var o in t)c.call(t,o)&&(e[o]=t[o]);return e}function l(e){try{t.emit("internal-error",e)}catch(n){}}return t||(t=o),n.inPlace=f,n.flag=a,n}},{}],ee:[function(t,e,n){function r(){}function o(t){function e(t){return t&&t instanceof r?t:t?s(t,c,i):i()}function n(n,r,o,i){if(!l.aborted||i){t&&t(n,r,o);for(var a=e(o),c=h(n),s=c.length,f=0;f<s;f++)c[f].apply(a,r);var d=u[w[n]];return d&&d.push([g,n,r,a]),a}}function p(t,e){y[t]=h(t).concat(e)}function h(t){return y[t]||[]}function m(t){return d[t]=d[t]||o(n)}function v(t,e){f(t,function(t,n){e=e||"feature",w[n]=e,e in u||(u[e]=[])})}var y={},w={},g={on:p,emit:n,get:m,listeners:h,context:e,buffer:v,abort:a,aborted:!1};return g}function i(){return new r}function a(){(u.api||u.feature)&&(l.aborted=!0,u=l.backlog={})}var c="nr@context",s=t("gos"),f=t(12),u={},d={},l=e.exports=o();l.backlog=u},{}],gos:[function(t,e,n){function r(t,e,n){if(o.call(t,e))return t[e];var r=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,e,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[e]=r,r}var o=Object.prototype.hasOwnProperty;e.exports=r},{}],handle:[function(t,e,n){function r(t,e,n,r){o.buffer([t],r),o.emit(t,e,n)}var o=t("ee").get("handle");e.exports=r,r.ee=o},{}],id:[function(t,e,n){function r(t){var e=typeof t;return!t||"object"!==e&&"function"!==e?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");e.exports=r},{}],loader:[function(t,e,n){function r(){if(!b++){var t=x.info=NREUM.info,e=l.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&e))return u.abort();f(w,function(e,n){t[e]||(t[e]=n)}),s("mark",["onload",a()+x.offset],null,"api");var n=l.createElement("script");n.src="https://"+t.agent,e.parentNode.insertBefore(n,e)}}function o(){"complete"===l.readyState&&i()}function i(){s("mark",["domContent",a()+x.offset],null,"api")}function a(){return E.exists&&performance.now?Math.round(performance.now()):(c=Math.max((new Date).getTime(),c))-x.offset}var c=(new Date).getTime(),s=t("handle"),f=t(12),u=t("ee"),d=window,l=d.document,p="addEventListener",h="attachEvent",m=d.XMLHttpRequest,v=m&&m.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:m,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var y=""+location,w={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1044.min.js"},g=m&&v&&v[p]&&!/CriOS/.test(navigator.userAgent),x=e.exports={offset:c,now:a,origin:y,features:{},xhrWrappable:g};t(9),l[p]?(l[p]("DOMContentLoaded",i,!1),d[p]("load",r,!1)):(l[h]("onreadystatechange",o),d[h]("onload",r)),s("mark",["firstbyte",c],null,"api");var b=0,E=t(14)},{}]},{},["loader",2,7]);</script>
+<title>Myn Bala: Warriors of the Steppe: Doha Tribeca Film Festival Review | Hollywood Reporter</title>
+<meta name="viewport" content="width=device-width"/>
+<meta name="description" content="Already a record-breaking hit at home, Kazakhstan’s official Academy Awards entry is a period action blockbuster about the teenage freedom fighter who liberated his entire nation."/>
+<meta name="twitter:site" content="@THR"/>
+<meta name="twitter:creator" content="@THR"/>
+<meta name="twitter:url" content="http://www.hollywoodreporter.com/review/myn-bala-warriors-steppe-doha-393672"/>
+<meta name="twitter:domain" content="http://www.hollywoodreporter.com/"/>
+<meta name="twitter:title" content="Myn Bala: Warriors of the Steppe: Doha Tribeca Film Festival Review"/>
+<meta name="twitter:description" content="Already a record-breaking hit at home, Kazakhstan’s official Academy Awards entry is a period action blockbuster about the teenage freedom fighter who liberated his entire nation."/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:image" content="http://cdn2.thr.com/sites/default/files/imagecache/NFE_portrait/2012/11/dohacouple_a.jpg"/>
+<meta property="og:site_name" content="The Hollywood Reporter"/>
+<meta property="og:title" content="Myn Bala: Warriors of the Steppe: Doha Tribeca Film Festival Review"/>
+<meta property="og:description" content="Already a record-breaking hit at home, Kazakhstan’s official Academy Awards entry is a period action blockbuster about the teenage freedom fighter who liberated his entire nation."/>
+<meta property="og:url" content="http://www.hollywoodreporter.com/review/myn-bala-warriors-steppe-doha-393672"/>
+<meta property="og:image" content="http://cdn4.thr.com/sites/default/files/2012/11/dohacouple_a.jpg"/>
+<meta property="og:image:width" content="349"/>
+<meta property="og:image:height" content="466"/>
+<meta property="og:image:type" content="image/jpeg"/>
+<meta property="og:type" content="article"/>
+<link rel="author" href="https://plus.google.com/+hollywoodreporter">
+<link rel="canonical" href="http://www.hollywoodreporter.com/review/myn-bala-warriors-steppe-doha-393672"/>
+<link rel="shortcut icon" href="/static/frontend/2017_06_08_1558/assets/images/brand/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/frontend/2017_06_08_1558/assets/images/brand/apple-touch-icon.png">
+<script type="text/javascript">
+    
+    var PGM = window.PGM || {};
+    PGM.config = PGM.config || {
+        contentHost: "//www.hollywoodreporter.com",
+    };
+    (function(PGM) {
+        var debug_queue = [];
+        PGM.debug = function() {debug_queue.push(arguments);};
+        PGM.debug.dump = function() {return debug_queue;}
+        PGM.debug.initialCategories = {
+                    };
+    })(PGM);
+
+    PGM.events = (function() {
+        var events_queue = [];
+        return {
+            trigger: function() {events_queue.push(arguments); },
+            get: function() { return events_queue; }
+        };
+    })();
+
+    PGM.createScript = (function() {
+        var q = [], cs = function createScript() { q.push(arguments) };
+        cs.dump = function() {return q;};
+        return cs;
+    })();
+
+    PGM.createScriptTag = (function() {
+        var q = [], cs = function createScriptTag() { q.push(arguments) };
+        cs.dump = function() {return q;};
+        return cs;
+    })();
+
+        PGM.tests = [];
+    PGM.ads = PGM.ads || {};
+    PGM.ads.adUnit = '/';
+    PGM.ads.slots = PGM.ads.slots || {};
+</script>
+<script src="http://ads.blbrd.co/advertisement.js"></script>
+<script type="text/javascript">
+    
+    var PGM = window.PGM || {};
+    PGM.mediaQueries = {
+        medium: "only screen and (min-width: 768px)",
+        large: "only screen and (min-width: 1024px)"
+    };
+    PGM.ads = PGM.ads || {};
+    PGM.ads.allAdsDeferred = true;
+</script>
+<script>
+var THR = THR || {};
+THR.config = THR.config || {
+    contentHost: "//www.hollywoodreporter.com",
+    debug: "",
+    getMediaHost: function(path) {
+        var mediaHosts=["//cdn1.thr.com","//cdn2.thr.com","//cdn3.thr.com","//cdn4.thr.com","//cdn5.thr.com"],s=0,i=0;
+        for(; i<path.length; i++){s+=path.charCodeAt(i);}return (mediaHosts.length>0?mediaHosts[s%mediaHosts.length]:'')+path;
+    }
+};
+</script>
+ 
+<script type='text/javascript'>
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+
+var PGM = PGM || {};
+PGM.ads = PGM.ads || {};
+PGM.ads.adUnit = '/6419/thr.com/film.review';
+PGM.ads.data = {"ad_zone":"film.review","targeting":{"tags":["movie reviews","international"],"page":["393672"],"env":["prod"]},"slots":{"t":{"adUnit":null,"slotName":"t","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[728,90],[980,50],[970,90],[728,91],[980,250],[970,250],[970,66],[970,51],[970,251]],"767":[[728,90],[728,91]],"0":[[300,50],[300,51],[320,50],[320,51],[320,170]]},"targetingParameters":{"pos":["t"],"tags":["movie reviews","international"],"page":["393672"]}},"t2":{"adUnit":null,"slotName":"t2","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[644,380]],"767":[[644,380],[728,90],[728,91]],"0":[[300,50],[300,52],[300,300],[320,50],[320,52]]},"targetingParameters":{"pos":["t2"],"tags":["movie reviews","international"],"page":["393672"]}},"b1":{"adUnit":null,"slotName":"b1","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[88,31],[120,60]],"767":[[88,31],[120,60]],"0":[[88,31],[120,60]]},"targetingParameters":{"pos":["b1"],"tags":["movie reviews","international"],"page":["393672"]}},"lightbox":{"adUnit":null,"slotName":"lightbox","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,250],[300,600]],"767":[[728,90]],"0":[[320,50],[300,50]]},"targetingParameters":{"pos":["lightbox"],"tags":["movie reviews","international"],"page":["393672"]}},"m1":{"adUnit":null,"slotName":"m1","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,250],[300,251],[300,600]],"767":[],"0":[]},"targetingParameters":{"pos":["m1"],"tags":["movie reviews","international"],"page":["393672"]}},"m2":{"adUnit":null,"slotName":"m2","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,250],[300,252]],"767":[[300,250],[300,252]],"0":[[300,250],[300,252],[300,50],[300,52],[320,50],[320,52]]},"targetingParameters":{"pos":["m2"],"tags":["movie reviews","international"],"page":["393672"]}}}};
+PGM.ads.slots = PGM.ads.slots || {};
+PGM.autoplayers = ["VkzEx53Fg","rJIWUc7eW","4kXvKxBFg","r1La1160g"];
+</script>
+<script type='text/javascript'>
+
+googletag.cmd.push(function() {
+
+            googletag.pubads().setTargeting('template', 'n');
+        PGM.debug('dfpauto', 'PAGE', 'template', 'n' );
+        
+    googletag.pubads().setTargeting('zone', 'film.review');
+    PGM.debug('dfpauto', 'PAGE', 'zone', 'film.review');
+            googletag.pubads().setTargeting('tags', ["movie reviews","international"]);
+        PGM.debug('dfpauto', 'PAGE', 'tags', ["movie reviews","international"]);
+            googletag.pubads().setTargeting('page', ["393672"]);
+        PGM.debug('dfpauto', 'PAGE', 'page', ["393672"]);
+            googletag.pubads().setTargeting('env', ["prod"]);
+        PGM.debug('dfpauto', 'PAGE', 'env', ["prod"]);
+    
+    $('video').each(function () {
+        let $vid = $(this),
+            player = $vid.data('player'),
+            account = $vid.data('account');
+
+        if (PGM.autoplayers.indexOf(player) >= 0) {
+            // If there are any auto-play vids stop
+            googletag.pubads().setTargeting('video', 'autoplay');
+            PGM.debug('dfpauto', 'PAGE', 'video', 'autoplay');
+            return false;
+        } else if (account) {
+            googletag.pubads().setTargeting('video', 'click-to-play');
+            PGM.debug('dfpauto', 'PAGE', 'video', 'click-to-play');
+            // if there are click-to-plays there could still be an auto-play somewhere, continue
+        }
+    });
+
+    if( typeof Krux !== 'undefined' ) {
+        googletag.pubads().setTargeting('ksg', Krux.segments);
+        PGM.debug('dfpauto', 'PAGE', 'ksg', Krux.segments);
+        googletag.pubads().setTargeting('kuid', Krux.user);
+        PGM.debug('dfpauto', 'PAGE', 'kuid', Krux.user);
+    }
+
+    });
+</script>
+ 
+ 
+<script>
+    var _comscore = _comscore || [];
+    var comscoreVars = {
+        c1: "2"
+        ,c2: "7395269"
+        ,c3: ""
+            ,options: { url_append: "comscorekw=movies" }
+        };
+    _comscore.push(comscoreVars);
+    </script>
+<script type="text/javascript" data-src="http://b.scorecardresearch.com/beacon.js"></script>
+<noscript>
+<img src="http://b.scorecardresearch.com/p?c1=2&c2=7395269&cv=2.0&cj=1"/>
+</noscript>
+ 
+ 
+<script type="text/javascript">
+        var dataLayer = dataLayer || [];
+        dataLayer.push({
+            'fireGTM': 'on'
+                        , 'contentId': '393672'
+
+                    , 'contentType': 'review'
+
+                    , 'author': 'Stephen Dalton'
+
+                    , 'category': 'Movies'
+
+                    , 'tags': 'Movie Reviews, International'
+
+                    , 'publishDate': '2012112118'
+
+            
+        });
+        dataLayer.push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+        PGM.createScript('//www.googletagmanager.com/gtm.js?id=GTM-WLF8ZZ');
+    </script>
+ 
+<script type="text/javascript">
+        window._taboola = window._taboola || [];
+        _taboola.push({ article :'auto'});
+        PGM.createScript('//cdn.taboola.com/libtrc/thr/loader.js');
+    </script>
+<link rel="stylesheet" type="text/css" href="/static/frontend/2017_06_08_1558/assets/css/thr-lotr.css">
+</head>
+<body class="article-page" data-template="Article" data-adsitesection="Movies" data-twitter-handle="thr">
+<header id="site-header" class="site-header" role="banner">
+<div class="site-header__background">
+<div class="site-header__contents">
+<div class="site-header__bar">
+<button class="site-header__nav-toggle"><i class="fa fa-bars"></i></button>
+<h1 class="site-header__brand">
+<a class="site-header__brand-link" href="/">
+<img class="site-header__brand-logo" src="/static/frontend/2017_06_08_1558/assets//images/brand/thr-logo-white.svg" alt="The&#x20;Hollywood&#x20;Reporter">
+<span class="site-header__brand-name">The Hollywood Reporter</span>
+</a>
+</h1>
+<button class="site-header__search-toggle"><i class="fa fa-search"></i></button>
+</div>
+<nav class="site-header__nav">
+<div class="site-header__nav-inner">
+<ul class="site-header__nav-items">
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;movies class=site-header__nav-link>
+Movies
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;node&#x2F;895551 class=site-header__nav-link>
+TV
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;business class=site-header__nav-link>
+Business
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;style class=site-header__nav-link>
+Style
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;node&#x2F;859190 class=site-header__nav-link>
+Politics
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;tech class=site-header__nav-link>
+Tech
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;culture class=site-header__nav-link>
+Culture
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;awards class=site-header__nav-link>
+Awards
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;video class=site-header__nav-link>
+Video
+</a>
+</li>
+<li class="site-header__nav-item collapsed">
+<span class=site-header__nav-link>
+Sites
+</span>
+<span class="carat"></span><ul class="site-header__subnav-items">
+<li class="site-header__subnav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;blogs&#x2F;heat-vision class=site-header__subnav-link>
+Heat Vision
+</a>
+</li>
+<li class="site-header__subnav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;blogs&#x2F;live-feed class=site-header__subnav-link>
+Live Feed
+</a>
+</li>
+<li class="site-header__subnav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;node&#x2F;786127 class=site-header__subnav-link>
+Esq
+</a>
+</li>
+<li class="site-header__subnav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;blogs&#x2F;race class=site-header__subnav-link>
+The Race
+</a>
+</li>
+<li class="site-header__subnav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;blogs&#x2F;behind-screen class=site-header__subnav-link>
+Behind the Screen
+</a>
+</li>
+<li class="site-header__subnav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;blogs&#x2F;bastard-machine class=site-header__subnav-link>
+Bastard Machine
+</a>
+</li>
+<li class="site-header__subnav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;node&#x2F;832202 class=site-header__subnav-link>
+Rambling Reporter
+</a>
+</li>
+<li class="site-header__subnav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;node&#x2F;832198 class=site-header__subnav-link>
+The Fien Print
+</a>
+</li>
+</ul>
+</li>
+</ul>
+<a href="https://subscribe.hollywoodreporter.com/sub/?p=THR&amp;f=saleb&amp;s=IH1402HR12" class="site-header__nav-link site-header__nav-link--subscribe">Subscribe</a>
+<a href="/newsletters/subscribe" class="site-header__nav-link site-header__nav-link--newsletter">Newsletters</a>
+<ul class="site-header__nav-items site-header__nav-items--site-tools">
+<li class="site-header__nav-item collapsed">
+<span class=site-header__nav-link--site-tools&#x20;site-header__nav-link class=site-header__nav-link>
+Site Tools
+</span>
+<span class="carat"></span><ul class="site-header__subnav-items">
+<li class="site-header__subnav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;user&#x2F;login class=site-header__subnav-link>
+Login
+</a>
+</li>
+<li class="site-header__subnav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;daily&#x2F;archive class=site-header__subnav-link>
+Daily Edition
+</a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</nav>
+<form class="site-header__search-form" method="post" accept-charset="UTF-8" action="/search/">
+<input class="site-header__search-input" placeholder="Search..." name="keys" maxlength="255">
+<button id="site-header__search-submit" class="site-header__search-submit"><i class="fa fa-times"></i></button>
+</form>
+</div>
+</div>
+</header>
+<div class="site-header__placeholder"></div>
+<nav class="site-header-links">
+<div class="site-header-links__contents">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;node&#x2F;892786 class=site-header-links__link>
+Reviews
+</a>
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;node&#x2F;225525 class=site-header-links__link>
+Box Office
+</a>
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;blogs&#x2F;heat-vision class=site-header-links__link>
+Heat Vision
+</a>
+</div>
+</nav>
+<div class="breaking-news-bar"></div>
+<div class="leaderboard leaderboard--top">
+<div class="dfp-ad dfp-ad-t  is-dfp-deferred " data-trackaction="" data-tracklabel="Ad Click">
+<script type="application/json">
+            { "slot": {"adUnit":null,"slotName":"t","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[728,90],[980,50],[970,90],[728,91],[980,250],[970,250],[970,66],[970,51],[970,251]],"767":[[728,90],[728,91]],"0":[[300,50],[300,51],[320,50],[320,51],[320,170]]},"targetingParameters":{"pos":["t"],"tags":["movie reviews","international"],"page":["393672"]}}, "extraTargeting": null }
+        </script>
+</div>
+</div>
+<div id="dfp-ad-o1" class="dfp-ad dfp-ad-o1 is-dfp-defined"></div>
+<main class="article">
+<section class="left-rail js-leftRail-container">
+<div class="left-rail__list js-leftRail"></div>
+<script type="application/json">
+{
+    "options": { "apiBase": "/fe_data/p/fe-api/reviews_index/movie%20review",
+"leftRailHighwater": true,
+"contentWellTaboolaMode": "thumbnails-f"
+ },
+    "title": "Latest Movie Reviews",
+    "initialItem": {
+        "id": 393672,
+        "title": "Myn Bala: Warriors of the Steppe: Doha Tribeca Film Festival Review",
+        "path": "/review/myn-bala-warriors-steppe-doha-393672",
+        "media": "http://cdn4.thr.com/sites/default/files/imagecache/NFE_square/2012/11/dohacouple_a.jpg",
+        "mediaType": "image",
+        "categoryName": "",
+        "categoryPath": "",
+        "publishDate": "11/21/2012"
+    },
+    "mainList": [
+                    {
+                "id": 1020245,
+                "title": "&#039;Girls Trip&#039;: Film Review",
+                "path": "/review/girls-trip-review-1020245",
+                "media": "http://cdn3.thr.com/sites/default/files/imagecache/NFE_square/2017/05/gt.png",
+                "mediaType": "video",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1020302,
+                "title": "&#039;Boyz n the Hood&#039;: THR&#039;s 1991 Review",
+                "path": "/review/boyz-n-hood-review-1991-movie-1020302",
+                "media": "http://cdn2.thr.com/sites/default/files/imagecache/NFE_square/2017/07/boyz_n_the_hood_-_h_-_1991.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1020109,
+                "title": "&#039;Cartels&#039;: Film Review ",
+                "path": "/review/cartels-1020109",
+                "media": "http://cdn4.thr.com/sites/default/files/imagecache/NFE_square/2017/07/cartels_still.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1018470,
+                "title": "&#039;Halal Daddy&#039;: Film Review | Edinburgh 2017",
+                "path": "/review/halal-daddy-1018470",
+                "media": "http://cdn4.thr.com/sites/default/files/imagecache/NFE_square/2017/06/halal_daddy-h_2017.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1018469,
+                "title": "&#039;That Good Night&#039;: Film Review | Edinburgh 2017",
+                "path": "/review/good-night-1018469",
+                "media": "http://cdn3.thr.com/sites/default/files/imagecache/NFE_square/2017/06/that_good_night-h_2017.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1020031,
+                "title": "&#039;Undercover Grandpa&#039;: Film Review ",
+                "path": "/review/undercover-grandpa-1020031",
+                "media": "http://cdn3.thr.com/sites/default/files/imagecache/NFE_square/2017/06/picture1_copy-h_2017.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019922,
+                "title": "&#039;Kevyn Aucoin Beauty &amp; the Beast in Me&#039;: Film Review | Outfest 2017",
+                "path": "/review/kevyn-aucoin-beauty-best-me-review-1019922",
+                "media": "http://cdn3.thr.com/sites/default/files/imagecache/NFE_square/2017/07/kevyn_aucoin_beauty__the_beast_in_me_still.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019683,
+                "title": "&#039;Contact&#039;: THR&#039;s 1997 Review",
+                "path": "/review/contact-review-1997-movie-1019683",
+                "media": "http://cdn1.thr.com/sites/default/files/imagecache/NFE_square/2017/07/contact_-_h_-_1997.png",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019939,
+                "title": "&#039;Dede&#039;: Film Review | Karlovy Vary 2017",
+                "path": "/review/dede-review-1019939",
+                "media": "http://cdn1.thr.com/sites/default/files/imagecache/NFE_square/2017/07/dede_still_2.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019847,
+                "title": "&#039;Valerian and the City of a Thousand Planets&#039;: Film Review",
+                "path": "/review/valerian-city-a-thousand-planets-review-1019847",
+                "media": "http://cdn4.thr.com/sites/default/files/imagecache/NFE_square/2017/05/dd.png",
+                "mediaType": "video",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019845,
+                "title": "&#039;How Viktor &quot;The Garlic&quot; Took Alexey &quot;The Stud&quot; to the Nursing Home&#039;: Film Review | Karlovy Vary 2017",
+                "path": "/review/how-viktor-garlic-took-alexey-stud-nursing-home-review-1019845",
+                "media": "http://cdn1.thr.com/sites/default/files/imagecache/NFE_square/2017/07/viktor_the_garlic_still_1.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019624,
+                "title": "&#039;Escape From New York&#039;: THR&#039;s 1981 Review",
+                "path": "/review/escape-new-york-review-1981-movie-1019624",
+                "media": "http://cdn2.thr.com/sites/default/files/imagecache/NFE_square/2017/07/escape_from_new_york_kurt_russell_-_h_-_1981.png",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1018962,
+                "title": "&#039;The Brigade&#039; (&#039;Les Hommes du feu&#039;): Film Review",
+                "path": "/review/brigade-les-hommes-du-feu-review-1018962",
+                "media": "http://cdn1.thr.com/sites/default/files/imagecache/NFE_square/2017/07/the_brigate_still_-_publicity_-_h_2017.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019075,
+                "title": "‘Liyana’: Film Review | LAFF 2017",
+                "path": "/review/liyana-1019075",
+                "media": "http://cdn2.thr.com/sites/default/files/imagecache/NFE_square/2017/07/liyana_still.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1018416,
+                "title": "&#039;The White World According to Daliborek&#039; (&#039;Svet podle Daliborka&#039;): Film Review | Karlovy Vary 2017",
+                "path": "/review/white-world-daliborek-svet-podle-daliborka-1018416",
+                "media": "http://cdn1.thr.com/sites/default/files/imagecache/NFE_square/2017/07/the-white-world-according-todaliborek.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019272,
+                "title": "&#039;The Cakemaker&#039; (&#039;Der Kuchenmacher&#039;): Film Review | Karlovy Vary 2017",
+                "path": "/review/cakemaker-der-kuchenmacher-1019272",
+                "media": "http://cdn4.thr.com/sites/default/files/imagecache/NFE_square/2017/07/kviff-the-cakemaker.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019463,
+                "title": "&#039;No Maps on My Taps&#039;: Film Review",
+                "path": "/review/no-maps-my-taps-1019463",
+                "media": "http://cdn5.thr.com/sites/default/files/imagecache/NFE_square/2017/07/about_tap.jimmyslyde.007-h_2017.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019387,
+                "title": "&#039;Austin Found&#039;: Film Review ",
+                "path": "/review/austin-found-1019387",
+                "media": "http://cdn3.thr.com/sites/default/files/imagecache/NFE_square/2017/06/austin_found_still.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019041,
+                "title": "&#039;The Line&#039; (&#039;Ciara&#039;): Film Review | Karlovy Vary 2017",
+                "path": "/review/line-ciara-1019041",
+                "media": "http://cdn1.thr.com/sites/default/files/imagecache/NFE_square/2017/07/kviff-the-line.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+            ,                    {
+                "id": 1019288,
+                "title": "&#039;Hickok&#039;: Film Review ",
+                "path": "/review/hickok-1019288",
+                "media": "http://cdn3.thr.com/sites/default/files/imagecache/NFE_square/2017/06/_dsc6702-h_2017.jpg",
+                "mediaType": "image",
+                "categoryName": "",
+                "categoryPath": "",
+                "publishDate": "12/31/1969"
+            }
+                        ],
+    "topicBlock":
+        null
+    }
+</script>
+</section>
+<section class="main-well js-mainWell">
+<article class="article__content-well article__content-well--portrait js-revarticle url-breadcrumb is-active " data-id="393672" data-url-breadcrumb="/review/myn-bala-warriors-steppe-doha-393672" data-content-type="article" data-page-title="Myn&#x20;Bala&#x3A;&#x20;Warriors&#x20;of&#x20;the&#x20;Steppe&#x3A;&#x20;Doha&#x20;Tribeca&#x20;Film&#x20;Festival&#x20;Review" data-canonical="http://www.hollywoodreporter.com/review/myn-bala-warriors-steppe-doha-393672" data-chartbeatSection="movies" data-analytics-category="Movies" data-analytics-tags="Movie Reviews, International">
+<div class="article__header">
+<h1 class="article__headline">Myn Bala: Warriors of the Steppe: Doha Tribeca Film Festival Review</h1>
+<p class="article__meta">
+<span class="js-publish-date" data-pubdate-value="2012112118">
+6:48 PM PST 11/21/2012
+</span>
+by
+<span class="js-authors-list">
+<span class="author">
+Stephen Dalton
+</span> </span>
+</p>
+<ul class="social-share">
+<li class="social-share__item">
+<a class="js-pgm-social-share social-share__link social-share__link--facebook fa-facebook" data-pgm-share="facebook" data-pgm-title="Myn&#x20;Bala&#x3A;&#x20;Warriors&#x20;of&#x20;the&#x20;Steppe&#x3A;&#x20;Doha&#x20;Tribeca&#x20;Film&#x20;Festival&#x20;Review" data-pgm-url="http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;review&#x2F;myn-bala-warriors-steppe-doha-393672" href="javascript:void(0);">
+FACEBOOK
+</a>
+</li>
+<li class="social-share__item">
+<a class="js-pgm-social-share social-share__link social-share__link--twitter fa-twitter" data-pgm-share="twitter" data-pgm-title="Myn&#x20;Bala&#x3A;&#x20;Warriors&#x20;of&#x20;the&#x20;Steppe&#x3A;&#x20;Doha&#x20;Tribeca&#x20;Film&#x20;Festival&#x20;Review" data-pgm-url="http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;review&#x2F;myn-bala-warriors-steppe-doha-393672" href="javascript:void(0);">
+TWITTER
+</a>
+</li>
+<li class="social-share__item">
+<a class="social-share__link social-share__link--email fa-envelope" data-pgm-title="Myn&#x20;Bala&#x3A;&#x20;Warriors&#x20;of&#x20;the&#x20;Steppe&#x3A;&#x20;Doha&#x20;Tribeca&#x20;Film&#x20;Festival&#x20;Review" href="/cdn-cgi/l/email-protection#f0cf929f9489cd98848480d6d388c3b1cbd6d388c2b6cbd6d388c2b6cb878787de989f9c9c89879f9f948295809f82849582de939f9dd6d388c2b6cb829586999587d6d388c2b6cb9d899edd92919c91dd87918282999f8283dd838495808095dd949f9891ddc3c9c3c6c7c2d68385929a959384cdbd899ed6d388c2c0cbb2919c91d6d388c3b1cbd6d388c2c0cba7918282999f8283d6d388c2c0cb9f96d6d388c2c0cb849895d6d388c2c0cba38495808095d6d388c3b1cbd6d388c2c0cbb49f9891d6d388c2c0cba4829992959391d6d388c2c0cbb6999c9dd6d388c2c0cbb69583849986919cd6d388c2c0cba29586999587">
+EMAIL ME
+</a>
+</li>
+<li class="social-share__item">
+<a class="social-share__link social-share__link--print fa-print" target="_blank" href="/print/393672">
+PRINT
+</a>
+</li>
+<li class="social-share__item">
+<a class="social-share__link social-share__link--comments js-scroll-to-comments fa-comment" href="javascript:void(0);">
+COMMENTS
+</a>
+</li>
+</ul>
+</div>
+<figure class="main-media main-media--image " data-media-type="image" data-media-id="">
+<div class="ndn_embed" data-config-distributor-id="91574" data-config-height="9/16w" id="ndn-video-player-1" style="width:100%;">
+<img src="http://cdn5.thr.com/sites/default/files/imagecache/portrait_300x450/2012/11/dohacouple_a.jpg" class="main-media__image">
+</div>
+</figure>
+<div class="bottom-line">
+<div class="bottom-line__headline">
+Once upon a time in the Wild East.
+<a class="js-pgm-social-share social-share__link social-share__link--reverse-color social-share__link--twitter fa-twitter" data-pgm-share="twitter" data-pgm-title="Myn&#x20;Bala&#x3A;&#x20;Warriors&#x20;of&#x20;the&#x20;Steppe&#x3A;&#x20;Doha&#x20;Tribeca&#x20;Film&#x20;Festival&#x20;Review | Once&#x20;upon&#x20;a&#x20;time&#x20;in&#x20;the&#x20;Wild&#x20;East.&#x0D;&#x0A;" data-pgm-url="" href="javascript:void(0);">
+TWITTER
+</a>
+</div>
+</div>
+<div class="article__body js-fitvids-content">
+<div class="dfp-ad dfp-ad-m2  is-dfp-deferred " data-trackaction="" data-tracklabel="Ad Click">
+<script type="application/json">
+            { "slot": {"adUnit":null,"slotName":"m2","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,250],[300,252]],"767":[[300,250],[300,252]],"0":[[300,250],[300,252],[300,50],[300,52],[320,50],[320,52]]},"targetingParameters":{"pos":["m2"],"tags":["movie reviews","international"],"page":["393672"]}}, "extraTargeting": null }
+        </script>
+</div>
+<h2 class="article__deck">
+Already a record-breaking hit at home, Kazakhstan’s official Academy Awards entry is a period action blockbuster about the teenage freedom fighter who liberated his entire nation.
+</h2>
+<p>A kind of Central Asian hybrid of <em>Braveheart </em>and <em>300</em>, Kazakhstan&rsquo;s official entry in the best foreign-language Oscar race is a sabre-rattling, chest-beating, flag-waving celebration of a mythic warrior hero from the early 18th century. The title translates as &ldquo;the thousand boys&rdquo;, an exaggerated reference to a few hundred young guerrilla fighters who fought back against occupation by the Dzungars, a merciless Mongol tribe descended from <strong>Genghis Khan</strong>. The definitive victory against these invaders came at the Battle of Anyrakay in 1729, a landmark date in Kazakh independence.</p>
+<p>A state-sponsored epic made to commemorate the 20th anniversary of Kazakhstan&rsquo;s secession from the crumbling Soviet Union,<em> Myn Bala</em> now ranks second only to <em>Avatar </em>in local box-office receipts. Fast-moving and visually ravishing, it was made by seasoned action director <strong>Akan Satayev</strong> on a reported budget of about $12 million -- huge by Kazakh standards -- with production values to match. All the same, such a parochial story will be a tough sell to foreign distributors and audiences. Even if it grabs an Oscar nomination, some smart marketing along the lines of <em>Crouching Tiger, Hidden Dragon</em> will be required to generate serious interest abroad.</p>
+<p><a href="http://www.hollywoodreporter.com/race/academy-awards-2013-foreign-oscar-390689" target="_blank"><strong>STORY: A Guide to the Foreign Oscar Race&nbsp;</strong></a></p>
+<p>Chosen from more than 20,000 contenders, screen novice <strong>Asylkhan Tolepov</strong> plays <strong>Sartay</strong>, a teenage freedom fighter whose name is legend in Kazakhstan. A delicate beauty with male-model looks, Tolepov makes an unlikely guerrilla leader but an engaging and dynamic lead. Other juvenile roles are filled by his fellow students from the Almaty theatre school, who hold their own against an older cast of mostly professional actors.</p>
+<p>The movie&rsquo;s chief flaw is its thuddingly simplistic fairy-tale script, which makes the average Bollywood melodrama seem understated by comparison. All the Kazakh fighters are noble young heroes forever proclaiming their readiness to die for the honor of their homeland and their womenfolk. Conversely, the Dzungars are uniformly ugly, black-clad, bestial conquerors with no qualms about killing children or torching entire villages. No prizes for subtlety or historical accuracy or nuanced depiction of geopolitical conflict. Then again, such trivialities did not trouble <em>Braveheart </em>either.</p>
+<p><strong><a href="http://www.hollywoodreporter.com/gallery/8-studio-picks-best-picture-387386" target="_blank">PHOTOS: The 8 Studio Picks for Best Picture Oscar</a></strong></p>
+<p>To their credit, Satayev and his team do their best to give this local story a universal resonance. Switch the costumes, and their stirring portrait of a raggle-taggle bandit army rising up against brutal imperial oppressors could equally apply to Robin Hood, the French Resistance, even <em>Star Wars</em>. There certainly are echoes of Luke Skywalker in Sartay&rsquo;s childhood backstory.&nbsp;</p>
+<p>Most of all, Satayev&rsquo;s period blockbuster impresses with its widescreen landscapes and epic combat scenes. Staged by a team that includes veterans of <em>300 </em>and the Russian action smash <em>Daywatch</em>, the battles are bloody and gripping affairs featuring some spectacular showpiece stunts, one involving a burning horse. Sumptuously shot by <strong>Khasan Kydyraliyev</strong> and color-graded in the rich candy hues of vintage postcards, the snowy peaks and lush valleys of the Kazakh steppe appear to contain scenery that rivals the Rockies and the Grand Canyon. If nothing else,<em> Myn Bala</em> should boost tourism to Kazakhstan. Who knows? It might even repair some of the damage caused by <em>Borat</em>.</p>
+<p><em>Venue: Doha Tribeca film festival screening, Nov. 18<br/>
+Production companies: Kazakhfilm Studio, New Film Format, Sataifilm<br/>
+Producers: Anna Katchko, Yeskendir Nurbergen, Aliya Uvalzhanov, Thessa Mooij<br/>
+Cast: Asylkhan Tolepov, Kuralay Anarbekova, Aliya Anuarbek, Aliya Telebarisova<br/>
+Director: Akan Satayev<br/>
+Writers: Muhammed Mamyrbekov, Jayik Sizdikov, Timur Zhaksylykov<br/>
+Cinematographer: Khasan Kydyraliyev<br/>
+Editors: Christopher Robin Bell, Nicolas Trembasiewicz<br/>
+Music: Renat Gaisin<br/>
+Sales company: Kazakhfilm Studio<br/>
+No MPAA rating, 108 minutes</em></p>
+</div>
+<div class="dfp-ad dfp-ad-t2  is-dfp-deferred " data-trackaction="" data-tracklabel="Ad Click">
+<script type="application/json">
+            { "slot": {"adUnit":null,"slotName":"t2","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[644,380]],"767":[[644,380],[728,90],[728,91]],"0":[[300,50],[300,52],[300,300],[320,50],[320,52]]},"targetingParameters":{"pos":["t2"],"tags":["movie reviews","international"],"page":["393672"]}}, "extraTargeting": null }
+        </script>
+</div>
+<div class="article-meta-bottom">
+<ul class="social-share social-share--bottom">
+<li class="social-share__item">
+<a class="js-pgm-social-share social-share__link social-share__link--facebook fa-facebook" data-pgm-share="facebook" data-pgm-title="Myn&#x20;Bala&#x3A;&#x20;Warriors&#x20;of&#x20;the&#x20;Steppe&#x3A;&#x20;Doha&#x20;Tribeca&#x20;Film&#x20;Festival&#x20;Review" data-pgm-url="http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;review&#x2F;myn-bala-warriors-steppe-doha-393672" href="javascript:void(0);">
+FACEBOOK
+</a>
+</li>
+<li class="social-share__item">
+<a class="js-pgm-social-share social-share__link social-share__link--twitter fa-twitter" data-pgm-share="twitter" data-pgm-title="Myn&#x20;Bala&#x3A;&#x20;Warriors&#x20;of&#x20;the&#x20;Steppe&#x3A;&#x20;Doha&#x20;Tribeca&#x20;Film&#x20;Festival&#x20;Review" data-pgm-url="http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;review&#x2F;myn-bala-warriors-steppe-doha-393672" href="javascript:void(0);">
+TWITTER
+</a>
+</li>
+<li class="social-share__item">
+<a class="social-share__link social-share__link--email fa-envelope" data-pgm-title="Myn&#x20;Bala&#x3A;&#x20;Warriors&#x20;of&#x20;the&#x20;Steppe&#x3A;&#x20;Doha&#x20;Tribeca&#x20;Film&#x20;Festival&#x20;Review" href="/cdn-cgi/l/email-protection#fdc29f929984c09589898ddbde85cebcc6dbde85cfbbc6dbde85cfbbc68a8a8ad395929191848a9292998f988d928f89988fd39e9290dbde85cfbbc68f988b94988adbde85cfbbc6908493d09f9c919cd08a9c8f8f94928f8ed08e89988d8d98d09992959cd0cec4cecbcacfdb8e889f97989e89c0b08493dbde85cfcdc6bf9c919cdbde85cebcc6dbde85cfcdc6aa9c8f8f94928f8edbde85cfcdc6929bdbde85cfcdc6899598dbde85cfcdc6ae89988d8d98dbde85cebcc6dbde85cfcdc6b992959cdbde85cfcdc6a98f949f989e9cdbde85cfcdc6bb949190dbde85cfcdc6bb988e89948b9c91dbde85cfcdc6af988b94988a">
+EMAIL ME
+</a>
+</li>
+<li class="social-share__item">
+<a class="social-share__link social-share__link--print fa-print" target="_blank" href="/print/393672">
+PRINT
+</a>
+</li>
+<li class="social-share__item">
+<a class="social-share__link social-share__link--comments js-scroll-to-comments fa-comment" href="javascript:void(0);">
+COMMENTS
+</a>
+</li>
+</ul>
+<ul class="article-meta__authors">
+<li class="author">
+<img src="http://cdn1.thr.com/sites/default/files/imagecache/nfe_square_383x383/2015/03/writerimage-thr.jpg" alt="Stephen Dalton" class="author__image"/>
+<div class="author__details">
+<p class="author__name">Stephen Dalton</p>
+<a href="/cdn-cgi/l/email-protection#ce9a869ca0abb9bd8ebaa6bce0ada1a3" class="author-social__email fa-envelope" data-tracklabel="Story Well - Author Email"><span class="__cf_email__" data-cfemail="81d5c9d3efe4f6f2c1f5e9f3afe2eeec">[email&#160;protected]</span><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script></a>
+<a href="http://twitter.com/thr" class="author-social__twitter fa-twitter" data-tracklabel="Story Well - Author Twitter">@thr</a>
+</div>
+</li>
+</ul>
+</div>
+<div class="taboola-wrapper"></div>
+<div class="zergnet-widget"></div>
+<script language="javascript" type="text/javascript">
+        PGM.createScript('//www.zergnet.com/zerg-inf.js?id=36523');
+    </script>
+<button class="js-show-disqus-comments show-disqus-comments" data-tracklabel="Show Comments - Myn Bala: Warriors of the Steppe: Doha Tribeca Film Festival Review">Comments</button>
+<div id="disqus-comments" class="disqus">
+<div id="disqus_thread" class="disqus-comments-wrapper"></div>
+<script type="text/javascript">
+        var disqus_shortname = 'hollywoodreporter';
+        var disqus_identifier = 'node/393672';
+        var disqus_title = 'Myn Bala: Warriors of the Steppe: Doha Tribeca Film Festival Review';
+        var disqus_url = 'http://www.hollywoodreporter.com/review/myn-bala-warriors-steppe-doha-393672';
+    </script>
+<script data-src="//hollywoodreporter.disqus.com/embed.js"></script>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+<div class="js-leftRail-slot-m1" data-trackaction="" data-tracklabel="Ad Click">
+<script type="application/json">
+            {"adUnit":null,"slotName":"m1","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,250],[300,251],[300,600]],"767":[],"0":[]},"targetingParameters":{"pos":["m1"],"tags":["movie reviews","international"],"page":["393672"]}}
+        </script>
+</div>
+<div class="js-ad-pageTargeting">
+<script type="application/json">
+        {
+                            "tags": ["movie reviews","international"],
+                            "page": ["393672"],
+                            "env": ["prod"]
+                    }
+        </script>
+</div>
+</article>
+<div class="js-leftRail-loadNewContent" data-currentId="393672" data-urlPrefix="/fe_data"></div>
+</section>
+</main>
+ 
+<footer id="site-footer" class="site-footer">
+<div class="container">
+<div class="branding column">
+<div class="brand">
+<a href="/" title="The Hollywood Reporter" rel="home" class="logo" data-tracklabel="Drip Pan Footer - THR Logo">The Hollywood Reporter</a>
+</div>
+<p class="copyright date">
+&copy; 2017 The Hollywood Reporter
+<br>
+All rights reserved.
+</p>
+<p class="copyright terms">
+<a href="/legal/terms">Terms of Use</a> |
+<a href="/legal/privacy">Privacy</a> |
+<a href="/sitemap">Sitemap</a> |
+<a href="/legal/about-our-ads">About Our Ads</a>
+</p>
+</div>
+<div class="affiliate column">
+<ul>
+<li>
+<a href="/about/about" data-tracklabel="Drip Pan Footer - About Us">About Us</a>
+</li>
+<li>
+<a href="/user/login" data-tracklabel="Drip Pan Footer - Login">Login</a>
+</li>
+<li>
+<a href="/daily/archive" data-tracklabel="Drip Pan Footer - Daily Edition">Daily Edition</a>
+</li>
+<li>
+<a href="//www.hollywoodreporter.com/subscribe3" data-tracklabel="Drip Pan Footer - Subscribe">Subscribe</a>
+</li>
+<li>
+<a href="/services" data-tracklabel="Drip Pan Footer - Subscriber Services">Subscriber Services</a>
+</li>
+<li>
+<a href="//shop.hollywoodreporter.com" data-tracklabel="Drip Pan Footer - Back Issues">Back Issues</a>
+</li>
+<li>
+<a href="/ad/contacts" data-tracklabel="Drip Pan Footer - Advertising">Advertising</a>
+</li>
+<li>
+<a href="/contact" data-tracklabel="Drip Pan Footer - Contact Us">Contact Us</a>
+</li>
+<li>
+<a href="http://prometheusglobalmedia.applytojob.com/" target="_blank" data-tracklabel="Drip Pan Footer - Careers">Careers</a>
+</li>
+<li>
+<a href="/industry-jobs" data-tracklabel="Drip Pan Footer - Industry Jobs">Industry Jobs</a>
+</li>
+</ul>
+</div>
+<div class="follow column">
+<ul>
+<li>
+Follow Us On
+<a href="http://twitter.com/thr" target="_blank" data-tracklabel="Drip Pan Footer - Twitter">Twitter</a>
+</li>
+<li>
+Find Us On
+<a href="http://www.facebook.com/HollywoodReporter" target="_blank" data-tracklabel="Drip Pan Footer - Facebook">Facebook</a>
+</li>
+<li>
+Watch Us On
+<a href="http://www.youtube.com/thrnetwork" target="_blank" data-tracklabel="Drip Pan Footer - YouTube">Youtube</a>
+</li>
+</ul>
+</div>
+<div class="partner column">
+<div class="publications">
+<p>Our affiliate publications</p>
+<ul>
+<li>
+<a href="http://www.billboard.com/" target="_blank" class="footer logo billboard" data-tracklabel="Drip Pan Footer - Billboard">Billboard</a>
+</li>
+<li>
+<a href="http://www.vibe.com/" target="_blank" class="foot logo vibe" data-tracklabel="Drip Pan Footer - Vibe">Vibe</a>
+</li>
+<li>
+<a href="http://www.spin.com/" target="_blank" class="foot logo spin" data-tracklabel="Drip Pan Footer - Spin">Spin</a>
+</li>
+<li>
+<a href="http://www.stereogum.com/" target="_blank" class="foot logo stereogum" data-tracklabel="Drip Pan Footer - Stereogum">Stereogum</a>
+</li>
+<li>
+<a href="http://www.deathandtaxesmag.com/" target="_blank" class="foot logo deathandtaxesmag" data-tracklabel="Drip Pan Footer - Death and Taxes">Death and Taxes</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</footer>
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "The Hollywood Reporter",
+    "url": "http://www.hollywoodreporter.com",
+    "logo": "http://www.hollywoodreporter.com/assets/images/brand/thr-logo.gif",
+    "sameAs" : [
+        "https://www.youtube.com/user/thrnetwork",
+        "https://twitter.com/thr",
+        "https://www.facebook.com/HollywoodReporter",
+        "https://instagram.com/hollywoodreporter/"
+    ]
+}
+</script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/commons.bundle.js"></script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/transition.bundle.js"></script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/templates.js"></script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/home.bundle.js"></script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/vendor.js"></script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/thr.js"></script>
+<div id="fb-root"></div>
+<script type="text/javascript">
+    PGM.createScriptTag("//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=303838389949803");
+</script>
+<script type="text/javascript">var __st_loadLate=true;</script>
+<meta name="sailthru.title" content="Myn Bala: Warriors of the Steppe: Doha Tribeca Film Festival Review">
+<meta name="sailthru.description" content="Already a record-breaking hit at home, Kazakhstan’s official Academy Awards entry is a period action blockbuster about the teenage freedom fighter who liberated his entire nation.">
+<meta name="sailthru.author" content="Stephen Dalton">
+<meta name="sailthru.vertical" content="Movies">
+<meta name="sailthru.date" content="2012-11-21 18:48:08">
+<meta name="sailthru.tags" content="Movie Reviews,International">
+<script type="text/javascript">
+    PGM.createScript("//ak.sail-horizon.com/horizon/v1.js", function() {
+        if (window.Sailthru) {
+            PGM.debug('sailthru', 'Running Sailthru.track for', 'http://www.hollywoodreporter.com/review/myn-bala-warriors-steppe-doha-393672');
+            Sailthru.track({
+                domain: 'horizon.hollywoodreporter.com',
+                spider: true,
+                track_url: true,
+                url: 'http://www.hollywoodreporter.com/review/myn-bala-warriors-steppe-doha-393672'
+            });
+        }
+        else {
+            PGM.debug('sailthru', 'No window.Sailthru');
+        }
+    });
+    </script>
+<script type="text/javascript">
+    PGM.createScript("//dnn506yrbagrg.cloudfront.net/pages/scripts/0021/6696.js?"+Math.floor(new Date().getTime()/3600000));
+</script>
+ 
+<script type='text/javascript'>
+    var _sf_async_config={};
+    /** CONFIGURATION START **/
+    _sf_async_config.uid = 3388;
+    _sf_async_config.domain = 'hollywoodreporter.com';
+    _sf_async_config.useCanonical = true;
+    _sf_async_config.authors = "Stephen Dalton";
+    _sf_async_config.sections = "movies";
+    /** CONFIGURATION END **/
+    PGM.createScript('//static.chartbeat.com/js/chartbeat.js');
+</script>
+ 
+ 
+<script class="kxct" data-id="JtjzpxpZ" data-timing="async" data-version="1.9" type="text/javascript">
+    window.Krux||((Krux=function(){Krux.q.push(arguments)}).q=[]);
+    PGM.createScript("//cdn.krxd.net/controltag?confid=JtjzpxpZ");
+</script>
+ 
+<script type="text/javascript">
+  window._taboola = window._taboola || [];
+  _taboola.push({flush: true});
+</script>
+<script type="text/javascript">
+        PGM.createScript('//launch.newsinc.com/js/embed.js', function() {
+            if( _informq && typeof _informq.push === 'function' ) {
+                _informq.push(['embed']);
+            }
+        });
+    </script>
+<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","licenseKey":"645958bbf2","applicationID":"3218764","transactionName":"YAZRbEJXC0VUURFZV1lMZkpZGQxYUVcdHkhfEw==","queueTime":0,"applicationTime":4906,"atts":"TEFSGgpNGEs=","errorBeacon":"bam.nr-data.net","agent":""}</script><script>/* <![CDATA[ */(function(d,s,a,i,j,r,l,m,t){try{l=d.getElementsByTagName('a');t=d.createElement('textarea');for(i=0;l.length-i;i++){try{a=l[i].href;s=a.indexOf('/cdn-cgi/l/email-protection');m=a.length;if(a&&s>-1&&m>28){j=28+s;s='';if(j<m){r='0x'+a.substr(j,2)|0;for(j+=2;j<m&&a.charAt(j)!='X';j+=2)s+='%'+('0'+('0x'+a.substr(j,2)^r).toString(16)).slice(-2);j++;s=decodeURIComponent(s)+a.substr(j,m-j)}t.innerHTML=s.replace(/</g,'&lt;').replace(/\>/g,'&gt;');l[i].href='mailto:'+t.value}}catch(e){}}}catch(e){}})(document);/* ]]> */</script></body>
+</html>

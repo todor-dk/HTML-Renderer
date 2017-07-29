@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+  
+      <title>KaTeX vs MathJax · jsPerf</title>
+  
+    <link rel="apple-touch-icon" href="/public/apple-touch-icon.png">
+    <link rel="shortcut icon" href="/public/favicon.ico">
+  
+  
+  
+      <link href="/katex-vs-mathjax.atom" rel="alternate" type="application/atom+xml" title="Atom feed for revisions of this test case">
+  
+    <link rel="stylesheet" href="/public/_css/main.src.css?1499805088467">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+  
+    <!--[if lt IE 9]>
+      <script src="/html5.js"></script>
+    <![endif]-->
+  
+      <script>document.documentElement.className='js'</script>
+  </head>
+  
+  <body>
+    <article>
+
+  <hgroup>
+  <h1>KaTeX vs MathJax</h1>
+  <h2>JavaScript performance comparison</h2>
+</hgroup>
+
+<p class="meta">
+    Test case
+  created by Xymostech 
+  <time datetime="2014-09-05T22:34:12.000Z" pubdate>on 2014-9-5</time>
+
+
+</p>
+
+
+  <section id="prep-code">
+    <h2>Preparation code </h2>
+
+    <pre><code><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"http://xymostech.com/katex/katex.min.css"</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/css"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"http://xymostech.com/katex/fonts/fonts.css"</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/css"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"http://xymostech.com/katex/katex.min.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&amp;delayStartupUntil=configured"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="actionscript">
+MathJax.Hub.Config({skipStartupTypeset: <span class="hljs-literal">true</span>});
+MathJax.Hub.Configured();
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"math"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <br>
+      <span class="sc2">&lt;<span class="kw2">script</span>></span><br>
+        Benchmark.<span class="me1">prototype</span>.<span class="me1">setup</span> <span class="sy0">=</span> <span class="kw2">function</span><span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span><br>
+          <pre><code class="js">  <span class="hljs-keyword">var</span> math = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"math"</span>);
+  <span class="hljs-keyword">var</span> formula = <span class="hljs-string">"\\dfrac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}"</span>;</code></pre>
+        <br>  <span class="br0">}</span><span class="sy0">;</span>
+          <br><br>
+
+        Benchmark.<span class="me1">prototype</span>.<span class="me1">teardown</span> <span class="sy0">=</span> <span class="kw2">function</span><span class="br0">(</span><span class="br0">)</span> <span class="br0">{</span><br>
+          <pre><code class="js">  math.innerHTML = <span class="hljs-string">""</span>;</code></pre>
+        <br>  <span class="br0">}</span><span class="sy0">;</span>
+
+      <br><span class="sc2">&lt;<span class="sy0">/</span><span class="kw2">script</span>></span>
+    </code></pre>
+  </section>
+
+    <section>
+      <h2>Preparation code output</h2>
+      <div class="user-output">
+        &lt;link href&#x3D;&quot;http://xymostech.com/katex/katex.min.css&quot; rel&#x3D;&quot;stylesheet&quot; type&#x3D;&quot;text/css&quot;&gt;
+&lt;link href&#x3D;&quot;http://xymostech.com/katex/fonts/fonts.css&quot; rel&#x3D;&quot;stylesheet&quot; type&#x3D;&quot;text/css&quot;&gt;
+
+&lt;script src&#x3D;&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config&#x3D;TeX-AMS-MML_HTMLorMML&amp;delayStartupUntil&#x3D;configured&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+MathJax.Hub.Config({skipStartupTypeset: true});
+MathJax.Hub.Configured();
+&lt;/script&gt;
+
+&lt;div id&#x3D;&quot;math&quot;&gt;&lt;/div&gt;
+      </div>
+    </section>
+
+<section id="runner">
+  <h2>Test runner</h2>
+  <p id="firebug"><strong>Warning! For accurate results, please disable Firebug before running the tests. <a href="/faq#firebug-warning">(Why?)</a></strong></p>
+  <p id="java"><strong>Java applet disabled.</strong></p>
+  <p id="status"><noscript><strong>To run the tests, please <a href="http://www.enable-javascript.com/">enable JavaScript</a> and reload the page.</strong></noscript></p>
+  <div id="controls"><button id="run" type="button"></button></div>
+  <table id="test-table">
+  <caption>Testing in Chrome 41.0.2228 / Windows 7 0.0.0</caption>
+    <thead>
+      <tr>
+        <th colspan="2">Test</th>
+        <th title="Operations per second (higher is better)">Ops/sec</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <th scope="row" id="title-1">
+            <div>
+              KaTeX
+            </div>
+          </th>
+          <td class="code">
+            <pre><code><pre><code class="js">katex.process(formula, math);
+math.outerWidth;</code></pre></code></pre>
+          </td>
+          <td id="results-1" class="results">pending…</td>
+        </tr>
+        <tr>
+          <th scope="row" id="title-2">
+            <div>
+              MathJax
+            </div>
+          </th>
+          <td class="code">
+            <pre><code><strong class="col1">// async test</strong><br><pre><code class="js">math.innerHTML = <span class="hljs-string">"&lt;script type='math/tex'&gt;"</span> + formula + <span class="hljs-string">"&lt;/script&gt;"</span>;
+MathJax.Hub.Queue([<span class="hljs-string">"Process"</span>, MathJax.Hub, math]);
+MathJax.Hub.Queue(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  math.outerWidth;
+  deferred.resolve();
+});</code></pre></code></pre>
+          </td>
+          <td id="results-2" class="results">pending…</td>
+        </tr>
+    </tbody>
+  </table>
+
+</section>
+
+  <section>
+    <h2 id="results">Compare results of other browsers</h2>
+    <div id="bs-results"></div>
+  </section>
+
+  <section id="revisions">
+    <h2>Revisions</h2>
+    <p>You can <a href="/katex-vs-mathjax/edit" rel="nofollow">edit these tests or add even more tests to this page</a> by appending <code>/edit</code> to the URL.</p>
+    <ul>
+          <li >
+            <a href="/katex-vs-mathjax/15">Revision 15</a>: published 
+            <time datetime="2014-09-18T05:32:37.000Z" pubdate>
+              on 2014-9-18
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/26">Revision 26</a>: published 
+            <time datetime="2014-12-16T21:28:33.000Z" pubdate>
+              on 2014-12-16
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/27">Revision 27</a>: published 
+            <time datetime="2014-12-16T21:31:53.000Z" pubdate>
+              on 2014-12-16
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/28">Revision 28</a>: published 
+            <time datetime="2014-12-19T10:56:54.000Z" pubdate>
+              on 2014-12-19
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/33">Revision 33</a>: published 
+            <time datetime="2015-02-12T06:21:42.000Z" pubdate>
+              on 2015-2-12
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/34">Revision 34</a>: published xymostech 
+            <time datetime="2015-02-21T02:20:00.000Z" pubdate>
+              on 2015-2-21
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/37">Revision 37</a>: published 
+            <time datetime="2015-05-10T13:02:47.000Z" pubdate>
+              on 2015-5-10
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/38">Revision 38</a>: published Sam 
+            <time datetime="2015-05-21T19:09:31.000Z" pubdate>
+              on 2015-5-21
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/40">Revision 40</a>: published 
+            <time datetime="2015-06-16T23:37:51.000Z" pubdate>
+              on 2015-6-16
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/42">Revision 42</a>: published xymostech 
+            <time datetime="2015-09-02T05:34:50.000Z" pubdate>
+              on 2015-9-2
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/43">Revision 43</a>: published 
+            <time datetime="2015-09-03T01:39:32.000Z" pubdate>
+              on 2015-9-3
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/47">Revision 47</a>: published 
+            <time datetime="2017-03-23T15:31:01.000Z" pubdate>
+              on 2017-3-23
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/49">Revision 49</a>: published 
+            <time datetime="2017-03-23T15:35:35.000Z" pubdate>
+              on 2017-3-23
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/52">Revision 52</a>: published 
+            <time datetime="2017-03-23T17:11:24.000Z" pubdate>
+              on 2017-3-23
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/53">Revision 53</a>: published <a href='http://facebook.com/natsukagami' rel='nofollow'>Natsu Kagami</a>
+            <time datetime="2017-06-10T11:49:07.000Z" pubdate>
+              on 2017-6-10
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/54">Revision 54</a>: published <a href='http://facebook.com/natsukagami' rel='nofollow'>Natsu Kagami</a>
+            <time datetime="2017-06-10T11:49:34.000Z" pubdate>
+              on 2017-6-10
+            </time>
+          </li>
+          <li >
+            <a href="/katex-vs-mathjax/55">Revision 55</a>: published <a href='http://facebook.com/natsukagami' rel='nofollow'>Natsu Kagami</a>
+            <time datetime="2017-06-10T11:50:44.000Z" pubdate>
+              on 2017-6-10
+            </time>
+          </li>
+    </ul>
+  </section>
+
+<section id="comments">
+  <h1>0 Comments</h1>
+
+  <div id="comments-wrapper">
+  </div>
+
+      <a class="login" href="/auth/github"><i class="fa fa-github"></i> Login with GitHub to Edit Test Cases</a>
+</section>
+
+
+    </article>
+  
+    <footer>
+      <ul>
+        <li>
+          <h4>Sponsors</h4>
+          <p>Hosting generously provided by <a href="https://m.do.co/c/b426e15331e8">DigitalOcean</a> and <a href="https://zeit.co/">Zeit</a></p>
+  
+          <p><a href="/sponsor">Learn how to become a sponsor</a></p>
+        </li>
+  
+        <li>
+          <h4>Tests</h4>
+          <ul>
+            <li>
+              <a href="/">Add</a>
+            </li>
+  
+  
+            <li>
+              <a href="/browse">Latest</a>
+            </li>
+            <li>
+              <a href="/popular">Popular</a>
+            </li>
+          </ul>
+        </li>
+  
+        <li>
+          <h4>Info</h4>
+          <ul>
+            <li>
+              <a href="/faq">FAQ</a>
+            </li>
+            <li>
+              <a href="/testimonials">Testimonials</a>
+            </li>
+            <li>
+              <a href="/contributors">Contributors</a>
+            </li>
+            <li>
+              <a href="https://benchmarkjs.com/">Benchmark.js</a>
+            </li>
+          </ul>
+        </li>
+  
+        <li>
+          <h4>Contact</h4>
+          <ul>
+            <li>
+              <a href="https://twitter.com/jsperf">Twitter</a>
+            </li>
+            <li>
+              <a href="https://github.com/jsperf/jsperf.com">GitHub</a>
+            </li>
+            <li>
+              <a href="https://webchat.freenode.net/?channels=jsperf">IRC</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </footer>
+  
+      <script src="/public/_js/test.js"></script>
+      <script>
+          ui.browserscope.key = 'agt1YS1wcm9maWxlcnIRCxIEVGVzdBiAgICGnr6kCww'
+  
+          ui.add(
+            'KaTeX',
+            {
+              'defer': false,
+              'fn': 'katex.process(formula, math);\r\nmath.outerWidth;'
+            }
+          );
+          ui.add(
+            'MathJax',
+            {
+              'defer': true,
+              'fn': 'math.innerHTML = "<script type=\'math/tex\'>" + formula + "<\/script>";\r\nMathJax.Hub.Queue(["Process", MathJax.Hub, math]);\r\nMathJax.Hub.Queue(function() {\r\n  math.outerWidth;\r\n  deferred.resolve();\r\n});'
+            }
+          );
+  
+          Benchmark.prototype.setup = 'var math = document.getElementById("math");\r\nvar formula = "\\\\dfrac{-b \\\\pm \\\\sqrt{b^2 - 4ac}}{2a}";'
+          Benchmark.prototype.teardown = 'math.innerHTML = "";'
+      </script>
+  
+      <link href="http://xymostech.com/katex/katex.min.css" rel="stylesheet" type="text/css">
+  <link href="http://xymostech.com/katex/fonts/fonts.css" rel="stylesheet" type="text/css">
+  <script src="http://xymostech.com/katex/katex.min.js"></script>
+  <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&delayStartupUntil=configured"></script>
+  
+  <script>
+  MathJax.Hub.Config({skipStartupTypeset: true});
+  MathJax.Hub.Configured();
+  </script>
+  
+  <div id="math"></div>
+  
+    <script>
+      window._gaq=[['_setAccount','UA-6065217-40'],['_trackPageview']];
+      (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.src='https://ssl.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))
+    </script>
+  </body>
+</html>

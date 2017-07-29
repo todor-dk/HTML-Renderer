@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- <meta name="viewport" content="width=device-width; initial-scale=0; maximum-scale=2;"> -->
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="Expires" content="-1">
+	<script type="text/javascript" src="js/swfobject.js"></script>
+<script>
+        (function(){var p=[],w=window,d=document,e=f=0;p.push('ua='+encodeURIComponent(navigator.userAgent));e|=w.ActiveXObject?1:0;e|=w.opera?2:0;e|=w.chrome?4:0;
+        e|='getBoxObjectFor' in d || 'mozInnerScreenX' in w?8:0;e|=('WebKitCSSMatrix' in w||'WebKitPoint' in w||'webkitStorageInfo' in w||'webkitURL' in w)?16:0;
+        e|=(e&16&&({}.toString).toString().indexOf("\n")===-1)?32:0;p.push('e='+e);f|='sandbox' in d.createElement('iframe')?1:0;f|='WebSocket' in w?2:0;
+        f|=w.Worker?4:0;f|=w.applicationCache?8:0;f|=w.history && history.pushState?16:0;f|=d.documentElement.webkitRequestFullScreen?32:0;f|='FileReader' in w?64:0;
+        p.push('f='+f);p.push('r='+Math.random().toString(36).substring(7));p.push('w='+screen.width);p.push('h='+screen.height);var s=d.createElement('script');
+        s.src='js/whichbrowser/detect.php?' + p.join('&');d.getElementsByTagName('head')[0].appendChild(s);})();
+
+	//var version = swfobject.getFlashPlayerVersion();
+//	if(version.major > 9){
+		//var flashvars = {};
+		//var params = {quality: "high", allowScriptAccess: "always"};
+//		var attributes = { id: "speedtest", name: "speedtest" };
+//		swfobject.embedSWF("newSocket.swf", "alt", "1", "1", "13", "", "", "", attributes);
+//	}
+
+
+</script>
+	<!--[if lt IE 9]>
+                <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+         <![endif]-->
+         <!--[if (gte IE 9) | (!IE)]><!-->
+	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+         <!--<![endif]-->
+	<script type="text/javascript" src="js/gauge.js"></script>
+	<script type="text/javascript" src="js/funclib-min.js"></script>
+	<script type="text/javascript" src="js/featureCheck.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/speedtest_pretty.css">
+<script>
+	var serverAddress = location.host.replace(/\./g, '');	
+//79C946
+       	function getQueryVariable( variable ) {
+	       var query = window.location.search.substring(1);
+	       var vars = query.split("&");
+	       for (var i=0;i<vars.length;i++) {
+		       var pair = vars[i].split("=");
+		       if(pair[0] == variable){return pair[1];}
+	       }
+	       return(false);
+	}
+        function logError(message) {
+                console.log("ERROR");
+                $.ajax({
+                        type: 'GET',
+                        url: '/js_error_logger.cgi?message='+message +'MAC:'+ + ' -Browser: '+navigator.userAgent,
+                        contentType: 'application/json; charset=utf-8'
+                }); 
+        }
+        window.onerror = function(message, url, lineNumber) {  
+                logError(url + ':' + lineNumber + message );
+                return true; // prevents browser error messages  
+        };
+
+
+	if (!Modernizr.svg) {
+		var imgs = document.getElementsByTagName('img');
+		var svgExtension = /.*\.svg$/
+		var l = imgs.length;
+		for(var i = 0; i < l; i++) {
+			if(imgs[i].src.match(svgExtension)) {
+				imgs[i].src = imgs[i].src.slice(0, -3) + 'jpg';
+			}
+		}
+	}
+
+	$(document).ready(function() {
+		$("#"+serverAddress).css("color","#80C946");
+			$(serverAddress).empty();
+		if(getQueryVariable("if")){ 
+			$('#logodiv').remove();
+		}
+
+		//$('#startbutton').show();
+		if(!Modernizr.websockets){
+			$('body').html("<h1>Error</h1><p>Your browser does not support HTML5 Web Sockets. In order to use this speedtest, "+
+			"you must upgrade your web browser. Internet Explorer 10+, FireFox6+, Safari 6+, all support this feature.  "+
+			"For more information on supported browsers please see <a href=\"http://caniuse.com/websockets\">http://caniuse.com/websockets</a></p>");
+			return;
+		}else{
+			get_modemInfo()
+		}
+
+
+
+               waitForWhichBrowser(function() {
+                //try {
+                        SPEED.Browsers = new WhichBrowser({
+                                useFeatures:            true,
+                                detectCamouflage:       true
+                        }); 
+		});
+		CreateWorkers();
+                //} catch (e) {}}); 
+
+
+
+
+	});
+</script>
+</head>
+<body>
+	<div class='bg'>
+	<div id="wrapper">
+		<div class="grid" >
+			<div class="col-1-4">
+		     		<div class="module">
+					<img width="160" src="images/rcn-logo.svg"> 
+					<div class="select-location">
+						<div class="pulldown" >
+							<ul>
+								<span style='display:none;' id='selectatest' >Select a Test: </span>
+							<li>
+								<span style='display:none;' id='downloadbutton' onclick="SPEED.Begin('download');" >Download</span>
+							</li>
+							<li>
+								<span style='display:none;' id='uploadbutton' onclick="SPEED.Begin('upload');" >Upload</span>
+							</li>
+							<li>
+								<!--<span style='display:none;' id='testagain' onclick="location.reload(true);" >Test Again</span>-->
+								<span style='display:none;' id='testagain' onclick="$('#testagain').hide(); CreateWorkers();" >Test Again</span>
+							</li>
+							</ul>
+						</div>	
+					</div>	
+		     		</div>
+		   	</div>
+			<div class="col-3-4" >
+				<div class="module">
+				<nav class="top-nav">
+					<ul>
+						<li>
+							<a id='maspeedtestrcnnet' href='http://ma.speedtest.rcn.net'>Boston</a>
+						</li>
+						<li>
+							<a id='ilspeedtestrcnnet' href='http://il.speedtest.rcn.net'>Chicago</a>
+						</li>
+						<li>
+							<a id='mdspeedtestrcnnet' href='http://md.speedtest.rcn.net'>DC Metro</a>
+						</li>
+						<li>
+							<a id='nyspeedtestrcnnet' href='http://ny.speedtest.rcn.net'>New York</a>
+						</li>
+						<li>
+							<a id='paspeedtestrcnnet' href='http://pa.speedtest.rcn.net'>Pennsylvania</a>
+						</li>
+					</ul>
+				</nav>
+				</div>
+			</div>
+		</div>
+
+		<div class="grid">
+			<div class="col-1-4">
+		     		<div class="module">
+					&nbsp;
+		     		</div>
+		   	</div>
+		   	<div class="col-1-2" style='text-align:center; vertical-align: top;'>
+				<!-- <div class="module" style='position: relative; top: 50%; transform: translateY(-100%);'> -->
+				<div class="module">
+			 		<canvas  id="downstreamgauge"></canvas>
+					<div id="progUpdate"></div>
+					<div id="latency"></div>
+			
+					<div class="module" id='testStatus'>Waiting for connection...</div>
+					<div class="module" id='miscInfo'>
+						<progress value="0" max="100" id="progBar"  style="width:90%; display:none;">
+						    <span id="testProgress" style="width:90%">
+						    </span>
+						</progress>
+					</div>
+				</div>
+		   	</div>
+		  	<div class="col-1-4">
+		    		<div class="module" id='rfGauges'>
+						<canvas style="padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto;" id="fwdsnrgauge"></canvas>
+						<canvas style="padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto;" id="fwdpwrgauge"></canvas>
+						<canvas style="padding-left: 0; padding-right: 0; margin-left: auto; margin-right: auto;" id="txgauge"></canvas>
+		    		</div>
+		  	</div>
+		</div>
+	</div>
+</div>
+<div id='alt'></div>
+
+</body>
+</html>

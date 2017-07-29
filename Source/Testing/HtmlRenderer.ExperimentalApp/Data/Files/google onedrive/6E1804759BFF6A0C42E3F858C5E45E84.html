@@ -1,0 +1,1801 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Google Drive Files to MS OneDrive</title>
+<meta name="description" content="Drive Files to MS OneDrive is a file transfer, backup tool for Google Drive. It allow you to save Google Drive's files to OneDrive folder. You can backup, copy your Google Drive to OneDrive.">
+<meta name="keywords" content="google drive to onedrive, google drive to skydrive, save file to ms onedrive, google drive backup, drive file transfer, drive file backup, cloud file transfer, cloud backup">
+
+<meta property="og:title" content="Google Drive Files to MS OneDrive"> 
+<meta property="og:description" content="Drive Files to MS OneDrive is a file transfer, backup tool for Google Drive. It allow you to save Google Drive's files to OneDrive folder. You can backup, copy your Google Drive to OneDrive.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="http://onedrive.booogle.net/">
+<meta property="og:image" content="http://onedrive.booogle.net/img/logo128.png">
+
+
+<link rel="shortcut icon" href="./favicon2.ico">
+<head>
+<style>
+body,table,td,span,select,input,textarea{
+	font-size:14px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+button{
+	font-size:14px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+body{background:#e3e3e3;}
+A:link    {color:#0860A8;text-decoration:none;}
+A:visited {color:#0860A8;text-decoration:none;}
+A:active  {color:#0860A8;text-decoration:underline;}
+A:hover  {color:#0860A8;text-decoration:underline;}
+
+.divopt{
+	-webkit-box-shadow: 0 0 10px #999;
+	-moz-box-shadow: 0 0 10px #999;
+	box-shadow: 0 0 10px #999;
+}
+.menulink{font-size:15px;}
+.input{width:630px;}
+.small{font-size:13px;}
+</style>
+
+<script src="js/common.js" type="text/javascript"></script>
+<script>
+var g_debug=false;
+var g_expires=1000*60*60*6;
+var gadb=false;
+function init(){
+	window.onunload=function(){
+		proc_saveopt();
+	}	
+}
+</script>
+</head>
+<body onload="init()">
+
+<table align=center>
+<tr><td height=10>
+</table>
+
+<table id="maintable" width=810 border=0 align=center class="divopt" style="background-color:white;padding:6px 6px 6px 6px;border: 0px solid #2E79DB;">
+<tr><td>
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" onerror="gadb=true;"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1113541014872557"
+     data-ad-slot="9823331909"
+     data-ad-format="link"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+<table width=100%><tr>
+<td><img src="img/logo65.png" width=65>
+<td>
+<td><a id="toptitle" href="./" title="Go Home" style="color:#1667A0"><span style="font-size:27px;font-family:Verdana, Arial;white-space:nowrap;">Google Drive Files to MS OneDrive</span></a>
+<div style="margin-left:2px;margin-top:3px">
+Drive Files to MS OneDrive is a file transfer, backup tool for Google Drive. It allow you to save Google Drive's files to OneDrive folder. You can backup, copy your Google Drive to OneDrive.<br>
+You don't need to install any further software or extension. This app only works locally without going through the server. Your files are completely safe, guarantees privacy.<br>
+Integrate your Google Drive with OneDrive. Provides connect with Google Drive. You can directly use this app with your drive. Supports Chrome, IE10+, Firefox, Safari..<br>
+<font style="color:green">Note:</font> Recommended File Size: 1byte~Hundreds of MB, Google Document Formats: 1~100MB
+</div>
+</table>
+
+<center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1113541014872557"
+     data-ad-slot="8346598708"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</center>
+
+<tr><td>
+<script>
+function get_data(){
+	var s=getstorage("c_filedata3");
+	if (!s) s="[]";
+	var a=[];
+	try{
+		a=JSON.parse(s);
+	}catch(err){
+		a=[];
+	}
+	if(!a) a=[];
+	return a;
+}
+
+function proc_savetohistory(){
+	var subject=getstorage('c_lastsubject') || '';
+	subject=prompt("Please enter a title or name.",subject);	
+	if(!subject){
+		//alert('You need to enter the subject.');
+		return;
+	}
+	setstorage('c_lastsubject',subject);
+	var b={};
+	b.id=(new Date()).getTime();
+	b.subject=subject;
+	b.files=[];
+	var d;
+	for(var i= 0; i <= gd_files.length-1;i++){
+		if(!gd_files[i].id)continue;
+		d={};
+		d.id=gd_files[i].id;
+		d.name=gd_files[i].name;
+		b.files.push(d);
+	}
+
+	var a=get_data();
+	a.push(b);
+	if(a.length>15) a.splice(0,1);
+	if(window.JSON) setstorage("c_filedata3",JSON.stringify(a));		
+	
+	proc_displayhistory();
+	var obj=_getid('history');
+	if(obj.options.length>=2) obj.selectedIndex=1;
+}
+function proc_displayhistory(){
+	var obj=_getid('history');
+	var a=get_data();
+	
+	for(var i=obj.options.length-1;i>=0;i--) obj.remove(i);
+	var c=document.createElement("option");
+	c.value='';
+	c.appendChild(document.createTextNode('*File History'));		         
+	obj.appendChild(c);		
+
+	var s;
+	for(var i=a.length-1;i>=0;i--){
+		var c=document.createElement("option");
+		c.value=a[i].id;		
+		s=a[i].subject+' ('+datetimetostring(a[i].id)+')';
+		c.appendChild(document.createTextNode(s));		         
+		obj.appendChild(c);		
+	}
+}
+
+function proc_historychange(){
+	var obj=_getid('history');
+	if(!obj.value)return;
+	var a=get_data();
+	for(i = 0; i < a.length; i++){
+		if(a[i].id==obj.value){
+			if(a[i].files && a[i].files.length>0){
+				attach_clear();								
+				var docs=[];var d;
+				for(var j = 0; j <= a[i].files.length-1;j++){
+					if(!a[i].files[j].id)continue;
+					d={};
+					d.id=a[i].files[j].id;
+					d.name=a[i].files[j].name;
+					docs.push(d);
+				}
+				gd_login(function(result){
+					if(!result) return;
+					gd_loadfiles(docs);
+				},true);								
+			}
+			break;
+		}
+	}
+}
+function proc_deletehistory(){
+	var obj=_getid('history');
+	if(!obj.value)return;
+	var a=get_data();
+	for(i = 0; i < a.length; i++){
+		if(a[i].id==obj.value){
+			a.splice(i,1);
+			if(window.JSON) setstorage("c_filedata3",JSON.stringify(a));
+			var idx=obj.selectedIndex;
+			obj.remove(idx);
+			if(idx>obj.options.length-1) idx=obj.options.length-1;
+			obj.selectedIndex=idx;
+			break;
+		}
+	}
+}
+function proc_clearhistory(){
+	for(i = 1; i <= 2; i++){
+		var answer=confirm("All stored history will be deleted. ["+i+"/2]"+"\n\n"+"Are you sure?");				
+		if(!answer) return;
+	}
+	setstorage("c_filedata3","[]");
+	var obj=_getid('history');
+	for(var i=obj.options.length-1;i>=1;i--) obj.remove(i);
+}
+
+function proc_saveopt(){
+	var b=[];
+	var c;
+	var obj=_getid("optcontainer");
+	var a=obj.getElementsByTagName('INPUT');
+	for(var i = 0; i < a.length; i++){    
+		if(a[i].type=='checkbox'){
+			c={};
+			c.name=a[i].name;
+			c.type=a[i].type;
+			c.checked=a[i].checked;
+			b.push(c);
+		}else if(a[i].type=='text'){
+			c={};
+			c.name=a[i].name;
+			c.type=a[i].type;
+			c.value=a[i].value || '';
+			b.push(c);
+		}
+	}
+	var a=obj.getElementsByTagName('SELECT');
+	for(var i = 0; i < a.length; i++){    
+		if(a[i].form && a[i].form.name){
+			c={};
+			c.name=a[i].name;
+			c.type='select';
+			c.value=a[i].value || '';
+			b.push(c);
+		}
+	}
+
+	if(window.JSON) setstorage('c_opt',JSON.stringify(b));
+}
+function proc_loadopt(){
+	var s=getstorage('c_opt');
+	var b=[];
+	try{
+		b=JSON.parse(s);
+	}catch(err){
+		b=[];
+	}
+	if(!b) b=[];
+
+	var c;
+	for(var i = 0; i < b.length; i++){    
+		if(b[i].type=='checkbox'){
+			c=document.optcontainer[b[i].name];
+			if(c) c.checked=b[i].checked;
+		}else if(b[i].type=='select' || b[i].type=='text'){
+			c=document.optcontainer[b[i].name];
+			if(c) c.value=b[i].value;
+		}
+	}
+	var a=_getid("optcontainer").getElementsByTagName('*');
+	for(var i = 0; i < a.length; i++){    
+		if(a[i].tagName=='SELECT'){
+			a[i].onchange=proc_saveopt;
+		}else if(a[i].type=='checkbox'){
+			if(a[i].name=='o_remove'){
+				a[i].onclick=function(){
+					proc_saveopt();
+				}				
+			}else{
+				a[i].onclick=proc_saveopt;
+			}
+		}
+	}
+}
+
+function proc_show(name){
+	var a=_getid(name);
+	if(!a)return;
+	if(a.style.display=='') a.style.display='none';
+	else a.style.display='';
+}
+</script>
+
+<style>
+.uploaded{color:green;}
+.error{color:#8A0808;}
+.welcome{color:#45616D;}
+.bold1{color:green;}
+.log{
+	width:100%;height:240px;
+}
+.big1{
+	font-size:20px;
+}
+#logtab a{
+	font-size:14px;
+}
+#gd_progress{width:650px;white-space:nowrap;overflow:hidden;border:0px solid red;}
+#gd_progress2{width:610px;white-space:nowrap;overflow:hidden;border:0px solid red;}
+</style>
+	<table width=100%>					
+		<tr><td>			
+			<button type="button" id='btn_open' onclick="gd_open_picker()" title="Select files and folders from Google Drive" style=""><img src="http://iblogbox.github.io/js/gdrive/product16.png" width=16 align="absmiddle"> Select files, folders from Google Drive</button>
+			<button type="button" onclick="attach_delete()">Remove</button>
+			<button type="button" onclick="attach_clear()">Clear</button>			
+			<label><input type=checkbox id="c_scansub" onclick="setstorage('c_scansub',this.checked)"> Scan all sub-folders</label>
+		<tr><td>			
+			<div id="downlink" style="margin-bottom:2px">Add files, folders to the list below. Select from Google Drive. <span id=spancount></span></div>
+			<select id='attachment' style="width:100%;height:200px" multiple=true onchange="attachment_onchange(this)" onclick="attachment_onchange(this)"></select>
+
+			<div id="desc" style="margin-top:2px;color:green;width:700px;white-space:nowrap;overflow:hidden;border:0px solid red"></div>
+			<font style="font-size:13px">*Unknown Size: Google Document Formats.</font> &nbsp;<span id="spandown"></span>
+
+			<table align=center>
+			<td><button type=button onclick="proc_savetohistory()">Save this file list</button>
+			<td><select id='history' onchange="proc_historychange()" style="width:300px"></select>
+			<td><button type=button onclick="proc_historychange()" title="Select"><img src="images/commit.png"></button>
+			<td><button type=button onclick="proc_deletehistory()" title="Delete"><img src="images/close.png"></button>
+			<td><button type=button onclick="proc_clearhistory()">Clear all</button>
+			</table>
+
+		<tr><td>
+			<button type=button onclick="md_selectfolder()"><img src="images/onedrive32.png" width=18 align="absmiddle"> Select target folder to save from OneDrive</button>		
+			<button type=button onclick="md_selectfolder(true)">Simple Selector</button>	&nbsp;
+			<button type=button onclick="md_logout()">Problem? OneDrive Log Out</button>		
+			<div id="foldername2" style="width:600px;white-space:nowrap;overflow:hidden;border:0px solid red;font-size:15px;margin-top:2px;margin-bottom:2px;">Root Folder</div>
+		<tr><td align=center>
+			<button type=button id="btn_ok" onclick="attach_saveall()" class="big1">Save to OneDrive</button>			
+			<button type=button onclick="proc_show('optcontainer')" class="" style="">Options</button>		
+		<tr><td>
+			<form id="optcontainer" name="optcontainer" style="display:none;border:2px dashed #0860A8;padding:2px" onsubmit="return false">
+				<table>
+				<tr><td>*Prefered Export Formats for Google Documents
+				<tr><td>
+					Documents <select name='o_prefer_doc'><option value="pdf">PDF<option value="docx">DOCX<option value="odt">ODT<option value="rtf">RTF<option value="txt">TXT<option value="zip">ZIP</select>
+					Spreadsheet <select name='o_prefer_spr'><option value="pdf">PDF<option value="xlsx">XLSX<option value="ods">ODS<option value="csv">CSV<option value="zip">ZIP</select>
+					Presentation <select name='o_prefer_pre'><option value="pdf">PDF<option value="pptx">PPTX<option value="txt">TXT</select>
+					Drawing <select name='o_prefer_dra'><option value="pdf">PDF<option value="png">PNG<option value="jpeg">JPEG<option value="svg">SVG</select>
+				<tr><td><label><input type=checkbox name='o_rm_invalid' checked> Auto remove invalid characters (\ / : * ? " | < >) in the file name (OneDrive does not allowed)</label>
+				<tr><td>Specify the behavior to use if the file already exists. <select name='o_behavior'><option value="rename">Rename<option value="replace">Replace<option value="fail">Fail</select>
+				</table>
+			</form>
+
+			<div id="logtab">
+				<a href="#" id="alog4" onclick="return proc_switchlog(4,this)" style="font-weight:bold">Upload, Download Log</a> &nbsp;&nbsp;<a href="#" id="alog5" onclick="return proc_switchlog(5,this)">Error Log</a>
+			</div>
+		<tr><td>
+			<div id="downlink2" style="margin-bottom:2px"></div>
+			<div id="log4" class="log" style="overflow-y:scroll;"></div>
+			<div id="log5" class="log" style="overflow-y:scroll;display:none"></div>
+	</table>
+
+<tr><td>
+<tr><td align=center>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1113541014872557"
+     data-ad-slot="8346598708"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</table>
+
+<script>
+var ischrome=false;
+if (navigator.userAgent.indexOf("Chrome")>=0) ischrome=true;
+
+function init_load(){
+	var id=getstorage('md_folder_id') || '';
+	var name=getstorage('md_folder_name') || 'Root Folder';
+	proc_setfolder(id, name);	
+
+	proc_displayhistory();
+	proc_loadopt();
+	var sw=_getid('attachment').offsetWidth;
+	for(var i = 1; i <= 7; i++){
+		var a=_getid("log"+i);
+		if(a){
+			if(ischrome) a.setAttribute("readonly", "true");
+			a.setAttribute("spellcheck", "false");
+			a.setAttribute("wrap", "off");
+			a.style.width=sw+'px';
+		}
+	}
+}
+</script>
+
+<style>
+a.bottomlink:link{text-decoration:underline;}
+a.bottomlink:visited{text-decoration:underline;}
+a.bottomlink:active{text-decoration:underline;}
+a.bottomlink:hover{text-decoration:underline;}
+</style>
+
+<table id="bottomtable" align=center>
+<tr><td height=7>
+<tr><td align=center><span id="bottomtitle">ⓒ Google Drive Files to MS OneDrive, 2017</span>
+	</table><br>
+
+<style>
+.gd_div{background-color:#FFFFE1;position:absolute;overflow:hidden;-webkit-box-shadow: 0 0 25px #999;-moz-box-shadow: 0 0 25px #999;box-shadow: 0 0 25px #999;}
+</style>
+<div id="layer_message" class="gd_div" style="z-index:10001;display:none;"></div>
+<div id="gd_window" class="gd_div" style="z-index:10000001;display:none;"></div>
+<div id="gd_btn_login" class="gd_div" style="z-index:10000000;display:none;">
+<table>
+<tr><td align=center><button onclick="gd_login_manual()" style="font-size:20px"><img src="http://iblogbox.github.io/js/gdrive/product20.png" align="absmiddle"> Login & Authorize</button> <button onclick="gd_login_close()" style="font-size:20px">Close</button>
+<tr><td>To use this app, Please login to the Google Drive and authorize this app or website.
+<br>(Note: If your browser block or disable the third-party cookies, this login does not work correctly.)
+</table>
+</div>
+<script>
+var CLIENT_ID = '920345881173-fursovpkfun79prll5m7smv3ti03b29p.apps.googleusercontent.com';
+var SCOPES = [
+	'https://www.googleapis.com/auth/drive.install',
+	'https://www.googleapis.com/auth/drive.readonly'
+];
+var gd_developerKey='AIzaSyA3xa5OZWhBsnXaBuvgQ_vYptrL2dLWICo';
+var gd_mimetype="";
+var gd_export_extension=[];
+var gd_state='';
+
+var gd_picker,gd_loaded,gd_pickerloaded,gd_lastprogress,gd_issupported,gd_isdownloading,gd_load_timer,gd_bloburl,gd_state2;
+var gd_loginexp=0;
+var gd_callback;
+var ismsie=false;
+if(navigator.appName!="Netscape"){
+	if(navigator.userAgent.indexOf("MSIE")>=0) ismsie=true;
+}
+
+function gd_btn_login2(e,callback){
+	function go(a,flag){
+		if(a && a.style.display==''){
+			var x=getScrollLeft()+((getWindowWidth()-a.clientWidth) / 2);
+			var y=getScrollTop()+((getWindowHeight()-a.clientHeight) / 2);
+			a.style["border"]="1px solid #000000";
+			a.style["padding"]="10px";
+			if(x<0) x=0; if(y<0) y=0;
+			a.style.left=x+"px";
+			a.style.top=y+"px";
+		}
+	}
+	go(_getid("gd_btn_login"));
+	go(_getid("gd_window"));	
+	go(_getid("folderfiles"));		
+	setTimeout(function(){
+		go(_getid("gd_btn_login"));
+		go(_getid("gd_window"));	
+		go(_getid("folderfiles"));		
+		if(callback)callback();
+	},10);
+}
+function gd_btn_login(isshow){
+	var a=_getid("gd_btn_login");
+	if(isshow){
+		a.style.display='';
+		gd_btn_login2();
+	}else{
+		a.style.display='none';
+	}
+}
+function gd_login_close(){
+	gd_btn_login(false);
+	gd_state='';
+}
+function gd_login_manual(){
+	var p={'client_id': CLIENT_ID, 'scope': SCOPES.join(' '), 'immediate': false};
+	if(gd_userId){p['login_hint']=gd_userId;p['authuser']=-1;}
+	gapi.auth.authorize(p, function (authResult){ 
+		if (authResult && !authResult.error){
+			gd_loginexp=(new Date()).getTime()+parseInt(authResult.expires_in*0.7*1000);
+			gd_btn_login(false);gd_info();
+			show_message("Login ok!!");
+			if(gd_callback) gd_callback(true);
+			else gd_open_state(true);
+		}else{
+			gd_btn_login(true);
+			show_message("Login failed!!");
+		}
+	});
+}
+function gd_login(callback,react){
+	if(gd_loginexp==0 || gd_loginexp<(new Date()).getTime()){
+	}else{
+		callback(true);
+		return;
+	}
+	var p={'client_id': CLIENT_ID, 'scope': SCOPES.join(' '), 'immediate': true};
+	if(gd_userId){p['login_hint']=gd_userId;p['authuser']=-1;}
+	gapi.auth.authorize(p, function (authResult){
+		if (authResult && !authResult.error){
+			gd_loginexp=(new Date()).getTime()+parseInt(authResult.expires_in*0.7*1000);
+			gd_btn_login(false);gd_info();
+			callback(true);
+		}else{
+			show_message("Login failed!!");
+			gd_btn_login(true);
+			callback(false);
+			if(react) gd_callback=callback;
+			else gd_callback=null;
+		}
+	});
+}
+function gd_checklogin(callback){
+	gd_login(function(result){
+		if(result)callback();
+	},true);
+}
+
+function gd_loadpicker() {		
+	gapi.load('picker',{'callback': function(){
+			gd_pickerloaded=true;
+		}
+	});	
+}
+function gd_createpicker() {
+	var access_token=gapi.auth.getToken().access_token;
+	if(!access_token){
+		alert('Error!! No access token.');
+		return;
+	}
+	if(!gd_picker){
+	  var view2 = new google.picker.DocsView(google.picker.ViewId.DOCS);
+	  if(gd_mimetype) view2.setMimeTypes(gd_mimetype);
+
+		var view4 = new google.picker.DocsView();
+		view4.setIncludeFolders(true);
+		view4.setSelectFolderEnabled(true);
+		view4.setParent("root");		
+		view4.setMimeTypes(gd_mimetype);
+		var view5 = new google.picker.View(google.picker.ViewId.RECENTLY_PICKED);
+
+      gd_picker = new google.picker.PickerBuilder()
+          //.enableFeature(google.picker.Feature.NAV_HIDDEN)
+          .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+		  .setLocale("en")
+		  .setTitle('Select files and folders')
+          .setOAuthToken(access_token)
+          .addView(view2)
+		  .addView(view4)
+		  .addView(view5)
+          //.addView(new google.picker.DocsUploadView())
+          .setDeveloperKey(gd_developerKey)
+          .setCallback(gd_pickercallback)
+          .build();
+	}
+	gd_picker.setVisible(true);
+}
+function gd_pickercallback(data) {
+	if (data.action == google.picker.Action.PICKED) {
+		if(data.docs && data.docs.length>0){
+			gd_loadfiles(data.docs);
+		}
+	}
+}
+function gd_count(){
+	var a=_getid('spancount');
+	if(a && gd_files) a.innerHTML="("+gd_files.length+" Added)";
+}
+
+var gd_files=[];
+var gd_files_count=0;
+function gd_loadfiles(docs){
+	if(gadb){alert('Please disable the adblock for free use.');return;}	if(gd_isdownloading){
+		alert("It's working... Please try again in a few minutes.");
+		return;
+	}
+
+	function end(){
+		gd_isdownloading=false;
+		clearTimeout(messagetimer);
+		hide_message();
+		var a=_getid("downlink");
+		if(a.innerHTML && a.innerHTML.indexOf("adownlink")<0){
+			_getid("downlink").innerHTML="Add files, folders to the list below. Select from Google Drive. <span id=spancount></span>";
+		}
+	}	
+	var canceled=false;
+	_getid("downlink").innerHTML="<table><tr><td><img src='http://iblogbox.github.io/js/img/etc/wait.gif' align='absmiddle'><td><a href='#' id='gd_cancel'>Cancel</a><td><div id='gd_progress'>Getting file information...</div></table>";	
+	_getid('gd_cancel').onclick=function(){
+		canceled=true;
+		return false;
+	}
+	gd_isdownloading=true;
+	if(!docs){
+		end();return;
+	}
+
+	var files=[];
+	for(var i = 0; i <= docs.length-1; i++){
+		if(!docs[i].id)continue;
+		var d={};
+		d.id=docs[i].id;
+		d.name=docs[i].name;
+		d.done=false;
+		files.push(d);
+	}
+	
+	function complete(){
+		var d,s;
+		var a=_getid("attachment");
+		for(var i = 0; i <= files.length-1; i++){
+			d=files[i];
+			if(!d.resp || !d.resp.title || d.resp.mimeType=='application/vnd.google-apps.folder')continue;
+			var c=document.createElement("option");
+			gd_files_count++;
+			d.idx=gd_files_count;
+			c.value=d.idx;
+			s='';
+			if(d.resp.exportLinks && !getSupported(d.resp)) s='[Not Supported] ';
+			if(d.parent) s+=d.parent+'/';
+			s=s+d.resp.title+' ('+getsize(d.resp.fileSize)+')';			
+			c.appendChild(document.createTextNode(s));		 
+			a.appendChild(c);		
+			gd_files.push(files[i]);
+		}		
+		_getid("downlink").innerHTML="Add files, folders to the list below. Select from Google Drive. <span id=spancount></span>";
+		gd_count();		
+	}
+
+	var joblist=[];
+	var jobtimer;
+	function getentryidx(){
+		for(var i = 0; i <= files.length-1; i++){
+			if(!files[i].done){
+				files[i].done=true;
+				return i;
+			}
+		}
+		return null;
+	}
+	function checkjoblist(){
+		if(joblist.length==0)return;
+		for(var i = 0; i <= joblist.length-1; i++){
+			if(!joblist[i].complete)return;
+		}
+		clearInterval(jobtimer);
+		end();
+		complete();
+	}
+	
+	var c_scansub=_getid('c_scansub').checked;
+	function get(jobidx){
+		function _call(){
+			var a=joblist[jobidx];
+			a.func(jobidx)
+		}
+		var idx=getentryidx();
+		if(idx==null || canceled){
+			joblist[jobidx].complete=true;
+			return;
+		}
+		if(files[idx].resp){			
+			_call();
+			return;
+		}
+
+		function _progress(s){
+			var a=_getid("gd_progress");
+			if(a) a.innerHTML='('+(idx+1)+'/'+files.length+') '+henc(s);
+		}
+		var folderlist;
+		function getfolder(folderidx){
+			if(folderidx>folderlist.length-1 || canceled){
+				_call();
+				return;
+			}
+			_progress('Getting files in the folder... '+folderlist[folderidx].name);
+			retrieveAllFiles("'"+folderlist[folderidx].id+"' in parents and trashed=false", function(results){
+				var parent=folderlist[folderidx].parent || '';
+				if(parent) parent+='/';
+				parent+=folderlist[folderidx].name || '';
+
+				for(var i = 0; i <= results.length-1; i++){
+					var d={};
+					d.id=results[i].id;
+					d.name=results[i].title;
+					d.resp=results[i];
+					d.parent=parent;
+					d.done=true;
+					files.push(d);
+					if(c_scansub && d.resp.mimeType=='application/vnd.google-apps.folder'){
+						folderlist.push(d);
+					}
+				}		
+				folderidx++;			
+				getfolder(folderidx);
+			});		
+		}
+
+		var fileId=files[idx].id;
+		_progress('Getting file info...');
+
+			var request = gapi.client.drive.files.get({
+				'fileId': fileId, 'fields':'id,title,mimeType,exportLinks,fileSize,downloadUrl,alternateLink,webContentLink,parents/id'
+			});
+			request.execute(function(resp){				
+				if(resp.error){
+					var s='Error. ';
+					if(files[idx].name) s+=files[idx].name+'  ';
+					if(resp.error.message) s+=resp.error.message+' ';
+					if(resp.error.code==401) s+='Login or Authorize Error.';					
+					_log("log4",s,"error");
+				}
+				files[idx].resp=resp;
+				if(!files[idx].name) files[idx].name=resp.title;
+
+				if(files[idx].resp.mimeType=='application/vnd.google-apps.folder'){
+					folderlist=[];
+					folderlist.push(files[idx]);
+					getfolder(0);
+				}else{
+					_call();
+				}
+			});
+	}
+
+	if(files.length==0){
+		end();return;
+	}
+	gapi.client.load('drive', 'v2', function(){
+		jobtimer=setInterval(checkjoblist,200);
+		for(var i = 0; i < 2; i++){
+			var a={};
+			a.func=get;
+			a.complete=false;
+			joblist.push(a);
+			a.func(i);
+		}
+	});
+}
+
+function retrieveAllFiles(query,callback) {
+	var fields='items(id,title,mimeType,exportLinks,fileSize,downloadUrl,alternateLink,webContentLink,parents/id),nextPageToken';
+  var retrievePageOfFiles = function(request, result) {
+    request.execute(function(resp) {
+      result = result.concat(resp.items);
+      var nextPageToken = resp.nextPageToken;
+      if (nextPageToken) {
+        request = gapi.client.drive.files.list({
+          'q': query, 'pageToken': nextPageToken, 'fields':fields
+        });
+        retrievePageOfFiles(request, result);
+      } else {
+        callback(result);
+      }
+    });
+  }
+  var initialRequest = gapi.client.drive.files.list({
+		'q': query, 'fields':fields
+       });
+  retrievePageOfFiles(initialRequest, []);
+}
+
+function getSupported(d){
+	var m=d.mimeType || '';
+	if(m.indexOf('vnd.google-apps.document')>=0 || m.indexOf('vnd.google-apps.presentation')>=0 || m.indexOf('vnd.google-apps.drawing')>=0 || m.indexOf('vnd.google-apps.spreadsheet')>=0){ 
+		return true;
+	}
+}
+function getPrefered(m){
+	var a=document.optcontainer['o_prefer_'+m];
+	if(a) return a.value || 'pdf';
+	else return 'pdf';
+}
+
+function proc_logincheck(){
+	_getid("log4").innerHTML='';
+	_getid("log5").innerHTML='';	
+	var b=_getid("gd_progress2");
+	if(b) b.innerHTML='';
+	_log("log4",'Login checking...','welcome');
+}
+function attach_saveall(){
+	if(gadb){alert('Please disable the adblock for free use.');return;}	if(gd_isdownloading){
+		alert("It's working... Please try again in a few minutes.");
+		return;
+	}
+	if(!gd_issupported){
+		alert("This browser does not support.");
+		return;
+	}
+	if(!gd_loaded || !gd_pickerloaded){
+		alert('Not loaded library. Please try again in a few minutes.');
+		return;
+	}
+
+	proc_logincheck();
+	md_login(function(result){
+		if(!result)return;
+		gd_login(function(result){
+			if(!result)return;
+			attach_saveall2();
+		},true);
+	});
+}
+
+var g_canceled;
+function attach_saveall2(){
+	if(gd_isdownloading){
+		alert("It's working... Please try again in a few minutes.");
+		return;
+	}
+	var files;
+	try{
+		files=JSON.parse(JSON.stringify(gd_files));
+	}catch(err){
+		files=gd_files;
+	}
+	if(files.length==0){
+		alert('No selected file.');
+		return;
+	}
+	var access_token=gapi.auth.getToken().access_token;
+	if(!access_token || !md_access_token){
+		alert('Error!! No access token.');
+		return;
+	}
+
+	var o_rm_invalid=document.optcontainer['o_rm_invalid'].checked;
+	var o_behavior=document.optcontainer['o_behavior'].value;
+	proc_switchlog(4,_getid('alog4'));
+	var upload_id=getstorage('md_folder_id') || '';
+
+  gapi.client.load('drive', 'v2', function(){	  
+	  if(upload_id){
+		  proc_log('log1','Folder checking...','welcome');
+		  md_metadata(upload_id, function(resp){
+			  if(resp && resp.id){
+				  go();
+			  }else{
+				  proc_log('log1','Target folder ('+(getstorage('md_folder_name') || 'Root Folder')+') for save does not exist.','error');
+				  proc_setfolder('', 'Root Folder');
+			  }			  
+		  });
+	  }else{
+		go();
+	  }
+  });
+
+  function go(){	
+	  if(gd_isdownloading)return;
+	var xhr= new XMLHttpRequest(); //upload
+	var xhr2= new XMLHttpRequest(); //download
+
+	iserror=false;
+	g_canceled=false;
+	gd_isdownloading=true;
+	_getid("downlink2").innerHTML="<table><tr><td><a href='#' id='gd_cancelall' style='display:none' title='Cancel all tasks'>Cancel all</a>&nbsp;<td><a href='#' id='gd_cancel2' style='display:none' title='Cancel the current task'>Cancel</a><td><div id='gd_progress2'></div></table>";		
+	proc_log('log1','Started...','welcome');
+
+	var c=_getid('gd_cancelall');
+	if(c){
+		c.style.display='';
+		c.onclick=function(){
+			g_canceled=true;
+			var a=_getid('gd_cancel2');
+			if(a && a.onclick) a.onclick();
+			return false;
+		}
+	}
+
+	function _end(){
+		gd_isdownloading=false;
+		var c=_getid('gd_cancelall');if(c) c.style.display='none';
+		var c=_getid('gd_cancel2');if(c) c.style.display='none';
+		var s='Completed.';
+		if(iserror) s+=' but there are some errors. Check the error log.'; 
+		proc_log('log1',s,'welcome');
+	}
+	function get(idx){
+		function _next(){
+			xhr.abort();xhr2.abort();
+			setTimeout(function(){
+				idx++;
+				get(idx);
+			},20);
+		}
+		function _progress(name,s,state,s2){
+			s='['+(idx+1)+'/'+files.length+'] '+s+' '+files[idx].resp.title;
+			proc_log(name,s,state,s2);
+		}
+		if(g_canceled || idx>files.length-1){
+			_end();
+			return;
+		}
+		
+		files[idx].canceled=false;
+		var c=_getid('gd_cancel2');
+		if(c){
+			c.style.display='';
+			c.onclick=function(){
+				xhr.abort(); 
+				xhr2.abort();
+				files[idx].canceled=true;
+				this.style.display='none';
+				this.onclick=function(){return false;}
+				_progress('log1','Canceled by user.','error');
+				_next();
+				return false;
+			}
+		}
+
+			var resp=files[idx].resp;
+				var downloadurl=resp.downloadUrl;
+				if(!downloadurl && resp.exportLinks){
+					if(!getSupported(resp)){
+						_progress('log1','This format is not Supported.','error');
+						_next();
+						return;
+					}
+					var m=resp.mimeType;
+					var ext,url,match;
+					if(m.indexOf('vnd.google-apps.document')>=0) ext=getPrefered('doc');
+					else if(m.indexOf('vnd.google-apps.spreadsheet')>=0) ext=getPrefered('spr');
+					else if(m.indexOf('vnd.google-apps.presentation')>=0) ext=getPrefered('pre');
+					else if(m.indexOf('vnd.google-apps.drawing')>=0) ext=getPrefered('dra');
+					ext=(ext || '').toLowerCase();
+					for (x in resp.exportLinks){
+						url=resp.exportLinks[x] || '';
+						match=url.match(/(exportFormat=|format=)(.*?)(&|$)/i);
+						if(ext && match && match[2] && match[2].toLowerCase()==ext){
+							downloadurl=url;
+							resp.title2=resp.title+'.'+ext;
+							if(navigator.userAgent.indexOf("Firefox")!=-1){
+								xhr2=new XMLHttpRequest();
+							}
+							break;
+						}
+					}
+				}
+				if(!downloadurl){
+					_progress('log1','Error. Can not find a Download URL.','error');
+					_next();
+					return;
+				}
+
+				files[idx].downloadurl=downloadurl;
+				if(resp.downloadUrl) files[idx].downloadurl2='https://www.googleapis.com/drive/v2/files/'+resp.id+'?alt=media';
+				files[idx].filename=resp.title2 || resp.title || '';
+				if(o_rm_invalid) files[idx].filename=files[idx].filename.replace(/[\\\\/:?*\"|<>]/g,'-');
+				files[idx].upload_id=upload_id;
+				files[idx].behavior=o_behavior;				
+
+						f_download(function(result){
+							if(!result){
+								_next();
+								return;
+							}
+							if(result.error){
+								var s='Error. ';
+								if(result.error.message) s+=result.error.message+' ';
+								if(result.error.code==401){
+									s+='Login or Authorize Error.';
+								}
+								_progress('log1',s,'error');
+							}else if(result.id){
+								var s='['+(idx+1)+'/'+files.length+'] Uploaded.';
+								var s2=henc(result.name);
+								if(result.webUrl) s2+=' &nbsp;<a href="'+result.webUrl+'" target="_blank" title="View this file">View</a>';
+								if(result.parentReference && result.parentReference.id && result.parentReference.path){
+									var id=encodeURIComponent(result.parentReference.id);
+									if(/root:$/i.test(result.parentReference.path)) id='';
+									s2+=' &nbsp;<a href="https://onedrive.live.com/?id='+id+'" target="_blank" title="Show folder">Folder</a>';
+								}
+								var s3=result['@content.downloadUrl'];
+								if(s3){
+									if(s3.indexOf('&download')<0 && s3.indexOf('?download')<0) s3+='/'+encodeURIComponent(result.name)+'?download';
+									s2+=' &nbsp;<a href="'+s3+'" target="_blank" download="'+result.name+'">Download</a>';
+								}
+								s2+=' &nbsp;<a href="#" onclick="proc_delete(\''+result.id+'\',this);return false" data="'+escape(result.name || '')+'" title="Delete this file">Delete</a>';
+								proc_log('log1',s,'uploaded',s2);
+								//console.log(result);
+							}
+							_next();
+						},xhr,files,idx,xhr2);
+	}//get
+
+	get(0);
+  }
+
+}
+
+var g_maxdown=100;
+function f_download(callback,xhr,files,idx,xhr2){
+	var cresp=files[idx];
+	function _error(s){
+		var result={};
+		result.error={"message":s};
+		callback(result);
+	}
+	function _end(){
+		callback();
+	}
+	function _progress(s,nolog){
+		var s1='['+(idx+1)+'/'+files.length+'] '+s+' '+(cresp.filename);
+		if(!nolog) proc_log('log1',s1);
+		var a=_getid("gd_progress2");
+		if(a) a.innerHTML=henc(s1);
+	}
+
+	_progress('Transferring...', true);
+	if(!cresp.downloadurl){
+		_error('Error. Can not find a Download URL.');
+		return;
+	}
+	if(g_canceled){
+		_end();return;
+	}
+
+	var len=files[idx].resp.fileSize;
+	var chunk=1024*1024*20;
+	var blobdata, blobfull;
+	var access_token;
+
+	function _getfiledata(start,response,isfull){
+		if(blobfull){
+			var end=start+chunk;
+			if(end>len)end=len;
+			blobdata=blobfull.slice(start,end);
+			response();
+			return;
+		}
+		gd_checklogin(function(){
+			access_token=gapi.auth.getToken().access_token;
+			if(!access_token){
+				_error('Error!! No access token for Google Drive.');	return;
+			}
+			try{
+				_getfiledata2(start,response,isfull);
+			}catch(err){
+				_error(err+' or This browser does not support. Please upgrade your browser.');
+			}
+		});
+	}
+	function _getfiledata2(start,response,isfull){
+		if(files[idx].canceled)return;
+		if(g_canceled){_end();return;}
+
+		var end=start+chunk-1;
+		if(end>len-1)end=len-1;
+		
+		gd_lastprogress=(new Date()).getTime();
+		var su=cresp.downloadurl2 || cresp.downloadurl+'&access_token='+encodeURIComponent(access_token);
+		if(su.indexOf('google.com/spreadsheets/export')>=0){
+			su='https://speedtesting.herokuapp.com/proxyrss/geturl2.php?max=15&url='+encodeURIComponent(su);
+		}
+		xhr2.open('GET', su);
+		xhr2.responseType = 'arraybuffer';
+		var s2=start+'-'+end;
+		if(!isfull) xhr2.setRequestHeader('Range', 'bytes='+s2);
+		if(cresp.downloadurl2) xhr2.setRequestHeader('Authorization', 'Bearer ' + access_token);					
+		xhr2.onprogress=function(event){
+			if(gd_lastprogress){
+				var elaspetime = new Date();
+				var dt=(elaspetime.getTime()-gd_lastprogress);
+				if(dt<1000)return;
+				gd_lastprogress=elaspetime.getTime();
+			}
+			var a=event;
+			var total=a.totalSize || a.total || len || 0;
+			if(total>=18446744073709552000) total=0;
+			var current=a.position || a.loaded  || 0;
+			current=current+start;			
+			_progress('('+number_format(current)+'/'+number_format(len)+') Downloading...', true);
+			if(isfull && (total>g_maxdown*1024*1024 || current>g_maxdown*1024*1024)){
+				xhr2.abort();
+				_error('The maximum download size is about '+g_maxdown+' M available for this file type.');
+			}
+		};
+	    xhr2.onload = function(){
+			if(this.status == 200 || this.status == 206){
+				try{
+					if(isfull) blobfull=new Blob([this.response]);
+					else blobdata=new Blob([this.response]);
+				}catch(err){	
+					_error(err);return;
+				}
+				response();
+			}else{
+				_error("Error (status) " + this.status + "("+this.statusText+") occurred while receiving the file.");
+			}
+		};
+		xhr2.onerror = function(e){      
+			_error("Error " + e.target.status + " occurred while receiving the file.");
+		};
+		xhr2.send();
+	}
+
+	function _upload(uploadUrl,start){
+		_getfiledata(start,function(){
+			md_checklogin(function(){
+				if(!md_access_token){
+					_error('Error!! No access token for OneDrive. or Check that you are logged in.');return;
+				}
+				_upload2(uploadUrl,start);
+			});
+		});
+	}	
+	function _upload2(uploadUrl,start){
+		if(files[idx].canceled)return;
+		if(g_canceled){_end();return;}
+
+		if(!blobdata){
+			_error('Chunk filedata read 0 byte.');				
+			return;
+		}		
+		var end=start+chunk-1;
+		if(end>len-1)end=len-1;
+		
+		xhr.open('PUT', uploadUrl);
+		xhr.setRequestHeader('Authorization', 'Bearer ' + md_access_token);
+		xhr.setRequestHeader('Content-Range', 'bytes '+start+'-'+end+'/'+len);
+		if(xhr.upload){
+			xhr.upload.onprogress=function(event){
+				if(gd_lastprogress){
+					var elaspetime = new Date();
+					var dt=(elaspetime.getTime()-gd_lastprogress);
+					if(dt<1000)return;
+					gd_lastprogress=elaspetime.getTime();
+				}
+				var a=event;
+				var total=a.totalSize || a.total || 0;
+				var current=a.position || a.loaded  || 0;
+				current=current+start;
+				_progress('('+number_format(current)+'/'+number_format(len)+') Uploading...', true);
+			};
+		}
+		xhr.onload = function(){
+			var a={};try{a=JSON.parse(this.response);}catch(err){a={};}
+			//console.log(this.status);			
+			if(this.status==201){
+				if(a.name){
+					callback(a);
+				}else{
+					_error('Results value error');									
+				}
+			}else if(this.status==202){
+				//console.log(a);
+				if(a.nextExpectedRanges && a.nextExpectedRanges.length>0){
+					var next=parseInt(a.nextExpectedRanges[0].split('-')[0]);
+					if(!next || isNaN(next)){
+						error('Results range value error');				
+					}else{
+						_upload(uploadUrl,next);
+					}
+				}else{
+					error('Results range value error');
+				}
+			}else{
+				if(a.error) _error(a.error.code+': '+a.error.message);
+				else _error("Error " + this.status + " occurred while uploading the file.");
+			}
+		};
+		xhr.onerror = function(e){   
+			_error("Error " + e.target.status + " occurred while uploading the file.");
+		};					
+		xhr.send(blobdata); 	
+	}
+
+	function _upload_create(){
+		if(files[idx].canceled)return;
+		if(g_canceled){_end();return;}
+
+		gd_lastprogress=(new Date()).getTime();
+		var s=md_server;
+		if(cresp.upload_id) s+='/drive/items/'+cresp.upload_id+':/';
+		else s+='/drive/root:/';
+		s+=encodeURIComponent(cresp.filename)+':/upload.createSession';
+
+		xhr.open('POST', s);
+		xhr.setRequestHeader('Authorization', 'Bearer ' + md_access_token);
+		xhr.setRequestHeader('Content-Type', 'application/json');
+		var body={
+		  "item": {
+			"@name.conflictBehavior": cresp.behavior,
+			"name": cresp.filename
+			}
+		};
+		xhr.onload = function(){
+			var a={};try{a=JSON.parse(this.response);}catch(err){a={};}
+			if(this.status==200){
+				if(a.uploadUrl){
+					_upload(a.uploadUrl,0);
+				}else{
+					_error('Results value error');									
+				}
+			}else{
+				if(a.error) _error(a.error.code+': '+a.error.message);
+				else _error("Error " + this.status + " occurred while uploading the file.");
+			}
+		};
+		xhr.onerror = function(e){   
+			_error("Error " + e.target.status + " occurred while uploading the file.");
+		};
+		xhr.send(JSON.stringify(body)); 	
+	}
+	
+	md_checklogin(function(){
+		if(!md_access_token){
+			_error('Error!! No access token for OneDrive. or Check that you are logged in.');return;
+		}
+		function go(){
+			try{
+				_upload_create();
+			}catch(err){
+				_error(err+' or This browser does not support. Please upgrade your browser.');
+			}
+		}
+		if(!len){
+			_getfiledata(0,function(){
+				if(!blobfull || blobfull.size==0){
+					_error('Filesize 0 byte.');
+				}else{
+					len=blobfull.size;
+					go();
+				}
+			},true);			
+		}else{
+			go();
+		}
+	});
+}
+
+var md_needlogin;
+function proc_delete(fileid,f){
+	if(!fileid) return;
+	if(gd_isdownloading){
+		alert("Please try again in a few minutes. or Cancel the current job.");
+		return;
+	}	
+	var title=unescape(f.getAttribute("data") || '');
+	function _log(s){
+		var a=_getid('gd_progress2');
+		if(a) a.innerHTML=s;
+	}
+	_log('Deleting...');
+	function go(){
+		md_delete(fileid,function(result,status,err){
+			var s;
+			if(result){
+				s='<font style="color:green">File deleted successfully. '+henc(title)+'</font>';
+				_log(s);
+			}else{
+				if(status==401){
+					md_needlogin=true;			
+				}
+				if(err)s='<font style="color:red">Delete failed. '+err+' '+henc(title)+'</font>';
+				else s='<font style="color:red">Delete failed. '+henc(title)+'</font>';
+				_log(s,'error');
+			}		
+		});
+	}
+	if(md_needlogin){
+		md_needlogin=false;
+		md_login(function(result){
+			if(!result)return;
+			go();
+		});
+	}else{
+		go();
+	}
+}
+
+function attach_delete(){
+	function remove(idx){
+		for(var i = 0; i <= gd_files.length-1; i++){
+			if(gd_files[i].idx==idx){
+				gd_files.splice(i,1);
+				return;
+			}
+		}
+	}
+	var a=_getid("attachment");
+	var k=-1;
+	for(var i=a.options.length-1;i>=0;i--){
+		if(a.options[i].selected){
+			remove(a.options[i].value);
+			a.remove(i);
+			k=i;
+		}
+	}
+	if (k>a.options.length-1) k=a.options.length-1;
+	if (k>=0){
+		a.selectedIndex=k;
+	}
+	gd_count();		
+}
+function attach_clear(){
+	var a=_getid("attachment");
+	for(var i=a.options.length-1;i>=0;i--) a.remove(i);
+	gd_files=[];
+	gd_count();		
+}
+var gexportlist=[];
+function attachment_onchange(f){
+	_getid("spandown").innerHTML='';
+	function _down(resp){
+			var accessToken=gapi.auth.getToken().access_token;
+			if(resp.downloadUrl){
+				_getid("spandown").innerHTML='<a id="adownlink">Download this file</a>&nbsp; ('+getsize(resp.fileSize)+')';
+				var a=_getid("adownlink");
+				if(a){
+					a.href=resp.downloadUrl+'&access_token='+encodeURIComponent(accessToken)
+					a.download=resp.title;
+					a.title=resp.title;
+				}
+			}else if(resp.exportLinks){
+				gexportlist=[];
+				for (x in resp.exportLinks){
+					var a={};
+					a.title=resp.title;
+					a.name=x;
+					a.url=resp.exportLinks[x] || '';
+					var match=a.url.match(/(exportFormat=|format=)(.*?)(&|$)/i);
+					if(match) a.ext=match[2];
+					gexportlist.push(a);
+				}
+				if(gexportlist.length==0) return;
+							var prefer=getstorage('c_prefer_ext');
+							s='<select id="adownsel" style="width:250px;margin-bottom:1px">';
+							for(var i = 0; i < gexportlist.length; i++){
+								s+='<option value="'+i+'"';
+								if(gexportlist[i].ext){
+									if(gexportlist[i].ext==prefer) s+=' selected';
+									s+='>(.'+gexportlist[i].ext+') ';
+								}else{
+									s+='>';
+								}
+								s+=gexportlist[i].name;
+							}		
+							s+='</select>&nbsp; <a id="adownlink" style="display:none">Download this file</a>';
+							_getid("spandown").innerHTML=s;
+							var a=_getid("adownsel");
+							if(a){
+								a.onchange=function(){
+									if(!this.value)return;
+									var d=gexportlist[this.value];
+									if(!d)return;
+									setstorage('c_prefer_ext',d.ext);
+									var a=_getid("adownlink");
+									if(a){
+										a.href=d.url;
+										var s=d.title || '';
+										if(d.ext) s+='.'+d.ext;
+										a.download=s;
+										a.title=s;
+										a.style.display='';
+									}
+								}
+								a.onchange();
+							}
+			}
+	}
+	function find(idx){
+		var resp;
+		for(var i = 0; i <= gd_files.length-1; i++){
+			if(gd_files[i].idx==idx){
+				resp=gd_files[i].resp;
+				var s=resp.title;
+				var link=resp.alternateLink || resp.webContentLink;
+				if(link) s='<a href="'+link+'" target="_blank" title="View this file">'+henc(s)+'</a>';
+				s+=' ('+getsize(resp.fileSize)+')';
+				if(resp.parents && resp.parents[0] && resp.parents[0].id){
+					s+=' &nbsp;<a href="'+gd_weburl()+'#folders/'+resp.parents[0].id+'" target="_blank" onclick="gd_clickweburl(this)" title="Show Folder, Folder ID: '+resp.parents[0].id+'">Folder</a>';
+				}
+				_getid("desc").innerHTML=s;
+				_down(resp);					
+				return;
+			}
+		}
+	}
+	var a=_getid("attachment");
+	for(var i=a.options.length-1;i>=0;i--){
+		if(a.options[i].selected){
+			find(a.options[i].value);
+			break;
+		}
+	}
+}
+
+function gd_open_picker(){
+	if(!gd_issupported){
+		alert("This browser does not support.");
+		return;
+	}
+	if(!gd_loaded || !gd_pickerloaded){
+		if(!gd_load_timer) gd_loadscript(gd_open_picker);
+		else alert('Not loaded library. Please try again in a few minutes.');
+		return;
+	}
+	gd_login(function(result){
+		if(!result) return;
+		gd_createpicker();
+	},true);
+}
+function gd_getparam(s,name){
+	name=name+"=";
+	name=name.toLowerCase();
+	var p1=s.toLowerCase().indexOf(name);
+	if (p1<0) return "";
+	s=s.substr(p1+name.length);
+	var p2=s.toLowerCase().indexOf("&");
+	if (p2>=0) {
+		return s.substr(0,p2);
+	} else {
+		return s;
+	}
+}
+function gd_open_state(force){
+	var s=gd_state;
+	if(s){
+		if(!gd_issupported){
+			gd_state='';
+			alert("This browser does not support.");
+			return;
+		}
+		s=decodeURIComponent(s);
+		try{
+			var a=JSON.parse(s);
+			var ids=[];
+			function find(b){
+				if(!b)return;
+				for(var i=0; i <= b.length-1; i++){
+					if(b[i]){
+						var cc={};
+						cc.id=b[i];
+						ids.push(cc);
+					}
+				}
+			}
+			find(a.ids);
+			find(a.exportIds);
+			if(ids.length>0){
+				gd_login(function(result){
+					if(gd_open2 && !force)return;
+					gd_open2=true;
+					if(!result) return;
+					//_getid('gd_btn_reopen').style.display='';
+					gd_state='';
+					gd_loadfiles(ids);
+				});				
+			}
+		}catch(err){
+		}
+	}
+}
+function gd_clientload(){
+	gd_loaded=true;
+	if (window.addEventListener){
+		window.addEventListener("resize", gd_btn_login2, false);
+	}else if (window.attachEvent){
+		window.attachEvent("onresize", gd_btn_login2);
+	}
+	gd_open_state();
+}
+var gd_open2;
+function gd_open_state2(){
+	setTimeout(function(){
+		if(!gd_open2)gd_open_state();
+	}, 1000);
+}
+
+function gd_loadscript(callback){
+	function inject(s){
+		var o = document.createElement('scri' + 'pt');
+		o.setAttribute('src', s);
+		o.setAttribute('type', 'text/javascript');
+		document.body.appendChild(o);
+	}
+	if(gd_load_timer)return;
+	if(gd_loaded && gd_pickerloaded)return;
+	gd_load_timer=setInterval(function(){
+		if(gd_loaded && gd_pickerloaded){
+			clearInterval(gd_load_timer);
+			if(callback) callback();
+		}
+	},100);
+	inject('https://apis.google.com/js/client.js?onload=gd_clientload');
+	inject('https://apis.google.com/js/api.js?onload=gd_loadpicker');	
+}
+function gd_dblclick(){
+	function dblclick(){
+		try{
+			if(gd_picker)gd_picker.setVisible(false);
+		}catch(err){}
+	}
+	function keydown(e){
+		if(!e)e=window.event;
+		if(e && e.keyCode==27) dblclick();
+	}
+	if(window.addEventListener){
+		document.addEventListener("dblclick", dblclick, false);
+		document.addEventListener("keydown", keydown, false);
+	}else if(window.attachEvent){
+		document.attachEvent("ondblclick", dblclick);
+		document.attachEvent("onkeydown", keydown);
+	}
+}
+var gd_userId,gd_email;
+function gd_weburl(){
+	var s;
+	if(gd_email) s='https://drive.google.com/?authuser='+encodeURIComponent(gd_email);
+	else s='https://drive.google.com/';
+	return s;
+}
+function gd_clickweburl(f){
+	var s=f.href || '';
+	var p1=s.indexOf('#');
+	if(p1<0) s='';
+	else s=s.substr(p1,s.length);
+	f.href=gd_weburl()+s;
+}
+function gd_info(){
+	if(gd_email)return;
+	gapi.client.load('drive', 'v2', function(){
+		var request = gapi.client.drive.about.get();
+		request.execute(function(resp) {
+			if(resp && resp.user){
+				if(gd_email)return;
+				gd_email=resp.user.emailAddress;
+				if(gd_email){
+					var a=_getid('btn_open');
+					var b=_getid('gd_btn_reopen');
+					if(a)a.title=a.title+' ('+gd_email+')';
+					if(b)b.title=b.title+' ('+gd_email+')';
+				}				
+			}
+		});
+	});
+}
+function gd_init(){
+	if(getstorage('c_scansub')=='true')_getid('c_scansub').checked=true;
+	gd_dblclick();
+	gd_state2=gd_state;
+	if(!window.XMLHttpRequest){//!window.FileReader || !window.URL ||
+	}else{
+		gd_issupported=true;
+		if(gd_state){
+			try{
+				var a=JSON.parse(gd_state);
+				gd_userId=a.userId;
+				if(a.ids || a.exportIds){
+					_getid("downlink").innerHTML="<table><tr><td><div id='gd_progress'>Ready...</div></table>";
+				}
+			}catch(err){}			
+			if(window.addEventListener) window.addEventListener("load", gd_open_state2, false);
+			else if (window.attachEvent) window.attachEvent("onload", gd_open_state2);
+		}
+		gd_loadscript();
+	}
+}
+gd_init();
+</script>
+
+<script src="//js.live.net/v5.0/wl.js"></script>
+<script>
+var md_access_token;
+var md_loginexp=0;
+var md_server='https://api.onedrive.com/v1.0';
+function md_init(){
+	WL.init({
+		client_id: '000000004014CD81',
+		redirect_uri: 'http://onedrive.booogle.net/redirect/',
+		scope: ["wl.signin","wl.skydrive_update"], //"wl.basic","wl.emails"
+		response_type: "token"
+	});
+	WL.Event.subscribe("auth.sessionChange", md_getsession);
+}
+function md_login(callback){
+	WL.login({}).then(
+		function(resp){
+			if(resp.status=="connected"){
+				md_getsession();
+				if(md_access_token) callback(true);
+				else callback(false);
+			}else{
+				callback(false);
+			}
+		},
+		function(resp){
+			callback(false);
+		}
+	);
+}
+function md_getsession(){
+	var session = WL.getSession();
+	if(session){
+		md_access_token=session.access_token;
+		md_loginexp=(new Date()).getTime()+parseInt(session.expires_in*0.7*1000);
+	}else{
+		md_access_token='';
+		md_loginexp=0;
+	}
+}
+function md_checklogin(callback){
+	md_getsession();
+	if(md_access_token){
+		callback();
+	}else{
+		var count=0;
+		var timer=setInterval(function(){
+			count++;
+			md_getsession();
+			if(md_access_token || count>3){
+				clearInterval(timer);
+				callback();
+			}
+		},2000);
+	}
+}
+function md_logout(){
+	if(gd_isdownloading){
+		alert("It's working... Please try again in a few minutes.");
+		return;
+	}
+	s='You have a problem with OneDrive functions?\nDo you want to login to another account?\n';
+	s+='Use this "Log Out" feature. and Log in again.\n\n';
+	s+='Signs the user out of any service using Microsoft account, and clears any user state.\n\nAre you sure?';
+	var answer=confirm(s);
+	if(!answer) return;
+	WL.logout();
+	show_message('Log Out Completed.');
+}
+function proc_setfolder(id,name){
+	var s;
+	var s='https://onedrive.live.com/?id='+encodeURIComponent(id || '');
+	if(!id){
+		name='Root Folder';
+	}
+	s='<a href="'+s+'" target="_blank" title="Show Folder">'+henc(name)+'</a>';
+	_getid("foldername2").innerHTML=s;		
+	setstorage('md_folder_id',id);
+	setstorage('md_folder_name', name);
+}
+function md_delete(itemid,callback){
+	var xhr= new XMLHttpRequest();
+	xhr.open('DELETE', md_server+'/drive/items/'+itemid);		
+	xhr.setRequestHeader('Authorization', 'Bearer ' + md_access_token);
+	xhr.onload = function(){
+		if(this.status==204){
+			callback(true);
+		}else{
+			var a={};
+			try{a=JSON.parse(this.response);}catch(err){a={};}
+			var s='';if(a.error && a.error.message) s=a.error.message;
+			callback(false, this.status, s);
+		}
+	};
+	xhr.onerror = function(e){   
+		callback(false);
+	};
+	xhr.send(); 	
+}
+function md_metadata(itemid,callback){
+	var xhr= new XMLHttpRequest();
+	xhr.open('GET', md_server+'/drive/items/'+itemid);		
+	xhr.setRequestHeader('Authorization', 'Bearer ' + md_access_token);
+	xhr.onload = function(){
+		var a={};
+		try{a=JSON.parse(this.response);}catch(err){a={};}
+		callback(a);
+	};
+	xhr.onerror = function(e){   
+		callback();
+	};
+	xhr.send(); 	
+}
+function md_selectfolder(issimple){
+	md_login(function(result){
+		if(!result)return;
+		if(issimple){
+			_getid('folderfiles').style.display='';
+			_getid('btn_close').onclick=function(){
+				_getid('folderfiles').style.display='none';
+			}
+			gd_btn_login2();
+			if(gnavs.length==0) md_selector(null);
+			return;
+		}
+		WL.fileDialog({
+			mode: "save"
+	    }).then(
+		    function(resp){
+				if(!resp || !resp.data || !resp.data.folders || resp.data.folders.length==0)return;
+				var id=resp.data.folders[0].id;
+				var arr=id.split('.');
+				if(arr.length==3){
+					id=arr[arr.length-1];
+				}else{
+					id='';
+				}
+				proc_setfolder(id, resp.data.folders[0].name);
+			},
+			function(resp){
+				//alert(resp.error_description);
+			}
+		);
+	});
+}
+function md_api_request(path,callback){
+	var xhr= new XMLHttpRequest();
+	xhr.open('GET', md_server+path);		
+	xhr.setRequestHeader('Authorization', 'Bearer ' + md_access_token);
+	xhr.onload = function(){
+		var a={};
+		try{
+			a=JSON.parse(this.response);
+		}catch(err){
+			a={};
+		}
+		callback(a);
+	};
+	xhr.onerror = function(e){   
+		callback();
+	};
+	xhr.send(); 	
+}
+md_init();
+init_load();
+
+var gfolderfiles=[];
+var gnavs=[];
+function md_selector(idx,ismove){
+		if(ismove){
+			gnavs.splice(idx+1,gnavs.length);
+		}else{
+			if(idx==null){
+				gnavs=[{name:'Root Folder', id:'root'}];
+			}else{
+				gnavs.push(gfolderfiles[idx]);
+			}			
+		}
+		var obj=_getid('folderfiles2');
+		obj.innerHTML="<table><tr><td><img src='http://iblogbox.github.io/js/img/etc/wait.gif' align='absmiddle'><td>Loading...</table>";
+		_getid('btn_sel').onclick=function(){}
+		md_api_request('/drive/items/'+gnavs[gnavs.length-1].id+'/children?select=id,name,folder,file&top=80',function(result){
+			//console.log(result);						
+			gfolderfiles=[];
+			var s='<div style="margin-bottom:5px">';
+			for(var i= 0; i <= gnavs.length-1;i++){
+				if(i>0) s+=henc(' > ');
+				s+='<a href="#" onclick="md_selector('+i+',true);return false">'+henc(gnavs[i].name)+'</a>';
+			}
+			s+='</div><form name="form3" onsubmit="return false" style="display:inline"><table>';
+			if(!result || !result.value){
+				s+="<tr><td>Error.";
+			}else{
+				for(var i= 0; i <= result.value.length-1;i++){
+					if(result.value[i].folder){
+						gfolderfiles.push(result.value[i]);					
+						s+='<tr><td><input type=radio name="selfolderfiles" value="'+(gfolderfiles.length-1)+'"><td><img src="http://iblogbox.github.io/js/img/etc/folder.png"><td><a href="#" onclick="md_selector('+(gfolderfiles.length-1)+');return false">'+henc(result.value[i].name)+'</a>';
+					}
+				}
+			}
+			s+='</table></form>';
+			obj.innerHTML=s;
+			_getid('btn_sel').onclick=function(){
+				var obj=document.form3.selfolderfiles;
+				var obj2;
+				if(obj){
+					if(!obj.length){
+						if(obj.checked) obj2=gfolderfiles[obj.value];
+					}else{
+						for(var i= 0; i <= obj.length-1;i++){
+							if(obj[i].checked){
+								obj2=gfolderfiles[obj[i].value];
+								break;
+							}
+						}				
+					}
+				}
+				if(!obj2) obj2=gnavs[gnavs.length-1];
+				if(obj2){
+					proc_setfolder(obj2.id, obj2.name);
+					_getid('folderfiles').style.display='none';
+				}
+			}
+		});
+}
+</script>
+
+<style>.shadow{border:0px solid silver;-webkit-box-shadow: 0 0 10px #999;	-moz-box-shadow: 0 0 10px #999; box-shadow: 0 0 10px #999;}</style>
+<div id="folderfiles" class="shadow" style="background-color:white;position:absolute;z-index:10000000;display:none;">
+<table><tr><td><div id="folderfiles2" style="width:550px;height:400px;overflow:auto;"></div><tr><td align=center><button id="btn_sel">Select</button> <button id="btn_close">Close</button></table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1479 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>ChangeDetection - Know when any web page changes</TITLE>
+<meta name="google-site-verification" content="xBY4yO9-TKEOIc5yhqvOH_OYhNzlfKfjkN3aV7efoxQ" />
+<!-- xinclude: include/std.head.html -->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="MSSmartTagsPreventParsing" content="TRUE">
+
+<link rel="shortcut icon" href="https://www.changedetection.com/favicon.ico" type="image/x-icon" >
+<!-- Default CSS, start -->
+<style type="text/css">
+body
+{
+	background-color: white;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12pt;
+	margin: 4px 10%;
+	padding: 0px;
+}
+A:link, A:visited {
+	text-decoration: underline;
+}
+A:hover {
+	color:magenta;
+}
+form {
+	margin: 0px;
+}
+table {
+	font-size: 10.0pt;
+	font-style: normal;
+	font-family: Verdana, sans-serif;
+	border: none;
+}
+h2 {
+	margin: 0.1em 0 0.2em 0;
+	border-bottom: 1px solid #ccc;
+	font-family: arial, verdana, sans-serif;
+	font-size: 150%;
+	font-weight: normal;
+	text-align: left;
+	text-decoration: none;
+	color: black;
+}
+ul {
+	margin: 0;
+	padding:0;
+}
+li {
+	margin-left: 0;
+	margin-bottom: 0;
+	line-height: 150%;
+	list-style-type: circle;
+	list-style-position:inside;
+}
+a.headerlink:link, a.headerlink:visited {
+ 	color:#F0F0F0;
+	text-decoration: none;
+	font-size: 10pt;
+}
+a.headerlink:hover {
+	color:magenta;
+}
+.errmsg
+{
+	margin-top:12;
+	width:80%;
+	background-color:#FFFFE0;
+	border-width: 1;
+	border-style: solid;
+	border-color: red;
+	padding-top:6;
+	padding-bottom:6;
+}
+
+.infomsg
+{
+	margin-top:12;
+	width:80%;
+	background-color:#FFFFE0;
+	border-width: 1;
+	border-style: solid;
+	border-color: blue;
+	padding-top:6;
+	padding-bottom:6;
+}
+.number 
+{ 
+	line-height:24px; 
+	font-size:24px;  
+	font-weight:bold;    
+	color:#707070;
+}
+
+</style>
+<!-- Default CSS, end -->
+<!-- /xinclude: include/std.head.html -->
+<!-- xinclude: include/std.head.script.html -->
+<!-- generic javascript functions -->
+<script type="text/javascript" language="JavaScript">
+<!--
+
+function dbgalert(msg)
+{
+	alert(msg);
+}
+
+function getElementByID(whichid)
+{
+	var e = null;
+	if (document.getElementById)
+	{
+		// this is the way the standards work
+		e = document.getElementById(whichid);
+	}
+	else if (document.all)
+	{
+		// this is the way old msie versions work
+		e = document.all[whichid];
+	}
+	else if (document.layers)
+	{
+		// this is the way nn4 works
+		e = document.layers[whichid];
+	}
+	return e;
+}
+
+function getStyleByID(whichid)
+{
+	var e = getElementByID(whichid);
+	if(e == null) 
+	{
+		return null;
+	}
+	return e.style;
+}
+
+function getFormRadioButtonCheckedIdx(formName, inputName, defaultVal)
+{
+	var form = document.forms[formName];
+	if(form == null) 
+	{
+		return null;
+	}
+	var radioButtons = form.elements[inputName];
+	if(radioButtons == null) 
+	{
+		return null;
+	}
+	var i = radioButtons.length;
+	while(--i >= 0)
+	{
+		if(radioButtons[i].checked)
+		{
+			return i;
+		}
+	}
+	return null;
+}
+
+function setInputDisabled(whichLayer, dvalue)
+{
+	var ctrl = getElementByID(whichLayer);
+	if ( ctrl != null)
+		ctrl.disabled = dvalue;
+}
+
+function getStyleDisplay(whichLayer)
+{
+	var s = getStyleByID(whichLayer);
+	if ( s == null)
+	  return null;
+	return s.display;
+}
+
+function setStyleDisplay(whichLayer, dvalue)
+{
+	var s = getStyleByID(whichLayer);
+	if ( s == null)
+	  return;
+	s.display = dvalue;
+}
+function setStyleVisibility(whichLayer, dvalue)
+{
+	var s = getStyleByID(whichLayer);
+	if ( s == null)
+	  return;
+	s.visibility = dvalue;
+}
+
+function getStyleVisibility(whichLayer)
+{
+	var s = getStyleByID(whichLayer);
+	if ( s == null)
+	  return null;
+	return s.visibility;
+}
+
+function isVisible(divid)
+{
+	var d = getStyleDisplay(divid);
+	return (d != null && d != "none" && d != "undefined" && d != "");
+}
+
+function doLogout()
+{
+	window.location.replace( "https://www.changedetection.com/logout.html?frompage=" + escape(window.location.href));
+}
+
+
+function doSignup()
+{
+	var form = getElementByID("login.form");
+	var op = getElementByID("login.op");
+	var email = getElementByID("login.email");
+	
+	if ( ( form != null) && ( op != null) )
+	{
+		op.value = "processsignup";
+		form.action="https://www.changedetection.com/processsignup.html";
+		form.submit();
+	}
+	else
+	{
+		if ( ( email != null) && ( email.value != null) && ( email.value != "") )
+		{
+			var newLoc = "https://www.changedetection.com/processsignup.html?frompage=" + escape(window.location.href);
+			newLoc += "&email=" + email.value;
+			
+			window.location.replace( newLoc );
+			
+		}
+		else
+		{
+			window.location.href = "https://www.changedetection.com/signup.html?frompage=" + escape(window.location.href);
+		}
+	}	
+}
+
+function handleResize()
+{
+	var iWidth = 1024;
+	
+	try
+	{
+		iWidth = document.body.clientWidth;
+	}
+	catch ( e)
+	{
+		iWidth = window.innerWidth;
+	}	
+
+	if ( iWidth < 400)
+	{
+		document.body.style.marginLeft = 
+      	document.body.style.marginRight	= "1%";
+    }	
+	else if ( iWidth < 800)
+	{
+		document.body.style.marginLeft = 
+      	document.body.style.marginRight	= "5%";
+	}	
+	else
+	{
+		document.body.style.marginLeft = 
+      	document.body.style.marginRight	= "10%";
+	}
+
+}
+
+window.onresize=handleResize;
+
+
+//--></script>
+<!-- /xinclude: include/std.head.script.html -->
+
+<!-- xinclude: include/std.head.help.html -->
+<!-- support for help popups -->
+<script language="JavaScript" type="text/javascript">
+var curhelp = null;
+var helpwasvis = null;
+function hidehelp()
+{
+	if(curhelp != null)
+	{
+		helpwasvis = curhelp;
+		setStyleDisplay(curhelp, "none");
+		curhelp = null;
+	} else {
+		helpwasvis = null;
+	}
+}
+function showhelp(helpid)
+{
+	if(helpwasvis == helpid)
+	{
+		helpwasvis = null;
+		return;
+	}
+	// show help if none up
+	if(curhelp == null)
+	{
+		setStyleDisplay(helpid, "inline");
+		curhelp = helpid;
+	}
+}
+</script>
+<style type="text/css">
+.helpword
+{
+	border-width:0;
+	border-bottom-width:1;
+	border-color:black;
+	border-style:dotted;
+	text-decoration: none;
+}
+.helpword:link, .helpword:visited {
+	color:black;
+	text-decoration: none;
+}
+.helpword:hover {
+	color:black;
+	text-decoration: none;
+}
+.helppopup
+{
+	display:none;
+	background-color:#ffffcc;
+	position:absolute;
+	border:thin solid black;
+	border-width:1;
+	text-align:left;
+	padding:2;
+}
+</style>
+<!-- /xinclude: include/std.head.help.html -->
+
+<!-- xinclude: include/std.head.monitor.html -->
+<style type="text/css"><!--
+.radio
+{
+	vertical-align:middle;
+	margin:0;
+	height:13;
+}
+
+.pg0opt0
+{
+    display: block;
+}
+
+.pg0opt1
+{
+    display: none;
+}
+
+.pagespec
+{
+	font-size: 8pt;
+	font-family: Verdana, Helvetica, sans-serif; 
+	width: 100%;
+}
+.optctls
+{
+	height: 12pt;
+	margin-left: 0;
+	margin-bottom: 1%;
+	list-style-type: none;
+	list-style-position: outside;
+}
+											
+--></style>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+function getdivid(pgnum, pgopt)
+{
+	var gdivid = "pg" + pgnum + "opt" + pgopt;
+	return gdivid;
+}
+
+function pguse(pgnum, pgopt)
+{
+	var divid = getdivid(pgnum, pgopt);
+	// if already visible, noop
+	if(isVisible(divid))
+	{
+		return;
+	}
+	// hide all divs	
+	var noptMax = 1;
+	for(nopt = 0; nopt <= noptMax; nopt++)
+	{
+		if(nopt == pgopt) {
+			continue;
+		}
+		var curdivid = getdivid(pgnum, nopt);
+		setStyleDisplay(curdivid, "none");
+	}
+	// show the selected div
+	setStyleDisplay(divid, "block");
+	// mmm
+	setInputDisabled("dodiff", "");
+}
+
+--></script>
+<!-- /xinclude: include/std.head.monitor.html -->
+
+<!-- xinclude: include/std.head.recentchangeslist.html -->
+
+<!-- styles specific to changes to the internet list -->
+<!-- BIG HACK for Safari cite must be the first rule in this list -->
+<!-- (also, it helps if no other rule sets starts with cite ;-) -->
+
+<style type="text/css">
+<!--
+
+cite
+{
+	font-style: normal;
+}
+cite.added-deleted
+{
+	display:inline;
+}
+cite.added
+{
+	display:none;
+}
+cite.deleted
+{
+	display:none;
+}
+
+span.itemtext
+{
+	font-size: 90%;
+	font-family: verdana, sans-serif;
+	font-style: normal;
+	font-weight: normal;
+}
+
+.rcl-da
+{
+	background-color: #FFFF99;
+	display:inline;
+}
+.rcl-dae
+{
+	background-color: #FFFF99;
+	display:inline;
+}
+.rcl-dd
+{
+	text-decoration: line-through;
+	display:inline;
+}
+.rcl-dde
+{
+	text-decoration: line-through;
+	display:inline;
+}
+.rcl-de
+{
+	display:inline;
+}
+.rcl-dee
+{
+	display:inline;
+}
+
+A.rclchlink:link, A.rclchlink:visited 
+{
+	font-weight:bolder; font-family:verdana; font-size:90%;
+	color: blue;
+	text-decoration: none;
+}
+A.rclchlink:hover 
+{
+	font-weight:bolder; font-family:verdana; font-size:90%;
+	text-decoration: underline;
+}
+
+A.adlsplink:link, A.adlsplink:visited
+{
+	color:gray;
+}
+A.adlsplink:hover
+{
+	color:blue;
+}
+
+A.rclmorelink:link, A.rclmorelink:visited
+{
+	color:gray;
+}
+A.rclmorelink:hover
+{
+	color:blue;
+}
+.menubox
+{
+	visibility:hidden;
+	position:absolute;
+	background-color:#F8F8F8;
+	border-color: #D0D0D0;
+	border-width:2;
+	border-style:outset;
+	text-align:left;
+	padding:0;
+}
+.menubar
+{
+	text-align:right;
+	background-color:#45ABEB
+}
+.menua
+{
+	display:list-item;
+	list-style-type:none;
+	list-style-position:outside;
+	padding-left:16;
+	padding-right:16;
+	text-align:left;
+	background-color:#F8F8F8;
+	text-decoration: none;
+	white-space: nowrap;
+}
+.menua:link, .menua:visited {
+	color:black;
+	text-decoration: none;
+}
+.menua:hover, .menua:focus {
+	color:white;
+	text-decoration: none;
+	background-color:#0A246A;
+}
+-->
+</style>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+// rcleopt: 0 = added and deleted, 1 = added only, 2 = deleted only
+// rclcopt: 0 = show extracts, 1 = hide extracts
+// rclsopt: 0 = show all, 1 = show sizable
+function rclSetTextExtractVisibilitiesAndTrunc(rcleopt, rclcopt)
+{
+	if ( rcleopt == "")
+	  rcleopt = 0;
+	if ( rclcopt == "")
+	  rclcopt = 0;
+	  
+	var styles = document.styleSheets;
+	for ( var n = 0; n < styles.length; n++)
+	{
+		var sty = styles[n];
+		var rules = null;
+		if ( sty.cssRules != null)
+		{
+			rules = sty.cssRules;
+		}
+		else if ( sty.rules != null)
+		{
+		 	rules = sty.rules;
+		}
+		else
+		{
+			return;
+		}
+		if ( ( rules.length < 1 ) || ( rules[0].selectorText.toLowerCase() != "cite") )
+		{
+			continue;
+		}  
+		for ( var j = 0; j < rules.length; j++)
+		{
+			var rule = rules[j];
+			var ruleName = rule.selectorText.toLowerCase();
+			
+			if ( ruleName == 'cite.added-deleted')
+			{
+				rule.style.display = ( rcleopt == 0) ? 'inline' : 'none';
+			}
+			else if ( ruleName == 'cite.added')
+			{
+				rule.style.display = ( rcleopt == 1) ? 'inline' : 'none';
+			}
+			else if ( ruleName == 'cite.deleted')
+			{
+				rule.style.display = ( rcleopt == 2) ? 'inline' : 'none';
+			}
+			else if ( ruleName == '.rcl-de')
+			{
+				rule.style.display = ( rclcopt == 0) ? 'inline' : 'none';
+			}
+		}	
+		break;
+	}
+	
+	// now set toolbar styles
+	if ( getElementByID('ctladdedanddeleted') != null )  
+		getElementByID('ctladdedanddeleted').style.fontStyle = rcleopt == 0 ? 'italic' : 'normal';
+	if ( getElementByID('ctlonlyadded') != null )  
+		getElementByID('ctlonlyadded').style.fontStyle = rcleopt == 1 ? 'italic' : 'normal';
+	if ( getElementByID('ctlonlydeleted') != null )  
+		getElementByID('ctlonlydeleted').style.fontStyle = rcleopt == 2 ? 'italic' : 'normal';
+	if ( getElementByID('ctlshowextracts') != null )  
+		getElementByID('ctlshowextracts').style.fontStyle = rclcopt == 0 ? 'italic' : 'normal';
+	if ( getElementByID('ctlhideextracts') != null )  
+		getElementByID('ctlhideextracts').style.fontStyle = rclcopt != 0 ? 'italic' : 'normal';
+	
+	var rclsopt = getElementByID('rclsopt');
+	if ( rclsopt != null)
+	{
+		rclsopt = rclsopt.value;
+		if ( rclsopt == "")
+		  rclsopt = 0;
+		getElementByID('ctlshowsizable').style.fontStyle = rclsopt == 0 ? 'italic' : 'normal';
+		getElementByID('ctlshowall').style.fontStyle = rclsopt != 0 ? 'italic' : 'normal';
+	}
+
+}
+
+function rclRefreshInPlace()
+{
+	getElementByID('rclupdateopt').value = "1";
+	rclRefresh( getElementByID("rclstart").value - 1);
+}
+
+
+function rclShowAddedAndDeleted()
+{
+	getElementByID('rcleopt').value = 0;
+	rclRefreshInPlace();
+}
+function rclShowOnlyAdded()
+{
+	getElementByID('rcleopt').value = 1;
+	rclRefreshInPlace();
+}
+function rclShowOnlyDeleted()
+{
+	getElementByID('rcleopt').value = 2;
+	rclRefreshInPlace();
+}
+function rclShowExtracts()
+{
+	getElementByID('rclcopt').value = 0;
+	rclRefreshInPlace();
+}
+function rclHideExtracts()
+{
+	getElementByID('rclcopt').value = 1;
+	rclRefreshInPlace();
+}
+
+function rclShowSizable()
+{
+	var current = getElementByID('rclsopt').value;
+	if ( current != 0)
+	{
+		getElementByID('rclsopt').value = 0;
+		getElementByID('rclstart').value = 1;
+	}
+	rclRefreshInPlace();
+}
+function rclShowAll()
+{
+	var current = getElementByID('rclsopt').value;
+	if ( current != 1)
+	{
+		getElementByID('rclsopt').value = 1;
+		getElementByID('rclstart').value = 1;
+	}
+	rclRefreshInPlace();
+}
+
+function rclRefresh( start)
+{
+	var rclform = getElementByID("rclform");
+	var rclstart = getElementByID("rclstart");
+	rclstart.value = start;
+	rclform.submit();	
+}
+
+
+
+
+function displayLoading()
+{
+} 
+
+function loadCompareCacheTime( urlmd, firstDocTime, secondDocTime, cmd)
+{
+	var cdopcform = getElementByID("cdopcform");
+	var temp = getElementByID("cdopcurlmd");
+	temp.value = urlmd;
+	temp = getElementByID("cdopcdocid1");
+	temp.value = -1;
+	temp = getElementByID("cdopcdocid2");
+	temp.value = -1;
+	temp = getElementByID("cdopctime1");
+	temp.value = firstDocTime;
+	temp = getElementByID("cdopctime2");
+	temp.value = secondDocTime;
+	temp = getElementByID("cdopccpm");
+	if ( cmd != null)
+	{
+		temp.value = cmd;
+	}
+	else
+	{
+		temp.value = 'fulltext';
+	}
+	displayLoading();
+	cdopcform.submit();
+		
+}
+function loadCompareCache( urlmd, firstDocId, secondDocId, cmd)
+{
+	var cdopcform = getElementByID("cdopcform");
+	var temp = getElementByID("cdopcurlmd");
+	temp.value = urlmd;
+	temp = getElementByID("cdopctime1");
+	if ( temp != null)
+		temp.value = -1;
+	temp = getElementByID("cdopctime2");
+	if ( temp != null)
+		temp.value = -1;
+	temp = getElementByID("cdopcdocid1");
+	temp.value  = firstDocId;
+	temp = getElementByID("cdopcdocid2");
+	temp.value  = secondDocId;
+	temp = getElementByID("cdopccpm");
+	try
+	{
+		if ( cmd != null)
+		{
+			temp.value = cmd;
+		}
+		else
+		{
+			temp.value = 'fulltext';
+		}
+	}
+	catch (e)
+	{
+		temp.value = 'fulltext';
+	}
+	displayLoading();
+	cdopcform.submit();
+		
+}
+
+
+--></script>
+<!-- --------- start of alternate codings --------------------  -->
+
+<style type="text/css"><!--
+
+#textdiffbox {
+	margin-top:12;
+	width:95%;
+	background-color:#F9F9F9;
+	border-width: 1;
+	border-style: solid;
+	border-color: black;
+	padding-top:6;
+	padding-bottom:6;
+	font-size: 10.0pt;
+	font-family: Verdana, sans-serif;
+	font-style: normal;
+}
+
+.content
+{
+    margin-left: 6px;
+    margin-right: 6px;
+}
+
+.pg1opt1, .pg2opt1, .pg3opt1
+{
+    display: block;
+}
+
+.pg1opt2, .pg1opt3, .pg2opt2, .pg2opt3, .pg3opt2, .pg3opt3, .pg3opt4
+{
+    display: none;
+}
+
+--></style>
+
+<!-- /xinclude: include/std.head.recentchangeslist.html -->
+
+<!-- stuff specific to this page only -->
+<style type="text/css">
+A.cdhdrlnks:link, A.cdhdrlnks:visited {
+	text-decoration: underline;
+}
+A.cdhdrlnks:hover {
+	background: cyan;
+}
+A.cdcmplnks:link {
+	text-decoration: underline;
+	color: gray;
+}
+A.cdcmplnks:visited {
+	text-decoration: underline;
+	color: gray;
+}
+A.cdcmplnks:hover {
+	text-decoration: underline;
+	color: blue;
+}
+</style>
+
+<!--  page-specific script  -->
+<script type="text/javascript" language="JavaScript"><!--
+function doOnLoad()
+{	
+	var eValue = "";
+	var cValue = "";
+	if ( getElementByID( 'rcleopt') != null )
+		eValue = getElementByID('rcleopt').value;
+	if ( getElementByID( 'rclcopt') != null )
+		cValue = getElementByID('rclcopt').value;
+	if ( ( eValue != null) && ( cValue != null) )
+		rclSetTextExtractVisibilitiesAndTrunc(eValue, cValue);
+}
+-->
+</script>
+
+</head>
+<body style="text-align:center;" onclick="hidehelp();" onload="doOnLoad();">
+
+<!-- xinclude: include/std.body.header.html -->
+<center>
+
+<script type="text/javascript" language="JavaScript">
+<!--
+function requestPage( docId)
+{
+	var form = getElementByID("mainform");
+	var op = getElementByID("reportinput2");
+	if ( ( form != null) && ( op != null) )
+	{
+		op.value = docId;
+		form.submit();
+	}
+	
+}
+function entryChanged()
+{
+}
+-->
+</script>								
+<!-- main page table, start -->
+<table id=page style="background:white; width:100%;" cellspacing=0 cellpadding=0 border=0>
+
+
+	<!-- main page row: start of page header -->
+	<tr>
+		<td width="80%">
+			<img style="margin-top:4px; vertical-align:top" src="https://www.changedetection.com/img/cd.changelog.icon.16x16.0.gif" border=0 alt="">
+			<a href="https://www.changedetection.com/">
+				<img style="margin:0; margin-top:2px; " src="https://www.changedetection.com/img/cd.logo.text.jpg" border=0 alt="">
+			</a>
+		</td>
+		<td style="text-align:right; vertical-align:bottom;">
+			
+			<a href="https://www.changedetection.com/signup.html"><span style="font-size:80%; font-weight:bold;">Sign&nbsp;up</span></a>
+			
+			
+			
+		</td>
+	</tr>
+
+	<!-- main page row: start of top menu -->
+	<tr>
+		<td colspan=2 style="background:#056BA5;">
+			<table cellspacing=0 cellpadding=0 border=0 width="100%">
+				<tr>
+					<td style="color:#F0F0F0; text-align:left;" valign=middle>
+						<span style="font-style:italic; font-size:10pt;">&nbsp;Automatic website change logs and notification</span>
+					</td>
+					<td style="color:#C0C0C0;" valign=middle>
+						<span style="font-size:10pt;"></span>
+					</td>
+					<td style="color:#F0F0F0; text-align:right; vertical-align:bottom;">
+						<p>
+							| <a class=headerlink href="https://www.changedetection.com/">&nbsp;Home&nbsp;</a>
+							| <a class=headerlink href="https://www.changedetection.com/forwebsites.html">&nbsp;Webmasters&nbsp;</a>
+							| <a class=headerlink href="https://www.changedetection.com/dirsearch.html">&nbsp;Directory&nbsp;</a>
+							| <a class=headerlink href="https://www.changedetection.com/comparepages.html">&nbsp;Compare&nbsp;</a>
+							| <a class=headerlink href="https://www.changedetection.com/help.html">&nbsp;Help&nbsp;</a>&nbsp;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td style="color:#F0F0F0; font-size:0px;">
+						&nbsp;
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+
+	<!-- main page row: optional small user welcome and changedetection link -->
+	<tr>
+		<td align=left style="font-size:80%; width:90%">
+			
+			
+		</td>
+	</tr>
+
+	<!-- main page row: optional dynamic error message -->
+	
+
+	<!-- main page row: optional dynamic information message -->
+	
+<!-- /xinclude: include/std.body.header.html -->
+
+	<!-- main page row: main content row -->
+	<tr>
+
+		<!-- main content row: start of center column with primary page content in it -->
+		<td colspan=2 id=pagecentercol valign=top>
+
+			<!-- main content table (a single row with two adjacent cells) -->
+			<table width="100%" border=0 cellspacing=0 cellpadding=10>
+				<tr>
+					<td valign=top>
+
+						<!-- main content section: welcome -->
+						<h2>welcome</h2>
+						
+						<p>
+						<div>
+							<img style="float:left; margin-right:12px; margin-bottom:12px;" src="https://www.changedetection.com/img/cd.icon.64x64.gif" border=0 width=64 height=64 alt="">
+							ChangeDetection.com provides page change monitoring and notification services to internet users worldwide.
+							Anyone can use our service to monitor any website page for changes.
+							Just fill in the form below, we will create a change log for the page and alert you by email when we detect a change in the page text.
+							We've been doing it since 1999.  It's free.
+							<div style="text-align:right;">
+							<a href="about.html" style="font-size:85%; font-style:italic;">more info...</a> &nbsp; <a href="forwebsites.html" style="font-size:85%; font-style:italic;">info for webmasters...</a>
+							</div>
+						</div>
+						<p>
+						
+						
+
+						<!-- main content section: monitor a page -->
+						<h2>monitor a page</h2>
+<!-- xinclude: include/std.body.monitor.html -->
+						
+						
+						
+						<!-- page specifier, start -->
+						<form name=mainform action="https://www.changedetection.com/monitorpage2.html" method=post>
+						<input type=hidden name=op id=op value="createmonitor">
+						<table style="width: 100%; border: thin solid silver; border-width: 0;" cellpadding=0 cellspacing=0>
+							<tr>
+								<td style="background-color:#f2f2f2;" align=center>
+									<table class=pagespec>
+										<tr>
+											<td colspan=2 valign=top>
+												<table class=pagespec width="100%" cellspacing=0 border=0>
+													<tr>
+														<td style="white-space:nowrap; width:5%;">
+															Page Address:
+														</td>
+														<td colspan=2 width="95%">
+															<input size=80 type=text name=mpurl style="font-family:verdana; font-size:150%;" value="">
+														</td>
+													</tr>
+													<tr>
+														<td style="white-space:nowrap; width:5%;">
+															Send alert to:
+														</td>
+														<td width="80%">
+															<input type=text name=mpemail value="" style="width:100%">
+														</td>
+														<td align=right width="10%">
+															<input id=domonitorpage type=submit name=dodiff value=" Next ">
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						</form>
+						<!-- page specifier, end -->
+						
+<!-- /xinclude: include/std.body.monitor.html -->
+						<p>&nbsp;
+						<!-- main content section: recent changes to the internet -->
+						<h2>recent changes to the internet</h2>
+						<form id='rclform' action='/' method=post>
+						<input type=hidden id=rcleopt name=rcleopt value="0">
+						<input type=hidden id=rclcopt name=rclcopt value="0">
+						<input type=hidden id=rclsopt name=rclsopt value="0">
+						<input type=hidden id=rclupdateopt name=rclupdateopt value="">
+						<input type=hidden id=rclstart name=rclstart value="1">
+						</form>
+						<!-- list nav bar, start -->
+						<table style="width: 100%; border: thin solid silver; border-width: 0;" cellpadding=0 cellspacing=0>
+							<tr>
+								<td style="background-color:#f2f2f2;" align=center>
+
+									<table style="font-size: 8pt; font-family: Verdana, Helvetica, sans-serif; width:100%;">
+										<tr>
+											<td width="5%" style="white-space:nowrap;" valign=top>
+												<span style="color:gray;">Showing 1 - 5 <!-- of 7,479,570 --></span>
+											</td>
+											<td style="white-space:nowrap;" valign=top align=right>
+						
+												<span style="font-size: 8pt;"><a href="https://www.changedetection.com/internetchanges.html?rclstart=5">more...</a></span>
+						
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						<!-- list nav bar, end -->
+						<div style="margin-left:6; margin-bottom:0; text-align:center;">
+							<!-- list nav bar, end -->
+							<div class=pg1opt1 id=pg1opt1>
+									<span style="color:#000000; font-size:75%;">
+									<a class="cdcmplnks" id=ctladdedanddeleted href="javascript:rclShowAddedAndDeleted();">show added and deleted</a>&nbsp;
+									<a class="cdcmplnks" id=ctlonlyadded href="javascript:rclShowOnlyAdded();">only added</a>&nbsp;
+									<a class="cdcmplnks" id=ctlonlydeleted href="javascript:rclShowOnlyDeleted();">only deleted</a>&nbsp;
+									|&nbsp;
+									<a class="cdcmplnks" id=ctlshowextracts href="javascript:rclShowExtracts();">show context</a>&nbsp;
+									<a class="cdcmplnks" id=ctlhideextracts href="javascript:rclHideExtracts();">hide context</a>&nbsp;
+									|&nbsp;
+									<a class="cdcmplnks" id=ctlshowsizable href="javascript:rclShowSizable();">show sizable</a>&nbsp;
+									<a class="cdcmplnks" id=ctlshowall href="javascript:rclShowAll();">show all</a>&nbsp;
+								</span>
+							</div>
+							
+							<div class=pg3opt2 id=pg3opt2>
+							HTML changes are shown hilighted on the original version of the HTML document
+							</div>
+	
+							<div class=pg3opt3 id=pg3opt3>
+							A block of text is returned with spans indicating existing, new, and deleted text.  Text is ellipsed and limited in size.
+							</div>
+	
+							<div class=pg3opt4 id=pg3opt4>
+							A block of text is returned with spans indicating existing, new and deleted text. All text is included.
+							</div>
+						</div>
+
+<!-- xinclude: include/std.body.recentchangeslist.listing.html -->						
+<!-- list of pages recently changed, start -->
+						
+						<form name=cdopcform id=cdopcform action="http://63.249.66.211/comparecache.html" method=post>
+							<input type=hidden name=op id=op value="comparecache">
+							<input type=hidden name=cdopcurlmd id=cdopcurlmd>
+							<input type=hidden name=cdopcdocid1 id=cdopcdocid1>
+							<input type=hidden name=cdopcdocid2 id=cdopcdocid2>
+							<input type=hidden name=cdopctime1 id=cdopctime1>
+							<input type=hidden name=cdopctime2 id=cdopctime2>
+							<input type=hidden name=cdopccpm id=cdopccpm value="fulltext">
+						</form> 
+						
+						
+<br> 
+<table> 
+<tr> 
+<td colspan=2 valign=top> 
+<a class=rclchlink rel='nofollow' href="http&#58;&#47;&#47;www.ben.edu&#47;news&#47;2016&#47;demaria.cfm" title="http&#58;&#47;&#47;www.ben.edu&#47;news&#47;2016&#47;demaria.cfm">Author&#47;former Notre Dame swimmer to talk about recovery, faith  &#124; Benedictine &#124; Chicago &#124; Catholi...</a> 
+</td> 
+</tr> 
+<tr> 
+<td colspan=2 valign=top> 
+<a class=rclviewlink href="javascript:loadCompareCache('B9088B52C7BD728214B288140B11C4D9CB474554', 0, 0, 'html' );">view&nbsp;changes</a> 
+&nbsp;&nbsp;<a class=rclloglink href="/log/edu/ben/demaria_log.html">change&nbsp;log</a> 
+&nbsp;<span style="color:green; font-size:80%">32 new words, 26 deleted words, 4% change</span> 
+</td> 
+</tr> 
+<tr> 
+<td colspan=2 valign=top style="width:100%; font-size:85%"> 
+<cite class='added-deleted' id=diff-ad1> 
+<span class=rcl-dee>... </span><span class=rcl-de>295&#45;3104 University Events Jul </span><span class=rcl-dd>12 </span><span class=rcl-da>28 </span><span class=rcl-dd>Transfer Admitted Student Day </span><span class=rcl-da>BenU at a Glance </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-dd>9&#58;30 </span><span class=rcl-da>11&#58;00 </span><span class=rcl-de>AM </span><span class=rcl-dd>Jul </span><span class=rcl-da>Aug </span><span class=rcl-dd>28 </span><span class=rcl-da>2 </span><span class=rcl-dd>BenU at a Glance </span><span class=rcl-da>Future Transfer Days </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-dd>11&#58;00 </span><span class=rcl-da>9&#58;00 </span><span class=rcl-de>AM </span><span class=rcl-da>&#45; 5&#58;00 PM </span><span class=rcl-de>Aug </span><span class=rcl-dd>2 </span><span class=rcl-da>14 </span><span class=rcl-dd>Future Transfer Days </span><span class=rcl-da>Summer Visit Day </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-dd>9&#58;00 </span><span class=rcl-da>11&#58;00 </span><span class=rcl-de>AM </span><span class=rcl-dd>&#45; 5&#58;00 PM </span><span class=rcl-de>Aug </span><span class=rcl-dd>14 </span><span class=rcl-da>21 </span><span class=rcl-dd>Summer Visit Day </span><span class=rcl-da>23rd Annual President&#39;s Invitational Golf Outing </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-de>... </span> 
+</cite> 
+<cite class='added' id=diff-a1> 
+<span class=rcl-de>295&#45;3104 University Events Jul </span><span class=rcl-da>28 </span><span class=rcl-da>BenU at a Glance </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-da>11&#58;00 </span><span class=rcl-de>AM </span><span class=rcl-da>Aug </span><span class=rcl-da>2 </span><span class=rcl-da>Future Transfer Days </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-da>9&#58;00 </span><span class=rcl-de>AM </span><span class=rcl-da>&#45; 5&#58;00 PM </span><span class=rcl-de>Aug </span><span class=rcl-da>14 </span><span class=rcl-da>Summer Visit Day </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-da>11&#58;00 </span><span class=rcl-de>AM </span><span class=rcl-de>... </span><span class=rcl-de>Aug </span><span class=rcl-da>21 </span><span class=rcl-da>23rd Annual President&#39;s Invitational Golf Outing </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-da>10&#58;00 </span><span class=rcl-de>AM </span><span class=rcl-da>&#45; 8&#58;00 PM </span><span class=rcl-de>View Full Calendar University </span> 
+</cite> 
+<cite class='deleted' id=diff-d1> 
+<span class=rcl-de>295&#45;3104 University Events Jul </span><span class=rcl-dd>12 </span><span class=rcl-dd>Transfer Admitted Student Day </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-dd>9&#58;30 </span><span class=rcl-de>AM </span><span class=rcl-dd>Jul </span><span class=rcl-dd>28 </span><span class=rcl-dd>BenU at a Glance </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-dd>11&#58;00 </span><span class=rcl-de>AM </span><span class=rcl-de>... </span><span class=rcl-de>Aug </span><span class=rcl-dd>2 </span><span class=rcl-dd>Future Transfer Days </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-dd>9&#58;00 </span><span class=rcl-de>AM </span><span class=rcl-dd>&#45; 5&#58;00 PM </span><span class=rcl-de>Aug </span><span class=rcl-dd>14 </span><span class=rcl-dd>Summer Visit Day </span><span class=rcl-de>Main Campus in Lisle </span><span class=rcl-dd>11&#58;00 </span><span class=rcl-de>AM </span><span class=rcl-de>... </span><span class=rcl-de>View Full Calendar University </span> 
+</cite> 
+ 
+&nbsp;&nbsp;&nbsp;<a class=rclmorelink href="javascript:loadCompareCache('B9088B52C7BD728214B288140B11C4D9CB474554', 0, 0);"><i>more...</i></a> 
+</td> 
+</tr> 
+
+
+</table> 
+
+
+<br> 
+<table> 
+<tr> 
+<td colspan=2 valign=top> 
+<a class=rclchlink rel='nofollow' href="https&#58;&#47;&#47;www.bignerdranch.com&#47;blog&#47;" title="https&#58;&#47;&#47;www.bignerdranch.com&#47;blog&#47;">Blog &#124; Big Nerd Ranch</a> 
+</td> 
+</tr> 
+<tr> 
+<td colspan=2 valign=top> 
+<a class=rclviewlink href="javascript:loadCompareCache('78A8D1665D34F90712E22760EF1FF49CBD870804', 0, 0, 'html' );">view&nbsp;changes</a> 
+&nbsp;&nbsp;<a class=rclloglink href="/log/bignerdranch/blog_log.html">change&nbsp;log</a> 
+&nbsp;<span style="color:green; font-size:80%">78 new words, 67 deleted words, 17% change</span> 
+</td> 
+</tr> 
+<tr> 
+<td colspan=2 valign=top style="width:100%; font-size:85%"> 
+<cite class='added-deleted' id=diff-ad2> 
+<span class=rcl-dee>... </span><span class=rcl-de>UP RANCH NEWS STUDENTS </span><span class=rcl-dd>iOS </span><span class=rcl-da>Managing Front&#45;End Assets in Vapor, Part 1 Josh Justice Back&#45;End &#124; Front&#45;End Jul </span><span class=rcl-de>11 </span><span class=rcl-dd>Brings </span><span class=rcl-da>, 2017 Let&#8217;s look at some of the basics of handling CSS and JavaScript in </span><span class=rcl-dae>... </span><span class=rcl-da>library&#58; add it to your app directly, or link to it elsewhere. read more </span><span class=rcl-de>Improvements to Motion Effect in tvOS </span><span class=rcl-da>11 </span><span class=rcl-de>David House iOS Jul </span><span class=rcl-dee>... </span><span class=rcl-de>file. read more </span><span class=rcl-dd>Why the Lean Startup Methodology Isn&#39;t Just for Startups Daniel Ra Clients Jun 15, 2017 </span><span class=rcl-dd>... </span> 
+</cite> 
+<cite class='added' id=diff-a2> 
+<span class=rcl-de>UP RANCH NEWS STUDENTS </span><span class=rcl-da>Managing Front&#45;End Assets in Vapor, Part 1 Josh Justice Back&#45;End &#124; Front&#45;End Jul </span><span class=rcl-de>11 </span><span class=rcl-da>, 2017 Let&#8217;s look at some of the basics of handling CSS and JavaScript in </span><span class=rcl-dae>... </span><span class=rcl-da>library&#58; add it to your app directly, or link to it elsewhere. read more </span><span class=rcl-de>Improvements to Motion Effect in tvOS </span><span class=rcl-da>11 </span><span class=rcl-de>David House iOS Jul </span><span class=rcl-de>... </span><span class=rcl-de>1 2 3 ... </span> 
+</cite> 
+<cite class='deleted' id=diff-d2> 
+<span class=rcl-de>UP RANCH NEWS STUDENTS </span><span class=rcl-dd>iOS </span><span class=rcl-de>11 </span><span class=rcl-dd>Brings </span><span class=rcl-de>Improvements to Motion Effect in tvOS </span><span class=rcl-de>... </span><span class=rcl-de>file. read more </span><span class=rcl-dd>Why the Lean Startup Methodology Isn&#39;t Just for Startups Daniel Ra Clients Jun 15, 2017 </span><span class=rcl-dde>... </span><span class=rcl-dd>. But it can also be used by enterprises to drive business forward. read more </span><span class=rcl-de>1 2 3 ... </span> 
+</cite> 
+ 
+&nbsp;&nbsp;&nbsp;<a class=rclmorelink href="javascript:loadCompareCache('78A8D1665D34F90712E22760EF1FF49CBD870804', 0, 0);"><i>more...</i></a> 
+</td> 
+</tr> 
+
+
+</table> 
+
+
+<br> 
+<table> 
+<tr> 
+<td colspan=2 valign=top> 
+<a class=rclchlink  href="http&#58;&#47;&#47;www.hs.fi&#47;english&#47;" title="http&#58;&#47;&#47;www.hs.fi&#47;english&#47;">HS in English &#124; HS.fi &#45; Helsingin Sanomat</a> 
+</td> 
+</tr> 
+<tr> 
+<td colspan=2 valign=top> 
+<a class=rclviewlink href="javascript:loadCompareCache('CA366F8A866DFBC990664F5AE24CE5933448118A', 0, 0, 'html' );">view&nbsp;changes</a> 
+&nbsp;&nbsp;<a class=rclloglink href="/log/fi/hs/english_log.html">change&nbsp;log</a> 
+&nbsp;<span style="color:green; font-size:80%">860 new words, 842 deleted words, 35% change</span> 
+</td> 
+</tr> 
+<tr> 
+<td colspan=2 valign=top style="width:100%; font-size:85%"> 
+<cite class='added-deleted' id=diff-ad3> 
+<span class=rcl-dee>... </span><span class=rcl-de>nyt P&#228;iv&#228; Viikko 1 </span><span class=rcl-dd>Alkoholi kuuluu helsinkil&#228;isyyteen ja </span><span class=rcl-dde>... </span><span class=rcl-dd>, sanoo tutkimus L&#228;&#228;k&#228;ri</span><span class=rcl-da>DI</span><span class=rcl-de>&#58; </span><span class=rcl-dd>Liikak&#228;ytt&#246; verhotaan kaupungissa useammin harrastukseksi 11.7.2017 </span><span class=rcl-da>Securitaksen johtajalta varastettiin identiteetti </span><span class=rcl-dae>... </span><span class=rcl-da>haettiin henkil&#246;kohtaiseen konkurssiin 12.7.2017 </span><span class=rcl-de>2 </span><span class=rcl-dd>Helene Schjerfbeckin suvun p&#228;&#228;mies n&#228;rk&#228;styi haudan kunnosta valittajille</span><span class=rcl-da>Psykiatrin v&#228;ite</span><span class=rcl-de>&#58; </span><span class=rcl-dd>Ei h&#228;n nyt kuitenkaan </span><span class=rcl-dde>... </span><span class=rcl-dd>mik&#228;&#228;n pyhimys&#8221; 11.7.2017 </span><span class=rcl-dd>... </span> 
+</cite> 
+<cite class='added' id=diff-a3> 
+<span class=rcl-de>nyt P&#228;iv&#228; Viikko 1 </span><span class=rcl-da>DI</span><span class=rcl-de>&#58; </span><span class=rcl-da>Securitaksen johtajalta varastettiin identiteetti </span><span class=rcl-dae>... </span><span class=rcl-da>haettiin henkil&#246;kohtaiseen konkurssiin 12.7.2017 </span><span class=rcl-de>2 </span><span class=rcl-da>Psykiatrin v&#228;ite</span><span class=rcl-de>&#58; </span><span class=rcl-da>Puoliso voi pahentaa masennusta </span><span class=rcl-dae>... </span><span class=rcl-da>jopa aiheuttaa sen 12.7.2017 </span><span class=rcl-de>3 </span><span class=rcl-da>Etel&#228;mantereesta lohkesi Kanta&#45;H&#228;meen kokoinen </span><span class=rcl-dae>... </span><span class=rcl-da>tonnin j&#228;&#228;vuori grafiikka n&#228;ytt&#228;&#228;</span><span class=rcl-de>, </span><span class=rcl-da>kuinka suuri vuori </span><span class=rcl-de>on </span><span class=rcl-da>Suomeen verrattuna 12.7.2017 </span><span class=rcl-de>4 </span><span class=rcl-da>Moni mies j&#228;&#228; lapsettomaksi </span><span class=rcl-dae>... </span><span class=rcl-da>, kaipaa lasta ep&#228;toivoisesti</span><span class=rcl-de>&#58; </span><span class=rcl-da>Olen t&#228;t&#228; itkenytkin</span><span class=rcl-da>... </span> 
+</cite> 
+<cite class='deleted' id=diff-d3> 
+<span class=rcl-de>nyt P&#228;iv&#228; Viikko 1 </span><span class=rcl-dd>Alkoholi kuuluu helsinkil&#228;isyyteen ja </span><span class=rcl-dde>... </span><span class=rcl-dd>, sanoo tutkimus L&#228;&#228;k&#228;ri</span><span class=rcl-de>&#58; </span><span class=rcl-dd>Liikak&#228;ytt&#246; verhotaan kaupungissa useammin harrastukseksi 11.7.2017 </span><span class=rcl-de>2 </span><span class=rcl-dd>Helene Schjerfbeckin suvun p&#228;&#228;mies n&#228;rk&#228;styi haudan kunnosta valittajille</span><span class=rcl-de>&#58; </span><span class=rcl-dd>Ei h&#228;n nyt kuitenkaan </span><span class=rcl-dde>... </span><span class=rcl-dd>mik&#228;&#228;n pyhimys&#8221; 11.7.2017 </span><span class=rcl-de>3 </span><span class=rcl-dd>El&#228;myshakuinen polttaa itsens&#228; loppuun</span><span class=rcl-de>, </span><span class=rcl-dd>kotoilija ei p&#228;&#228;se yl&#246;s </span><span class=rcl-dde>... </span><span class=rcl-dd>, kumpi piirre sinussa </span><span class=rcl-de>on </span><span class=rcl-dd>voimakkaampi 11.7.2017 </span><span class=rcl-de>4 </span><span class=rcl-dd>Suomalaiset tyrmistyiv&#228;t EU&#45;parlamentin mets&#228;linjauksesta Nils Torvalds</span><span class=rcl-dd>... </span> 
+</cite> 
+ 
+&nbsp;&nbsp;&nbsp;<a class=rclmorelink href="javascript:loadCompareCache('CA366F8A866DFBC990664F5AE24CE5933448118A', 0, 0);"><i>more...</i></a> 
+</td> 
+</tr> 
+
+
+</table> 
+
+
+<br> 
+<table> 
+<tr> 
+<td colspan=2 valign=top> 
+<a class=rclchlink rel='nofollow' href="http&#58;&#47;&#47;www.toddklindt.com&#47;blog&#47;Builds&#47;SharePoint&#45;2016&#45;Builds.aspx" title="http&#58;&#47;&#47;www.toddklindt.com&#47;blog&#47;Builds&#47;SharePoint&#45;2016&#45;Builds.aspx">&#13;&#10;&#9;&#13;&#10;&#9;Todd Klindt&#39;s SharePoint Admin Blog &#45; SharePoint&#45;2016&#45;Builds&#13;&#10;&#13;&#10;</a> 
+</td> 
+</tr> 
+<tr> 
+<td colspan=2 valign=top> 
+<a class=rclviewlink href="javascript:loadCompareCache('5869468AFC6B896DB3BAD1C2978796ACFFD5AC6A', 0, 0, 'html' );">view&nbsp;changes</a> 
+&nbsp;&nbsp;<a class=rclloglink href="/log/toddklindt/sharepoint-2016-builds_log.html">change&nbsp;log</a> 
+&nbsp;<span style="color:green; font-size:80%">59 new words, 0 deleted words, 5% change</span> 
+</td> 
+</tr> 
+<tr> 
+<td colspan=2 valign=top style="width:100%; font-size:85%"> 
+<cite class='added-deleted' id=diff-ad4> 
+<span class=rcl-dee>... </span><span class=rcl-de>Notes, and Regressions </span><span class=rcl-da>16.0.4561.1000 July 2017 Patch &#40;Language Independent Files&#41; SharePoint Server KB 3213544 Download Bugs, Notes, and Regressions 16.0.4561.1000 July 2017 Patch &#40;Language Dependent Files&#41; SharePoint Server KB 3213543 Download Bugs, Notes, and Regressions 16.0.4561.1000 July 2017 Patch Office Online Server Office Web Apps KB 3213657 Download Bugs, Notes, and Regressions </span><span class=rcl-de>false,false, </span><span class=rcl-de>... </span> 
+</cite> 
+<cite class='added' id=diff-a4> 
+<span class=rcl-de>Notes, and Regressions </span><span class=rcl-da>16.0.4561.1000 July 2017 Patch &#40;Language Independent Files&#41; SharePoint Server KB 3213544 Download Bugs, Notes, and Regressions 16.0.4561.1000 July 2017 Patch &#40;Language Dependent Files&#41; SharePoint Server KB 3213543 Download Bugs, Notes, and Regressions 16.0.4561.1000 July 2017 Patch Office Online Server Office Web Apps KB 3213657 Download Bugs, Notes, and Regressions </span><span class=rcl-de>false,false, </span><span class=rcl-de>... </span> 
+</cite> 
+<cite class='deleted' id=diff-d4> 
+<span class=rcl-de>Notes, and Regressions </span><span class=rcl-de>... </span><span class=rcl-de>false,false, </span> 
+</cite> 
+ 
+&nbsp;&nbsp;&nbsp;<a class=rclmorelink href="javascript:loadCompareCache('5869468AFC6B896DB3BAD1C2978796ACFFD5AC6A', 0, 0);"><i>more...</i></a> 
+</td> 
+</tr> 
+
+
+</table> 
+
+
+<br> 
+<table> 
+<tr> 
+<td colspan=2 valign=top> 
+<a class=rclchlink rel='nofollow' href="http&#58;&#47;&#47;www.micc.gouv.qc.ca&#47;fr&#47;presse&#47;" title="http&#58;&#47;&#47;www.micc.gouv.qc.ca&#47;fr&#47;presse&#47;">Immigration, Diversit&#233; et Inclusion Qu&#233;bec &#45; Actualit&#233; minist&#233;rielle</a> 
+</td> 
+</tr> 
+<tr> 
+<td colspan=2 valign=top> 
+<a class=rclviewlink href="javascript:loadCompareCache('D21AD113EEF5F7E7CDAD95C2298A646A549D8729', 0, 0, 'html' );">view&nbsp;changes</a> 
+&nbsp;&nbsp;<a class=rclloglink href="/log/ca/qc/gouv/micc/presse_log.html">change&nbsp;log</a> 
+&nbsp;<span style="color:green; font-size:80%">1 new words, 7 deleted words, 1% change</span> 
+</td> 
+</tr> 
+<tr> 
+<td colspan=2 valign=top style="width:100%; font-size:85%"> 
+<cite class='added-deleted' id=diff-ad5> 
+<span class=rcl-dee>... </span><span class=rcl-de>pas &#224; communiquer avec </span><span class=rcl-dd>le </span><span class=rcl-da>la </span><span class=rcl-de>Commissaire aux plaintes </span><span class=rcl-dd>et &#224; la qualit&#233; des services </span><span class=rcl-de>. Politique de confidentialit&#233; </span> 
+</cite> 
+<cite class='added' id=diff-a5> 
+<span class=rcl-de>pas &#224; communiquer avec </span><span class=rcl-da>la </span><span class=rcl-de>Commissaire aux plaintes </span><span class=rcl-de>... </span><span class=rcl-de>. Politique de confidentialit&#233; </span> 
+</cite> 
+<cite class='deleted' id=diff-d5> 
+<span class=rcl-de>pas &#224; communiquer avec </span><span class=rcl-dd>le </span><span class=rcl-de>Commissaire aux plaintes </span><span class=rcl-dd>et &#224; la qualit&#233; des services </span><span class=rcl-de>. Politique de confidentialit&#233; </span> 
+</cite> 
+ 
+ 
+</td> 
+</tr> 
+
+
+</table> 
+
+
+						
+						<br><br>
+						
+						<!-- list of pages recently changed, end -->
+<!-- /xinclude: include/std.body.recentchangeslist.listing.html -->
+
+
+						<p>
+
+						<!-- main content section: end -->
+					</td>
+
+					<!-- main content row: end of center column with primary page content in it -->
+
+					<!-- main content row: start of right column with misc small sections on it -->
+					<td width="20%" id=pagerightcol valign=top align=center>
+
+						<!-- 2nd content section: optional login -->
+						
+<!-- xinclude: include/std.section.login.html -->
+			
+						<h2>log in</h2>
+						<br>
+						<div style="text-align:left;">
+							<form id=login.form action="https://www.changedetection.com/login.html" method=post>
+								<span style="color: gray; font-weight:normal; font-family:verdana; font-size:90%">
+									<input type=hidden id="login.op" name="op" value="login">
+									<input type=hidden id="login.frompage" name="frompage" value=>
+									
+<script type="text/javascript" language="JavaScript">
+<!--
+
+
+
+function setLoginFromPageAndAction()
+{
+	var e = getElementByID("login.frompage");	
+	if ( e != null )
+	{
+		if ( ( e.value == null) || ( e.value == "") ) 
+			e.value = window.location.href;
+	}
+	var e1 = getElementByID("loginform");	
+	if ( e1 != null )
+	{
+		var ls = "https://www.changedetection.com/login.html";
+		if ( e1.action == ls)
+		{
+			if ( ( e != null) && ( e.value != null) && ( e.value.indexOf(ls) < 0 ) )
+			{
+				e1.action = e.value;
+			}
+			else if ( window.location.pathname != "https://www.changedetection.com/login.html")
+			{
+				e1.action = window.location.href;
+			}
+			else
+			{
+				e1.action = "https://www.changedetection.com/index.html";
+			}
+		}
+	}
+}
+
+setLoginFromPageAndAction();
+-->
+</script>
+									
+									<input style="width:90px;" id="login.email" type=text size=11 name=email value="">&nbsp;email<br>
+									<input style="width:90px;" type=password size=12 name=pw value="">&nbsp;password<br>
+									<input type=checkbox name=remember value=1 > remember me<br>
+									<input style="margin-top:4px; font-size:90%;" type=submit name=login value="log in">&nbsp;
+									<input style="font-size:90%;" type=button name=newacct value="sign up" onclick="javascript:doSignup()">&nbsp;
+									<input style="font-size:90%;" type=submit name=loginhelp value="help"><br>
+								</span>
+							</form>
+						</div>
+						<p>
+			
+
+						
+<!-- /xinclude: include/std.section.login.html -->
+						
+
+						<!-- 2nd content section: optional account menu -->
+<!-- xinclude: include/std.section.account.html -->
+						
+						
+						<!-- /xinclude: include/std.section.account.html -->
+
+						<!-- 2nd content section: search box-->
+<!-- xinclude: include/std.section.search.html -->
+		
+	 					<h2>search</h2>
+						<br>
+						<FORM ACTION="http://search.freefind.com/find.html" METHOD="GET" accept-charset="utf-8" target="_self">
+						<table>
+						<tr>
+							<td>
+								<FONT size=1 face="arial,helvetica" >
+								<INPUT TYPE="HIDDEN" NAME="id" VALUE="19176448">
+								<INPUT TYPE="HIDDEN" NAME="pageid" VALUE="r">
+								<INPUT TYPE="HIDDEN" NAME="mode" VALUE="ALL">
+								<INPUT type="HIDDEN" name="n" value="0">
+								<INPUT TYPE="HIDDEN" NAME="_charset_" VALUE="">
+						
+								<INPUT TYPE="HIDDEN" NAME="bcd" VALUE="&#247;">
+								<INPUT TYPE="TEXT" NAME="query" SIZE="15"></font>
+							</td>
+						</tr>
+						<tr>
+						<td align=right>
+							<FONT size=1 face="arial,helvetica" >
+							<small> 
+							<INPUT TYPE="SUBMIT" VALUE=" Search "><br>
+							</small>
+							</font>
+					
+						</td>
+						</tr>
+						</table>
+						</FORM>
+
+<!-- /xinclude: include/std.section.search.html -->
+
+<!-- xinclude: include/std.section.ads.html --><!-- placeholder -->
+<!-- /xinclude: include/std.section.ads.html -->
+
+						<!-- 2nd content section: popular things -->
+<!-- xinclude: include/std.section.popular.html --><!-- std.section.popular.old.html placeholder -->
+<!-- /xinclude: include/std.section.popular.html -->
+
+
+						<!-- 2nd content section: new change logs -->
+<!-- xinclude: include/std.section.new.html --><!-- std.section.new.old.html placeholder -->
+<!-- /xinclude: include/std.section.new.html -->
+
+						<!-- 2nd content section: browse history -->
+<!-- xinclude: include/std.section.browsehistory.html --><!-- std.section.browsehistory.old.html placeholder -->
+<!-- /xinclude: include/std.section.browsehistory.html -->
+
+					</td>
+					<!-- main content row: end of right column with misc small sections on it -->
+				</tr>
+			</table>
+			<!-- main content table: end -->
+		</td>
+	</tr>
+	<!-- main page row: end of main content row -->
+
+
+	<!-- main page row: start of footer menu -->
+<!-- xinclude: include/std.footer.html -->
+	<tr>
+		<td colspan=2 style="background: #056BA5;">
+			<table cellspacing=0 cellpadding=0 border=0 width="100%">
+				<tr>
+					<td style="color:#F0F0F0; text-align: left;" valign=middle>
+						<span style="font-style:italic; font-size:10pt;">&nbsp;Automatic website change logs and notification</span>
+					</td>
+					<td style="color:#F0F0F0; text-align: right; vertical-align:bottom;">
+						<p>
+							| <a class=headerlink href="https://www.changedetection.com/">&nbsp;Home&nbsp;</a>
+							| <a class=headerlink href="https://www.changedetection.com/forwebsites.html">&nbsp;Webmasters&nbsp;</a>
+							| <a class=headerlink href="https://www.changedetection.com/dirsearch.html">&nbsp;Directory&nbsp;</a>
+							| <a class=headerlink href="https://www.changedetection.com/comparepages.html">&nbsp;Compare&nbsp;</a>
+							| <a class=headerlink href="https://www.changedetection.com/help.html">&nbsp;Help&nbsp;</a>&nbsp;
+						</p>
+					</td>
+				</tr>
+				<tr>
+					<td colspan=3 style="color:#F0F0F0; font-size:0px;">
+						&nbsp;
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+
+	<!-- main page row: start of footer text -->
+    <tr>
+            <td style="font-family:arial,sans-serif; font-size:80%; font-weight:normal;     text-align:center;" colspan=3>
+                    Copyright 1999-2015 FreeFind.com.
+                    ChangeDetection and ChangeDetection.com are trademarks of FreeFind.com.
+            </td>
+    </tr>
+
+    <tr>
+            <td align=center colspan=2>
+                    <!-- nav links -->
+                    <font face="arial" size=-1>
+                    <p>&nbsp;&nbsp;&nbsp;
+                    <a href="https://www.changedetection.com/"><font color=black>home</font></a>
+
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="https://www.changedetection.com/faq.html"><font color=black>faq</font></a>
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="https://www.changedetection.com/policy.html"><font color=black>policies</font></a>
+                    &nbsp;&nbsp;&nbsp;
+
+                    <a href="https://www.changedetection.com/contact.html"><font color=black>contact</font></a>
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="https://www.changedetection.com/html.html"><font color=black>website panels</font></a>
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="https://www.changedetection.com/tags.html"><font color=black>tag reference</font></a>
+                    &nbsp;&nbsp;&nbsp;
+                    <!-- end nav links-->
+
+                    <p>
+                    <font face="arial,helvetica" size="-2">
+
+
+                    <A HREF="http://www.freefind.com">Site search</a> technology provided by FreeFind.com and Findia.Net <A HREF="http://www.findia.net">net search</a>
+
+                    </font>
+            </td>
+    </tr>
+
+
+</table>
+<!-- main page table, end -->
+
+</center>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62956002-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
+<!-- /xinclude: include/std.footer.html -->

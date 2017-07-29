@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="keywords" content="">
+<meta name="description" content="MinePick is a toplist for Minecraft Servers. Find a server you like or add your own server to the listing!">
+<base href="http://www.minepick.com/" />
+<title>MinePick - Minecraft Servers List</title>
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" href="/style5.css">
+<link type="text/css" rel="stylesheet" href="/simplePagination.css"/>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/jquery.simplePagination.js"></script>
+<script type="text/javascript" src="/right.js"></script>
+<script type="text/javascript" src="/right-selectable.js"></script>
+
+<script type="text/javascript">
+	jQuery(document).ready(function($){
+		$('#menu_btn').on('click', function(){
+			if($(this).hasClass('active')){
+				$(this).removeClass('active');
+				$('#menu').slideUp(500);
+			} else {
+				$(this).addClass('active');
+				$('#menu').slideDown(500);
+			}
+		});
+		
+		if (location.href.indexOf('/page/') > 0 ) {
+			var hrefPrefix = location.href.substring(0, location.href.indexOf('/page/')) + '/page/';
+		}
+		else {
+			if (location.href[location.href.length - 1] == "/"){
+				var hrefPrefix = location.href + "page/"
+			}
+			else {
+				var hrefPrefix =  location.href + "/page/"
+			}
+		}
+		
+		$('.pagination').pagination({
+			pages: 976,
+			currentPage: 1,
+			cssStyle: 'light-theme',
+			hrefTextPrefix: hrefPrefix,
+			hrefTextSuffix: '/'
+		});
+		
+					
+		
+		new Selectable('ddCategory', {
+			selected: [0],
+			multiple: false
+		});
+		new Selectable('ddSort', {
+			selected: [1],
+			multiple: false
+		});
+		new Selectable('ddVersion', {
+			selected: [0],
+			multiple: false
+		});
+			
+		//'#ddCategory'.on('change', function(){ $(this).children('li:eq(' + $(this).attr('value') + ')').attr('value'); });
+		'#ddCategory'.on('change', function(){ changeCategory(jQuery('#ddCategory li:eq(' + jQuery(this).attr('value') + ')').attr('value')) });
+		'#ddSort'.on('change', function(){ sort(jQuery('#ddSort li:eq(' + jQuery(this).attr('value') + ')').attr('value')) });
+		'#ddVersion'.on('change', function(){ version(jQuery('#ddVersion li:eq(' + jQuery(this).attr('value') + ')').attr('value')) });
+		
+	});
+	
+	var root = "";
+
+	function changeCategory(value) {
+		var categories = "hungergames,tekkit,factions,creative,roleplay,ftb,pvp,economy,survival,prison,classic,skyblock,pixelmon,copsrobbers,minigames,parkour".split(",");		
+		if(categories.indexOf(value) >= 0) {
+			link = "/" + value + "/";
+			location.href = link;
+		}
+		else {
+			link = "/";
+			location.href = root + link;
+		}
+	}
+	
+	function sort(value) {
+		var sortTypes = "votes,views,players-online,total-slots,reg-date".split(",");		
+		if(sortTypes.indexOf(value) >= 0) {	
+			createCookie("sort", value, 365, '/');			
+			var link = "/sort/"+value+"/";
+			location.href = root + link
+		}
+		else {
+			var link = "/";
+			location.href = root + link
+		}
+	}
+	
+	function version(value) {
+		var versions = "1.7.4,1.7.3,1.7.2,1.6.4,1.6.3,1.6.2,1.5.2,1.5.1,1.4.7,1.3,1.2.5".split(",");		
+		if(versions.indexOf(value) >= 0) {	
+			var link = "/version/"+value+"/";
+			location.href = root + link
+		}
+		else {
+			var link = "/";
+			location.href = root + link
+		}
+	}	
+	
+	function createCookie(name, value, expires, path, domain) {
+	  var cookie = name + "=" + escape(value) + ";";
+	 
+	  if (expires) {
+		// If it's a date
+		if(expires instanceof Date) {
+		  // If it isn't a valid date
+		  if (isNaN(expires.getTime()))
+		   expires = new Date();
+		}
+		else
+		  expires = new Date(new Date().getTime() + parseInt(expires) * 1000 * 60 * 60 * 24);
+	 
+		cookie += "expires=" + expires.toGMTString() + ";";
+	  }
+	 
+	  if (path)
+		cookie += "path=" + path + ";";
+	  if (domain)
+		cookie += "domain=" + domain + ";";
+	 
+	  document.cookie = cookie;
+	}
+	
+	function getCookie(name) {
+	  var regexp = new RegExp("(?:^" + name + "|;\s*"+ name + ")=(.*?)(?:;|$)", "g");
+	  var result = regexp.exec(document.cookie);
+	  return (result === null) ? null : result[1];
+	}
+</script>
+<!-- echo variable website_title -->
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-46244000-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+<!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = {"message":"This website uses cookies to ensure you get the best experience on our website","dismiss":"Got it!","learnMore":"More info","link":"http://www.minepick.com/privacy/","theme":"dark-bottom"};
+</script>
+
+<script type="text/javascript" src="//s3.amazonaws.com/cc.silktide.com/cookieconsent.latest.min.js"></script>
+<!-- End Cookie Consent plugin -->
+
+</head>
+<body>
+<form name="form1" method="POST" enctype="multipart/form-data">
+<input type="hidden" name="h_action">
+<style>
+#outer_wrapper {
+    background: none repeat scroll 0 0 #E6E6E6;
+    box-sizing: border-box;
+    max-width: 1220px;
+	margin: 0 auto;
+    padding: 0;
+    width: 100%;
+}
+#ad_left {
+	float: left;
+}
+#ad_right {
+	float: left;
+}
+#wrapper {
+	float: left;
+}
+.adsystem_bottom_right_fixed {
+	position: absolute;
+}
+.adsystem_bottom_left_fixed {
+	position: absolute !important;
+	top: 0 !important;
+	left: 0 !important;
+	bottom: none !important;
+}
+</style>
+<div id="outer_wrapper">
+<div id="ad_left">
+
+</div>
+<div id="wrapper">
+	<div class="box" id="header">
+		<div class="inner_content_top">
+		<a href="/" id="logo"></a>
+			<div class="searchbox">
+				<input type="text" name="keyword" value="" onKeyPress="return submitenter(this.value,event)" placeholder="Search" class="searchfield" /> <input class="searchbtn" type="button" value="Go" onclick="do_search(document.getElementsByName('keyword')[0].value);"/>
+			<div id="twitter">
+			<a href="https://twitter.com/MinePick" class="twitter-follow-button" data-show-count="true" data-show-screen-name="false">Follow @MinePick</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+			</div>
+			</div>
+		</div>
+		<div class="inner_content">
+			<div id="menu">
+				<ul>
+									<li><a href="/">Start</a></li>
+					<li><a href="/add-server/">Add Server</a></li>
+					<li><a href="/sponsored/" style="font-weight: bold;">Get Sponsored</a></li>
+					<li><a href="/login/">Login</a></li>
+					<li><a href="/contact/">Contact</a></li>
+					<li><a href="/links/">Links</a></li>
+								</ul>
+			</div><!-- #menu -->
+				<div id="menu_btn"></div>
+			</div>
+		</div>
+		<!-- .box #header -->
+
+<script type="text/javascript">
+<!--
+var root = "";
+
+function do_search(value) {
+	if(value != null && value.length > 0) {			
+		var link = "/search/"+value+"/";
+		location.href = root + link
+	}
+	else {
+		var link = "/";
+		location.href = root + link
+	}
+}
+function submitenter(value,e)
+{
+	var keycode;
+	if (window.event) keycode = window.event.keyCode;
+	else if (e) keycode = e.which;
+	else return true;
+
+	if (keycode == 13)
+	{
+		do_search(value);
+		return false;
+	}
+else
+	return true;
+}
+//-->
+</script>
+<div id="pwd">
+<!-- Project Wonderful Ad Box Code -->
+<div id='pw_adbox_71739_5_0'></div>
+<script type='text/javascript'></script>
+<noscript><map name='admap71739' id='admap71739'><area href='http://www.projectwonderful.com/out_nojs.php?r=0&c=0&id=71739&type=5' shape='rect' coords='0,0,728,90' title='' alt='' target='_blank' rel='nofollow' /></map>
+<table cellpadding='0' cellspacing='0' style='width:728px;border-style:none;background-color:#ffffff;'><tr><td><img src='http://www.projectwonderful.com/nojs.php?id=71739&type=5' style='width:728px;height:90px;border-style:none;' usemap='#admap71739' alt='' /></td></tr><tr><td style='background-color:#ffffff;' colspan='1'><center><a style='font-size:10px;color:#006e9f;text-decoration:none;line-height:1.2;font-weight:bold;font-family:Tahoma, verdana,arial,helvetica,sans-serif;text-transform: none;letter-spacing:normal;text-shadow:none;white-space:normal;word-spacing:normal;' href='http://www.projectwonderful.com/advertisehere.php?id=71739&type=5&tag=85643' target='_blank'>Ads by Project Wonderful!  Your ad here, right now: $0</a></center></td></tr></table>
+</noscript>
+<!-- End Project Wonderful Ad Box Code -->
+</div><div class='message' style='margin: 0; text-align: center; -moz-border-radius: 0px; -webkit-border-radius: 0px; -khtml-border-radius: 0px; border-radius: 0px;'>Get your server in a top sponsored slot today. <a href='/sponsored/'>More info here!</a></div>
+
+<div class="box" id="content">
+
+<div class="start">
+		<h1 class="title" style="margin-bottom: 10px;">Minecraft Servers</h1>
+
+	<ul id="ddSort" style="display:none">
+		<li>Select Sort Type</li><li value="votes" class="rui-selectable-selected">Votes</li><li value="views" >Views</li><li value="players-online" >Players Online</li><li value="total-slots" >Total Slots</li><li value="reg-date" >Join Date</li>	</ul>
+	
+	&nbsp;&nbsp;
+	<ul id="ddCategory" style="display:none">
+		<li>All Categories</li><li value="hungergames">Hunger Games</li><li value="tekkit">Tekkit</li><li value="factions">Factions</li><li value="creative">Creative</li><li value="roleplay">Roleplay</li><li value="ftb">FTB</li><li value="pvp">PvP</li><li value="economy">Economy</li><li value="survival">Survival</li><li value="prison">Prison</li><li value="classic">Classic</li><li value="skyblock">Skyblock</li><li value="pixelmon">Pixelmon</li><li value="copsrobbers">Cops And Robbers</li><li value="minigames">Minigames</li><li value="parkour">Parkour</li>	</ul>
+	
+	&nbsp;&nbsp;
+	<ul id="ddVersion" style="display:none">
+		<li>All Versions</li><li value="1.7.4">1.7.4</li><li value="1.7.3">1.7.3</li><li value="1.7.2">1.7.2</li><li value="1.6.4">1.6.4</li><li value="1.6.3">1.6.3</li><li value="1.6.2">1.6.2</li><li value="1.5.2">1.5.2</li><li value="1.5.1">1.5.1</li><li value="1.4.7">1.4.7</li><li value="1.3">1.3</li><li value="1.2.5">1.2.5</li>	</ul>
+	
+	<br /><br />
+	
+	<div class="pagination">
+	</div><!-- .pagination (top) -->	
+</div><!-- .start -->
+
+		<div class="nomoretables">
+        <ul class="serverlist">
+        <li class="header-row">
+         <span class="trank">Rank</span>
+         <span class="tserver">Server</span>
+         <span class="tstatus">Status</span>
+         <span class="tplayers">Players</span>
+         <span class="tversion">Version</span> 
+		</li>
+	<li class='trserver'>
+								<a href='servers/13586/'>
+                                <span data-title='Rank' class='trank'>1</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1499633948_banner.gif' width='468px' height='60px' title='ExtremeCraft.net' alt='ExtremeCraft.net' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>1520/1520</span>
+                                <span data-title='Version' class='tversion'>1.8.x-1.12.x</span>
+								</a>
+								<input type='text' value='play.extremecraft.net' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/8486/'>
+                                <span data-title='Rank' class='trank'>2</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1497748617_Qfeq1hx.gif' width='468px' height='60px' title='PhanaticMC' alt='PhanaticMC' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>501/1000</span>
+                                <span data-title='Version' class='tversion'>Waterfall 1.8.x, 1.9.x, 1.10.x, 1.11.x</span>
+								</a>
+								<input type='text' value='play.phanaticmc.com' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/4369/'>
+                                <span data-title='Rank' class='trank'>3</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1383716620_edawg878.gif' width='468px' height='60px' title='EDawg878 Creative [Plots with WorldEdit] [512x512]' alt='EDawg878 Creative [Plots with WorldEdit] [512x512]' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>184/1000</span>
+                                <span data-title='Version' class='tversion'>BungeeCord 1.8.x-1.12.x</span>
+								</a>
+								<input type='text' value='play.EDawg878.com:25565' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/13665/'>
+                                <span data-title='Rank' class='trank'>4</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1496404634_banner.png' width='468px' height='60px' title='strongcraft.org' alt='strongcraft.org' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>38/38</span>
+                                <span data-title='Version' class='tversion'>1.8.x-1.12.x</span>
+								</a>
+								<input type='text' value='play.strongcraft.org:25565' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/13051/'>
+                                <span data-title='Rank' class='trank'>5</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1460443387_banner-serverlist.png' width='468px' height='60px' title='MassiveCraft' alt='MassiveCraft' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>79/1000</span>
+                                <span data-title='Version' class='tversion'>MassiveCraft 1.7.x, 1.8.x, 1.9.x, 1.10.x, 1.11.x</span>
+								</a>
+								<input type='text' value='massivecraft.com' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/10863/'>
+                                <span data-title='Rank' class='trank'>6</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1465443929_401464_8549.gif' width='468px' height='60px' title='PokeNexus' alt='PokeNexus' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='offline'>Offline</font></span>
+                                <span data-title='Players' class='tplayers'>N/A</span>
+                                <span data-title='Version' class='tversion'>Spigot 1.10.2</span>
+								</a>
+								<input type='text' value='play.pokenexus.com:25565' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/10272/'>
+                                <span data-title='Rank' class='trank'>7</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1434229703_gif_im_color_dither_64_d2f8087747.gif' width='468px' height='60px' title='Craftland.org' alt='Craftland.org' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>30/30</span>
+                                <span data-title='Version' class='tversion'>BungeeCord 1.8.x, 1.9.x, 1.10.x</span>
+								</a>
+								<input type='text' value='craftland.org:25565' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/7644/'>
+                                <span data-title='Rank' class='trank'>8</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1396779982_poke2.gif' width='468px' height='60px' title='PixelmonCraft.com Pixelmon 5.0.3 Server' alt='PixelmonCraft.com Pixelmon 5.0.3 Server' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>81/1000</span>
+                                <span data-title='Version' class='tversion'>Waterfall 1.10.2</span>
+								</a>
+								<input type='text' value='server.pixelmoncraft.com:25565' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/10614/'>
+                                <span data-title='Rank' class='trank'>9</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1427594616_such-survival.gif' width='468px' height='60px' title='&#128227; Minewind &#128227; WILL YOU SURVIVE?' alt='&#128227; Minewind &#128227; WILL YOU SURVIVE?' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>127/250</span>
+                                <span data-title='Version' class='tversion'>BungeeCord 1.8.x-1.12.x</span>
+								</a>
+								<input type='text' value='mp.Minewind.com:25565' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/12509/'>
+                                <span data-title='Rank' class='trank'>10</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1455546439_ezgif.com-optimize.gif' width='468px' height='60px' title='Super Fun Time Network' alt='Super Fun Time Network' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>18/18</span>
+                                <span data-title='Version' class='tversion'>Welcome to Super Fun Time! You need MC 1.12+ to play!</span>
+								</a>
+								<input type='text' value='mc.superfuntime.org:25565' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/7928/'>
+                                <span data-title='Rank' class='trank'>11</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1428695245_569806_10.gif' width='468px' height='60px' title='MineFrost Network ** SKYBLOCK ** OREGENERATOR' alt='MineFrost Network ** SKYBLOCK ** OREGENERATOR' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>12/100</span>
+                                <span data-title='Version' class='tversion'>BungeeCord 1.8.x-1.12.x</span>
+								</a>
+								<input type='text' value='play.minefrost.net:25565' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/6712/'>
+                                <span data-title='Rank' class='trank'>12</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1422550353_SMALLER-BANNER.gif' width='468px' height='60px' title='PokePlanet Pixelmon Network' alt='PokePlanet Pixelmon Network' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>5/100</span>
+                                <span data-title='Version' class='tversion'>cauldron,craftbukkit,mcpc,fml,forge 1.7.10</span>
+								</a>
+								<input type='text' value='play.pokeplanet.net' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/8825/'>
+                                <span data-title='Rank' class='trank'>13</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1470193757_optimize2.gif' width='468px' height='60px' title='Yu-Craft' alt='Yu-Craft' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>4/62</span>
+                                <span data-title='Version' class='tversion'>Spigot 1.8.8</span>
+								</a>
+								<input type='text' value='Yu-Craft.com' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/9750/'>
+                                <span data-title='Rank' class='trank'>14</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1438285344_banner-sv-com.gif' width='468px' height='60px' title='Beuteugeu Server' alt='Beuteugeu Server' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='offline'>Offline</font></span>
+                                <span data-title='Players' class='tplayers'>N/A</span>
+                                <span data-title='Version' class='tversion'>Waterfall BeuBot Systems 1.8-1.11</span>
+								</a>
+								<input type='text' value='mc.beuteugeu.com:25565' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li><li class='trserver'>
+								<a href='servers/3887/'>
+                                <span data-title='Rank' class='trank'>15</span>
+                                <span data-title='Server' class='tserver'>
+									<img src='uploads/1392475815_64643.jpg' width='468px' height='60px' title='Original SkyBlock' alt='Original SkyBlock' border='0' />
+								</span>
+                                <span data-title='Status' class='tstatus'><font class='online'>Online</font></span>
+                                <span data-title='Players' class='tplayers'>19/100</span>
+                                <span data-title='Version' class='tversion'>§4Requires: §l1.10</span>
+								</a>
+								<input type='text' value='Originalsb.com:25565' onClick='this.focus();this.select();' readonly='readonly' class='ip-box' />
+							  </li>        </ul>
+		<div class="end">
+		<div class="pagination">
+		</div>
+		</div><!-- .end -->
+        </div>
+	</div><!-- .box #servers -->
+
+	<div id="pwd2">
+	<!-- Project Wonderful Ad Box Code -->
+	<div id='pw_adbox_71739_5_1'></div>
+	<script type='text/javascript'></script>
+	<noscript><map name='admap71739' id='admap71739'><area href='http://www.projectwonderful.com/out_nojs.php?r=0&c=0&id=71739&type=5' shape='rect' coords='0,0,728,90' title='' alt='' target='_blank' rel='nofollow' /></map>
+	<table cellpadding='0' cellspacing='0' style='width:728px;border-style:none;background-color:#ffffff;'><tr><td><img src='http://www.projectwonderful.com/nojs.php?id=71739&type=5' style='width:728px;height:90px;border-style:none;' usemap='#admap71739' alt='' /></td></tr><tr><td style='background-color:#ffffff;' colspan='1'><center><a style='font-size:10px;color:#006e9f;text-decoration:none;line-height:1.2;font-weight:bold;font-family:Tahoma, verdana,arial,helvetica,sans-serif;text-transform: none;letter-spacing:normal;text-shadow:none;white-space:normal;word-spacing:normal;' href='http://www.projectwonderful.com/advertisehere.php?id=71739&type=5&tag=85643' target='_blank'>Ads by Project Wonderful!  Your ad here, right now: $0</a></center></td></tr></table>
+	</noscript>
+	<!-- End Project Wonderful Ad Box Code -->
+	</div><!-- #pwd2 -->
+<script type="text/javascript">
+ //document.form1.keyword.focus();
+</script>
+
+	<div class="box" id="footer">
+
+	
+	� <a href="/">MinePick</a> | <a href="/about/">About</a> | <a href="/help/">Help</a> | <a href="/contact/">Contact</a> | <a href="/stats/">Statistics</a> | <a href="/privacy/">Privacy</a> | <a href="/newservers/">New Servers</a>
+	<br><br>
+	Minecraft is copyright Mojang and is not affiliated with this site.
+	
+	</div><!-- .box #footer -->
+
+			<!-- Start of StatCounter Code for Default Guide -->
+			<script type="text/javascript">
+			var sc_project=8484055; 
+			var sc_invisible=1; 
+			var sc_security="917ce2b6"; 
+			var scJsHost = (("https:" == document.location.protocol) ?
+			"https://secure." : "http://www.");
+			document.write("<sc"+"ript type='text/javascript' src='" +
+			scJsHost +
+			"statcounter.com/counter/counter.js'></"+"script>");</script>
+			<noscript><div class="statcounter"><a title="free hit
+			counters" href="http://statcounter.com/free-hit-counter/"
+			target="_blank"><img class="statcounter"
+			src="https://c.statcounter.com/8484055/0/917ce2b6/1/"
+			alt="free hit counters"></a></div></noscript>
+			<!-- End of StatCounter Code for Default Guide -->
+			
+			<!-- Project Wonderful Ad Box Loader -->
+			<script type="text/javascript">
+			   (function(){function pw_load(){
+				  if(arguments.callee.z)return;else arguments.callee.z=true;
+				  var d=document;var s=d.createElement('script');
+				  var x=d.getElementsByTagName('script')[0];
+				  s.type='text/javascript';s.async=true;
+				  s.src='//www.projectwonderful.com/pwa.js';
+				  x.parentNode.insertBefore(s,x);}
+			   if (window.attachEvent){
+				window.attachEvent('DOMContentLoaded',pw_load);
+				window.attachEvent('onload',pw_load);}
+			   else{
+				window.addEventListener('DOMContentLoaded',pw_load,false);
+				window.addEventListener('load',pw_load,false);}})();
+			</script>
+			<!-- End Project Wonderful Ad Box Loader -->
+			
+			<!-- CrazyEgg Heatmap -->
+			<script type="text/javascript">
+			setTimeout(function(){var a=document.createElement("script");
+			var b=document.getElementsByTagName("script")[0];
+			a.src=document.location.protocol+"//dnn506yrbagrg.cloudfront.net/pages/scripts/0020/3749.js?"+Math.floor(new Date().getTime()/3600000);
+			a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1);
+			</script>
+			<!-- CrazyEgg Heatmap -->
+
+			
+
+</div><!-- #wrapper -->
+<div id="ad_right">
+<SCRIPT language="Javascript">
+var cpmstar_rnd=Math.round(Math.random()*999999);
+var cpmstar_pid=44819;
+document.writeln("<SCR"+"IPT language='Javascript' src='//server.cpmstar.com/view.aspx?poolid="+cpmstar_pid+"&script=1&rnd="+cpmstar_rnd+"'></SCR"+"IPT>");
+</SCRIPT>
+</div>
+</div><!-- #outer_wrapper -->
+</form>
+</body>
+</html>

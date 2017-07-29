@@ -1,0 +1,626 @@
+<head>
+<title>Convertidor Automatico de Unidades de Medidas</title>
+<meta name="verify-v1" content="Gpy1/TQ1fOG/abS7iNb81e4a7Q8+WkoJKyAsipUaOMs=" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+<body bgcolor="#C8C8C8" link="#0066FF" vlink="#0066FF" alink="#0033FF">
+<div align="center">
+  <p><script language=JavaScript>
+    function clearform(form) {
+        for (var i = 0; i < form.elements.length - 1; i++) {
+            form.elements[i].value = "";
+        }
+        return true;
+    }
+    function convertValue(value) {
+        var splitArr = value.toLowerCase().split("e");
+        var theValue = value;
+        if ( splitArr.length == 1 || splitArr.length == 2 ) {
+            if ( splitArr.length == 2 ) {
+                theValue = splitArr[0] * Math.pow(10, splitArr[1]);
+            }
+        } else {
+            alert('Invalid value: ' + value);
+        }
+        
+        return theValue;
+    }
+    function findField(form) {
+        for(var i = 0; i < form.elements.length - 1; i++) {
+            if ( form.elements[i].value != "" ) {
+                // Convert the value
+                form.elements[i].value = convertValue(form.elements[i].value);
+                return i;
+            }
+        }
+        return -1;
+    }
+    function convertLength(form) {
+        x = findField(form);
+        if ( x == -1 ) return false;
+        
+        var array = new Array( 1, 10, 0.01, 1/2.54, 1/30.48, 1/91.44 );
+        form.elements[0].value = form.elements[x].value / array[x];
+
+        for( var i = 1; i < form.elements.length - 1; i++) {
+            form.elements[i].value = form.elements[0].value * array[i];
+        }
+        
+        for( var i = 0; i < form.elements.length - 1; i++ ) {       
+			form.elements[i].value = ' ' + Math.round(form.elements[i].value*10000000000) / 10000000000.0;
+        }
+    }
+    function convertArea(form) {
+        x = findField(form);
+        if ( x == -1 ) return false;
+        
+        var array = new Array( 1, 100, 1/10000, 1/6.4516, 1/929.0303, 1/8361.2734 );
+        form.elements[0].value = form.elements[x].value / array[x];
+
+        for( var i = 1; i < form.elements.length - 1; i++) {
+            form.elements[i].value = form.elements[0].value * array[i];
+        }
+        
+        for( var i = 0; i < form.elements.length - 1; i++ ) {       
+			form.elements[i].value = ' ' + Math.round(form.elements[i].value*10000000000) / 10000000000.0;
+        }
+    }
+    function convertVolume(form) {
+        x = findField(form);
+        if ( x == -1 ) return false;
+        
+        var array = new Array( 1, 1000, 1/1000000, 1/16.387064, 1/28321, 1/764530, 1/29.5735, 1/999.9999, 1/946.3, 1/3785.4121, 1/4546.0898 );
+        form.elements[0].value = form.elements[x].value / array[x];
+        
+        for( var i = 1; i < form.elements.length - 1; i++) {
+            form.elements[i].value = form.elements[0].value * array[i];
+        }
+        
+        for( var i = 0; i < form.elements.length - 1; i++ ) {       
+			form.elements[i].value = ' ' + Math.round(form.elements[i].value*10000000000) / 10000000000.0;
+        }
+    }
+    function convertWeight(form) {
+        x = findField(form);
+        if ( x == -1 ) return false;
+        
+        var array = new Array( 1, 0.001, 0.0283495232, 0.4536, 0.3732, 907.1852, 999.9999 );
+        form.elements[0].value = form.elements[x].value * array[x];
+        
+        for( var i = 1; i < form.elements.length - 1; i++) {
+            form.elements[i].value = form.elements[0].value / array[i];
+        }
+        
+        for( var i = 0; i < form.elements.length - 1; i++ ) {       
+			form.elements[i].value = ' ' + Math.round(form.elements[i].value*10000000000) / 10000000000.0;
+        }
+    }
+    function convertPressure(form) {
+        x = findField(form);
+        if ( x == -1 ) return false;
+        
+        var array = new Array( 1, 10, 0.01, 0.9807, 0.0689475729, 0.0339, 0.0299, 0.0025, 10, 1.0132 );
+        form.elements[0].value = form.elements[x].value * array[x];
+        
+        for( var i = 1; i < form.elements.length - 1; i++) {
+            form.elements[i].value = form.elements[0].value / array[i];
+        }
+        
+        for( var i = 0; i < form.elements.length - 1; i++ ) {       
+			form.elements[i].value = ' ' + Math.round(form.elements[i].value*10000000000) / 10000000000.0;
+        }
+    
+    }
+    function convertDensity(form) {
+        x = findField(form);
+        if ( x == -1 ) return false;
+        
+        var array = new Array( 1, 1728, 0.0624279606, 62428, 62.4279606 );
+        form.elements[0].value = form.elements[x].value * array[x];
+        
+        for( var i = 1; i < form.elements.length - 1; i++) {
+            form.elements[i].value = form.elements[0].value / array[i];
+        }
+        
+        for( var i = 0; i < form.elements.length - 1; i++ ) {       
+			form.elements[i].value = ' ' + Math.round(form.elements[i].value*10000000000) / 10000000000.0;
+        }
+    }
+    function convertSpeed(form) {
+        x = findField(form);
+        if ( x == -1 ) return false;
+        
+        var array = new Array( 1, 0.0254, 0.3048, 0.00508, 0.0000846666667);
+        form.elements[0].value = form.elements[x].value * array[x];
+        
+        for( var i = 1; i < form.elements.length - 1; i++) {
+            form.elements[i].value = form.elements[0].value / array[i];
+        }
+        
+        for( var i = 0; i < form.elements.length - 1; i++ ) {       
+			form.elements[i].value = ' ' + Math.round(form.elements[i].value*10000000000) / 10000000000.0;
+        }
+    }
+    function convertFlowRate(form) {
+        x = findField(form);
+        if ( x == -1 ) return false;
+        
+        var array = new Array( 1, 60, 0.5886, 35.3147, 2118.8796, 0.1337, 0.16054372 );
+        form.elements[0].value = form.elements[x].value * array[x];
+        
+        for( var i = 1; i < form.elements.length - 1; i++) {
+            form.elements[i].value = form.elements[0].value / array[i];
+        }
+        
+        for( var i = 0; i < form.elements.length - 1; i++ ) {       
+			form.elements[i].value = ' ' + Math.round(form.elements[i].value*10000000000) / 10000000000.0;
+        }
+    }
+    function convertTorque(form) {
+        x = findField(form);
+        if ( x == -1 ) return false;
+        
+        var array = new Array( 1, 0.08333, 7.2338, 0.7376 );
+        form.elements[0].value = form.elements[x].value * array[x];
+        
+        for( var i = 1; i < form.elements.length - 1; i++) {
+            form.elements[i].value = form.elements[0].value / array[i];
+        }
+        
+        for( var i = 0; i < form.elements.length - 1; i++ ) {       
+			form.elements[i].value = ' ' + Math.round(form.elements[i].value*10000000000) / 10000000000.0;
+        }
+    }
+    function convertTemperature(form) {
+        x = findField(form);
+        if ( x == -1 ) return false;
+        
+        if ( x == 0 ) {
+            form.elements[1].value = (5/9) * (form.elements[0].value - 32);
+            form.elements[2].value = (form.elements[1].value * 1) + 273;
+        }
+        if ( x == 1 ) {
+            form.elements[0].value = (((9/5) * form.elements[1].value) + 32);
+            form.elements[2].value = (form.elements[1].value * 1) + 273;
+        }
+        if ( x == 2 ) {
+            form.elements[1].value = (form.elements[2].value * 1) - 273;
+            form.elements[0].value = (((9/5) * form.elements[1].value) + 32);
+        }
+        
+        for( var i = 0; i < form.elements.length - 1; i++ ) {       
+			form.elements[i].value = ' ' + Math.round(form.elements[i].value*10000000000) / 10000000000.0;
+        }
+    }
+    function convertAngular(form) {
+        x = findField(form);
+        if ( x == -1 ) return false;
+        
+        var array = new Array( 1, 57.2958 );
+        form.elements[0].value = form.elements[x].value * array[x];
+        
+        for( var i = 1; i < form.elements.length - 1; i++ ) {
+            form.elements[i].value = form.elements[0].value / array[i];
+        }
+        
+        for( var i = 0; i < form.elements.length - 1; i++ ) {       
+			form.elements[i].value = ' ' + Math.round(form.elements[i].value*10000000000) / 10000000000.0;
+        }
+    }
+  </script>
+	<strong><font size="5" face="Arial, Helvetica, sans-serif">
+<div align="center">
+  <table width="700" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td rowspan="5" bgcolor="#C8C8C8">&nbsp;</td>
+        <td bgcolor="#C8C8C8"><br>
+&nbsp;</td>
+        <td rowspan="5" bgcolor="#C8C8C8">&nbsp;</td>
+      </tr>
+      <tr>
+        <td bgcolor="#C8C8C8">          <form onsubmit="convertLength(this);return false;">
+            <table width="600" border="0" align="center" cellpadding="0" cellspacing="0">
+              <tr bgcolor="#990099">
+                <td colspan="6" bgcolor="#DB232D"><div align="center">
+					<b><font color="#FFFFFF">Measure Converter: Length </font>
+					</b></div>
+</td>
+              </tr>
+              <tr bgcolor="#330099">
+                <td width="83" bgcolor="#666666"><div align="center"></div></td>
+                <td width="83" bgcolor="#666666"><div align="center"></div></td>
+                <td width="83" bgcolor="#666666"><div align="center"></div></td>
+                <td width="83" bgcolor="#666666"><div align="center"></div></td>
+                <td width="83" bgcolor="#666666"><div align="center"></div></td>
+                <td width="85" bgcolor="#666666"><div align="center"></div></td>
+              </tr>
+              <tr bgcolor="#330099">
+                <td bgcolor="#666666"><div align="center">
+					<span class="contentTextSmall">
+					<font size="2" color="#FFFFFF">centimeters</font></span></div></td>
+                <td bgcolor="#666666"><div align="center">
+					<span class="contentTextSmall">
+					<font size="2" color="#FFFFFF">milimeters</font></span></div></td>
+                <td bgcolor="#666666"><div align="center"><font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial, Helvetica, sans-serif" size="2">meters</font></span></font></div></td>
+                <td bgcolor="#666666">
+				<p align="center"><span class="contentTextSmall">
+				<font size="2" color="#FFFFFF">inches</font></span></td>
+                <td bgcolor="#666666"><div align="center">
+					<span class="contentTextSmall">
+					<font size="2" color="#FFFFFF">feet</font></span></div></td>
+                <td bgcolor="#666666"><div align="center"><font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial, Helvetica, sans-serif" size="2">yards</font></span></font></div></td>
+              </tr>
+              <tr bgcolor="#330099">
+                <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+                    <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val132 value=""></font><font size="2" color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+					</font></div></td>
+                <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+                    <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val232 value=""></font><font size="2" color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+					</font></div></td>
+                <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+                    <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val332 value=""></font><font size="2" color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+					</font></div></td>
+                <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+                    <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val432 value=""></font><font size="2" color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+					</font></div></td>
+                <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+                    <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val532 value=""></font><font size="2" color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+					</font></div></td>
+                <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+                    <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val632 value=""></font><font size="2" color="#FFFFFF" face="Arial, Helvetica, sans-serif">
+					</font></div></td>
+              </tr>
+              <tr bgcolor="#330099">
+                <td bgcolor="#666666"><font size="2" color="#FFFFFF">&nbsp;</font></td>
+                <td bgcolor="#666666"><font size="2" color="#FFFFFF">&nbsp;</font></td>
+                <td bgcolor="#666666"><font size="2" color="#FFFFFF">&nbsp;</font></td>
+                <td bgcolor="#666666"><font size="2" color="#FFFFFF">&nbsp;</font></td>
+                <td bgcolor="#666666"><font size="2" color="#FFFFFF">&nbsp;</font></td>
+                <td bgcolor="#666666"><font size="2" color="#FFFFFF">&nbsp;</font></td>
+              </tr>
+              <tr>
+                <td colspan="6"><div align="center"><font color="#C9C9C9" face="Arial, Helvetica, sans-serif">
+                    <font face="Arial, Helvetica, sans-serif"><br>
+                    <input name="button2" type="button" class="conversionInput" onClick="convertLength(this.form);" value="Calculate"></font><font size="2">
+					</font>
+                </font></div></td>
+              </tr>
+            </table>
+        </form></td>
+      </tr>
+      <tr>
+        <td bgcolor="#C8C8C8"><div align="center">          </div>
+          <form onsubmit="convertWeight(this);return false;">
+            <div align="center">
+              <table width="600" border="0" cellspacing="0" cellpadding="0">
+                <tr bgcolor="#990099">
+                  <td colspan="6" bgcolor="#DB232D"><div align="center">
+					<b><span class="contentText"><font color="#FFFFFF">Measure 
+					Converter: Weight </font></span></b></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">kilograms</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">grams</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">ounces</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">pounds</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">Troy pounds</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">Short Tons</font></span></font></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val122342 value=""></font><font color="#FFFFFF" face="Arial" size="2">
+                  </font></div></td>
+                  <font size="5" face="Arial, Helvetica, sans-serif">
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val222342 value=""></font><font color="#FFFFFF" face="Arial" size="2">
+                  </font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val322342 value=""></font><font color="#FFFFFF" face="Arial" size="2">
+                  </font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val422342 value=""></font><font color="#FFFFFF" face="Arial" size="2">
+                  </font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val522342 value=""></font><font color="#FFFFFF" face="Arial" size="2">
+                  </font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val1222232 value=""></font><font color="#FFFFFF" face="Arial" size="2">
+                  </font></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">Metric Tonnes</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF" face="Arial">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val2222232 value=""></font><font color="#FFFFFF" face="Arial" size="2">
+					<br>
+&nbsp;</font></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                </tr>
+                <tr>
+                  <td colspan="6" bgcolor="#C8C8C8"><div align="center"><font color="#C9C9C9" face="Arial, Helvetica, sans-serif">
+                      <br>
+                      <input name="submit2232" type="button" class="conversionInput" value="Calculate" onClick="convertWeight(this.form);">
+                  </font></div></td>
+                </tr>
+              </table>
+            </div>
+        </form></td>
+      </tr>
+      <tr>
+        <td bgcolor="#C8C8C8"><div align="center">          </div>
+          <form onsubmit="convertVolume(this);return false;">
+            <div align="center">
+              <table width="600" border="0" cellspacing="0" cellpadding="0">
+                <tr bgcolor="#990099">
+                  <td colspan="6" bgcolor="#DB232D"><div align="center">
+					<b><font color="#FFFFFF">Measure Converter: Volume </font>
+					</b></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">ccubic <br>
+					centimeters</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">cubic <br>
+					milimetersm</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">cubic <br>
+					meters</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">cubic <br>
+					inches</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">cubic <br>
+					feet</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">cubic <br>
+					yards</font></span></font></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center">
+					<font face="Arial" color="#FFFFFF">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val12252 value=""><font size="2">
+					</font></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font face="Arial" color="#FFFFFF">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val22252 value=""><font size="2">
+					</font></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font face="Arial" color="#FFFFFF">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val32252 value=""><font size="2">
+					</font></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font face="Arial" color="#FFFFFF">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val42252 value=""><font size="2">
+					</font></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font face="Arial" color="#FFFFFF">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val52252 value=""><font size="2">
+					</font></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font face="Arial" color="#FFFFFF">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val62232 value=""><font size="2">
+					</font></font></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">Fluid Ounces</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">Litres</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">Quarts</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">US Galones</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial" size="2">UK Galones</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center">
+					<font face="Arial" color="#FFFFFF">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val122242 value=""><font size="2">
+					</font></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font face="Arial" color="#FFFFFF">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val222242 value=""><font size="2">
+					</font></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font face="Arial" color="#FFFFFF">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val322232 value=""><font size="2">
+					</font></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font face="Arial" color="#FFFFFF">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val422232 value=""><font size="2">
+					</font></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font face="Arial" color="#FFFFFF">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val522222 value=""><font size="2">
+					</font></font></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666">&nbsp;</td>
+                  <td bgcolor="#666666">&nbsp;</td>
+                  <td bgcolor="#666666">&nbsp;</td>
+                  <td bgcolor="#666666">&nbsp;</td>
+                  <td bgcolor="#666666">&nbsp;</td>
+                  <td bgcolor="#666666">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td colspan="6"><div align="center"><font color="#C9C9C9" face="Arial, Helvetica, sans-serif">
+                      <br>
+                      <input name="submit242" type="button" class="conversionInput" value="Calculate" onClick="convertVolume(this.form);">
+                  </font></div></td>
+                </tr>
+              </table>
+            </div>
+        </form></td>
+      </tr>
+      <tr>
+        <td bgcolor="#C8C8C8"><form onsubmit="convertArea(this);return false;">
+            <div align="center">
+              <table width="600" border="0" cellspacing="0" cellpadding="0">
+                <tr bgcolor="#990099">
+                  <td colspan="6" bgcolor="#DB232D"><div align="center">
+					<b><font color="#FFFFFF">Measure Converter: Area</font></b></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center">
+					<span class="contentTextSmall">
+					<font size="2" color="#FFFFFF">square <br>
+					</font></span><font color="#FFFFFF">
+					<span class="contentTextSmall">
+					<font face="Arial, Helvetica, sans-serif" size="2">centimeters</font></span></font></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<span class="contentTextSmall">
+					<font size="2" color="#FFFFFF">square <br>
+					milimeters</font></span></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<span class="contentTextSmall">
+					<font size="2" color="#FFFFFF">square<br>
+					meters</font></span></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<span class="contentTextSmall">
+					<font size="2" color="#FFFFFF">square<br>
+					inches</font></span></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<span class="contentTextSmall">
+					<font size="2" color="#FFFFFF">square<br>
+					feet</font></span></div></td>
+                  <td bgcolor="#666666"><div align="center">
+					<font color="#FFFFFF"><span class="contentTextSmall">
+					<font face="Arial, Helvetica, sans-serif" size="2">square<br>
+					yards</font></span></font></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center"><font color="#C9C9C9" face="Arial, Helvetica, sans-serif">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val1232 value="">
+                  </font></div></td>
+                  <td bgcolor="#666666"><div align="center"><font color="#C9C9C9" face="Arial, Helvetica, sans-serif">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val2232 value="">
+                  </font></div></td>
+                  <td bgcolor="#666666"><div align="center"><font color="#C9C9C9" face="Arial, Helvetica, sans-serif">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val3232 value="">
+                  </font></div></td>
+                  <td bgcolor="#666666"><div align="center"><font color="#C9C9C9" face="Arial, Helvetica, sans-serif">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val4232 value="">
+                  </font></div></td>
+                  <td bgcolor="#666666"><div align="center"><font color="#C9C9C9" face="Arial, Helvetica, sans-serif">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val5232 value="">
+                  </font></div></td>
+                  <td bgcolor="#666666"><div align="center"><font color="#C9C9C9" face="Arial, Helvetica, sans-serif">
+                      <input class="conversionInput" onFocus=clearform(this.form) size=10 name=val6232 value="">
+                  </font></div></td>
+                </tr>
+                <tr bgcolor="#330099">
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center"></div></td>
+                  <td bgcolor="#666666"><div align="center">&nbsp;</div></td>
+                </tr>
+                <tr>
+                  <td colspan="6"><div align="center"><font color="#C9C9C9" face="Arial, Helvetica, sans-serif">
+                      <br>
+                      <input name="submit322" type="button" class="conversionInput" value="Calculate" onClick="convertArea(this.form);">
+                  </font></div></td>
+                </tr>
+              </table>
+            </div>
+        </form></td>
+      </tr>
+      </table>
+</div>
+</div>
+</BODY>
+</HTML>

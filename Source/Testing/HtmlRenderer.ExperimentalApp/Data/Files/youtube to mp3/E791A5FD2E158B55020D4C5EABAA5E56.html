@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Download and Convert your favorite online videos and audio to MP3, MP4, WEBM, F4V, and 3GP formats for free!" /><meta name="keywords" content="The,Best,YouTube,to,MP3,Converter,Youtubeamp3,net" /><meta property="og:image" content="http://youtubeamp3.net/css/images/default-share-image.jpg" /><title>The Best YouTube to MP3 Converter - Youtubeamp3.net</title>  <script type="text/javascript">
+//<![CDATA[
+var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-70129182-1']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();(function(b){(function(a){"__CF"in b&&"DJS"in b.__CF?b.__CF.DJS.push(a):"addEventListener"in b?b.addEventListener("load",a,!1):b.attachEvent("onload",a)})(function(){"FB"in b&&"Event"in FB&&"subscribe"in FB.Event&&(FB.Event.subscribe("edge.create",function(a){_gaq.push(["_trackSocial","facebook","like",a])}),FB.Event.subscribe("edge.remove",function(a){_gaq.push(["_trackSocial","facebook","unlike",a])}),FB.Event.subscribe("message.send",function(a){_gaq.push(["_trackSocial","facebook","send",a])}));"twttr"in b&&"events"in twttr&&"bind"in twttr.events&&twttr.events.bind("tweet",function(a){if(a){var b;if(a.target&&a.target.nodeName=="IFRAME")a:{if(a=a.target.src){a=a.split("#")[0].match(/[^?=&]+=([^&]*)?/g);b=0;for(var c;c=a[b];++b)if(c.indexOf("url")===0){b=unescape(c.split("=")[1]);break a}}b=void 0}_gaq.push(["_trackSocial","twitter","tweet",b])}})})})(window);//]]>
+</script><script type="text/javascript">
+//<![CDATA[
+try{if (!window.CloudFlare) {var CloudFlare=[{verbose:0,p:0,byc:0,owlid:"cf",bag2:1,mirage2:0,oracle:0,paths:{cloudflare:"/cdn-cgi/nexp/dok3v=1613a3a185/"},atok:"b709070e32e3e25554e8655d51331f6c",petok:"4e9fb9ba372c91a4b82cc2a65f6ce3a7f672852e-1499877727-1800",zone:"youtubeamp3.net",rocket:"0",apps:{"ga_key":{"ua":"UA-70129182-1","ga_bs":"2"}}}];!function(a,b){a=document.createElement("script"),b=document.getElementsByTagName("script")[0],a.async=!0,a.src="//ajax.cloudflare.com/cdn-cgi/nexp/dok3v=85b614c0f6/cloudflare.min.js",b.parentNode.insertBefore(a,b)}()}}catch(e){};
+//]]>
+</script>
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/flag-icon.css" />
+      <link rel="stylesheet" type="text/css" href="assets/css/prettySocial.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/colorbox.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/custom.css">
+  <link rel="stylesheet" href="assets/css/colors.css" />
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="assets/js/jquery.ui.touch-punch.min.js"></script>
+  <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="assets/js/jquery.colorbox-min.js"></script>
+    <script type="text/javascript" src="assets/js/jquery.prettySocial.min.js"></script>
+    <script type="text/javascript" src="assets/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
+      <script src="assets/js/jquery.easing.min.js"></script>
+  <script src="assets/js/mods.js"></script>
+  <script type="text/javascript">
+		var conversionLogLength = 0;
+		var conversionInProgress = false;
+		var failedAjaxRequests = 0;
+		var maxAjaxRequestTries = 20;
+		var conversionStopping = false;
+		var timer;
+
+		function updateVideoDownloadProgress(percentage)
+		{
+			var progress = document.getElementById('progress');
+			progress.style.width = progress.innerHTML = parseInt(percentage) + '%';
+		}
+
+		function updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle)
+		{
+			conversionInProgress = true;
+			var progress = document.getElementById('progress');
+			document.getElementById('conversion-status').innerHTML = "Converting file. . .";
+			$.ajax({
+				type : "POST",
+				url : "ffmpeg_progress.php",
+				data : "uniqueId=1499878458_5966543a711dd1.78686314&logLength=" + conversionLogLength + "&convertedFile=" + encodeURI(convertedFile) + "&tempFileType=" + encodeURI(tempFileType),
+				success : function(retVal, status, xhr) {
+					var retVals = retVal.split('|');
+					if (retVals[3] == 2)
+					{
+						progress.style.width = progress.innerHTML = parseInt(retVals[1]) + '%';
+						if (parseInt(retVals[1]) < 100)
+						{
+							conversionLogLength = parseInt(retVals[0]);
+							if (!conversionStopping)
+							{
+								timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 500);
+							}
+						}
+						else
+						{
+							conversionInProgress = false;
+							showConversionResult(convertedFile, convertedFileNiceName, vidTitle, retVals[2]);
+						}
+					}
+					else
+					{
+						if (++failedAjaxRequests < maxAjaxRequestTries && !conversionStopping)
+						{
+							timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 100);
+						}
+						else
+						{
+							conversionInProgress = false;
+							showConversionResult(convertedFile, convertedFileNiceName, vidTitle, 2);
+						}
+					}
+				},
+				error : function(xhr, status, ex) {
+					if (++failedAjaxRequests < maxAjaxRequestTries && !conversionStopping)
+					{
+						timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 100);
+					}
+					else
+					{
+						conversionInProgress = false;
+						showConversionResult(convertedFile, convertedFileNiceName, vidTitle, 2);
+					}
+				}
+			});
+		}
+
+		function showConversionResult(convertedFile, convertedFileNiceName, vidTitle, success)
+		{
+			$("#preview").css("display", "none");
+			$("#searchFormContainer").css("display", "none");
+			var convertSuccessMsg = '';
+			if (success == 1)
+			{
+				var isEditableRegex = new RegExp('(\.(webm|mp4|mp3|aac|m4a|f4v))$', 'i');
+				var isEditable = isEditableRegex.test(convertedFile);
+				        		convertSuccessMsg += '<p class="bg-success padding-msg"><b><i class="fa fa-thumbs-up"></i>Success!</b></p>';
+        		convertSuccessMsg += '<p><img src="" alt="preview image" style="width:150px" /></p>';
+        		convertSuccessMsg += '<p><b></b></p>';
+        		convertSuccessMsg += '<h4 style="margin-bottom:15px;text-transform:uppercase;"><span class="label label-default"></span></h4>';
+        		convertSuccessMsg += '<p><a class="btn btn-success download-buttons" href="/index.php?output=' + encodeURI(convertedFile) + '" onclick="showShareButtonsWindow(this.href); return false;"><i class="fa fa-download"></i> Download your converted file</a></p>';
+								        		convertSuccessMsg += (isEditable) ? '<p><a id="editFurtherButton" class="btn btn-warning download-buttons" href="edit.php?vid_name=' + encodeURI(convertedFile) + '&vid_title=' + encodeURI(vidTitle) + '&vid_id=&vid_image=&vid_host=" title="Crop file and/or Edit file info (i.e., title, artist, etc.)."><i class="fa fa-scissors"></i> Edit file further</a></p>' : '';
+        		convertSuccessMsg += '<p><a class="btn btn-danger download-buttons" href="http://youtubeamp3.net/"><i class="fa fa-reply"></i> Return to homepage.</a></p>';
+			}
+			else
+			{
+        		convertSuccessMsg = '<p class="bg-danger padding-msg"><i class="fa fa-exclamation-triangle"></i> Error generating converted file!<br /><br /><a href="http://youtubeamp3.net/">Please, try again.</a></p>';
+			}
+			$("#conversionSuccess").html(convertSuccessMsg).find("#dropboxLink, #onedriveLink, #editFurtherButton").each(function(){
+				if ($(this).attr("id") == "editFurtherButton")
+				{
+					$(this).tooltip();
+				}
+				else
+				{
+					$(this).click(function() {
+						saveToCloud($(this), convertedFileNiceName);
+						return false;
+					});
+				}
+			});
+		}
+
+		function saveToCloud(buttonObj, convertedFileNiceName)
+		{
+			var options = {
+				success: function() {
+					// Indicate to the user that the file has been saved.
+					buttonObj.html('<span class="fa fa-check" style="color:#fff"></span> ' + buttonObj.text());
+				},
+				progress: function(progress) {
+					buttonObj.html('<span class="fa fa-refresh fa-spin" style="color:#fff"></span> ' + buttonObj.text());
+				},
+				error: function(errorMessage) {
+					buttonObj.html('<span class="fa fa-exclamation-triangle" style="color:red"></span> ' + buttonObj.text());
+				}
+			};
+			switch (buttonObj.attr("id"))
+			{
+				case "dropboxLink":
+					Dropbox.save(buttonObj.attr("href"), convertedFileNiceName, options);
+					break;
+				case "onedriveLink":
+					options.file = buttonObj.attr("href");
+					options.fileName = convertedFileNiceName;
+					OneDrive.save(options);
+					break;
+			}
+		}
+
+		function stopConversion()
+		{
+			var redirectUrl = 'http://youtubeamp3.net/index.php';
+			if (!conversionStopping)
+			{
+				failedAjaxRequests = 0;
+				clearTimeout(timer);
+				conversionStopping = true;
+			}
+			if (conversionInProgress)
+			{
+				$.ajax({
+					type : "POST",
+					url : "ffmpeg_stop.php",
+					data : "token=1499878458_5966543a711dd1.78686314",
+					success : function(retVal, status, xhr) {
+						window.location.href = redirectUrl;
+					},
+					error : function(xhr, status, ex) {
+						if (++failedAjaxRequests < maxAjaxRequestTries)
+						{
+							timer = setTimeout(function(){stopConversion();}, 100);
+						}
+					}
+				});
+			}
+			else
+			{
+				window.location.href = redirectUrl;
+			}
+		}
+
+		// If this is iframe, and parent receives URL-initiated conversion request, forward request to iframe
+		if (window.location != window.parent.location)
+		{
+			if (parent.location.search != "")
+			{
+				var queryStrParams = [];
+				var queryStrParts = parent.location.search.replace(/\?/, "").split("&");
+				for (var i=0; i<queryStrParts.length; i++)
+				{
+					queryStrParams.push(queryStrParts[i].split("=")[0]);
+				}
+				if (($.inArray('vidHost', queryStrParams) != -1 && $.inArray('vidID', queryStrParams) != -1) || $.inArray('url', queryStrParams) != -1)
+				{
+					var iframeQueryStr = parent.location.search;
+					parent.history.replaceState("object or string", "Title", "/");
+					window.location.href = window.location.href.replace(/\?.*/, "") + iframeQueryStr;
+				}
+			}
+		}
+
+		$(document).ready(function(){
+			$(function(){
+				$('[data-toggle="tooltip"]').tooltip();
+			});
+			$("#volumeSlider").slider({
+				range: "min",
+				min: 0,
+				max: 1024,
+				value: 256,
+				slide: function(event, ui) {
+					var percent = Math.floor((ui.value / 256) * 100);
+					$("#volumeVal").html(percent + '%');
+					$("input[name='volume']").val(ui.value);
+				}
+			});
+			$("#toggleOptionsDisplay span").click(function(){
+				$("#moreOptions").toggle('fast', function(){
+					var linkText = ($(this).css('display') == 'none') ? "Show more options &#187;" : "Hide more options &#171;";
+					$("#toggleOptionsDisplay span").html(linkText);
+				});
+			});
+			(function(){
+				var siteNames = $(".siteNames");
+				var examples = $("#examples span");
+				var exampleIndex = -1;
+				function animateIt(elementGroup){
+					var nextFuncCall = (elementGroup != examples) ? showNextExample : null;
+					elementGroup.eq(exampleIndex)
+						.fadeIn({
+							duration: 700
+						})
+						.delay(6000)
+						.fadeOut(700, nextFuncCall);
+				}
+				function showNextExample(){
+					exampleIndex = (++exampleIndex > examples.length - 1) ? 0 : exampleIndex;
+					animateIt(siteNames);
+					animateIt(examples);
+				}
+				showNextExample();
+			})();
+			//stLight.options({publisher: "INSERT_PUBLIC_KEY_HERE", doNotHash: true, doNotCopy: false, hashAddressBar: false});
+			if (!document.getElementById('preview'))
+			{
+				$("#conversionForm").css("display", "block");
+				$("#searchFormContainer").css("display", "block");
+			}
+			$("#videoURL").focus();
+		});
+	</script></head>
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top" dir="ltr">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">
+                    <i class="fa fa-play-circle"></i>  Youtubeamp3.net                </a>
+            </div>
+
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#about">About</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#faq">FAQ</a>
+                    </li>
+                     <li>
+                        <a class="page-scroll" href="#plugin">Get Plugin</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+
+                    <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="flag-icon flag-icon-us"></span> US<span class="caret"></span></a>                      <ul class="dropdown-menu" role="menu">
+                    <li><a dir="ltr" href="http://youtubeamp3.net/index.php?ccode=DE"><span class="flag-icon flag-icon-de"></span>&nbsp;&nbsp;Deutsch</a></li><li><a dir="ltr" href="http://youtubeamp3.net/index.php?ccode=US"><span class="flag-icon flag-icon-us"></span>&nbsp;&nbsp;English (US)</a></li>			          </ul>
+			        </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-12 header bg-babe">
+    	<div class="converter-box">
+    		<div class="col-lg-4 col-md-7 col-lg-offset-4 col-md-offset-3 col-sm-7 col-sm-offset-3 col-xs-12">
+    			<div class="converter text-center">
+                        <form action="/index.php" method="post" id="conversionForm" style="display:none">
+                <h3>Download online videos in a format you like, easy and free of charge!</h3>
+      				  <div class="col-lg-12">
+                  <div class="input-group">
+                    <input type="text" class="form-control input-lg" id="videoURL" name="videoURL" placeholder="Enter a valid URL:">
+                    <span class="input-group-btn">
+                      <button class="btn btn-primary btn-lg" type="submit" name="submitForm" style="border-radius:0 7px 7px 0;"><i class="fa fa-cogs"></i> Convert It!</button>
+                      <input type="hidden" name="formToken" value="1499878458_5966543a711dd1.78686314" />
+                    </span>
+                  </div><!-- /input-group -->
+                  <div id="moreOptions" class="tmargin-10" style="display:none" align="center">
+                    <p>Volume control: (<span id="volumeVal">100%</span>)</p>
+                    <p id="volumeSlider"></p>
+                    <input type="hidden" name="volume" />
+                  </div>
+                  <div id="toggleOptionsDisplay" class="btn btn-default"><span>Show more options &#187;</span></div>
+                    <select id="ftype" class="form-control" name="ftype" id="ftype">
+                      <optgroup label="audio"><option value="5">.aac</option><option value="6">.m4a</option><option value="4">.mp3 (256kb)</option><option value="3" selected="selected">.mp3 (128kb)</option></optgroup><optgroup label="video"><option value="8">.3gp</option><option value="7">.f4v</option><option value="2">.mp4</option><option value="1">.webm</option></optgroup>                    </select>
+                  <div class="clearfix"></div><!-- /.clearfix -->
+                </div><!-- /.col-lg-12 -->
+              </form>
+              
+                    			</div><!-- /.converter -->
+    		</div><!-- /.col-lg-6 col-lg-offset-4 -->
+        
+    	</div><!-- /.header -->
+    </div><!-- /.col-lg-12 -->
+  </div><!-- /.row -->
+
+<div id="about">
+  <div class="row">
+  	<div class="col-lg-12 text-center">
+  			<h1>About</h1>
+  		<p class="text-light-gray">All features at a glance!</p>
+  	</div><!-- /.col-lg-12 -->
+  </div><!-- /.row -->
+</div><!-- /#about -->
+
+  <div class="row">
+    <div class="col-lg-12 bg-turquoise text-center tpadding bpadding">
+      <div class="container">
+        <div class="about">
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <i class="fa fa-youtube" id="youtube-icon"></i>
+            <h2>Supported Portals</h2>
+            <p>YouTube, SoundCloud, Vimeo, Facebook, Instagram, Dailymotion, VK, Metacafe, AOL, RedTube, XVideos and Pornhub</p>
+          </div><!-- /.col-lg-3 -->
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <i class="fa fa-scissors" id="scissors-icon"></i>
+            <h2>File <br />Editor</h2>
+            <p>With our file editor can you cut your file to a from you desired length and/or you can add ID3 metadata to your Audiofiles.</p>
+          </div><!-- /.col-lg-3 -->
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <i class="fa fa-cloud" id="cloud-icon"></i>
+            <h2>Cloud Support</h2>
+            <p>Save your files in the Dropbox or Microsoft OneDrive cloud and it is available on any of your devices.</p>
+          </div><!-- /.col-lg-3 -->
+          <div class="col-lg-3 col-md-6 col-sm-6">
+            <i class="fa fa-apple" id="apple-icon"></i>
+            <h2>Cross Platform</h2>
+            <p>All Devices and Mobile Devices with OSX, Windows, Linux, iOS, Windows Phone and Android are supported.</p>
+          </div><!-- /.col-lg-3 -->
+          <div class="col-lg-8 col-lg-offset-2">
+            <div class="anytime">
+                <h3 class="slim"><em>Anytime</em> and <em>Anywhere</em></h3>
+              <p>Convert your videos anytime, from any modern device with Internet connection and every corner of the planet Earth.</p>
+            </div><!-- /.anytime -->
+          </div><!-- /.col-lg-8 col-lg-offset-2 -->
+          <div class="col-lg-12">
+            <img src="assets/img/world.png" id="world" alt="">
+          </div><!-- /.col-lg-12 -->
+        </div><!-- /.about -->
+      </div><!-- /.container -->
+    </div><!-- /.col-lg-12 bg-yellow -->
+  </div><!-- /.row -->
+
+<div id="faq">
+  <div class="row">
+    <div class="col-lg-12 text-center">
+        <h1>FAQ</h1>
+      <p class="text-light-gray">The most important answers at a glance!</p>
+    </div><!-- /.col-lg-12 -->
+  </div><!-- /.row -->  
+</div><!-- /#faq -->  
+
+  <div class="row">
+    <div class="col-lg-12 bg-blue tpadding bpadding">
+        <div class="container">
+          <div class="faq">
+            <h2 class="text-center">How can i Convert a Video?</h2>
+            <h5 class="slim secondary text-center">Four simple steps to your file.</h5>
+            <div class="col-lg-3">
+              <div class="icon text-center">
+                <i class="fa fa-globe"></i>
+              </div><!-- /.icon text-center -->
+              <h5 class="tertiary slim inline">1.</h5>
+              <h5 class="inline slim"><em>Copy the Video URL</em></h5>
+              <p class="slim secondary">Search your Video on YouTube or a other Supported Site, copy the Video URL and paste in the Converterbox.</p>
+            </div><!-- /.col-lg-3 -->
+            <div class="col-lg-3">
+              <div class="icon text-center">
+                <i class="fa fa-file-audio-o"></i>
+              </div><!-- /.icon text-center -->
+              <h5 class="tertiary slim inline">2.</h5>
+              <h5 class="inline slim"><em>Choose your Format</em></h5>
+              <p class="slim secondary">Choose the File type you want.</p>
+            </div><!-- /.col-lg-3 -->
+            <div class="col-lg-3">
+            <div class="icon text-center">
+              <i class="fa fa-cogs"></i>
+            </div><!-- /.icon text-center -->
+              <h5 class="tertiary slim inline">3.</h5>
+              <h5 class="inline slim"><em>Convert</em></h5>
+              <p class="slim secondary">Click on Convert and wait a Moment!</p>
+            </div><!-- /.col-lg-3 -->
+            <div class="col-lg-3">
+            <div class="icon text-center">
+              <i class="fa fa-download"></i>
+            </div><!-- /.icon text-center -->
+              <h5 class="tertiary slim inline">4.</h5>
+              <h5 class="inline slim"><em>Download</em></h5>
+            <p class="slim secondary">Download your Converted file to your Device or in the Dropbox or OneDrive Cloud.</p>
+            </div><!-- /.col-lg-3 -->
+
+            <div class="col-lg-12 faq-list text-center">
+            	<h2>What is the maximum length of a video?</h2>
+            	<p>A video may not be longer than 90 minutes.</p>
+				<p>Audio files are unlimited.</p>
+            </div><!-- /.col-lg-12 text-center -->
+          </div><!-- /.faq -->
+        </div><!-- /.container -->
+    </div><!-- /.col-lg-12 -->
+  </div><!-- /.row -->
+
+<div id="plugin">
+  <div class="row">
+    <div class="col-lg-12 text-center">
+        <h1>Get Plugin</h1>
+        <p class="text-light-gray">
+          Get our Browser Plugin!        </p><!-- /.text-light-gray -->
+    </div><!-- /.col-lg-12 -->
+  </div><!-- /.row -->
+</div><!-- /#plugin -->
+
+  <div class="row">
+    <div class="col-lg-12 bg-dark-blue">
+      <div class="container">
+        <div class="plugin">
+        <!--
+        <h3 class="text-center">Plugin for Google Chrome</h3>
+        <p class="text-center">Version 2.2.1</p>
+        <p class="text-center"><a href="#" target="_blank"><img src="assets/img/ChromeWebStore.png" width="50%" alt="" /></a></p>
+        <p class="text-center">Works with all Supported Portals</p>
+        <hr /> 
+        -->
+        <h3 class="text-center">Plugin for Chrome & Firefox</h3>
+          <p class="text-center plugin-a"><b>This plugin is a bookmarklet.</b> A bookmarklet is a tiny program stored inside a browser bookmark, and it's typically executed by clicking a button in the browser's bookmarks/favorites toolbar. If you are unfamiliar with bookmarklets, please see the corresponding documentation for the <a href="https://support.mozilla.org/en-US/kb/bookmarklets-perform-common-web-page-tasks" target="_blank">Firefox</a> browser.</p>
+
+          <p class="tpadding-15 bpadding bookmarklet text-center"><b>To install bookmarklet</b>, drag this text link to your browser's bookmarks/favorites toolbar: <i class="fa fa-hand-o-right"></i> <a href="javascript:(function(){ if (document.getElementById('bookmarklet-container')) return; var bmkl_urlProtocol = (window.location.protocol === 'https:') ? 'https://' : 'http://'; if (bmkl_urlProtocol == 'https://') { alert('Uh oh! This bookmarklet only works on http:// video pages.\n\nThe page will now reload as http://, and you will need to launch the bookmarklet again.\n\n\nTROUBLESHOOTING TIPS:\n\n1) Sometimes a setting in your browser, OS, or anti-virus program will force a secure https:// connection if it\'s available. If so, you should disable such a setting in order to use the plugin with this video hosting site.\n\n2) You can also try initiating a &quot;private&quot; browser session first before using the plugin. In Firefox, do this by selecting the &quot;New Private Window&quot; option in the main menu. In Chrome, select &quot;New incognito window&quot; in the main menu.\n\n3) The plugin will NOT work with Facebook videos because Facebook implements extra security measures in its pages.'); window.location.href = window.location.href.replace(/^(https:)/, 'http:'); return; } var bmkl_urlRoot = bmkl_urlProtocol+'youtubeamp3.net/'; var bmkl_head = document.getElementsByTagName('head')[0]; var bmkl_script = document.createElement('script'); bmkl_script.type = 'text/javascript'; bmkl_script.src = bmkl_urlRoot+'bookmarklet/bookmarklet.js'; var bmkl_script_done = false; bmkl_script.onload = bmkl_script.onreadystatechange = function() { if (!bmkl_script_done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete')) { bmkl_script_done = true; var bookmarklet = new Bookmarklet(bmkl_urlRoot); } }; bmkl_head.insertBefore(bmkl_script, bmkl_head.firstChild); })();">Convert Video!</a> <i class="fa fa-hand-o-left"></i></p>
+		  
+          	<p class="tpadding-15 text-center"><b>To use bookmarklet</b>, navigate to a YouTube, Dailymotion, Vimeo, Metacafe, VK, SoundCloud, Instagram, AOL, RedTube, XVideos, or Pornhub video/audio page, click the bookmarklet in your browser's bookmarks/favorites toolbar to launch the plugin, choose a file type, and then press the "Go!" button. A new tab will open in your browser where the video/audio will automatically be converted on our site!</p>
+        </div><!-- /.plugin -->
+      </div><!-- /.container -->
+    </div><!-- /.col-lg-12 -->
+  </div><!-- /.row -->
+
+<div id="contact">
+  <div class="row">
+    <div class="col-lg-12 text-center">
+        <h1>Contact</h1>
+        <p class="text-light-gray">
+          Do you have any questions or suggestions, please contact us!        </p><!-- /.text-light-gray -->
+    </div><!-- /.col-lg-12 -->
+  </div><!-- /.row -->
+</div><!-- /#contact -->
+
+  <div class="row">
+    <div class="col-lg-12 bg-dark-gray tpadding bpadding">
+      <div class="container">
+        <div class="contact">
+          <h2 class="text-center">Contact Us</h2>
+           <p class="tertiary text-center">If you have questions don't hesitate to contact us.</p>
+           <p class="text-center"><b>Please compose your message in German or English.</b></p>
+            <div id="contact_form" class="row">
+              <div class="col-12 col-sm-12 col-lg-12">
+                <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<html>
+<head>
+<!-- define some style elements-->
+<style>
+label
+{
+	font-family : Arial, Helvetica, sans-serif;
+	font-size : 12px; 
+}
+.err
+{
+	font-family : Verdana, Helvetica, sans-serif;
+	font-size : 12px;
+	color: red;
+}
+.contact-from-input {
+	border: 0px solid #000 !important;
+	background-color: #000;
+	color: #fff;
+	padding: 10px;
+}
+.contact-from-input input:focus {
+	border: 0px solid #000 !important;
+	border-color: #000 !important;
+	-webkit-box-shadow: inset 0px 0px 0px rgba(0, 0, 0, 0.1) !important;
+	-moz-box-shadow: inset 0 0px 0px rgba(0, 100, 100, 0.1) !important;
+	box-shadow: inset 0 0px 0px rgba(0, 100, 100, 0.1) !important;
+}
+</style>	
+<!-- a helper script for vaidating the form-->
+<script language="JavaScript" src="scripts/gen_validatorv31.js" type="text/javascript"></script>
+<script src='https://www.google.com/recaptcha/api.js'></script>	
+</head>
+
+<body>
+<div id='contact_form_errorloc' class='err'></div>
+<form method="POST" name="contact_form" 
+action="/index.php"> 
+<p>
+<label for='name'>Name: </label><br>
+<input type="text" name="name" class="form-control input-lg contact-from-input" value=''>
+</p>
+<p>
+<label for='email'>Email: </label><br>
+<input type="text" name="email" class="form-control input-lg contact-from-input" value=''>
+</p>
+<p>
+<label for='message'>Message:</label> <br>
+<textarea name="message" class="form-control contact-from-input" rows=8 cols=30></textarea>
+</p>
+
+<p>
+<div class="g-recaptcha" data-sitekey="6Lf3IRUUAAAAAFPYIXF7ry3hw2GA3aoGJxjfjJEd"></div>
+<!-- img src="captcha_code_file.php?rand=" id='captchaimg' ><br>
+<label for='message'>Enter the code above here :</label><br>
+<input id="6_letters_code" class="contact-from-input" name="6_letters_code" type="text"><br>
+<small>Can't read the image? click <a href='javascript: refreshCaptcha();'>here</a> to refresh</small -->
+</p>
+<button type="submit" value="Submit" name='submit' class="btn btn-primary btn-lg">Send</button>
+</form>
+<script language="JavaScript">
+// Code for validating the form
+// Visit http://www.javascript-coder.com/html-form/javascript-form-validation.phtml
+// for details
+var frmvalidator  = new Validator("contact_form");
+//remove the following two lines if you like error message box popups
+frmvalidator.EnableOnPageErrorDisplaySingleBox();
+frmvalidator.EnableMsgsTogether();
+
+frmvalidator.addValidation("name","req","Please provide your name"); 
+frmvalidator.addValidation("email","req","Please provide your email"); 
+frmvalidator.addValidation("email","email","Please enter a valid email address"); 
+</script>
+<script language='JavaScript' type='text/javascript'>
+function refreshCaptcha()
+{
+	var img = document.images['captchaimg'];
+	img.src = img.src.substring(0,img.src.lastIndexOf("?"))+"?rand="+Math.random()*1000;
+}
+</script>
+</body>
+</html>              </div>
+            </div>
+              <ul class="list-inline social-buttons text-center">
+                  <li class="twitter"><a href="https://twitter.com/convertfromnet" target="_blank"><i class="fa fa-twitter"></i></a>
+                  </li>
+                  <li class="facebook"><a href="https://www.facebook.com/OnlineVideoConverter" target="_blank"><i class="fa fa-facebook"></i></a>
+                  </li>
+              </ul>
+                
+        </div><!-- /.contact -->
+        <div class="text-center">
+          <a class="page-scroll text-white" href="#page-top"> PageTop </a>
+        </div><!-- /.text-center -->
+      </div><!-- /.container -->
+    </div><!-- /.col-lg-12 -->
+  </div><!-- /.row -->
+
+  <div class="row">
+  	<div class="col-lg-12 bg-black">
+  		<div class="footer">
+  			<p class="text-center">
+  				Copyright &copy; 2012 - 2017 Youtubeamp3.net | Made with <i class="fa fa-heart"></i> in Duisburg (Germany)
+  			</p><!-- /.text-center -->
+  		</div><!-- /.footer -->
+  	</div><!-- /.col-lg-12 -->
+  </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//usve77665.serverprofi24.de/piwik/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', 2]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//usve77665.serverprofi24.de/piwik/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
+
+</body>
+</html>

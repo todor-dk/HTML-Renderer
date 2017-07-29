@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta name="robots" content="noodp">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    
+    <title>  Speedometer: Benchmark for Web App Responsiveness | WebKit</title>
+
+    <meta name="application-name" content="WebKit">
+
+    <link rel="stylesheet" type="text/css" href="https://webkit.org/wp-content/themes/webkit/style.css" media="all">
+    <link rel="stylesheet" href="https://www.apple.com/wss/fonts?family=Myriad+Set+Pro&v=1" type="text/css" />
+
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://webkit.org/feed/">
+    <link rel="alternate" type="text/xml" title="RSS .92" href="https://webkit.org/feed/rss/">
+    <link rel="alternate" type="application/atom+xml" title="Atom 0.3" href="https://webkit.org/feed/atom/">
+    <link rel="pingback" href="https://webkit.org/wp/xmlrpc.php">
+
+    <link rel="shortcut icon" sizes="32x32" type="image/x-icon" href="/favicon.ico">
+    <link rel="mask-icon" href="tabicon.svg" color="#0088cc">
+
+    <link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/webkit.org\/wp\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.8-alpha-40568"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),!(j.toDataURL().length<3e3)&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,65039,8205,55356,57096),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,55356,57096),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55357,56425,55356,57341,8205,55357,56507),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55357,56425,55356,57341,55357,56507),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='https://api.w.org/' href='https://webkit.org/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://webkit.org/wp/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://webkit.org/wp/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Introducing the WebKit FTL JIT' href='https://webkit.org/blog/3362/introducing-the-webkit-ftl-jit/' />
+<link rel='next' title='Introducing the JetStream Benchmark Suite' href='https://webkit.org/blog/3418/introducing-the-jetstream-benchmark-suite/' />
+<meta name="generator" content="WordPress 4.8-alpha-40568" />
+<link rel="canonical" href="https://webkit.org/blog/3395/speedometer-benchmark-for-web-app-responsiveness/" />
+<link rel='shortlink' href='https://webkit.org/?p=3395' />
+<link rel="alternate" type="application/json+oembed" href="https://webkit.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwebkit.org%2Fblog%2F3395%2Fspeedometer-benchmark-for-web-app-responsiveness%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://webkit.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwebkit.org%2Fblog%2F3395%2Fspeedometer-benchmark-for-web-app-responsiveness%2F&#038;format=xml" />
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-7299333-1', 'auto'); ga('send', 'pageview');
+    </script>
+
+    <!-- Schema.org markup -->
+    <meta itemprop="name" content="Speedometer: Benchmark for Web App Responsiveness">
+    <meta itemprop="description" content="We are pleased to announce Speedometer, a new benchmark that measures the responsiveness of web applications.">
+    <meta itemprop="image" content="https://webkit.org/wp-content/themes/webkit/images/ogimage.png">
+
+    <!-- Twitter Card data -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@webkit">
+    <meta name="twitter:title" content="Speedometer: Benchmark for Web App Responsiveness">
+    <meta name="twitter:description" content="We are pleased to announce Speedometer, a new benchmark that measures the responsiveness of web applications.">
+    <meta name="twitter:image:src" content="https://webkit.org/wp-content/themes/webkit/images/ogimage.png">
+
+    <!-- Open Graph data -->
+    <meta property="og:title" content="Speedometer: Benchmark for Web App Responsiveness">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://webkit.org/blog/3395/speedometer-benchmark-for-web-app-responsiveness/">
+    <meta property="og:image" content="https://webkit.org/wp-content/themes/webkit/images/ogimage.png">
+    <meta property="og:description" content="We are pleased to announce Speedometer, a new benchmark that measures the responsiveness of web applications.">
+    <meta property="og:site_name" content="WebKit">
+    <meta property="article:published_time" content="2014-06-02T12:40:17+00:00">
+    <meta property="article:modified_time" content="2015-11-20T13:04:25+00:00">
+    <meta property="article:section" content="Performance">
+    <meta property="fb:admins" content="1085088865">
+    <meta property="fb:admins" content="854565306">
+</head>
+<body class="post-template-default single single-post postid-3395 single-format-standard">
+
+    <header aria-label="WebKit.org Header" id="header">
+        <div class="page-width">
+        <a href="/"><div id="logo" class="site-logo">WebKit <span class="tagline">Open Source Web Browser Engine</span></div></a>
+        <nav id="site-nav" aria-label="Site Menu">
+<div class="menu-main-menu-container"><input type="checkbox" id="menu-main-menu-toggle" class="menu-toggle" /><label for="menu-main-menu-toggle" class="label-toggle main-menu" data-open="Main Menu" data-close="Close Menu"></label><ul id="menu-main-menu" class="menu" role="menubar"><li id="menu-item-4270" class="menu-item menu-item-type-post_type menu-item-object-page current_page_parent menu-item-4270"><a href="https://webkit.org/blog/">Blog</a></li>
+<li id="menu-item-6091" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6091"><a href="https://webkit.org/downloads/">Downloads</a></li>
+<li id="menu-item-4272" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4272"><a href="https://webkit.org/status/">Feature Status</a></li>
+<li id="menu-item-4273" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4273"><a href="https://webkit.org/reporting-bugs/">Reporting Bugs</a></li>
+<li id="menu-item-4274" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-4274"><input type="checkbox" id="toggle-4274" class="menu-toggle" /><a href="#nav-sub-menu" aria-haspopup="true" aria-owns="sub-menu-for-4274" aria-controls="sub-menu-for-4274" aria-expanded="true"><label for="toggle-4274" class="label-toggle">Contribute</label></a>
+<ul class="sub-menu sub-menu-layer" role="menu" id="sub-menu-for-4274">
+	<li id="menu-item-4277" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4277"><input type="checkbox" id="toggle-4274" class="menu-toggle" /><a href="https://webkit.org/getting-started/">Getting Started</a></li>
+	<li id="menu-item-4284" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4284"><input type="checkbox" id="toggle-4274" class="menu-toggle" /><a href="https://webkit.org/contributing-code/">Contributing Code</a></li>
+	<li id="menu-item-4281" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4281"><input type="checkbox" id="toggle-4274" class="menu-toggle" /><a href="https://webkit.org/testing-contributions/">Testing Contributions</a></li>
+	<li id="menu-item-4282" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4282"><input type="checkbox" id="toggle-4274" class="menu-toggle" /><a href="https://webkit.org/policy-and-guidelines/">Policy and Guidelines</a></li>
+	<li id="menu-item-4278" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4278"><input type="checkbox" id="toggle-4274" class="menu-toggle" /><a href="http://trac.webkit.org">Trac Timeline</a></li>
+</ul>
+</li>
+</ul></div></nav>
+        </div>
+    </header>
+
+<main id="content" class="page-width">
+    
+        <article class="post-3395 post type-post status-publish format-standard hentry category-performance" id="post-3395">
+            <h1><a href="https://webkit.org/blog/3395/speedometer-benchmark-for-web-app-responsiveness/" rel="bookmark" title="Permanent Link: Speedometer: <br>Benchmark for Web App Responsiveness">Speedometer: <br>Benchmark for Web App Responsiveness</a></h1>
+            <div class="byline">
+                <p class="date">Jun 2, 2014</p>
+                <p class="author">by <span>Ryosuke Niwa</span></p>
+                            </div>
+            
+            <div class="bodycopy">
+                <p>Today we are pleased to announce <a href="http://browserbench.org/Speedometer/">Speedometer</a>, a new benchmark that measures the responsiveness of web applications.</p>
+<h2>Benchmark</h2>
+<p>Speedometer measures simulated user interactions in web applications. Version 1.0 of Speedometer uses <a href="http://todomvc.com/">TodoMVC</a> to simulate user actions for adding, completing, and removing to-do items. Speedometer repeats the same actions using <a href="https://developer.mozilla.org/en-US/docs/DOM">DOM APIs</a> — a core set of web platform APIs used extensively in web applications — as well as six popular JavaScript frameworks: <a href="http://emberjs.com/">Ember.js</a>, <a href="http://backbonejs.org/">Backbone.js</a>, <a href="http://jquery.com/">jQuery</a>, <a href="https://angularjs.org/">AngularJS</a>, <a href="http://facebook.github.io/react/">React</a>, and <a href="http://flightjs.github.io/">Flight</a>. Many of these frameworks are used on the most popular websites in the world, such as Facebook and Twitter. The performance of these types of operations depends on the speed of the DOM APIs, the JavaScript engine, CSS style resolution, layout, and other technologies.</p>
+<h2>Motivation</h2>
+<p>When we set out to improve the performance of interactive web applications in WebKit last year, we looked for a benchmark to guide our work. However, many browser benchmarks we checked were micro-benchmarks, and didn’t reflect how DOM APIs were used in the real world, or how individual APIs interacted with the rest of the web browser engine.</p>
+<p>For example, one popular DOM benchmark assigns the value of element.id to a global variable repeatedly inside a loop:</p>
+<pre><code class="javascript"><span class="keyword control">for</span> (<span class="keyword type">var</span> <span class="identifier">i</span> <span class="operator">=</span> <span class="number">0</span>; <span class="identifier">i</span> <span class="operator">&lt;</span> <span class="identifier">count</span>; <span class="identifier">i</span><span class="operator">+</span><span class="operator">+</span>)
+     <span class="identifier">globalVariable</span> <span class="operator">=</span> <span class="identifier">element</span>.<span class="identifier">id</span>; 
+</code></pre>
+<p>We like these micro-benchmarks for tracking regressions in heavily used DOM APIs like element.id. However, we couldn&#8217;t use them to guide our performance work because they don’t tell us the relative importance of each DOM API. With these micro-benchmarks, we could have easily over optimized APIs that don’t matter as much in actual web applications.</p>
+<p>These micro-benchmarks can also encourage browser vendors to implement optimizations that don&#8217;t translate into any real-world benefit. In the example above for instance, some browser engines detect that element.id doesn&#8217;t have any side effect and eliminate the loop entirely; assigning the value exactly once. However, real-world websites rarely access element.id repeatedly without ever using the result or modifying the DOM in between.</p>
+<p>Hence we decided to write a new benchmark for the end-to-end performance of a complete web application instead of testing individual DOM calls.</p>
+<h2>Mechanics</h2>
+<p>We tried to make Speedometer faithfully simulate a typical workload on a demo application by replaying a sequence of user interactions. We did have to work around certain limitations of the browser, however. For instance, we call click() on each checkbox in order to simulate a mouse click since many browsers don&#8217;t allow web content to create fake mouse or keyboard events. To make the run time long enough to measure with the limited precision, we synchronously execute a large number of the operations, such as adding one hundred to-do items.</p>
+<p>We also noticed that some browser engines have used an optimization strategy of doing some work asynchronously to reduce the run time of synchronous operations. Returning control back to JavaScript execution as soon as possible is worth pursuing. However, a holistic, accurate measurement of web application performance involves measuring when these related, asynchronous computations actually complete since they could still eat up a big proportion of the 16-millisecond-per-frame budget required to achieve smooth, 60 frames-per-second user interaction. Thus, we measure the time browsers spend executing those asynchronous tasks in Speedometer, estimated as the time between when a zero-second delay timer is scheduled and when it is fired.</p>
+<p>It is worth noting that Speedometer is not meant to compare the performance of different JavaScript frameworks. The mechanism by which we simulate user actions is different for each framework, and we’re forcing frameworks to do more work synchronously than needed in some cases to ensure that run time can be measured.</p>
+<h2>Optimizations in WebKit</h2>
+<p>Over the past eight months since we introduced <a href="https://lists.webkit.org/pipermail/webkit-dev/2013-September/025503.html">the first beta version</a> of Speedometer under a different name, we have been optimizing WebKit’s performance on this benchmark.</p>
+<p>One of our biggest improvements on Speedometer came from <a href="http://trac.webkit.org/changeset/160908">making render tree creation lazy</a>. In WebKit, we create render objects for each element that gets displayed on screen in order to compute each element’s style and position. To avoid thrash, we changed WebKit to only create an element’s render object when it was needed, giving WebKit a huge performance boost. We also made many DOM APIs not trigger synchronous style resolutions or synchronous layout so that we get further benefit from lazily creating the render tree.</p>
+<p>Another area we made substantial improvements was JavaScript bindings, the layer that sits between C++ browser code and JavaScript. We removed redundant layers of abstraction and made more properties and member functions on DOM objects inline cacheable (See <a href="https://www.webkit.org/blog/3362/introducing-the-webkit-ftl-jit/">Introducing the WebKit FTL JIT</a>). For example, we <a href="http://trac.webkit.org/changeset/160628">added a new JavaScriptCore feature</a> to deal with named properties on the document object so that its attributes could be inline cached. We also optimized node lists returned by getElementsByTagName as well as inline caching the length property.</p>
+<p>Finally, WebKit’s performance on Speedometer benefited from two major architectural changes. JavaScriptCore&#8217;s <a href="http://trac.webkit.org/changeset/150465">concurrent</a> and <a href="http://trac.webkit.org/changeset/161546">parallel</a> JIT (See <a href="https://www.webkit.org/blog/3362/introducing-the-webkit-ftl-jit/">Introducing the WebKit FTL JIT</a>), which allows JavaScript to be compiled while the main thread is running other code, reduced the run time of JavaScripts in Speedometer. <a href="https://www.webkit.org/blog/3271/webkit-css-selector-jit-compiler/">The CSS JIT</a>, which allows CSS selectors to be compiled up front and rapidly checked against elements, reduced time spent in style resolution and made querySelector and querySelectorAll much faster.</p>
+<p>Because Speedometer is an end-to-end benchmark that uses popular JavaScript frameworks, it also helped us catch surprising performance regressions. For instance, when we tried to optimize calls to bound functions in JavaScript by doing more work up front in Function.prototype.bind, we saw a few percent performance regression on Speedometer because many bound functions were called only once before being discarded. We initially doubted that this result reflected the behavior of real web applications, so we collected statistics on popular websites like Facebook and Twitter. To our surprise, we found exactly the same behavior: the average bound function was called only once or twice on the websites we studied.</p>
+<h2>Future Plans</h2>
+<p>In future versions, we hope to add more variations of web applications and frameworks. If you know of any good demo web applications distributed under <a href="http://en.wikipedia.org/wiki/MIT_License">MIT license</a> or <a href="http://en.wikipedia.org/wiki/BSD_license">BSD license</a> that could be incorporated into Speedometer, <a href="https://www.webkit.org/coding/contributing.html">please let us know</a>.</p>
+<p>With Speedometer, the web browser community now has a benchmark that measures the responsiveness of real-world web applications. We are looking forward to making further performance improvements in WebKit using Speedometer, and we hope other browser vendors will join us.</p>
+
+                            </div>
+        </article>
+        
+        <nav class="navigation pagination" aria-label="Next/Last posts">
+            <a class="page-numbers prev-post" href="https://webkit.org/blog/3362/introducing-the-webkit-ftl-jit/" rel="prev">Older Post <span>Introducing the WebKit FTL JIT</span></a>            <a class="page-numbers next-post" href="https://webkit.org/blog/3418/introducing-the-jetstream-benchmark-suite/" rel="next">Newer Post <span>Introducing the JetStream Benchmark Suite</span></a>        </nav>
+
+    
+    
+    </main><!-- #content -->
+        
+    <footer class="page-width">
+    <hr>
+    <nav id="footer-nav" aria-label="Footer menu"><div class="menu-footer-menu-container"><ul id="menu-footer-menu" class="menu"><li id="menu-item-7617" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-7617"><a href="https://twitter.com/webkit">@webkit</a></li>
+<li id="menu-item-5365" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5365"><a href="https://webkit.org/sitemap/">Site Map</a></li>
+<li id="menu-item-4185" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-4185"><a href="http://www.apple.com/legal/privacy/">Privacy Policy</a></li>
+<li id="menu-item-4287" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4287"><a href="https://webkit.org/licensing-webkit/">Licensing WebKit</a></li>
+<li id="menu-item-4187" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-4187"><a href="https://webkit.org/terms-of-use/">WebKit and the WebKit logo are trademarks of Apple Inc.</a></li>
+</ul></div></nav>
+    </footer>
+
+
+<script type='text/javascript' src='https://webkit.org/wp-content/themes/webkit/scripts/global.js?ver=1.0'></script>
+<script type='text/javascript' src='https://webkit.org/wp/wp-includes/js/wp-embed.min.js?ver=4.8-alpha-40568'></script>
+</body>
+</html>
+<!-- Dynamic page generated in 0.167 seconds. -->
+<!-- Cached page generated by WP-Super-Cache on 2017-07-12 04:05:32 -->
+
+<!-- Compression = gzip -->
+<!-- super cache -->

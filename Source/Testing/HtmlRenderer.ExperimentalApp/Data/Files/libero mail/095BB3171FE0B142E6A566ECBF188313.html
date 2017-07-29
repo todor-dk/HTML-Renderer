@@ -1,0 +1,210 @@
+
+
+
+
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link rel="shortcut icon" type="image/x-icon" href="/cp/images/pec.libero.it/pec-libero-favicon.ico" />
+
+        <title>
+           Login Posta Certificata – Libero Mail Pec 
+        </title>
+        
+
+        <link type="text/css" rel="stylesheet"  href='/cp/styles/default/en/uikit/inone_styles.css' >
+        <link type="text/css" rel="stylesheet"  href='/cp/styles/default/en/uikit/login.css' >
+
+        <script language="JavaScript" type="text/javascript" src='/cp/javascript/default/en/uikit/util.js'></script>
+        <script language="JavaScript" type="text/javascript">
+            // store domain in a cookie.
+            document.cookie = "thedomain=null; path=/";
+            function removeUsernameFromUrl(url) {
+                var username = /(.*)u=[^&]*([&]|$)(.*)/;
+                var result = url.match(username);
+                if( result != null ) {
+                    url = result[1] + result[3];
+                }
+                return url;
+            }
+            function removeTokenFromUrl(url) {
+                var username = /(.*)t=[^&]*([&]|$)(.*)/;
+                var result = url.match(username);
+                if( result != null ) {
+                    url = result[1] + result[3];
+                }
+                return url;
+            }
+            function removeDomainFromUrl(url) {
+                var username = /(.*)d=[^&]*([&]|$)(.*)/;
+                var result = url.match(username);
+                if( result != null ) {
+                    url = result[1] + result[3];
+                }
+                return url;
+            }
+            
+            function setAction() {
+                
+                
+                
+                var authenticateUrl = "/cp/ps/Main/login/PreAuthenticate?d=213.51.63&style=libero&s=1499878436503";
+                // Remove unecessary query parameters from the url. The username is supplied by the login form. The token will be created upon a successful login.
+                authenticateUrl = removeUsernameFromUrl(authenticateUrl);
+                authenticateUrl = removeTokenFromUrl(authenticateUrl);
+                authenticateUrl = removeDomainFromUrl(authenticateUrl);
+                // Enable session validation. This prevents users re-authenticating an expired or logged out session using a browser refresh.
+                authenticateUrl = authenticateUrl + "&v=1499878436503";
+                window.document.loginInfo.action = authenticateUrl;
+
+                
+                setInterval(sessionPing, 840*1000);
+            }
+            
+            
+            function setloginParameters() {
+                document.getElementById('displayUserName').className="input";
+                document.getElementById('password').className="input";    
+
+                var form = window.document.loginInfo;
+                var fullUserName = form.displayUserName.value;
+                
+                var ctrerror = "Inserisci il tuo indirizzo PEC Libero e la tua password."
+                if (fullUserName.length ==0) {
+                    document.getElementById('displayUserName').className="err";
+                    document.getElementById('errorMsgBox').innerHTML=ctrerror;
+                    return false;
+                }
+                if (fullUserName != "" && !isAddressValid(fullUserName)){
+                    document.getElementById('displayUserName').className="err";
+                    ctrerror = "Inserisci un indirizzo valido."
+                    document.getElementById('errorMsgBox').innerHTML=ctrerror;
+                    return false;
+                }
+
+                var pwd = form.password.value;
+                if (pwd.length ==0) {
+                    document.getElementById('password').className="err";    
+                    ctrerror = "Inserisci la tua password."
+                    document.getElementById('errorMsgBox').innerHTML=ctrerror;
+                    return false;
+                }
+                
+
+                var index = fullUserName.indexOf('@');
+                var userName = fullUserName.substring(0, index);
+                var domainName = fullUserName.substring(index+1);
+
+                var actionUrl = form.action;
+
+                document.loginInfo.action = actionUrl;
+                document.loginInfo.u.value = userName;
+                document.loginInfo.d.value = domainName;
+                return true;
+            }
+            function submitForm() {
+                if (!setloginParameters()) 
+                    return false;
+                return true;
+            }
+            function creatRequestObj() {
+                var req
+                if (window.XMLHttpRequest) {
+                    req = new XMLHttpRequest()
+                } else if (window.ActiveXObject) {
+                    req = new ActiveXObject("Microsoft.XMLHTTP")
+                }
+                return req
+            }
+            function sessionPing() {
+                var req = creatRequestObj()
+                var url = "AsyncAccessBridge"
+                req.open("GET", url, true)
+                req.onreadystatechange = function() {}
+                req.send(null)
+            }
+        </script>
+    </head>
+    <!-- 
+         DEBUG HOST INFO
+ 
+         host : pecps02
+         port : 8080
+         protocol : HTTP/1.1     
+    -->
+
+    <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onload="setAction();">
+        
+
+        
+        <div id="l_header_topbar" style="background:#021C34;height:40px;width:100%;" >
+            <iframe scrolling="no" frameborder="0" style="width: 100%; height: 40px; left: 0; position: fixed; top: 0; width: 100%; z-index: 10000;" border="0" src="/cp/static/pec.libero.it/header1024.html"><!-- --></iframe>
+        </div>
+
+        <div id="mp-top">
+            <div class="content">
+                <div style="cursor:pointer;" onclick='document.location.href="http://mailpec.libero.it/"'>
+                    <h1>MAILPEC. La posta certificata di Libero</h1>
+                    <div class="clear"></div>
+                    <h2>Pi&ugrave; raccomandatat di una raccomandata. Lo dicono tutti. E tu?</h2>
+                </div>
+
+                <div id="mp-reg" onclick='document.location.href="http://mailpec.libero.it/"'
+                     title="Se non hai ancora Libero Mail Pec, registrati qui.">
+                </div>
+                <div id="mp-pwby">Power by Italia OnLine</div>
+                
+                <div class="mp-box-form">
+                    <form name="loginInfo" method="post" action="/cp/ps/Main/login/Login?d=213.51.63&style=libero&s=1499878436503" onsubmit="return submitForm()">
+                        <input type="hidden" name="pinOrPassword" value="false">
+                        <a href="http://mailpec.libero.it/" title="Vai alla Home Page MAILPEC" class="mp-lnk-hp">Vai alla Home Page di MAILPEC</a>
+                        <span class="mp-err-mess" id="errorMsgBox">
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                        </span>
+                        
+                        
+                        
+                        
+
+                        <label for="liberoid">Inserisci l&acute;indirizzo della tua mailpec</label>
+                        <input type="text" name="liberoid" id="displayUserName" tabindex="1" value=""><!-- applicare la classe err in caso di eroore nel campo -->
+                        <input type="hidden" name="u" value="">
+                        <input type="hidden" name="d" value='213.51.63'>
+                        <span class="mp-es-user">es. mario.rossi@pec.libero.it</span>
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" tabindex="2" value="">
+                        <!-- applicare la classe err in caso di erore nel campo e applicare la classe focus in caso di...FOCUS sul campo -->
+                        <a href="/cp/ps/Main/login/OtherLogin?style=libero" title="Hai dimenticato la password?" class="mp-lost-pwd">Hai dimenticato la password?</a>
+                        <input name="entra" type="submit" value="Entra" class="mp-bt-entra" tabindex="3"/>
+                        <div class="mp-shadow-box"><!-- elemento grafico ombra --></div>
+                        <a href="http://aiuto.libero.it/mail/libero-mail-pec/7059.phtml" class="mp-lnk-ass" title="Hai bisogno di Assistenza?">Hai bisogno di <span>Assistenza</span>?</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <br/>
+        <br/>
+        <div id="l_footer">
+
+            <iframe id="l_iframe_footer" scrolling="no" frameborder="0" style="width: 970px;height:45px" border="0" src="about:blank"><!-- --></iframe>
+        	<script type="text/javascript">
+        		var l_iframe_footer_url = '/cp/static/pec.libero.it/footer1024.html';
+        		document.getElementById('l_iframe_footer').src = l_iframe_footer_url + '?cs_url=' + escape(document.location.href) + '&cs_referrer=' + escape(document.referrer) + '&cs_title=' + escape(document.title) + '&cs_charset=' + escape(document.characterSet || document.defaultCharset);
+        	</script>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,1051 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Virgilio - Login</title>
+    <meta name="description" content="Inserisci la tua user e password ed entra in Virgilio Mail. Sei invece un nuovo utente? Crea un nuovo account o richiedi l'aiuto di Virgilio" />
+    <meta http-equiv="Cache-Control" content="private, max-age=0">
+    <meta http-equiv="Expires" content="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic' rel='stylesheet' type='text/css'>
+    <link href="css/login_resp.css?d=130528" type="text/css" rel="stylesheet">
+    <link rel="canonical" href="http://mail.virgilio.it/login" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="css/splash_noiframe_resp.css?d=131105" />
+    <link type="text/css" href="css/stili_loginresp.css?d=170109" rel="stylesheet" />
+    <link type="text/css" href="css/footer_virgilio.css" rel="stylesheet" />
+    <!--<script src='https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit'></script>-->
+    <script type="text/javascript" src="/js/vMailActivate.js"></script>
+    <script type="text/javascript" src="/js/index_noiframe_resp.js?20170322"></script>
+    <script type="text/javascript" language="javascript" src="js/common.js"></script>
+    <script type="text/javascript" language="javascript" src="js/Vlogin_noiframe_resp.js?d=20170413_6"></script>
+    <script type="text/javascript" language="javascript" src="js/autocomplete.js?d=20160114_1"></script>
+    <script language="JavaScript">
+        document.domain = "virgilio.it";
+    </script>
+    <script type="text/javascript" src="ssl/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="ssl/jquery.query-2.1.7-min.js"></script>
+    <!--	<script type="text/javascript" src="https://ssl-i.plug.it/common/tech_includes/lib/liberix.js"></script>-->
+    
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            startRedirect();
+            loadingFrame();
+            initUsernameDomain();
+            recaptcha();
+            jQuery.getScript("https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit");
+            callMpu();     
+            if (window.location.protocol.match("h.*[p]:"))
+              $("#imageField").prop("disabled",true);       
+        });
+    </script>
+    <script type="text/javascript" src="https://ssl-i.plug.it/common/tech_includes/lib/policy_cookie.js"></script>
+    <!--Adv-->
+    <script type='text/javascript'>
+        var crtg_nid = '1994';
+        var iol_adv_config = {
+            'sito': 'virgilio',
+            'section': 'mail' 
+        };
+    </script>
+    <script type='text/javascript' src='https://ssl-i.plug.it/banners/js/rta2.js'></script>
+    <script type='text/javascript' src='https://ssl-i.plug.it/banners/js/adv_library3_https.js'></script>
+    <!-- <script type='text/javascript' src='https://ssl-i.plug.it/banners/js/test/adv_test_lib_https.js'></script> -->
+    <!-- Amazon -->
+    <script type='text/javascript' src='https://c.amazon-adsystem.com/aax2/amzn_ads.js'></script>
+    <!--    nella versione di test/stage 
+    <script type='text/javascript' src='https://ssl-i.plug.it/st/banners/js/adv_lib_login.js'></script>
+    -->
+    <!-- nella versione di produzione --> 
+<script type='text/javascript' src='https://ssl-i.plug.it/banners/js/adv_lib_login.js'></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;            
+        }
+        
+        .external_footer_libero {
+            background-color: #FFF;
+            border-left: 1px solid #ccc;
+            border-top: 1px solid #ccc;
+            border-right: 1px solid #ccc;
+            width: 676px;
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            margin-left: -340px;
+            z-index: 100;
+        }
+        
+        .ftr {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 10px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 8px 0 3px 0;
+        }
+        
+        .ftr a {
+            color: #666;
+        }
+        
+        .ftr a:hover {
+            color: #999;
+        }
+        
+        .pipe {
+            padding: 0 8px;
+        }
+        
+        .ftr_piva {
+            font-family: 'Roboto', sans-serif;
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+            clear: both;
+            padding: 0 0 10px 0;
+        }
+        
+        .display {
+            display: inline;
+        }
+        
+        .view {}
+        
+        @media only screen and (max-width: 1440px) {}
+        
+        @media only screen and (max-width: 980px) {}
+        
+        @media only screen and (max-width: 730px) {
+            .external_footer_libero {
+                width: 568px;
+                margin-left: -287px;
+            }
+            .pipe {
+                padding: 0 4px;
+            }
+        }
+        
+        @media only screen and (max-width: 570px) {
+            .external_footer_libero {
+                width: 318px;
+                margin-left: -161px;
+                border-bottom: 1px solid #ccc;
+                position: relative;
+            }
+            .view {
+                display: none;
+            }
+            .display {
+                display: block;
+            }
+        }
+        
+        #tlb-corp li,
+        #tlb-corp ul {
+            height: inherit;
+            padding-left: 15px;
+            display: inline-block
+        }
+        
+        #tlb-corp .caret:after,
+        #tlb-corp li.active a:after,
+        #tlb-sx .logo:after {
+            content: ""
+        }
+        
+        #tlb-corp img,
+        #tlb-corp svg {
+            display: inline-block
+        }
+        
+        #tlb-corp svg path {
+            -webkit-transition: fill .2s ease-out, stroke .2s ease-out;
+            transition: fill .2s ease-out, stroke .2s ease-out
+        }
+        
+        #tlb-corp svg:hover path,
+        #tlb-corp svg:hover polygon {
+            fill: #999;
+            stroke: #999
+        }
+        
+        .svg-fcb path,
+        .svg-gpl path,
+        .svg-gpl polygon,
+        .svg-lib path,
+        .svg-twt path,
+        .svg-virg path {
+            fill: #FFF;
+            stroke: #FFF
+        }
+        
+        .svg-virg path:first-child {
+            fill: transparent!important
+        }
+        
+        .svg-virg .svg-virg-ar,
+        .svg-virg:hover .svg-virg-ar {
+            fill: #F85F3A!important
+        }
+        
+        .svg-icon-user path {
+            fill: #F85F3A
+        }
+        
+        .svg-lib .svg-lib-strk {
+            stroke-width: 1.5
+        }
+        
+        .svg-lib .svg-lib-bll {
+            fill: #7EB144!important;
+            stroke: #7EB144!important
+        }
+        
+        #log_nickname .svg-a,
+        #log_nickname .svg-b,
+        #log_username .svg-a,
+        #log_username .svg-b {
+            fill: rgba(144, 68, 49, .5)
+        }
+        
+        #tlb-corp {
+            display: block;
+            position: relative;
+            top: 0;
+            left: 0;
+            background-color: #262626;
+            height: 40px;
+            width: 100%;
+            font-family: Arial;
+            z-index: 1000;
+            min-width: 320px
+        }
+        
+        #tlb-corp * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            border: 0;
+            outline: 0
+        }
+        
+        #tlb-corp a {
+            text-decoration: none;
+            -webkit-transition: color .2s ease-out;
+            transition: color .2s ease-out
+        }
+        
+        #tlb-corp .tlb-cont {
+            width: 100%;
+            max-width: 1192px;
+            margin: 0 auto;
+            height: inherit
+        }
+        
+        #tlb-corp ul {
+            vertical-align: top;
+            font-size: 0
+        }
+        
+        #tlb-altro>span,
+        #tlb-corp li a {
+            font-size: 11px;
+            text-transform: uppercase
+        }
+        
+        #tlb-corp li {
+            line-height: 40px
+        }
+        
+        #tlb-corp li:first-child {
+            padding-left: 0
+        }
+        
+        #tlb-corp li a {
+            font-weight: 700;
+            color: #FFF
+        }
+        
+        #tlb-corp li.active a:after {
+            display: block;
+            border-top-width: 4px;
+            border-top-style: solid;
+            left: 0;
+            top: -44px;
+            position: relative
+        }
+        
+        #tlb-corp li a:hover,
+        #tlb-corp li.active a:hover,
+        #tlb-dx .back-libero:hover {
+            color: #999!important
+        }
+        
+        #tlb-corp .caret:after {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            vertical-align: middle;
+            border-top: 4px solid #eb4d04;
+            border-right: 4px solid transparent;
+            border-left: 4px solid transparent;
+            position: absolute;
+            top: 50%;
+            margin: -2px 0 0 8px;
+            -webkit-transition: border-top-color .2s ease-out;
+            transition: border-top-color .2s ease-out
+        }
+        
+        #tlb-sx,
+        #tlb-sx .logo {
+            display: inline-block;
+            height: inherit
+        }
+        
+        #tlb-altro,
+        #tlb-sx {
+            vertical-align: top
+        }
+        
+        #tlb-corp .caret:hover:after {
+            border-top-color: #FFF
+        }
+        
+        #tlb-sx .logo {
+            position: relative;
+            width: 83px;
+            margin-left: 10px
+        }
+        
+        #tlb-sx .logo:after {
+            display: block;
+            width: 1px;
+            height: 20px;
+            background-color: #404040;
+            position: absolute;
+            right: -10px;
+            top: 9px
+        }
+        
+        #tlb-sx .logo img {
+            margin-top: 12px
+        }
+        
+        #tlb-altro {
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            padding-right: 20px
+        }
+        
+        #tlb-altro .label:before {
+            content: "menu"
+        }
+        
+        #tlb-altro.open {
+            overflow: visible
+        }
+        
+        #tlb-altro>span {
+            display: inline-block;
+            height: inherit;
+            line-height: 40px;
+            padding-left: 15px;
+            cursor: pointer;
+            color: #999
+        }
+        
+        #tlb-altro>span:hover {
+            color: #999
+        }
+        
+        #tlb-altro ul {
+            position: absolute;
+            left: 0;
+            top: 40px;
+            background-color: #333;
+            font-size: 0
+        }
+        
+        #tlb-altro li {
+            padding: 0 15px 0 0;
+            white-space: nowrap;
+            display: block
+        }
+        
+        #tlb-altro li.active a:after {
+            display: none
+        }
+        
+        #tlb-altro li.active a {
+            color: #FFF!important
+        }
+        
+        #tlb-dx {
+            float: right;
+            height: inherit
+        }
+        
+        #tlb-dx .back-libero {
+            line-height: 42px;
+            font-size: 11px;
+            color: #FFF;
+            margin-right: 10px;
+            display: none;
+            white-space: nowrap
+        }
+        
+        #tlb-dx .back-libero img,
+        #tlb-dx .back-libero svg {
+            height: 15px;
+            width: auto;
+            margin-left: 5px;
+            vertical-align: sub
+        }
+        
+        #tlb-user,
+        #tlb-user .user-icon {
+            position: relative;
+            vertical-align: top
+        }
+        
+        #tlb-user {
+            display: inline-block;
+            min-height: 100%;
+            overflow: hidden;
+            width: 50px;
+            margin-left: 15px
+        }
+        
+        #tlb-user .user-icon {
+            display: block;
+            width: 14px;
+            height: 14px;
+            margin: 13px auto 0;
+            cursor: pointer
+        }
+        
+        #tlb-user .caret:after {
+            margin-left: 15px
+        }
+        
+        #tlb-user ul {
+            position: absolute;
+            right: 0;
+            top: 40px;
+            background-color: #f26134;
+            font-size: 0;
+            text-align: right;
+            padding-left: 0
+        }
+        
+        #tlb-user li {
+            white-space: nowrap;
+            border-top: 1px solid #f69070;
+            display: block;
+            padding: 0 15px
+        }
+        
+        #tlb-user li a,
+        #tlb-user li span {
+            text-transform: none;
+            font-size: 14px;
+            font-weight: 400
+        }
+        
+        #tlb-user li span {
+            display: block;
+            color: #FFF
+        }
+        
+        #tlb-user li img,
+        #tlb-user li svg {
+            margin-left: 16px
+        }
+        
+        #tlb-user.open {
+            background-color: #333;
+            overflow: visible
+        }
+        
+        #tlb-user.open .svg-icon-user {
+            display: none
+        }
+        
+        #tlb-user.open .caret:after {
+            content: "\2716";
+            border: 0;
+            color: #f26134;
+            font-size: 20px;
+            margin: -15px 0 0 -2px
+        }
+        
+        #tlb-user .ico_mail {
+            position: absolute;
+            right: -1px;
+            top: 2px;
+            margin: 0
+        }
+        
+        #tlb-user .ico_prof {
+            position: absolute;
+            right: -7px;
+            top: 1px
+        }
+        
+        #tlb-user .loggedin #log_nick,
+        #tlb-user .loggedin #log_user {
+            padding: 0 22px 0 15px;
+            position: relative
+        }
+        
+        #tlb-corp li[mem_order="10"].active a {
+            color: #f26134
+        }
+        
+        #tlb-corp li[mem_order="13"].active a {
+            color: #1a4785
+        }
+        
+        #tlb-corp li[mem_order="16"].active a {
+            color: #C2AC12
+        }
+        
+        #tlb-corp li[mem_order="2"].active a {
+            color: #ba2185
+        }
+        
+        #tlb-corp li[mem_order="19"].active a {
+            color: #09F
+        }
+        
+        #tlb-corp li[mem_order="5"].active a {
+            color: #c21a01
+        }
+        
+        #tlb-corp li[mem_order="6"].active a,
+        #tlb-corp li[mem_order="9"].active a,
+        #tlb-corp li[mem_order="3"].active a {
+            color: #09f
+        }
+        
+        #tlb-corp li[mem_order="8"].active a {
+            color: #ffa540
+        }
+        
+        #tlb-corp li[mem_order="11"].active a {
+            color: #c30
+        }
+        
+        #tlb-corp li#log_mail.active a {
+            color: #F60
+        }
+        
+        #tlb-corp li#log_community.active a {
+            color: #019fde
+        }
+        
+        li[mem_order="10"] a:after {
+            border-top-color: #f26134
+        }
+        
+        li[mem_order="13"] a:after {
+            border-top-color: #1a4785
+        }
+        
+        li[mem_order="16"] a:after {
+            border-top-color: #C2AC12
+        }
+        
+        li[mem_order="2"] a:after {
+            border-top-color: #ba2185
+        }
+        
+        li[mem_order="19"] a:after {
+            border-top-color: #09F
+        }
+        
+        li[mem_order="5"] a:after {
+            border-top-color: #c21a01
+        }
+        
+        li[mem_order="6"] a:after,
+        li[mem_order="9"] a:after,
+        li[mem_order="3"] a:after {
+            border-top-color: #09f
+        }
+        
+        li[mem_order="8"] a:after {
+            border-top-color: #ffa540
+        }
+        
+        li[mem_order="11"] a:after {
+            border-top-color: #c30
+        }
+        
+        li#log_mail a:after {
+            border-top-color: #F60
+        }
+        
+        li#log_community a:after {
+            border-top-color: #019fde
+        }
+        
+        @media screen and (max-width:768px) {
+            #tlb-corp li.active a:after,
+            #tlb-sx>ul {
+                display: none
+            }
+            #tlb-corp li.active a {
+                color: #FFF
+            }
+            #tlb-altro.static {
+                position: static
+            }
+            #tlb-altro.static ul {
+                padding-left: 0
+            }
+            #tlb-altro.static li {
+                width: 33%;
+                padding-right: 0;
+                display: inline-block
+            }
+            #tlb-altro.static a {
+                margin: 0 15px
+            }
+            #tlb-altro .label:before {
+                content: "menu"
+            }
+            #tlb-dx ul {
+                float: right;
+                padding: 0 15px 0 0
+            }
+            #tlb-dx li:nth-child(2),
+            #tlb-user {
+                display: none
+            }
+        }
+        
+        #footer-corporate,
+        #footer-corporate h6 {
+            font-family: Arial
+        }
+        
+        #footer-corporate .logo,
+        #footer-corporate h6,
+        #footer-corporate p,
+        #footer-corporate ul {
+            display: inline-block;
+            vertical-align: middle
+        }
+        
+        #footer-corporate {
+            background-color: #404040;
+            color: #999;
+            text-align: center;
+            padding: 10px 10px 10px 5px
+        }
+        
+        #footer-corporate a {
+            text-decoration: none;
+            color: #999;
+            -webkit-transition: color .2s ease-out;
+            transition: color .2s ease-out
+        }
+        
+        #footer-corporate a:hover {
+            color: #fff
+        }
+        
+        #footer-corporate .logo {
+            width: 130px;
+            height: 24px
+        }
+        
+        #footer-corporate img {
+            width: 100%;
+            height: 100%;
+            border: 0
+        }
+        
+        #footer-corporate .svg-a {
+            fill: none
+        }
+        
+        #footer-corporate .svg-b {
+            fill: #FFF
+        }
+        
+        #footer-corporate .svg-c {
+            fill: #FFCE06
+        }
+        
+        #footer-corporate .svg-d {
+            fill: #FF005C
+        }
+        
+        #footer-corporate .svg-e {
+            fill: #8ED800
+        }
+        
+        #footer-corporate .svg-f {
+            fill: #2B0052
+        }
+        
+        #footer-corporate .svg-g {
+            fill: #20C3F3
+        }
+        
+        #footer-corporate h6 {
+            padding: 0 20px;
+            margin: 0
+        }
+        
+        #footer-corporate ul {
+            padding: 0;
+            list-style: none;
+            font-size: 0
+        }
+        
+        #footer-corporate li {
+            display: inline-block;
+            padding: 5px 10px 5px 5px;
+            font-size: 11px
+        }
+        
+        #footer-corporate .footer-rule+ul li {
+            padding: 5px
+        }
+        
+        #footer-corporate p {
+            color: #999;
+            font-size: 11px;
+            margin: 0 0 0 10px
+        }
+        /*
+        .external_loginresp {
+            position: relative;
+        }
+        */
+        .mpu {
+            width: 300px;
+            position: absolute;
+            top: 50px;
+            left: 240px;        
+            display: none;
+        }
+        
+        .quote {
+            width: 270px;
+            padding: 0 25px 0 25px;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 26px;
+            color: #333;
+            position: absolute;
+            left: 540px;
+            top: 50px;
+            display: none;
+        }
+        
+        .quote p::before {
+            content: "\00AB";
+            text-align: left;
+            display: block;
+            font-size: 50px;
+            font-weight: bold;
+            color: #b8b8b8;
+            margin-bottom: 10px;
+        }
+        
+        .quote p::after {
+            content: "\00BB";
+            text-align: right;
+            display: block;
+            font-size: 50px;
+            font-weight: bold;
+            color: #b8b8b8;
+            margin-top: 10px;
+        }
+        
+        .quote p {
+            text-align: center;
+            line-height: 36px;
+        }
+        
+        .author {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            padding-top: 20px;
+        }
+        
+        @media only screen and (min-width: 980px) and (max-width: 1440px) {
+            #adsplash {
+                left: 0!important;
+            }
+            .quote {
+                left: 300px;
+            }
+        }
+        
+        @media only screen and (max-device-width: 979px) and (orientation: portrait) {
+            #adsplash,
+            .quote {
+                display: none!important;
+            }
+        }
+        @media only screen and (max-width: 979px) {
+            #adsplash,
+            .quote {
+                display: none!important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- INIZIO DIV splash 1440x1024, 1024x768, 768x1024 DFP -->
+    
+    <!-- FINE DIV splash 1440x1024, 1024x768, 768x1024 DFP -->
+    <!-- INIZIO DIV mobleaderboard 320x50, 320x100 DFP -->
+    <div id="admobleaderboard">
+        <script type='text/javascript'>
+            var service_id = adv_getParameterByName("service_id");
+            if (!service_id || service_id != "premium_mp") {
+                googletag.cmd.push(function () {
+                    googletag.display('admobleaderboard');
+                });
+            }
+        </script>
+    </div>
+    <!-- FINE DIV mobleaderboard 320x50, 320x100 DFP -->
+    <!-- INIZIO DIV leaderboard 728x90 DFP -->
+    <div id="adleaderboard">
+        <script type='text/javascript'>
+            var service_id = adv_getParameterByName("service_id");
+            if (!service_id || service_id != "premium_mp") {
+                googletag.cmd.push(function () {
+                    googletag.display('adleaderboard');
+                });
+            }
+        </script>
+    </div>
+    <!-- FINE DIV leaderboard 728x90 DFP -->
+    <div class="external_loginresp">
+        <div id="adsplash">   
+            <script type='text/javascript'>
+                var service_id = adv_getParameterByName("service_id");
+                if (!service_id || service_id != "premium_mp") {
+                    googletag.cmd.push(function () {
+                        googletag.display('adsplash');
+                    });
+                }
+            </script>
+        </div>
+    <!--
+        <div class="mpu" id="divMpu">
+            <a href="#"><img src="https://ssl-i.plug.it/st/mail/login/img/mpu_maxi.jpg" alt=""></a>
+        </div>
+    -->
+        <div class="quote" id="divQuote">
+            <p id="aphorism"></p>
+            <div id="author" class="author"></div>
+        </div>
+        <div class="cont_loginresp">
+            
+	
+
+
+
+
+
+	<script type="text/javascript">
+		var vMailActivate=true;
+		var vAccountMailActivate=true;
+	</script>
+    
+    
+    
+     <div id="box1" class="box1 box_external" style="position:relative; z-index:10000">    
+    <a href="http://www.virgilio.it" title="Torna all'Home Page di Virgilio" target=_new><div class="logo"></div></a>
+    <div id="alicebox" class="box_top_grey hide">
+    	<div class="txt">Pi&ugrave; organizzata, pi&ugrave; veloce<br>
+e sempre gratuita.
+		</div>
+        
+        </div>
+         <form onsubmit="return checkAndSubmit()" 
+         id="mail_servizi" name="mail_servizi" style="border:0" method="post" action="https://aaacsc.virgilio.it/piattaformaAAA/aapm/amI">
+         
+         <div class="txt_error" id="errMsg" name="errMsg"></div>        
+        
+        <div class="dati">
+          <input class="loginoff input_n" name="usernameDisplay" id="usernameDisplay" tabindex="1" alt="Email" title="utente" type="text" value="inserisci la tua email" onfocus="loginFocus(this)" onblur="loginBlur(this)" onkeypress="return Autocomplete(this, event, arrValues)">
+     
+          <input placeholder="Password" class="pwd_n" name="password" id="password" tabindex="2" title="password" type="password" value="" onfocus="pwdFocus(this)" onblur="pwdBlur(this)" onkeypress="pwdKPress(this)"> 
+        
+        <div class="clear"></div>
+       
+         </div>
+          <!-- parametri ALICE specifici -->
+            <input name="login" value="" type="hidden">
+            <input name="pwd" value="" type="hidden">
+            <input name="channel" value="Vmail" type="hidden">
+            <input name="URL_OK" value="https://authsrs.alice.it/aap/aap_redir.jsp?entry=Vmail" type="hidden">
+            <input name="URL_KO" value="https://authsrs.alice.it/aap/aap_redir_ko.jsp?entry=Vmail" type="hidden">
+            <!-- parametri TIM specifici -->
+            <input name="servizio" value="mail" type="hidden">
+            <input name="msisdn" value="" type="hidden">
+            <input name="username" value="" type="hidden">
+            <!-- parametri TIN, VIRGILIO specifici    -->
+            <input name="user" value="" type="hidden">
+            <input name="a3afep" value="https://mail.virgilio.it/login/index.html?code=470&amp;channel=Vmail" type="hidden">
+            <input name="DOMAIN" value="" type="hidden">
+            <input name="PASS" value="" type="hidden">
+            <input name="self" value="true" type="hidden">
+            <input name="a3si" value="none" type="hidden">
+            <input name="a3st" value="VCOMM" type="hidden">
+            <input name="totop" value="true" type="hidden">
+            <input name="nototopa3ep" value="true" type="hidden">
+            <input name="a3aid" value="lames" type="hidden">
+            <input name="a3flag" value="0" type="hidden">
+            <input id="a3ep" name="a3ep" value="http://webmail.virgilio.it/cp/ps/Main/login/SSOLogin" type="hidden">
+            <input name="a3epvf" value="http://webmail.virgilio.it/cp/ps/Main/login/SSOLogin" type="hidden">
+            <input name="a3se" value="http://mail.virgilio.it/common/iframe_mail/pf/Vlogin.html?code=470&amp;channel=Vmail" type="hidden">
+            <input name="a3dcep" value="http://communicator.alice.it/asp/homepage.asp?s=005" type="hidden">
+            <input name="a3l" value="" type="hidden">
+            <input name="a3p" value="" type="hidden">
+            <!-- WS-PSS  -->
+            <!-- BMPOP - Spalla_destra_auth -->
+            
+            <div class="ricorda">
+          <input name="rememberUsernameChk" value="checkbox" id="checkbox" tabindex="7" type="checkbox">
+          <label for="checkbox" style="border-right:0; color:#999">Ricordami</label>
+          <div class="pwd_dimenticata"><a href="http://go.virgilio.it/clkc_pu_oggi_hp_mail_1_3_dimpwd/https://registrazioni.virgilio.it/gau/rup/recuperaPassword.do">Password dimenticata?</a></div>
+          
+           <input name="imageField" id="imageField" tabindex="10" type="submit" class="inp_n" value="ENTRA">
+           
+           <div id="needhelp" class="serve_aiuto"><a href="http://aiuto.virgilio.it">Serve aiuto?</a></div>
+           </div>
+           
+             <div class="clear"></div>
+             
+            <div id="virgiliorecaptcha" class="recaptcha display_no"></div>
+				
+            <p id="captchaTextErr" class="errore" style="display:none;">Verifica non riuscita</p>
+             
+             <div style=" margin:10px 0 10px 15px; display:none;" id="div_fbconnect"><a id="btn_fbconnect" href="http://aaacsc.virgilio.it/magma/extauth/facebookAuthentication.do?urlRitorno=http%3A%2F%2Faaacsc.virgilio.it%2Fmagma%2Fjsp%2FcloseLayerFacebook.html%3Fret_url%3Dhttp%3A%2F%2Fnotizie.virgilio.it&entryPoint=extLogin" title="Entra con Facebook"><img src="images/pulsante_entrafb.png" alt="Entra con Facebook" ></a></div>
+             
+           <div class="clear"></div>
+           <div id="registeraccount" class="registrati">Non hai un account? <a id="btn_registrati" href="">Registrati</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a style="display:none;" id="needhelpcomm" href="http://aiuto.virgilio.it">Serve aiuto?</a></div>
+           
+                <!-- <div class="filo"></div>-->
+                 <!--<div class="tit_assistenza"><a href="http://aiuto.virgilio.it"><center>Aiuto</center></a></div>-->
+                 
+                 
+                 <!--<div class="txt_assistenza"><a href="http://go.alice.it/clkc_pu_oggi_hp_mail_1_3_dimpwd/https://registrazioni.virgilio.it/gau/rup/recuperaPassword.do" target="_top" style="margin:0 0 20px 0"><center>Hai dimenticato la password?</center></a></div>
+                     -->
+                                  
+                
+ 
+    
+              <!-- <div class="txt_assistenza_b none"><a href="#"><center>Non sei ancora registrato?</center></a></div>    -->
+               
+               
+        
+          <!--
+        <ul>
+           <li class="assistenza"><a id="idLinkAssistenza" href="http://aiuto.virgilio.it/" target="_top">Hai bisogno di <b>Aiuto</b>?</a></li>            
+        </ul>
+-->
+<div class="clear"></div>
+            <!--<div id="registrati" class="n-utente">          
+        <a id="btn_registrati" href="" onClick="getHrefUrl();" target="_top" class="color_ut">REGISTRATI</a>
+	  	<div id="spacer"></div>
+          </div>
+          -->
+           <div id="login_parameters"></div>
+ 
+         </form>
+        </div>
+
+        </div>
+    </div>
+    <!-- INIZIO DIV mpu 300x250 DFP -->
+    <div id="admpu">
+        <script type='text/javascript'>
+            var service_id = adv_getParameterByName("service_id");
+            if (!service_id || service_id != "premium_mp") {
+                googletag.cmd.push(function () {
+                    googletag.display('admpu');
+                });
+            }
+        </script>
+    </div>
+    <!-- FINE DIV mpu 300x250 DFP -->
+    
+<div class="external_footer_libero">
+  <div class="ftr"> <a href="http://aiuto.virgilio.it/" target="_blank">Aiuto</a> <span class="pipe">|</span> <a href="http://privacy.italiaonline.it/note_legali_virgilio.html" target="_blank">Note legali</a> <span class="pipe">|</span> <a href="http://privacy.italiaonline.it/privacy_virgilio.html" target="_blank">Privacy</a> <span class="pipe view">|</span>
+    <div class="display"><a href="http://privacy.italiaonline.it/common/cookie/privacy_detail.php" target="_blank">Cookie Policy</a> <span class="pipe">|</span> <a href="http://www.commissariatodips.it/" target="_blank">Commissariato di P.S.</a></div>
+  </div>
+  <div class="ftr_piva">&copy; ITALIAONLINE <script>document.write(new Date().getFullYear())</script><noscript>2016</noscript> - P. IVA 03970540963</div>
+</div>
+
+    <iframe id="geoisp" style="display:none" src="https://geoisp.virgilio.it/index.html?&f=virgiliomail" height="0" frameborder="0" marginheight="0" scrolling="no"></iframe>
+<iframe id="np" style="display:none" src="https://geoisp.virgilio.it/np.html?f=virgiliomail" height="0" frameborder="0" marginheight="0" scrolling="no"></iframe>
+  <!--include virtual="/common/includes/geoisp/index.html"-->
+	<!--include virtual="/common/includes/geoisp/np.html"-->
+    <!-- DMP start Virgilo -->
+    <script type="text/javascript" src="https://tags.crwdcntrl.net/c/6200/cc.js?ns=_cc6200" id="LOTCC_6200"></script>
+    <script type="text/javascript" language="javascript">
+        _cc6200.bcp();
+    </script>
+    <!-- DMP end -->
+    <!-- START Nielsen Online SiteCensus V6.0 -->
+    <!-- COPYRIGHT 2012 Nielsen Online -->
+    <script type="text/javascript" src="//secure-it.imrworldwide.com/v60.js">
+    </script>
+    <script type="text/javascript">
+        var pvar = {
+            cid: "matrix-it"
+            , content: "0"
+            , server: "secure-it"
+        };
+        var feat = {
+            check_cookie: 0
+        };
+        var trac = nol_t(pvar, feat);
+        trac.record().post();
+    </script>
+    <noscript>
+        <div> <img src="//secure-it.imrworldwide.com/cgi-bin/m?ci=matrix-it&amp;cg=0&amp;cc=0&amp;ts=noscript" width="1" height="1" alt="" /> </div>
+    </noscript>
+    <!-- END Nielsen Online SiteCensus V6.0 -->
+    <!--  IOL COMSCORE start - Version 1.58 -->
+    <script type="text/javascript">
+        document.write(unescape("%3Cscript src='" + (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        document.write(unescape("%3Cscript id='libero_tracking_js_site' src='" + (document.location.protocol == 'https:' ? 'https://ssl-i.plug.it/iplug/js/lib/iol/tr' : 'http://i.plug.it/iplug/js/lib/iol/tr') + "/data/mail.virgilio.it/comscore_mail.virgilio.it.min.js'%3E%3C/script%3E"));
+        document.write(unescape("%3Cscript id='libero_tracking_js_engine' src='" + (document.location.protocol == 'https:' ? 'https://ssl-i.plug.it/iplug/js/lib/iol/tr' : 'http://i.plug.it/iplug/js/lib/iol/tr') + "/engine/comscore_engine.min.js'%3E%3C/script%3E"));
+    </script>
+    <noscript> <img src="https://sb.scorecardresearch.com/p?c1=2&amp;c2=13259779&amp;cj=1&amp;name=virgilio.mail.others&amp;ns_site=virgilio" alt="" /> </noscript>
+    <!-- IOL COMSCORE end -->
+    
+    
+    <!-- IOL Analytics -->
+    <script src="//i.plug.it/iplug/js/lib/iol/analytics/data/mail-virgilio-it/tracking_mail-virgilio-it.min.js"></script>
+    <script src="//i.plug.it/iplug/js/lib/iol/analytics/engine/IOL.Analytics.Tracking.min.js"></script>
+    <script type="text/javascript">
+    var iat = new IOL.Analytics.Tracking.Engine();
+    iat.send();
+    </script>
+    <noscript><img src="//italiaonline01.wt-eu02.net/215973748390194/wt.pl?p=315,virgilio.web.mail.noscript&amp;cg1=virgilio&amp;cg2=web&amp;cg3=mail&amp;cg4=noscript&amp;cg7=virgilio.web.mail.noscript" height="1" width="1" alt=""></noscript>
+    <!-- /IOL Analytics -->
+</body>
+
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE HTML>
+<html lang='en'>
+<head>
+<title>glob</title>
+<meta charset="UTF-8">
+<script type="text/javascript">
+//<![CDATA[
+try{if (!window.CloudFlare) {var CloudFlare=[{verbose:0,p:0,byc:0,owlid:"cf",bag2:1,mirage2:0,oracle:0,paths:{cloudflare:"/cdn-cgi/nexp/dok3v=1613a3a185/"},atok:"3e39585f948fa704662b0a1a93d10df3",petok:"b20b83c7fb589279bdc99d7882043035de011084-1499878166-1800",zone:"tcl.tk",rocket:"a",apps:{}}];document.write('<script type="text/javascript" src="//ajax.cloudflare.com/cdn-cgi/nexp/dok3v=85b614c0f6/cloudflare.min.js"><'+'\/script>');}}catch(e){};
+//]]>
+</script>
+<link rel='stylesheet' href='/_css/wikit_screen.css' media='screen' type='text/css' title='With TOC'>
+<link rel='alternate stylesheet' href='/_css/wikit_screen_notoc.css' media='screen' type='text/css' title='Without TOC'>
+<link rel='stylesheet' href='/_css/wikit_print.css' media='print' type='text/css'>
+<link rel='stylesheet' href='/_css/wikit_handheld.css' media='handheld' type='text/css'>
+<link rel='stylesheet' href='/_css/tooltips.css' type='text/css'>
+<script type="text/rocketscript" data-rocketsrc="/_scripts/sh_main.js"></script>
+<script type="text/rocketscript" data-rocketsrc="/_scripts/sh_tcl.js"></script>
+<script type="text/rocketscript" data-rocketsrc="/_scripts/sh_c.js"></script>
+<script type="text/rocketscript" data-rocketsrc="/_scripts/sh_cpp.js"></script>
+<link type="text/css" rel="stylesheet" href="/_css/sh_style.css">
+<link rel='alternate' type='application/rss+xml' title='RSS' href='/rss.xml'>
+<script type="text/rocketscript">/* <![CDATA[ */
+
+	    function init() {
+		// quit if this function has already been called
+		if (arguments.callee.done) return;
+
+		// flag this function so we don't do the same thing twice
+		arguments.callee.done = true;
+
+		try {
+		    hide_discussions()
+		} catch (err) {
+		    /* nothing */
+		}
+	    };
+
+	    /* for Mozilla */
+	    if (document.addEventListener) {
+		document.addEventListener("DOMContentLoaded", init, false);
+	    }
+
+	    // for Internet Explorer (using conditional comments)
+	    /*@cc_on @*/
+	    /*@if (@_win32)
+	    document.write("<script id=__ie_onload defer src=javascript:void(0)><\/script>");
+	    var script = document.getElementById("__ie_onload");
+	    script.onreadystatechange = function() {
+		if (this.readyState == "complete") {
+		    init(); // call the onload handler
+		}
+	    };
+	    /*@end @*/
+	  
+	    /* for other browsers */
+	    window.onload = init;
+	
+/* ]]> */
+</script>
+<meta name="verify-v1" content="89v39Uh9xwxtWiYmK2JcYDszlGjUVT1Tq0QX+7H8AD0=">
+</head>
+<body onload="(function(a){window.CloudFlare &amp;&amp; window.CloudFlare.push(function(b){b([&quot;cloudflare/rocket&quot;],function(c){c.push(function(){(function(){sh_highlightDocument();}).call(a)})})})})(this);">
+<div class='container'>
+<div class='header'>
+<div class='logo'><a href='http://wiki.tcl.tk' class='logo'>wiki.tcl.tk</a><a href='http://wiki.tcl.tk'><img class='logo' alt='' src='http://wiki.tcl.tk/plume.png'></a></div>
+<div id='title' class='title'><a href='/_/ref?N=1474' title='click to see reference to this page'>glob</a></div>
+<div id='updated' class='updated'>Updated 2016-11-16 08:05:47 by <a href='/27625'>pooryorick</a> <a href='/_/diff?N=1474#diff0' class='delta'>▲</a></div>
+</div>
+<div id='wrapper'><div id='content'><p></p><b><span class='tt'><a rel="nofollow" href="http://www.tcl.tk/man/tcl/TclCmd/glob.htm">glob<img src='/ext.png'></a></span></b>, a <a href="/9798">built-in</a> <a href="/445">Tcl</a> <a href="/3273">command</a>, matches files by name.<h2 id='pagetoca25df2f4'> Synopsis &nbsp;<a href='/_/edit?N=1474&amp;S=0' class='partedit'>edit</a></h2><dl><dt> </dt><dd><b>glob</b> ?<i>switches...</i>? <i>pattern</i> ?<i>pattern ...</i>?</dd></dl><p></p>Supported <i>switches</i> are:<dl><dt> </dt><dd><b>-directory</b> <i>directory</i></dd><dt> </dt><dd><b>-join</b></dd><dt> </dt><dd><b>-nocomplain</b></dd><dt> </dt><dd><b>-path</b> <i>pathPrefix</i></dd><dt> </dt><dd><b>-tails</b></dd><dt> </dt><dd><b>-types</b> <i>typeList</i></dd><dt> </dt><dd><b>--</b></dd></dl><h2 id='pagetoccb04b416'> Documentation &nbsp;<a href='/_/edit?N=1474&amp;S=1' class='partedit'>edit</a></h2><dl><dt><a rel="nofollow" href="http://www.tcl.tk/man/tcl/TclCmd/glob.htm">official reference<img src='/ext.png'></a></dt><dd></dd></dl><h2 id='pagetocd6a61b2d'> Description &nbsp;<a href='/_/edit?N=1474&amp;S=2' class='partedit'>edit</a></h2><p></p><b><span class='tt'>glob</span></b> lists all the directory entries whose names match a given <i>pattern</i>, optionally filtering them by type.<p></p>The following two cases are errors:<p></p><ul><li>The result set is empty.</li><li>The requested listing can&#39;t be completed, e.g. when permissions are insufficient.</li></ul><p></p><span class='tt'>-nocomplain</span> can be used to squelch the error in the first case, except that currently, <a rel="nofollow" href="http://core.tcl.tk/tcl/tktview/391bc0fd2cdd59209201660b95a2d886d24c1825">there is a bug<img src='/ext.png'></a> that causes glob to also squelch a failure to obtain the type of a file in order to limit the results to files of a certain type. <a href="/36727">ycl dir listing</a> is similar to <span class='tt'>glob</span>, but works around this issue.<p></p><span class='tt'>glob</span> should have been designed such that it returned the <a href="/39821">empty string</a> when the result list would be empty, making <span class='tt'>-nocomplain</span> unnecessary, but for the sake of backward-compatibility, in the current Tcl release <span class='tt'>glob</span> still returns an error if the result list would be empty.<h2 id='pagetocbdea8ead'> <span class='tt'>glob</span> raises an exception; the <span class='tt'>-nocomplain</span> option &nbsp;<a href='/_/edit?N=1474&amp;S=3' class='partedit'>edit</a></h2><p></p>If no files or directories were found, the command throws an error, unless the <b>-nocomplain</b> switch is given. This models the behavior of <a href="/444">Unix</a>&#39;s <b>ls</b>:<pre class=''>$ ls not_existing
+ls: not_existing: No such file or directory
+$ echo $?
+1</pre><p></p><a href="/28962">PYK</a> 2016-11-16: Except that it doesn&#39;t model the behaviour of ls in other cases, such as when it operates on an existing directory that has no contents.<h3 id='pagetocdc928e2f'> Use <span class='tt'>--</span> to separate switches from arguments </h3><p></p>Take care to use <span class='tt'>--</span> to signify the end of switches whenever <i>patterns</i> contain arbitrary characters or might get a preceding dash through substitution.<h3 id='pagetocf7cd129d'> The <span class='tt'>-types</span> option </h3><p></p><b>-types</b> can be used to filter the results to certain types of files:<pre class='sh_tcl'>glob -types hidden *
+glob -types d *</pre><p></p>There are cross-OS issues with this (in particular the handling of hidden files), see below.<p></p>To get a list of all contents of a directory that aren&#39;t themselves directories, including broken symbolic links (<span class='tt'><a href="/1277">lsort</a> -unique</span> is used in case an item gets listed by both invocations of <span class='tt'>glob</span>):<pre class='sh_tcl'>set itemlist [
+    concat [
+        glob -nocomplain -directory $dir -types hidden *] [
+        glob -nocomplain -directory $dir *]]
+#usually . and .. aren&#39;t desired
+set onlyfiles [lmap item [lsort -unique $itemlist] {
+    expr {![file isdirectory $item] &amp;&amp; [file tail $item] ni {. ..}
+        ? $item
+        : [continue]
+    }
+}]</pre><p></p><a href="/15534">PL</a>: I rewrote the script some.<p></p>I left the subcondition <span class='tt'>[<a href="/10093">file tail</a> $item] ni {. ..}</span> in, even though <span class='tt'>.</span> and <span class='tt'>..</span> <i>are</i> directories and thus get filtered out by <span class='tt'>![<a href="/10073">file isdirectory</a> $item]</span> alone, i.e. this invocation ought to do:<pre class='sh_tcl'>expr {![file isdirectory $item] ? $item : [continue] }</pre><p></p><a href="/28962">PYK</a> 2014-08-13: edited the example above to use <span class='tt'>[<a href="/10093">file tail</a> $item]</span> instead of <span class='tt'>$item</span>, as the <span class='tt'>-directory</span> option causes <span class='tt'>glob</span> to return paths rather than simple file names.<h3 id='pagetocc267c061'> The <span class='tt'>-directory</span> and <span class='tt'>-path</span> options </h3><p></p>(Note that these are mutually exclusive. Also note that <span class='tt'>-directory</span> can be abbreviated to <span class='tt'>-dir</span>.)<p></p>Let&#39;s say I want to find all files in a directory, then I use (ignoring hidden files for the moment)<pre class='sh_tcl'>glob -dir $dir *</pre><p></p>Now, what I want all files in that directory whose names start with <span class='tt'>$nametail</span> (where I have no idea what characters are in <span class='tt'>$nametail</span>). I could try:<pre class='sh_tcl'>glob -dir $dir ${nametail}*</pre><p></p>but that would fail (either with an error or not the expected result) if nametail contains characters like <span class='tt'>{}</span>. Therefore I must use <i>-path</i>, like this:<pre class='sh_tcl'>glob -path $dir/$nametail *
+# or even (see below)
+glob -join -path $dir $nametail *</pre><p></p>One thing to be aware of is that <span class='tt'>-dir {}</span> is the same as <span class='tt'>-dir .</span>. Hopefully this wart will be removed in the future.<h3 id='pagetocc066da64'> The <span class='tt'>-join</span> option </h3><p></p>When to use <i>-join</i>?<p></p>If I want to find all <span class='tt'>*.tcl</span> files in any subdirectory of a known directory, I could try this:<pre class='sh_tcl'>glob -dir $dir */*.tcl</pre><p></p>but that won&#39;t work on MacOS. So, use <span class='tt'>-join</span>:<pre class='sh_tcl'>glob -join -dir $dir * *.tcl</pre><h3 id='pagetocec072389'> Odds and ends </h3><h4 id='pagetocb0a68cbe'> Trailing <span class='tt'>/</span> </h4><p></p>In a recent email thread on the <a href="/6972">Modules</a> mailing list, a developer reported a change he found when beginning to use Tcl 8.5:<pre class='sh_tcl'>$ tclsh8.4
+% glob /home/
+/home
+% glob /home
+/home
+^D
+$ tclsh8.5
+% glob /home/
+/home/
+% glob /home
+/home
+^D
+</pre><p></p>Turns out that the modules package was dependent on having the path returned without the trailing <span class='tt'>/</span>, and when 8.5 started returning some paths with the slash, certain behaviors changed.<p></p>From a purely technical point of view, the two forms of the name are considered equivalent by the operating systems with which I am familar (Ultrix, Solaris, etc.). I don&#39;t know if there are differences for variants or not.<p></p><a href="/15534">PL</a>: In Tcl 8.6, this seems to be changed <i>again</i>: no trailing slashes are in the result.<p></p>In any case, <span class='tt'>file normalize</span> removes any trailing slashes present:<pre class='sh_tcl'>string equal [file nor [glob /Tcl/]] [file nor [glob /Tcl]]
+# =&gt; (should be 1 on all versions)
+string equal [file nor /foo/] [file nor /foo]
+# =&gt; 1</pre><p></p><a href="/9885">APN</a> I don&#39;t see 8.6 having changed again. At least not on Windows. If the pattern include a trailing slash, the return values do too (for dirs). Otherwise they don&#39;t.<pre class='sh_tcl'>% glob /temp/fo*
+C:/temp/foo C:/temp/foodir
+% glob /temp/fo*/
+C:/temp/foodir/</pre><h4 id='pagetocf18313d2'> <span class='tt'>glob</span> does not sort </h4><p></p>The <span class='tt'>glob</span> command does not return sorted results, so to emulate <span class='tt'><a href="/6239">csh</a></span> one might have to use <span class='tt'><a href="/1277">lsort</a></span> on the file list (note the various settings of the <span class='tt'>lsort</span> command: especially differences between <span class='tt'>-ascii</span> and <span class='tt'>-dictionary</span> sorting, the option to choose increasing or decreasing order, the option to ignore case difference, and the option to provide an adhoc comparison command):<pre class='sh_tcl'>set files [lsort [glob *]] ;# will probably suffice in most cases
+set files [lsort -dictionary -decreasing -nocase [glob *]]</pre><h4 id='pagetocd6a24cc7'> Negated patterns </h4><p></p><a href="/472">LV</a>: does anyone have some Tcl code for handling negated patterns? The <a href="/4491">ksh</a> glob function allows me to do things like <span class='tt'>!(o*)</span> or <span class='tt'>ab[!b-z]</span> and I would like to be able to do similar things.<p></p><a href="/15534">PL</a>: This one is still open, though one might possibly <span class='tt'>glob</span> two lists, one with all files and one with the pattern-to-be-negated, and <a href="/39182">ldiff</a> the second from the first. There may be issues with this that need to be investigated, though.<hr><p></p><button type='button' id='togglediscussionbutton0' onclick='toggleDiscussion(0);'>Show discussion</button><div class='discussion' id='discussion0'><p></p><a href="/15534">PL</a>: The following command is intended to <i>start</i> a discussion, not to be a solution (among other things, it does nothing for the <span class='tt'>ab[!b-z]</span> case).<pre class='sh_tcl'># untested code
+proc negatedGlob pattern {
+    set allfiles [glob -nocomplain *]
+    set matchedfiles [glob -nocomplain $pattern]
+    ldiff $allfiles $matchedfiles
+}</pre><p></p></div><h4 id='pagetocc4da970e'> Use of braces </h4><p></p>One might consider at least one of the behaviours of <span class='tt'>glob</span> as a <a href="/1798">wart</a>. glob uses the brace (<span class='tt'>{}</span>) characters as special notation, even though the Tcl parser <i>ALSO</i> uses these characters. The result is that one needs to learn, from the beginning, that one needs to quote these characters when using them in glob arguments. glob also uses the [ and ] characters and those need quoted as well.<p></p>Vince: fortunately with the use of &#39;-dir&#39; or &#39;-path&#39; flags to glob the need for quoting is pretty much gone in Tcl 8.3 or newer.<h4 id='pagetocfa3c5b2d'> Recursive <span class='tt'>glob</span> </h4><p></p><button type='button' id='togglediscussionbutton1' onclick='toggleDiscussion(1);'>Show</button>&nbsp;<b>Recursive <span class='tt'>glob</span><p></p></b><div class='discussion' id='discussion1'><p></p><b>Recursive glob:</b> This lightly tested procedure follows subdirectories (not sure what happens with links) and returns all non-directories in alphabetic order:<pre class='sh_tcl'>proc glob-r {{dir .}} {
+    set res {}
+    foreach i [lsort [glob -nocomplain -dir $dir *]] {
+        if {[file type $i] eq {directory}} {
+            eval lappend res [glob-r $i]
+        } else {
+            lappend res $i
+        }
+    }
+    set res
+} ;# RS</pre><p></p>(<a href="/15534">PL</a>: verified works with 8.6.)<p></p><a href="/1906">JH</a> 2006-05-16: With this variant that allows for optional patterns of interest, like <span class='tt'>glob-r C:/Tcl *.gif *.ps</span>:<pre class='sh_tcl'>proc glob-r {{dir .} args} {
+    set res {}
+    foreach i [lsort [glob -nocomplain -dir $dir *]] {
+        if {[file isdirectory $i]} {
+            eval [list lappend res] [eval [linsert $args 0 glob-r $i]]
+        } else {
+            if {[llength $args]} {
+                foreach arg $args {
+                    if {[string match $arg $i]} {
+                        lappend res $i
+                        break
+                    }
+                }
+            } else {
+                lappend res $i
+            }
+        }
+    }
+    return $res
+} ;# JH</pre><p></p>(<a href="/15534">PL</a>: invocation without arguments verified works with 8.6.)<p></p><a href="/6939">MG</a> 2004-05-20: I couldn&#39;t get the above code to work, so wrote my own version of it. The only oddity about it is that paths (sometimes) start <span class='tt'>././</span>, rather than just <span class='tt'>./</span> - I really don&#39;t know why. But using <span class='tt'><a href="/10071">file exists</a></span> on those files still works, so it doesn&#39;t really seem to matter. (It also uses <span class='tt'><a href="/1720">info level</a> 0</span> to find out its own name when it calls itself recursively. This is simply because I just found out how you do that :) Replacing <span class='tt'>[lindex [info level 0] 0]</span> with <span class='tt'>globRec</span> (or whatever you call the procedure) will speed it up a fair bit. <i>Changed quickly to add -- into the <span class='tt'>glob</span> calls, so <span class='tt'>$dir</span> can&#39;t be mistaken as a switch, as suggested above</i>. Takes an optional second argument to specify which types of file to <span class='tt'>glob</span>, for by default all mentioned on the manpage apart from directories.<pre class='sh_tcl'>proc globRec {{dir .} {types {b c f l p s}}} {
+    set files [glob -nocomplain -types $types -dir $dir -- *]
+    foreach x [glob -nocomplain -types {d} -dir $dir -- *] {
+        set files [
+            concat $files [[lindex [info level 0] 0] [file join $dir $x]]]
+    }
+    return [lsort $files]
+} ;# globRec</pre><p></p>(<a href="/15534">PL</a>: invocation without arguments verified works with 8.6.)<p></p>TC 2004-11-23: I couldn&#39;t get either of the above functions to do what I wanted, which was to recursively list all directories and use a filespec. My Tcl hack (lightly tested on 8.3 and 8.5) of <a href="/6939">MG</a>&#39;s code, which seems to do all his was intended to do also. Modified to also eliminate leading ./s. Modified to support filenames with spaces in them.<p></p>Note: you may need to replace <span class='tt'><a href="/3410">file join</a> $dir $x</span> with simply <span class='tt'>$x</span>. I had to.<pre class='sh_tcl'>proc globRec {{dir .} {filespec *} {types {b c f l p s}}} {
+    set files [glob -nocomplain -types $types -dir $dir -- $filespec]
+    foreach x [glob -nocomplain -types {d} -dir $dir -- *] {
+        set files [concat $files [globRec [file join $dir $x] $filespec $types]]
+    }
+    set filelist {}
+    foreach x $files {
+        while {[string range $x 0 1] eq {./}} {
+            regsub ./ $x {} x
+        }
+        lappend filelist $x
+    }
+    return $filelist;
+};# globRec</pre><p></p>(<a href="/15534">PL</a>: invocation without arguments verified works with 8.6.)<hr><p></p><a href="/26355">jys</a>: I wanted a recursive glob that would take the same options as glob, so I wrote this wrapper. I don&#39;t know if it works 100% with all options though, and it currently gets tripped up by glob spitting the dummy when it can&#39;t look inside a directory (generally &#39;cause of permissions).<pre class='sh_tcl'>proc rglob {args} {
+    # This code requires -join and -nocomplain. We also remove the -types option, and then manually apply a filter at the end.
+    set args [linsert $args 0 -nocomplain -join]
+    if {[set types_index [lsearch -exact $args -types]] != -1} {
+        set types [lindex $args [expr {$types_index+1}]]
+        set args [lreplace $args $types_index [expr {$types_index+1}]]
+    }
+    
+    # Get inital matches.
+    set matches [glob {*}$args]
+    
+    # Keep adding * wildcards to search through subdirectories until there are no more levels of directories to search.
+    while {[llength [glob -types d {*}[lreplace $args end end *]]] &gt; 0} {
+        set args [linsert $args end-1 *]
+        lappend matches {*}[glob {*}$args]
+    }
+    
+    # Filter matches with -types option.
+    if {[info exists types]} {
+        set matches [glob -nocomplain -types $types {*}$matches]}
+    return $matches
+}</pre><p></p>(<a href="/15534">PL</a>: hangs Tcl 8.6 (made no attempt to find cause of problem).)<p></p></div><p></p><button type='button' id='togglediscussionbutton2' onclick='toggleDiscussion(2);'>Show</button>&nbsp;<b>findfile<p></p></b><div class='discussion' id='discussion2'><p></p><a href="/9340">ES</a>: <b>findfile:</b> This procedure was inspired by glob-r above and is customized to quickly find the first instance of a file in a given path.<pre class='sh_tcl'>proc findfile { dir fname } {
+    if {
+        [llength [set x [glob -nocomplain -dir $dir $fname]]]
+    } {
+        return [lindex $x 0]
+    } else {
+        foreach i [glob -nocomplain -type d -dir $dir *] {
+            if {
+                $i != $dir &amp;&amp;
+                [llength [set x [findfile $i $fname]]]
+            } {
+                return $x
+            }
+        }
+    }
+}</pre><p></p>(<a href="/15534">PL</a>: verified works with 8.6.)<p></p></div><p></p><button type='button' id='togglediscussionbutton3' onclick='toggleDiscussion(3);'>Show</button>&nbsp;<b>listTree<p></p></b><div class='discussion' id='discussion3'><p></p>Here is a proc that will list the directory tree under any given root, giving the full path name of all descendants. It embeds glob in a recursive call; a directory with no descendants is the base case.<pre class='sh_tcl'>proc listTree {rootdir_} {
+# Precondition: rootdir_ is valid path 
+    set currentnodes [glob -nocomplain -directory $rootdir_ -types d *]
+    if {[llength $currentnodes] &lt;= 0} {
+    # Base case: the current dir is a leaf, write out the leaf 
+        puts $rootdir_
+        return
+    } else {
+                # write out the current node 
+        puts $rootdir_
+                # Recurse over all dirs at this level
+        foreach node $currentnodes {
+            listTree $node
+        }
+    }
+}
+
+listTree [pwd]</pre><p></p>(<a href="/15534">PL</a>: verified works with 8.6 (and is surprisingly quick).)<p></p>(Original command author): That this isn&#39;t a Tcl built-in (or if it is, why is it is such a well-kept secret) strikes me as odd.<p></p>I remember reading something about a pre-defined limit on depth of recursion in Tcl, so this code is not guaranteed for arbitrarily deep file structures.<p></p>Bob<p></p></div><h4 id='pagetoc9652925c'> <span class='tt'>pathentry</span> </h4><p></p><a href="/4162">MSW</a>: <a href="/4183">pathentry</a>: Entry widget/binding set using <span class='tt'>glob</span> to offer quick auto-completion of paths<h4 id='pagetoc920f7fbe'> The DKF star </h4><p></p><a href="/1513">GPS</a>: In the Tcl&#39;ers chat this elegant solution was created by <a href="/1280">DKF</a>:<pre class='sh_tcl'>proc * args {glob -nocomplain *[join $args {}]}</pre><p></p><a href="/3654">CMCc</a>: Now try the same kind of composition and extension under /bin/sh :)<p></p><a href="/14766">MJ</a>: Shouldn&#39;t this be:<pre class='sh_tcl'>proc * args {glob -nocomplain *\{[join $args ,]\}}</pre><p></p>Because <a href="/1280">DKF</a>&#39;s version doesn&#39;t do what I expect it to do with multiple args (maybe my expectation is wrong)<h4 id='pagetoc8c59a212'> Unglobbing </h4><p></p><a href="/9126">Sarnold</a>: Sometimes <a href="/1474">glob</a>-like patterns are expected to be passed to some commands. This may lead to bugs, for example, in <a rel="nofollow" href="https://groups.google.com/d/msg/comp.lang.tcl/ogIayrQo4Zg/O1-8pa2tnrcJ">array unset gotch<img src='/ext.png'></a>, <a href="/842">comp.lang.tcl</a>, 2007-09-13:<pre class='sh_tcl'>set bar {x[y]}
+set foo($bar) yes
+array unset foo $bar
+parray foo =&gt; foo(x[y]) still exists</pre><p></p>What&#39;s the cure, Doctor? <b>Unglob it!</b><pre class='sh_tcl'>proc unglob {x} {
+    string map {* \\* ? \\? [ \\[ ] \\]} $x
+}</pre><h3 id='pagetoc1f430db1'> Cross-OS issues </h3><h4 id='pagetoc91612960'> Hidden files </h4><p></p>Even though the proper directory separator character on <a href="/4473">Windows</a> is <span class='tt'>\</span>, the standard directory separator in Tcl is &#39;/&#39;, and all Tcl file manipulation commands, including <span class='tt'><a href="/1039">exec</a></span>, understand it.<p></p>On unix and OS X, <span class='tt'>glob -types hidden *</span> returns all files beginning with a period (.), including <span class='tt'>.</span> and <span class='tt'>..</span>. On Windows and Classic Mac OS, this returns files that have their hidden attribute set (and (at least on Windows) <i>does not</i> list files with names beginning with a period, except if they have the hidden attribute set).<p></p>On Windows, <span class='tt'>glob *</span> returns files beginning with <span class='tt'>.</span>, while On *nix systems, it does not.<p></p>See the discussion of the <span class='tt'>-types</span> option above for a cross-OS way to list all entries in a given directory.<hr><p></p>The following attempt works on *nix, but can return duplicates on Windows:<pre class='sh_tcl'>lsort [glob -dir $dir {.*,*}]]</pre><h4 id='pagetocd695c69f'> Windows drive globbing </h4><p></p><a href="/15966">kostix</a> 2004-09-07: There&#39;s one trick with <b>glob</b> on Windows:<pre class='sh_tcl'>glob -dir c: *</pre><p></p>will list contents of <i>the current working directory on drive C:,</i> not the contents of the root folder on that drive.<p></p>To get the latter, add trailing slash to the drive letter:<pre class='sh_tcl'>glob -dir c:/ *</pre><p></p>The described behaviour is consistent with what is seen in <b>cmd.exe</b> command shell.<p></p>Thanks <a href="/1900">PT</a> for explaining this issue.<p></p><a href="/13606">Zipguy</a> 2013-02-07 - Thanks <a href="/15966">kostix</a> for pointing this out. I do use windows (and strongly love/hate it). I found this very interesting so I tried it. I was running a program called <a href="/13591">ML - Heavily Modified &amp; Improved</a> using tclkit-8.5.8.exe, in which mine was the current directory, so I opened a console window and typed in:<pre class=''>(mine) 3 % glob -dir d: *</pre><p></p>and what I got was:<p></p><button type='button' id='togglediscussionbutton4' onclick='toggleDiscussion(4);'>Show</button>&nbsp;<b>(results)<p></p></b><div class='discussion' id='discussion4'><pre class=''>d:action-demo.tcl d:action.tcl d:awf.kit d:awfgreat.kit d:awf_cfg.ml
+d:bindb.bat d:bindb.kit d:bindb.tcl d:bindb.vfs d:bindcbk.tcl d:clipr.kit
+d:clipr.vfs d:colorp.dat d:colorp.kit d:dler.kit d:dler.vfs d:eff-font.txt
+d:efftcl.kit d:efftcl.vfs d:ezsdx.bat d:ezsdx.kit d:ezsdxc.dat d:ezsdxgreat.kit
+d:ezsdxh.dat d:help.dat d:icons d:links.txt d:ml.bat d:ml.kit d:ml.txt
+d:mlalpha.kit d:mlgreat.bat d:mlgreat.kit d:mlgreatold.kit d:ml_cfg.ml
+{d:ml_cfg.ml.$$$} d:output.html d:output.tcl d:output2.html d:panedwindow.tcl
+d:progress.tcl d:progressbar.txt d:res.tcl d:sbf.tcl d:scrollb.tcl d:sdx.kit
+d:sdx.vfs d:sdxnew.kit d:sdxold.kit d:t.kit d:t.tcl d:t.vfs d:tclkit-8.5.8.exe
+d:tclkit-8.5.9.exe d:tgood.kit d:timeplay d:timeplay.tcl d:timeplay.tcll
+d:Tk_coding_styles.txt d:widget d:wsf.kit d:wsf.vfs d:wsfold.kit d:wsfold.tcl
+d:wsfold.vfs d:wsforig.tcl d:XSCLOCK.TCL d:yacm.ini d:yacm.kit d:yacm.txt
+d:yacm2.kit d:yacmgood.kit d:yacmo.kit d:ypedit.tcl d:zipper.tcl</pre><p></p>which did surprise me.<p></p>It did come back with all of these files (which was expected), which were on the proper drive, namely d:, in the proper directory, namely mine (or more precisely &quot;D:\dl\dcl\mine\&quot;), but, it did prefix all of them with the &quot;d:&quot; (which was unexpected). For example, &quot;d:tclkit-8.5.9.exe&quot; which is there and &quot;{d:ml_cfg.ml.$$$}&quot; which it did enclose in curly brackets, which I do understand (in case they have spaces or special characters in them).<p></p>Anyway, I decided to try a more complex version, which would list the directory above the current one (which is kind of dangerous if it doesn&#39;t exist, unknown) like this:<pre class=''>(mine) 5 % glob -dir d:../ *</pre><p></p>and (lo and behold,) it did produce this:<pre class=''>d:../caps d:../desktop d:../ezsdx d:../ezsdx.kit d:../ezsdxc.dat d:../ezsdxgreat.kit 
+d:../ezsdxh.dat d:../fd d:../freepdf d:../freepdflogoweeebxd.jpg d:../freewrap6.2 
+d:../irfanview_screenshot_1.jpg d:../irfanview_screenshot_2.jpg d:../irfanview_step1.jpg 
+d:../irfanview_step2.jpg d:../irfanview_step3.jpg d:../jasspa-mechm-ms-win32-20091011.zip 
+d:../mine d:../ml d:../ml.kit d:../ml124d_procw_colors.jpg d:../ml124d_screen.jpg 
+d:../ml124d_screen_rightclick_meni.jpg d:../ml124d_status_line.jpg d:../ml124d_toolbar.jpg 
+d:../mlgreat.kit d:../mlgreatold.kit d:../sdx.kit d:../sdxe.dat d:../sdxnew.kit d:../sdxold.kit  
+d:../setup-jasspame-20091011.exe d:../stock d:../t.kit d:../tclkit-8.5.8-win32-x86_64.exe 
+d:../tclkit852.exe d:../tgood.kit d:../tgoodold.kit d:../viewIcons.kit</pre><p></p>which did work but provided a prefix of &quot;d:../&quot; rather than the previous command which provided a prefix of &quot;d:&quot; which does make sense also.<pre class=''>(mine) 7 % glob -dir d:../../ *</pre><p></p>and this<pre class=''>d:../..<a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="8ea1cefaede2">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/rocketscript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script> d:../../bas d:../../browser d:../../dcl d:../../dler
+d:../../editor d:../../flv d:../../fonts d:../../games d:../../good
+d:../../html d:../../img d:../../mid d:../../misc d:../../nc d:../../new
+d:../../new2 d:../../new3 d:../../new4 d:../../new5 d:../../zip</pre><p></p>But more importantly, should I write a proc to strip out the &quot;d:&quot;&#39;s (or &quot;d:../&quot;&#39;s) in front of them, or use a better undocumented glob option?<p></p>Yes, I did read (and re-read) all about glob for &quot;ActiveState ActiveTcl 8.4.19.5.294332&quot; (which was produced in Feb 11, 2011) which may mean it has been documented in a later version.<p></p></div><p></p><a href="/6939">MG</a> Add the <span class='tt'>-tails</span> option to <a href="/1474">glob</a>.<h3 id='pagetoc1ff2eead'> Version issues </h3><p></p>(Also see &quot;Trailing <span class='tt'>/</span>&quot; above.)<h4 id='pagetoc696099b7'> Stale links </h4><p></p><a href="/1683">RS</a>:<p></p><b>Stale links:</b> <i>glob</i> in older (pre Tcl 8.4a4) versions of Tcl has a funny behavior (seen on Solaris 5.5.1) with symbolic links that don&#39;t point to an existing file:<pre class=''>% exec ln -s /does/not/exist stalelink
+% glob stalelink
+no files matched glob pattern &quot;stalelink&quot;
+% glob stalelink*
+stalelink</pre><p></p>If the pattern is not wildcarded, it tries to follow the link; otherwise it just returns the link&#39;s name itself. Hmm...<h4 id='pagetoc3055cdf5'> Tilde paths </h4><p></p><a href="/8438">EB</a>: The <a href="/13137">changes in Tcl/Tk 8.4.9</a> shows that <i>tilde paths are not returned specially by <a href="/1474">glob</a></i>, but shouldn&#39;t that have been done to avoid a security problem with ~ expansion ? e.g:<pre class='sh_tcl'>foreach file [glob *] {
+    file delete -force $file
+}</pre><p></p>where <a href="/1474">glob</a> returns a file beginning with a ~ ?<p></p><a href="/2931">Vince</a> writes: for historical reasons the code above is considered wrong/buggy. You should write <span class='tt'>file delete -force ./$file</span>. This is perhaps something that should be changed in the future, but it might well break some old code. There is even a bug report or patch somewhere on sf about this, I think (probably closed now).<hr><p></p><a href="/14890">MHo</a> 2015-10-15: Oops, what&#39;s this:<pre class='sh_tcl'>% glob -path c:/winwdows/*.exe
+alloc: invalid block: 10018A34: 24 e8</pre><p></p>The Tclsh (8.6.4, ActiveState) terminates after this...<h2 id='pagetoc9c9bb55e'> See Also &nbsp;<a href='/_/edit?N=1474&amp;S=4' class='partedit'>edit</a></h2><dl><dt><a href="/17275">Directory recursion</a></dt><dd></dd><dt><a href="/913">glob forwards compatibility</a></dt><dd>how to to override the older [glob] command.</dd><dt><a href="/28719">glob and VFS</a></dt><dd>issues with <a href="/2138">VFS</a></dd></dl><p></p><hr><div class='centered'><p></p><table class='wikit_categories'><tr><td><a href="/2418">Tcl syntax</a></td><td><a href="/969">Arts and crafts of Tcl-Tk programming</a></td><td><a href="/2207">Category Command</a></td><td><a href="/14995">Category File</a></td></tr></table></div><p></p></div></div>
+<div id='menu_area'><div id='wiki_menu'><ul id='menu'>
+<li><a href='/'>Home</a></li><li><a href='/_/recent'>Recent changes</a></li><li><a href='/Help'>Help</a></li><li><a href='/_/whoami'>WhoAmI</a>/<a href='/_/logout'>Logout</a></li><li><a href='/_/new'>Create new page</a></li><li><a href='/_/random'>Random page</a></li><li><a href='/_/previouspage'>Previous page</a></li><li><a href='/_/nextpage'>Next page</a></li><li><br></li><li><a href='/_/edit?N=1474&amp;A=1'>Add comments</a></li><li><a href='/_/edit?N=1474'>Edit</a></li><li><a href='/_/history?N=1474'>History</a></li><li><a href='/_/summary?N=1474'>Edit summary</a></li><li><a href='/_/ref?N=1474'>References</a></li></ul></div>
+<form method='get' action='/_/search' id='searchform'><input id='searchtxt' onfocus='clearSearch();' onblur='setSearch();' name='S' type='text' value='Search' tabindex='1'>
+<input name='_charset_' type='hidden' value='' tabindex='2'></form>
+<div class='navigation'><div id='page_toc'><div class='toc1'>Page contents
+<div class='ptoc'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetoca25df2f4'>&nbsp;Synopsis&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetoccb04b416'>&nbsp;Documentation&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocd6a61b2d'>&nbsp;Description&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocbdea8ead'>&nbsp;glob&nbsp;raises&nbsp;an&nbsp;exception;&nbsp;the&nbsp;-nocomplain&nbsp;option&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocdc928e2f'>&nbsp;Use&nbsp;--&nbsp;to&nbsp;separate&nbsp;switches&nbsp;from&nbsp;arguments&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocf7cd129d'>&nbsp;The&nbsp;-types&nbsp;option&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocc267c061'>&nbsp;The&nbsp;-directory&nbsp;and&nbsp;-path&nbsp;options&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocc066da64'>&nbsp;The&nbsp;-join&nbsp;option&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocec072389'>&nbsp;Odds&nbsp;and&nbsp;ends&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocb0a68cbe'>&nbsp;Trailing&nbsp;/&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocf18313d2'>&nbsp;glob&nbsp;does&nbsp;not&nbsp;sort&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocd6a24cc7'>&nbsp;Negated&nbsp;patterns&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocc4da970e'>&nbsp;Use&nbsp;of&nbsp;braces&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetocfa3c5b2d'>&nbsp;Recursive&nbsp;glob&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetoc9652925c'>&nbsp;pathentry&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetoc920f7fbe'>&nbsp;The&nbsp;DKF&nbsp;star&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='joinbottom.gif'>&nbsp;<a class='toc' href='#pagetoc8c59a212'>&nbsp;Unglobbing&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetoc1f430db1'>&nbsp;Cross-OS&nbsp;issues&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetoc91612960'>&nbsp;Hidden&nbsp;files&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='joinbottom.gif'>&nbsp;<a class='toc' href='#pagetocd695c69f'>&nbsp;Windows&nbsp;drive&nbsp;globbing&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='joinbottom.gif'>&nbsp;<a class='toc' href='#pagetoc1ff2eead'>&nbsp;Version&nbsp;issues&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='empty.gif'><img alt='' class='ptoc' src='join.gif'>&nbsp;<a class='toc' href='#pagetoc696099b7'>&nbsp;Stale&nbsp;links&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='line.gif'><img alt='' class='ptoc' src='empty.gif'><img alt='' class='ptoc' src='joinbottom.gif'>&nbsp;<a class='toc' href='#pagetoc3055cdf5'>&nbsp;Tilde&nbsp;paths&nbsp;</a></div>
+<div class='ptoc'><img alt='' class='ptoc' src='joinbottom.gif'>&nbsp;<a class='toc' href='#pagetoc9c9bb55e'>&nbsp;See&nbsp;Also&nbsp;</a></div>
+</div></div></div><div class='extra'><div id='wiki_toc'><div class='toc1'>Getting started
+<div class='toc2'><a class='toc' href='/299'>What is Tcl?</a></div>
+<div class='toc2'><a class='toc' href='/487'>What is Tk?</a></div>
+<div class='toc2'><a class='toc' href='/20786'>Getting Tcl/Tk</a></div>
+<div class='toc2'><a class='toc' href='/20788'>Getting help</a></div>
+<div class='toc2'><a class='toc' href='/20789'>Learning Tcl</a></div>
+<div class='toc2'><a class='toc' href='/20790'>Tcl Dev Xchange</a></div>
+<div class='toc3'><a class='toc' href='/20791'>About the Wiki</a></div>
+</div>
+<div class='toc1'>Community
+<div class='toc2'><a class='toc' href='/590'>Advocacy</a></div>
+<div class='toc2'><a class='toc' href='/828'>Conferences</a></div>
+<div class='toc2'><a class='toc' href='/20792'>Chat, news, lists</a></div>
+<div class='toc2'><a class='toc' href='/20794'>History</a></div>
+<div class='toc2'><a class='toc' href='/17182'>Humor</a></div>
+<div class='toc2'><a class='toc' href='/10681'>People</a></div>
+<div class='toc3'><a class='toc' href='/20810'>Tcl websites</a></div>
+</div>
+<div class='toc1'>Reference
+<div class='toc2'><a class='toc' href='/1887'>Companies</a></div>
+<div class='toc2'><a class='toc' href='/20788'>Getting help</a></div>
+<div class='toc2'><a class='toc' href='/20795'>Online books</a></div>
+<div class='toc2'><a class='toc' href='/20796'>Online tutorials</a></div>
+<div class='toc2'><a class='toc' href='/3109'>Manual pages</a></div>
+<div class='toc2'><a class='toc' href='/20797'>Tcl roadmap</a></div>
+<div class='toc3'><a class='toc' href='/49'>Acronyms</a></div>
+</div>
+<div class='toc1'>Tcl software
+<div class='toc2'><a class='toc' href='/20798'>Applications</a></div>
+<div class='toc2'><a class='toc' href='/20799'>The Tcl core</a></div>
+<div class='toc2'><a class='toc' href='/20800'>Development tools</a></div>
+<div class='toc2'><a class='toc' href='/11485'>Documentation</a></div>
+<div class='toc2'><a class='toc' href='/940'>Extensions</a></div>
+<div class='toc3'><a class='toc' href='/20801'>Toys and games</a></div>
+</div>
+<div class='toc1'>Tcl in the wild
+<div class='toc2'><a class='toc' href='/20802'>Major applications</a></div>
+<div class='toc2'><a class='toc' href='/20803'>Businesses</a></div>
+<div class='toc2'><a class='toc' href='/20804'>Education</a></div>
+<div class='toc2'><a class='toc' href='/20805'>Engineering</a></div>
+<div class='toc2'><a class='toc' href='/20806'>Government</a></div>
+<div class='toc2'><a class='toc' href='/20811'>Medical</a></div>
+<div class='toc3'><a class='toc' href='/20809'>Other</a></div>
+</div>
+</div></div></div>
+<div class='footer'><p id='footer'><a href='/'>Home</a> &bull; <a href='/_/recent'>Recent changes</a> &bull; <a href='/Help'>Help</a> &bull; <a href='/_/new'>Create new page</a> &bull; <a href='/_/searchp'>Search</a> &bull; <a href='/_/edit?N=1474&amp;A=1'>Add comments</a> &bull; <a href='/_/edit?N=1474'>Edit</a></p></div>
+</div>
+<script type="text/rocketscript" data-rocketsrc="/_scripts/wiki.js"></script>
+</body>
+</html>

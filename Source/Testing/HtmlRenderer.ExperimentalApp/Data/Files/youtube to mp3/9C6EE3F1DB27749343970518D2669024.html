@@ -1,0 +1,242 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html class="ie ie6 no-js" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="ie ie7 no-js" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="ie ie8 no-js" lang="en"> <![endif]-->
+<!--[if IE 9 ]>    <html class="ie ie9 no-js" lang="en"> <![endif]-->
+<!--[if gt IE 9]><!--><html class="no-js" lang="en"><!--<![endif]--><head>
+<meta charset="utf-8">
+<title>Free Youtube Converter - Convert Youtube Videos To Mp3 Format</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="Keywords" content="youtube mp3 converter, convert youtube to mp3, free youtube to mp3 converter, youtube 2 mp3, youtube converter, how to convert youtube to mp3"/>
+<meta name="Description" content="Youtube Converter - Top Youtube Videos To Mp3 Format Software. Download, Convert, Transfer!"/>
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css"/>
+<link rel="stylesheet" type="text/css" href="css/styles.css"/>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+<script type="text/javascript">
+		var conversionLogLength = 0;
+
+		function updateVideoDownloadProgress(percentage)
+		{
+			var progress = document.getElementById('progress');
+			progress.style.width = progress.innerHTML = parseInt(percentage) + '%';
+		}
+
+		function updateConversionProgress(convertedFile, tempFileType)
+		{
+			var progress = document.getElementById('progress');
+			document.getElementById('conversion-status').innerHTML = "Converting video. . .";
+			$.ajax({
+				type : "POST",
+				url : "ffmpeg_progress.php",
+				data : "uniqueId=1499877729_59665161956db7.12724634&logLength=" + conversionLogLength + "&convertedFile=" + encodeURI(convertedFile) + "&tempFileType=" + encodeURI(tempFileType),
+				success : function(retVal, status, xhr) {
+					var retVals = retVal.split('|');
+					if (retVals[3] == 2)
+					{
+						progress.style.width = progress.innerHTML = parseInt(retVals[1]) + '%';
+						if (parseInt(retVals[1]) < 100)
+						{
+							conversionLogLength = parseInt(retVals[0]);
+							setTimeout(function(){updateConversionProgress(convertedFile, tempFileType);}, 500);
+						}
+						else
+						{
+							showConversionResult(convertedFile, retVals[2]);
+						}
+					}
+					else
+					{
+						setTimeout(function(){updateConversionProgress(convertedFile, tempFileType);}, 1);
+					}
+				},
+				error : function(xhr, status, ex) {
+					setTimeout(function(){updateConversionProgress(convertedFile, tempFileType);}, 1);
+				}
+			});
+		}
+
+		function showConversionResult(convertedFile, success)
+		{
+			$("#preview").css("display", "none");
+			var convertSuccessMsg = (success == 1) ? '<p>Success!</p><p><a href="/index.php?output=' + encodeURI(convertedFile) + '">Download your converted file</a>' + ((/(\.mp3)$/i.test(convertedFile)) ? ' or <a href="ringtone.php?vid_name=' + encodeURI(convertedFile) + '">Create a ringtone</a>' : '') + '.</p>' : '<p>Error generating converted file!</p>';
+			$("#conversionSuccess").html(convertSuccessMsg);
+			$("#conversionForm").css("display", "block");
+		}
+
+		$(document).ready(function(){
+			$("#volumeSlider").slider({
+				range: "min",
+				min: 0,
+				max: 1024,
+				value: 256,
+				slide: function(event, ui) {
+					var percent = Math.floor((ui.value / 256) * 100);
+					$("#volumeVal").html(percent + '%');
+					$("input[name='volume']").val(ui.value);
+				}
+			});
+			$("#toggleOptionsDisplay span").click(function(){
+				$("#moreOptions").toggle('fast', function(){
+					var linkText = ($(this).css('display') == 'none') ? 'Show more options &#187;' : 'Hide more options &#171;';
+					$("#toggleOptionsDisplay span").html(linkText);
+				});
+			});
+		});
+
+		window.onload = function()
+		{
+			if (!document.getElementById('preview'))
+			{
+				$("#conversionForm").css("display", "block");
+			}
+			if (document.getElementById('videoURL'))
+			{
+				var vidUrl = document.getElementById('videoURL');
+				//vidUrl.focus();
+			}
+		};
+    </script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+<meta name="google-site-verification" content=""/>
+<link rel="shortcut icon" href="http://youtube-converter.us/img/favicon.ico" type="image/vnd.microsoft.icon"/>
+<link rel="stylesheet" href="css/style.css"/>
+<script src="js/modernizr.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/functions.js"></script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-43803835-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body class="clearfix">
+<header>
+<h1 class="wrapper" id="logo"><a href="index.php"><img src="img/youtube-converter.us.png" alt="Youtube Mp3 Converter"/></a></h1>
+<nav>
+<div class="wrapper">
+<ul>
+<li><a href="index.php">Home</a></li>
+<li><a href="tutorial.php">Tutorial</a></li>
+<li><a href="faq.php">FAQ</a></li>
+<li><a href="terms.php">Terms of Service</a></li>
+<li><a href="blog.php">Blog</a></li>
+<li class="lastnav"><a href="contact.php">Contact Us</a></li>
+</ul>
+</div>
+</nav>
+</header>
+<div class="wrapper clearfix">
+<div id="ad1">
+<div class="adbox">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-7297392655963165";
+/* youtube-con (Top Leader) */
+google_ad_slot = "1620157732";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+</div>
+<hr class="nomargin"/>
+<hr class="nomargin"/>
+<div style="margin:4px auto 0px; width: 40px;">
+<iframe src="//www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.youtube-converter.us&amp;width=105&amp;height=21&amp;colorscheme=light&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;send=false&amp;appId=501202986638673" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:105px; height:21px;" allowTransparency="true"></iframe>
+</div>
+<div class="main home">
+<div class="left">
+<div class="videoframe">
+<iframe width="447" height="280" src="https://www.youtube.com/embed/JGwWNGJdvx8" frameborder="0" allowfullscreen></iframe>
+</div>
+<div class="shadow"><img src="img/videoshadow.jpg" width="467" height="23" alt="shadow"></div>
+</div>
+<div class="right">
+<ul>
+<li><img src="img/index1.jpg" alt=""/>Download YouTube Videos</li>
+<li><img src="img/index2.jpg" alt=""/>Convert to Mp3 or Mp4</li>
+<li><img src="img/index3.jpg" alt=""/>Enjoy your music</li>
+<li class="lhfix"><img src="img/index4.jpg" alt=""/>It's 100% free</li>
+</ul>
+</div>
+</div>
+<hr class="nomargin"/>
+<div id="form-bubble">
+<form action="/index.php" method="post" id="conversionForm">
+<h2>Enter a valid YouTube.com video URL:</h2>
+<p><i>(i.e., "<span style="color:#C00">http://www.youtube.com/watch?v=HMpmI2F2cMs</span>")</i></p>
+<div>
+<div class="adbox">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-7297392655963165";
+/* youtube-con (Middle Lead) */
+google_ad_slot = "8294082534";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript" src="//pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<input type="text" placeholder="Enter Youtube URL" id="videoURL" name="videoURL"/>
+<input type="submit" name="submitForm" class="submitdata" value=""/>
+<div id="convert-radio"><input type="radio" value="1" name="ftype"/>.flv &nbsp;<input type="radio" value="2" name="ftype"/>.mp4 &nbsp;<input type="radio" value="3" name="ftype" checked="checked"/>.mp3 (128kb) &nbsp;<input type="radio" value="4" name="ftype"/>.mp3 (256kb) &nbsp;<input type="radio" value="5" name="ftype"/>.3gp</div>
+<div id="moreOptions" style="display:none">
+<p>Volume control: (<span id="volumeVal">100%</span>)</p>
+<p id="volumeSlider"></p>
+<input type="hidden" name="volume"/>
+</div>
+<div id="toggleOptionsDisplay"><span>Show more options &#187;</span></div>
+</div>
+</form>
+</div>
+<div class="insidetext">
+</br>
+<div style="margin:-5px auto 0px; width: 552px;">
+<iframe src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FYouTubeMp3Converter%2F588716274519352&amp;width=292&amp;height=258&amp;colorscheme=light&amp;show_faces=true&amp;header=false&amp;stream=false&amp;show_border=true&amp;appId=501202986638673" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:552px; height:151px;" allowTransparency="true"></iframe>
+</div></br>
+<p>
+Don’t you just hate it when you have this amazing song, but you can’t find it anywhere else than on YouTube? The technical term of what you are looking to do is to convert YouTube videos to Mp3. In Mp3 format, you will be able to transfer them onto your iPod, iPhone and any music-playing device. The software that we offer enables you to do just so, it is a YouTube video to Mp3 converter. It’s as easy as 1,2,3!<br/><br/>
+1. Click to download<br/>
+2. Convert your videos<br/>
+3. Enjoy them on-the-go<br/>
+</p>
+<p>
+Rest assured, we won’t try to scam you by wrongfully installing malware, spyware or viruses. Our YouTube Mp3 converter is a lightweight software that is able to take YouTube videos and turn them into a universally accepted format, Mp3, thus allowing you to do as you please with them; share it, save it, transfer it, send it!
+</p>
+<h2>How it works?</h2>
+<p>
+- YouTube videos are in a special flash format called FLV.<br/>
+- Find the YouTube video that you want to convert into an Mp3; you can do this through your browser.<br/>
+- Grab the direct video link to the video in question (URL). That’s the address in your browser’s navigation bar.<br/>
+- Copy and paste the address into the "Video URL" box.<br/>
+- Choose to convert the video into an Mp3 directly or have it as an FLV format directly on your computer.<br/>
+- When the conversion is complete, simply click "Download your converted file". That's it!
+</p>
+<p>
+<a href="http://www.youtube-converter.us/">www.youtube-converter.us</a> -
+The best free <strong>FLV to Mp3 converter</strong>
+</p>
+<p><a href="http://www.youtube-converter.us/">www.youtube-converter.us</a> is in no way affiliated with YouTube or Google.</p>
+</div>
+</div>
+<footer>
+<div class="wrapper">Copyright &copy; 2010-2017 <a title="Youtube Mp3 Converter" href="http://www.youtube-converter.us">YouTube Converter</a>. All Rights Reserved.</div>
+</footer>
+<!--[if lt IE 7 ]>
+        <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+        <script>window.attachEvent(\'onload\',function(){CFInstall.check({mode:\'overlay\'})})</script>
+    <![endif]-->
+</body>
+</html>

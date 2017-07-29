@@ -236,7 +236,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
             Node[] nodes = (node is DocumentFragment) ? ((DocumentFragment)node).ChildNodes.Cast<Node>().ToArray() : new Node[] { node };
 
             // 13. Queue a mutation record of "childList" for target parent with addedNodes nodes, removedNodes a list solely containing child, nextSibling reference child, and previousSibling child's previous sibling.
-            // TODO: Implement observers
+            FutureVersions.ImplementDomObservers();
 
             // 14. Return child.
             return child;

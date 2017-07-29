@@ -1,0 +1,1153 @@
+
+<!DOCTYPE html>
+<html>
+<head><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<script>
+
+		function setTaggedSessionInfo(tag, taggedSessionInfo) {
+			var oldTaggedSessionInfo = window._taggedSessionInfos[tag];
+			window._taggedSessionInfos[tag] = taggedSessionInfo;
+
+			if (!oldTaggedSessionInfo || taggedSessionInfo.SessionID != oldTaggedSessionInfo.SessionID || taggedSessionInfo.Code != oldTaggedSessionInfo.Code)
+				SC.pagedata.notifyDirty();
+		}
+
+		// backwards compatibility with extensions
+		function setTaggedSessionID(tag, sessionID) {
+			window.setTaggedSessionInfo(tag, { SessionID: sessionID });
+		}
+
+		function getTaggedSessionInfo(tag) {
+			return window._taggedSessionInfos[tag];
+		}
+
+	</script>
+<script src="Script.ashx?__Cache=8e2ed78b-1d5b-4201-85bc-4cbdbc9449c5" id="defaultScript"></script>
+<link href="App_Themes/TheMatrix/Default.css?__Cache=c08cb99b-fdbd-4f36-a6b6-b958378d1032" type="text/css" rel="stylesheet" /><link href="FavIcon.axd?__Cache=41afe83c-7d76-42ee-8933-a0e335c7a81b" rel="shortcut icon" />
+<script>SC.util.mergeIntoContext({"focusedControlID":null,"userDisplayName":"","isUserAuthenticated":false,"isUserAdministrator":false,"loginUrl":"/Login","loginReturnUrlParameterName":"ReturnUrl","loginReasonParameterName":"Reason","pageBaseFileName":"Guest","guestPageUrl":".","hostPageUrl":"Host","administrationPageUrl":"Administration","notifyActivityFrequencyMilliseconds":600000,"loginAfterInactivityMilliseconds":0,"canChangePassword":false,"changePasswordUrl":"ChangePassword","controlPanelUrl":null,"pageType":"GuestPage","processType":2,"userAgentOverride":null,"sessionTypeInfos":[]});</script>
+<script>SC.extension.addInitializeProc('07979477-b058-44c4-9829-035b041eeb01', function (extensionContext) {
+/*
+http://forum.screenconnect.com/yaf_postsm33047_Extension--Command-Toolbox.aspx#post33047
+multi line saved commands
+demand administer permission to modify settings
+*/
+SC.util.includeStyleSheet(extensionContext.baseUrl + 'Style.css');
+
+SC.event.addGlobalHandler(SC.event.QueryCommandButtons, function (eventArgs) {
+	switch (eventArgs.area) {
+		case 'HostDetailPopoutPanel':
+			//if (window.isCommandEnabled("RunCommand", null, [eventArgs.session], eventArgs.session.Permissions))
+				eventArgs.buttonDefinitions.push(
+					{commandName: 'Select', commandArgument: 'OpenCommandToolbox', text: SC.res['CommandToolbox.DetailPopout.Modal']}
+				);
+			break;
+	}
+});
+
+SC.event.addGlobalHandler(SC.event.ExecuteCommand, function (eventArgs){
+	switch (eventArgs.commandArgument) {
+		case 'OpenCommandToolbox':
+				SC.dialog.showModalButtonDialog('CommandToolbox', SC.res['CommandToolbox.Modal.Title'], SC.res['CommandToolbox.Modal.RunCommand'], 'Default',
+				function(container){
+					SC.ui.addElement(container, 'P', SC.res['CommandToolbox.Modal.Instruction']);
+					var selector = SC.ui.createElement('SELECT', {id: 'commandSelector'});
+					var commandText = SC.ui.createElement('TextArea', {id: 'commandText'});
+					var commandIndex = [];
+					var commands = getCommandNamesAndValues();
+					
+					var saveCommand = SC.ui.createElement('INPUT', {id: 'saveCommand', type: 'BUTTON', value: SC.res['CommandToolbox.Modal.SaveButton']});
+					var saveStatusField = SC.ui.createElement('SPAN', {id: 'saveStatus'});
+					
+					Array.prototype.forEach.call(commands, function(c){
+						var option = document.createElement('option');
+						option.value = c.value.toString();
+						option.text = c.name;
+						commandIndex.push(c.index.toString());
+						selector.appendChild(option);
+					});
+					
+					selector.onchange = function () {
+						commandText.value = getSelectedItemText();
+					};
+					
+					commandText.value = commands[0].value;
+					
+					SC.ui.addContent(container, selector);
+					SC.ui.addContent(container, commandText);
+					
+					SC.ui.addContent(container, saveCommand);
+					SC.ui.addContent(container, saveStatusField);
+					
+					saveCommand.onclick =  function() {
+						$('saveStatus').innerHTML = SC.res['CommandToolbox.Modal.Saving'];
+						var position = commandIndex[$('commandSelector').selectedIndex];
+						var commandName = $('commandSelector').options[$('commandSelector').selectedIndex].text;
+						SC.service.SaveExtensionCommandSetting(commandName, position, commandText.value, function(ret) {
+							$('saveStatus').innerHTML = SC.res['CommandToolbox.Modal.Saved'];
+							$('saveStatus').className = 'Success';
+						});
+					};
+				},
+				function (eventArgs) {
+					var allRows = "";
+					if ($('.DetailTable') === null)
+						allRows = $('detailTable').rows;
+					else
+						allRows = $('.DetailTable').rows;
+					var commandRows = Array.prototype.filter.call(allRows, function (r) { return SC.ui.isChecked(r) || SC.ui.isSelected(r); });
+					var sessions = Array.prototype.map.call(commandRows, function (r) {return r._dataItem; });
+					var sessionIDs = Array.prototype.map.call(sessions, function (s) { return s.SessionID; });
+					
+					var chosenCommand = $('commandText').value;
+					
+					//window.getSessionGroupUrlPart()[0] different from <5.3
+					window.addEventToSessions(window.getSessionGroupUrlPart()[0], 
+						SC.types.SessionType.Access,
+						sessionIDs,
+						SC.types.SessionEventType.QueuedCommand,
+						null,
+						chosenCommand,
+						false,
+						false,
+						true
+					);
+					SC.dialog.hideModalDialog();
+				});
+			break;
+	}
+});
+
+function getSelectedItemText() {
+	return $('commandSelector').options[$('commandSelector').selectedIndex].value;
+}
+
+function getCommandNamesAndValues() {
+	var commandsToReturn = [];
+	var commands = [
+		{'name' : extensionContext.settingValues.CommandName1, 'value' : extensionContext.settingValues.Command1, 'index' : 1}, 
+		{'name' : extensionContext.settingValues.CommandName2, 'value' : extensionContext.settingValues.Command2, 'index' : 2}, 
+		{'name' : extensionContext.settingValues.CommandName3, 'value' : extensionContext.settingValues.Command3, 'index' : 3}, 
+		{'name' : extensionContext.settingValues.CommandName4, 'value' : extensionContext.settingValues.Command4, 'index' : 4}, 
+		{'name' : extensionContext.settingValues.CommandName5, 'value' : extensionContext.settingValues.Command5, 'index' : 5}, 
+		{'name' : extensionContext.settingValues.CommandName6, 'value' : extensionContext.settingValues.Command6, 'index' : 6}, 
+		{'name' : extensionContext.settingValues.CommandName7, 'value' : extensionContext.settingValues.Command7, 'index' : 7}, 
+		{'name' : extensionContext.settingValues.CommandName8, 'value' : extensionContext.settingValues.Command8, 'index' : 8}, 
+		{'name' : extensionContext.settingValues.CommandName9, 'value' : extensionContext.settingValues.Command9, 'index' : 9}, 
+		{'name' : extensionContext.settingValues.CommandName10, 'value' : extensionContext.settingValues.Command10, 'index' : 10} 
+	];
+	Array.prototype.forEach.call(commands, function(c) {
+		if (c.value !== ''){
+			commandsToReturn.push(c);
+		}
+	});
+	
+	return commandsToReturn;
+}
+});</script>
+<script>SC.extension.addInitializeProc('c06711f7-e4a9-40dc-85ea-0f9bdee533b7', function (extensionContext) {
+SC.event.addGlobalHandler(SC.event.QueryPanels, function (eventArgs) {
+	switch(eventArgs.area){
+	case 'GuestActionPanel':
+		eventArgs.panelDefinitions.unshift({
+			initProc: function (container) {
+				var buildtitle = [];
+				if(extensionContext.settingValues.title.split(" ").length > 1){
+					buildtitle = [extensionContext.settingValues.title.substring(0, extensionContext.settingValues.title.indexOf(" ")), extensionContext.settingValues.title.substring(extensionContext.settingValues.title.indexOf(" "))];
+				}else{
+					buildtitle = [extensionContext.settingValues.title, ""];
+				}
+				SC.ui.setContents(container, [$h2({ innerHTML: '<em>'+buildtitle[0]+'</em> '+buildtitle[1] }), $table({id: 'installerTable'})]);
+				SC.ui.clear($('installerTable'));
+				SC.ui.addElement($('installerTable'), 'tr', {id: 'BuildInstallerRow'});
+				SC.ui.addElement($('BuildInstallerRow'), 'td', {id: 'BuildInstallerCell0'});
+				SC.ui.addElement($('BuildInstallerRow'), 'td', {id: 'BuildInstallerCell1'});
+				SC.ui.addElement($('BuildInstallerCell0'), 'span', {innerHTML: extensionContext.settingValues.description});
+				SC.ui.addElement($('BuildInstallerCell1'), 'a', {
+					id: 'BuildInstallerButton', 
+					className: 'GoLink Small', 
+					_commandName: 'ShowBuildInstallerDialog',
+					innerHTML: ""
+				});
+				
+			},
+			isVisibleProc: function (pass, previousPassVisibleCount, sessionInfo) {
+				return pass == 10;
+			}
+		});
+		break;
+	}
+});
+
+SC.event.addGlobalHandler(SC.event.ExecuteCommand, function (eventArgs) {
+	switch (eventArgs.commandName) {
+		case 'ShowBuildInstallerDialog':
+			if(extensionContext.settingValues.UsePassword != "false"){
+				var titlePanel = SC.dialog.createTitlePanel("Installer Password");
+				var mainContentPanel = SC.dialog.createContentPanel();
+				var buttonPanel = SC.dialog.createButtonPanel("Submit");
+				
+				var contentContainer = SC.ui.addElement(mainContentPanel, 'dl');
+				SC.ui.addElement(contentContainer, 'DT', "Please enter the password:");
+			
+				SC.editfield.addEditField(contentContainer, 'password', null, null, null);
+			
+				SC.util.includeStyleSheet(extensionContext.baseUrl + 'Style.css');
+				SC.dialog.showModalDialogRaw('PasswordDialog', [titlePanel, mainContentPanel, buttonPanel], function (eventArgs){
+					password = SC.editfield.getTextValue(contentContainer, 'password');
+					if(password == extensionContext.settingValues.Password){			
+						SC.installer.showBuildDialog();
+					}else{
+						alert("Incorrect Password");
+					}
+				});
+			}else{
+				SC.installer.showBuildDialog();
+			}
+			break;
+	}
+});
+
+});</script>
+<script>SC.extension.addInitializeProc('18c75f30-eb5c-42ba-be18-9ef6850f5437', function (extensionContext) {
+SC.event.addGlobalHandler(SC.event.QueryCommandButtons, function (eventArgs) {
+	switch (eventArgs.area) {
+		case 'ExtrasPopoutPanel':
+			eventArgs.buttonDefinitions.push(
+				{ commandName: 'DownloadDesktopExe', text: 'Download Desktop Client' }
+			);
+			break;
+	}
+});
+
+SC.event.addGlobalHandler(SC.event.ExecuteCommand, function (eventArgs) {
+	switch (eventArgs.commandName) {
+		case 'DownloadDesktopExe':
+			SC.util.launchUrl(extensionContext.baseUrl + 'Download.ashx');
+			break;
+	}
+});
+
+});</script>
+<script>SC.extension.addInitializeProc('f3ae653f-bdca-471f-80c3-eaa4a0f7d540', function (extensionContext) {
+SC.util.includeStyleSheet(extensionContext.baseUrl + 'Style.css');
+
+SC.event.addGlobalHandler(SC.event.QueryPanels, function (eventArgs) {
+	
+	switch(eventArgs.area){
+	case 'GuestActionPanel':
+		eventArgs.panelDefinitions.push({
+				initProc: function (container) {
+					SC.ui.setContents(container, [
+						$h2({ innerHTML: SC.res['GuestActionPanel.PublicSession.Heading']}),
+						$table({id: 'publicTable'}),
+					]);
+				},
+				isVisibleProc: function (pass, previousPassVisibleCount, sessionInfo) {
+					return pass == 5 && previousPassVisibleCount === 0 && sessionInfo !== null && sessionInfo.Sessions.filter(function (s) { return s.IsPublic; }).length > 0;
+				},
+				refreshProc: function (container, sessionInfo, wasMadeVisible) {
+					SC.ui.clear($('publicTable'));
+						
+					for (var i = 0; i < sessionInfo.Sessions.length; i++)
+					{
+						var rowClass;
+						if (i % 2 === 0)
+							rowClass = 'tableDataAlt';
+						else
+							rowClass = 'tableDataPrime';
+							
+						var displayOrNot = true;
+						
+						if (sessionInfo.Sessions[i].ActiveConnections.length > 0)
+						{
+							for (var j = 0; j < sessionInfo.Sessions[i].ActiveConnections.length; j++)
+							{
+								if ((sessionInfo.Sessions[i].ActiveConnections[j].ProcessType == "2") && (extensionContext.settingValues.HideSessionsWhereGuestIsConnected == 'true'))
+									displayOrNot = false;
+							}
+						}
+						
+						if (displayOrNot)
+						{
+							SC.ui.addElement($('publicTable'), 'tr', {id: 'publicRow' + i});
+							SC.ui.addElement($('publicRow' + i), 'td', {id: 'publicSessionName' + i, innerHTML: sessionInfo.Sessions[i].Name, className: rowClass});
+							
+							if (extensionContext.settingValues.ShowSessionHostIfKnown == 'true' && sessionInfo.Sessions[i].Host !== null)
+								SC.ui.addElement($('publicRow' + i), 'td', {id: 'publicSessionHost' + i, innerHTML: sessionInfo.Sessions[i].Host, className: rowClass});
+							
+							SC.ui.addElement($('publicRow' + i), 'td', {id: 'publicSessionJoin' + i});
+							SC.ui.addElement($('publicSessionJoin' + i), 'a', {
+								id: 'publicJoinButton' + i, 
+								className: 'GoLink Small', 
+								_commandName: 'JoinBySessionID',
+								_commandArgument: sessionInfo.Sessions[i].SessionID
+							});
+						}
+					}
+					//hack attack
+					SC.ui.setVisible(SC.ui.findAncestorByTag(SC.ui.findDescendentByTag($('actionPanel'), 'SELECT'), 'DIV', false));
+				}
+			});
+		break;
+	}
+});
+
+});</script>
+<script>SC.extension.addInitializeProc('a7b5a8f2-9fd0-489c-89d0-3c1888fde971', function (extensionContext) {
+/*
+Todo:
+Uninstall: (Get-WmiObject -Class Win32_Product -Filter "IdentifyingNumber = '{7B5AF017-C01E-49A0-B454-1200F0A94D86}'").Uninstall()
+Stop/Start Service:
+Stop Process:
+System Information: Get-WmiObject win32_SystemEnclosure | Select SerialNumber | ConvertTo-Xml -As Stream
+Move strings to resources
+******Configurable event log entry count
+*/
+SC.util.includeStyleSheet(extensionContext.baseUrl + 'NewStyle.css');
+
+function getValidEventLogCount() {
+	var tempValue = extensionContext.settingValues.EventLogRequestCount;
+	if ((tempValue > 0) && (tempValue <= 100))
+		return tempValue;
+	else
+		return 10;
+}
+
+SC.event.addGlobalHandler(SC.event.QueryCommandButtons, function (eventArgs) {
+	switch (eventArgs.area) {
+		case 'HostDetailTabList':
+			//because changes to 6.0 keep breaking this stuff
+			/*
+			eventArgs.buttonDefinitions.push(
+				{commandName: 'Select', commandArgument: 'Processes', text: SC.res['Diagnostics.ProcessTab.Label'], className: 'TabProcesses'},
+				{commandName: 'Select', commandArgument: 'Software', text: SC.res['Diagnostics.SoftwareTab.Label'], className: 'TabSoftware'},
+				{commandName: 'Select', commandArgument: 'EventLog', text: SC.res['Diagnostics.EventLogTab.Label'], className: 'TabEventLog'},
+				{commandName: 'Select', commandArgument: 'Services', text: SC.res['Diagnostics.ServicesTab.Label'], className: 'TabServices'}
+			);*/
+			
+			
+			eventArgs.buttonDefinitions.push(
+				{commandName: 'Select', commandArgument: 'Processes', text: SC.res['Diagnostics.ProcessTab.Label'], imageUrl: extensionContext.baseUrl + 'Images/Processes.png'},
+				{commandName: 'Select', commandArgument: 'Software', text: SC.res['Diagnostics.SoftwareTab.Label'], imageUrl: extensionContext.baseUrl + 'Images/Software.png'},
+				{commandName: 'Select', commandArgument: 'EventLog', text: SC.res['Diagnostics.EventLogTab.Label'], imageUrl: extensionContext.baseUrl + 'Images/EventLog.png'},
+				{commandName: 'Select', commandArgument: 'Services', text: SC.res['Diagnostics.ServicesTab.Label'], imageUrl: extensionContext.baseUrl + 'Images/Services.png'}
+			);
+			break;
+		case 'ProcessesButtons':eventArgs.buttonDefinitions.push({commandName: 'GetInfo', commandArgument: 'Processes', text: SC.res['Diagnostics.ProcessTab.Button']});
+			break;
+		case 'SoftwareButtons':eventArgs.buttonDefinitions.push({commandName: 'GetInfo', commandArgument: 'Software', text: SC.res['Diagnostics.SoftwareTab.Button']});
+			break;
+		case 'EventLogButtons':eventArgs.buttonDefinitions.push({commandName: 'GetInfo', commandArgument: 'EventLog', text: SC.res['Diagnostics.EventLogTab.Button']});
+			break;
+		case 'ServicesButtons':eventArgs.buttonDefinitions.push({commandName: 'GetInfo', commandArgument: 'Services', text: SC.res['Diagnostics.ServicesTab.Button']});
+			break;
+	}
+});
+
+SC.event.addGlobalHandler(SC.event.InitializeTab, function (eventArgs) {
+	if (isMyTab(eventArgs.tabName))	{
+		SC.command.queryAndAddCommandButtons(eventArgs.container, eventArgs.tabName + 'Buttons');
+		SC.ui.addElement(eventArgs.container, 'DIV', {id: 'lastUpdateContainer'});
+		SC.ui.addElement(eventArgs.container, 'DIV', {id: 'dataContainer'});
+		SC.ui.addElement(eventArgs.container, 'TABLE', {id: 'dataTable'});
+	}
+});
+
+SC.event.addGlobalHandler(SC.event.RefreshTab, function (eventArgs) {
+	if (isMyTab(eventArgs.tabName)) {
+		SC.ui.clear($('dataContainer'));
+		SC.ui.clear($('lastUpdateContainer'));
+		SC.ui.clear($('dataTable'));
+		
+		SC.ui.findDescendent(
+			eventArgs.container, function(e) { 
+				return e._commandName == 'GetInfo'; 
+			}
+		)._commandArgument = {
+			type: eventArgs.tabName, 
+			operatingSystemName: eventArgs.session.GuestOperatingSystemName 
+		};
+			
+		displayDiagnosticInformation(
+			getLatestDiagnosticEvent(
+				eventArgs.sessionDetails, 
+				eventArgs.tabName
+				), eventArgs.sessionDetails.BaseTime
+			);
+			
+	}
+});
+
+SC.event.addGlobalHandler(SC.event.ExecuteCommand, function (eventArgs) {
+	switch (eventArgs.commandName){
+		case 'GetInfo':
+			window.addEventToSessions(
+				window.getSessionGroupUrlPart()[0], 
+				SC.types.SessionType.Access,
+				[window.getSessionUrlPart()], 
+				SC.types.SessionEventType.QueuedCommand, 
+				null,
+				getInputCommand(
+					eventArgs.commandArgument.type, 
+					eventArgs.commandArgument.operatingSystemName
+					),
+				false,
+				false,
+				true
+			);
+			break;
+	}
+});
+
+function getInputCommand(diagnosticType, operatingSystem) {
+	var headers = getHeaders(operatingSystem);
+	headers.DiagnosticType = diagnosticType;
+	var commandText = getDiagnosticCommandText(headers);
+	
+	var emptyLinePrefix = '';
+	
+	if (headers.Processor == 'sh') 
+		emptyLinePrefix = 'echo ';
+	else{
+		emptyLinePrefix = 'echo ""';
+		commandText = "$Host.UI.RawUI.BufferSize = New-Object Management.Automation.Host.Size (500, 25)" + "\n" + commandText;
+	}
+	
+	return  "#!" + headers.shaBang + "\n" +
+		"#maxlength=100000" + "\n" +
+		"#timeout=90000" + "\n" +
+		headers.modifier + "DIAGNOSTIC-RESPONSE/1" + headers.delimiter  + "\n" +
+		headers.modifier + "DiagnosticType: " + headers.DiagnosticType + headers.delimiter  + "\n" +
+		headers.modifier + "ContentType: " + headers.ContentType + headers.delimiter  + "\n" +
+		emptyLinePrefix + "\n" + commandText;
+}
+
+function getHeaders(operatingSystem) {
+	if (operatingSystem.indexOf("Windows") >= 0 || operatingSystem.indexOf("Server") >= 0) 
+		return { Processor: "ps", Interface: "powershell", ContentType: "xml", shaBang: "ps", modifier: "echo \"", delimiter: '\"' };
+	else if(operatingSystem.indexOf("Linux") >= 0)
+		return { Processor: "sh", Interface: "linux", ContentType: "text", shaBang: "sh",  modifier: "echo ", delimiter: ''};
+	else if (operatingSystem.indexOf("Mac") >= 0)
+		return { Processor: "sh", Interface: "osx", ContentType: "text", shaBang: "sh", modifier: "echo ", delimiter: ''};
+}
+
+function isMyTab(tabName) {
+	switch (tabName) {
+		case 'Processes':
+		case 'Software':
+		case 'EventLog':
+		case 'Services':
+			return true;
+		default:
+			return false;
+	}
+}
+
+function isDiagnosticContent(eventData) {
+	return eventData.startsWith("DIAGNOSTIC-RESPONSE/1");
+}
+
+function getLatestDiagnosticEvent(sessionDetails, diagnosticEventType) {
+	return sessionDetails.Connections
+			.map(function(c) { return c.Events; })
+			.reduce(function(outputArray, events) { Array.prototype.push.apply(outputArray, events); return outputArray; }, [])
+			.filter(function(e) { 
+				return e.EventType === SC.types.SessionEventType.RanCommand &&
+					isDiagnosticContent(e.Data) &&
+					parseDataHeaders(e.Data).DiagnosticType.trim() == diagnosticEventType;
+			})
+			.sort(function (x, y) { return x.Time - y.Time; })
+			[0];
+}
+
+function parseDataHeaders(eventData) {
+	var currentIndex = 0;
+	var headers = {};
+	var isStatusLine = true;
+	
+	while (true) {
+		var nextNewLineIndex = eventData.indexOf('\n', currentIndex);
+		
+		if (isStatusLine) {
+			isStatusLine = false;
+		} else if (nextNewLineIndex == currentIndex + 2 || nextNewLineIndex < 0) {
+			break;
+		} else {
+			var lineParts = eventData.substring(currentIndex, nextNewLineIndex).split(': ');
+			headers[lineParts[0]] = lineParts[1];
+		}
+		currentIndex = nextNewLineIndex + 1;
+	}
+	return headers;
+}
+
+function displayDiagnosticInformation(latestDiagnosticEvent, baseTime) {
+	var headers = parseDataHeaders(latestDiagnosticEvent.Data);
+	
+	if (headers.ContentType.trim() == 'xml')
+		displayDataXml(getEventDataXml(latestDiagnosticEvent.Data));
+	else
+		displayDataText(getEventDataText(latestDiagnosticEvent.Data));
+		
+	$('lastUpdateContainer').innerHTML = SC.res['Diagnostics.LastUpdateField.Label'] + new Date(latestDiagnosticEvent.Time + baseTime);
+}
+
+function getEventDataXml(eventData) {
+	return parseXml(eventData.substring(eventData.indexOf('<?xml'), eventData.length));
+}
+
+function displayDataXml(xml) {
+	var x = xml.getElementsByTagName("Object");
+	var iterationLength = 0;
+	
+	try {
+		iterationLength = x[0].children.length;
+	} catch(error) {
+		iterationLength = x[0].childNodes.length;
+	}
+	
+	//because IE/Edge are dumb
+	if (isUsingInternetExplorerOrEdge())
+	{
+		for (j = 0; j < iterationLength; j++)
+		{
+			var child = x[0].childNodes[j];
+	    	if (child.nodeType !== 1) continue;
+	    
+			SC.ui.addElement($('dataTable'), 'th', {id: 'dataTableHeader', innerHTML: x[0].childNodes[j].attributes.Name.nodeValue});
+		}
+		
+		for (i = 0; i < x.length; i++) 
+		{
+			SC.ui.addElement($('dataTable'), 'tr', {id: 'dataRow' + i});
+			
+			for (j = 0; j < x[i].childNodes.length; j++)
+			{
+				var childX = x[i].childNodes[j];
+	    		if (childX.nodeType !== 1) continue;
+				SC.ui.addElement($('dataRow' + i), 'td', {id: 'dataTableData', innerHTML: x[i].childNodes[j].textContent});
+			}
+		}
+	}
+	else
+	{
+		for (j = 0; j < x[0].children.length; j++)
+		{
+			SC.ui.addElement($('dataTable'), 'th', {id: 'dataTableHeader', innerHTML: x[0].children[j].attributes.Name.nodeValue});
+		}
+	
+		for (i = 0; i < x.length; i++) 
+		{
+			SC.ui.addElement($('dataTable'), 'tr', {id: 'dataRow' + i});
+			
+			for (j = 0; j < x[i].children.length; j++)
+			{
+				SC.ui.addElement($('dataRow' + i), 'td', {id: 'dataTableData', innerHTML: x[i].children[j].innerHTML});
+			}
+		}
+	}
+}
+
+function getEventDataText(eventData) {
+	return parseText(
+		eventData
+			.split('\n')
+			.splice(3, eventData.length)
+			.join('\n')
+		);
+}
+
+function displayDataText(eventData) {
+	for (var category in eventData[0]) {
+		SC.ui.addElement($('dataTable'), 'th', {id: 'dataTableHeader', innerHTML: category});
+	}
+	for (var i = 0; i < eventData.length; i++) {
+		SC.ui.addElement($('dataTable'), 'tr', {id: 'dataRow' + i});
+		for (var item in eventData[i]) {
+			SC.ui.addElement($('dataRow' + i), 'td', {id: 'dataTableData', innerHTML: eventData[i][item]});
+		}
+	}
+}
+
+function parseXml(xml) {
+   var dom = null;
+   if (window.DOMParser) {
+      try { 
+         dom = (new DOMParser()).parseFromString(xml, "text/xml"); 
+      } 
+      catch (e) { dom = null; }
+   }
+   else if (window.ActiveXObject) {
+      try {
+         dom = new ActiveXObject('Microsoft.XMLDOM');
+         dom.async = false;
+         if (!dom.loadXML(xml)) // parse error ..
+            window.alert(dom.parseError.reason + dom.parseError.srcText);
+      } 
+      catch (e) { dom = null; }
+   }
+   else
+      alert("cannot parse xml string!");
+   return dom;
+}
+
+function parseText (data) {
+	var lines=data.split('\n');
+	var result = [];
+ 	
+ 	var headers=lines[1].split(',');
+ 
+	for(var i=3;i<lines.length;i++){
+		var obj = {};
+		var currentline=lines[i].split(",");
+ 
+		for(var j=0;j<headers.length;j++){
+			obj[headers[j]] = currentline[j];
+		}
+		result.push(obj);
+	}
+	return result; 
+}
+
+function isUsingInternetExplorerOrEdge() {
+	var ua = window.navigator.userAgent;
+	var msie = ua.indexOf("Trident");
+	
+	if (ua.indexOf("Trident") > 0 || ua.indexOf("Edge") > 0)
+		return true;
+	else
+		return false;
+}
+
+//ripped directly from http://stackoverflow.com/questions/6108819/javascript-timestamp-to-relative-time-eg-2-seconds-ago-one-week-ago-etc-best
+function timeDifference(current, previous) {
+    var msPerMinute = 60 * 1000;
+    var msPerHour = msPerMinute * 60;
+    var msPerDay = msPerHour * 24;
+    var msPerMonth = msPerDay * 30;
+    var msPerYear = msPerDay * 365;
+
+    var elapsed = current - previous;
+
+    if (elapsed < msPerMinute) 
+         return Math.abs(Math.round(elapsed/1000)) + ' seconds ago';   
+    else if (elapsed < msPerHour) 
+         return Math.round(elapsed/msPerMinute) + ' minutes ago';   
+    else if (elapsed < msPerDay ) 
+         return Math.round(elapsed/msPerHour ) + ' hours ago';   
+    else if (elapsed < msPerMonth) 
+        return 'approximately ' + Math.round(elapsed/msPerDay) + ' days ago';   
+    else if (elapsed < msPerYear) 
+        return 'approximately ' + Math.round(elapsed/msPerMonth) + ' months ago';   
+    else 
+        return 'approximately ' + Math.round(elapsed/msPerYear ) + ' years ago';   
+}
+
+function getDiagnosticCommandText(headers) {
+	switch (headers.Processor + '/' + headers.Interface + '/' + headers.ContentType + '/' + headers.DiagnosticType)
+	{
+		case "ps/powershell/xml/Processes": return "Get-Process | select ProcessName, Id, NPM, PM, WS, VM | Sort ProcessName | ConvertTo-Xml -As Stream";
+		case "ps/powershell/xml/EventLog": return "Get-EventLog Application -newest " + getValidEventLogCount() + " | Select TimeWritten, EntryType, Source, Message | Sort TimeWritten -Descending | ConvertTo-Xml -As Stream";
+		case "ps/powershell/xml/Services": return "Get-Service | select displayName, Name, Status | Sort DisplayName  | ConvertTo-Xml -As Stream";
+		case "ps/powershell/xml/Software": return "Get-WmiObject -Class Win32_Product | Select Name, Vendor, Version, IdentifyingNumber | Sort Name | ConvertTo-Xml -As Stream";
+		
+		case "sh/linux/text/Processes": return "ps -eo \"%U,%p,%x,%C,%c\"";
+		case "sh/linux/text/EventLog": return "echo " + headers.DiagnosticType + " ; dmesg -T | tail -" + getValidEventLogCount();
+		case "sh/linux/text/Services": return "echo " + headers.DiagnosticType + " ; ls /etc/init.d";
+		case "sh/linux/text/Software": return "echo " + headers.DiagnosticType + " ; dpkg --get-selections";
+		
+		case "sh/osx/text/Processes": return "ps -eo \"pid,%cpu,command\"";
+		case "sh/osx/text/EventLog": return "echo " + headers.DiagnosticType + " ; syslog -C";
+		case "sh/osx/text/Services": return "echo " + headers.DiagnosticType + " ; launchctl list";
+		case "sh/osx/text/Software": return "echo " + headers.DiagnosticType + " ; ls /Applications";
+    	default: throw "unknown os";
+	}
+}
+
+
+});</script>
+<title>
+	NY Network Managers Remote Support Software
+</title></head>
+<body>
+	<script>
+		SC.ui.setVisible(document.body, false);
+	</script>
+	<div class="OuterPanel">
+		<div class="HeaderPanel"></div>
+		<div class="NavigationPanel"></div>
+		<div class="MainPanel">
+			
+	<div class="ContentPanel">
+		<div>
+			<div class="WelcomePanel"></div>
+			<div class="ActionPanel"></div>
+		</div>
+	</div>
+
+		</div>
+	</div>
+	<script>
+		SC.context.scriptBaseUrl = SC.util.getBaseUrl($('defaultScript').src);
+	</script>
+	
+	<script>
+
+		SC.event.addGlobalHandler(SC.event.ExecuteCommand, function (eventArgs) {
+			var session = null;
+			var hostAccessToken = null
+
+			switch (eventArgs.commandName) {
+				case 'JoinBySessionID':
+					session = SC.pagedata.get().Sessions.filter(function (s) { return s.SessionID == eventArgs.commandArgument; })[0];
+					break;
+				case 'JoinByTag':
+					var taggedSessionInfo = window.getTaggedSessionInfo(eventArgs.commandArgument);
+					hostAccessToken = taggedSessionInfo.HostAccessToken;
+					session = SC.pagedata.get().Sessions.filter(function (s) { return s.SessionID == taggedSessionInfo.SessionID || (taggedSessionInfo.Code && s.Code.toLowerCase() == taggedSessionInfo.Code.toLowerCase()); })[0];
+					break;
+			}
+
+			// IE only allows launching urls on actual clicks
+			if (session && (SC.command.doesClickDispatch(eventArgs.commandElement) || !SC.util.isCapable(SC.util.Caps.InternetExplorer))) {
+				SC.launch.startJoinSession(
+					null,
+					function (userData, promptFieldMap, onSuccess, onFailure) {
+						onSuccess(
+							SC.util.getClientLaunchParameters(
+								session.SessionID,
+								session.SessionType,
+								session.Name,
+								promptFieldMap.participantName.value,
+								hostAccessToken,
+								hostAccessToken ? SC.types.ProcessType.Host : SC.types.ProcessType.Guest
+							)
+						);
+					},
+					SC.util.getSessionTypeBooleanResource('JoinPanel.{0}PromptVisible', session.SessionType),
+					SC.util.getSessionTypeResource('JoinPanel.{0}PromptMessage', session.SessionType),
+					{
+						participantName: {
+							labelText: SC.util.getSessionTypeResource('JoinPanel.{0}ParticipantNameLabelText', session.SessionType),
+							value: '',
+							visible: SC.util.getSessionTypeBooleanResource('JoinPanel.{0}PromptParticipantNameVisible', session.SessionType),
+						},
+					},
+					SC.util.getSessionTypeResource('JoinPanel.{0}PromptButtonText', session.SessionType)
+				);
+			}
+		});
+
+		SC.event.addGlobalHandler(SC.event.QueryParticipantJoinedCount, function (eventArgs) {
+			var sessionInfo = SC.pagedata.get();
+			var session = sessionInfo.Sessions.find(function (s) { return s.SessionID === eventArgs.clientLaunchParameters.s; });
+
+			if (session !== undefined)
+				eventArgs.participantJoinedCount = session.ActiveConnections.filter(function (ac) {
+					if (eventArgs.clientLaunchParameters.n)
+						return ac.ProcessType == SC.types.ProcessType.Host;
+
+					return ac.ProcessType == SC.types.ProcessType.Guest && ac.ParticipantName == eventArgs.clientLaunchParameters.r;
+				}).length;
+		});
+
+		SC.event.addGlobalHandler(SC.event.QueryPanels, function (eventArgs) {
+			switch (eventArgs.area) {
+				case 'GuestActionPanel':
+					eventArgs.panelDefinitions.push({
+						initProc: function (container) {
+							SC.ui.setContents(container, [
+								$div({ className: 'Loading' },
+									$div({ className: 'LoadingContent' })
+								)
+							]);
+						},
+						isVisibleProc: function (pass, previousPassVisibleCount, sessionInfo) {
+							return pass == 1 && sessionInfo == null;
+						}
+					});
+
+					eventArgs.panelDefinitions.push({
+						initProc: function (container) {
+							SC.ui.setContents(container, [
+								$a({ _commandName: 'JoinByTag', _commandArgument: 'DefaultSessionID', className: 'GoLink Large' }),
+								$h2({ _htmlResource: 'GuestActionPanel.InvitationSession.Heading' }),
+								$p({ _htmlResource: 'GuestActionPanel.InvitationSession.Message' }),
+							]);
+						},
+						isVisibleProc: function (pass, previousPassVisibleCount, sessionInfo) {
+							return pass == 3 &&
+								previousPassVisibleCount == 0 &&
+								sessionInfo != null &&
+								sessionInfo.Sessions.find(function (s) { return s.SessionID == window.getTaggedSessionInfo('DefaultSessionID').SessionID; });
+						}
+					});
+
+					eventArgs.panelDefinitions.push({
+						initProc: function (container) {
+							SC.ui.setContents(container, [
+								$h2({ _htmlResource: 'GuestActionPanel.CodeSession.Heading' }),
+								$p({ _htmlResource: 'GuestActionPanel.CodeSession.Message' }),
+								$p([
+									SC.ui.createSearchTextBox({ _commandName: 'JoinByTag', _commandArgument: 'DefaultCode', value: window.getTaggedSessionInfo('DefaultCode').Code || '' }, function (eventArgs) {
+										var sessionCode = SC.util.getTrimmedOrNull(SC.event.getElement(eventArgs).value);
+										window.setTaggedSessionInfo('DefaultCode', { Code: sessionCode });
+									}),
+									$nbsp(),
+									$a({ _commandName: 'JoinByTag', _commandArgument: 'DefaultCode', className: 'GoLink Medium' }),
+								]),
+							]);
+						},
+						isVisibleProc: function (pass, previousPassVisibleCount, sessionInfo) {
+							return pass == 5 && previousPassVisibleCount == 0 && sessionInfo != null && sessionInfo.DoCodeSessionsExist;
+						},
+						refreshProc: function (container, sessionInfo, wasMadeVisible) {
+							var taggedSessionInfo = window.getTaggedSessionInfo('DefaultCode');
+
+							SC.ui.setDisabled(
+								SC.ui.findDescendentByTag(container, 'A'),
+								!sessionInfo.Sessions.find(function (s) { return taggedSessionInfo.Code && s.Code.toLowerCase() == taggedSessionInfo.Code.toLowerCase(); })
+							);
+
+							if (wasMadeVisible)
+								SC.ui.findDescendentByTag(container, 'INPUT').focus();
+						}
+					});
+
+					eventArgs.panelDefinitions.push({
+						initProc: function (container) {
+							SC.ui.setContents(container, [
+								$h2({ _htmlResource: 'GuestActionPanel.PublicSession.Heading' }),
+								$p({ _htmlResource: 'GuestActionPanel.PublicSession.Message' }),
+								$p([
+									$select(),
+									$nbsp(),
+									$a({ _commandName: 'JoinBySessionID', className: 'GoLink Medium' }),
+								]),
+							]);
+
+							SC.event.addHandler(SC.ui.findDescendentByTag(container, 'SELECT'), 'change', function (eventArgs) {
+								var selectBox = SC.event.getElement(eventArgs);
+								SC.ui.findDescendentByTag(container, 'A')._commandArgument = selectBox.options[selectBox.selectedIndex].value;
+							});
+						},
+						isVisibleProc: function (pass, previousPassVisibleCount, sessionInfo) {
+							return pass == 5 && previousPassVisibleCount == 0 && sessionInfo != null && sessionInfo.Sessions.filter(function (s) { return s.IsPublic; }).length > 0;
+						},
+						refreshProc: function (container, sessionInfo, wasMadeVisible) {
+							var selectBox = SC.ui.findDescendentByTag(container, 'SELECT');
+							var link = SC.ui.findDescendentByTag(container, 'A');
+
+							SC.ui.setContents(selectBox,
+								sessionInfo.Sessions.filter(function (s) { return s.IsPublic; }).map(function (s) {
+									return $option({ value: s.SessionID }, s.Name);
+								})
+							);
+
+							var optionIndex = Array.prototype.findIndex.call(selectBox.options, function (o) { return o.value == link._commandArgument; });
+
+							if (optionIndex != -1)
+								selectBox.selectedIndex = optionIndex;
+							else
+								link._commandArgument = selectBox.options[selectBox.selectedIndex].value;
+						}
+					});
+
+					eventArgs.panelDefinitions.push({
+						initProc: function (container) {
+							SC.ui.setContents(container, [
+								$h2({ _htmlResource: 'GuestActionPanel.NoAvailableSessions.Heading' }),
+								$p({ _htmlResource: 'GuestActionPanel.NoAvailableSessions.Message' }),
+							]);
+						},
+						isVisibleProc: function (pass, previousPassVisibleCount, sessionInfo) {
+							return pass == 8 && previousPassVisibleCount == 0;
+						}
+					});
+
+					break;
+			}
+		});
+
+		SC.event.addGlobalHandler(SC.event.PreRender, function () {
+			window._taggedSessionInfos = {};
+
+			var queryStringMap = SC.util.parseQueryString(window.location.search);
+			window.setTaggedSessionInfo('DefaultCode', { Code: queryStringMap.Code });
+			window.setTaggedSessionInfo('DefaultSessionID', { SessionID: queryStringMap.Session, HostAccessToken: queryStringMap.HostAccessToken });
+
+			var welcomePanel = $('.WelcomePanel');
+			var actionPanel = $('.ActionPanel');
+
+			SC.ui.setVisible(welcomePanel, SC.util.getBooleanResource('GuestWelcomePanel.Visible'));
+
+			SC.ui.setContents(welcomePanel, [
+				$h2({ _htmlResource: 'GuestWelcomePanel.Heading' }),
+				$p({ _htmlResource: 'GuestWelcomePanel.Message' }),
+			]);
+
+			SC.panellist.queryAndInitializePanels(actionPanel);
+			SC.panellist.refreshPanels(actionPanel, null);
+
+			var getTaggedValuesFunc = function (propertyName) {
+				return Object.keys(window._taggedSessionInfos)
+					.map(function (key) { return window._taggedSessionInfos[key]; })
+					.filter(function (_) { return _[propertyName]; })
+					.map(function (_) { return _[propertyName]; });
+			}
+
+			SC.pagedata.startPageDataLoop(function (version, onSuccess, onFailure) {
+				return SC.service.GetGuestSessionInfo(
+					getTaggedValuesFunc('Code'),
+					getTaggedValuesFunc('SessionID'),
+					version,
+					onSuccess,
+					onFailure
+				);
+			});
+		});
+
+		SC.event.addGlobalHandler(SC.event.PageDataRefreshed, function (eventArgs) {
+			SC.panellist.refreshPanels($('.ActionPanel'), eventArgs.pageData);
+		});
+
+	</script>
+
+	<script>
+
+		SC.event.addGlobalHandler(SC.event.QueryCommandButtons, function (eventArgs) {
+			switch (eventArgs.area) {
+				case 'ToolsPanel':
+					eventArgs.buttonDefinitions.push(
+						{ commandName: 'Extras' },
+						{ commandName: 'Login' }
+					);
+					break;
+				case 'UserPopoutPanel':
+					eventArgs.buttonDefinitions.push(
+						{ commandName: 'NavigateControlPanel' },
+						{ commandName: 'ChangePassword' },
+						{ commandName: 'Logout' }
+					);
+					break;
+				case 'HelpPopoutPanel':
+					if (SC.context.pageType !== 'GuestPage' && SC.context.pageType != 'LoginPage') {
+						eventArgs.buttonDefinitions.push({ commandName: 'GiveFeedback' });
+
+						for (var i = 1; ; i++) {
+							var resourceValue = SC.res['HelpPanel.Link' + i + '.Text'];
+
+							if (resourceValue === undefined || resourceValue === '')
+								break;
+
+							eventArgs.buttonDefinitions.push({ commandName: 'NavigateHelpLink', commandArgument: i, text: resourceValue });
+						}
+					}
+					break;
+			}
+		});
+
+		SC.event.addGlobalHandler(SC.event.QueryCommandButtonState, function (eventArgs) {
+			switch (eventArgs.commandName) {
+				case 'User':
+					eventArgs.isVisible = SC.context.isUserAuthenticated;
+					break;
+				case 'Login':
+					eventArgs.isVisible = SC.context.pageType != 'SetupWizardPage' && SC.context.pageType != 'LoginPage' && !SC.context.isUserAuthenticated;
+					break;
+				case 'NavigateControlPanel':
+					eventArgs.isVisible = !!SC.context.controlPanelUrl;
+					break;
+				case 'ChangePassword':
+					eventArgs.isVisible = SC.context.canChangePassword;
+					break;
+				case 'Extras':
+					eventArgs.isVisible = !SC.context.isUserAuthenticated && SC.popout.computePopoutCommandsVisible(eventArgs);
+					break;
+				case 'Help':
+					eventArgs.isVisible = SC.popout.computePopoutCommandsVisible(eventArgs);
+					break;
+			}
+		});
+
+		SC.event.addGlobalHandler(SC.event.ExecuteCommand, function (eventArgs) {
+			switch (eventArgs.commandName) {
+				case 'Extras':
+					SC.popout.showPanelFromCommand(eventArgs);
+					break;
+				case 'Login':
+					SC.util.sendToLogin(SC.types.LoginReason.None, true);
+					break;
+				case 'Logout':
+					SC.util.sendToLogin(SC.types.LoginReason.Logout, false);
+					break;
+				case 'User':
+					SC.popout.togglePanel(eventArgs.commandElement, function (popoutPanel) {
+						['ExtrasPopoutPanel', 'HelpPopoutPanel', 'UserPopoutPanel'].forEach(function (_) {
+							var commandButtons = SC.command.queryAndCreateCommandButtons(_);
+
+							if (commandButtons.length)
+								popoutPanel.appendChild($div(commandButtons));
+						});
+
+						SC.command.updateCommandButtonsState(popoutPanel);
+					});
+					break;
+				case 'NavigateControlPanel':
+					window.open(SC.context.controlPanelUrl);
+					break;
+				case 'ChangePassword':
+					window.location.href = SC.context.changePasswordUrl;
+					break;
+				case 'NavigateHelpLink':
+					window.open(SC.res['HelpPanel.Link' + eventArgs.commandArgument + '.Url']);
+					break;
+				case 'GiveFeedback':
+					SC.dialog.showModalButtonDialog(
+						'GiveFeedback',
+						SC.res['Command.GiveFeedback.Text'],
+						SC.res['Command.GiveFeedback.ButtonText'],
+						'Default',
+						function (container) {
+							SC.ui.setContents(container, [
+								$dl([
+									$dt({ _htmlResource: 'GiveFeedbackPanel.RatingLabelText' }),
+									$dd([
+										$label($input({ type: 'radio', name: 'rating', value: 'excellent' }), $span({ _htmlResource: 'GiveFeedbackPanel.ExcellentRatingLabelText' })),
+										$label($input({ type: 'radio', name: 'rating', value: 'good' }), $span({ _htmlResource: 'GiveFeedbackPanel.GoodRatingLabelText' })),
+										$label($input({ type: 'radio', name: 'rating', value: 'bad' }), $span({ _htmlResource: 'GiveFeedbackPanel.BadRatingLabelText' })),
+									]),
+									$dt({ _htmlResource: 'GiveFeedbackPanel.CommentsLabelText' }),
+									$dd(SC.ui.createTextBox({ id: 'commentsBox' }, true)),
+								]),
+							]);
+						},
+						function (eventArgs) {
+							SC.service.SendFeedback(
+								Array.prototype.map.call(document.querySelectorAll('input[name=rating]:checked'), function (e) { return e.value; })[0],
+								$('commentsBox').value,
+								function () {
+									SC.dialog.showModalMessageBox(
+										SC.res['GiveFeedbackPanel.SuccessHeading'],
+										SC.res['GiveFeedbackPanel.SuccessMessage']
+									);
+								}
+							);
+						}
+					);
+			}
+		});
+
+		SC.event.addGlobalHandler(SC.event.QueryNavigationLinks, function (eventArgs) {
+			Array.prototype.push.apply(eventArgs.navigationLinks, SC.context.sessionTypeInfos.map(function (_) {
+				return {
+					href: SC.context.scriptBaseUrl + SC.context.hostPageUrl + '#' + SC.util.getEnumValueName(SC.types.SessionType, _.sessionType),
+					text: SC.util.getSessionTypeResource('NavigationPanel.{0}LinkText', _.sessionType),
+					imageUrl: SC.util.formatString('Images/Navigation{0}.png', SC.util.getEnumValueName(SC.types.SessionType, _.sessionType)),
+					align: 'begin',
+				}
+			}));
+
+			if (SC.context.isUserAdministrator)
+				eventArgs.navigationLinks.push({
+					href: SC.context.scriptBaseUrl + SC.context.administrationPageUrl,
+					align: 'end',
+					text: SC.res['NavigationPanel.AdministrationLinkText'],
+					imageUrl: 'Images/NavigationAdministration.png',
+				});
+		});
+
+		SC.event.addGlobalHandler(SC.event.PreRender, function () {
+			var resetInactivityProc = function () {
+				window._lastNotifyActivityTime = new Date().getTime();
+
+				if (SC.context.loginAfterInactivityMilliseconds != 0) {
+					if (window._loginAfterInactivityTimer)
+						window.clearTimeout(window._loginAfterInactivityTimer);
+
+					window._loginAfterInactivityTimer = window.setTimeout(function () { SC.util.sendToLogin(SC.types.LoginReason.IdleTooLong, true); }, SC.context.loginAfterInactivityMilliseconds);
+				}
+			};
+
+			SC.context.prehandleServiceFailureProc = function (error) {
+				if (error.statusCode != 403)
+					return false;
+
+				SC.util.sendToLogin(SC.types.LoginReason.PermissionsInsufficient, true);
+			}
+
+			SC.context.unhandledServiceFailureProc = function (error) {
+				SC.dialog.showModalErrorBox(error.detail || error.message);
+			}
+
+			resetInactivityProc();
+
+			SC.ui.initializeWindowActivityTracking(function () {
+				if (new Date().getTime() - window._lastNotifyActivityTime > SC.context.notifyActivityFrequencyMilliseconds) {
+					resetInactivityProc();
+					SC.service.NotifyActivity();
+				}
+			});
+
+			var isTouchEnabled = (typeof document.documentElement.ontouchstart !== 'undefined');
+			SC.css.ensureClass(document.documentElement, 'TouchEnabled', isTouchEnabled);
+			SC.css.ensureClass(document.documentElement, 'TouchDisabled', !isTouchEnabled);
+			SC.css.ensureClass(document.documentElement, 'UserAuthenticated', SC.context.isUserAuthenticated);
+			SC.css.ensureClass(document.documentElement, 'NativeClient', SC.util.isCapable(SC.util.Caps.NativeClient));
+			SC.css.ensureClass(document.documentElement, 'HasMasterPanel', $('.MasterPanel'));
+			SC.css.ensureClass(document.documentElement, 'LogoImageVisible', SC.util.getBooleanResource('LogoPanel.ImageVisible'));
+			SC.css.ensureClass(document.documentElement, 'LogoIconVisible', SC.util.getBooleanResource('LogoPanel.IconVisible'));
+			SC.css.ensureClass(document.documentElement, 'LogoHeadingVisible', SC.util.getBooleanResource('LogoPanel.HeadingVisible'));
+			SC.css.ensureClass(document.documentElement, SC.context.pageType, true);
+
+			var parameterlessUrl = SC.util.getParameterlessUrl(window.location.href);
+			var createNavigationLinkFunc = function (_) {
+				return $a({ href: _.href, _selected: _.href == parameterlessUrl }, [
+					$img({ src: _.imageUrl }),
+					$span(_.text),
+				]);
+			};
+
+			SC.ui.setContents($('.HeaderPanel'), [
+				$a({ href: SC.context.guestPageUrl, className: 'LogoIconLink' }),
+				$h1({ className: 'LogoPanel' }),
+				$div({ className: 'CommandPanel' }),
+			]);
+
+			SC.command.queryAndAddCommandButtons($('.HeaderPanel .CommandPanel'), 'ToolsPanel');
+			SC.command.updateCommandButtonsState($('.HeaderPanel .CommandPanel'));
+
+			var queryNavigationLinksEventArgs = SC.event.dispatchEvent(null, SC.event.QueryNavigationLinks, { navigationLinks: [] })
+
+			SC.ui.setContents($('.NavigationPanel'), [
+				queryNavigationLinksEventArgs.navigationLinks.filter(function (l) { return l.align == 'begin'; }).map(createNavigationLinkFunc),
+				$span(),
+				queryNavigationLinksEventArgs.navigationLinks.filter(function (l) { return l.align != 'begin'; }).reverse().map(createNavigationLinkFunc),
+				$div({ _commandName: 'User' },
+					$span(SC.context.userDisplayName == null ? '' : SC.context.userDisplayName.toUpperCase()[0]),
+					$span(SC.context.userDisplayName)
+				)
+			]);
+
+			var setSelectedFunc = function () {
+				Array.prototype.forEach.call(
+					document.querySelector('.NavigationPanel').querySelectorAll('a'),
+					function (_) { SC.ui.setSelected(_, window.location.href.startsWith(_.href)); }
+				);
+			};
+
+			SC.event.addHandler(window, 'hashchange', setSelectedFunc);
+
+			setSelectedFunc();
+		});
+
+		SC.extension.initializeExtensions();
+		SC.event.dispatchEvent(null, SC.event.PreRender);
+		SC.ui.setVisible(document.body, true);
+
+		if (SC.context.focusedControlID)
+			$(SC.context.focusedControlID).focus();
+
+	</script>
+</body>
+</html>

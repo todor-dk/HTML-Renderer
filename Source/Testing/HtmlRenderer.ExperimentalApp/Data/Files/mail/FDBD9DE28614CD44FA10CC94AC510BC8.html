@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Postage Price Calculator </title>
+	<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width" />
+
+	
+	<link href="/Content/themes/base/core.css" rel="stylesheet"/>
+<link href="/Content/themes/base/resizable.css" rel="stylesheet"/>
+<link href="/Content/themes/base/selectable.css" rel="stylesheet"/>
+<link href="/Content/themes/base/accordion.css" rel="stylesheet"/>
+<link href="/Content/themes/base/autocomplete.css" rel="stylesheet"/>
+<link href="/Content/themes/base/button.css" rel="stylesheet"/>
+<link href="/Content/themes/base/dialog.css" rel="stylesheet"/>
+<link href="/Content/themes/base/slider.css" rel="stylesheet"/>
+<link href="/Content/themes/base/tabs.css" rel="stylesheet"/>
+<link href="/Content/themes/base/datepicker.css" rel="stylesheet"/>
+<link href="/Content/themes/base/progressbar.css" rel="stylesheet"/>
+<link href="/Content/themes/base/theme.css" rel="stylesheet"/>
+
+
+	<link href="/Content/bootstrap.css" rel="stylesheet"/>
+<link href="/Content/site-010010.css" rel="stylesheet"/>
+
+	<script src="/Scripts/modernizr-2.8.3.js"></script>
+
+	<script src="/Scripts/calculator-1.0.1.js"></script>
+
+</head>
+<body>
+	
+<!-- Google Tag Manager -->
+<noscript>
+	<iframe src="//www.googletagmanager.com/ns.html?id=GTM-MVCC8H" height="0" width="0" style="display: none; visibility: hidden"></iframe>
+</noscript>
+<script type="text/javascript">
+	(function (w, d, s, l, i) {
+		w[l] = w[l] || [];
+		w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+		var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+	})(window, document, 'script', 'dataLayer', 'GTM-MVCC8H');
+</script>
+<!-- End Google Tag Manager -->
+
+<div id="utility-bar">
+	<div class="container">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Domestic <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/">Retail Calculator</a></li>
+								<li><a href="https://dbcalc.usps.com/">Business Calculator</a></li>
+								<li><a href="/MilitaryRestrictions">APO/FPO/DPO Restrictions</a></li>
+								<li><a href="/DomesticZoneChart">Zone Chart</a></li>
+								<li><a href="https://tools.usps.com/go/POLocatorAction!input.action" target="_blank">Locate a Post Office</a></li>
+								<li><a href="https://tools.usps.com/go/ZipLookupAction!input.action" target="_blank">ZIP Code Lookup</a></li>
+								<li><a href="/ServiceCommitments">Service Commitments</a></li>
+							</ul>
+						</li>
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">International <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a Length="0" href="/?country=10440">Retail Calculator</a></li>
+								<li><a href="https://ibcalc.usps.com/">Business Calculator</a></li>
+								<li><a href="/CustomsForm">Customs Form Indicator</a></li>
+								<li><a href="/CountryPriceGroup">Country Max Limits and Price Groups</a></li>
+								<li><a href="/InternationalZoneChart">Zone Chart</a></li>
+							</ul>
+						</li>
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pricing <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="http://pe.usps.com/text/dmm300/Notice123.htm">Price Charts HTML</a></li>
+								<li><a href="http://pe.usps.com/cpim/ftp/manuals/dmm300/Notice123.pdf">Price Charts PDF</a></li>
+							</ul>
+						</li>
+						<li class="active"><a href="http://pe.usps.com">Postal Explorer</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+</div>
+
+	<div id="wrap">
+		<div class="container">
+			
+<!--googleoff: index-->
+<div id="skip-content" style="height: 0px; overflow: hidden;">
+	<a id="skip-nav" style="height: 0.1rem;" href="#maincontent">Skip navigation</a>
+</div>
+<div class="header-usps">
+		<a href="https://www.usps.com" class="logo-usps"><img alt="USPS.com home" src="/images/logo-sb.png"></a>
+	<span class="logo-pcalc">
+		<a class="hidden-xs" href="/">Postage Price Calculator</a>
+		<a class="visible-xs" href="/">Price Calculator</a>
+	</span>
+</div>
+<!--googleon: index-->
+
+			
+
+			<div id="maincontent" class="content-wrap-pcalc">
+				
+
+
+<form action="/" method="post"><input name="__RequestVerificationToken" type="hidden" value="AU2iqRQvAK2G5fdVvZ6E0gf6JISl074wwJexkzRUuKtwM4s23btp4tIFC-MIK2Om0Z4DcMqw5rEPrf9P0Hx_gkaKJLo1" /><input data-val="true" data-val-required="The IsEmbedded field is required." id="IsEmbedded" name="IsEmbedded" type="hidden" value="False" />	<div><span class="field-validation-valid" data-valmsg-for="PageError" data-valmsg-replace="true"></span></div>
+	<div class="row">
+		<div class="col-xs-12 col-md-8">
+			<div class="form-group">
+				<label for="CountryID">What&#39;s the destination country?</label>
+				<select class="form-control" data-val="true" data-val-required="The What&#39;s the destination country? field is required." id="CountryID" name="CountryID" tabindex="1"><option value="10440">Abu Dhabi (United Arab Emirates)</option>
+<option value="10345">Admiralty Islands (Papua New Guinea)</option>
+<option value="10000">Afghanistan</option>
+<option value="10314">Aitutaki, Cook Islands (New Zealand)</option>
+<option value="10441">Ajman (United Arab Emirates)</option>
+<option value="10110">Aland Island (Finland)</option>
+<option value="10001">Albania</option>
+<option value="12000">Alberta (Canada)</option>
+<option value="10140">Alderney (Channel Islands) (Great Britain and Northern Ireland)</option>
+<option value="10002">Algeria</option>
+<option value="10388">Alhucemas (Spain)</option>
+<option value="10309">Alofi Island (New Caledonia)</option>
+<option value="10450">American Samoa</option>
+<option value="10193">Andaman Islands (India)</option>
+<option value="10003">Andorra</option>
+<option value="10004">Angola</option>
+<option value="10005">Anguilla</option>
+<option value="10068">Anjouan (Comoros)</option>
+<option value="10097">Annobon Island (Equatorial Guinea)</option>
+<option value="12140">Antigua (Antigua and Barbuda)</option>
+<option value="10006">Antigua and Barbuda</option>
+<option value="10009">Argentina</option>
+<option value="10010">Armenia</option>
+<option value="10011">Aruba</option>
+<option value="10012">Ascension</option>
+<option value="10152">Astypalaia (Greece)</option>
+<option value="10505">Atafu (Samoa)</option>
+<option value="12026">Atiu, Cook Islands (New Zealand)</option>
+<option value="10013">Australia</option>
+<option value="10026">Austria</option>
+<option value="10315">Avarua (New Zealand)</option>
+<option value="10027">Azerbaijan</option>
+<option value="10359">Azores (Portugal)</option>
+<option value="10028">Bahamas</option>
+<option value="10029">Bahrain</option>
+<option value="10389">Balearic Islands (Spain)</option>
+<option value="10342">Balochistan (Pakistan)</option>
+<option value="10030">Bangladesh</option>
+<option value="10496">Banks Island (Vanuatu)</option>
+<option value="10031">Barbados</option>
+<option value="10007">Barbuda (Antigua and Barbuda)</option>
+<option value="10171">Barthelemy (Guadeloupe)</option>
+<option value="10032">Belarus</option>
+<option value="10033">Belgium</option>
+<option value="10034">Belize</option>
+<option value="10036">Benin</option>
+<option value="10038">Bermuda</option>
+<option value="10039">Bhutan</option>
+<option value="10346">Bismark Archipelago (Papua New Guinea)</option>
+<option value="10040">Bolivia</option>
+<option value="10299">Bonaire (Bonaire, Sint Eustatius, and Saba)</option>
+<option value="12318">Bonaire, Sint Eustatius, and Saba</option>
+<option value="10118">Bora Bora (French Polynesia)</option>
+<option value="10200">Borneo (Indonesia)</option>
+<option value="10041">Bosnia-Herzegovina</option>
+<option value="10042">Botswana</option>
+<option value="10347">Bougainville (Papua New Guinea)</option>
+<option value="10366">Bourbon (Reunion)</option>
+<option value="10043">Brazil</option>
+<option value="12001">British Columbia (Canada)</option>
+<option value="10184">British Guiana (Guyana)</option>
+<option value="10044">British Virgin Islands</option>
+<option value="10045">Brunei Darussalam</option>
+<option value="10348">Buka (Papua New Guinea)</option>
+<option value="10046">Bulgaria</option>
+<option value="10047">Burkina Faso</option>
+<option value="10048">Burma</option>
+<option value="10050">Burundi</option>
+<option value="10434">Caicos Islands (Turks and Caicos Islands)</option>
+<option value="10051">Cambodia</option>
+<option value="10053">Cameroon</option>
+<option value="10054">Canada</option>
+<option value="10390">Canary Islands (Spain)</option>
+<option value="10225">Canton Island (Kiribati)</option>
+<option value="10057">Cape Verde</option>
+<option value="10058">Cayman Islands</option>
+<option value="10059">Central African Republic</option>
+<option value="10391">Ceuta (Spain)</option>
+<option value="10397">Ceylon (Sri Lanka)</option>
+<option value="10060">Chad</option>
+<option value="10392">Chaferinas Islands (Spain)</option>
+<option value="10153">Chalki (Greece)</option>
+<option value="10141">Channel Islands (Jersey, Guernsey, Alderney and Sark) (Great Britain and Northern Ireland)</option>
+<option value="10062">Chile</option>
+<option value="10063">China</option>
+<option value="10452">Christiansted, US Virgin Islands</option>
+<option value="10014">Christmas Island (Australia)</option>
+<option value="10226">Christmas Island (Kiribati)</option>
+<option value="10453">Chuuk, Micronesia</option>
+<option value="10015">Cocos Island (Australia)</option>
+<option value="10067">Colombia</option>
+<option value="10069">Comoros</option>
+<option value="10073">Congo, Democratic Republic of the</option>
+<option value="10072">Congo, Republic of the</option>
+<option value="10316">Cook Islands (New Zealand)</option>
+<option value="10098">Corisco Island (Equatorial Guinea)</option>
+<option value="10112">Corsica (France)</option>
+<option value="10080">Costa Rica</option>
+<option value="10081">Cote d Ivoire</option>
+<option value="10154">Crete (Greece)</option>
+<option value="10082">Croatia</option>
+<option value="10083">Cuba</option>
+<option value="10280">Cumino Island (Malta)</option>
+<option value="10300">Curacao</option>
+<option value="10243">Cyjrenaica (Libya)</option>
+<option value="10085">Cyprus</option>
+<option value="10086">Czech Republic</option>
+<option value="10037">Dahomey (Benin)</option>
+<option value="10194">Damao (India)</option>
+<option value="10317">Danger Islands (New Zealand)</option>
+<option value="10087">Denmark</option>
+<option value="10172">Desirade Island (Guadeloupe)</option>
+<option value="10195">Diu (India)</option>
+<option value="10088">Djibouti</option>
+<option value="10155">Dodecanese Islands (Greece)</option>
+<option value="10363">Doha (Qatar)</option>
+<option value="10091">Dominica</option>
+<option value="10092">Dominican Republic</option>
+<option value="10442">Dubai (United Arab Emirates)</option>
+<option value="10201">East Timor (Timor-Leste, Democratic Republic of)</option>
+<option value="10456">Ebeye, Marshall Islands</option>
+<option value="10093">Ecuador</option>
+<option value="10094">Egypt</option>
+<option value="10209">Eire (Ireland)</option>
+<option value="10095">El Salvador</option>
+<option value="10436">Ellice Islands (Tuvalu)</option>
+<option value="10099">Elobey Islands (Equatorial Guinea)</option>
+<option value="10227">Enderbury Island (Kiribati)</option>
+<option value="10142">England (Great Britain and Northern Ireland)</option>
+<option value="10100">Equatorial Guinea</option>
+<option value="10103">Eritrea</option>
+<option value="10104">Estonia</option>
+<option value="10105">Ethiopia</option>
+<option value="10506">Fakaofo (Samoa)</option>
+<option value="10106">Falkland Islands</option>
+<option value="10228">Fanning Island (Kiribati)</option>
+<option value="10108">Faroe Islands</option>
+<option value="10101">Fernando Po (Equatorial Guinea)</option>
+<option value="10244">Fezzan (Libya)</option>
+<option value="10109">Fiji</option>
+<option value="10111">Finland</option>
+<option value="10414">Formosa (Taiwan)</option>
+<option value="10113">France</option>
+<option value="10458">Frederiksted, US Virgin Islands</option>
+<option value="10117">French Guiana</option>
+<option value="10119">French Oceania (French Polynesia)</option>
+<option value="10120">French Polynesia</option>
+<option value="10173">French West Indies (Guadeloupe)</option>
+<option value="12002">French West Indies (Martinique)</option>
+<option value="10426">Friendly Islands (Tonga)</option>
+<option value="10443">Fujairah (United Arab Emirates)</option>
+<option value="10503">Futuna (Wallis and Futuna Islands)</option>
+<option value="10134">Gabon</option>
+<option value="10135">Gambia</option>
+<option value="10121">Gambier (French Polynesia)</option>
+<option value="10136">Georgia, Republic of</option>
+<option value="10137">Germany</option>
+<option value="10138">Ghana</option>
+<option value="10139">Gibraltar</option>
+<option value="10229">Gilbert Islands (Kiribati)</option>
+<option value="10196">Goa (India)</option>
+<option value="10281">Gozo Island (Malta)</option>
+<option value="10070">Grand Comoro (Comoros)</option>
+<option value="10143">Great Britain and Northern Ireland</option>
+<option value="10156">Greece</option>
+<option value="10169">Greenland</option>
+<option value="10170">Grenada</option>
+<option value="10407">Grenadines (Saint Vincent and the Grenadines)</option>
+<option value="10174">Guadeloupe</option>
+<option value="10459">Guam</option>
+<option value="10181">Guatemala</option>
+<option value="10144">Guernsey (Channel Islands) (Great Britain and Northern Ireland)</option>
+<option value="10182">Guinea</option>
+<option value="10183">Guinea-Bissau</option>
+<option value="10185">Guyana</option>
+<option value="10064">Hainan Island (China)</option>
+<option value="10186">Haiti</option>
+<option value="10220">Hashemite Kingdom (Jordan)</option>
+<option value="10318">Hervey, Cook Islands (New Zealand)</option>
+<option value="10122">Hivaoa (French Polynesia)</option>
+<option value="10297">Holland (Netherlands)</option>
+<option value="10187">Honduras</option>
+<option value="10189">Hong Kong</option>
+<option value="10123">Huahine (French Polynesia)</option>
+<option value="10310">Huan Island (New Caledonia)</option>
+<option value="10191">Hungary</option>
+<option value="10192">Iceland</option>
+<option value="10197">India</option>
+<option value="10202">Indonesia</option>
+<option value="10206">Iran</option>
+<option value="10208">Iraq</option>
+<option value="10210">Ireland</option>
+<option value="10203">Irian Barat (Indonesia)</option>
+<option value="10145">Isle of Man (Great Britain and Northern Ireland)</option>
+<option value="10311">Isle of Pines (New Caledonia)</option>
+<option value="10084">Isle of Pines, West Indies (Cuba)</option>
+<option value="10211">Israel</option>
+<option value="12077">Issas (Djibouti)</option>
+<option value="10212">Italy</option>
+<option value="12312">Ivory Coast (Cote d Ivoire)</option>
+<option value="10213">Jamaica</option>
+<option value="10214">Japan</option>
+<option value="10146">Jersey (Channel Islands) (Great Britain and Northern Ireland)</option>
+<option value="10259">Johore (Malaysia)</option>
+<option value="10221">Jordan</option>
+<option value="10157">Kalymnos (Greece)</option>
+<option value="10052">Kampuchea (Cambodia)</option>
+<option value="10158">Karpathos (Greece)</option>
+<option value="10159">Kassos (Greece)</option>
+<option value="10160">Kastellorizon (Greece)</option>
+<option value="10223">Kazakhstan</option>
+<option value="10260">Kedah (Malaysia)</option>
+<option value="10016">Keeling Islands (Australia)</option>
+<option value="10261">Kelantan (Malaysia)</option>
+<option value="10224">Kenya</option>
+<option value="10462">Kingshill, US Virgin Islands</option>
+<option value="10230">Kiribati</option>
+<option value="10232">Korea, Democratic Peoples Republic of (North Korea)</option>
+<option value="10234">Korea, Republic of (South Korea)</option>
+<option value="10463">Koror (Palau)</option>
+<option value="10161">Kos (Greece)</option>
+<option value="12317">Kosovo, Republic of</option>
+<option value="10464">Kosrae, Micronesia</option>
+<option value="10190">Kowloon (Hong Kong)</option>
+<option value="10236">Kuwait</option>
+<option value="10465">Kwajalein, Marshall Islands</option>
+<option value="10237">Kyrgyzstan</option>
+<option value="10055">Labrador (Canada)</option>
+<option value="10262">Labuan (Malaysia)</option>
+<option value="10238">Laos</option>
+<option value="10239">Latvia</option>
+<option value="10240">Lebanon</option>
+<option value="10162">Leipsos (Greece)</option>
+<option value="10163">Leros (Greece)</option>
+<option value="10175">Les Saints Island (Guadeloupe)</option>
+<option value="10241">Lesotho</option>
+<option value="10242">Liberia</option>
+<option value="10245">Libya</option>
+<option value="10247">Liechtenstein</option>
+<option value="10248">Lithuania</option>
+<option value="10017">Lord Howe Island (Australia)</option>
+<option value="10312">Loyalty Islands (New Caledonia)</option>
+<option value="10249">Luxembourg</option>
+<option value="10250">Macao</option>
+<option value="10251">Macau (Macao)</option>
+<option value="10252">Macedonia, Republic of</option>
+<option value="10253">Madagascar</option>
+<option value="10360">Madeira Islands (Portugal)</option>
+<option value="10466">Majuro, Marshall Islands</option>
+<option value="10263">Malacca (Malaysia)</option>
+<option value="10256">Malawi</option>
+<option value="10265">Malaysia</option>
+<option value="10278">Maldives</option>
+<option value="10279">Mali</option>
+<option value="10282">Malta</option>
+<option value="10319">Manahiki (New Zealand)</option>
+<option value="10065">Manchuria (China)</option>
+<option value="12006">Manitoba (Canada)</option>
+<option value="10467">Manua Islands, American Samoa</option>
+<option value="10176">Marie Galante (Guadeloupe)</option>
+<option value="10124">Marquesas Islands (French Polynesia)</option>
+<option value="10468">Marshall Islands, Republic of the</option>
+<option value="10283">Martinique</option>
+<option value="10284">Mauritania</option>
+<option value="10285">Mauritius</option>
+<option value="10115">Mayotte (France)</option>
+<option value="10393">Melilla (Spain)</option>
+<option value="10287">Mexico</option>
+<option value="10469">Micronesia, Federated States of</option>
+<option value="10404">Miquelon (Saint Pierre and Miquelon)</option>
+<option value="10071">Moheli (Comoros)</option>
+<option value="10288">Moldova</option>
+<option value="10116">Monaco (France)</option>
+<option value="10289">Mongolia</option>
+<option value="12316">Montenegro</option>
+<option value="10290">Montserrat</option>
+<option value="10125">Moorea (French Polynesia)</option>
+<option value="10291">Morocco</option>
+<option value="10292">Mozambique</option>
+<option value="10340">Muscat (Oman)</option>
+<option value="10049">Myanmar (Burma)</option>
+<option value="10293">Namibia</option>
+<option value="10215">Nansil Islands (Japan)</option>
+<option value="10295">Nauru</option>
+<option value="10266">Negri Sembilan (Malaysia)</option>
+<option value="10296">Nepal</option>
+<option value="10298">Netherlands</option>
+<option value="10399">Nevis (Saint Kitts and Nevis)</option>
+<option value="10349">New Britain (Papua New Guinea)</option>
+<option value="12011">New Brunswick (Canada)</option>
+<option value="10313">New Caledonia</option>
+<option value="10350">New Hanover (Papua New Guinea)</option>
+<option value="10497">New Hebrides (Vanuatu)</option>
+<option value="10351">New Ireland (Papua New Guinea)</option>
+<option value="10018">New South Wales (Australia)</option>
+<option value="10324">New Zealand</option>
+<option value="10056">Newfoundland (Canada)</option>
+<option value="10335">Nicaragua</option>
+<option value="10336">Niger</option>
+<option value="10337">Nigeria</option>
+<option value="10164">Nissiros (Greece)</option>
+<option value="10325">Niue (New Zealand)</option>
+<option value="10019">Norfolk Island (Australia)</option>
+<option value="10267">North Borneo (Malaysia)</option>
+<option value="10233">North Korea (Korea, Democratic People&#39;s Republic of)</option>
+<option value="10147">Northern Ireland (Great Britain and Northern Ireland)</option>
+<option value="10473">Northern Mariana Islands, Commonwealth of</option>
+<option value="12012">Northwest Territory (Canada)</option>
+<option value="10338">Norway</option>
+<option value="12013">Nova Scotia (Canada)</option>
+<option value="10126">Nukahiva (French Polynesia)</option>
+<option value="10507">Nukunonu (Samoa)</option>
+<option value="10231">Ocean Island (Kiribati)</option>
+<option value="10217">Okinawa (Japan)</option>
+<option value="10341">Oman</option>
+<option value="12014">Ontario (Canada)</option>
+<option value="10474">Pago Pago, American Samoa</option>
+<option value="10268">Pahang (Malaysia)</option>
+<option value="10343">Pakistan</option>
+<option value="10475">Palau</option>
+<option value="10326">Palmerston, Avarua (New Zealand)</option>
+<option value="10344">Panama</option>
+<option value="10352">Papua New Guinea</option>
+<option value="10353">Paraguay</option>
+<option value="10327">Parry, Cook Islands (New Zealand)</option>
+<option value="10165">Patmos (Greece)</option>
+<option value="10420">Pemba (Tanzania)</option>
+<option value="10269">Penang (Malaysia)</option>
+<option value="10415">Penghu Islands (Taiwan)</option>
+<option value="10394">Penon de Velez de la Gomera (Spain)</option>
+<option value="10328">Penrhyn, Tongareva (New Zealand)</option>
+<option value="10270">Perak (Malaysia)</option>
+<option value="10271">Perlis (Malaysia)</option>
+<option value="10207">Persia (Iran)</option>
+<option value="10354">Peru</option>
+<option value="10416">Pescadores Islands (Taiwan)</option>
+<option value="10177">Petite Terre (Guadeloupe)</option>
+<option value="10355">Philippines</option>
+<option value="10356">Pitcairn Island</option>
+<option value="10477">Pohnpei, Micronesia</option>
+<option value="10357">Poland</option>
+<option value="10362">Portugal</option>
+<option value="12015">Prince Edward Island (Canada)</option>
+<option value="10478">Puerto Rico</option>
+<option value="10329">Pukapuka (New Zealand)</option>
+<option value="10364">Qatar</option>
+<option value="12016">Quebec (Canada)</option>
+<option value="10020">Queensland (Australia)</option>
+<option value="10417">Quemoy (Taiwan)</option>
+<option value="10127">Raiatea (French Polynesia)</option>
+<option value="10330">Rakaanga (New Zealand)</option>
+<option value="10128">Rapa (French Polynesia)</option>
+<option value="10331">Rarotonga, Cook Islands (New Zealand)</option>
+<option value="10444">Ras al Kaimah (United Arab Emirates)</option>
+<option value="10008">Redonda (Antigua and Barbuda)</option>
+<option value="10367">Reunion</option>
+<option value="10102">Rio Muni (Equatorial Guinea)</option>
+<option value="10166">Rodos (Greece)</option>
+<option value="10286">Rodrigues (Mauritius)</option>
+<option value="10368">Romania</option>
+<option value="10480">Rota, Northern Mariana Islands</option>
+<option value="10369">Russia</option>
+<option value="10370">Rwanda</option>
+<option value="10303">Saba (Bonaire, Sint Eustatius, and Saba)</option>
+<option value="10273">Sabah (Malaysia)</option>
+<option value="10400">Saint (St.) Kitts and Nevis</option>
+<option value="12019">Saint Barthelemy (Guadeloupe)</option>
+<option value="10178">Saint Bartholomew (Guadeloupe)</option>
+<option value="10481">Saint Croix, US Virgin Islands</option>
+<option value="10402">Saint Helena</option>
+<option value="10482">Saint John, US Virgin Islands</option>
+<option value="10401">Saint Kitts (Saint Kitts and Nevis)</option>
+<option value="10403">Saint Lucia</option>
+<option value="10179">Saint Martin (French) (Guadeloupe)</option>
+<option value="10405">Saint Pierre and Miquelon</option>
+<option value="10483">Saint Thomas, US Virgin Islands</option>
+<option value="10406">Saint Vincent and the Grenadines</option>
+<option value="12017">Sainte Marie de Madagascar (Madagascar)</option>
+<option value="10484">Saipan, Northern Mariana Islands</option>
+<option value="10096">Salvador (El Salvador)</option>
+<option value="10512">Samoa</option>
+<option value="10451">Samoa, American</option>
+<option value="10371">San Marino</option>
+<option value="10381">Santa Cruz Islands (Solomon Islands)</option>
+<option value="10372">Sao Tome and Principe</option>
+<option value="10274">Sarawak (Malaysia)</option>
+<option value="10148">Sark (Channel Islands) (Great Britain and Northern Ireland)</option>
+<option value="12018">Saskatchewan (Canada)</option>
+<option value="10373">Saudi Arabia</option>
+<option value="10332">Savage Island, Niue (New Zealand)</option>
+<option value="10508">Savaii Island (Samoa)</option>
+<option value="10149">Scotland (Great Britain and Northern Ireland)</option>
+<option value="10272">Seberang Perai (Malaysia)</option>
+<option value="10275">Selangor (Malaysia)</option>
+<option value="10374">Senegal</option>
+<option value="12313">Serbia, Republic of</option>
+<option value="10376">Seychelles</option>
+<option value="10445">Sharja (United Arab Emirates)</option>
+<option value="10218">Shikoku (Japan)</option>
+<option value="10377">Sierra Leone</option>
+<option value="10198">Sikkim (India)</option>
+<option value="10378">Singapore</option>
+<option value="10304">Sint Eustatius (Bonaire, Sint Eustatius, and Saba)</option>
+<option value="10305">Sint Maarten (Dutch)</option>
+<option value="10379">Slovak Republic (Slovakia)</option>
+<option value="10380">Slovenia</option>
+<option value="10129">Society Islands (French Polynesia)</option>
+<option value="10382">Solomon Islands</option>
+<option value="10383">Somali Democratic Republic (Somalia)</option>
+<option value="10384">Somalia</option>
+<option value="10385">Somaliland (Somalia)</option>
+<option value="10386">South Africa</option>
+<option value="10021">South Australia (Australia)</option>
+<option value="10107">South Georgia (Falkland Islands)</option>
+<option value="10235">South Korea (Korea, Republic of)</option>
+<option value="10395">Spain</option>
+<option value="10339">Spitzbergen (Norway)</option>
+<option value="10398">Sri Lanka</option>
+<option value="10408">Sudan</option>
+<option value="10409">Suriname</option>
+<option value="10333">Suwarrow Islands (New Zealand)</option>
+<option value="10486">Swain&#39;s Island, American Samoa</option>
+<option value="10188">Swan Islands (Honduras)</option>
+<option value="10410">Swaziland</option>
+<option value="10411">Sweden</option>
+<option value="10412">Switzerland</option>
+<option value="10167">Symi (Greece)</option>
+<option value="10413">Syrian Arab Republic (Syria)</option>
+<option value="10130">Tahaa (French Polynesia)</option>
+<option value="10131">Tahiti (French Polynesia)</option>
+<option value="10418">Taiwan</option>
+<option value="10419">Tajikistan</option>
+<option value="10421">Tanzania</option>
+<option value="10022">Tasmania (Australia)</option>
+<option value="10061">Tchad (Chad)</option>
+<option value="10424">Thailand</option>
+<option value="10023">Thursday Island (Australia)</option>
+<option value="10066">Tibet (China)</option>
+<option value="10168">Tilos (Greece)</option>
+<option value="10204">Timor (Indonesia)</option>
+<option value="10517">Timor-Leste, Democratic Republic of</option>
+<option value="10487">Tinian, Northern Mariana Islands</option>
+<option value="10428">Tobago (Trinidad and Tobago)</option>
+<option value="10425">Togo</option>
+<option value="10509">Tokelau (New Zealand)</option>
+<option value="10427">Tonga</option>
+<option value="10334">Tongareva (New Zealand)</option>
+<option value="10219">Tori Shima (Japan)</option>
+<option value="10498">Torres Island (Vanuatu)</option>
+<option value="10222">Trans-Jordan, Hashemite Kingdom (Jordan)</option>
+<option value="10387">Transkei (South Africa)</option>
+<option value="10276">Trengganu (Malaysia)</option>
+<option value="10429">Trinidad and Tobago</option>
+<option value="10246">Tripolitania (Libya)</option>
+<option value="10430">Tristan da Cunha</option>
+<option value="10446">Trucial States (United Arab Emirates)</option>
+<option value="10132">Tuamotou (French Polynesia)</option>
+<option value="10133">Tubuai (French Polynesia)</option>
+<option value="10431">Tunisia</option>
+<option value="10432">Turkey</option>
+<option value="10433">Turkmenistan</option>
+<option value="10435">Turks and Caicos Islands</option>
+<option value="10489">Tutuila Island, American Samoa</option>
+<option value="10437">Tuvalu</option>
+<option value="10438">Uganda</option>
+<option value="10439">Ukraine</option>
+<option value="10447">Umm al Quaiwain (United Arab Emirates)</option>
+<option value="10365">Umm Said (Qatar)</option>
+<option value="10448">United Arab Emirates</option>
+<option value="10150">United Kingdom (Great Britain and Northern Ireland)</option>
+<option value="10491">United Nations, New York</option>
+<option selected="selected" value="0">United States (Domestic and APO/FPO/DPO Mail)</option>
+<option value="10511">Upolu Island (Samoa)</option>
+<option value="10449">Uruguay</option>
+<option value="10495">Uzbekistan</option>
+<option value="10499">Vanuatu</option>
+<option value="10500">Vatican City</option>
+<option value="10501">Venezuela</option>
+<option value="10024">Victoria (Australia)</option>
+<option value="10502">Vietnam</option>
+<option value="12023">Virgin Islands (British)</option>
+<option value="10492">Virgin Islands (US)</option>
+<option value="10151">Wales (Great Britain and Northern Ireland)</option>
+<option value="10504">Wallis and Futuna Islands</option>
+<option value="10277">Wellesley, Province (Malaysia)</option>
+<option value="10205">West New Guinea (Indonesia)</option>
+<option value="10025">Western Australia (Australia)</option>
+<option value="10494">Yap, Micronesia</option>
+<option value="10513">Yemen</option>
+<option value="12024">Yukon Territory (Canada)</option>
+<option value="10396">Zafarani Islands (Spain)</option>
+<option value="10514">Zambia</option>
+<option value="10422">Zanzibar (Tanzania)</option>
+<option value="10516">Zimbabwe</option>
+</select>
+				<span id="country-error" class="field-validation-valid"></span>
+			</div>
+		</div>
+	</div>
+	<div id="zip-codes-section" class="row">
+		<div class="col-xs-12 col-md-4">
+			<div class="form-group">
+				<label for="Origin">What ZIP Code are you mailing from?</label>
+				<input class="form-control numeric-only" id="Origin" maxlength="5" name="Origin" placeholder="5-Digit ZIP Code" tabindex="2" type="text" value="" />
+				<span class="field-validation-valid" data-valmsg-for="Origin" data-valmsg-replace="true"></span>
+			</div>
+		</div>
+		<div class="col-xs-12 col-md-4">
+			<div class="form-group">
+				<label for="Destination">What ZIP Code are you mailing to?</label>
+				<input class="form-control numeric-only" id="Destination" maxlength="5" name="Destination" placeholder="5-Digit ZIP Code" tabindex="3" type="text" value="" />
+				<span class="field-validation-valid" data-valmsg-for="Destination" data-valmsg-replace="true"></span>
+			</div>
+		</div>
+	</div>
+	<div id="item-value-section" class="row">
+		<div class="col-xs-12 col-md-4">
+			<div class="form-group">
+				<label for="ItemValue">What&#39;s the value of the item being mailed?</label>
+				<input class="form-control numeric-only" id="ItemValue" maxlength="20" name="ItemValue" placeholder="Item&#39;s Value" tabindex="4" type="text" value="" />
+				<span class="field-validation-valid" data-valmsg-for="ItemValue" data-valmsg-replace="true"></span>
+			</div>
+		</div>
+	</div>
+	<div id="shipping-date-section" class="row">
+		<div class="col-xs-12 col-md-4">
+			<div class="form-group">
+				<label class="control-label" for="ShippingDate">What&#39;s the Date you plan to mail the item?</label>
+				<input class="form-control datepicker" data-val="true" data-val-date="The field What&#39;s the Date you plan to mail the item? must be a date." data-val-required="The Shipping Date is required." id="ShippingDate" name="ShippingDate" placeholder="Shipping Date" tabindex="5" type="text" value="7/12/2017" />
+				<span class="field-validation-valid" data-valmsg-for="ShippingDate" data-valmsg-replace="true"></span>
+			</div>
+		</div>
+		<div class="col-xs-12 col-md-4">
+			<div class="form-group">
+				<label class="control-label" for="ShippingTime">What&#39;s the Time you plan to mail the item?</label>
+				<select class="form-control" data-val="true" data-val-required="The Shipping Time is required." id="ShippingTime" name="ShippingTime" tabindex="6"><option value="5:59">before  6:00 a.m.</option>
+<option value="6:29">between 6:00 a.m. - 6:30 a.m.</option>
+<option value="6:59">between 6:30 a.m. - 7:00 a.m.</option>
+<option value="7:29">between 7:00 a.m. - 7:30 a.m.</option>
+<option value="7:59">between 7:30 a.m. - 8:00 a.m.</option>
+<option selected="selected" value="8:29">between 8:00 a.m. - 8:30 a.m.</option>
+<option value="8:59">between 8:30 a.m. - 9:00 a.m.</option>
+<option value="9:29">between 9:00 a.m. - 9:30 a.m.</option>
+<option value="9:59">between 9:30 a.m. - 10:00 a.m.</option>
+<option value="10:29">between 10:00 a.m. - 10:30 a.m.</option>
+<option value="10:59">between 10:30 a.m. - 11:00 a.m.</option>
+<option value="11:29">between 11:00 a.m. - 11:30 a.m.</option>
+<option value="11:59">between 11:30 a.m. - 12:00 a.m.</option>
+<option value="12:29">between 12:00 a.m. - 12:30 p.m.</option>
+<option value="12:59">between 12:30 p.m. - 1:00 p.m.</option>
+<option value="13:29">between 1:00 p.m. - 1:30 p.m.</option>
+<option value="13:59">between 1:30 p.m. - 2:00 p.m.</option>
+<option value="14:29">between 2:00 p.m. - 2:30 p.m.</option>
+<option value="14:59">between 2:30 p.m. - 3:00 p.m.</option>
+<option value="15:29">between 3:00 p.m. - 3:30 p.m.</option>
+<option value="15:59">between 3:30 p.m. - 4:00 p.m.</option>
+<option value="16:29">between 4:00 p.m. - 4:30 p.m.</option>
+<option value="16:59">between 4:30 p.m. - 5:00 p.m.</option>
+<option value="17:29">between 5:00 p.m. - 5:30 p.m.</option>
+<option value="17:59">between 5:30 p.m. - 6:00 p.m.</option>
+<option value="18:29">between 6:00 p.m. - 6:30 p.m.</option>
+<option value="18:59">between 6:30 p.m. - 7:00 p.m.</option>
+<option value="19:29">between 7:00 p.m. - 7:30 p.m.</option>
+<option value="19:59">between 7:30 p.m. - 8:00 p.m.</option>
+<option value="23:59">after  8:00 p.m.</option>
+</select>
+				<span class="field-validation-valid" data-valmsg-for="ShippingTime" data-valmsg-replace="true"></span>
+			</div>
+		</div>
+	</div>
+	<div id="dom-content" >
+		<div class="form-group">
+			<h5 style="font-weight:bold">What are you Mailing?</h5>
+			<div>
+				<input data-val="true" data-val-required="The Live Animal(s) other than Day-Old Poultry field is required." id="LiveAnimals" name="LiveAnimals" tabindex="7" type="checkbox" value="true" /><input name="LiveAnimals" type="hidden" value="false" />
+				<label Style="font-weight: normal" class="control-label" for="LiveAnimals">Live Animal(s) other than Day-Old Poultry</label>
+				- <a href="http://pe.usps.com/text/pub52/pub52c5_003.htm" target="_blank", tabindex ="7">Learn about mailing Live Animals</a>
+			</div>
+			<div>
+				<input data-val="true" data-val-required="The Day-Old Poultry field is required." id="DayOldPoultry" name="DayOldPoultry" tabindex="8" type="checkbox" value="true" /><input name="DayOldPoultry" type="hidden" value="false" />
+				<label Style="font-weight: normal" class="control-label" for="DayOldPoultry">Day-Old Poultry</label>
+				- <a href="http://pe.usps.com/text/pub52/pub52c5_008.htm#ep184002" target="_blank", tabindex ="9">Learn about mailing Day Old Poultry</a>
+			</div>
+			<div>
+				<input data-val="true" data-val-required="The Hazardous Materials field is required." id="Hazmat" name="Hazmat" tabindex="10" type="checkbox" value="true" /><input name="Hazmat" type="hidden" value="false" />
+				<label Style="font-weight: normal" class="control-label" for="Hazmat">Hazardous Materials</label>
+				- <a href="http://pe.usps.com/text/pub52/pub52c3_001.htm" target="_blank", tabindex ="11">Learn about mailing Hazardous Materials</a>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<h5 style="font-weight:bold">Does the mailpiece require Ground Transportation?</h5>
+			<div>
+				<input data-val="true" data-val-required="The Requires Ground Transportation field is required." id="GroundTransportation" name="GroundTransportation" tabindex="12" type="checkbox" value="true" /><input name="GroundTransportation" type="hidden" value="false" />
+				<label Style="font-weight: normal" class="control-label" for="GroundTransportation">Requires Ground Transportation</label>
+			</div>
+		</div>
+	</div>
+	<div id="intl-content">
+		<div class="form-group">
+			<label for="What_are_you_Mailing_">What are you Mailing?</label>
+			<div>
+				<input data-val="true" data-val-required="The Only Nonnegotiable Document(s) field is required." id="NonnegotiableDocument" name="NonnegotiableDocument" tabindex="13" type="checkbox" value="true" /><input name="NonnegotiableDocument" type="hidden" value="false" />
+				<label Style="font-weight: normal" class="control-label" for="NonnegotiableDocument">Only Nonnegotiable Document(s)</label>
+			</div>
+		</div>
+	</div>	
+<label class="control-label hidden-print" for="MailShapeAndSize">Please select from the following options</label>	<div id="options-section" class="form-group hidden-print">
+		<div class="row">
+			<div class="col-xs-6 col-sm-3 col-md-2">
+				<input id="option_1" class="submit-panel postcard-button" type="submit" name="action" value="Postcard" tabindex="14" />
+				<label for="option_1">Calculate Postcard price</label>
+			</div>
+			<div class="col-xs-6 col-sm-3 col-md-2">
+				<input id="option_2" class="submit-panel flat-rate-envelope-button" type="submit" name="action" value="FlatRateEnvelopes" tabindex="15" />
+				<label for="option_2">View Flat Rate Envelopes</label>
+			</div>
+			<div class="col-xs-6 col-sm-3 col-md-2">
+				<input id="option_3" class="submit-panel flat-rate-box-button" type="submit" name="action" value="FlatRateBoxes" tabindex="16" />
+				<label for="option_3">View Flat Rate Boxes</label>
+			</div>
+			<div class="col-xs-6 col-sm-3 col-md-2">
+				<input id="option_4" class="submit-panel shape-and-size-button" type="submit" name="action" value="ShapeAndSize" tabindex="17" />
+				<label for="option_4">Calculate price based on Shape and Size</label>
+			</div>
+		</div>
+	</div>
+</form>
+
+
+
+			</div>
+		</div>
+	</div>
+
+<!--googleoff: index-->
+<div class="global-footer-wrap hidden-print" id="global-footer-wrap">
+	<div class="container">
+		<footer>
+			<div class="row">
+				<div class="col-xs-6">
+					<div class="col-xs-12 col-sm-6">
+						<h3>Helpful Links</h3>
+						<ul>
+							<li><a href="https://www.usps.com/help/welcome.htm">Contact Us</a></li>
+							<li><a href="https://www.usps.com/globals/site-index.htm">Site Index</a></li>
+							<li><a href="http://faq.usps.com/">FAQs</a>
+						</ul>
+						<h3>USPS Jobs</h3>
+						<ul>
+							<li><a href="http://about.usps.com/careers/welcome.htm">Careers</a></li>
+						</ul>
+					</div>
+					<div class="col-xs-12 col-sm-6">
+						<h3>On About.USPS.com</h3>
+						<ul>
+							<li><a href="http://about.usps.com/">About USPS Home</a></li>
+							<li><a href="http://about.usps.com/news/welcome.htm">Newsroom</a></li>
+							<li><a href="http://about.usps.com/news/service-alerts/welcome.htm">USPS Service Updates</a></li>
+							<li><a href="http://about.usps.com/forms-publications/welcome.htm">Forms &amp; Publications</a></li>
+							<li><a href="https://www.usps.com/gov-services/gov-services.htm">Government Services</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div class="col-xs-12 col-sm-6">
+						<h3>Other USPS Sites</h3>
+						<ul>
+							<li><a href="https://gateway.usps.com/">Business Customer Gateway</a></li>
+							<li><a href="https://postalinspectors.uspis.gov/">Postal Inspectors</a></li>
+							<li><a href="http://www.uspsoig.gov/">Inspector General</a></li>
+							<li><a href="http://pe.usps.gov/">Postal Explorer</a></li>
+							<li><a href="http://www.postalmuseum.si.edu/">National Postal Museum</a></li>
+							<li><a href="https://www.usps.com/webtools/welcome.htm">Resources for Developers</a></li>
+							<li><a href="https://ribbs.usps.gov/">RIBBS</a></li>
+							<li><a href="https://www.usps.com/datadial">USPS Customer Data Dial</a></li>
+							<li><a href="https://uspscybersafe.com">CyberSafe at USPS</a></li>
+						</ul>
+					</div>
+					<div class="col-xs-12 col-sm-6">
+						<h3>Legal Information</h3>
+						<ul>
+							<li><a href="http://about.usps.com/who-we-are/privacy-policy/privacy-policy-highlights.htm">Privacy Policy</a></li>
+							<li><a href="http://about.usps.com/termsofuse.htm">Terms of Use</a></li>
+							<li><a href="http://about.usps.com/who-we-are/foia/welcome.htm">FOIA</a></li>
+							<li><a href="http://about.usps.com/who-we-are/no-fear-act/welcome.htm">No FEAR Act EEO Data</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-sm-9">
+					<img id="footer-logo"
+						alt="USPS.com home. The profile of an eagle's head adjoining the words United States Postal Service are the two elements that are combined to form the corporate signature."
+						src="/images/logo-usps-footer.png">
+					<span class="copyright">Copyright&copy; <span id="copyright-year"></span>&nbsp;USPS. All Rights Reserved.</span>
+					<script type="text/javascript">var d = new Date(); document.getElementById('copyright-year').innerHTML = d.getFullYear();</script>
+				</div>
+				<div class="col-sm-3">
+					<div id="footer-social">
+						<ul class="social-links">
+							<li><a class="social-fb" href="http://www.facebook.com/usps" target="_blank">Follow USPS on facebook.com </a></li>
+							<li><a class="social-twitter" href="http://twitter.com/usps" target="_blank">Follow USPS on twitter.com </a></li>
+							<li><a class="social-pinterest" href="http://pinterest.com/uspsstamps/" target="_blank">Follow USPS on pinterest.com </a></li>
+							<li><a class="social-youtube" href="http://www.youtube.com/usps" target="_blank">Follow USPS on YouTube.com </a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+</div>
+<!--googleon: index-->
+
+
+
+	<script src="/Scripts/jquery-2.2.4.js"></script>
+
+	<script src="/Scripts/bootstrap.js"></script>
+
+
+	
+	<script src="/Scripts/jquery-ui-1.11.4.js"></script>
+
+
+	<script type="text/javascript">
+		var USCountries = [ 10450,10452,10453,10456,10458,10459,10462,10463,10464,10465,10466,10467,10468,10469,10473,10474,10475,10477,10478,10480,10481,10482,10483,10484,10451,10486,10487,10489,10491,0,10492,10494 ];
+
+		$(document).ready(function () {
+			$.ajaxSetup({ cache: false });
+			ShowHideSections();
+			ValidCountry();
+
+			$("#CountryID").change(function () {
+				ShowHideSections();
+				ValidCountry();
+			});
+
+			var today_date = new Date();
+			var shipping_date = new Date($('#ShippingDate').val());
+
+			if (shipping_date.getFullYear() == today_date.getFullYear() && shipping_date.getMonth() == today_date.getMonth() && shipping_date.getDate() == today_date.getDate()) {
+				var selected_time = $('#ShippingTime').val();
+				var selected_time_parts = selected_time.split(":", 2);
+				var hour = today_date.getHours();
+				var minute = today_date.getMinutes();
+
+				if (hour > selected_time_parts[0]) {
+					var shipping_time = "";
+
+					if (((hour == 6) && (minute == 0)) || (hour < 6))
+						shipping_time = "5:59";
+					else if (hour >= 20)
+						shipping_time = "23:59";
+					else {
+						if (minute < 30)
+							shipping_time = hour + ":29";
+						else
+							shipping_time = hour + ":59";
+					}
+
+					$('#ShippingTime').val(shipping_time);
+				}
+			}
+		});
+
+		function ShowHideSections() {
+			var country_id = parseInt($('#CountryID').val());
+			var index = USCountries.indexOf(country_id);
+			var is_us = (index == -1) ? false : true;
+
+			if (is_us == true) {
+				$('#zip-codes-section').show();
+				$('#item-value-section').hide();
+				$('#dom-content').show();
+				$('#intl-content').hide();
+			}
+			else {
+				$('#zip-codes-section').hide();
+				$('#item-value-section').show();
+				$('#dom-content').hide();
+				$('#intl-content').show();
+			}
+		}
+
+		function ValidCountry() {
+			$.getJSON("/Calculator/ValidateCountry",
+				{
+					countryID: $('#CountryID').val()
+				}, function (data) {
+
+					if (data == "") {
+						$('#country-error').removeClass('field-validation-error').addClass('field-validation-valid');
+						//$('#weight-section').show();
+
+						var country_id = parseInt($('#CountryID').val());
+						var index = USCountries.indexOf(country_id);
+						var is_us = (index == -1) ? false : true;
+
+						if (is_us == true) {
+							$('#zip-codes-section').show();
+						}
+						else {
+							$('#zip-codes-section').hide();
+						}
+					}
+					else {
+						$('#country-error').removeClass('field-validation-valid').addClass('field-validation-error').html(data);
+						//$('#weight-section').hide();
+						$('#zip-codes-section').hide();
+					}
+
+					//$('#mail-service-section').hide();
+					//$('#customs-forms').html("");
+				})
+			.fail(function (jqxhr, textStatus, error) {
+				alert(error);
+			});
+		}
+
+		$(function () { 
+		   $('.datepicker').datepicker();
+		});
+	</script>
+
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('.numeric-only').keypress(function (e) { NumberOnly(e); });
+			$('.decimal-only').keypress(function (e) { DecimalOnly(e); });
+		});
+
+		function NumberOnly(e) {
+			var verified = (e.which == 8 || e.which == undefined || e.which == 0) ? null : String.fromCharCode(e.which).match(/[^0-9]/);
+			if (verified) { e.preventDefault();
+			}
+		}
+
+		function DecimalOnly(e) {
+			var verified = (e.which == 8 || e.which == undefined || e.which == 0) ? null : String.fromCharCode(e.which).match(/[0-9]|[.]/);
+			if (!verified) { e.preventDefault(); }
+		}
+	</script>
+</body>
+</html>

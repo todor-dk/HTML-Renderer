@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>PokéVision &mdash; Find, locate and track Pokemon near you or anywhere in the world live &amp; realtime in Pokemon GO!</title>
+
+                    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700" rel="stylesheet">
+
+                            <link href="/asset/css/app.css?ffe11e1" type="text/css" rel="stylesheet">
+                    
+                                        <script src="/asset/js/app.js?e929b95"></script>
+                    
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@pokevisiongo">
+    <meta name="twitter:title" content="PokéVision &mdash; Real-Time Pokémon Go Map">
+    <meta name="twitter:description" content="Find all Pokémon near you (or a selected target location) in real time for Pokémon Go. No login necessary!">
+    <meta name="twitter:image" content="https://pokevision.com/asset/image/twitter-card.jpg">
+
+    <script async id="factorem" src="//cdm.cursecdn.com/js/pokevision/cdmfactorem_min.js?misc=1499877792&amp;sec=home"></script>
+
+        <link rel="shortcut icon" href="/asset/image/favicon.ico?4685504">
+    </head>
+
+    <body class="home is-en_US">
+        <div class="ad-unit ad-unit-hidden"></div>
+        <script>
+            App.checkAdBlock();
+        </script>
+                    <header class="header">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <a href="/" class="header-logo">
+                                <span class="header-logo-icon"></span>
+                                <strong>Poké</strong><span>Vision</span>
+                            </a>
+                            <form method="post" class="header-map-search">
+                                <input type="text" name="name" class="form-control" placeholder="Enter location, eg. Santa Monica Pier, CA...">
+                                <button type="submit" class="btn btn-primary" disabled>
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-sm-6">
+                            <ul class="header-navigation">
+                                <li><a href="/pokemon">Pokémon</a></li>
+                                <li><a href="/eggs">Eggs</a></li>
+                                <li><a href="/moves">Moves</a></li>
+                                <li><a href="/tools">Tools</a></li>
+                                <li><a href="http://masterpubg.com/">MasterPUBG</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <header class="header-mobile">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="header-mobile-main">
+                                <a href="/" class="header-logo">
+                                    <span class="header-logo-icon"></span>
+                                    <strong>Poké</strong><span>Vision</span>
+                                </a>
+                                <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".header-mobile-toggle">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="header-mobile-toggle row collapse">
+                        <ul class="header-navigation">
+                            <li><a href="/pokemon">Pokémon</a></li>
+                            <li><a href="/eggs">Eggs</a></li>
+                            <li><a href="/moves">Moves</a></li>
+                            <li><a href="/tools">Tools</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+        
+            <main class="home-map">
+        <div class="home-map-wrapper"></div>
+        <div class="home-map-tooltip"></div>
+        <div class="home-map-loading">
+            <div class="loading-pokeballs">
+                <span class="loading-pokeball loading-pokeball-normal"></span>
+                <span class="loading-pokeball loading-pokeball-great"></span>
+                <span class="loading-pokeball loading-pokeball-ultra"></span>
+                <span class="loading-pokeball loading-pokeball-master"></span>
+            </div>
+            <div class="loading-message"></div>
+        </div>
+        <button href="javascript:;" class="home-map-scan btn btn-primary" disabled>
+            <strong>Click To Find Pokémon Near Marker</strong>
+            <small>You can only scan once every 10 seconds.</small>
+        </button>
+        <select name="filters" class="form-control" multiple data-size="8" data-actions-box="true">
+                            <option value="1" style="background-image:url('//ugc.pokevision.com/images/pokemon/1.png');" selected>Bulbasaur</option>
+                            <option value="2" style="background-image:url('//ugc.pokevision.com/images/pokemon/2.png');" selected>Ivysaur</option>
+                            <option value="3" style="background-image:url('//ugc.pokevision.com/images/pokemon/3.png');" selected>Venusaur</option>
+                            <option value="4" style="background-image:url('//ugc.pokevision.com/images/pokemon/4.png');" selected>Charmander</option>
+                            <option value="5" style="background-image:url('//ugc.pokevision.com/images/pokemon/5.png');" selected>Charmeleon</option>
+                            <option value="6" style="background-image:url('//ugc.pokevision.com/images/pokemon/6.png');" selected>Charizard</option>
+                            <option value="7" style="background-image:url('//ugc.pokevision.com/images/pokemon/7.png');" selected>Squirtle</option>
+                            <option value="8" style="background-image:url('//ugc.pokevision.com/images/pokemon/8.png');" selected>Wartortle</option>
+                            <option value="9" style="background-image:url('//ugc.pokevision.com/images/pokemon/9.png');" selected>Blastoise</option>
+                            <option value="10" style="background-image:url('//ugc.pokevision.com/images/pokemon/10.png');" selected>Caterpie</option>
+                            <option value="11" style="background-image:url('//ugc.pokevision.com/images/pokemon/11.png');" selected>Metapod</option>
+                            <option value="12" style="background-image:url('//ugc.pokevision.com/images/pokemon/12.png');" selected>Butterfree</option>
+                            <option value="13" style="background-image:url('//ugc.pokevision.com/images/pokemon/13.png');" selected>Weedle</option>
+                            <option value="14" style="background-image:url('//ugc.pokevision.com/images/pokemon/14.png');" selected>Kakuna</option>
+                            <option value="15" style="background-image:url('//ugc.pokevision.com/images/pokemon/15.png');" selected>Beedrill</option>
+                            <option value="16" style="background-image:url('//ugc.pokevision.com/images/pokemon/16.png');" selected>Pidgey</option>
+                            <option value="17" style="background-image:url('//ugc.pokevision.com/images/pokemon/17.png');" selected>Pidgeotto</option>
+                            <option value="18" style="background-image:url('//ugc.pokevision.com/images/pokemon/18.png');" selected>Pidgeot</option>
+                            <option value="19" style="background-image:url('//ugc.pokevision.com/images/pokemon/19.png');" selected>Rattata</option>
+                            <option value="20" style="background-image:url('//ugc.pokevision.com/images/pokemon/20.png');" selected>Raticate</option>
+                            <option value="21" style="background-image:url('//ugc.pokevision.com/images/pokemon/21.png');" selected>Spearow</option>
+                            <option value="22" style="background-image:url('//ugc.pokevision.com/images/pokemon/22.png');" selected>Fearow</option>
+                            <option value="23" style="background-image:url('//ugc.pokevision.com/images/pokemon/23.png');" selected>Ekans</option>
+                            <option value="24" style="background-image:url('//ugc.pokevision.com/images/pokemon/24.png');" selected>Arbok</option>
+                            <option value="25" style="background-image:url('//ugc.pokevision.com/images/pokemon/25.png');" selected>Pikachu</option>
+                            <option value="26" style="background-image:url('//ugc.pokevision.com/images/pokemon/26.png');" selected>Raichu</option>
+                            <option value="27" style="background-image:url('//ugc.pokevision.com/images/pokemon/27.png');" selected>Sandshrew</option>
+                            <option value="28" style="background-image:url('//ugc.pokevision.com/images/pokemon/28.png');" selected>Sandslash</option>
+                            <option value="29" style="background-image:url('//ugc.pokevision.com/images/pokemon/29.png');" selected>Nidoran</option>
+                            <option value="30" style="background-image:url('//ugc.pokevision.com/images/pokemon/30.png');" selected>Nidorina</option>
+                            <option value="31" style="background-image:url('//ugc.pokevision.com/images/pokemon/31.png');" selected>Nidoqueen</option>
+                            <option value="32" style="background-image:url('//ugc.pokevision.com/images/pokemon/32.png');" selected>Nidoran</option>
+                            <option value="33" style="background-image:url('//ugc.pokevision.com/images/pokemon/33.png');" selected>Nidorino</option>
+                            <option value="34" style="background-image:url('//ugc.pokevision.com/images/pokemon/34.png');" selected>Nidoking</option>
+                            <option value="35" style="background-image:url('//ugc.pokevision.com/images/pokemon/35.png');" selected>Clefairy</option>
+                            <option value="36" style="background-image:url('//ugc.pokevision.com/images/pokemon/36.png');" selected>Clefable</option>
+                            <option value="37" style="background-image:url('//ugc.pokevision.com/images/pokemon/37.png');" selected>Vulpix</option>
+                            <option value="38" style="background-image:url('//ugc.pokevision.com/images/pokemon/38.png');" selected>Ninetales</option>
+                            <option value="39" style="background-image:url('//ugc.pokevision.com/images/pokemon/39.png');" selected>Jigglypuff</option>
+                            <option value="40" style="background-image:url('//ugc.pokevision.com/images/pokemon/40.png');" selected>Wigglytuff</option>
+                            <option value="41" style="background-image:url('//ugc.pokevision.com/images/pokemon/41.png');" selected>Zubat</option>
+                            <option value="42" style="background-image:url('//ugc.pokevision.com/images/pokemon/42.png');" selected>Golbat</option>
+                            <option value="43" style="background-image:url('//ugc.pokevision.com/images/pokemon/43.png');" selected>Oddish</option>
+                            <option value="44" style="background-image:url('//ugc.pokevision.com/images/pokemon/44.png');" selected>Gloom</option>
+                            <option value="45" style="background-image:url('//ugc.pokevision.com/images/pokemon/45.png');" selected>Vileplume</option>
+                            <option value="46" style="background-image:url('//ugc.pokevision.com/images/pokemon/46.png');" selected>Paras</option>
+                            <option value="47" style="background-image:url('//ugc.pokevision.com/images/pokemon/47.png');" selected>Parasect</option>
+                            <option value="48" style="background-image:url('//ugc.pokevision.com/images/pokemon/48.png');" selected>Venonat</option>
+                            <option value="49" style="background-image:url('//ugc.pokevision.com/images/pokemon/49.png');" selected>Venomoth</option>
+                            <option value="50" style="background-image:url('//ugc.pokevision.com/images/pokemon/50.png');" selected>Diglett</option>
+                            <option value="51" style="background-image:url('//ugc.pokevision.com/images/pokemon/51.png');" selected>Dugtrio</option>
+                            <option value="52" style="background-image:url('//ugc.pokevision.com/images/pokemon/52.png');" selected>Meowth</option>
+                            <option value="53" style="background-image:url('//ugc.pokevision.com/images/pokemon/53.png');" selected>Persian</option>
+                            <option value="54" style="background-image:url('//ugc.pokevision.com/images/pokemon/54.png');" selected>Psyduck</option>
+                            <option value="55" style="background-image:url('//ugc.pokevision.com/images/pokemon/55.png');" selected>Golduck</option>
+                            <option value="56" style="background-image:url('//ugc.pokevision.com/images/pokemon/56.png');" selected>Mankey</option>
+                            <option value="57" style="background-image:url('//ugc.pokevision.com/images/pokemon/57.png');" selected>Primeape</option>
+                            <option value="58" style="background-image:url('//ugc.pokevision.com/images/pokemon/58.png');" selected>Growlithe</option>
+                            <option value="59" style="background-image:url('//ugc.pokevision.com/images/pokemon/59.png');" selected>Arcanine</option>
+                            <option value="60" style="background-image:url('//ugc.pokevision.com/images/pokemon/60.png');" selected>Poliwag</option>
+                            <option value="61" style="background-image:url('//ugc.pokevision.com/images/pokemon/61.png');" selected>Poliwhirl</option>
+                            <option value="62" style="background-image:url('//ugc.pokevision.com/images/pokemon/62.png');" selected>Poliwrath</option>
+                            <option value="63" style="background-image:url('//ugc.pokevision.com/images/pokemon/63.png');" selected>Abra</option>
+                            <option value="64" style="background-image:url('//ugc.pokevision.com/images/pokemon/64.png');" selected>Kadabra</option>
+                            <option value="65" style="background-image:url('//ugc.pokevision.com/images/pokemon/65.png');" selected>Alakazam</option>
+                            <option value="66" style="background-image:url('//ugc.pokevision.com/images/pokemon/66.png');" selected>Machop</option>
+                            <option value="67" style="background-image:url('//ugc.pokevision.com/images/pokemon/67.png');" selected>Machoke</option>
+                            <option value="68" style="background-image:url('//ugc.pokevision.com/images/pokemon/68.png');" selected>Machamp</option>
+                            <option value="69" style="background-image:url('//ugc.pokevision.com/images/pokemon/69.png');" selected>Bellsprout</option>
+                            <option value="70" style="background-image:url('//ugc.pokevision.com/images/pokemon/70.png');" selected>Weepinbell</option>
+                            <option value="71" style="background-image:url('//ugc.pokevision.com/images/pokemon/71.png');" selected>Victreebel</option>
+                            <option value="72" style="background-image:url('//ugc.pokevision.com/images/pokemon/72.png');" selected>Tentacool</option>
+                            <option value="73" style="background-image:url('//ugc.pokevision.com/images/pokemon/73.png');" selected>Tentacruel</option>
+                            <option value="74" style="background-image:url('//ugc.pokevision.com/images/pokemon/74.png');" selected>Geodude</option>
+                            <option value="75" style="background-image:url('//ugc.pokevision.com/images/pokemon/75.png');" selected>Graveler</option>
+                            <option value="76" style="background-image:url('//ugc.pokevision.com/images/pokemon/76.png');" selected>Golem</option>
+                            <option value="77" style="background-image:url('//ugc.pokevision.com/images/pokemon/77.png');" selected>Ponyta</option>
+                            <option value="78" style="background-image:url('//ugc.pokevision.com/images/pokemon/78.png');" selected>Rapidash</option>
+                            <option value="79" style="background-image:url('//ugc.pokevision.com/images/pokemon/79.png');" selected>Slowpoke</option>
+                            <option value="80" style="background-image:url('//ugc.pokevision.com/images/pokemon/80.png');" selected>Slowbro</option>
+                            <option value="81" style="background-image:url('//ugc.pokevision.com/images/pokemon/81.png');" selected>Magnemite</option>
+                            <option value="82" style="background-image:url('//ugc.pokevision.com/images/pokemon/82.png');" selected>Magneton</option>
+                            <option value="83" style="background-image:url('//ugc.pokevision.com/images/pokemon/83.png');" selected>Farfetch&#039;d</option>
+                            <option value="84" style="background-image:url('//ugc.pokevision.com/images/pokemon/84.png');" selected>Doduo</option>
+                            <option value="85" style="background-image:url('//ugc.pokevision.com/images/pokemon/85.png');" selected>Dodrio</option>
+                            <option value="86" style="background-image:url('//ugc.pokevision.com/images/pokemon/86.png');" selected>Seel</option>
+                            <option value="87" style="background-image:url('//ugc.pokevision.com/images/pokemon/87.png');" selected>Dewgong</option>
+                            <option value="88" style="background-image:url('//ugc.pokevision.com/images/pokemon/88.png');" selected>Grimer</option>
+                            <option value="89" style="background-image:url('//ugc.pokevision.com/images/pokemon/89.png');" selected>Muk</option>
+                            <option value="90" style="background-image:url('//ugc.pokevision.com/images/pokemon/90.png');" selected>Shellder</option>
+                            <option value="91" style="background-image:url('//ugc.pokevision.com/images/pokemon/91.png');" selected>Cloyster</option>
+                            <option value="92" style="background-image:url('//ugc.pokevision.com/images/pokemon/92.png');" selected>Gastly</option>
+                            <option value="93" style="background-image:url('//ugc.pokevision.com/images/pokemon/93.png');" selected>Haunter</option>
+                            <option value="94" style="background-image:url('//ugc.pokevision.com/images/pokemon/94.png');" selected>Gengar</option>
+                            <option value="95" style="background-image:url('//ugc.pokevision.com/images/pokemon/95.png');" selected>Onix</option>
+                            <option value="96" style="background-image:url('//ugc.pokevision.com/images/pokemon/96.png');" selected>Drowzee</option>
+                            <option value="97" style="background-image:url('//ugc.pokevision.com/images/pokemon/97.png');" selected>Hypno</option>
+                            <option value="98" style="background-image:url('//ugc.pokevision.com/images/pokemon/98.png');" selected>Krabby</option>
+                            <option value="99" style="background-image:url('//ugc.pokevision.com/images/pokemon/99.png');" selected>Kingler</option>
+                            <option value="100" style="background-image:url('//ugc.pokevision.com/images/pokemon/100.png');" selected>Voltorb</option>
+                            <option value="101" style="background-image:url('//ugc.pokevision.com/images/pokemon/101.png');" selected>Electrode</option>
+                            <option value="102" style="background-image:url('//ugc.pokevision.com/images/pokemon/102.png');" selected>Exeggcute</option>
+                            <option value="103" style="background-image:url('//ugc.pokevision.com/images/pokemon/103.png');" selected>Exeggutor</option>
+                            <option value="104" style="background-image:url('//ugc.pokevision.com/images/pokemon/104.png');" selected>Cubone</option>
+                            <option value="105" style="background-image:url('//ugc.pokevision.com/images/pokemon/105.png');" selected>Marowak</option>
+                            <option value="106" style="background-image:url('//ugc.pokevision.com/images/pokemon/106.png');" selected>Hitmonlee</option>
+                            <option value="107" style="background-image:url('//ugc.pokevision.com/images/pokemon/107.png');" selected>Hitmonchan</option>
+                            <option value="108" style="background-image:url('//ugc.pokevision.com/images/pokemon/108.png');" selected>Lickitung</option>
+                            <option value="109" style="background-image:url('//ugc.pokevision.com/images/pokemon/109.png');" selected>Koffing</option>
+                            <option value="110" style="background-image:url('//ugc.pokevision.com/images/pokemon/110.png');" selected>Weezing</option>
+                            <option value="111" style="background-image:url('//ugc.pokevision.com/images/pokemon/111.png');" selected>Rhyhorn</option>
+                            <option value="112" style="background-image:url('//ugc.pokevision.com/images/pokemon/112.png');" selected>Rhydon</option>
+                            <option value="113" style="background-image:url('//ugc.pokevision.com/images/pokemon/113.png');" selected>Chansey</option>
+                            <option value="114" style="background-image:url('//ugc.pokevision.com/images/pokemon/114.png');" selected>Tangela</option>
+                            <option value="115" style="background-image:url('//ugc.pokevision.com/images/pokemon/115.png');" selected>Kangaskhan</option>
+                            <option value="116" style="background-image:url('//ugc.pokevision.com/images/pokemon/116.png');" selected>Horsea</option>
+                            <option value="117" style="background-image:url('//ugc.pokevision.com/images/pokemon/117.png');" selected>Seadra</option>
+                            <option value="118" style="background-image:url('//ugc.pokevision.com/images/pokemon/118.png');" selected>Goldeen</option>
+                            <option value="119" style="background-image:url('//ugc.pokevision.com/images/pokemon/119.png');" selected>Seaking</option>
+                            <option value="120" style="background-image:url('//ugc.pokevision.com/images/pokemon/120.png');" selected>Staryu</option>
+                            <option value="121" style="background-image:url('//ugc.pokevision.com/images/pokemon/121.png');" selected>Starmie</option>
+                            <option value="122" style="background-image:url('//ugc.pokevision.com/images/pokemon/122.png');" selected>Mr. Mime</option>
+                            <option value="123" style="background-image:url('//ugc.pokevision.com/images/pokemon/123.png');" selected>Scyther</option>
+                            <option value="124" style="background-image:url('//ugc.pokevision.com/images/pokemon/124.png');" selected>Jynx</option>
+                            <option value="125" style="background-image:url('//ugc.pokevision.com/images/pokemon/125.png');" selected>Electabuzz</option>
+                            <option value="126" style="background-image:url('//ugc.pokevision.com/images/pokemon/126.png');" selected>Magmar</option>
+                            <option value="127" style="background-image:url('//ugc.pokevision.com/images/pokemon/127.png');" selected>Pinsir</option>
+                            <option value="128" style="background-image:url('//ugc.pokevision.com/images/pokemon/128.png');" selected>Tauros</option>
+                            <option value="129" style="background-image:url('//ugc.pokevision.com/images/pokemon/129.png');" selected>Magikarp</option>
+                            <option value="130" style="background-image:url('//ugc.pokevision.com/images/pokemon/130.png');" selected>Gyarados</option>
+                            <option value="131" style="background-image:url('//ugc.pokevision.com/images/pokemon/131.png');" selected>Lapras</option>
+                            <option value="132" style="background-image:url('//ugc.pokevision.com/images/pokemon/132.png');" selected>Ditto</option>
+                            <option value="133" style="background-image:url('//ugc.pokevision.com/images/pokemon/133.png');" selected>Eevee</option>
+                            <option value="134" style="background-image:url('//ugc.pokevision.com/images/pokemon/134.png');" selected>Vaporeon</option>
+                            <option value="135" style="background-image:url('//ugc.pokevision.com/images/pokemon/135.png');" selected>Jolteon</option>
+                            <option value="136" style="background-image:url('//ugc.pokevision.com/images/pokemon/136.png');" selected>Flareon</option>
+                            <option value="137" style="background-image:url('//ugc.pokevision.com/images/pokemon/137.png');" selected>Porygon</option>
+                            <option value="138" style="background-image:url('//ugc.pokevision.com/images/pokemon/138.png');" selected>Omanyte</option>
+                            <option value="139" style="background-image:url('//ugc.pokevision.com/images/pokemon/139.png');" selected>Omastar</option>
+                            <option value="140" style="background-image:url('//ugc.pokevision.com/images/pokemon/140.png');" selected>Kabuto</option>
+                            <option value="141" style="background-image:url('//ugc.pokevision.com/images/pokemon/141.png');" selected>Kabutops</option>
+                            <option value="142" style="background-image:url('//ugc.pokevision.com/images/pokemon/142.png');" selected>Aerodactyl</option>
+                            <option value="143" style="background-image:url('//ugc.pokevision.com/images/pokemon/143.png');" selected>Snorlax</option>
+                            <option value="144" style="background-image:url('//ugc.pokevision.com/images/pokemon/144.png');" selected>Articuno</option>
+                            <option value="145" style="background-image:url('//ugc.pokevision.com/images/pokemon/145.png');" selected>Zapdos</option>
+                            <option value="146" style="background-image:url('//ugc.pokevision.com/images/pokemon/146.png');" selected>Moltres</option>
+                            <option value="147" style="background-image:url('//ugc.pokevision.com/images/pokemon/147.png');" selected>Dratini</option>
+                            <option value="148" style="background-image:url('//ugc.pokevision.com/images/pokemon/148.png');" selected>Dragonair</option>
+                            <option value="149" style="background-image:url('//ugc.pokevision.com/images/pokemon/149.png');" selected>Dragonite</option>
+                            <option value="150" style="background-image:url('//ugc.pokevision.com/images/pokemon/150.png');" selected>Mewtwo</option>
+                            <option value="151" style="background-image:url('//ugc.pokevision.com/images/pokemon/151.png');" selected>Mew</option>
+                    </select>
+    </main>
+    <main class="home-sidebar">
+        <div class="ad-unit ad-unit-medrec ad-unit-medrec-atf">
+            <div id="cdm-zone-02"></div>
+        </div>
+        <p class="home-sidebar-social">
+            <iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fpokevisiongo&amp;width=80&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=20" width="80" height="20" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+            <iframe src="//platform.twitter.com/widgets/follow_button.b41e99df00581dc95d7fdd63f3283511.en.html#dnt=true&amp;id=twitter-widget-0&amp;lang=en&amp;screen_name=pokevisiongo&amp;show_count=false&amp;show_screen_name=false&amp;size=m&amp;time=1467322263651" id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" class="twitter-follow-button twitter-follow-button-rendered" style="position: static; visibility: visible; width: 65px; height: 20px;" title="Twitter Follow Button" data-screen-name="masteroverwatch"></iframe>
+            <span>Follow us on social media for updates, news and support!</span>
+        </p>
+        <h3>Find all Pokemon near you (or a selected target location) in real time for Pokemon Go. Pokemon nearby will be marked along with their appearance timer on the map. These are real time Pokemon locations, meaning they are currently live and can be found exactly at the marked spots.</h3>
+        <p><strong>What is Pokevision?</strong></p>
+        <p>Pokevision is a Pokemon tracker/locator for the mobile game Pokemon Go. It uses the Niantic API to grab the location of all Pokemon near your (or your selected location) and display them on the map in real-time; this means if it is displayed on the map, you can go out and catch them! Note: Rarer pokemons have a shorter appearance time so they might despawn; make sure to be quick and keep an eye on their timers!</p>
+        <p><strong>How do I track Pokemon using Pokevision?</strong></p>
+        <p>There are a few methods to scan for the location of Pokemon:</p>
+        <ol>
+            <li>Click anywhere on the map to drop a location marker. After placing a marker, press scan to reveal Pokemon nearby.</li>
+            <li>Use the Search Bar to enter your location (or a location you wish to scan) and hit enter. You can then click Scan. If there are Pokemon nearby, they will display on the map along with their appearance time.</li>
+        </ol>
+        <p><strong>Are the Pokemon displayed actually there?</strong></p>
+        <p>Yes - as long as the timer has not reached 0, the Pokemon are actually there and in real time.</p>
+        <p><strong>How come I see some Pokemon in game but not on your map?</strong></p>
+        <p>Pokemon that spawn due to lure/incense are not visible on our map since those pokemon are visible to only you.</p>
+        <p><strong>Can I scan anywhere?</strong></p>
+        <p>As long as it is an area where Pokemon Go is serviced, yes. Please keep in mind we have a small delay between scans so that requests do not spam the servers. Scans take around 5-15 seconds depending on the density of the area.</p>
+        <p><strong>I am receiving an error. Help!</strong></p>
+        <p>The Pokemon Go servers are very overloaded during peak hours of the day, this also affects the API and results may take longer or stall. Please be patient and try again!</p>
+        <p><strong>What map provider are you using?</strong></p>
+        <p>We are grateful to be provided map tiles and geocoding services by the folks over at <a href="http://developers.arcgis.com/">Esri</a> <a href="http://developers.arcgis.com/"><img src="/asset/image/esri-logo.png" class="faq-esri-logo"></a>.</p>
+        <p><strong>How do I contact you guys regarding suggestions, feedback, or business inquiries?</strong></p>
+        <p>You may reach us via the <a href="/contact">contact us</a> page.</p>
+        <div class="ad-unit ad-unit-medrec ad-unit-medrec-btf">
+            <div id="cdm-zone-06"></div>
+        </div>
+    </main>
+    <script>
+        $(function() {
+            var locationHash = window.location.hash ? window.location.hash.substring(3) : '';
+            var parts = locationHash.split(',');
+            var latitude = $.isNumeric(parts[0]) ? parseFloat(parts[0]) : null;
+            var longitude = $.isNumeric(parts[1]) ? parseFloat(parts[1]) : null;
+
+            App.home.init({
+                latitude: latitude || 34.008727050558,
+                longitude: longitude || -118.49764466286,
+                pokedex: {
+                                            1: 'Bulbasaur',
+                                            2: 'Ivysaur',
+                                            3: 'Venusaur',
+                                            4: 'Charmander',
+                                            5: 'Charmeleon',
+                                            6: 'Charizard',
+                                            7: 'Squirtle',
+                                            8: 'Wartortle',
+                                            9: 'Blastoise',
+                                            10: 'Caterpie',
+                                            11: 'Metapod',
+                                            12: 'Butterfree',
+                                            13: 'Weedle',
+                                            14: 'Kakuna',
+                                            15: 'Beedrill',
+                                            16: 'Pidgey',
+                                            17: 'Pidgeotto',
+                                            18: 'Pidgeot',
+                                            19: 'Rattata',
+                                            20: 'Raticate',
+                                            21: 'Spearow',
+                                            22: 'Fearow',
+                                            23: 'Ekans',
+                                            24: 'Arbok',
+                                            25: 'Pikachu',
+                                            26: 'Raichu',
+                                            27: 'Sandshrew',
+                                            28: 'Sandslash',
+                                            29: 'Nidoran',
+                                            30: 'Nidorina',
+                                            31: 'Nidoqueen',
+                                            32: 'Nidoran',
+                                            33: 'Nidorino',
+                                            34: 'Nidoking',
+                                            35: 'Clefairy',
+                                            36: 'Clefable',
+                                            37: 'Vulpix',
+                                            38: 'Ninetales',
+                                            39: 'Jigglypuff',
+                                            40: 'Wigglytuff',
+                                            41: 'Zubat',
+                                            42: 'Golbat',
+                                            43: 'Oddish',
+                                            44: 'Gloom',
+                                            45: 'Vileplume',
+                                            46: 'Paras',
+                                            47: 'Parasect',
+                                            48: 'Venonat',
+                                            49: 'Venomoth',
+                                            50: 'Diglett',
+                                            51: 'Dugtrio',
+                                            52: 'Meowth',
+                                            53: 'Persian',
+                                            54: 'Psyduck',
+                                            55: 'Golduck',
+                                            56: 'Mankey',
+                                            57: 'Primeape',
+                                            58: 'Growlithe',
+                                            59: 'Arcanine',
+                                            60: 'Poliwag',
+                                            61: 'Poliwhirl',
+                                            62: 'Poliwrath',
+                                            63: 'Abra',
+                                            64: 'Kadabra',
+                                            65: 'Alakazam',
+                                            66: 'Machop',
+                                            67: 'Machoke',
+                                            68: 'Machamp',
+                                            69: 'Bellsprout',
+                                            70: 'Weepinbell',
+                                            71: 'Victreebel',
+                                            72: 'Tentacool',
+                                            73: 'Tentacruel',
+                                            74: 'Geodude',
+                                            75: 'Graveler',
+                                            76: 'Golem',
+                                            77: 'Ponyta',
+                                            78: 'Rapidash',
+                                            79: 'Slowpoke',
+                                            80: 'Slowbro',
+                                            81: 'Magnemite',
+                                            82: 'Magneton',
+                                            83: 'Farfetch&#039;d',
+                                            84: 'Doduo',
+                                            85: 'Dodrio',
+                                            86: 'Seel',
+                                            87: 'Dewgong',
+                                            88: 'Grimer',
+                                            89: 'Muk',
+                                            90: 'Shellder',
+                                            91: 'Cloyster',
+                                            92: 'Gastly',
+                                            93: 'Haunter',
+                                            94: 'Gengar',
+                                            95: 'Onix',
+                                            96: 'Drowzee',
+                                            97: 'Hypno',
+                                            98: 'Krabby',
+                                            99: 'Kingler',
+                                            100: 'Voltorb',
+                                            101: 'Electrode',
+                                            102: 'Exeggcute',
+                                            103: 'Exeggutor',
+                                            104: 'Cubone',
+                                            105: 'Marowak',
+                                            106: 'Hitmonlee',
+                                            107: 'Hitmonchan',
+                                            108: 'Lickitung',
+                                            109: 'Koffing',
+                                            110: 'Weezing',
+                                            111: 'Rhyhorn',
+                                            112: 'Rhydon',
+                                            113: 'Chansey',
+                                            114: 'Tangela',
+                                            115: 'Kangaskhan',
+                                            116: 'Horsea',
+                                            117: 'Seadra',
+                                            118: 'Goldeen',
+                                            119: 'Seaking',
+                                            120: 'Staryu',
+                                            121: 'Starmie',
+                                            122: 'Mr. Mime',
+                                            123: 'Scyther',
+                                            124: 'Jynx',
+                                            125: 'Electabuzz',
+                                            126: 'Magmar',
+                                            127: 'Pinsir',
+                                            128: 'Tauros',
+                                            129: 'Magikarp',
+                                            130: 'Gyarados',
+                                            131: 'Lapras',
+                                            132: 'Ditto',
+                                            133: 'Eevee',
+                                            134: 'Vaporeon',
+                                            135: 'Jolteon',
+                                            136: 'Flareon',
+                                            137: 'Porygon',
+                                            138: 'Omanyte',
+                                            139: 'Omastar',
+                                            140: 'Kabuto',
+                                            141: 'Kabutops',
+                                            142: 'Aerodactyl',
+                                            143: 'Snorlax',
+                                            144: 'Articuno',
+                                            145: 'Zapdos',
+                                            146: 'Moltres',
+                                            147: 'Dratini',
+                                            148: 'Dragonair',
+                                            149: 'Dragonite',
+                                            150: 'Mewtwo',
+                                            151: 'Mew',
+                                    }
+            });
+
+            App.home.initMap(false);
+        });
+    </script>
+
+            <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="footer-links">
+                        <li><a href="/faq">FAQ</a></li>
+                        <li><a href="/contact">Contact Us</a></li>
+                        <li class="footer-links-social">
+                            <a href="https://twitter.com/pokevisiongo" target="_blank">
+                                <svg viewBox="0 0 512 512" width="25" height="25"><path d="M419.6 168.6c-11.7 5.2-24.2 8.7-37.4 10.2 13.4-8.1 23.8-20.8 28.6-36 -12.6 7.5-26.5 12.9-41.3 15.8 -11.9-12.6-28.8-20.6-47.5-20.6 -42 0-72.9 39.2-63.4 79.9 -54.1-2.7-102.1-28.6-134.2-68 -17 29.2-8.8 67.5 20.1 86.9 -10.7-0.3-20.7-3.3-29.5-8.1 -0.7 30.2 20.9 58.4 52.2 64.6 -9.2 2.5-19.2 3.1-29.4 1.1 8.3 25.9 32.3 44.7 60.8 45.2 -27.4 21.4-61.8 31-96.4 27 28.8 18.5 63 29.2 99.8 29.2 120.8 0 189.1-102.1 185-193.6C399.9 193.1 410.9 181.7 419.6 168.6z"></svg>
+                            </a>
+                            <a href="https://facebook.com/pokevisiongo" target="_blank">
+                                <svg viewBox="0 0 512 512" width="25" height="25"><path d="M211.9 197.4h-36.7v59.9h36.7V433.1h70.5V256.5h49.2l5.2-59.1h-54.4c0 0 0-22.1 0-33.7 0-13.9 2.8-19.5 16.3-19.5 10.9 0 38.2 0 38.2 0V82.9c0 0-40.2 0-48.8 0 -52.5 0-76.1 23.1-76.1 67.3C211.9 188.8 211.9 197.4 211.9 197.4z"></svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-12">
+                    <div class="footer-copyright">&copy; PokeVision.com 2017. All rights reserved.</div>
+                </div>
+            </div>
+        </div>
+        <div class="ad-unit ad-unit-leaderboard ad-unit-leaderboard-atf">
+            <script>
+                (function() {
+                    if (window.innerWidth >= 1200) {
+                        document.write('<div id="cdm-zone-01"></div>');
+                    } else {
+                        document.write('<div id="cdm-zone-00"></div>');
+                    }
+                })();
+            </script>
+        </div>
+    </footer>
+
+                    <div id="cdm-zone-end"></div>
+            <script>
+                App.init();
+                App.header.init();
+            </script>
+            <!-- Begin Google Analytics -->
+            <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-80975276-1', 'auto');
+                ga('send', 'pageview');
+            </script>
+            <!-- End Google Analytics -->
+            <!-- Begin comScore -->
+            <script>
+                var _comscore = _comscore || [];
+                _comscore.push({ c1: "2", c2: "6035118" });
+                (function() {
+                   var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
+                   s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+                   el.parentNode.insertBefore(s, el);
+                })();
+            </script>
+            <noscript>
+               <img src="http://b.scorecardresearch.com/p?c1=2&amp;c2=6035118&amp;cv=2.0&amp;cj=1" />
+            </noscript>
+            <!-- End comScore -->
+            <!-- Nielsen Online SiteCensus -->
+            <script type="text/javascript">
+                (function () {
+                   var d = new Image(1, 1);
+                   d.onerror = d.onload = function () {
+                       d.onerror = d.onload = null;
+                   };
+                   d.src = ["//secure-us.imrworldwide.com/cgi-bin/m?ci=us-603339h&cg=0&cc=1&si=", escape(window.location.href), "&rp=", escape(document.referrer), "&ts=compact&rnd=", (new Date()).getTime()].join('');
+                })();
+            </script>
+            <noscript>
+                <div><img src="//secure-us.imrworldwide.com/cgi-bin/m?ci=us-603339h&amp;amp;cg=0&amp;amp;cc=1&amp;amp;ts=noscript" width="1" height="1" alt="" /></div>
+            </noscript>
+            <!-- End Nielsen Online SiteCensus -->
+            </body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Convertidor de Youtube a Mp3</title>
+		<meta name="description" content="Convertir cualquier vídeo de YouTube a formato MP3 con nuestra YouTube a MP3 convertidor en línea rápido, simple y altamente personalizable."/>
+		<meta name="keywords" content="convertir, youtube, mp3, en línea"/>
+		<meta name="author" content="YouTube In MP3"/>
+		<meta name="distribution" content="global"/>
+		<meta name="language" content="es"/>
+		<meta name="google" content="notranslate"/>
+		<meta name="robots" content="index, follow"/>
+		<meta name="msvalidate.01" content="A00EBC5E7DD10C724E78F2B19493DA1D" />
+		<meta property="og:title" content="Youtube a Mp3"/>
+		<meta property="og:image" content="youtubeamp3.png"/>
+		<meta property="og:description" content="Convertir cualquier vídeo de YouTube a form..."/>
+		<meta property="og:site_name" content="YoutubeaMP3.org"/>
+		<meta property="og:url" content="http://www.youtubeamp3.org/"/>
+		
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="Shortcut Icon" type="image/x-icon" href="icon.ico" />
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<style>
+		body{
+	max-width:400px;
+    margin: auto;
+}
+input[type="text"] {
+  display: block;
+  margin: 0;
+  width: 99%;
+  font-family: sans-serif;
+  font-size:16px;
+  appearance: none;
+  box-shadow: none;
+  border-radius: none;
+}
+input[type="text"]:focus {
+  outline: none;
+}
+input[type="submit"] {
+  font-size: large;
+}
+.res{
+	text-align : justify;
+}
+
+#carga{
+	display:none;
+}
+#load{
+	display:none;
+}
+
+
+#caratula {
+    float:left;
+	width:30%;
+}
+#detalles {
+    float:right;
+	width:65%;
+	text-align: justify;
+}
+		</style>
+	</head>
+	<body>
+	<a href="/"><img src="logo.png" alt="YouTube mp3" width="290" height="59"></a><br/>
+
+
+</div>
+
+
+	<div id="carga" class="double-flash">
+		<center><a style="color:#00F388">Convirtiendo vídeo...</a></center>
+	</div><br>
+	<div id="load">
+		<div id="caratula">
+			<img id="thumbnail" src="logo.png"><br>
+		</div>
+		<div id="detalles">
+			<b>V&#237;deo Convertido a MP3</b><br>
+			<b>Nombre:</b>
+			<a id="titulo"></a><br>
+			<div><a id="descarga" href="" target="_blank">Descargar</a></div>
+		</div>
+	</div>
+	<form name="form" id="form" style="font-size:20px;" onsubmit='return sub()'>
+        <input type="text" name="url" id="url" value="" autocomplete="off" required/>
+		<center><input type="submit" value="Convertir V&#237;deo" id="convert"  ></center>
+    </form>
+	<br>
+	<center><button><a href="ayuda.php" style="text-decoration: none;" target="_blank">Ayudar</a></button></center>
+	
+	
+	<hr color="#F34621" size=3>
+	
+	<div><div class="que">
+		<h4><a>¿Qué es Youtube a MP3?</a></h4>
+		</div>
+		<p class="res">
+		YouTubeamp3.org es la forma más fácil de convertir vídeo de Youtube a Mp3. No es necesario ningún tipo de registro, lo único que necesitas es la dirección URL de YouTube. Una vez introducida la dirección del vídeo, convertiremos su audio en un archivo .mp3 el cual podrás empezar descargar inmediatamente. No se necesita de ningún programa adicional. Debido a esto nuestro software es independiente al sistema operativo que utilices: Puedes utilizarlo con tu Mac, el PC con Linux, o incluso un iPhone. Todas las conversiones se realizan en modo de alta calidad de al menos 128 kbit/s. No te preocupes, nuestro servicio es totalmente gratuito. Necesitamos aproximadamente 3 a 4 minutos por vídeo.
+		
+		</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<script>
+		var btn = document.getElementById("convert");
+		var carga=document.getElementById("carga");
+		var thumbnail=document.getElementById("thumbnail");
+		var titulo=document.getElementById("titulo");
+		var descarga=document.getElementById("descarga");
+		var load=document.getElementById("load");
+		var errorurl='<center><a style="color:#F32A00">Url Incorrecta.</a></<center>';
+		var convirtiendo='<center><a style="color:#00F388">Convirtiendo vídeo...</a></center>';
+		function sub(){
+			load.style.display="none";
+			carga.innerHTML=convirtiendo;
+			carga.style.display="block";
+			return false;
+		}
+		btn.onclick = function() {
+			var url=document.getElementById("url").value;
+			request(url);
+		}
+		
+		function request(url) {
+		  var xmlhttp;
+		  if (window.XMLHttpRequest) {
+			xmlhttp = new XMLHttpRequest();
+		  } else {
+			// code for older browsers
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		  }
+		  xmlhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				var data=this.responseText;
+			  if(data != "Error"){
+					if(data != "Error"){
+					  data=JSON.parse(data);
+					  thumbnail.src=data.thumbnail;
+					  titulo.innerHTML=data.title;
+					  descarga.href=data.link;
+					  carga.style.display="none";
+					  load.style.display="block";
+					}
+					else
+					{
+						carga.innerHTML=errorurl;
+					}
+			  }
+			  else
+					{
+						carga.innerHTML=errorurl;
+					}
+			}
+		  };
+		  xmlhttp.open("GET", "convert.php?url="+url, true);
+		  xmlhttp.send();
+		}
+	</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-2069523954822877",
+    enable_page_level_ads: true
+  });
+</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-99927722-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+	</body>
+	
+</html>

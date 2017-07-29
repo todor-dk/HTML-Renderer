@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>.NET email component, .NET IMAP component, .NET POP3 component | Mail.dll</title>
+    <meta name="keywords" content="IMAP, POP3, MIME, email, e-mail, mail, component, library, receive, .NET, SMIME, S/MIME, c#, DKIM" />
+    <meta name="description" content=".NET email component, .NET IMAP component and .NET POP3 component for receiving emails with SSL and SMIME support" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+    <link rel="image_src" href="/images/Limilabs_128x72.png" />
+    <link href="/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/plugins/Default/css/style.css" type="text/css" media="all" />
+
+<script type="text/javascript">
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments);
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-10787587-4', 'limilabs.com');
+    ga('send', 'pageview');
+</script>
+
+
+    
+    
+    
+    <link href="/plugins/SyntaxHighlighter/css/shcore.css" rel="stylesheet" type="text/css" />
+    <link href="/plugins/SyntaxHighlighter/css/shthemedefault.css" rel="stylesheet" type="text/css" />
+
+    <link href="/plugins/Slider/css/slider.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+    #samples
+    {
+        margin-top: 1em;
+    }
+    .slides_container
+    {
+        height: 101px;
+        margin: 40px 20px 40px 20px;
+    }
+    #slides
+    {
+        position: relative;
+    }
+    .prev 
+    {
+        top: 30px;
+	    left: 0;
+    }
+    .next 
+    {
+        top: 30px;
+	    left: 685px;
+    }
+    </style>
+
+
+
+</head>
+    <body>
+        <div id="content-body">        
+            <nav>
+                <div class="container">
+
+                    <div class="row hidden-xs">
+                        <div class="col-sm-2">
+                            <div id="top-logo"><a href="/">Limilabs</a></div>
+                        </div>
+                        <div class="col-sm-2">
+                        </div>
+                        <div class="col-sm-8">
+                            <div id="top-menu">
+                                <ul class="nav nav-pills nav-justified">
+                                    <li><a href="/products">Products</a></li>
+                                    <li><a href="/services">Services</a></li>
+                                    <li><a href="/support">Support</a></li>
+                                    <li><a href="/blog/">Blog</a></li>
+                                    <li><a href="/about">About&#160;us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row visible-xs">
+                        <div class="col-xs-8">
+                            <div id="top-logo"><a href="/">Limilabs</a></div>
+                        </div>
+                        <div class="col-xs-4 text-center">
+                            <button id="hamburger" href="#mobile-menu" class="btn btn-default" data-toggle="collapse" type="button">
+                                <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row visible-xs" >
+                        <div class="col-sm-12">
+                            <div id="mobile-menu" class="collapse">
+                                <ul class="nav nav-pills nav-justified">
+                                    <li><a href="/products">Products</a></li>
+                                    <li><a href="/services">Services</a></li>
+                                    <li><a href="/support">Support</a></li>
+                                    <li><a href="/blog/">Blog</a></li>
+                                    <li><a href="/about">About&#160;us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div id="content-main">
+                <div class="container">
+                    
+
+
+<div class="page-header">
+    
+    
+    <h1><span class="limiNamespace">Mail</span>.dll - .NET email component (IMAP,&nbsp;POP3,&nbsp;S/MIME)</h1>
+
+
+</div>
+
+
+
+
+<div class="row">
+    <div class="col-sm-3">
+
+
+        <ul id="product-navigation" class="nav nav-pills nav-stacked text-center hidden-xs">
+            
+    <li><a href="/mail">Overview</a></li>
+    <li><a href="/mail/download">Download</a></li>
+    <li><a href="/mail/help">Help</a></li>
+    <li><a href="/mail/samples">Samples</a></li>
+    <li><a href="/mail/purchase">Purchase</a></li>
+
+        </ul>
+
+        <ul id="product-navigation" class="nav nav-pills visible-xs small">
+            
+    <li><a href="/mail">Overview</a></li>
+    <li><a href="/mail/download">Download</a></li>
+    <li><a href="/mail/help">Help</a></li>
+    <li><a href="/mail/samples">Samples</a></li>
+    <li><a href="/mail/purchase">Purchase</a></li>
+
+        </ul>
+        <hr/>
+    </div>
+    <div class="col-sm-9">
+        
+
+
+
+
+
+<div class="row" style="margin-top: 20px">
+    <div class="col-md-6" style="margin-bottom: 50px;">
+        <a class="btn btn-primary btn-largest btn-action" href="/mail/download">Download</a>
+    </div>
+    <div class="col-md-6" style="margin-bottom: 50px;">
+        <a class="btn btn-success btn-largest btn-action" href="/mail/purchase">Purchase</a>
+    </div>
+</div>
+
+<p>
+    <strong>IMAP component</strong> and POP3 component that allows you to <strong>receive e-mails and process e-mail messages</strong> in .NET applications. 
+    Includes SMTP component for sending, along with e-mail signing, encrypting and signature verification.
+    Written entirely in managed code. Works with .NET 2.0, 3.0, 3.5, 4.0, 4.5, 4.6.1, 4.6.2 and 4.7 including Mono.
+    Dedicated <a href="/mail-for-windows-store">Mail For Windows Store</a> version is also available.
+    
+</p>
+
+
+
+<h2>Features</h2>
+
+<ul class="yellow">	
+	<li><span class="unique">UNIQUE</span> <strong>IMAP component</strong>, <strong>POP3 component</strong>, SMTP component in a single library.</li>
+	<li><span class="unique">UNIQUE</span> Email component includes most reliable <strong>MIME parser</strong> on the market</li>
+    <li>Fully compatible with Microsoft Exchange, Office 365, Gmail, Dovecot, hMailServer and others</li>
+	<li><strong>SSL and TLS 1.2 support</strong></li>
+	<li>Automatic email <strong>attachments encoding/decoding</strong></li>
+	<li><strong>S/MIME</strong>: <a href="/blog/send-signed-email-using-smime">sending signed emails</a>, <a href="/blog/validate-smime-emails">signed emails validation</a>, <a href="/blog/send-encrypted-email-using-smime">encryption</a> and <a href="/blog/decrypt-smime-emails">decryption</a></li>
+	<li><span class="unique">UNIQUE</span> <strong>DKIM</strong> emails <a href="/blog/sign-emails-with-dkim">validation and signing</a> </li>		
+	<li><span class="unique">UNIQUE</span> <strong>iCalendar appointments</strong> and <strong>vCard</strong> support</li>
+    <li>Easy <a href="/blog/reading-outlook-msg-file-format-net"><strong>Outlook .msg</strong> files processing</a> and <a href="/blog/convert-outlook-msg-file-to-mime-format-in-net">.msg to MIME converter</a></li>
+	<li><strong>TNEF</strong> support (decodes winmail.dat files)</li>
+	<li>Create attachments from a file or byte array</li>
+	<li>Secure login (APOP, CRAM-MD5, DIGEST-MD5 support)</li>
+	<li><strong>Proxy</strong> support: <a href="/blog/imap-pop3-smtp-via-http-socks-proxy">HTTP and Socks proxy (Socks5, Socks4, Socks4a)</a></li>
+	<li>IMAP IDLE: <strong>push email</strong> support for IMAP servers</li>
+	<li><span class="unique">UNIQUE</span> <a href="/blog/email-template-engine"><strong>Template</strong> engine</a> support</li>
+	<li>Support for <a href="/blog/display-html-email-in-windows-application">displaying e-mails in Windows applications</a></li>
+	<li><span class="unique">UNIQUE</span> <a href="/blog/oauth2-gmail-imap-web-applications"><strong>OAuth 2.0</strong> for web sites (ASP.NET)</a> and <a href="/blog/oauth2-gmail-imap-installed-applications"><strong>OAuth 2.0</strong> for installed applications</a> support</li>
+    <li><span class="unique">UNIQUE</span> <a href="/blog/2-legged-oauth-with-imap">2-legged <strong>OAuth</strong></a> and <a href="/blog/oauth-with-imap">3-legged <strong>OAuth</strong></a> support (including Gmail API helpers)</li>
+    <li><span class="unique">UNIQUE</span> IMAP protocol <a href="/blog/gmail-extensions-in-mail-dll">Gmail extensions</a></li>
+	<li><a href="/blog/bounce-handling"><strong>Bounce handling</strong></a></li>
+	<li><a href="/blog/net-email-spam-filter">Bayesian <strong>spam filter</strong></a> (over 99.5% accuracy)</li>
+	<li><span class="unique">UNIQUE</span> Build-in <a href="/blog/extract-plain-text-from-html-email">HTML to plain text converter</a></li>
+</ul>
+
+
+
+<h2>What folks are saying about Mail.dll</h2>
+
+<div class="row">
+    <a class="col-md-4" href="/customers/testimonials" title="Read what our customers say about us...">
+        <blockquote><strong>Just bought a license. Mail.dll is an absolutely fantastic email library</strong>. I would recommend it to anyone who needs to send or receive emails from .NET applications</blockquote>
+    </a>
+    <a class="col-md-4" href="/customers/testimonials" title="Read what our customers say about us...">
+        <blockquote>I like your product. I should also recognize the <strong>excellent technical support</strong> you provide; my questions were always promptly answered, and the answers were very helpful every time.</blockquote>
+    </a>
+    <a class="col-md-4" href="/customers/testimonials" title="Read what our customers say about us...">
+        <blockquote>I’ve installed 4 or so other email components from other vendors, played with each of them to see how easy they are to work with, and yours was up and running <strong>quicker, easier, and better than all the others</strong>.</blockquote>
+    </a>
+</div>
+ 
+
+<h2>Quick start samples</h2>
+
+<div class="visible-xs">
+    <pre class="brush: csharp;gutter: false">
+    using(Imap imap = new Imap())
+    {
+        imap.ConnectSSL("imap.server.com");
+        imap.UseBestLogin("user", "pass");
+    
+        imap.SelectInbox();
+
+        List&lt;long&gt; uids = imap.Search(
+            Flag.Unseen);
+        long first = uids[0];
+        
+        byte[] eml = imap
+            .GetMessageByUID(uid);
+        
+        IMail email = new MailBuilder()
+            .CreateFromEml(eml);
+        
+        Console.WriteLine(email.Subject);
+        
+        imap.Close();
+    }
+    </pre>
+    You can find <a href="/mail/samples">more samples here</a>.
+</div>
+
+<div id="samples" class="hidden-xs">
+    <ul>
+        <li><a href="#CS">C#</a></li>
+        <li><a href="#VB">VB.NET</a></li>
+    </ul>
+
+    <ul id="CS" class="code">
+
+        <li>
+            <a href="javascript:void(0)" onclick="$('#CSIMAP').toggle('fast');">Receive e-mails from IMAP server using C#</a><br />
+            <div id="CSIMAP" style="display: block ">
+                <pre class="brush: csharp;gutter: false">
+	            using(Imap imap = new Imap())
+                {
+                    imap.Connect("imap.server.com");  // or ConnectSSL for SSL
+                    imap.UseBestLogin("user", "password");
+                    imap.SelectInbox();
+                    List&lt;long&gt; uids = imap.Search(Flag.Unseen);
+                    foreach (long uid in uids)
+                    {
+                        IMail email = new MailBuilder()
+                            .CreateFromEml(imap.GetMessageByUID(uid));
+                        Console.WriteLine(email.Subject);
+                    }
+                    imap.Close();
+                }
+            </pre>
+            </div>
+        </li>
+
+        <li>
+            <a href="javascript:void(0)" onclick="$('#CSPOP3').toggle('fast');">Receive e-mails from POP3 server using C#</a><br />
+            <div id="CSPOP3" style="display: none ">
+                <pre class="brush: csharp;gutter: false">
+                using(Pop3 pop3 = new Pop3())
+                {
+                    pop3.Connect("pop3.server.com");  // or ConnectSSL for SSL       
+                    pop3.UseBestLogin("user", "password");
+                    List&lt;string&gt; uids = pop3.GetAll();
+                    foreach (string uid in uids)
+                    {
+                        IMail email = new MailBuilder()
+                            .CreateFromEml(pop3.GetMessageByUID(uid));
+                        Console.WriteLine(email.Subject);
+                    }
+                    pop3.Close();
+                }	            
+            </pre>
+            </div>
+        </li>
+
+        <li>
+            <a href="javascript:void(0)" onclick="$('#CSSMTP').toggle('fast');">Send e-mail using SMTP server using C#</a><br />
+            <div id="CSSMTP" style="display: none ">
+                <pre class="brush: csharp;gutter: false">
+                IMail email = Mail
+                    .Html(@"Html with an image: &lt;img src=""cid:lena"" /&gt;")
+                    .AddVisual(@"c:\lena.jpeg").SetContentId("lena")
+                    .AddAttachment(@"c:\tmp.doc").SetFileName("document.doc")
+                    .To("to@example.com")
+                    .From("from@example.com")
+                    .Subject("Subject")
+                    .Create();
+                using(Smtp smtp = new Smtp())
+                {
+                    smtp.Connect("smtp.server.com");  // or ConnectSSL for SSL
+                    smtp.UseBestLogin("user", "password");
+                    smtp.SendMessage(email);                      
+                    smtp.Close();    
+                }	            
+            </pre>
+            </div>
+        </li>
+    </ul>
+
+    <ul id="VB" class="code">
+
+        <li>
+            <a href="javascript:void(0)" onclick="$('#VBIMAP').toggle('fast');">Receive e-mails from IMAP server using VB.NET</a><br />
+            <div id="VBIMAP" style="display: block ">
+                <pre class="brush: vb;gutter: false">
+                Using imap As New Imap
+                    imap.Connect("imap.server.com")  ' or ConnectSSL for SSL
+                    imap.UseBestLogin("user", "password")
+                    imap.SelectInbox()
+                    Dim uidList As List(Of Long) = imap.Search(Flag.Unseen)
+                    For Each uid As Long In uidList
+                        Dim email As IMail = New MailBuilder() _
+                            .CreateFromEml(imap.GetMessageByUID(uid))
+                        Console.WriteLine(email.Subject)
+                    Next
+                    imap.Close()
+                End Using	            
+            </pre>
+            </div>
+        </li>
+
+        <li>
+            <a href="javascript:void(0)" onclick="$('#VBPOP3').toggle('fast');">Receive e-mails from POP3 server using VB.NET</a><br />
+            <div id="VBPOP3" style="display: none ">
+                <pre class="brush: vb;gutter: false">
+                Using pop3 As New Pop3
+                    pop3.Connect("pop3.server.com")  ' or ConnectSSL for SSL       
+                    pop3.UseBestLogin("user", "password")
+                    For Each uid As String In pop3.GetAll()
+                        Dim email As IMail = New MailBuilder() _
+                            .CreateFromEml(pop3.GetMessageByUID(uid))
+                        Console.WriteLine(email.Subject)
+                    Next
+                    pop3.Close()
+                End Using
+            </pre>
+            </div>
+        </li>
+
+        <li>
+            <a href="javascript:void(0)" onclick="$('#VBSMTP').toggle('fast');">Send e-mail using SMTP server using VB.NET</a><br />
+            <div id="VBSMTP" style="display: none ">
+                <pre class="brush: vb;gutter: false">
+                Dim email As IMail = Mail _
+                    .Html("Html with an image: &lt;img src=""cid:lena"" /&gt;") _
+                    .AddVisual("C:\lena.jpeg").SetContentId("lena") _
+                    .AddAttachment("C:\tmp.doc").SetFileName("document.doc") _
+                    .To("to@example.com") _
+                    .From("from@example.com") _
+                    .Subject("Subject") _
+                    .Create()
+                Using smtp As Smtp = New Smtp
+                    smtp.Connect("smtp.server.com")  ' or ConnectSSL for SSL
+                    smtp.UseBestLogin("user", "password")
+                    smtp.SendMessage(email)
+                    smtp.Close()
+                End Using	            
+            </pre>
+            </div>
+        </li>
+    </ul>
+</div>
+
+
+
+<h2>Our customers</h2>
+
+<div class="visible-lg-block visible-md-block">
+    <div id="slides">
+        <div class="slides_container">
+            <div><a href="/customers"><img src="/images/customers/slides/line1.gif" alt="" /></a></div>
+            <div><a href="/customers"><img src="/images/customers/slides/line2.gif" alt="" /></a></div>
+            <div><a href="/customers"><img src="/images/customers/slides/line3.gif" alt="" /></a></div>
+            <div><a href="/customers"><img src="/images/customers/slides/line4.gif" alt="" /></a></div>
+            <div><a href="/customers"><img src="/images/customers/slides/line5.gif" alt="" /></a></div>
+            <div><a href="/customers"><img src="/images/customers/slides/line6.gif" alt="" /></a></div>
+            <div><a href="/customers"><img src="/images/customers/slides/line7.gif" alt="" /></a></div>
+        </div>
+        <a href="#" class="prev">Prev</a>
+        <a href="#" class="next">Next</a>
+    </div>
+</div>
+<div class="visible-xs-block visible-sm-block">
+    <a href="/customers"><img src="/images/customers/slides/line1.gif" class="img-responsive" alt="" /></a>
+</div>
+
+
+<h2>Get Started Today</h2>
+
+<div style="text-align: center; margin-top: 1em; margin-bottom: 2em">
+    <a class="btn btn-primary btn-largest" href="/mail/download">Download Now</a>
+</div>
+
+<ul class="yellow">
+    <li><a href="/mail/samples">Browse samples</a></li>
+    <li><a href="/mail/uninstall">Unistall steps</a></li>
+    <li><a href="/mail/purchase">Purchase</a></li>
+</ul>
+
+    </div>
+</div>
+
+                    <div class="clearfix"></div>
+                </div><!-- /container -->
+            </div>
+            <div id="push"></div>
+        </div>
+        <div id="footer">
+            <div id="footer-shadow">
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 visible-lg-block visible-md-block">
+                        <h3>Jumplist</h3>
+                        <ul class="no-bullets">
+                            <li><a href="/mail">Email component - Mail.dll</a></li>
+                            <li><a href="/mail/imap">IMAP component - Mail.dll</a></li>
+                            <li><a href="/barcode">Barcode component - Barcode.dll</a></li>
+                            <li><a href="/ftp">FTP/FTPS component - Ftp.dll</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 visible-lg-block visible-md-block">
+                        <h3>Contact</h3>
+                        <p>
+                            <a class="email" title="Write to us - we're enthusiastic about support"></a>
+                        </p>
+                    </div>
+                    <div class="col-md-4" itemscope itemtype="http://data-vocabulary.org/Organization">
+                        <h3 itemprop="name">Limilabs&trade;</h3>
+                        <p>
+                            VAT: PL 5213195875<br />
+                            Regon: 145938780<br />
+                            <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                                <span itemprop="street-address">Pulawska 115/18</span><br />
+                                <span itemprop="postalCode">02-707</span>, <span itemprop="addressLocality">Warsaw</span> <span itemprop="addressCountry">Poland</span><br />
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                
+                <div id="footer-legal" class="clearfix">
+                    <span class="visible-lg-inline visible-md-inline"><strong>Limilabs&trade;</strong> &copy; 2004-2017. All rights reserved. |</span>
+                    <a href="/legal/terms-of-use">Terms of Use</a> | <a href="/legal/privacy-policy">Privacy Policy</a>
+                </div>
+            </div>
+
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js" type="text/javascript"></script>
+
+        <script src="/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+
+        <script src="/plugins/Default/js/scripts.js" type="text/javascript"></script>
+
+        <script type="text/javascript">
+            $(function () {
+                try { insertEmail(); } catch (ex) { }
+                preventMultiSubmit();
+            });
+        </script>
+
+        
+    
+    
+    <script src="/plugins/SyntaxHighlighter/js/shCore.js" type="text/javascript"></script>
+    <script src="/plugins/SyntaxHighlighter/js/shBrushCSharp.js" type="text/javascript"></script>
+    <script src="/plugins/SyntaxHighlighter/js/shBrushVB.js" type="text/javascript"></script>
+
+    <script src="/plugins/Slider/js/slides.min.jquery.js" type="text/javascript"></script>
+
+    <script type="text/javascript" >
+        $(function () {
+            SyntaxHighlighter.all();
+            $('#samples').tabs();
+            $('#slides').slides(
+                {
+                    preload: true,
+                    preloadImage: '/plugins/slider/css/loading.gif',
+                    play: 5000,
+                    pause: 2500
+                    /* hoverPause: true*/
+                });
+
+        });
+    </script>
+
+
+
+
+    </body>
+</html>

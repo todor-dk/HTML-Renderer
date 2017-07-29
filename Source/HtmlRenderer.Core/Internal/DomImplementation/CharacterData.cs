@@ -124,7 +124,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
                 count = length - offset;
 
             // 4. Queue a mutation record of "characterData" for node with oldValue node's data.
-            // TODO: Implement observers
+            FutureVersions.ImplementDomObservers();
 
             // 5. Insert data into node's data after offset code units.
             this.Text = this.Text.Insert(offset, data).Remove(offset + data.Length, count);
@@ -135,7 +135,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
             // 9. For each range whose end node is node and end offset is greater than offset but less than or equal to offset plus count, set its end offset to offset.
             // 10. For each range whose start node is node and start offset is greater than offset plus count, increase its start offset by the number of code units in data, then decrease it by count.
             // 11. For each range whose end node is node and end offset is greater than offset plus count, increase its end offset by the number of code units in data, then decrease it by count.
-            // TODO: The purpose of the above is to patch existing Range objects that may be alive and in use.
+            FutureVersions.PatchExistingRanges();
         }
 
         /// <summary>

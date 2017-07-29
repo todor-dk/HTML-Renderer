@@ -1,0 +1,3613 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="fi" class="ie ie6"> <![endif]-->
+<!--[if IE 7 ]> <html lang="fi" class="ie ie7"> <![endif]-->
+<!--[if IE 8 ]> <html lang="fi" class="ie ie8"> <![endif]-->
+<!--[if IE 9 ]> <html lang="fi" class="ie ie9"> <![endif]-->
+<!--[if (gt IE 9)]><html class="ie" lang="fi"><![endif]-->
+<!--[if !(IE)]><!--><html lang="fi"><!--<![endif]-->
+	<head>
+		
+
+
+
+<meta charset="UTF-8">
+<meta name="apple-itunes-app" content="app-id=623736563">
+<meta name="apple-itunes-app-tab" content="app-id=623736563">
+<meta name="google-play-app" content="app-id=com.accenture.vrmobile">
+<meta name="google-play-app-tab" content="app-id=com.accenture.vrmobile">
+<meta name="msApplication-ID" content="App" />
+<meta name="msApplication-TileImage" content="http://wscont1.apps.microsoft.com/winstore/1x/107a0080-d451-4367-bee0-ccbb49465360/Icon.102051.png" /> <!-- From the Windows RT store : http://apps.microsoft.com/windows/fr-fr/app/twitter/8289549f-9bae-4d44-9a5c-63d9c3a79f35 -->
+<meta name="msApplication-PackageFamilyName" content="e165dc0b-7dcf-4070-b112-3c15d3f13fd1" /> <!-- Windows RT > PackageFamilyName is visible in the source page of the store : http://apps.microsoft.com/windows/fr-fr/app/twitter/8289549f-9bae-4d44-9a5c-63d9c3a79f35 -->
+<meta name="msApplication-WinPhonePackageUrl" content="e165dc0b-7dcf-4070-b112-3c15d3f13fd1" /> <!-- Windows Phone > AppId is visible in the URL of the app in the windows phone store -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+<!--
+/**
+ * @license
+ * MyFonts Webfont Build ID 2755274, 2014-02-25T04:32:57-0500
+ * 
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are 
+ * explicitly restricted from using the Licensed Webfonts(s).
+ * 
+ * You may obtain a valid license at the URLs below.
+ * 
+ * Webfont: Proxima Nova Regular by Mark Simonson
+ * URL: http://www.myfonts.com/fonts/marksimonson/proxima-nova/regular/
+ * 
+ * Webfont: Proxima Nova Bold by Mark Simonson 
+ * URL: http://www.myfonts.com/fonts/marksimonson/proxima-nova/bold/
+ * 
+ * 
+ * License: http://www.myfonts.com/viewlicense?type=web&buildid=2755274
+ * Licensed pageviews: 40,000,000
+ * Webfonts copyright: Copyright (c) Mark Simonson, 2005. All rights reserved.
+ * 
+ * © 2014 MyFonts Inc
+*/
+
+-->
+
+
+
+<title>Allegro train services - VR</title>
+
+<link rel="shortcut icon" sizes="196x196" type="image/png" href="/cs/vrweb/images/icon196x196.png"/>
+<link rel="shortcut icon" sizes="128x128" type="image/png" href="/cs/vrweb/images/icon128x128.png"/>
+<link rel="apple-touch-icon" type="image/png" href="/cs/vrweb/images/icon_57x57.png" />
+<link rel="apple-touch-icon" sizes="72x72" type="image/png" href="/cs/vrweb/images/icon_72x72.png" />
+<link rel="apple-touch-icon" sizes="114x114" type="image/png" href="/cs/vrweb/images/icon_114x114.png" />
+<link rel="apple-touch-icon" sizes="144x144" type="image/png" href="/cs/vrweb/images/icon_144x144.png" />
+<link href="/cs/vrweb/images/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
+
+ <link type="text/css" rel="stylesheet" href="/cs/vrweb/css/out.css?v=191"/>
+
+<script type="text/javascript">
+var SERVER_TIME_URL = "/cs/Satellite?pagename=VRWeb/vrweb_querySystemTime";
+var locale = 'en';
+</script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" ></script>
+<script>window.jQuery || document.write('<script src="/cs/vrweb/jquery-1.9.1.min.js">\x3C/script>')</script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+<script>window.jQuery.ui || document.write('<script src="/cs/vrweb/jquery-ui-1.9.2.custom.min.js">\x3C/script>')</script>
+
+<script type="text/javascript" src="/cs/vrweb/scripts/out.js?v=191"></script>
+
+
+<script type="text/javascript">
+var timeInputTooltipText = "Enter time. E.g. 6:30, 0630 or 6.30";
+var vrBulletinClose = "vrweb/vrBulletinCloseText";
+$(function(){
+	if($(".vrToolTip").length){
+	    $(".vrToolTip").tooltip();
+	}
+$( '.vrToolTipClick').mouseenter(function(){
+		$(this).attr("title","");
+	});
+	$( '.vrToolTipClick').mouseout(function(){
+		$(this).attr("title",$(this).attr("data-title"));
+	});
+	
+    $(document).on('click touchstart', '.vrToolTipClick', function () {
+    
+		var text = $(this).attr("data-title");
+		$(".vrToolTipClick.on").tooltip('close');
+    	$(".vrToolTipClick.on").removeClass("on");
+		
+    	 $(".closeVRToolTip").unbind("click touchstart");
+        $(this).addClass("on");
+        $(this).tooltip({
+            items: '.vrToolTipClick.on',
+            tooltipClass: "tooltip-closable", 
+            content: function (){
+               
+                  
+                  return text + '<span style="position:absolute;top:0;right:0;" class="closeVRToolTip" ></span>';
+                 }
+        });
+        $(this).trigger('mouseenter');
+        
+       $(".closeVRToolTip, body").bind('click touchstart',function(e){
+        	if($(e.target).hasClass("closeVRToolTip") || !($(e.target).hasClass("ui-tooltip")||$(e.target).closest(".ui-tooltip").length>0)){
+        		$(".vrToolTipClick.on").tooltip('close');
+	        	$(".vrToolTipClick.on").removeClass("on");
+	        	$(".closeVRToolTip, body").unbind('click touchstart');
+        	}
+       		
+         });
+        
+    });
+    //hide
+   /* $(document).on('click touchstart', '.vrToolTipClick.on', function () {
+        $(this).tooltip('close');
+        $(this).removeClass("on");
+    });*/
+    //prevent mouseout and other related events from firing their handlers
+    $(".vrToolTipClick").on('mouseout', function (e) {
+        e.stopImmediatePropagation();
+    });
+    
+   
+});
+
+</script>
+
+
+<script type="text/javascript" src='/cs/vr/stationlist.js?locale=en'></script>
+
+
+<!-- VRLayout -->
+
+<!-- script -->
+<!-- Start Visual Website Optimizer Asynchronous Code -->
+<script type='text/javascript'>
+var _vwo_code=(function(){
+var account_id=20593,
+settings_tolerance=2000,
+library_tolerance=2500,
+use_existing_jquery=false,
+// DO NOT EDIT BELOW THIS LINE
+f=false,d=document;return{use_existing_jquery:function(){return use_existing_jquery;},library_tolerance:function(){return library_tolerance;},finish:function(){if(!f){f=true;var a=d.getElementById('_vis_opt_path_hides');if(a)a.parentNode.removeChild(a);}},finished:function(){return f;},load:function(a){var b=d.createElement('script');b.src=a;b.type='text/javascript';b.innerText;b.onerror=function(){_vwo_code.finish();};d.getElementsByTagName('head')[0].appendChild(b);},init:function(){settings_timer=setTimeout('_vwo_code.finish()',settings_tolerance);this.load('//dev.visualwebsiteoptimizer.com/j.php?a='+account_id+'&u='+encodeURIComponent(d.URL)+'&r='+Math.random());var a=d.createElement('style'),b='body{opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;}',h=d.getElementsByTagName('head')[0];a.setAttribute('id','_vis_opt_path_hides');a.setAttribute('type','text/css');if(a.styleSheet)a.styleSheet.cssText=b;else a.appendChild(d.createTextNode(b));h.appendChild(a);return settings_timer;}};}());_vwo_settings_timer=_vwo_code.init();
+</script>
+<!-- End Visual Website Optimizer Asynchronous Code -->
+
+<!-- script -->
+<meta name="author" content="VR">
+<!-- script -->
+
+
+
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-52494ef5545ff568"></script>
+
+
+
+
+				<link rel="canonical" href="/cs/vr/en/allegro-train-services"/>
+				
+				
+				
+				
+			
+
+<link rel="alternate" hreflang="fi" href="/cs/vr/fi/allegro"/>
+
+
+
+<link rel="alternate" hreflang="sv" href="/cs/vr/sv/allegro_se"/>
+
+
+		
+		
+		<link rel="alternate" hreflang="en" href="/cs/vr/en/allegro_juna_en"/>
+		
+		
+		
+		
+					<meta content='Travel by train to St. Petersburg! See services onboard the Allegro train.' name="description">
+				
+		
+		<meta http-equiv="X-UA-Compatible" content="IE=9" />
+	</head>
+	
+	
+	
+	
+	<body>
+
+		
+		
+		
+		
+		<div class='mainContainer'  >
+			<div class='main'>
+				
+				<header id="header">
+					
+<div class='headerWrapper'>
+	<div class='headerContents'>
+		<div class='infoMessages'></div>
+		<div class='logo'>
+			<a href='/cs/vr/en/frontpage' class='mainLogo'><img src="/cs/vrweb/images/vr.png" alt="VR"/></a>
+		</div>
+		<div class='tools'>
+			<div class='headerLogin'>
+				<ul>						
+					
+					
+					
+					<li>
+						<a href='https://shop.vr.fi/onlineshop/Welcome.do?request_locale=en&login' class="header_login">
+							<span class='icon'></span><span>Sign in</span>
+						</a>
+					</li>
+						
+					<li>
+						<a href='https://shop.vr.fi/onlineshop/Register.do?request_locale=en' class="header_register">
+							<span>Register</span>
+						</a>
+					</li>	
+					
+					
+					
+												
+				</ul>
+			</div>
+			<div class='langbox'>
+				
+
+<ul class='languages'>	
+
+
+<li class="localebtn locale_btn_fi"><a href='/cs/vr/fi/etusivu'>fi</a></li>
+
+
+<li class="localebtn locale_btn_ru"><a href='/cs/vr/ru/etusivu_ru'>ru</a></li>
+
+
+<li class="localebtn locale_btn_en"><a href='/cs/vr/en/frontpage'>en</a></li>
+
+
+<li class="localebtn locale_btn_sv"><a href='/cs/vr/sv/etusivu_sv'>sv</a></li>
+
+
+</ul>
+
+			</div>
+			<div class='searchbox'>
+					
+<form method="get" class="headersearch" action='/cs/vr/en/hakutulokset_en' role="search">	
+	<div class='searchWrapper'>
+		<input type="text" class="search" name="query" value='' placeholder='Search VR.fi'/>
+		<button class="searchSubmit" type="submit"><span class="hidden">Search VR.fi</span></button>
+	</div>
+</form>
+<script type="text/javascript">
+$(function() {
+	
+	$(".headersearch:visible").submit(function(){
+		$(".headersearch .search").val($(".headersearch .search").val().replace(/[\])}[{\"\'(]/g,''));
+	
+	});
+	
+	
+$( ".headersearch .search" ).autocomplete({	
+  source: function( request, response ) {
+        $.ajax({
+          url: '/cs/Satellite?pagename=vrweb_vrsearch&amp;loc=en',
+          dataType: "json",
+          data: {
+            action: "SEARCH",
+            maxRows: 12,
+            criteria: request.term
+          },
+          success: function( data ) {
+            response( $.map( data.arr, function( item ) {
+              return {
+                label: item.text , // + "_" + item.stamp
+                value: item.text,
+                id: item.id
+              }
+            }));
+          }
+        });
+      },
+   select: function( event, ui ) {
+        if (ui.item) {
+            $(".headersearch .search").val(ui.item.value);
+            $(".headersearch").submit();
+           
+        }
+      },      
+      minLength: 2
+});
+
+$(".headersearch .search").autocomplete('widget').css('z-index', 100).addClass("quickSearch");
+
+});
+</script>
+			</div>					
+		</div>
+	</div>
+</div>
+				</header>
+				
+			 
+	<div class='navWrapper offcanvas left'>
+		<div class="mobile">
+			<div class='homeLink'>
+				<a href='/cs/vr/en/frontpage'><span class="home"><span class='icon'></span><span class="hidden">vrweb/mainNavHomeText</span></span></a>
+			</div>
+			<div class='langbox'>
+			
+
+<ul class='languages'>	
+
+
+<li class="localebtn locale_btn_fi"><a href='/cs/vr/fi/etusivu'>fi</a></li>
+
+
+<li class="localebtn locale_btn_ru"><a href='/cs/vr/ru/etusivu_ru'>ru</a></li>
+
+
+<li class="localebtn locale_btn_en"><a href='/cs/vr/en/frontpage'>en</a></li>
+
+
+<li class="localebtn locale_btn_sv"><a href='/cs/vr/sv/etusivu_sv'>sv</a></li>
+
+
+</ul>
+
+			</div>
+			<div class='headerLogin'>
+						<ul>						
+							<li>									
+								<a href='https://shop.vr.fi/onlineshop/Welcome.do?request_locale=en&login' class="header_login">
+									<span class='icon'></span><span>Sign in</span>
+								</a>
+							</li>	
+							<li>
+								<a href='https://shop.vr.fi/onlineshop/Register.do?request_locale=en' class="header_register">
+									<span>Register</span>
+								</a>
+							</li>									
+						</ul>
+			</div>
+			<div class='searchbox'>
+				
+<form method="get" class="headersearch" action='/cs/vr/en/hakutulokset_en' role="search">	
+	<div class='searchWrapper'>
+		<input type="text" class="search" name="query" value='' placeholder='Search VR.fi'/>
+		<button class="searchSubmit" type="submit"><span class="hidden">Search VR.fi</span></button>
+	</div>
+</form>
+<script type="text/javascript">
+$(function() {
+	
+	$(".headersearch:visible").submit(function(){
+		$(".headersearch .search").val($(".headersearch .search").val().replace(/[\])}[{\"\'(]/g,''));
+	
+	});
+	
+	
+$( ".headersearch .search" ).autocomplete({	
+  source: function( request, response ) {
+        $.ajax({
+          url: '/cs/Satellite?pagename=vrweb_vrsearch&amp;loc=en',
+          dataType: "json",
+          data: {
+            action: "SEARCH",
+            maxRows: 12,
+            criteria: request.term
+          },
+          success: function( data ) {
+            response( $.map( data.arr, function( item ) {
+              return {
+                label: item.text , // + "_" + item.stamp
+                value: item.text,
+                id: item.id
+              }
+            }));
+          }
+        });
+      },
+   select: function( event, ui ) {
+        if (ui.item) {
+            $(".headersearch .search").val(ui.item.value);
+            $(".headersearch").submit();
+           
+        }
+      },      
+      minLength: 2
+});
+
+$(".headersearch .search").autocomplete('widget').css('z-index', 100).addClass("quickSearch");
+
+});
+</script>
+			</div>
+		</div>
+		<nav id='mainNav'>
+			<ul class="mainUL">
+				
+				<li class="mainLI first_navitem cpid1383028872244 ppid1383028872244 1383028872244">
+					<a href='/cs/vr/en/frontpage'><span class="home"><span class='icon'></span><span class="hidden">vrweb/mainNavHomeText</span></span></a>
+					
+								<li class='mainLI venyta normal 1383028872242'>
+									<p>
+										<span>Tips and offers</span>
+										<span class="arrow"></span>
+									</p>
+									<span class="separator"></span>
+									
+										<div class='subMenu'>
+											<div class="subMenuWrapper">
+												<div class="submenuLakana left">
+													
+															<div class="subnavColumn column3">
+																
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Special offers</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1395447635822 ppid1383028872242'>
+																						<a class="level3" href='/cs/vr/en/katso_kaikki_tarjoukset_en'>
+																							<span>See all offers</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1383028868993 ppid1383028872242'>
+																						<a href='#' class="level3">
+																							<span>Helsinki</span>
+																						</a>
+																					</li>
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+																<div class="subnavColumn column3">
+																			
+																			
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Things to do</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1395448213843 ppid1383028872242'>
+																						<a class="level3" href='/cs/vr/en/tekemista/see_all_tips'>
+																							<span>See all tips</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395362655026 ppid1383028872242'>
+																						<a class="level3" href='/cs/vr/en/lappi_ja_pohjoinen_en'>
+																							<span>Lapland</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1395365348254 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/levi_en'>
+																											<span>Levi is full of adventures</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395370206833 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/rovaniemikesapassi_en'>
+																											<span>Welcome to Rovaniemi</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395369097838 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/pyhaluosto_en'>
+																											<span>Welcome to Pyhä</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395368720780 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/inarisaariselka_en'>
+																											<span>Inari-Saariselkä - far up north</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395365648626 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/luosto_en'>
+																											<span>Welcome to Luosto!</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395362886519 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/sallatext_en'>
+																											<span>Salla – in the middle of nowhere</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392313329671 ppid1383028872242'>
+																						<a class="level3" href='/cs/vr/en/finland-by-train'>
+																							<span>More of Finland by train</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+																<div class="subnavColumn column3">
+																			
+																			
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Other countries</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1395448520884 ppid1383028872242'>
+																						<a class="level3" href='/cs/vr/en/pietarin_tarjoukset_en'>
+																							<span>Tips for St. Petersburg</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1395372219564 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/tuulahdus_tropiikista_en'>
+																											<span>Tropics in the city</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395386983833 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/allegretto_matkaprima_en'>
+																											<span>Allegretto - independent package tour to St. Petersburg from €177</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395371406865 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/nelja_paivaa_pietarissa_en'>
+																											<span>Four days in St. Petersburg</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395384127188 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/uusi_venalainen_keittio_en'>
+																											<span>New Russian kitchen</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395371928879 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/_koe_aito_venalainen_banja_en'>
+																											<span>Experience an authentic Russian banya</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395371709812 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/fi/lahialuematkat_sokoshotels_en'>
+																											<span>Allegro + Sokos Hotel St. Petersburg package</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395371156617 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/pietarin_top5_nahtavyydet_en'>
+																											<span>TOP5 attractions of St. Petersburg</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392292488455 ppid1383028872242'>
+																						<a class="level3" href='/cs/vr/en/tolstoi_to_moscow'>
+																							<span>Cheaper Advance ticket to Moscow</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395448630345 ppid1383028872242'>
+																						<a class="level3" href='/cs/vr/en/moscow_en'>
+																							<span>Moscow</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392294849444 ppid1383028872242'>
+																						<a class="level3" href='/cs/vr/en/_allegro_magazine_en'>
+																							<span>Allegro Magazine</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395348082840 ppid1383028872242'>
+																						<a class="level3" href='/cs/vr/en/reilausvinkit_en'>
+																							<span>Europe by train - InterRail</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1395348148464 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/reilausvinkit_valmistautuminen_en'>
+																											<span>Planning tips</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395348733960 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/reilausvinkit_pakkaaminen_en'>
+																											<span>Equipment</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395348779256 ppid1383028872242'>
+																										<a class="level4" href='/cs/vr/en/reilausvinkit_majoitus_en'>
+																											<span>Accomodation</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+													</div><!-- Submenulakana ends 1-->	
+																				 
+													<div class="submenuLakanaNosto left">
+														
+														
+														
+														
+														
+													</div> <!-- SubmenuLakananosto ends -->
+												</div> <!-- SubmenuWrapper ends -->
+											</div><!-- Submenu ends -->
+										</li>
+							
+								<li class='mainLI venyta normal 1383028872679'>
+									<p>
+										<span>Timetables and routes</span>
+										<span class="arrow"></span>
+									</p>
+									<span class="separator"></span>
+									
+										<div class='subMenu'>
+											<div class="subMenuWrapper">
+												<div class="submenuLakana left">
+													
+															<div class="subnavColumn column3">
+																
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Timetables</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1392309034496 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/aikatauluhaku_en'>
+																							<span>Timetable search</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386978359797 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/long-distance_timetables'>
+																							<span>Long-distance timetables</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386993217425 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/commuter_service_timetables'>
+																							<span>Commuter service timetables</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386978520610 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/night_and_car-carrier_train_timetables'>
+																							<span>Night and car-carrier train timetables</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1386978674624 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/autojunien_aikataulut_helsinki_rovaniemi_en'>
+																											<span>Car-carrier train timetables: Helsinki–Rovaniemi–Helsinki</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386979038584 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/autojunien_aikataulut_helsinki_kolari_en'>
+																											<span>Car-carrier train timetables: Helsinki–Kolari–Helsinki </span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386994111609 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/autojunien_aikataulut_helsinki_oulu_en_'>
+																											<span>Car-carrier train timetables: Helsinki–Oulu–Helsinki</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386994890481 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/autojunien_aikataulut_turku_ko_en'>
+																											<span>Car-carrier train timetables: Turku-Kolari-Turku</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386994350338 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/autojunien_aikataulut_helsinki_kemijarvi_en'>
+																											<span>Car-carrier train timetables: Helsinki–Kemijärvi–Helsinki</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386994709063 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/autojunien_aikataulut_tampere__en'>
+																											<span>Car-carrier train timetables: Tampere–Kolari–Tampere</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386994744088 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/autojunien_aikataulut_tampere__rovaniemi_en'>
+																											<span>Car-carrier train timetables: Tampere–Rovaniemi–Tampere</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386994789894 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/autojunien_aikataulut_turku_ro_en'>
+																											<span>Car-carrier train timetables: Turku–Rovaniemi–Turku</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386993221864 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/russian_timetables'>
+																							<span>Timetables Finland–Russia</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+																<div class="subnavColumn column3">
+																			
+																			
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Routes and maps</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1386989126284 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/long-distance_service_network'>
+																							<span>Long-distance service network</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395361180226 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/lahiliikenteen_reittikartta_en'>
+																							<span>Commuter Train Stations</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392315337390 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/train-transfer-commuter-area'>
+																							<span>Commuter transfer stations to the Ring Rail Line or Coast Line</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392296940387 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/keharata_en'>
+																							<span>Ring Rail Line</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386989260982 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/train_bus'>
+																							<span>Train + Bus</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1392275808787 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/junabussiyhteydet_en'>
+																											<span>Train + Bus routes</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386989396225 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/car-carrier_train_loading_sites'>
+																							<span>Car-carrier train loading sites</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1386989682506 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/other_car_loading_sites'>
+																											<span>Other car loading sites</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386990275163 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/connections'>
+																							<span>Connections</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1386990770350 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/connections_from_helsinki'>
+																											<span>Connections from Helsinki</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386990777841 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/connections_from_tikkurila_station'>
+																											<span>Connections from Tikkurila station</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386990785936 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/connections_from_tampere_railway_station'>
+																											<span>Connections from Tampere railway station</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386990791541 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/connections_in_lapland'>
+																											<span>Travel connections in Lapland</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392310106482 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/liityntakuljetukset-en'>
+																							<span>Connecting bus transfer services</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1392310247861 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/liityntabussi-vaasa-seinajoki-en'>
+																											<span>Connecting bus transfer services between Vaasa and Seinäjoki</span>
+																										</a>
+																										
+																												<ul class="hidden">
+																												
+																												
+																													<li class='cpid1392310248771 ppid1383028872679'>
+																														<a class="level5" href='/cs/vr/en/liityntakuljetus-vaasa-seinajoki-kartat-en'>
+																															<span>Vaasa–Seinäjoki connection transfer bus stations</span>
+																														</a>
+																													
+																												</ul>
+																											
+																									</li>
+																									
+																									<li class='cpid1392310247861 ppid1383028872679'>
+																										<a class="level4" href='/cs/vr/en/liityntabussi-vaasa-seinajoki-en'>
+																											<span>Connecting bus transfer services between Vaasa and Seinäjoki</span>
+																										</a>
+																										
+																												<ul class="hidden">
+																												
+																												
+																													<li class='cpid1392310248771 ppid1383028872679'>
+																														<a class="level5" href='/cs/vr/en/liityntakuljetus-vaasa-seinajoki-kartat-en'>
+																															<span>Vaasa–Seinäjoki connection transfer bus stations</span>
+																														</a>
+																													
+																												</ul>
+																											
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+																<div class="subnavColumn column3">
+																			
+																			
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Rail services status</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1392301363002 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/traffic_info'>
+																							<span>Traffic info</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1391671967855 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/juku_en'>
+																							<span>Live train updates</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386989018395 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/live_train_map'>
+																							<span>Live Train Map</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386988970657 ppid1383028872679'>
+																						<a class="level3" href='/cs/vr/en/track_work'>
+																							<span>Track work</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+													</div><!-- Submenulakana ends 1-->	
+																				 
+													<div class="submenuLakanaNosto left">
+														
+														
+														
+
+<div class="currentLift">
+	<div class="currentLiftImg">
+		
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/aikatauluhaku_700x350.jpg?blobnocache=false"  />
+	
+	</div>
+	<div class="currentText">
+	
+		<h4 class="heading">Timetable search</h4>
+		<p class="p1">
+	<span class="s1">You can search for </span><span class="s2">all domestic </span><span class="s1">timetables by selecting the departure and destination stations and the validity of the timetable. </span><br />
+	<span class="s1">With the advanced search you can search for timetables according to the day of the week, time of departure, transfers, type of train or services on the train.&nbsp;</span></p>
+<p class="p1">
+	<span class="s1">Read more about the timetable search <a href="https://www.vr.fi/cs/vr/en/aikatauluhaku_en">here</a> &gt;</span></p>
+<p class="p3">
+	<span class="s1">&nbsp;</span></p>
+
+	</div>
+	 
+</div>
+
+	
+
+														
+														
+													</div> <!-- SubmenuLakananosto ends -->
+												</div> <!-- SubmenuWrapper ends -->
+											</div><!-- Submenu ends -->
+										</li>
+							
+								<li class='mainLI venyta normal 1383028872798'>
+									<p>
+										<span>Services</span>
+										<span class="arrow"></span>
+									</p>
+									<span class="separator"></span>
+									
+										<div class='subMenu'>
+											<div class="subMenuWrapper">
+												<div class="submenuLakana left">
+													
+															<div class="subnavColumn column3">
+																
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Station services</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1386998200384 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/asemat_kartalla_en'>
+																							<span>Station services </span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392295126083 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/tikkurilan_matkakeskus_en'>
+																							<span>Tikkurila Travel Centre</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386998242719 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/avustuspalvelu_asemilla_en'>
+																							<span>Assistance services</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387013763444 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/car_and_bicycle_parking'>
+																							<span>Car and bicycle parking</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387014051690 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/restaurant_services_asemat'>
+																							<span>Restaurant services at train stations</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387014035314 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/luggage_storage'>
+																							<span>Luggage storage</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387014188065 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/lost_property'>
+																							<span>Lost property</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Onboard services</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1387004273293 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/ekstraluokan_palvelut_en'>
+																							<span>Extra Class services</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387014503546 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/tietokone_puhelin_en'>
+																							<span>Laptops and mobile phones onboard</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392306257255 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/ravintolapalvelut_kooste_en'>
+																							<span>Restaurant services on trains</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1387014719070 ppid1383028872798'>
+																										<a class="level4" href='/cs/vr/en/restaurant_services'>
+																											<span>Restaurant services on long-distance trains</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1390448799585 ppid1383028872798'>
+																										<a class="level4" href='/cs/vr/en/duettoplus_en_'>
+																											<span>The new era of service at the DuettoPlus restaurant car</span>
+																										</a>
+																										
+																												<ul class="hidden">
+																												
+																												
+																													<li class='cpid1392307592680 ppid1383028872798'>
+																														<a class="level5" href='/cs/vr/en/roberts_coffee_kahvilavaunu_en'>
+																															<span>Robert’s Coffee café car</span>
+																														</a>
+																													
+																												</ul>
+																											
+																									</li>
+																									
+																									<li class='cpid1387014719070 ppid1383028872798'>
+																										<a class="level4" href='/cs/vr/en/restaurant_services'>
+																											<span>Restaurant services on long-distance trains</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387015241526 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/luggage'>
+																							<span>Luggage</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387020383542 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/sleeping_berths'>
+																							<span>Services in sleeping berths</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392296911191 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/autojunien_palvelut_en'>
+																							<span>Car-carrier trains</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387020386638 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/bicycles_skis_en'>
+																							<span>Bicycles, skis and prams</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392297809754 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/moottoripyorat_ja_kelkat_en'>
+																							<span>Motor cycles and snowmobiles</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+																<div class="subnavColumn column3">
+																			
+																			
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Special needs</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1386163589946 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/families_and_children'>
+																							<span>Families and children</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386164232127 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/vammaispalvelut_en'>
+																							<span>Disabled passengers</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1395304417129 ppid1383028872798'>
+																										<a class="level4" href='/cs/vr/en/junatyyppien_vammaispalvelut_en'>
+																											<span>Services for the disabled on different types of train</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386164304330 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/groups'>
+																							<span>Groups</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386165927796 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/passengers_with_allergies'>
+																							<span>Passengers with allergies</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386164328123 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/travelling_with_pets'>
+																							<span>Travelling with pets</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Business services</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1387002613852 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/yrityspalvelut_en'>
+																							<span>Business services</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387023572085 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/kokous_junassa_en'>
+																							<span>Group and conference journeys</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1387023712179 ppid1383028872798'>
+																										<a class="level4" href='/cs/vr/en/kokoustilat_unassa_en'>
+																											<span>Book a compartment or coach</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387021738730 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/yrityspalvelut_palvelut_en'>
+																							<span>Services for business travellers</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392308079405 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/junaliput_yritysasiakkaille_ala_en'>
+																							<span>Train tickets for Corporate Customers</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1392307956977 ppid1383028872798'>
+																										<a class="level4" href='/cs/vr/en/corporate_ticket_new'>
+																											<span>Corporate ticket</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387026601006 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/corporate_cooperation_agreement'>
+																							<span>Corporate Cooperation Agreement</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387026588928 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/to_russia'>
+																							<span>To Russia</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+																<div class="subnavColumn column3">
+																			
+																			
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Trains and cars</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1390405910509 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/junat_ja_vaunut_alasivu_en'>
+																							<span>Trains and cars</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387040330997 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/pendolino_en'>
+																							<span>Pendolino</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387040728087 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/intercity_versio2_en'>
+																							<span>InterCity</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387041198447 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/pikajunat_en'>
+																							<span>Express trains</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1390416987032 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/yo-_ja_autojunat_en'>
+																							<span>Night and car-carrier trains</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1390418643075 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/taajamajunat_en'>
+																							<span>Regional trains</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395374000008 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/lahijunat_en'>
+																							<span>Commuter trains</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395371126547 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/allegro_juna_en'>
+																							<span>Allegro</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395373587234 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/tolstoi_en'>
+																							<span>Tolstoi</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Mobile services</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1395363137886 ppid1383028872798'>
+																						<a class="level3" href='/cs/vr/en/vr_mobiili_en'>
+																							<span>VR Mobile</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1395379820007 ppid1383028872798'>
+																										<a class="level4" href='/cs/vr/en/vr_mobiilin_ohjeet_en'>
+																											<span>VR Mobile Instructions</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395379977752 ppid1383028872798'>
+																										<a class="level4" href='/cs/vr/en/ostaminen_vr_mobiilissa_en'>
+																											<span>Paying on VR Mobile</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+													</div><!-- Submenulakana ends 1-->	
+																				 
+													<div class="submenuLakanaNosto left">
+														
+														
+														
+
+<div class="currentLift">
+	<div class="currentLiftImg">
+		
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/vr_juna_syysmaisemassa.jpg?blobnocache=false"  />
+	
+	</div>
+	<div class="currentText">
+	
+		<h4 class="heading">Environmental pledges</h4>
+		<div>
+	Although rail is already the greenest choice, it is always possible to do more. We have pledged to improve, for instance, energy efficiency in railway passenger traffic by 20 per cent. Acquaint yourself with all our environmental pledges.</div>
+<div>
+	<a href="http://www.vrgroup.fi/en/vrgroup/responsibility/environment/enviromental-pledges-2013-2020/" target="_blank">VR&rsquo;s environmental pledges</a></div>
+<p>
+	<br />
+	&nbsp;</p>
+
+	</div>
+	 
+</div>
+
+	
+
+														
+														
+													</div> <!-- SubmenuLakananosto ends -->
+												</div> <!-- SubmenuWrapper ends -->
+											</div><!-- Submenu ends -->
+										</li>
+							
+								<li class='mainLI venyta normal 1386068742340'>
+									<p>
+										<span>Tickets</span>
+										<span class="arrow"></span>
+									</p>
+									<span class="separator"></span>
+									
+										<div class='subMenu'>
+											<div class="subMenuWrapper">
+												<div class="submenuLakana left">
+													
+															<div class="subnavColumn column3">
+																
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Long-distance train tickets</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1392301002141 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/hintakalenteri_en'>
+																							<span>Price Calendar</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392307955437 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/saver_ticket_new'>
+																							<span>Saver ticket</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392307955306 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/basic_ticket_new'>
+																							<span>Basic ticket</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386156552543 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/cartrain_packages'>
+																							<span>CarTrain packages</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392307987187 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/berths_en_uusi'>
+																							<span>Berths and sleeping compartments</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392307991381 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/multi-tickets_kauko_new'>
+																							<span>Multi-tickets (during summer break, from 9.6.)</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386069651558 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/seasonticket_kauko'>
+																							<span>Season tickets</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1392324196172 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/quota_seats_for_helsinki-kouvola'>
+																											<span>Quota seats for Helsinki-Kouvola</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1392324189328 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/quota_seats_for_helsinki-tampere'>
+																											<span>Quota seats for Helsinki-Tampere</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1392324203384 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/quota_seats_for_helsinki-turku'>
+																											<span>Quota seats for Helsinki-Turku</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1392324210967 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/quota_seats_for_turku-pieksamaki'>
+																											<span>Quota seats for Turku-Pieksämaki</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395354138814 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/junabussi_en'>
+																							<span>Train + Bus</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386070138494 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/gift_voucher'>
+																							<span>Gift voucher</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Additional services</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1392307974203 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/extra_class_new'>
+																							<span>Extra Class seats</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392317181954 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/door-to-door-services'>
+																							<span>Door to Door Services</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392307974267 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/duettoplus_new'>
+																							<span>Upstair seats for the DuettoPlus restaurant</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392307974468 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/cancellation_insurance'>
+																							<span>Cancellation insurance</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392307974387 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/pets_new'>
+																							<span>Pets onboard</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392307974359 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/bicycles_new'>
+																							<span>Bicycles in the trains</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Commuter tickets</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1392316795383 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/changes-commuter-trains'>
+																							<span>Commuter traffic at your service</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386163034338 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/zone_tickets'>
+																							<span>Commuter tickets</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386163203897 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/multi-ticket'>
+																							<span>Commuter multi-tickets</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386163314527 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/season_ticket'>
+																							<span>Commuter season ticket</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+																<div class="subnavColumn column3">
+																			
+																			
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Discount groups</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1392308059471 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/students_new'>
+																							<span>Students</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1392310031314 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/student-cards'>
+																											<span>VR approved student cards </span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392308005887 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/children_new'>
+																							<span>Children</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392308005463 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/seniors_new'>
+																							<span>Seniors</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392307991906 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/conscripts_uusi'>
+																							<span>Conscripts</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392308006808 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/persons_in_non-military_service_new'>
+																							<span>Persons liable for non-military service</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392307955522 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/group_tickets_new'>
+																							<span>Groups</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>International tickets</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1386954621464 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/tickets_to_russia'>
+																							<span>Tickets to Russia</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1386958640858 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/allegro_fares'>
+																											<span>Allegro tickets – Helsinki to St. Petersburg from € 39</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386958767491 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/tolstoi_timetables'>
+																											<span>Timetables of Tolstoi between Helsinki and Moscow</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386958838380 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/tolstoi_fares'>
+																											<span>Tolstoi ticket prices</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386957026844 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/tickets_to_europe'>
+																							<span>Train tickets to Europe</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386958288576 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/interrail_en'>
+																							<span>Interrail</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1386959121087 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/discounts_for_interrail_passengers'>
+																											<span>Discounts for Interrail passengers</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386959196571 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/interrail_60%20'>
+																											<span>Interrail for seniors</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1386959491419 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/how_to_purchase_an_interrail_pass'>
+																											<span>How to purchase an Interrail pass</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1383029394747 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/rail_passes'>
+																							<span>Rail passes</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																</div>
+																
+																<div class="subnavColumn column3">
+																		
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Subsidized tickets</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1386951179600 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/employment-subsidized_commuter_ticket'>
+																							<span>Employment-subsidized commuter ticket</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386158499404 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/assistants_ticket'>
+																							<span>Assistant's ticket</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Buy a ticket</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1386951383092 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/buy_long-distance_train_tickets'>
+																							<span>Buy long-distance train tickets</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1392292115365 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/kiskobussien_maksaminen_en'>
+																											<span>Paying on railcars</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1392296444094 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/junaliput_rkioskilta_en'>
+																											<span>Train tickets at R-Kioski</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392308066123 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/ostopaikat_uusi_en'>
+																							<span>Purchase locations</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386953859090 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/buy_commuter_train_tickets'>
+																							<span>Purchase commuter train tickets</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1395327466698 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/yoliikenne_lahiksessa_en'>
+																											<span>Night fare</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392301023574 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/junaliput_lentoasemalle_en'>
+																							<span>Train tickets to the Airport</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386954086322 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/conditions_of_carriage'>
+																							<span>Conditions of Carriage</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1395328719188 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/lippujen_tarkastus_en'>
+																											<span>Ticket validation, ticket inspection and penalty fare</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395334883581 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/autonkuljetusehdot_en'>
+																											<span>Car transport terms and conditions</span>
+																										</a>
+																										
+																									</li>
+																									
+																									<li class='cpid1395334859081 ppid1386068742340'>
+																										<a class="level4" href='/cs/vr/en/lippujen_muutokset_peruutukset_en'>
+																											<span>Long-distance train ticket changes and cancellations</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1386958909714 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/terms-and-conditions-of-sale-of-tickets-finland-russia'>
+																							<span>Conditions of Carriage for Passenger Services between Finland and Russia</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395350942145 ppid1386068742340'>
+																						<a class="level3" href='/cs/vr/en/international_legal_provisions_and_conditions_of_carriage'>
+																							<span>International legal provisions and conditions of carriage</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																 </div>  <!-- Submenulakana ends ends -->
+																			
+													</div><!-- Submenulakana ends 1-->	
+																				 
+													<div class="submenuLakanaNosto left">
+														
+														
+														
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/vr_vrfi_hintamielikuva_eng_700x350_taysvalk_eitekstia.jpg?blobnocache=false"  />
+	
+														
+														
+													</div> <!-- SubmenuLakananosto ends -->
+												</div> <!-- SubmenuWrapper ends -->
+											</div><!-- Submenu ends -->
+										</li>
+							
+								<li class='mainLI venyta normal 1383028873032'>
+									<p>
+										<span>Customer Service</span>
+										<span class="arrow"></span>
+									</p>
+									<span class="separator"></span>
+									
+										<div class='subMenu'>
+											<div class="subMenuWrapper">
+												<div class="submenuLakana left">
+													
+															<div class="subnavColumn column3">
+																
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Contacts</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1387003775189 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/miten_voimme_auttaa_en'>
+																							<span>Customer Care contact information</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395362320719 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/vr_sosiaalisessa_mediassa_en'>
+																							<span>VR on social media networks</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395457815755 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/yritys_ja_ryhmamyynti_en'>
+																							<span>Contact information for business travellers</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Frequently asked questions</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1395384687238 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/ukk_en'>
+																							<span>Questions and answers</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+																<div class="subnavColumn column3">
+																			
+																			
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Online forms</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1399637951706 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/anna_palautetta_en'>
+																							<span>Give feedback</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1399637962142 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/peruuta_verkosta_ostettu_lippu_en'>
+																							<span>Cancel a ticket</span>
+																						</a>
+																						
+																							
+																								<ul class="hidden">
+																								
+																									<li class='cpid1392291801885 ppid1383028873032'>
+																										<a class="level4" href='/cs/vr/en/peruutus_kiitos_en'>
+																											<span>Thank you for your message!</span>
+																										</a>
+																										
+																									</li>
+																									
+																								</ul>
+																							
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1399637991417 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/hyvityslomake_en'>
+																							<span>Claim compensation for a delay</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1399638001874 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/ostohairiolomake_en'>
+																							<span>Claim compensation for transaction error</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1399638026452 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/kysy_junamatkustamisesta_en'>
+																							<span>Ask about train travel</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Train travel ABCs</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1387002953258 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/junamatkustuksen_abc_en'>
+																							<span>Train travel</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387035724979 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/abc_commuter_trains'>
+																							<span>Commuter services</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387034357544 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/abc_russia'>
+																							<span>Train travel to Russia</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387034989633 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/abc_cartrain'>
+																							<span>Travel north with your car – CarTrain Travel ABC</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387032855530 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/night_traintravel'>
+																							<span>Night train travel</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+																<div class="subnavColumn column3">
+																			
+																			
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>About the website</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1387003355772 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/web_service_technical_information'>
+																							<span>Web service technical information</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387003358154 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/privacy_statement'>
+																							<span>Privacy statement</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1387003351702 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/verkkokaupan_ehdot_en'>
+																							<span>Online Shop terms and conditions</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Refunding and compensations</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1395335886249 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/rautatievastuuasetus_en'>
+																							<span>Regulation on railways' responsibilities</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395336322332 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/hae_hyvitysta_ja_korvausta_en'>
+																							<span>Apply for compensation or refund</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1395336700816 ppid1383028873032'>
+																						<a class="level3" href='/cs/vr/en/muut_korvaukset_en'>
+																							<span>Other compensations</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+													</div><!-- Submenulakana ends 1-->	
+																				 
+													<div class="submenuLakanaNosto left">
+														
+														
+														
+
+<div class="currentLift">
+	<div class="currentLiftImg">
+		
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/Fiiliskuva_700x350_asema_lappari.jpg?blobnocache=false"  />
+	
+	</div>
+	<div class="currentText">
+	
+		<h4 class="heading">Social media service period extended</h4>
+		<p>
+	Our customer service will be there to help you on Facebook and Twitter daily from 7:00 - 22:00.</p>
+<p>
+	<a href="https://www.facebook.com/VRyhteisellamatkalla">Facebook</a><br />
+	<a href="https://twitter.com/VRpalvelu">Twitter</a></p>
+
+	</div>
+	 
+</div>
+
+	
+
+														
+														
+													</div> <!-- SubmenuLakananosto ends -->
+												</div> <!-- SubmenuWrapper ends -->
+											</div><!-- Submenu ends -->
+										</li>
+							
+								<li class='mainLI venyta normal 1387004218258'>
+									<p>
+										<span>Veturi</span>
+										<span class="arrow"></span>
+									</p>
+									<span class="separator"></span>
+									
+										<div class='subMenu'>
+											<div class="subMenuWrapper">
+												<div class="submenuLakana left">
+													
+															<div class="subnavColumn column1">
+																
+																			<ul class="sub">
+																		
+																		<li class='subli normal'>
+																			<p class="subPage">
+																				<span>Veturi Loyalty Programme</span>
+																			</p>
+																		</li>
+																		
+																		
+																		
+																			
+																					<li class='subli normal cpid1383029178594 ppid1387004218258'>
+																						<a class="level3" href='/cs/vr/en/veturi_in_a_nutshell'>
+																							<span>Veturi in a nutshell</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1392315169378 ppid1387004218258'>
+																						<a class="level3" href='/cs/vr/en/offers-for-veturi-members'>
+																							<span>Offers and perks for Veturi members</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1390440751376 ppid1387004218258'>
+																						<a class="level3" href='/cs/vr/en/vaihda_kayttajatunnus_en'>
+																							<span>Change your username</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1383029179645 ppid1387004218258'>
+																						<a class="level3" href='/cs/vr/en/veturi_rules'>
+																							<span>Veturi rules</span>
+																						</a>
+																						
+																					</li>
+																					
+																					
+																					<li class='subli normal cpid1383029179499 ppid1387004218258'>
+																						<a class="level3" href='/cs/vr/en/prize_draws_and_competitions'>
+																							<span>Prize draws and competitions</span>
+																						</a>
+																						
+																					</li>
+																					
+																						
+																	</ul> 
+																</div><!-- SubNavColumn ends -->
+																
+																		
+													</div><!-- Submenulakana ends 1-->	
+																				 
+													<div class="submenuLakanaNosto left">
+														
+														
+														
+														
+														
+													</div> <!-- SubmenuLakananosto ends -->
+												</div> <!-- SubmenuWrapper ends -->
+											</div><!-- Submenu ends -->
+										</li>
+							
+			</ul>
+			<a class="dropdownButton" href="#"><span class="hidden">vrweb/mobileNavOpenmenu</span></a>
+		
+		</nav>
+	</div>
+
+
+
+
+
+<script>
+
+var selectedLocale = '.locale_btn_en';
+
+$(".localebtn").show();
+$(selectedLocale).remove();
+	
+</script>
+
+
+<script>
+
+
+var currentpageinnavigation = '.cpid1395371126547';
+	
+		if($(currentpageinnavigation).length > 0){
+			var classList =$(currentpageinnavigation).attr('class').split(" ");
+			$.each( classList, function(index, item){
+			    
+				if (item.indexOf("ppid") > -1) {
+					item = item.replace("ppid", ".");
+					$(item).removeClass("normal");
+					$(item).addClass("selected");
+			    }
+			});
+
+		
+	}
+	
+	
+</script>
+
+				<div id='mainContent' class='container' role="main">
+				
+					<div class='columnContainer'>
+					
+					
+				<h1>Allegro</h1>
+				
+<div id="anchorWrapper"><div id="anchors"><div class="styledSelect"><select id="anchorSelect"><option value="">Move</option></select></div></div></div>
+
+<script>
+
+function scrollTo(target){
+	var myArray = target.split('#');
+	var targetPosition = jQuery('#' + myArray[1]).offset().top;
+	jQuery('html,body').animate({ scrollTop: targetPosition}, 'slow');
+	} 
+
+function addOrRemoveHomeAnchorFromDropDown()
+{
+	var displayMode = "desktop";
+	if($(window).width()<768)
+	{
+		displayMode = "mobile";
+	}
+	else if($(window).width()<980)
+	{
+		displayMode = "tablet";
+	}
+	else{
+		return;
+	}
+	
+	var isHomeAnchorInDropDown = !($("#anchorSelect option[value='#top']").val()==undefined || $("#anchorSelect option[value='#top']").val()==null);
+	if(displayMode=="mobile" && !isHomeAnchorInDropDown)
+	{
+			$('#anchorSelect')
+		       .append($("<option></option>")
+		       .attr("value","#top")
+		       .text("Back to top"));
+	}
+	else if(displayMode=="tablet" && isHomeAnchorInDropDown)
+	{
+		$("#anchorSelect option[value='#top']").remove();
+	}
+}
+
+$(function(){
+	var linkit = "";
+var i = 0;
+	$.each($("a[id]:not(href)"),function(){
+		var anchorText = this.id.replace(/\s/g, '');
+		var anchorText = anchorText.replace('.', '');
+		linkit += "<div class='anchorItem'><a href='#" +anchorText+"' class='vrAnchor'>" + this.id+"</a></div>"; 
+		
+		  $('#anchorSelect')
+	         .append($("<option></option>")
+	         .attr("value","#"+anchorText)
+	         .text(this.id)); 
+		
+		$(this).attr("id", anchorText);
+		i++;
+	});
+
+	if(i==0)
+		{
+		$("#anchorWrapper").remove();
+		}
+	addOrRemoveHomeAnchorFromDropDown();
+	
+	linkit +="<div class='lastAnchorItem anchorItem'><a class='anchorsReturnToTop' href='#top'><span>Back to top</span><div class='icon'></div></a>";
+	$("#anchors").append(linkit);
+	$("#anchors").sticky({topSpacing:0, center:true, className:"vrSticky"});
+
+	
+
+	$("#anchorSelect").on('change', function(e) {	
+		 var url = jQuery(this).val();
+		 if(url=="#top")
+			 {
+			 $('html,body').animate({scrollTop:0}, 500, "swing");
+			 $("#anchorSelect").val('');
+			 return;
+			 }
+		 var scrollTarget = $(url).offset().top;
+		 $('html,body').animate({scrollTop:scrollTarget-100}, 500, "swing"); 
+		 
+	});
+	
+	function removeHash () { 
+		
+		if(history.pushState!=null){ 
+	    history.pushState("", document.title, window.location.pathname
+	                                                       + window.location.search);
+		}
+	}
+	
+	$("a.anchorsReturnToTop").on('click', function(e) {	
+		 e.preventDefault();
+		 $("a.activeAnchor").removeClass("activeAnchor");
+		 $('html,body').animate({scrollTop:0}, 500, "swing"); 
+		 removeHash();
+	});
+	
+	 $("a.vrAnchor").on('click', function(e) {
+		 $("a.activeAnchor").removeClass("activeAnchor");
+		$(e.target).addClass("activeAnchor");
+		// e.preventDefault();
+		 var url = "#" + jQuery(this).attr("href").split("#")[1];
+		 var scrollTarget = $(url).offset().top;
+		 $('html,body').animate({scrollTop:scrollTarget-100}, 500, "swing"); 
+	});
+	 /*This is to avoid resize-function firing multiple times on drag-resize*/
+	 var resizeTimeoutID;
+	 $( window ).resize(function() {
+	 	 clearTimeout(resizeTimeoutID);
+	 	 resizeTimeoutID = setTimeout(addOrRemoveHomeAnchorFromDropDown, 500);
+	 	
+	 });
+
+});
+
+
+
+</script>
+
+
+						<div class='contentColumns'>
+							
+							<div class='first'>
+								<div class='columnContent'>	
+									
+									
+<div class='moduleContent'>
+				
+				
+				
+				<div class='boxContent nodesktop nomobile'>
+			
+
+				
+				
+				</div>
+				
+				
+<script type="text/javascript" charset="utf-8">
+
+  $(window).load(function() {
+	  
+	  
+	  
+	var speed1 = 8000;
+	var random1 = false;
+	var windowLocation = window.location.host;
+	var nextLocation = "/cs/vrweb/images/karuselliNext.png";
+	var previousLocation = "/cs/vrweb/images/karuselliPrev.png";
+	var nextButton = "<img src='" + nextLocation + "' alt='Next'/>";
+	var previousButton = "<img src='" + previousLocation + "' alt='Previous'/>";
+		
+  
+
+    	$('.flexslider').flexslider({
+        	slideshowSpeed: speed1,
+        	randomize: random1,
+            slideshow: true,
+            useCSS: false,
+            prevText: previousButton,
+            nextText: nextButton,
+            animation: "slide",
+    		itemMargin: 10,
+    		pauseOnAction: true,
+    		animationLoop: true
+          });
+    	
+
+
+    
+  });
+</script>
+<div id="wrapper" class="etusivu_wrapper">
+
+	
+			<div class="flexslider">
+				<ul class="slides">
+										
+							<li>
+								<div class="carouselLift">
+								
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/allegro_saapuu_asemalle.jpg?blobnocache=false"  />
+	
+								</div>
+								
+							</li>
+											
+							<li>
+								<div class="carouselLift">
+								
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/vr_allegro_pariskunta.jpg?blobnocache=false"  />
+	
+								</div>
+								
+							</li>
+											
+							<li>
+								<div class="carouselLift">
+								
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/vr_perheet_allegro.png?blobnocache=false"  />
+	
+								</div>
+								
+							</li>
+											
+							<li>
+								<div class="carouselLift">
+								
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/VR_700x350.jpg?blobnocache=false"  />
+	
+								</div>
+								
+							</li>
+											
+							<li>
+								<div class="carouselLift">
+								
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/vr_allegro_lemmikit.jpg?blobnocache=false"  />
+	
+								</div>
+								
+							</li>
+						
+				</ul>
+			</div>
+		
+</div>
+
+</div>
+
+
+
+<div class='moduleContent'>
+				
+				
+				<div class="ingressi">It is comfortable to travel in an Allegro&nbsp;train. The train is spacious and the interior is timelessly classy and it has a wide variety of onboard services. The onboard staff speak Finnish, Russian and English.</div>
+
+</div>
+
+
+
+<div class='moduleContent'>
+				
+				
+				<p><a id="Onboard services" name="Onboard services"></a></p>
+
+<p>&nbsp;</p>
+
+<h2>Allegro train services onboard</h2>
+
+</div>
+
+
+
+<div class='moduleContent'>
+				
+				
+				
+
+<div class='fourth'>
+
+
+<div class="vrGrid left oneThird">
+<p><strong>Basic services</strong></p>
+
+<ul>
+	<li>space for pram</li>
+	<li>power outlets</li>
+	<li>WiFi</li>
+	<li>hand luggage</li>
+	<li>accessible toilet with baby care equipment</li>
+</ul>
+
+<p><strong>Services for different passenger categories</strong></p>
+
+<ul>
+	<li>Restaurant Bistro Allegro</li>
+	<li>children&#39;s playroom</li>
+	<li>Pet spaces</li>
+	<li>service for disabled</li>
+</ul>
+
+</div>
+
+
+<div class="vrGrid left oneThird">
+<p><strong>Services for disabled passengers</strong></p>
+
+<ul>
+	<li>2 wheelchair spaces</li>
+	<li>accessible toilet</li>
+	<li>lift for easy boarding</li>
+</ul>
+
+<p><a href="/cs/vr/en/vammaispalvelut_en" class="fwckembeddedlink">See services for the disabled</a></p>
+</div>
+
+
+<div class="vrGrid left oneThird">
+<p><b>First Class services</b></p>
+
+<ul>
+	<li>daily newspapers in Finnish, Russian and English</li>
+	<li>A snack served at the seat</li>
+	<li>coffee and tea are available at a self-service counter</li>
+	<li>power outlets</li>
+</ul>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<div class='moduleContent'>
+				
+				
+				<p><a id="Passenger car album" name="Passenger car album"></a></p>
+
+<p>&nbsp;</p>
+
+<h2>Passenger car album</h2>
+
+<p>
+	<img style='float:left;margin-right:15px' class="capty" alt='Allegro kokoonpano' src="/cs/vr/img/d/1/1/Allegro-kopio_En.png?blobnocache=false"  />
+	</p>
+<p>&nbsp;</p>
+
+<p>More information: <span class="fwckembeddedlink"><a href="/cs/vr/en/allegro_en" class="fwckembeddedlink">
+		
+		<img style='float:right;margin-left:15px' src="/cs/vr/img/icon/see_passenger_car_album.png?blobnocache=false" alt=''/>
+</a></span></p>
+
+</div>
+
+
+
+<div class='moduleContent'>
+				
+				
+				<p><a id="Restaurant services" name="Restaurant services"></a></p>
+
+<p>&nbsp;</p>
+
+<h2>Restaurant services</h2>
+
+</div>
+
+
+
+<div class='moduleContent'>
+				
+				
+				<p>
+	
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/vr_allegro_ravintola_2.jpg?blobnocache=false"  />
+	</p>
+
+</div>
+
+
+
+<div class='moduleContent'>
+				
+				
+				
+
+<div class='fourth'>
+
+
+<div class="vrGrid left fullWidth">
+<table border="1" cellpadding="1" cellspacing="1" class="noStyle" style="width: 700px;">
+	<tbody>
+		<tr>
+			<td>
+			<p>
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/bistro_allegro.jpg?blobnocache=false"  />
+	</p>
+			</td>
+			<td>
+			<h2>Bistro Allegro</h2>
+
+			<ul>
+				<li>on the Allegro train</li>
+				<li>you can enjoy the culinary delights of Finnish and Russian cuisine</li>
+				<li>several choices for breakfast, snack and dinner</li>
+				<li>A snack served at your seat is included in the fare for First Class passengers</li>
+				<li>on busier departures a sales trolley with a variety of things to eat and drink serves the entire train.</li>
+			</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<div class='moduleContent'>
+				
+				
+				<p>&nbsp;</p>
+
+<p><em>Allegro&trade; is a registered trademark.</em></p>
+
+</div>
+
+
+
+
+									
+								</div>
+							</div>
+							<div class='second'>
+								
+								<div class='boxContent full nomobile notablet'>
+								
+							
+								
+								
+								</div>
+							
+									
+								<div class='module full'>
+								
+								
+				
+
+
+<div class='moduleContent'>
+
+
+						
+
+
+
+<div class='fourth articleContainer'>
+	
+	
+	<div class="textLiftVertical">
+		<div class="textLiftVerticalImg">	
+		
+	<img  class="" alt='' src="/cs/vr/img/d/1/1/smolnan_luostari.png?blobnocache=false"  />
+	
+		</div>
+		
+		<h4 class="heading">Current tips for St. Petersburg</h4>
+		<p>
+	Find the city&rsquo;s most interesting events on the Visit Petersburg website.</p>
+<p>
+	<a href="http://www.visit-petersburg.ru/en/" target="_blank">Visit Petersburg</a></p>
+
+	</div>
+</div>
+
+	
+
+</div>
+
+
+
+<div class='moduleContent'>
+
+
+						
+
+
+
+<div class='fourth articleContainer'>
+	
+	
+	<div class="textLiftVertical">
+		<div class="textLiftVerticalImg">	
+		
+		</div>
+		
+		<h4 class="heading">Tax-free refunds onboard trains</h4>
+		<p>Passengers entitled to tax-free refunds can cash in e-Taxfree and Global Blue tax-free forms on all Allegro and Tolstoi trains. Global Blue&rsquo;s refunds are paid in cash before Kouvola railway station onboard trains departing for Russia. e-Taxfree&rsquo;s refunds are paid in cash before Vainikkala railway station. Have your tax free forms, sealed purchases and passport ready. 
+<a href="/cs/vr/doc/Global%20Blue%20Tax%20Free.pdf">Read more from the Global Blue leaflet</a>
+ (in English and Russian)</p>
+
+<p>For additional information on currency exchange and tax-free refunds, go to the websites of the service operators: <a href="http://www.e-taxfree.com/" target="_blank">www.e-taxfree.com</a> and <a href="http://www.globalblue.com/" target="_blank">www.globalblue.com</a></p>
+
+	</div>
+</div>
+
+	
+
+</div>
+
+
+
+<div class='moduleContent'>
+
+
+						
+
+
+
+<div class='fourth articleContainer'>
+	
+	
+	<div class="textLiftVertical">
+		<div class="textLiftVerticalImg">	
+		
+		</div>
+		
+		<h4 class="heading">Currency exchange and tax-free refunds</h4>
+		<p>You can exchange currency onboard the train. When travelling to Russia you can purchase rubles easily while sitting in your seat and on the return trip you can exchange your rubles to euros. Currency exchangers change currency onboard while the train is on the Finnish rail network. You can only exchange cash or with a Finnish Debit card.</p>
+
+<p>Currency exchange services are provided by e-Taxfree Nordic Ltd. Exchange rates of the company are very competitive in comparison to other companies in the Helsinki metropolitan area. You may find current exchange rates on: <a href="https://e-taxfree.com/en/MyAccount/Exchange.aspx" target="_blank">www.e-taxfree.com</a></p>
+
+	</div>
+</div>
+
+	
+
+</div>
+
+
+
+
+
+								
+							</div>
+							</div>
+						</div>	
+					</div>
+				</div>
+			<div class='clear'></div>
+			</div>
+		</div>
+		
+<div class='bottomNav'>
+	<div class='bottomNavContent'>	
+		  
+		<div class="bottomNav_left">
+			<img src="/cs/vrweb/images/asiakaspalvelu.png" alt="Asiakaspalvelu"/>
+			<h2>Need help?</h2>
+			<p>Our customer service will help you</p>
+		</div>
+	</div>
+</div>	
+
+
+<!-- script -->
+
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K78ZHH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K78ZHH');</script>
+<!-- End Google Tag Manager -->
+									
+<footer id='pageFooter'>
+	<div class='footerContent'> 
+	
+		<div class="footerColumns">
+	<div class="columnWrapper">
+	
+		<div class="column rightLine leftLine onefifth">
+			<nav class="footerNav">
+				<ul class="linklist icons">
+					
+						
+
+
+
+
+				<li>	
+
+
+		
+		
+		<a  href="/cs/vr/en/miten_voimme_auttaa_en">
+		
+		<img  src="/cs/vr/img/icon/otayhteytta_footer_ikoni.png?blobnocache=false" alt=''/>
+
+		<span>Contacts &raquo;</span></a>
+	
+</li>
+
+
+				<li>	
+
+
+		
+		
+		<a  href="/cs/vr/en/junamatkustuksen_abc_en">
+		
+		<img  src="/cs/vr/img/icon/abc_footer_ikoni.png?blobnocache=false" alt=''/>
+
+		<span>Train travel &raquo;</span></a>
+	
+</li>
+
+
+
+				</ul>
+			</nav>
+		</div>
+		
+		<div class="column rightLine leftLine onefifth">
+			<nav class="footerNav">
+				<ul class="linklist icons">
+					
+					
+
+
+
+				<li>	
+
+
+		
+		
+		<a  href="/cs/vr/en/ukk_en">
+		
+		<img  src="/cs/vr/img/icon/ukk_footer_ikoni.png?blobnocache=false" alt=''/>
+
+		<span>Frequently asked questions &raquo;</span></a>
+	
+</li>
+
+
+				<li>	
+
+
+		
+		
+		<a  href="/cs/vr/en/long-distance_timetables">
+		
+		<img  src="/cs/vr/img/icon/ajankohtaista_footer_ikoni.png?blobnocache=false" alt=''/>
+
+		<span>Timetables &raquo;</span></a>
+	
+</li>
+
+
+	
+
+					
+				</ul>
+			</nav>
+		</div>
+		
+		
+		
+		<div class="column rightLine leftLine onefifth fCompany">
+			<nav class="footerNav">
+				<ul class="linklist icons">
+					
+				
+
+	
+				<li>	
+
+
+		
+		
+		<a  href="/cs/vr/en/yrityspalvelut_en">
+		
+		<img  src="/cs/vr/img/icon/yrityspalvelut_footer_ikoni.png?blobnocache=false" alt=''/>
+
+		<span>Business services &raquo;</span></a>
+	
+</li>
+
+	
+				<li>	
+
+
+		
+		
+		<a  href="/cs/vr/en/anna_palautetta_en">
+		
+		<img  src="/cs/vr/img/icon/annapalautetta_footer_ikoni.png?blobnocache=false" alt=''/>
+
+		<span>Send feedback &raquo;</span></a>
+	
+</li>
+
+
+	
+
+					
+					
+				</ul>
+			</nav>
+		</div>
+		
+		
+		
+		
+		
+	</div>
+	<div class="columnWrapper thinnerColumns">	
+			
+			<div class="column leftLine rightLine">
+				<nav class="footerNav">
+					<h2>VR-Group</h2>
+					<ul class="linklist">
+						
+						
+				
+
+	
+				<li>	
+
+
+<a  href="http://www.vr-konserni.fi/en/index/Servicesforthemedia.html">
+
+<span>News &raquo;</span></a>
+		
+
+</li>
+
+	
+				<li>	
+
+
+<a  href="http://www.vr-konserni.fi/en/index/VRasemployer.html">
+
+<span>Jobs &raquo;</span></a>
+		
+
+</li>
+
+	
+				<li>	
+
+
+<a  href="http://www.vr-konserni.fi/en/index/vastuullista_toimintaa.html">
+
+<span>The environment &raquo;</span></a>
+		
+
+</li>
+
+	
+				<li>	
+
+
+<a  href="http://www.vrgroup.fi/en/vrgroup/">
+
+<span>VR Group &raquo;</span></a>
+		
+
+</li>
+
+	
+				<li>	
+
+
+<a  href="http://www.vrtranspoint.com/">
+
+<span>VR Transpoint &raquo;</span></a>
+		
+
+</li>
+
+	
+				<li>	
+
+
+<a  href="http://www.vr-rata.fi/en/">
+
+<span>VR Track &raquo;</span></a>
+		
+
+</li>
+
+
+	
+						
+					</ul>
+				</nav>
+			</div>
+			
+			
+			
+			<div class="column leftLine last">
+				<div class="socialmedia">
+					<nav class="footerNav">
+					<h2>Elsewhere on the web</h2>					
+						<ul class="linklist">
+							
+							
+						
+
+
+
+				<li>	
+
+<a  class='facebook' href='https://www.facebook.com/VRyhteisellamatkalla' target="_blank"><span class="icon"></span><span>Facebook &raquo;</span></a>
+	
+
+</li>
+
+
+				<li>	
+
+<a  class='twitter' href='http://www.twitter.com/VRpalvelu' target="_blank"><span class="icon"></span><span>Twitter &raquo;</span></a>
+	
+
+</li>
+
+
+				<li>	
+
+<a  class='instagram' href='https://www.instagram.com/vrmatkalla/' target="_blank"><span class="icon"></span><span>Instagram &raquo;</span></a>
+	
+
+</li>
+
+
+				<li>	
+
+<a  class='youtube' href='https://www.youtube.com/user/TheVRChannel?sub_confirmation=1' target="_blank"><span class="icon"></span><span>Youtube &raquo;</span></a>
+	
+
+</li>
+
+
+				<li>	
+
+<a  class='' href='/cs/vr/en/vr_sosiaalisessa_mediassa_en' target="_self"><span class="icon"></span><span>VR on social media &raquo;</span></a>
+	
+
+</li>
+
+
+	
+
+							
+						</ul>
+					</nav>
+				</div>
+			
+			
+		</div>
+	</div>
+</div>		
+</div>
+</footer>
+
+<div class="alaNaviWrapper">
+<div class="alaNaviContainer">
+<div class="alaNaviLeft left">
+							
+	
+		<ul class="alaNaviLista">
+		
+
+	
+				<li>	
+
+		
+<a class="link internal"  href='/cs/vr/en/privacy_statement' target="_self">Privacy statement</a>
+
+</li>
+
+
+	
+</ul>
+</div>
+<div class="alaNaviRight right">© VR Group 2016</div>				
+
+</div>
+</div>
+
+
+
+<script type="text/javascript">
+
+function getCookie(cname)
+{
+var name = cname + "=";
+var ca = document.cookie.split(';');
+for(var i=0; i<ca.length; i++)
+  {
+  var c = ca[i].trim();
+  if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+  }
+return "";
+} 
+var serverTime;
+	$(function(){
+		try{
+        $.ajax({
+          url: "/cs/vr/rest/bulletin?locale=en",
+          dataType: "json",
+          data: {
+            channel: "VRfi",
+            mode: "live"
+          }}).done(
+        		  function( data, status, resp ) { 
+        	 
+        	  $.each(data.arr, function(i, item) {
+        		  var display = item.display.substring(1, item.display.length-1).split(",");
+	              var cssClass = item.type.toLowerCase();
+	              var message = item.message +" ";
+	              var link ="";
+	              
+	              if(item.linkUrl!="" && item.linkText!="")
+	              {
+	            	link = "<a href='"+item.linkUrl+"'>"+item.linkText+"</a>";
+	            	message = message + link;
+	              }
+	              if(getCookie("vrbulletin_"+item.id)!="1"){
+		              if($.inArray("Header", display)!=-1)
+					  {
+		              	VRBulletin.displayVRBulletin($("#header .headerContents .infoMessages"), item.title, message, cssClass,"",item.id);
+					  }
+		              
+		              if($.inArray("Matkahaku", display)!=-1)
+		              {
+		            	  cssClass +=" matkahakuBulletin";
+		                  VRBulletin.displayVRBulletin($(".matkahaku .tabi .infoMessages").not(".matkahakuMiddle .infoMessages, .ignoreBulletin .infoMessages"), item.title, message, cssClass, "hideMatkahakuBulletin",item.id);
+		                  VRBulletin.displayVRBulletin($(".hkal .tabi .infoMessages").not(".matkahakuMiddle .infoMessages, .ignoreBulletin .infoMessages"), item.title, message, cssClass, "hideMatkahakuBulletin",item.id);
+			            	
+		              }
+	              }
+          	});	 
+        	  var dateStr = resp.getResponseHeader('Date');
+         	 var date1 = new Date(Date.parse(dateStr)); 
+         	 serverTime =  ("0" + date1.getHours()).slice(-2) + ":" +("0" + date1.getMinutes()).slice(-2); 
+          }).fail(function(jqXHR, textStatus, errorThrown){
+         
+       	  $.ajax({
+                 url: "/cs/Satellite?pagename=VRWeb/vrweb_querySystemTime",
+                 dataType: "text"}).
+                 done(function(data) { 
+                	 serverTime = data;
+                 });
+       	  }).always(function(jqXHR, textStatus){
+         	 if(serverTime==null || serverTime=="undefined" || serverTime==""){
+        		 var d = new Date();
+        		 var curr_hour = d.getHours();
+        		 var curr_min = d.getMinutes();
+        		 serverTime = ("0" + curr_hour).slice(-2) + ":" +("0" + curr_min).slice(-2);
+        		
+        	 }
+        	
+         });
+		}
+		catch(err){
+			
+			 var d = new Date();
+    		 var curr_hour = d.getHours();
+    		 var curr_min = d.getMinutes();
+    		 serverTime = ("0" + curr_hour).slice(-2) + ":" +("0" + curr_min).slice(-2);
+    		
+		}
+      
+	});
+
+</script>
+
+
+		
+	</body>
+</html>
+

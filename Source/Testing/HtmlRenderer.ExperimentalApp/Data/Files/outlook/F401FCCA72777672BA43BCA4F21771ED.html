@@ -1,0 +1,539 @@
+
+<!doctype html>
+<!--[if lt IE 7 ]><html class="ie ie6 lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7 lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8 lt-ie9" lang="en"> <![endif]-->
+<!--[if IE 9 ]><html class="ie ie9 gt-ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en">
+<head id="ctl00_Head1" lang="en"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><link rel="stylesheet" type="text/css" href="/WorkArea/FrameworkUI/css/ektron.stylesheet.ashx?id=-1759591071+1831813829+-845549574+-1510701721+-205454697+1346646193" /><script type="text/javascript" src="/WorkArea/FrameworkUI/js/ektron.javascript.ashx?id=-1028355414+1948574407+-1388997516+2009761168+27274999+1979897163+-422906301+-1818005853+-1008700845+-1253165105+-1735369984+372672004+-991739241+-131183629+1236513420+-1084101322+423378070+-17975867+1338359439"></script><script type="text/javascript" src="/WorkArea/FrameworkUI/js/ektron.javascript.ashx?id=49230196"></script><script type="text/javascript" src="/WorkArea/FrameworkUI/js/ektron.javascript.ashx?id=659787066+-1965253052"></script>
+	<script type="text/javascript">
+	    var _gaq = _gaq || [];
+	    _gaq.push(['_setAccount', 'UA-22381036-1']);
+	    _gaq.push(['_trackPageview']);
+	    (function () {
+	        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	    })();
+    </script>
+	<script id="ektronTechFunctions" type="text/javascript" > 
+		<!--//--><![CDATA[//><!--
+		function remove_thickbox(redirectUrl)
+		{ 
+			if( redirectUrl != '' )
+			{
+				window.parent.document.location.href = redirectUrl;
+			}
+			closeWorkarea();
+		}
+
+		// Closes the workarea if it is open
+		function closeWorkarea()
+		{
+			//var sitePath = '';
+			var url = 'close.html';
+			
+			try{ 
+				   window.open( url,'Admin400','toolbar=0,location=0,scrollbars=0,width=1,height=1'); return false;
+			}catch(err){
+				// do nothing 
+			}
+		}
+		
+		function open_window(width,height,url){
+			window.open(url,"newWin","status=0,toolbar=0,location=0,scrollbars=0,resizable=0,width="+width+", height="+height);
+		}
+		
+		function ecmPopUpWindow(url, hWind, nWidth, nHeight, nScroll, nResize) {
+			var popupwin, cToolBar;
+			cToolBar = 'toolbar=0,location=0,directories=0,status=' + nResize + ',menubar=0,scrollbars=' + nScroll + ',resizable=' + nResize + ',width=' + nWidth + ',height=' + nHeight;
+			popupwin = window.open(url, hWind, cToolBar);
+			return popupwin;
+		}
+		
+		$ektron(document).ready(function() { 
+			
+		        
+                        // Example 1 - assigns modal window to #dialog1 id
+			//$ektron('#dialog1').modal(); 
+			 
+			// Example 2 - assigns modal window to #loginDialog id & uses callbacks
+			$ektron('#loginDialog').modal({ 
+				trigger: '.loginlink', 
+				modal: true, 
+				onShow: function(hash) { 
+					/* callback executed via a trigger click using Ektron library slideDown animation */ 
+					hash.w.slideDown(); 
+				}, 
+				onHide: function(hash) { 
+					/* callback executed on window hide using Ektron Library remove method. */ 
+					hash.w.slideUp("slow",function() { 
+						if(hash.o) hash.o.remove();  
+					});
+				}
+                        
+			});
+			
+			$ektron(':input#ctl00_SiteLogin1_loginControl_UserName').keydown(function(e){
+				var objUserName = $ektron(':input#ctl00_SiteLogin1_loginControl_UserName').val();
+				if (objUserName!=null)
+				{
+					var keyCode;
+					if (window.event) // IE
+					{
+						keyCode = event.keyCode;
+					}
+					else if (event.which) // Netscape/Firefox/Opera
+					{
+						keyCode = event.which;
+					}
+					if ((keyCode==13) || (e.keyCode == 13))
+					{
+						$ektron(':input#ctl00_SiteLogin1_loginControl_LoginButton').focus();
+						$ektron(':input#ctl00_SiteLogin1_loginControl_LoginButton').click();
+						document.form1[0].ctl00_SiteLogin1_loginControl_LoginButton.click();
+						return false;
+					}
+				}
+			});
+			
+			$ektron(':input#ctl00_SiteLogin1_loginControl_Password').keydown(function(e){
+				var objPassword = $ektron(':input#ctl00_SiteLogin1_loginControl_Password').val();
+				if (objPassword!=null)
+				{
+					var keyCode;
+					if (window.event) // IE
+					{
+						keyCode = event.keyCode;
+					}
+					else if (event.which) // Netscape/Firefox/Opera
+					{
+						keyCode = event.which;
+					}
+					if ((keyCode==13) || (e.keyCode == 13))
+					{
+						$ektron(':input#ctl00_SiteLogin1_loginControl_LoginButton').focus();
+						$ektron(':input#ctl00_SiteLogin1_loginControl_LoginButton').click();
+						document.form1[0].ctl00_SiteLogin1_loginControl_LoginButton.click();
+						return false;
+					}
+				}
+			});
+			
+			$ektron('.search_input').keydown(function(e){
+				if(e.keyCode == 188 || e.keyCode == 190){
+					return false;
+				}
+				if (e.keyCode == 13) {
+					$ektron('.input_search_btn').click();
+					return false;
+				}
+			});
+		});
+		function clearSearchText() {
+			if (document.getElementById('txtSearch').value != "") document.getElementById('txtSearch').value = "";
+		}
+
+		function checkKeycode(event) {
+			var keycode;
+			if (window.event) // IE
+				keycode = event.keyCode;
+			else if (event.which) // Netscape/Firefox/Opera
+				keycode = event.which;
+			if (keycode == 13) {
+				CallSearchPage();
+				return false;
+			}
+		}
+
+		function CallSearchPage() {
+			var objSearchText = document.getElementById('txtSearch');
+			var searchText;
+
+			if ((objSearchText != null) && (objSearchText != "")) {
+				searchText = objSearchText.value;
+				searchText = searchText.replace(/</gi, "< ");
+				searchText = searchText.replace(/>/gi, " >");
+				objSearchText.value = searchText;
+			}
+			window.location.href = document.getElementsByTagName('base')[0].href + "search.aspx?searchtext=" + searchText.replace('alert', '').replace('confirm', '');
+			//Properties set here- search text,Orderby, FolderId, and SearchFor
+		}
+	//--><!]]>
+	</script>
+	
+<link rel="Stylesheet" href="/css/c2.css" type="text/css" /><link rel="Stylesheet" href="/css/officeLocations.css" /><link rel="Stylesheet" href="../css/print.css" media="print" type="text/css" />
+
+	<script type="text/javascript" src="/js/custom.js"></script>
+<base href="http://www.acosta.com/" /><base href="http://www.acosta.com/" /><meta name="description" content="Acosta associates can use this page to access MyAcosta, our intranet site, their email via the web, and emergency information." /><title>
+	Acosta: Associate Information
+</title></head>
+<body>
+	 <form method="post" action="/Associate_Log_in/Associate_Log_in.aspx" id="aspnetForm" autocomplete="false">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="EktronClientManager" id="EktronClientManager" value="-1759591071,-1028355414,1948574407,-1388997516,2009761168,27274999,1979897163,-422906301,-1818005853,-1008700845,1831813829,-845549574,-1253165105,-1510701721,-1735369984,372672004,-991739241,-131183629,1236513420,-1084101322,423378070,-17975867,1338359439,49230196,-205454697,1346646193,659787066,-1965253052" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKLTkyOTI1OTE0MA9kFgJmD2QWAgIDEGRkFgICBQ9kFgQCAw9kFgICAg9kFgJmD2QWAgIBDxYCHgVjbGFzcwUQZHJvcHpvbmUgUEJDbGVhchYCAgMPFgIeC18hSXRlbUNvdW50AgEWAmYPZBYCAgEPFgIfAAUJUEJWaWV3aW5nFgICAQ9kFgICAw8WAh8BAgFkAgUPZBYCAgIPZBYCZg9kFgICAQ8WAh8ABRBkcm9wem9uZSBQQkNsZWFyFgICAw8WAh8BAgEWAmYPZBYCAgEPFgIfAAUJUEJWaWV3aW5nFgICAQ9kFgICAw8WAh8BAgFkGAIFcGN0bDAwJENvbnRlbnRQbGFjZUhvbGRlcjEkRHJvcFpvbmUxJGNvbHVtbkRpc3BsYXkkY3RsMDAkY29udHJvbGNvbHVtbiRjdGwwMCRXaWRnZXRIb3N0JFdpZGdldEhvc3Rfd2lkZ2V0JFZpZXdTZXQPD2RmZAVwY3RsMDAkQ29udGVudFBsYWNlSG9sZGVyMSREcm9wWm9uZTQkY29sdW1uRGlzcGxheSRjdGwwMCRjb250cm9sY29sdW1uJGN0bDAwJFdpZGdldEhvc3QkV2lkZ2V0SG9zdF93aWRnZXQkVmlld1NldA8PZGZk+T4ZwvR9ZOYT4i4x+lWmdCT0rjPQe5xCjzSRPLvDF1I=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=wTFgnhPHtGejWzEvJVrGjO_beygD-EBcR33FxkntHREFMJqvdlnASsZ5PlP01icbjV4ek6z5hElcQkPMFYvU9OpwvBHAzGCCtRaGkR6hMk41&amp;t=635328563960000000" type="text/javascript"></script>
+
+
+<script src="/ScriptResource.axd?d=iodSCUjDEpfCNltBINXcK0QPWnFxkxMYUY7ZpbSnXoUdfS5qFGxqrX2LPUK0UVlxG7Zp9S1C__AIveBjJtMngYyk2kvtpElWAOTfqnrL6ANcbPLCZJ2EBnSlIX6f6shO4cfC4BYPvOPUv-wroGyTQ7LFsHR0DPf9PlsO-w3FH74SXmcN-45tHBYCbDdkjkCX0&amp;t=42a7acab" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<script src="/ScriptResource.axd?d=ZwR4v90m7shUlSgyW3h41WMs0259IegyEc7zSi9KhdQRLc7OOtsrIUQgFsP_bWFwgZh2kGYt8BFmVyzv8LbRFxRMNGDe4kbFjNioYox0ZwOh6CIUdTvLQ9kJtKYjZIUNuYBE3YfErHDhshKMQaE7d7mQLt6TvRNpB4dYrQ-ChQFyztJVU8u-ETotaVIvtPbn0&amp;t=42a7acab" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="0F440037" />
+</div>
+	     
+	   <div class="wrapper">
+		<div class="pagebody">
+				<div class="basic_menu noprint" >				 
+				<a href="Home.aspx"><img src="img/logo_top.png" class="logo" /></a>				 
+				<div style="
+								     /* float: right; */
+								     padding-left: 300px; width: 570px
+">
+                
+                <ul><li class="red"><a class="grey" href="/Careers/Home.aspx">CAREERS</a></li><li class="grey"><a class="grey" href="/MediaCenter.aspx">MEDIA CENTER</a><ul><li><a class="grey" href="/MediaCenter.aspx?folderid=122">News Releases</a></li><li><a class="grey" href="/MediaCenter.aspx?folderid=123">Acosta in the News</a></li><li><a class="grey" href="/MediaCenter.aspx?folderid=124">Publications</a></li><li><a class="grey" href="/AwardsRecognition.aspx">Awards/Recognition</a></li></ul></li><li class="grey"><a class="grey" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=224">CONTACT</a><ul><li><a class="grey" href="/Careers/Home.aspx">Careers</a></li><li><a class="grey" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=323">New Client Survey/ Business Inquiry</a></li><li><a class="grey" href="/OfficeLocations.aspx">Office Locations</a></li></ul></li></ul>
+
+				<input type="text" id="txtSearch" name="txtSearch" value="SEARCH" onFocus="clearSearchText();" onkeypress="return checkKeycode(event);" />
+				</div><!--end basic menu--></div>
+				<div class="clearfix2"></div>
+			<div class="menu_top noprint">
+				<!--<a href="Home.aspx"><img src="img/logo_top.png" class="logo" /></a>-->
+				<div class="menu" style="display:none">
+					<div id="ctl00_fm1">
+	<link type="text/css" rel="stylesheet" href="/css/horizontal.css" /><div class="horizontal"><div class="ekflexmenu" id="e9edebdfa_10737418286_0_ekflexmenu" onmouseover="return (ekFlexMenuPopupMsIn(event));" onmouseout="return (ekFlexMenuPopupMsOut(event));"><div class="ekflexmenu_menu_level_0 ekflexmenu_submenu"><ul class="ekflexmenu_submenu_items" id="e9edebdfa_10737418286_0_submenu_items"><li class="ekflexmenu_menu_level_1 ekflexmenu_submenu ekflexmenu_startlevel" id="e9edebdfa_10737418286_10737418288"><a id="e9edebdfa_10737418286_10737418288_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=51">ABOUT ACOSTA</a><input type="hidden" id="e9edebdfa_10737418286_10737418288_parentid" value="e9edebdfa_10737418286_10737418286" /><ul id="e9edebdfa_10737418286_10737418288_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418295"><a id="e9edebdfa_10737418286_10737418295_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/History.aspx">History</a><input type="hidden" id="e9edebdfa_10737418286_10737418295_parentid" value="e9edebdfa_10737418286_10737418288" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418296"><a id="e9edebdfa_10737418286_10737418296_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=65">Culture</a><input type="hidden" id="e9edebdfa_10737418286_10737418296_parentid" value="e9edebdfa_10737418286_10737418288" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418297"><a id="e9edebdfa_10737418286_10737418297_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/Leadership.aspx">Our Leadership</a><input type="hidden" id="e9edebdfa_10737418286_10737418297_parentid" value="e9edebdfa_10737418286_10737418288" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418399"><a id="e9edebdfa_10737418286_10737418399_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420193">Investor Relations</a><input type="hidden" id="e9edebdfa_10737418286_10737418399_parentid" value="e9edebdfa_10737418286_10737418288" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418298"><a id="e9edebdfa_10737418286_10737418298_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/OurClientsAndCustomers.aspx">Our Clients and Customers</a><input type="hidden" id="e9edebdfa_10737418286_10737418298_parentid" value="e9edebdfa_10737418286_10737418288" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418299"><a id="e9edebdfa_10737418286_10737418299_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=66">Community Involvement</a><input type="hidden" id="e9edebdfa_10737418286_10737418299_parentid" value="e9edebdfa_10737418286_10737418288" /></li><li><a class="ekflexmenu_link" href="/Careers/Home.aspx" target="_self">Careers</a></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418300"><a id="e9edebdfa_10737418286_10737418300_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=67">FAQs</a><input type="hidden" id="e9edebdfa_10737418286_10737418300_parentid" value="e9edebdfa_10737418286_10737418288" /></li></ul></li><li class="ekflexmenu_menu_level_1 ekflexmenu_submenu ekflexmenu_startlevel" id="e9edebdfa_10737418286_10737418289"><a id="e9edebdfa_10737418286_10737418289_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=56">THE ACOSTA DIFFERENCE</a><input type="hidden" id="e9edebdfa_10737418286_10737418289_parentid" value="e9edebdfa_10737418286_10737418286" /><ul id="e9edebdfa_10737418286_10737418289_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418301"><a id="e9edebdfa_10737418286_10737418301_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=61">Why Choose Us?</a><input type="hidden" id="e9edebdfa_10737418286_10737418301_parentid" value="e9edebdfa_10737418286_10737418289" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418302"><a id="e9edebdfa_10737418286_10737418302_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737418488">Client Testimonials</a><input type="hidden" id="e9edebdfa_10737418286_10737418302_parentid" value="e9edebdfa_10737418286_10737418289" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418303"><a id="e9edebdfa_10737418286_10737418303_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/CaseStudies.aspx">Case Studies</a><input type="hidden" id="e9edebdfa_10737418286_10737418303_parentid" value="e9edebdfa_10737418286_10737418289" /></li></ul></li><li class="ekflexmenu_menu_level_1 ekflexmenu_submenu ekflexmenu_startlevel" id="e9edebdfa_10737418286_10737418290"><a id="e9edebdfa_10737418286_10737418290_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/our-channels/">OUR CHANNELS</a><input type="hidden" id="e9edebdfa_10737418286_10737418290_parentid" value="e9edebdfa_10737418286_10737418286" /><ul id="e9edebdfa_10737418286_10737418290_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418304"><a id="e9edebdfa_10737418286_10737418304_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/club-stores/">Club</a><input type="hidden" id="e9edebdfa_10737418286_10737418304_parentid" value="e9edebdfa_10737418286_10737418290" /><ul id="e9edebdfa_10737418286_10737418304_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418351"><a id="e9edebdfa_10737418286_10737418351_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/adw/">Costco - Served by ADW | Acosta</a><input type="hidden" id="e9edebdfa_10737418286_10737418351_parentid" value="e9edebdfa_10737418286_10737418304" /></li></ul></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418305"><a id="e9edebdfa_10737418286_10737418305_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/convenience-stores/">Convenience</a><input type="hidden" id="e9edebdfa_10737418286_10737418305_parentid" value="e9edebdfa_10737418286_10737418290" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418306"><a id="e9edebdfa_10737418286_10737418306_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/drug-stores/">Drug</a><input type="hidden" id="e9edebdfa_10737418286_10737418306_parentid" value="e9edebdfa_10737418286_10737418290" /></li><li><a class="ekflexmenu_link" href="http://www.acostafoodservice.com" target="_self">Foodservice</a></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418308"><a id="e9edebdfa_10737418286_10737418308_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/Our_Channels/Grocery.aspx">Grocery</a><input type="hidden" id="e9edebdfa_10737418286_10737418308_parentid" value="e9edebdfa_10737418286_10737418290" /><ul id="e9edebdfa_10737418286_10737418308_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418339"><a id="e9edebdfa_10737418286_10737418339_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/Our_Channels/Grocery/Blue_Team.aspx">Center Store</a><input type="hidden" id="e9edebdfa_10737418286_10737418339_parentid" value="e9edebdfa_10737418286_10737418308" /></li><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418340"><a id="e9edebdfa_10737418286_10737418340_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/Our_Channels/Grocery/Green_Team.aspx">Fresh Foods</a><input type="hidden" id="e9edebdfa_10737418286_10737418340_parentid" value="e9edebdfa_10737418286_10737418308" /></li><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418341"><a id="e9edebdfa_10737418286_10737418341_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/Our_Channels/Grocery/Red_Team.aspx">HBC/GM/Front-end</a><input type="hidden" id="e9edebdfa_10737418286_10737418341_parentid" value="e9edebdfa_10737418286_10737418308" /></li><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418347"><a id="e9edebdfa_10737418286_10737418347_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/Gold_Team.aspx">Hispanic</a><input type="hidden" id="e9edebdfa_10737418286_10737418347_parentid" value="e9edebdfa_10737418286_10737418308" /></li></ul></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418309"><a id="e9edebdfa_10737418286_10737418309_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/mass-merchandisers/">Mass Merchandisers</a><input type="hidden" id="e9edebdfa_10737418286_10737418309_parentid" value="e9edebdfa_10737418286_10737418290" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418310"><a id="e9edebdfa_10737418286_10737418310_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/military/">Military</a><input type="hidden" id="e9edebdfa_10737418286_10737418310_parentid" value="e9edebdfa_10737418286_10737418290" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418311"><a id="e9edebdfa_10737418286_10737418311_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/naturalspecialtysales/">Natural/Specialty Sales</a><input type="hidden" id="e9edebdfa_10737418286_10737418311_parentid" value="e9edebdfa_10737418286_10737418290" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418344"><a id="e9edebdfa_10737418286_10737418344_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/Pet.aspx">Pet</a><input type="hidden" id="e9edebdfa_10737418286_10737418344_parentid" value="e9edebdfa_10737418286_10737418290" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418312"><a id="e9edebdfa_10737418286_10737418312_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/value/">Value</a><input type="hidden" id="e9edebdfa_10737418286_10737418312_parentid" value="e9edebdfa_10737418286_10737418290" /></li></ul></li><li class="ekflexmenu_menu_level_1 ekflexmenu_submenu ekflexmenu_startlevel" id="e9edebdfa_10737418286_10737418291"><a id="e9edebdfa_10737418286_10737418291_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=69">HEADQUARTER SALES</a><input type="hidden" id="e9edebdfa_10737418286_10737418291_parentid" value="e9edebdfa_10737418286_10737418286" /><ul id="e9edebdfa_10737418286_10737418291_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418313"><a id="e9edebdfa_10737418286_10737418313_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=70">Customer Relationship Management</a><input type="hidden" id="e9edebdfa_10737418286_10737418313_parentid" value="e9edebdfa_10737418286_10737418291" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418314"><a id="e9edebdfa_10737418286_10737418314_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=71">Category Management</a><input type="hidden" id="e9edebdfa_10737418286_10737418314_parentid" value="e9edebdfa_10737418286_10737418291" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418316"><a id="e9edebdfa_10737418286_10737418316_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=82">Sales Support</a><input type="hidden" id="e9edebdfa_10737418286_10737418316_parentid" value="e9edebdfa_10737418286_10737418291" /></li></ul></li><li class="ekflexmenu_menu_level_1 ekflexmenu_submenu ekflexmenu_startlevel" id="e9edebdfa_10737418286_10737418292"><a id="e9edebdfa_10737418286_10737418292_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/MarketingSolutions/">MARKETING SOLUTIONS</a><input type="hidden" id="e9edebdfa_10737418286_10737418292_parentid" value="e9edebdfa_10737418286_10737418286" /><ul id="e9edebdfa_10737418286_10737418292_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418369"><a id="e9edebdfa_10737418286_10737418369_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="http://www.mosaic.com">Mosaic</a><input type="hidden" id="e9edebdfa_10737418286_10737418369_parentid" value="e9edebdfa_10737418286_10737418292" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418372"><a id="e9edebdfa_10737418286_10737418372_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="http://www.frontlinemarketing.com">Mosaic FrontLine</a><input type="hidden" id="e9edebdfa_10737418286_10737418372_parentid" value="e9edebdfa_10737418286_10737418292" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418373"><a id="e9edebdfa_10737418286_10737418373_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="http://www.promodepot.com">Mosaic Promo Depot</a><input type="hidden" id="e9edebdfa_10737418286_10737418373_parentid" value="e9edebdfa_10737418286_10737418292" /></li></ul></li><li class="ekflexmenu_menu_level_1 ekflexmenu_submenu ekflexmenu_startlevel" id="e9edebdfa_10737418286_10737418293"><a id="e9edebdfa_10737418286_10737418293_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=78">RETAIL SERVICES</a><input type="hidden" id="e9edebdfa_10737418286_10737418293_parentid" value="e9edebdfa_10737418286_10737418286" /><ul id="e9edebdfa_10737418286_10737418293_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418325"><a id="e9edebdfa_10737418286_10737418325_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=79">Continuity Services</a><input type="hidden" id="e9edebdfa_10737418286_10737418325_parentid" value="e9edebdfa_10737418286_10737418293" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418326"><a id="e9edebdfa_10737418286_10737418326_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=80">Resets</a><input type="hidden" id="e9edebdfa_10737418286_10737418326_parentid" value="e9edebdfa_10737418286_10737418293" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418327"><a id="e9edebdfa_10737418286_10737418327_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=81">Projects</a><input type="hidden" id="e9edebdfa_10737418286_10737418327_parentid" value="e9edebdfa_10737418286_10737418293" /></li></ul></li><li class="ekflexmenu_menu_level_1 ekflexmenu_submenu ekflexmenu_startlevel" id="e9edebdfa_10737418286_10737418294"><a id="e9edebdfa_10737418286_10737418294_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=82">BUSINESS PROCESS SOLUTIONS</a><input type="hidden" id="e9edebdfa_10737418286_10737418294_parentid" value="e9edebdfa_10737418286_10737418286" /><ul id="e9edebdfa_10737418286_10737418294_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418329"><a id="e9edebdfa_10737418286_10737418329_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=84">Order-to-Cash</a><input type="hidden" id="e9edebdfa_10737418286_10737418329_parentid" value="e9edebdfa_10737418286_10737418294" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418352"><a id="e9edebdfa_10737418286_10737418352_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737419937">EDI</a><input type="hidden" id="e9edebdfa_10737418286_10737418352_parentid" value="e9edebdfa_10737418286_10737418294" /></li></ul></li><li class="ekflexmenu_menu_level_1 ekflexmenu_submenu ekflexmenu_startlevel" id="e9edebdfa_10737418286_10737418430"><a id="e9edebdfa_10737418286_10737418430_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420373">BUSINESS INTELLIGENCE</a><input type="hidden" id="e9edebdfa_10737418286_10737418430_parentid" value="e9edebdfa_10737418286_10737418286" /><ul id="e9edebdfa_10737418286_10737418430_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418431"><a id="e9edebdfa_10737418286_10737418431_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420374">Intelligence</a><input type="hidden" id="e9edebdfa_10737418286_10737418431_parentid" value="e9edebdfa_10737418286_10737418430" /><ul id="e9edebdfa_10737418286_10737418431_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418432"><a id="e9edebdfa_10737418286_10737418432_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420376">Market/Retailer Intelligence</a><input type="hidden" id="e9edebdfa_10737418286_10737418432_parentid" value="e9edebdfa_10737418286_10737418431" /></li><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418433"><a id="e9edebdfa_10737418286_10737418433_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420375">Category/Brand Intelligence</a><input type="hidden" id="e9edebdfa_10737418286_10737418433_parentid" value="e9edebdfa_10737418286_10737418431" /></li><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418452"><a id="e9edebdfa_10737418286_10737418452_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420423">Strategic Insights</a><input type="hidden" id="e9edebdfa_10737418286_10737418452_parentid" value="e9edebdfa_10737418286_10737418431" /></li></ul></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418435"><a id="e9edebdfa_10737418286_10737418435_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420377">Strategic Consulting</a><input type="hidden" id="e9edebdfa_10737418286_10737418435_parentid" value="e9edebdfa_10737418286_10737418430" /></li><li class="ekflexmenu_menu_level_2 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418436"><a id="e9edebdfa_10737418286_10737418436_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420378">Space Management</a><input type="hidden" id="e9edebdfa_10737418286_10737418436_parentid" value="e9edebdfa_10737418286_10737418430" /><ul id="e9edebdfa_10737418286_10737418436_submenu_items" class="ekflexmenu_submenu_items_hidden"><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418437"><a id="e9edebdfa_10737418286_10737418437_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420379">Planogram Development</a><input type="hidden" id="e9edebdfa_10737418286_10737418437_parentid" value="e9edebdfa_10737418286_10737418436" /></li><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418438"><a id="e9edebdfa_10737418286_10737418438_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420380">Space Analytics</a><input type="hidden" id="e9edebdfa_10737418286_10737418438_parentid" value="e9edebdfa_10737418286_10737418436" /></li><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418439"><a id="e9edebdfa_10737418286_10737418439_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420381">Product Imaging</a><input type="hidden" id="e9edebdfa_10737418286_10737418439_parentid" value="e9edebdfa_10737418286_10737418436" /></li><li class="ekflexmenu_menu_level_3 ekflexmenu_submenu" id="e9edebdfa_10737418286_10737418440"><a id="e9edebdfa_10737418286_10737418440_button" tabindex="0" onkeydown="return (ekFlexMenuKey(event));" onblur="return (ekFlexMenuMsOut(event));" onfocus="return (ekFlexMenuMsOvr(event));" onclick="return (ekFlexMenuClk(event));" onmouseover="return (ekFlexMenuMsOvr(event));" onmouseout="return (ekFlexMenuMsOut(event));" class="ekflexmenu_button" href="/WorkArea/linkit.aspx?LinkIdentifier=ID&amp;ItemID=10737420382">Education</a><input type="hidden" id="e9edebdfa_10737418286_10737418440_parentid" value="e9edebdfa_10737418286_10737418436" /></li></ul></li></ul></li></ul></div></div></div><script language="JavaScript" type="text/javascript">
+			// Pass server control properties, etc., to Javascript:
+			if (("undefined" == typeof window.ekFlexMenu_ekflexmenuArray)
+				|| (null == window.ekFlexMenu_ekflexmenuArray)) {
+				window.ekFlexMenu_ekflexmenuArray = new Array;
+			}
+			window.ekFlexMenu_ekflexmenuArray[window.ekFlexMenu_ekflexmenuArray.length] = "e9edebdfa_10737418286_0";
+			//
+			if (("undefined" == typeof window.ekFlexMenu_swRev)
+			|| (null == window.ekFlexMenu_swRev)) {
+			window.ekFlexMenu_swRev = new Array;
+			}
+			window.ekFlexMenu_swRev["e9edebdfa"] = "8.0.0.073";
+			//
+			if (("undefined" == typeof window.ekFlexMenu_startupSubmenuBranchId)
+			|| (null == window.ekFlexMenu_startupSubmenuBranchId)) {
+			window.ekFlexMenu_startupSubmenuBranchId = new Array;
+			}
+			window.ekFlexMenu_startupSubmenuBranchId["e9edebdfa"] = "";
+			//
+			if (("undefined" == typeof window.ekFlexMenu_autoCollapseBranches)
+			|| (null == window.ekFlexMenu_autoCollapseBranches)) {
+			window.ekFlexMenu_autoCollapseBranches = new Array;
+			}
+			window.ekFlexMenu_autoCollapseBranches["e9edebdfa"] = "true";
+			//
+			if (("undefined" == typeof window.ekFlexMenu_startCollapsed)
+			|| (null == window.ekFlexMenu_startCollapsed)) {
+			window.ekFlexMenu_startCollapsed = new Array;
+			}
+			window.ekFlexMenu_startCollapsed["e9edebdfa"] = "true";
+			//
+			if (("undefined" == typeof window.ekFlexMenu_startWithRootFolderCollapsed)
+				|| (null == window.ekFlexMenu_startWithRootFolderCollapsed)) {
+				window.ekFlexMenu_startWithRootFolderCollapsed = new Array;
+			}
+			window.ekFlexMenu_startWithRootFolderCollapsed["e9edebdfa"] = "false";
+			//
+			if (("undefined" == typeof window.ekFlexMenu_masterControlIdHash)
+				|| (null == window.ekFlexMenu_masterControlIdHash)) {
+				window.ekFlexMenu_masterControlIdHash = new Array;
+			}
+			window.ekFlexMenu_masterControlIdHash["e9edebdfa"] = "";
+			
+			//
+			if (("undefined" == typeof window.ekFlexMenu_ajaxEnabled)
+			|| (null == window.ekFlexMenu_ajaxEnabled)) {
+			window.ekFlexMenu_ajaxEnabled = new Array;
+			}
+			window.ekFlexMenu_ajaxEnabled["e9edebdfa"] = "false";
+			//
+			if (("undefined" == typeof window.ekFlexMenu_ajaxWSPath)
+			|| (null == window.ekFlexMenu_ajaxWSPath)) {
+			window.ekFlexMenu_ajaxWSPath = new Array;
+			}
+			window.ekFlexMenu_ajaxWSPath["e9edebdfa"] = "/WorkArea/webservices/";
+			// 
+			if (("undefined" == typeof window.ekFlexMenu_displayXslt)
+			|| (null == window.ekFlexMenu_displayXslt)) {
+			window.ekFlexMenu_displayXslt = new Array;
+			}
+			window.ekFlexMenu_displayXslt["e9edebdfa"] = "/xsl/FMMasterDemo.xsl";
+			//
+			if (("undefined" == typeof window.ekFlexMenu_cacheInterval)
+			|| (null == window.ekFlexMenu_cacheInterval)) {
+			window.ekFlexMenu_cacheInterval = new Array;
+			}
+			window.ekFlexMenu_cacheInterval["e9edebdfa"] = "600";
+			//
+			//////////////////////////////////////////////////////////////////
+			// Add event handler calling functions:
+			//   Test to ensure that ekFlexMenu is valid/reachable (this is needed 
+			//   to prevent intermittent Javascript errors that can occur if user
+			//   causes event to fire while page is being torn down (i.e. a link is
+			//   clicked, browser is fetching new page, movement causes mouse-out...):
+			function ekFlexMenu_IsValid(obj) {
+				return (("undefined" != typeof obj) && (null != obj));
+			}
+			function ekFlexMenuPopupMsIn(event) {
+				if (ekFlexMenu_IsValid(ekFlexMenu) && ekFlexMenu_IsValid(ekFlexMenu.mouseIn)) {
+					return (ekFlexMenu.mouseIn(event));
+				}
+				return (true);
+			}
+			function ekFlexMenuPopupMsOut(event) {
+				if (ekFlexMenu_IsValid(ekFlexMenu) && ekFlexMenu_IsValid(ekFlexMenu.mouseOut)) {
+					return (ekFlexMenu.mouseOut(event));
+				}
+				return (true);
+			}
+			function ekFlexMenuKey(event) {
+				if (ekFlexMenu_IsValid(ekFlexMenu) && ekFlexMenu_IsValid(ekFlexMenu.menuBtnKeyHdlr)) {
+					return (ekFlexMenu.menuBtnKeyHdlr(event));
+				}
+				return (true);
+			}
+			function ekFlexMenuMsOut(event) {
+				if (ekFlexMenu_IsValid(ekFlexMenu) && ekFlexMenu_IsValid(ekFlexMenu.menuBtnMouseOutHdlr)) {
+					return (ekFlexMenu.menuBtnMouseOutHdlr(event));
+				}
+				return (true);
+			}
+			function ekFlexMenuMsOvr(event) {
+				if (ekFlexMenu_IsValid(ekFlexMenu) && ekFlexMenu_IsValid(ekFlexMenu.menuBtnMouseOverHdlr)) {
+					return (ekFlexMenu.menuBtnMouseOverHdlr(event));
+				}
+				return (true);
+			}
+			function ekFlexMenuClk(event) {
+				if (ekFlexMenu_IsValid(ekFlexMenu) && ekFlexMenu_IsValid(ekFlexMenu.menuBtnClickHdlr)) {
+					return (ekFlexMenu.menuBtnClickHdlr(event));
+				}
+				return (true);
+			}
+		</script>
+</div>
+				</div>
+			</div>
+			<!--end menu top-->
+			<div class="clearfix2"></div>
+			
+				
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ContentPlaceHolder1$PageHost1$ctl02', 'aspnetForm', ['tctl00$ContentPlaceHolder1$DropZone4$updatepanel','','tctl00$ContentPlaceHolder1$DropZone1$updatepanel','','tctl00$ContentPlaceHolder1$DropZone4$columnDisplay$ctl00$controlcolumn$ctl00$WidgetHost$updatepanel','','tctl00$ContentPlaceHolder1$DropZone1$columnDisplay$ctl00$controlcolumn$ctl00$WidgetHost$updatepanel',''], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+
+    <script type="text/javascript" language="JavaScript">
+        Ektron.PBSettings = { 'dontClose': false }
+    </script>
+
+
+
+
+
+
+        <div class="banner_top">
+            
+<div id="ctl00_ContentPlaceHolder1_DropZone4_updatepanel">
+	
+        <div id="ctl00_ContentPlaceHolder1_DropZone4_dzcontainer" class="dropzone PBClear">
+            
+            
+                    <div id="ctl00_ContentPlaceHolder1_DropZone4_columnDisplay_ctl00_zone" class="PBViewing">
+                        <ul id="ctl00_ContentPlaceHolder1_DropZone4_columnDisplay_ctl00_column" class="columnwidgetlist">
+                            
+                            
+                                    <li class="PBItem">
+                                        <div id="ctl00_ContentPlaceHolder1_DropZone4_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_dropcontainer" class="widget">
+    <span id="ctl00_ContentPlaceHolder1_DropZone4_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_lblErrorMessage"></span>
+    <div id="ctl00_ContentPlaceHolder1_DropZone4_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_updatepanel">
+		
+            
+            <div id="ctl00_ContentPlaceHolder1_DropZone4_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_dvContent" class="content">
+                
+        
+        <div id="ctl00_ContentPlaceHolder1_DropZone4_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_WidgetHost_widget_CB">
+			<h1 class="oneline">Associate Information</h1>
+		</div>
+        
+        
+        <span id="ctl00_ContentPlaceHolder1_DropZone4_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_WidgetHost_widget_errorLb"></span>
+    
+            </div>
+        
+	</div>
+</div>
+                                    </li>
+                                
+                        </ul>
+                    </div>
+                
+        </div>
+    
+</div>
+
+
+        </div>
+        <div class="separator_banner"></div>
+        <div class="menu_tools">&nbsp;</div>
+       <div class="col620">
+           
+<div id="ctl00_ContentPlaceHolder1_DropZone1_updatepanel">
+	
+        <div id="ctl00_ContentPlaceHolder1_DropZone1_dzcontainer" class="dropzone PBClear">
+            
+            
+                    <div id="ctl00_ContentPlaceHolder1_DropZone1_columnDisplay_ctl00_zone" class="PBViewing">
+                        <ul id="ctl00_ContentPlaceHolder1_DropZone1_columnDisplay_ctl00_column" class="columnwidgetlist">
+                            
+                            
+                                    <li class="PBItem">
+                                        <div id="ctl00_ContentPlaceHolder1_DropZone1_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_dropcontainer" class="widget">
+    <span id="ctl00_ContentPlaceHolder1_DropZone1_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_lblErrorMessage"></span>
+    <div id="ctl00_ContentPlaceHolder1_DropZone1_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_updatepanel">
+		
+            
+            <div id="ctl00_ContentPlaceHolder1_DropZone1_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_dvContent" class="content">
+                
+        
+        <div id="ctl00_ContentPlaceHolder1_DropZone1_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_WidgetHost_widget_CB">
+			<h1 class="greytxt">Associate Information</h1>
+<div class="associate_box"><a href="http://myacosta.acosta.com/" target="_blank"><img src="img/my_acosta.jpg" /></a> </div>
+<p> </p>
+<div class="clearfix"> </div>
+<p>Acosta’s intranet site, <a class="bold_link" href="http://myacosta.acosta.com/" target="_blank">myAcosta</a>, provides associates with valuable information about the company and its business units, human resources information such as benefits, policies, links to applications such as ATLAS and Concur, and much more.</p>
+<div class="associate_box"><a title="&amp;nbsp;&amp;nbsp;" href="http://outlook.acosta.com" target="_blank" xtitlex="click to access microsoft web access"><img border="0" src="img/btn_owa.jpg" /></a> </div>
+<p> </p>
+<div class="clearfix"> </div>
+<p>Outlook Web Access (OWA) is used to access e-mail, calendars, contacts, tasks, and other Outlook mailbox content remotely via a web browser when associates are out of the office. Outlook e-mails may be accessed from any computer that has an Internet connection by using the following link: <a class="bold_link" href="http://outlook.acosta.com" target="_blank">http://outlook.acosta.com</a> Click here for the <a class="bold_link" href="/uploadedFiles/Content/Associate_Log_in/OWA Reference Guide.pdf" target="_blank">Quick Reference guide</a> or to <a class="bold_link" href="http://www.microsoft.com/exchange/code/OWA/index.html" target="_blank">learn more about OWA.</a> </p>
+<div class="associate_box"><a href="http://emergencyinfo.acosta.com/" target="_blank" xtitlex="click to access emergency information"><img src="img/btn_emergency.jpg" /></a> </div>
+<p> </p>
+<div class="clearfix"> </div>
+<p>Acosta wants to ensure the safety and well being of each associate during a state of emergency or office closure. Current emergencies can be viewed on the <a class="bold_link" href="http://emergencyinfo.acosta.com" target="_blank">Emergency Information page</a>. In an emergency, associates may complete the online associate emergency questionnaire or leave a message on Acosta's Emergency Hotline at <strong>1-866-7ACOSTA</strong> or <strong>1-866-722-6782</strong> and respond to the requested information.</p>
+		</div>
+        
+        
+        <span id="ctl00_ContentPlaceHolder1_DropZone1_columnDisplay_ctl00_controlcolumn_ctl00_WidgetHost_WidgetHost_widget_errorLb"></span>
+    
+            </div>
+        
+	</div>
+</div>
+                                    </li>
+                                
+                        </ul>
+                    </div>
+                
+        </div>
+    
+</div>
+
+
+       </div><!--end main colr-->
+        <div class="clearfix2"></div>
+
+
+		<div class="footer noprint">&#169; Copyright <script type="text/javascript">var d = new Date(); document.write(d.getFullYear());</script>, Acosta, Inc. All Rights Reserved. 
+		 
+		<ul>
+			<li><a href="WorkArea/linkit.aspx?LinkIdentifier=ID&ItemID=223">ASSOCIATE INFORMATION</a> |</li>
+			<li><a href="sitemap.aspx">SITE MAP</a></li>
+			
+		</ul>
+		
+		
+<br/><a href="/privacy_statement.aspx">Privacy Statement  Terms of Use</a><a href="Accessibility_Policy.aspx">&nbsp;&nbsp;Accessibility Policy</a>
+
+		</div>
+        
+        <div id="footerMediaLinks">
+            <ul class="socialMediaLinks"><li><a href="https://www.facebook.com/AcostaSales" title=""><img src="/uploadedImages/Content/_SiteAdministrator/icon_facebook_32px.gif" /></a></li><li><a href="http://www.linkedin.com/company/acosta-sales-&amp;-marketing" title=""><img src="/uploadedImages/Content/_SiteAdministrator/linkedin_icon_32px_x_32px(1).gif" /></a></li><li><a href="https://twitter.com/AcostaSales" title=""><img src="/uploadedImages/Content/_SiteAdministrator/twitter_icon_32px_x_32px.png" /></a></li></ul>
+        </div>
+
+		</div><!--end pagebody-->
+	</div><!--end wrapper-->
+	</form>
+	<script type="text/javascript">
+		$ektron(document).ready(function() {
+			$ektron(".menu .ekflexmenu_menu_level_0 > ul > li").each(function(index) {
+				if ($ektron(this).find('a').html().length < 16) {
+					if (index == 2) {
+						$ektron(this).css('width', '80px');
+					} else if (index == 0) {
+						$ektron(this).css('width', '83px');
+					} else {
+						$ektron(this).css('width', '95px');
+					}
+				} else if ($ektron(this).find('a').html().length < 22) {
+					if (index == 3) {
+						$ektron(this).css('width', '115px');
+					} else if (index == 1) {
+					    $ektron(this).css('width', '105px');
+					}
+					else if (index == 6) {
+					    $ektron(this).css('width', '85px');
+					}
+					else if (index == 4) {
+						$ektron(this).css('width', '111px');
+					}
+					else {
+					    $ektron(this).css('width', '125px');
+					}
+				} else {
+				    $ektron(this).css('width', '149px');
+				}
+				if ($ektron(this).find('a').html().indexOf('CHANNELS') > -1) {
+					$ektron(this).find('a').addClass('channels');
+				}
+				$ektron(this).find('li.ekflexmenu_menu_level_2:last').addClass("last");
+			});
+			$ektron(".menu .ekflexmenu_menu_level_0 > ul > li > ul > li a").each(function(index) {
+				if ($ektron(this).html().length > 25) {
+					$ektron(this).addClass('double');
+				}
+			});
+			$ektron(".menu").fadeIn();
+			$ektron(".menu_inside li a").each(function(index) {
+				if (window.location.href.indexOf($ektron(this).attr('href')) > -1) {
+					$ektron(this).addClass('active');
+				}
+			});            
+		});
+	</script>
+</body>
+</html>

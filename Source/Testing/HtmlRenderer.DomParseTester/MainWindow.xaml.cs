@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HtmlRenderer.DomParseTester.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -27,18 +28,30 @@ namespace HtmlRenderer.DomParseTester
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void OpenKeywordsViewer_Click(object sender, RoutedEventArgs e)
         {
-            MakeRequest();
+            KeywordsView window = new KeywordsView();
+            window.Owner = this;
+            window.Show();
         }
 
-        static void MakeRequest()
+        private void OpenDomComparer_Click(object sender, RoutedEventArgs e)
         {
-            var res = BingWebSearcher.Search("Facebook", 50, 50);
+            DomComparing.DomComparer window = new DomComparing.DomComparer();
+            window.Owner = this;
+            window.Show();
         }
 
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
 
-
-
+        private void OpenDomExplorer_Click(object sender, RoutedEventArgs e)
+        {
+            ReferenceDomExplorer window = new ReferenceDomExplorer();
+            window.Owner = this;
+            window.Show();
+        }
     }
 }

@@ -1,0 +1,369 @@
+<!-- saved from url=(0014)about:internet -->
+<HTML>
+<!--
+Copyright (c) 1993 The Regents of the University of California.
+Copyright (c) 1994-1996 Sun Microsystems, Inc.
+
+This software is copyrighted by the Regents of the University of
+California, Sun Microsystems, Inc., Scriptics Corporation,
+and other parties. The following terms apply to all files associated
+with the software unless explicitly disclaimed in individual files.
+
+The authors hereby grant permission to use, copy, modify, distribute,
+and license this software and its documentation for any purpose, provided
+that existing copyright notices are retained in all copies and that this
+notice is included verbatim in any distributions. No written agreement,
+license, or royalty fee is required for any of the authorized uses.
+Modifications to this software may be copyrighted by their authors
+and need not follow the licensing terms described here, provided that
+the new terms are clearly indicated on the first page of each file where
+they apply.
+
+IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO ANY PARTY
+FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES
+ARISING OUT OF THE USE OF THIS SOFTWARE, ITS DOCUMENTATION, OR ANY
+DERIVATIVES THEREOF, EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. THIS SOFTWARE
+IS PROVIDED ON AN "AS IS" BASIS, AND THE AUTHORS AND DISTRIBUTORS HAVE
+NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
+MODIFICATIONS.
+
+GOVERNMENT USE: If you are acquiring this software on behalf of the
+U.S. government, the Government shall have only "Restricted Rights"
+in the software and related documentation as defined in the Federal
+Acquisition Regulations (FARs) in Clause 52.227.19 (c) (2). If you
+are acquiring the software on behalf of the Department of Defense, the
+software shall be classified as "Commercial Computer Software" and the
+Government shall have only "Restricted Rights" as defined in Clause
+252.227-7013 (c) (1) of DFARs. Notwithstanding the foregoing, the
+authors grant the U.S. Government and others acting in its behalf
+permission to use and distribute the software in accordance with the
+terms specified in this license.
+
+*** This permission applies only to the pages containing this message
+
+-->
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<LINK rel="StyleSheet" href="../mksman.css">
+
+
+
+<TITLE>
+glob
+ -- Return names of files that match patterns</TITLE>
+</HEAD>
+<BODY>
+<div id="nsr">
+<TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING=="0">
+<TD ROWSPAN="2" ALIGN="LEFT" VALIGN="TOP">
+<H1 class="header">
+<NOBR>glob</NOBR>
+<P class="header">Return names of files that match patterns&nbsp;</P>
+</TD>
+<TD ALIGN="RIGHT" VALIGN="TOP">
+<H2 class="header">Tclsh Built-In Commands</H1></H2>
+</TD>
+</TR>
+<TR>
+<TD ALIGN="RIGHT" VALIGN="TOP">
+<form name="form">
+<select name="site" size="1" onChange="formHandler()">
+<option value="../man1/glob.1t.asp#SYNOPSIS">SYNOPSIS</option>
+<option value="../man1/glob.1t.asp#DESCRIPTION">DESCRIPTION</option>
+<option value="../man1/glob.1t.asp#PORTABILITY_ISSUES">PORTABILITY ISSUES</option>
+<option value="../man1/glob.1t.asp#PORTABILITY">PORTABILITY</option>
+<option value="../man1/glob.1t.asp#AVAILABILITY">AVAILABILITY</option>
+</select>
+</form>
+</TD>
+</TR>
+</TABLE>
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Begin
+function formHandler(){
+var URL = document.form.site.options[document.form.site.selectedIndex].value;
+location.href=URL;
+// End -->
+}
+</SCRIPT>
+</div>
+<div id="mainbody"><HR class="divider">
+<H2><A NAME="SYNOPSIS">SYNOPSIS</A></H2>
+<P class="synlast">
+<B><TT>glob</TT></B> ?<I>switches</I>? <I>pattern</I> ?<I>pattern...</I>?
+</P>
+
+<HR class="divider">
+<H2><A NAME="DESCRIPTION">DESCRIPTION</A></H2>
+
+<P class="firstline">
+This command performs file name <TT>globbing</TT> in a fashion similar to
+the csh shell. It returns a list of the files whose names match any
+of the <I>pattern</I> arguments.
+</P>
+<P>
+If the initial arguments to <B><TT>glob</TT></B> start with <B><TT><NOBR>-</NOBR></TT></B>
+then
+they are treated as switches. The following switches are
+currently supported:
+</P>
+<P class="firstline">
+<DL compact="yes">
+
+<A NAME=""></A><DT><B><TT><NOBR>-directory</NOBR></TT></B> <I>directory</I>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Search for files which match the given patterns starting in the given
+<I>directory</I>. This allows searching of directories whose name
+contains glob-sensitive characters without the need to quote such
+characters explicitly. This option may not be used in conjunction with
+<B><TT><NOBR>-path</NOBR></TT></B>.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><B><TT><NOBR>-join</NOBR></TT></B>&nbsp;</DT>
+<DD>
+<P class="firstline">
+The remaining pattern arguments are treated as a single pattern
+obtained by joining the arguments with directory separators.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><B><TT><NOBR>-nocomplain</NOBR></TT></B>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Allows an empty list to be returned without error; without this
+switch an error is returned if the result list would be empty.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><B><TT><NOBR>-path</NOBR></TT></B> <I>pathPrefix</I>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Search for files with the given <I>pathPrefix</I> where the rest of
+the name
+matches the given patterns. This allows searching for files with names
+similar to a given file even when the names contain glob-sensitive
+characters. This option may not be used in conjunction with
+<B><TT><NOBR>-directory</NOBR></TT></B>.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><B><TT><NOBR>-types</NOBR></TT></B> <I>typeList</I>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Only list files or directories which match <I>typeList</I>, where the
+items
+in the list have two forms. The first form is like the <B><TT><NOBR>-type</NOBR></TT></B> option of
+the UNIX find command:
+<I>b</I> (block special file),
+<I>c</I> (character special file),
+<I>d</I> (directory),
+<I>f</I> (plain file),
+<I>l</I> (symbolic link),
+<I>p</I> (named pipe),
+or <I>s</I> (socket), where multiple types may be specified in the
+list.
+<B><TT>glob</TT></B> will return all files which match at least one of the types
+given.
+</P>
+</DD>
+
+</DL>
+</P>
+<P>
+The second form specifies types where all the types given must match.
+These are <I>r</I>, <I>w</I>, <I>x</I> as file
+permissions, and
+<I>readonly</I>, <I>hidden</I> as special permission cases.
+On the
+Macintosh, MacOS types and creators are also supported, where any item
+which is four characters long is assumed to be a MacOS type
+(for example, <TT>TEXT</TT>). Items which are of the form
+<I>{macintosh type XXXX}</I>
+or <I>{macintosh creator XXXX}</I> will match types or creators
+respectively. Unrecognised types, or specifications of multiple MacOS
+types/creators will signal an error.
+</P>
+<P>
+The two forms may be mixed, so <TT>-types {d f r w}</TT> will find all
+regular files OR directories that have both read AND write permissions.
+The following are equivalent:
+</P>
+<BLOCKQUOTE><PRE>
+glob -type d *
+glob */
+</PRE></BLOCKQUOTE>
+<P>
+except that the first case doesn't return the trailing <TT>/</TT> and
+is more platform independent.
+</P>
+<P class="firstline">
+<DL compact="yes">
+
+<A NAME=""></A><DT><B><TT><NOBR>--</NOBR></TT></B>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Marks the end of switches. The argument following this one will
+be treated as a <I>pattern</I> even if it starts with a
+<B><TT><NOBR>-</NOBR></TT></B>.
+</P>
+</DD>
+
+</DL>
+</P>
+<P>
+The <I>pattern</I> arguments may contain any of the following
+special characters:
+</P>
+<P class="firstline">
+<DL compact="yes">
+
+<A NAME=""></A><DT><TT>?</TT>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Matches any single character.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><TT>*</TT>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Matches any sequence of zero or more characters.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><TT>[</TT><I>chars</I><TT>]</TT>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Matches any single character in <I>chars</I>. If <I>chars</I>
+contains a sequence of the form <I>a</I><B><TT><NOBR>-</NOBR></TT></B><I>b</I> then
+any
+character between <I>a</I> and <I>b</I> (inclusive) will
+match.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><TT>\</TT><I>x</I>&nbsp;</DT>
+<DD>
+<P class="firstline">
+Matches the character <I>x</I>.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><TT>{</TT><I>a</I><TT>,</TT><I>b</I><TT>,</TT><I>...</I>}&nbsp;</DT>
+<DD>
+<P class="firstline">
+Matches any of the strings <I>a</I>, <I>b</I>, etc.
+</P>
+</DD>
+
+</DL>
+</P>
+<P>
+As with csh, a <TT>.</TT> at the beginning of a file's name or just
+after a <TT>/</TT> must be matched explicitly or with a {} construct.
+In addition, all <TT>/</TT> characters must be matched explicitly.
+</P>
+<P>
+If the first character in a <I>pattern</I> is <TT>~</TT> then it
+refers
+to the home directory for the user whose name follows the <TT>~</TT>.
+If the <TT>~</TT> is followed immediately by <TT>/</TT> then the value
+of
+the <B><TT><I>HOME</I></TT></B> environment variable is used.
+</P>
+<P>
+The <B><TT>glob</TT></B> command differs from csh globbing in two ways.
+First, it does not sort its result list (use the <A HREF="../man1/lsort.1t.asp"><B><TT>lsort</TT></B></A>
+command if you want the list sorted).
+Second, <B><TT>glob</TT></B> only returns the names of files that actually
+exist; in csh no check for existence is made unless a pattern
+contains a ?, *, or [] construct.
+</P>
+
+<HR class="divider">
+<H2><A NAME="PORTABILITY_ISSUES">PORTABILITY ISSUES</A></H2>
+
+<P class="firstline">
+Unlike other Tcl commands that will accept both network and native
+style names (see the <A HREF="../man1/filename.1t.asp"><B><TT>filename</TT></B></A> reference page for details on
+how
+native and network names are specified), the <B><TT>glob</TT></B> command
+only
+accepts native names.
+</P>
+<P class="firstline">
+<DL compact="yes">
+
+<A NAME=""></A><DT><TT>Windows</TT>&nbsp;</DT>
+<DD>
+<P class="firstline">
+For Windows UNC names, the servername and sharename components of the path
+may not contain ?, *, or [] constructs. On Windows NT, if
+<I>pattern</I> is
+of the form
+<TT>~</TT><I>username</I><TT>@</TT><I>domain</I>
+it refers to the home
+directory of the user whose account information resides on the specified NT
+domain server. Otherwise, user account information is obtained from
+the local computer. On Windows 95 and 98, <B><TT>glob</TT></B> accepts
+patterns
+like <TT>.../</TT> and <TT>..../</TT> for successively higher up
+parent directories.
+</P>
+</DD>
+
+
+<A NAME=""></A><DT><TT>Macintosh</TT>&nbsp;</DT> 
+<DD>
+<P class="firstline">
+.
+When using the options, <B><TT><NOBR>-dir</NOBR></TT></B>, <B><TT><NOBR>-join</NOBR></TT></B> or
+<B><TT><NOBR>-path</NOBR></TT></B>, glob
+assumes the directory separator for the entire pattern is the standard
+<TT>:</TT>. When not using these options, glob examines each pattern
+argument
+and uses <TT>/</TT> unless the pattern contains a <TT>:</TT>.
+</P>
+</DD>
+
+</DL>
+</P>
+
+<HR class="divider">
+<H2><A NAME="PORTABILITY">PORTABILITY</A></H2>
+
+<P class="firstline">Windows Vista. Windows 7. Windows Server 2008. Windows 8. Windows Server 2012. Windows 10.</P>
+
+<HR class="divider">
+<H2><A NAME="AVAILABILITY">AVAILABILITY</A></H2>
+
+<P class="firstline">
+PTC MKS Toolkit for Power Users<BR>
+PTC MKS Toolkit for System Administrators<BR>
+PTC MKS Toolkit for Developers<BR>
+PTC MKS Toolkit for Interoperability<BR>
+PTC MKS Toolkit for Professional Developers<BR>
+PTC MKS Toolkit for Enterprise Developers<BR>
+PTC MKS Toolkit for Enterprise Developers 64-Bit Edition<BR>
+
+</P>
+
+<HR class="divider">
+<CENTER><P class="build">
+PTC MKS Toolkit 10.0 Documentation Build 6.
+</P></CENTER><BR style="page-break-after: always;"></div></BODY></HTML>

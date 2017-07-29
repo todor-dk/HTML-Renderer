@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>Login Page - Uolo </title>
+
+		<meta name="description" content="User login page" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" href="https://dfb5wgyuyvhoq.cloudfront.net/assets-new/css/bootstrap.css" />
+		<link rel="stylesheet" href="https://dfb5wgyuyvhoq.cloudfront.net/assets-new/css/font-awesome.css" />
+
+		<!-- text fonts -->
+		<link rel="stylesheet" href="https://dfb5wgyuyvhoq.cloudfront.net/assets-new/css/ace-fonts.css" />
+
+		<!-- ace styles -->
+		<link rel="stylesheet" href="https://dfb5wgyuyvhoq.cloudfront.net/assets-new/css/ace.css" />
+
+				<link rel="stylesheet" href="https://dfb5wgyuyvhoq.cloudfront.net/assets-new/css/ace-rtl.css" />
+		
+		<style type="text/css">
+		.showpasswordcheckbox{
+			margin-top: 10px;
+		}
+		</style>
+
+		                
+
+		    <script type="text/javascript" src="https://dfb5wgyuyvhoq.cloudfront.net/assets-new/js/jquery.js"></script>
+	
+    <script type="text/javascript">
+
+		$(document).ready(function() {
+			var username = $.trim($('#username').val());
+			var password = $.trim($('#password').val());
+
+	        $("#chkShowPassword").bind("click", function () {
+	            var txtPassword = $("#password");
+	            if ($(this).is(":checked")) {
+	                txtPassword.after('<input onchange = "PasswordChanged(this);" id = "txt_' + txtPassword.attr("id") + '" type = "text" value = "' + txtPassword.val() + '" class="form-control" placeholder="Password" />');
+	                txtPassword.hide();
+	            } else {
+	                txtPassword.val(txtPassword.next().val());
+	                txtPassword.next().remove();
+	                txtPassword.show();
+	            }
+	        });
+
+		    function PasswordChanged(txt) {
+		        $(txt).prev().val($(txt).val());
+		    }
+
+		    $('#password').keypress(function(e) { 
+			    var s = String.fromCharCode( e.which );
+			    if ( s.toUpperCase() === s && s.toLowerCase() !== s && !e.shiftKey ) {
+			        $('#caps').html('Caps lock is On');
+			    }else{
+			    	$('#caps').html('');
+			    }
+			});
+
+			    	}); // end of ready function
+        
+        function recaptchaCallback() {
+                       $('#dis').slideDown().html("Please click on login button");
+        };                
+        
+        $('.g-recaptcha').bind('contextmenu', function(e) {
+            return false;
+        }); 
+                       
+                       
+    	function validate(){
+			console.log('validating');
+			if($('#password').val() == ''){
+				if( typeof $('#txt_password').val() !== 'undefined' && $('#txt_password').val().length > 0){
+					$('#password').val($('#txt_password').val());
+				}
+			}
+
+			if(typeof $('#txt_password').val() !== 'undefined' && $('#txt_password').val() !== $('#password').val()){
+				$('#password').val($('#txt_password').val());
+			}
+
+			if($('#password').val() == '' && $('#username').val() == ''){
+		        $('#dis').slideDown().html("<span>Please Enter Username and Password</span>");
+		        return false;
+		    }else if($('#username').val() == ''){
+		       $('#dis').slideDown().html("<span>Please Enter Username</span>"); 
+		       return false;
+		    }else if(!validateEmail($('#username').val()) && !validatePhone($('#username').val())){
+			    $('#dis').slideDown().html("<span>Please Enter a valid Email Id or Phone Number</span>");
+			    return false;
+			}else if($('#password').val() == ''){
+		        $('#dis').slideDown().html("<span>Please Enter Password</span>");
+		        return false;
+		    }
+		    $('#dis').html('');
+		    $('#login').addClass('disabled');
+		    return true;
+		}
+		
+		function validateEmail(email) {
+		    var re = /\S+@\S+\.\S+/;
+		    return re.test(email);
+		}
+
+		function validatePhone(phone) {
+		    var re = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[0789]\d{9}$/;
+		    return re.test(phone);
+		}
+
+		document.addEventListener("contextmenu", function(e){
+            alert('Right click is not allowed');
+		    e.preventDefault();
+		}, false);
+
+    </script>
+                
+	</head>
+	<body class="login-layout light-login">
+         		<div class="main-container">
+			<div class="main-content">
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1">
+						<div class="login-container">
+                            <div class="center">
+                                <h1>
+                                    <img class="nav-user-photo" style="margin-top:-30px;" height="100px" width="250px" src="https://dfb5wgyuyvhoq.cloudfront.net/assets-new/avatars/Uolo.png" alt="aknclakn" /><br/>
+                                    <span class="red" id="id-text2" style="display:block; margin-top:-20px;">Uolo Technology</span>
+                                </h1>
+                            </div>
+
+							<div class="position-relative">
+								<div id="login-box" class="login-box visible widget-box no-border">
+									<div class="widget-body">
+										<div class="widget-main">
+											<h3 style="text-align: center">
+												Login to your account
+											</h3>                   
+											<form class="easySubmit form-horizontal" action="/login_check" method="POST" onsubmit="return validate();">
+												<fieldset>
+                                                    <center><label id="dis" class="red"></label></center><br>
+                                                    <label class="block clearfix">
+                                                        <span class="block input-icon input-icon-right">
+                                                            <input type="text" class="form-control {eitherEmailPhone:true}" id="username" name="_username" value="" placeholder="Mobile No/Email" />
+                                                            <i class="ace-icon fa fa-user"></i>
+                                                        </span>
+                                                    </label>
+                                                    <label class="block clearfix">
+                                                        <span class="block input-icon input-icon-right">
+                                                            <input type="password" class="form-control showpassword" id="password" name="_password" placeholder="Password"/>                                                                
+                                                            <i class="ace-icon fa fa-lock"></i>
+                                                        </span>
+                                                    </label>
+                                                    <h2 class="red bolder small center left"><span id="caps"><span></h2> 
+                                                    <div class="clearfix text-left">
+                                                    	<div class="text-left" style="width:60%;float:left;margin-top:0px;">
+                                                    		<label class="inline">
+	                                                            <input type="checkbox" class="ace" id="chkShowPassword" name="_remember_me">
+	                                                            <span class="lbl"> Show Password</span>
+	                                                        </label>
+	                                                        <label class="inline">
+	                                                            <input type="checkbox" class="ace" id="remember_me" name="_remember_me">
+	                                                            <span class="lbl"> Remember Me</span>
+	                                                        </label>
+                                                    	</div>
+                                                        <button type="submit" id="login" class="width-25 pull-right btn btn-primary btn-round btn-sm header">
+                                                            <i class="fa fa-key"></i>
+                                                            Login
+                                                        </button>
+                                                    </div>
+													<div class="space-8"></div>
+												</fieldset>
+                 	                                                                              	<input type="hidden"  name="automationtesting" value="1">
+                                                                     
+                                                                                            
+                                                                                            
+											</form>
+											<div class="social-or-login center" style="margin-top:-20px;"></div>
+											<div>
+			                                   <table style="margin: 0 auto;border-collapse: collapse !important;width: 99.9% !important;" cellpadding="0" cellspacing="0" class="force-full-width" bgcolor="#FFF">                  
+			                          				<tr>
+			                                           	<td style="color: #000;font-size: 14px;font-family: 'Dosis', sans-serif;font-weight: 400;text-align: center;"><br>
+			                                           		<a target="_blank" href="http://goo.gl/qOCLXg" style="text-decoration: none;border: 0;outline: none;color: #bbbbbb;"><img src="https://dfb5wgyuyvhoq.cloudfront.net/assets-new/images/play.png" width="120" height="40" alt="playstore" style="max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;"></a>&nbsp;&nbsp;
+			                       							<a target="_blank" href="http://apple.co/1mJSFUQ" style="text-decoration: none;border: 0;outline: none;color: #bbbbbb;"><img src="https://dfb5wgyuyvhoq.cloudfront.net/assets-new/images/appstore.png" width="120" height="40" alt="appstore" style="max-width: 600px;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;border: none;"></a>
+			                                           	</td>
+			                                      	</tr>
+			                                   </table>     
+			                                </div>
+										</div><!-- /.widget-main -->
+										<div class="toolbar clearfix">
+											<div style="margin-left:30%;">
+												<a href="/retrievePassword" class="forgot-password-link">
+													I forgot my password
+												</a>
+											</div>
+										</div>
+									</div><!-- /.widget-body -->
+								</div><!-- /.login-box -->
+                                <div class="contact text-center">
+                                     <h5><font color="3498DB">
+                                         <i class="ace-icon glyphicon glyphicon-earphone bigger-100"></i>
+                                         &nbsp;Helpline:<font color="#CC3300"><b> +91 9066022620</b></font></h5>
+                                     <h5><font color="3498DB">
+                                         <i class="ace-icon glyphicon glyphicon-envelope bigger-100"></i>
+                                         &nbsp;Support:<font color="#CC3300"><b> support@theuolo.com</b></font></h5>
+                                <div class="text-center"> 
+                                    <h6 style="color: black">Compatible with</h6>
+                                    <img class="nav-user-photo" src="https://dfb5wgyuyvhoq.cloudfront.net/assets-new/avatars/compatable.png" width="25px" /><br/>
+                            	</div>
+                            </div><!-- /.position-relative -->
+						</div>
+					</div><!-- /.col -->
+				</div><!-- /.row -->
+			</div><!-- /.main-content -->
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='https://dfb5wgyuyvhoq.cloudfront.net/assets-new/js/jquery.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- <![endif]-->
+
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='https://dfb5wgyuyvhoq.cloudfront.net/assets-new/js/jquery.mobile.custom.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			jQuery(function($) {
+				$(document).on('click', '.toolbar a[data-target]', function(e) {
+					e.preventDefault();
+					var target = $(this).data('target');
+					$('.widget-box.visible').removeClass('visible');//hide others
+					$(target).addClass('visible');//show target
+				});
+			});
+		</script>
+                <script src='https://www.google.com/recaptcha/api.js'></script>
+	</body>
+</html>

@@ -1,0 +1,1715 @@
+ <!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1"/>
+        <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+        <meta http-equiv="cache-control" content="no-cache,no-store"/>
+        <meta http-equiv="pragma" content="no-cache"/>
+        <meta http-equiv="expires" content="-1"/>
+        <meta name='mswebdialog-title' content='Connecting to @microsoft.com account'/>
+
+        <title>Sign In</title>
+        <script type='text/javascript'>
+//<![CDATA[
+function LoginErrors(){this.userNameFormatError = 'Enter your user ID in the format \u0026quot;domain\\user\u0026quot; or \u0026quot;user@domain\u0026quot;.'; this.passwordEmpty = 'Enter your password.'; this.passwordTooLong = 'Password is too long (\u0026gt; 128 characters).';}; var maxPasswordLength = 128;
+//]]>
+</script>
+
+<script type='text/javascript'>
+//<![CDATA[
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+function InputUtil(errTextElementID, errDisplayElementID) {
+
+    if (!errTextElementID)  errTextElementID = 'errorText'; 
+    if (!errDisplayElementID)  errDisplayElementID = 'error'; 
+
+    this.hasFocus = false;
+    this.errLabel = document.getElementById(errTextElementID);
+    this.errDisplay = document.getElementById(errDisplayElementID);
+};
+InputUtil.prototype.canDisplayError = function () {
+    return this.errLabel && this.errDisplay;
+}
+InputUtil.prototype.checkError = function () {
+    if (!this.canDisplayError){
+        throw new Error ('Error element not present');
+    }
+    if (this.errLabel && this.errLabel.innerHTML) {
+        this.errDisplay.style.display = '';        
+        var cause = this.errLabel.getAttribute('for');
+        if (cause) {
+            var causeNode = document.getElementById(cause);
+            if (causeNode && causeNode.value) {
+                causeNode.focus();
+                this.hasFocus = true;
+            }
+        }
+    }
+    else {
+        this.errDisplay.style.display = 'none';
+    }
+};
+InputUtil.prototype.setInitialFocus = function (input) {
+    if (this.hasFocus) return;
+    var node = document.getElementById(input);
+    if (node) {
+        if ((/^\s*$/).test(node.value)) {
+            node.focus();
+            this.hasFocus = true;
+        }
+    }
+};
+InputUtil.prototype.setError = function (input, errorMsg) {
+    if (!this.canDisplayError) {
+        throw new Error('Error element not present');
+    }
+    input.focus();
+
+    if (errorMsg) {
+        this.errLabel.innerHTML = errorMsg;
+    }
+    this.errLabel.setAttribute('for', input.id);
+    this.errDisplay.style.display = '';
+};
+InputUtil.makePlaceholder = function (input) {
+    var ua = navigator.userAgent;
+
+    if (ua != null && 
+        (ua.match(/MSIE 9.0/) != null || 
+         ua.match(/MSIE 8.0/) != null ||
+         ua.match(/MSIE 7.0/) != null)) {
+        var node = document.getElementById(input);
+        if (node) {
+            var placeholder = node.getAttribute("placeholder");
+            if (placeholder != null && placeholder != '') {
+                var label = document.createElement('input');
+                label.type = "text";
+                label.value = placeholder;
+                label.readOnly = true;
+                label.style.position = 'absolute';
+                label.style.borderColor = 'transparent';
+                label.className = node.className + ' hint';
+                label.tabIndex = -1;
+                label.onfocus = function () { this.nextSibling.focus(); };
+
+                node.style.position = 'relative';
+                node.parentNode.style.position = 'relative';
+                node.parentNode.insertBefore(label, node);
+                node.onkeyup = function () { InputUtil.showHint(this); };
+                node.onblur = function () { InputUtil.showHint(this); };
+                node.style.background = 'transparent';
+
+                node.setAttribute("placeholder", "");
+                InputUtil.showHint(node);
+            }
+        }
+    }
+};
+InputUtil.focus = function (inputField) {
+    var node = document.getElementById(inputField);
+    if (node) node.focus();
+};
+InputUtil.hasClass = function(node, clsName) {
+    return node.className.match(new RegExp('(\\s|^)' + clsName + '(\\s|$)'));
+};
+InputUtil.addClass = function(node, clsName) {
+    if (!this.hasClass(node, clsName)) node.className += " " + clsName;
+};
+InputUtil.removeClass = function(node, clsName) {
+    if (this.hasClass(node, clsName)) {
+        var reg = new RegExp('(\\s|^)' + clsName + '(\\s|$)');
+        node.className = node.className.replace(reg, ' ');
+    }
+};
+InputUtil.showHint = function (node, gotFocus) {
+    if (node.value && node.value != '') {
+        node.previousSibling.style.display = 'none';
+    }
+    else {
+        node.previousSibling.style.display = '';
+    }
+};
+InputUtil.updatePlaceholder = function (input, placeholderText) {
+    var node = document.getElementById(input);
+    if (node) {
+        var ua = navigator.userAgent;
+        if (ua != null &&
+            (ua.match(/MSIE 9.0/) != null ||
+            ua.match(/MSIE 8.0/) != null ||
+            ua.match(/MSIE 7.0/) != null)) {
+            var label = node.previousSibling;
+            if (label != null) {
+                label.value = placeholderText;
+            }
+        }
+        else {
+            node.placeholder = placeholderText;
+        }
+    }
+};
+
+//]]>
+</script>
+
+
+        
+        <link rel="stylesheet" type="text/css" href="/adfs/portal/css/style.css?id=16EB18570B5806BFA42EEC8BD645BBFA8D925E12E020B10F209850B0675DB74E" /><style>.illustrationClass {background-image:url(/adfs/portal/illustration/illustration.png?id=555E5E5E6553061E2DF070FFCF6363CAB5F63FDA1D777CFDFE768670E5DA2A78);}</style>
+
+    </head>
+    <body dir="ltr" class="body">
+    <div id="noScript" style="position:static; width:100%; height:100%; z-index:100">
+        <h1>JavaScript required</h1>
+        <p>JavaScript is required. This web browser does not support JavaScript or JavaScript in this web browser is not enabled.</p>
+        <p>To find out if your web browser supports JavaScript or to enable JavaScript, see web browser help.</p>
+    </div>
+    <script type="text/javascript" language="JavaScript">
+         document.getElementById("noScript").style.display = "none";
+    </script>
+    <div id="fullPage">
+        <div id="brandingWrapper" class="float">
+            <div id="branding"></div>
+        </div>
+        <div id="contentWrapper" class="float">
+            <div id="content">
+                <div id="header">
+                    <img class='logoImage' id='companyLogo' src='/adfs/portal/logo/logo.png?id=AC8D7D0F5EBC646B2F36665FCA56AEDE31F9DC2A4430DC227E5B2952F2FE8B96' alt='@microsoft.com account'/>
+                </div>
+                <div id="workArea">
+                    
+    <div id="authArea" class="groupMargin">
+        
+        
+        
+    <div id="loginArea">        
+        <div id="loginMessage" class="groupMargin">Sign in with your organizational account</div>
+
+        <form method="post" id="loginForm" autocomplete="off" novalidate="novalidate" onKeyPress="if (event && event.keyCode == 13) Login.submitLoginRequest();" action="/adfs/ls/?wa=wsignin1.0&wtrealm=https%3a%2f%2fmail.exchange.microsoft.com%2fowa%2f&wctx=rm%3d0%26id%3dpassive%26ru%3d%252fowa%252f&wct=2017-07-12T16%3a48%3a42Z&client-request-id=00000000-0000-0000-771d-0080000000a5" >
+            <div id="error" class="fieldMargin error smallText">
+                <span id="errorText" for=""></span>
+            </div>
+
+            <div id="formsAuthenticationArea">
+                <div id="userNameArea">
+                    <label id="userNameInputLabel" for="userNameInput" class="hidden">User Account</label>
+                    <input id="userNameInput" name="UserName" type="email" value="" tabindex="1" class="text fullWidth"
+                        spellcheck="false" placeholder="someone@example.com" autocomplete="off"/>
+                </div>
+
+                <div id="passwordArea">
+                    <label id="passwordInputLabel" for="passwordInput" class="hidden">Password</label>
+                    <input id="passwordInput" name="Password" type="password" tabindex="2" class="text fullWidth"
+                        placeholder="Password" autocomplete="off"/>
+                </div>
+                <div id="kmsiArea" style="display:''">
+                    <input type="checkbox" name="Kmsi" id="kmsiInput" value="true" tabindex="3" />
+                    <label for="kmsiInput">Keep me signed in</label>
+                </div>
+                <div id="submissionArea" class="submitMargin">
+                    <span id="submitButton" class="submit" tabindex="4" role="button"
+                        onKeyPress="if (event && event.keyCode == 32) Login.submitLoginRequest();"
+                        onclick="return Login.submitLoginRequest();">Sign in</span>
+                </div>
+            </div>
+            <input id="optionForms" type="hidden" name="AuthMethod" value="FormsAuthentication"/>
+        </form>
+
+             <div id="authOptions">
+        <form id="options"  method="post" action="https://msft.sts.microsoft.com:443/adfs/ls/?wa=wsignin1.0&wtrealm=https%3a%2f%2fmail.exchange.microsoft.com%2fowa%2f&wctx=rm%3d0%26id%3dpassive%26ru%3d%252fowa%252f&wct=2017-07-12T16%3a48%3a42Z&client-request-id=00000000-0000-0000-771d-0080000000a5">
+            <script type="text/javascript">
+                function SelectOption(option) {
+                    var i = document.getElementById('optionSelection');
+                    i.value = option;
+                    document.forms['options'].submit();
+                    return false;
+                }
+            </script>
+            <input id="optionSelection" type="hidden" name="AuthMethod" />
+            <div id='authOptionLinks' class='groupMargin'><a class="actionLink" href="#" id="CertificateAuthentication" onclick="SelectOption('CertificateAuthentication'); return false;">Sign in using an X.509 certificate</a></div>
+        </form>
+      </div>
+
+        <div id="introduction" class="groupMargin">
+                                 
+        </div>
+
+        <script type="text/javascript">
+        //<![CDATA[
+
+            function Login() {
+            }
+
+            Login.userNameInput = 'userNameInput';
+            Login.passwordInput = 'passwordInput';
+
+            Login.initialize = function () {
+
+                var u = new InputUtil();
+
+                u.checkError();
+                u.setInitialFocus(Login.userNameInput);
+                u.setInitialFocus(Login.passwordInput);
+            }();
+
+            Login.submitLoginRequest = function () { 
+                var u = new InputUtil();
+                var e = new LoginErrors();
+
+                var userName = document.getElementById(Login.userNameInput);
+                var password = document.getElementById(Login.passwordInput);
+
+                if (!userName.value || !userName.value.match('[@\\\\]')) {
+                    u.setError(userName, e.userNameFormatError);
+                    return false;
+                }
+
+                if (!password.value) {
+                    u.setError(password, e.passwordEmpty);
+                    return false;
+                }
+
+                if (password.value.length > maxPasswordLength) {
+                    u.setError(password, e.passwordTooLong);
+                    return false;
+                }
+
+                document.forms['loginForm'].submit();
+                return false;
+            };
+
+            InputUtil.makePlaceholder(Login.userNameInput);
+            InputUtil.makePlaceholder(Login.passwordInput);
+        //]]>
+        </script>
+    </div>
+
+    </div>
+
+                </div>
+                <div id="footerPlaceholder"></div>
+            </div>
+            <div id="footer">
+                <div id="footerLinks" class="floatReverse">
+                     <div><span id="copyright">&#169; 2016 Microsoft</span><a id="helpDesk" class="pageLink" href="https://corp.sts.microsoft.com/Onboard/ServiceSupport.htm"> Help &amp; Support</a></div>
+                </div>
+            </div>
+        </div> 
+    </div>
+    <script type='text/javascript'>
+//<![CDATA[
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+// MSIT boolean value for MFA status"
+// True = Phone Authentication Service is healthy
+// False = Phone Authentication Service is unhealthy
+
+var bMFAServiceStatus = "True"
+//var bMFAServiceStatus = "False"
+
+// iPhone email friendly keyboard does not include "\" key, use regular keyboard instead.
+// Note change input type does not work on all versions of all browsers.
+if (navigator.userAgent.match(/iPhone/i) != null) {
+    var emails = document.querySelectorAll("input[type='email']");
+    if (emails) {
+        for (var i = 0; i < emails.length; i++) {
+            emails[i].type = 'text';
+        }
+    }
+}
+
+//MSIT-START: Function to split querystring
+var currentUrl = location.href;
+function getQueryString(qsName) {
+    qsName = qsName.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + qsName + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(currentUrl);
+    if (!results) return "";
+    if (!results[2]) return "";
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function setViewPort(hololens) {
+    var viewport = document.querySelector("meta[name=viewport]");
+    if (hololens) {
+        viewport.setAttribute('content', 'width=device-width');
+        document.documentElement.style.zoom = '1.5';
+        return;
+    }
+
+    // In the CSS file we set the ms-viewport to be consistent with the device dimensions, 
+    // which is necessary for correct functionality of immersive IE. 
+    // However, for Windows 8 phone we need to reset the ms-viewport's dimension to its original
+    // values (auto), otherwise the viewport dimensions will be wrong for Windows 8 phone.
+    // Windows 8 phone has agent string 'IEMobile 10.0'
+    if ((navigator.userAgent.match(/IEMobile\/10\.0/)) || (navigator.userAgent.match(/IEMobile\/11\.0/))) {
+        var msViewportStyle = document.createElement("style");
+        msViewportStyle.appendChild(
+            document.createTextNode(
+                "@-ms-viewport{width:auto!important}"
+            )
+        );
+        msViewportStyle.appendChild(
+            document.createTextNode(
+                "@-ms-viewport{height:auto!important}"
+            )
+        );
+        document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+    }
+
+    // If the innerWidth is defined, use it as the viewport width.
+    var viewport = document.querySelector("meta[name=viewport]");
+    //Commented on 4/12/2016
+    //viewport.setAttribute('content', 'width=device-width; initial-scale=1.0; maximum-scale=1.0');
+    //Added below section on 4/12/2016
+    if (window.innerWidth && window.outerWidth && window.innerWidth !== window.outerWidth) {
+        // If the innerWidth is defined, use it as the viewport width.
+        viewport.setAttribute('content', 'width=' + window.innerWidth + ', initial-scale=1.0, user-scalable=1');
+    }
+    else {
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, user-scalable=1');
+    }
+}
+
+// Gets the current style of a specific property for a specific element.
+function getStyle(element, styleProp) {
+    var propStyle = null;
+
+    if (element && element.currentStyle) {
+        propStyle = element.currentStyle[styleProp];
+    }
+    else if (element && window.getComputedStyle) {
+        propStyle = document.defaultView.getComputedStyle(element, null).getPropertyValue(styleProp);
+    }
+
+    return propStyle;
+}
+
+//Hololens customization
+//Start
+// Turn off branding image and adjust layout for Hololens
+function turnOffBranding() {
+
+    // Setup Hololens theme 
+    var node = document.getElementById('brandingWrapper');
+    node.style.display = 'none';
+
+    node = document.getElementById('contentWrapper');
+    node.style.float = 'none';
+    node.style.margin = 'auto';
+    node.style.width = '100%';
+
+    node = document.getElementById('content');
+    node.style.width = '864px';
+    node.style.padding = '0px 48px';
+    node.style.fontSize = '20px';
+    node.style.fontWeight = 'light';
+    node.style.margin = '0px';
+
+    node = document.getElementById('footer');
+    node.style.display = 'none';
+
+    document.getElementById('workArea').style.width = '100%';
+    var content = document.getElementById('contentWrapper');
+    content.style.backgroundColor = '#A0A0A0';
+    content.style.minWidth = '960px';
+    content.style.minHeight = '540px';
+
+    // Rebuild page title with new text and logo
+    var newHeader = document.createElement('div');
+    newHeader.style.width = '100%';
+
+    var textHeader = document.createElement('div');
+    textHeader.id = 'header';
+    textHeader.style.display = 'inline-block';
+    textHeader.style.width = '100%';
+    textHeader.style.marginBottom = '0px';
+    textHeader.style.height = '56px';
+    textHeader.style.minHeight = '56px';
+    textHeader.style.padding = '30px 0px 38px 0px';
+    textHeader.style.fontSize = '46px';
+    textHeader.style.color = '#0078D7';
+    var hololensTitle = document.getElementById('hololens_signinTitle');
+    if (hololensTitle) {
+        textHeader.innerText = hololensTitle.innerText;
+    } else {
+        textHeader.innerHTML = "<div id='hololens_signinTitle' style='display:inline-block'>Sign in with your work account</div>";
+    }
+    newHeader.appendChild(textHeader);
+
+    var header = document.getElementById('header');
+    var logo = header.getElementsByTagName('img');
+    if (logo && logo.length >= 1) {
+        logo[0].style.verticalAlign = 'middle';
+        logo[0].style.position = 'absolute';
+        logo[0].style.maxWidth = '180px';
+        if (document.body.getAttribute('dir') == 'rtl') {
+            logo[0].style.left = '48px';
+        } else {
+            logo[0].style.right = '48px';
+        }
+        textHeader.appendChild(logo[0]);
+    }
+
+    header.parentNode.replaceChild(newHeader, header);
+}
+
+var passwordInputId = 'passwordInput';
+var userNameInputId = 'userNameInput';
+var passwordNoteId = 'hololens_passwordNote';
+var signinAccountMarker = 'hololens_signinAccount';
+
+// Adjust forms signin page for Hololens
+function signinForHololens() {
+    if (typeof Login != 'undefined' && document.getElementById(passwordInputId)) {
+
+        // Hide login message and page description
+        var msg = document.getElementById('loginMessage');
+        if (msg) {
+            msg.style.display = 'none';
+        }
+        document.getElementById('introduction').style.display = 'none';
+
+        // Move error to be under input fields
+        var passwordArea = document.getElementById('passwordArea');
+        var error = document.getElementById('error');
+        passwordArea.parentNode.insertBefore(error, passwordArea.nextSibling);
+        error.style.fontSize = '1em'; // do not reduce error font size
+        error.style.paddingTop = '20px';
+
+        // Stylize input fields
+        Login.stylizeInputField = function (node) {
+            node.style.width = '600px'; // + padding on 24px on sides
+            node.style.height = '76px';
+            node.style.padding = '0px 24px';
+            node.style.borderStyle = 'solid';
+            node.style.borderWidth = '4px';
+            node.style.borderColor = '#0078D7';
+            node.style.fontSize = '28px';
+            node.style.fontColor = '#A5A5A5';
+            node.style.backgroundColor = '#d2d2d2';
+        };
+        Login.stylizeInputField(document.getElementById(userNameInputId));
+        Login.stylizeInputField(document.getElementById(passwordInputId))
+
+        document.getElementById('kmsiArea').style.paddingTop = '16px';
+        var kmsi = document.getElementById('kmsiInput');
+        if (kmsi) {
+            kmsi.style.zoom = '1.6';
+            kmsi.style.paddingTop = '0px';
+        }
+
+        // Set password description
+        Login.setPasswordNote = function () {
+            var noteCustomization = document.getElementById('hololens_passwordNoteTemplate');
+            var noteLive = document.getElementById(passwordNoteId);
+            var noteTemplate = null;
+
+            if (noteCustomization) {
+                noteTemplate = noteCustomization.innerHTML;
+            }
+            else {
+                noteTemplate = "<div style='padding-top: 20px'>Your organizational account is <span>hololens_signinAccount</span>, <a href='#' onclick='Login.toggleInput(true, true);return false;'>click to edit.</a></div>"
+            }
+
+            if (!noteLive) {
+                var noteLive = document.createElement('div');
+                noteLive.id = passwordNoteId;
+                noteLive.innerHTML = noteTemplate.replace(signinAccountMarker, document.getElementById(userNameInputId).value);
+                document.getElementById('passwordArea').appendChild(noteLive);
+            }
+            else {
+                noteLive.innerHTML = noteTemplate.replace(signinAccountMarker, document.getElementById(userNameInputId).value);
+            }
+        };
+        Login.setPasswordNote();
+
+        // Toggle visibility and focus of username and password 
+        Login.toggleInput = function (showUserName, eraseError) {
+            if (eraseError) {
+                document.getElementById('errorText').innerHTML = '';
+                document.getElementById('error').style.display = 'none';
+            }
+            var userName = document.getElementById('userNameArea');
+            var password = document.getElementById('passwordArea');
+            if (showUserName) {
+                userName.style.display = '';
+                password.style.display = 'none';
+                document.getElementById(userNameInputId).focus();
+            }
+            else {
+                userName.style.display = 'none';
+                password.style.display = '';
+                document.getElementById(passwordInputId).focus();
+            }
+        };
+
+        // Initialize input fields visibility at load time
+        Login.initializeInput = function () {
+            var error = document.getElementById('errorText');
+            if (error.innerHTML && error.innerHTML !== '') {
+                var showInput = error.getAttribute('for');
+                Login.toggleInput(showInput == '' ? true : false);
+            }
+            else {
+                var userName = document.getElementById(userNameInputId);
+                Login.toggleInput(userName.value === '' ? true : false);
+            }
+        }();
+
+        // Override submit
+        var submitButton = document.getElementById('submitButton');
+        submitButton.onkeypress = null;
+        submitButton.onclick = (function () {
+
+            var u = new InputUtil();
+            var e = new LoginErrors();
+
+            var userName = document.getElementById(userNameInputId);
+            var password = document.getElementById(passwordInputId);
+
+            if (!userName.value || !userName.value.match('[@\\\\]')) {
+                u.setError(userName, e.userNameFormatError);
+                Login.toggleInput(true);
+                return false;
+            }
+
+            if (!password.value) {
+                if (document.getElementById('passwordArea').style.display === 'none') {
+                    document.getElementById('errorText').innerHTML = '';
+                    Login.setPasswordNote();
+                }
+                else {
+                    u.setError(password, e.passwordEmpty);
+                }
+                Login.toggleInput(false, true);
+                return false;
+            }
+
+            document.forms['loginForm'].submit();
+            return false;
+        });
+
+        var submitArea = document.getElementById('submissionArea');
+        submitArea.style.top = '408px';
+        submitArea.style.margin = '0px';
+
+        submitButton.style.display = 'block';
+        submitButton.style.height = '46px';
+        submitButton.style.width = '240px';
+        submitButton.style.padding = '16px';
+        submitButton.style.backgroundColor = '#0078D7';
+        submitButton.style.textAlign = 'center';
+        submitButton.style.fontSize = '30px';
+        submitButton.style.fontFamily = '"Segoe UI Light" , "Segoe" , "SegoeUI-Light-final", Tahoma, Helvetica, Arial, sans-serif';
+        submitButton.style.position = 'absolute';
+        submitButton.style.bottom = '48px';
+        if (document.body.getAttribute('dir') == 'rtl') {
+            submitButton.style.left = '48px';
+        } else {
+            submitButton.style.right = '48px';
+        }
+    }
+}
+
+// Get query parameter case insensitive
+function getParameterByName(name, toLowerCase) {
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)", "i"),
+    results = regex.exec(location.search);
+    results = results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    return toLowerCase ? results.toLowerCase() : results;
+}
+
+var hololens = (getParameterByName("CxhPlatform", true) === "holographic");
+setViewPort(hololens);
+if (hololens) {
+    turnOffBranding();
+    signinForHololens();
+    var cert = document.getElementById('CertificateAuthentication');
+    if (cert) {
+        cert.style.display = 'none';
+    }
+}
+
+//End
+
+// The script below is used for downloading the illustration image 
+// only when the branding is displaying. This script work together
+// with the code in PageBase.cs that sets the html inline style
+// containing the class 'illustrationClass' with the background image.
+var computeLoadIllustration = function () {
+    //Hololens customization
+    //Start
+    if (hololens) {
+        return;
+    }
+    //End
+    var branding = document.getElementById("branding");
+    var brandingDisplay = getStyle(branding, "display");
+    var brandingWrapperDisplay = getStyle(document.getElementById("brandingWrapper"), "display");
+
+    if (brandingDisplay && brandingDisplay !== "none" &&
+        brandingWrapperDisplay && brandingWrapperDisplay !== "none") {
+        var newClass = "illustrationClass";
+
+        if (branding.classList && branding.classList.add) {
+            branding.classList.add(newClass);
+        } else if (branding.className !== undefined) {
+            branding.className += " " + newClass;
+        }
+        if (window.removeEventListener) {
+            window.removeEventListener('load', computeLoadIllustration, false);
+            window.removeEventListener('resize', computeLoadIllustration, false);
+        }
+        else if (window.detachEvent) {
+            window.detachEvent('onload', computeLoadIllustration);
+            window.detachEvent('onresize', computeLoadIllustration);
+        }
+    }
+};
+
+if (window.addEventListener) {
+    window.addEventListener('resize', computeLoadIllustration, false);
+    window.addEventListener('load', computeLoadIllustration, false);
+}
+else if (window.attachEvent) {
+    window.attachEvent('onresize', computeLoadIllustration);
+    window.attachEvent('onload', computeLoadIllustration);
+}
+
+//START:MSIT Customization
+//Update copyright
+var copyrightText = document.getElementById('copyright');
+if (copyrightText) {
+    copyrightText.innerHTML = "&#169; 2016 Microsoft";
+}
+
+//START:MSIT Customization
+//Get page_hint
+var iPageHint = "";
+iPageHint = getQueryString("page_hint");
+if (iPageHint == "pf") {
+
+    //Invoke MFA (WindowsAzureMultiFactorAuthentication) selection
+    var iformOptions = document.forms['options'];
+    if (iformOptions) {
+        iformOptions.style.display = 'none';
+        var iWindowsAzureMultiFactorAuthentication = document.getElementById('WindowsAzureMultiFactorAuthentication');
+        if (iWindowsAzureMultiFactorAuthentication) {
+            var iauthOptions = document.getElementById('authOptions');
+
+            if (iauthOptions) {
+                iauthOptions.style.display = 'none';
+            }
+            SelectOption('WindowsAzureMultiFactorAuthentication');
+            //	return false;
+        }
+
+    }
+}
+
+//Check wauth
+var ilocationhref = location.href;
+var iwauthFlag = decodeURIComponent(location.href);
+var iIndexOfMFA = 0;
+var iIndexOfhttpPWD = 0;
+var iIndexOfurnPWD = 0;
+iIndexOfMFA = iwauthFlag.indexOf("&wauth=http://schemas.microsoft.com/claims/multipleauthn");
+iIndexOfPWD = iwauthFlag.indexOf("&wauth=http://schemas.microsoft.com/ws/2008/06/identity/authenticationmethod/password");
+iIndexOfurnPWD = iwauthFlag.indexOf("&wauth=urn:oasis:names:tc:SAML:1.0:am:password");
+
+if (!hololens) {
+    var certAuth = document.getElementById('CertificateAuthentication');
+    if (certAuth) {
+
+        //Change OOB text
+        certAuth.innerHTML = "Sign in with PIN or smartcard";
+
+        //If MFA, then check for Phone auth element and enable smartcard option
+        var mfaphoneAuth = document.getElementById('WindowsAzureMultiFactorAuthentication');
+
+        //Check for apps sending wauth=MFA
+        if (iIndexOfMFA == -1) {
+            //Hide smartcard link
+            certAuth.style.display = 'none';
+            if (mfaphoneAuth) {
+                //Show smartcard link
+                certAuth.style.display = '';
+
+                //Additional checking is required to hide smartcard on Non-TPM devices and for applications sending wauth=password
+                if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/Macintosh/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Opera Mini/i)) {
+                    certAuth.style.display = 'none';
+                }
+            }
+        }
+        else {
+            if (mfaphoneAuth) {
+                //Show smartcard link
+                certAuth.style.display = '';
+
+                //Additional checking is required to hide smartcard on Non-TPM devices and for applications sending wauth=password
+                if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/Macintosh/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Opera Mini/i)) {
+                    certAuth.style.display = 'none';
+                }
+            }
+            else {
+                //Hide the default smartcard link on FBA 1FA page on all devices
+                certAuth.style.display = 'none';
+            }
+        }
+    }
+}
+
+var phoneAuth = document.getElementById('WindowsAzureMultiFactorAuthentication');
+if (phoneAuth) {
+    phoneAuth.innerHTML = "Sign in with your phone";
+}
+
+var mfaAuth = document.getElementById('sectionHeader');
+if (mfaAuth) {
+    mfaAuth.innerHTML = "Multi-Factor Authentication";
+}
+
+//Customize incorrect User ID or password exception
+
+var ierrorText = document.getElementById("errorText");
+if (ierrorText) {
+    var ierrorCurrent = ierrorText.innerHTML;
+    var isearchIncorrect = 'ID and password';
+    var iIncorrectMessage = 0;
+    iIncorrectMessage = ierrorCurrent.indexOf(isearchIncorrect);
+
+    if (iIncorrectMessage > 0) {
+        if ((iIndexOfPWD > 0) || (iIndexOfurnPWD > 0) || navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Opera Mini/i)) {
+            ierrorText.innerHTML = ierrorCurrent + "<br>" + "Forgotten or expired password? Use the self-service password management tool ('https://sspm.microsoft.com')";
+        }
+        else {
+            ierrorText.innerHTML = ierrorCurrent + "<br>" + "Forgotten or expired password? Use the <a href='https://sspm.microsoft.com'>self-service password management tool</a>";
+        }
+    }
+}
+
+//Customize MFA exception
+//START
+
+var iauthArea = document.getElementById("authArea");
+if (iauthArea) {
+    var sauthArea = iauthArea.innerHTML;
+    var isearchString = 'security reasons';
+    var iFFAMessage = 0;
+
+    var isearchCert = 'Select a certificate';
+    var iCertMessage = 0;
+
+    iCertMessage = sauthArea.indexOf(isearchCert);
+
+    if (iCertMessage > 0) {
+        var certInstructions = document.getElementById("introduction");
+        if (certInstructions) {
+            //certInstructions.innerHTML = "<p><h2>Select a certificate in the popup window</h2></p><br><p><h3>Choose one of the following</h3></p><br><div><img src='https://msft.sts.microsoft.com/adfsassets/images/PhysicalSmartCard.png'>&nbsp;&nbsp;<span>Physical smart card certificate</span></div><br><img src='https://msft.sts.microsoft.com/adfsassets/images/VirtualSmartCard.png'>&nbsp;&nbsp;Virtual smart card certificate.<br><br><br><p><h3>Do not choose this type of certificate</h3></p><br><img src='https://msft.sts.microsoft.com/adfsassets/images/Wrongcertificate.png'>&nbsp;&nbsp;If you pick this type of certificate, you'll need to start over."
+            //certInstructions.innerHTML = "<p><h2>Select a certificate in the popup window</h2></p><br><p><h3>Choose one of the following</h3></p><div><div><img src='https://msft.sts.microsoft.com/adfsassets/images/PhysicalSmartCard.png' style='float: left;margin: 0 10px 0 0;'>&nbsp;&nbsp;<p style='overflow: hidden;'>Physical smart card certificate</p></div><br><div><img src='https://msft.sts.microsoft.com/adfsassets/images/VirtualSmartCard.png' style='float: left;margin: 0 10px 0 0;'>&nbsp;&nbsp;<p style='overflow: hidden;'>Virtual smart card certificate</p></div><br><br><h3>Do not choose this type of certificate</h3><div><img src='https://msft.sts.microsoft.com/adfsassets/images/Wrongcertificate.png' style='float: left;margin: 0 10px 0 0;'>&nbsp;&nbsp;<p style='overflow: hidden;'>If you pick this type of certificate, you'll need to start over.</p></div>"
+            //certInstructions.innerHTML = "<p><h2>Select a certificate in the popup window</h2></p><br><p><h3>Choose one of the following</h3></p><div><div><img src='https://msft.sts.microsoft.com/adfsassets/images/NGCSmartCard.png' style='float: left;margin: 0 10px 0 0;'>&nbsp;&nbsp;<p style='overflow: hidden;'>PIN (recommended)</p></div><br><div><img src='https://msft.sts.microsoft.com/adfsassets/images/Win10PhysicalSmartCard.png' style='float: left;margin: 0 10px 0 0;'>&nbsp;&nbsp;<p style='overflow: hidden;'>Physical smart card (Microsoft Intranet Level 2 User CA)</p></div><br><div><img src='https://msft.sts.microsoft.com/adfsassets/images/PhysicalSmartCard.png' style='float: left;margin: 0 10px 0 0;'>&nbsp;&nbsp;<p style='overflow: hidden;'>Physical smart card (Microsoft Intranet Level 2 User CA)</p></div><br><div><img src='https://msft.sts.microsoft.com/adfsassets/images/VirtualSmartCard.png' style='float: left;margin: 0 10px 0 0;'>&nbsp;&nbsp;<p style='overflow: hidden;'>Virtual smart card (MSIT User CA)</p></div><br><div><img src='https://msft.sts.microsoft.com/adfsassets/images/Win10VirtualSmartCard.png' style='float: left;margin: 0 10px 0 0;'>&nbsp;&nbsp;<p style='overflow: hidden;'>Virtual smart card (MSIT User CA)</p></div><br><br><h3>Do not choose this type of certificate</h3><div><img src='https://msft.sts.microsoft.com/adfsassets/images/Win10Wrongcertificate.png' style='float: left;margin: 0 10px 0 0;'>&nbsp;&nbsp;<p style='overflow: hidden;'>If you pick this type of certificate, you'll need to start over.</p></div><br><div><img src='https://msft.sts.microsoft.com/adfsassets/images/Wrongcertificate.png' style='float: left;margin: 0 10px 0 0;'>&nbsp;&nbsp;<p style='overflow: hidden;'>If you pick this type of certificate, you'll need to start over.</p></div>";
+            certInstructions.innerHTML = "<p><h3>In the Pop-up window to the left, choose one of these certificates:</h3></p><hr width=100%><br><div><table width='100%' cellpadding='0' cellspacing='0'><tr><td width='100%' align='left'><img src='https://msft.sts.microsoft.com/adfsassets/images/Recommended.png' style='float: left;margin: 0 10px 0 0;'><h2>Recommended</h2></td></tr></table></div><br><div><img src='https://msft.sts.microsoft.com/adfsassets/images/NGCSmartCard.png' style='float: left;margin: 0 10px 0 0;'>&nbsp;&nbsp;<p style='overflow: hidden;'>PIN</p></div><br><hr width=100%><br><h2>Other options</h2><div><table width='100%' cellpadding='5' cellspacing='5'><tr><td width='40%' colspan='2'>Physical smart cards</td><td width='20%' colspan='1'></td><td width='40%' colspan='2'>Virtual smart cards</td></tr><tr><td width='20%'><img src='https://msft.sts.microsoft.com/adfsassets/images/Win10PhysicalSmartCard.png' style='float: left;margin: 0 10px 0 0;'></td><td width='20%'><img src='https://msft.sts.microsoft.com/adfsassets/images/PhysicalSmartCard.png' style='float: left;margin: 0 10px 0 0;'></td><td width='20%'></td><td width='20%'><img src='https://msft.sts.microsoft.com/adfsassets/images/VirtualSmartCard.png' style='float: left;margin: 0 10px 0 0;'></td><td width='20%'><img src='https://msft.sts.microsoft.com/adfsassets/images/Win10VirtualSmartCard.png' style='float: left;margin: 0 10px 0 0;'></td></tr></table><br><img src='https://msft.sts.microsoft.com/adfsassets/images/DontPick.png' style='float: left;margin: 0 10px 0 0;'><h3>You'll need to start over if you choose one of these:</h3><table width='100%' cellpadding='0' cellspacing='0'><tr><td width='20%'><img src='https://msft.sts.microsoft.com/adfsassets/images/Win10Wrongcertificate.png' style='float: left;margin: 0 10px 0 0;'></td><td width='20%'><img src='https://msft.sts.microsoft.com/adfsassets/images/Wrongcertificate.png' style='float: left;margin: 0 10px 0 0;'></td><td width='20%'></td><td width='20%'></td><td width='20%'></td></tr></table></div></p>";
+            var certAuth = document.getElementById('otherOptions');
+            if (certAuth) {
+                //certAuth.style.display = 'none';
+                certAuth.style.display = '';
+            }
+
+            //Interim fix for Chromium cert picker pop-up issue
+            var iRetrieveCertificate = document.getElementById("RetrieveCertificate");
+            if ((!iRetrieveCertificate) && (navigator.userAgent.match(/Teams/i))) {
+                var newDiv = document.createElement("div");
+                newDiv.innerHTML = "<input id='RetrieveCertificate' type='hidden' name='RetrieveCertificate' value='1' />";
+                document.forms["options"].appendChild(newDiv);
+                SelectOption("CertificateAuthentication");
+
+            }
+
+        }
+    }
+
+    iFFAMessage = sauthArea.indexOf(isearchString);
+    if (iFFAMessage > 0) {
+        var ierrorMessage = document.getElementById("errorMessage");
+        if (ierrorMessage) {
+            var userAccount = "";
+            var iworkArea = document.getElementById('workArea');
+            if (iworkArea) {
+
+                var authcontainer = document.getElementById('authArea');
+                var authchildren = authcontainer.childNodes;
+                for (var i = 0; i < authchildren.length; i++) {
+                    if (authchildren[i].className === 'fieldMargin bigText') {
+                        var authWelcomeDiv = authchildren[i];
+                        var tempuserAccount = authWelcomeDiv.innerText;
+                        userAccount = tempuserAccount.replace("Welcome ", "");
+                        authWelcomeDiv.style.display = 'none';
+                    }
+                    if (authchildren[i].className === 'groupMargin') {
+                        var authSecurityDiv = authchildren[i];
+                        authSecurityDiv.style.display = 'none';
+                        break;
+                    }
+                }
+
+                var errorcontainer = document.getElementById('errorArea');
+                var errorchildren = errorcontainer.childNodes;
+                for (var i = 0; i < errorchildren.length; i++) {
+                    if (errorchildren[i].className === 'groupMargin bigText') {
+                        var errorOccurredDiv = errorchildren[i];
+                        errorOccurredDiv.style.display = 'none';
+                        break;
+                    }
+                }
+
+                var otherAuth = document.getElementById('otherOptions');
+                if (otherAuth) {
+                    //otherAuth.style.display = 'none';
+                    otherAuth.style.display = '';
+                }
+            }
+
+            if ((iIndexOfPWD > 0) || (iIndexOfurnPWD > 0) || navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/Macintosh/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Opera Mini/i)) {
+                ierrorMessage.innerHTML = "<p><h2>Something went wrong</h2></p><br><p>We couldn't sign you in to your account(" + userAccount + ").</p><br><p>Try registering for phone authentication by going to <a href='https://aka.ms/ringring'>aka.ms/ringring</a>.<br><br>If it still doesn't work, contact Global Helpdesk.</p>";
+            }
+            else {
+                ierrorMessage.innerHTML = "<p><h2>Something went wrong</h2></p><br><p>We couldn't sign you in to your account(" + userAccount + ").</p><br>Try one of these options:<ul class='indent block smallText'><li>Not registered for phone authentication? Go to <a href='https://aka.ms/ringring'>aka.ms/ringring</a></li><li>Close this window and retry using smartcard</li></ul><br><p>If it still doesn't work, contact Global Helpdesk.</p>";
+            }
+        }
+    }
+
+}
+
+//END
+
+var iInstructions = document.getElementById('instructions');
+if (iInstructions) {
+    document.write("<style>.illustrationClass {background-image: url(/adfsassets/illustration/msit_fba.png);}</style>");
+    if (navigator.userAgent.match(/IEMobile/i)) {
+        iInstructions.innerHTML = "<p>We&#39;re calling you as a workaround for a known WinPhone OS issue. Please answer it to continue.</p>";
+    }
+}
+
+var iviewDetailsLink = document.getElementById('viewDetailsLink');
+if (iviewDetailsLink) {
+    document.write("<style>.illustrationClass {background-image: url(/adfsassets/illustration/msit_fba.png);}</style>");
+    iviewDetailsLink.innerHTML = "<p>More details</p>";
+}
+
+var idifferentVerificationOption = document.getElementById('differentVerificationOption');
+if (idifferentVerificationOption) {
+    document.write("<style>.illustrationClass {background-image: url(/adfsassets/illustration/msit_fba.png);}</style>");
+    idifferentVerificationOption.innerHTML = "<p>Try a different verification option</p>";
+}
+
+var ierrorDiv = document.getElementById('errorDiv');
+if (ierrorDiv) {
+    var ierrorText = document.getElementById('errorText');
+
+    if (ierrorText) {
+        var ierrorOOBE = ierrorText.innerHTML;
+        if ((iIndexOfPWD > 0) || (iIndexOfurnPWD > 0) || navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Opera Mini/i)) {
+            ierrorText.innerHTML = ierrorOOBE + "<br><br>If issue persists, try one of these options:<ul class='indent block smallText'><li>Close this window and start over to resend a call/notification again</li><li>New to phone authentication? Register your device at <a href='https://aka.ms/ringring'>aka.ms/ringring</a></li><li>PIN issue? Reset at <a href='https://aka.ms/PhoneAuthPIN'>aka.ms/PhoneAuthPIN</a></li><li>Voice/Network coverage issue? Try Azure authenticator app at <a href='https://aka.ms/PhoneAuthApp'>aka.ms/PhoneAuthApp</a></li></ul><br><p>If none of these work, contact Global Helpdesk.</p>";
+        }
+        else {
+            ierrorText.innerHTML = ierrorOOBE + "<br><br>If issue persists, try one of these options:<ul class='indent block smallText'><li>Close this window and start over to resend a call/notification again</li><li>New to phone authentication? Register your device at <a href='https://aka.ms/ringring'>aka.ms/ringring</a></li><li>PIN issue? Reset at <a href='https://aka.ms/PhoneAuthPIN'>aka.ms/PhoneAuthPIN</a></li><li>Voice/Network coverage issue? Try Azure authenticator app at <a href='https://aka.ms/PhoneAuthApp'>aka.ms/PhoneAuthApp</a></li></ul><br><p>If none of these work, contact Global Helpdesk.</p>";
+        }
+    }
+}
+
+function HideSmartCard() {
+    //Hide SC button and text
+    var scOption = document.getElementById('signinsmartcard');
+    var scHelpText = document.getElementById('helptext');
+    if (scOption) {
+        scOption.style.display = 'none';
+    }
+    if (scHelpText) {
+        scHelpText.style.display = 'none';
+    }
+    var upMessageArea = document.getElementById('submissionArea');
+    if (upMessageArea) {
+        var elementUPHelpText = document.createElement("span");
+        elementUPHelpText.id = "uphelptext";
+        elementUPHelpText.className = "tinyText";
+        if (bMFAServiceStatus == "False") {
+            //elementUPHelpText.innerHTML = "<br><br>Phone authentication service is experiencing some unexpected issues, we are working on it. You can still sign in with your smartcard or Windows Hello for Business (PIN).</a>";	
+            elementUPHelpText.innerHTML = "<br><br>Phone Authentication is experiencing a service degradation currently. Authentications may be delayed. Please try again later.</a>";
+            elementUPHelpText.style.color = "red";
+        }
+        else {
+            elementUPHelpText.innerHTML = "<br><br>You may receive a phone call or app notification to complete sign in. Locate your phone before clicking Sign in.</a>";
+        }
+
+        var objuphelptext = document.getElementById('uphelptext');
+        if (objuphelptext) {
+            upMessageArea.removeChild(objuphelptext);
+            upMessageArea.appendChild(elementUPHelpText);
+        }
+        else {
+            upMessageArea.appendChild(elementUPHelpText);
+        }
+    }
+
+    var uphelptext = document.getElementById('uphelptext');
+    if (uphelptext) {
+        var asc = document.createElement('A');
+        asc.onclick = function () {
+            var usernamepwd = document.getElementById('formsAuthenticationArea');
+            if (usernamepwd.style.display === '') {
+
+                usernamepwd.style.display = 'none';
+                //usernamepwd.style.display = '';
+
+                var icurrenterrorText = document.getElementById("errorText");
+                if (icurrenterrorText) {
+                    icurrenterrorText.style.display = 'none';
+                }
+
+                ausernamepwd.setAttribute('href', '#');
+                ausernamepwd.innerHTML = "<br><br><p class='normalText'>Sign in with a username and password instead</p></a>";
+                ausernamepwd.className = "actionLink";
+                if (loginMessageArea) {
+                    loginMessageArea.appendChild(ausernamepwd);
+                }
+
+                var scOption = document.getElementById('signinsmartcard');
+                var scHelpText = document.getElementById('helptext');
+                if (scOption) {
+                    scOption.style.display = '';
+                }
+                if (scHelpText) {
+                    scHelpText.style.display = '';
+                }
+            }
+        }
+        asc.setAttribute('href', '#');
+        asc.innerHTML = "<br><br><p class='normalText'>Sign in with PIN or smartcard instead</p></a>";
+        asc.className = "actionLink";
+        uphelptext.appendChild(asc);
+    }
+}
+
+//Check for HRD or Sign-In page
+var hrd = document.getElementById('hrd');
+var pageOptions = document.getElementById('options');
+var pageloginForm = document.getElementById('loginForm');
+
+if (hrd) {
+    document.write("<style>.illustrationClass {background-image: url(/adfsassets/illustration/msit_hrd.jpg); background-position-x: 74%; background-position-y: center;}</style>");
+    //document.write("<style>#loginMessage {display: none;}</style>");
+    document.getElementById('header').innerHTML = "Microsoft IT sign in services";
+
+    var container = document.getElementById('bySelection');
+    var children = container.childNodes;
+    for (var i = 0; i < children.length; i++) {
+        if (children[i].className === 'idp') {
+            var idpDiv = children[i].childNodes[1];
+            var idpText = idpDiv.childNodes[0].innerHTML;
+            var taglineSpan = document.createElement('SPAN');
+            taglineSpan.className = 'hint indentNonCollapsible';
+            var tagline = '';
+            if (idpText === '@microsoft.com account') {
+                tagline = 'Microsoft corpnet users';
+            } else if (idpText === 'Microsoft account') {
+                tagline = 'Formerly Windows Live ID';
+            } else if (idpText === 'Microsoft account INT') {
+                tagline = 'Formerly Windows Live ID INT';
+            } else if (idpText === 'OrgID') {
+                idpDiv.childNodes[0].innerHTML = 'AAD/Office365 Account';
+                tagline = 'Azure Active Directory or Office 365 Login';
+            } else if (idpText === 'OrgIDINT') {
+                idpDiv.childNodes[0].innerHTML = 'AAD/Office365 INT Account';
+                tagline = 'Azure Active Directory or Office 365 INT Login';
+            } else if (idpText === 'CME domain') {
+                idpDiv.childNodes[0].innerHTML = 'CME domain users';
+                tagline = 'CME domain accounts';
+            } else if (idpText === 'Partner domain') {
+                idpDiv.childNodes[0].innerHTML = 'Partner domain users';
+                tagline = 'Partner domain accounts';
+            }
+            taglineSpan.innerHTML = tagline;
+            idpDiv.appendChild(taglineSpan);
+        }
+    }
+} else {
+    document.write("<style>.illustrationClass {background-image: url(/adfsassets/illustration/msit_fba.png);}</style>");
+    if (pageloginForm) {
+        //document.write("<style>#header {color: #666666;}</style>");
+        //document.write("<style>#loginMessage {display: visible;}</style>");
+        //document.getElementById('header').innerHTML = '<img class="logoImage" alt="" src="/adfsassets/logo/corp_logo_tile.png" style="float: left; width: 90px; margin-right: 20px;" /><h3>Microsoft IT</h3><h4>Corporate sign in</h4>';
+        //document.getElementById('header').innerHTML = '<img class="logoImage" alt="" src="/adfsassets/logo/corp_logo.png" />';
+
+        var fbaloginMessage = document.getElementById('loginMessage');
+        if (fbaloginMessage) {
+            //fbaloginMessage.innerHTML = "<p style='font-size:20px'>Sign in to your Microsoft Corporate account</p><br>";	
+            fbaloginMessage.innerHTML = "<p><h2>Sign in to your Microsoft corporate account</h2></p><br>";
+        }
+        if (!hololens) {
+            if ((iIndexOfPWD == -1) && (iIndexOfurnPWD == -1) && (navigator.userAgent.match(/Android/i) == null) && (navigator.userAgent.match(/iPad/i) == null) && (navigator.userAgent.match(/Macintosh/i) == null) && (navigator.userAgent.match(/IEMobile/i) == null) && (navigator.userAgent.match(/iPhone/i) == null) && (navigator.userAgent.match(/BlackBerry/i) == null) && (navigator.userAgent.match(/Opera Mini/i) == null)) {
+                var usernamepwdArea = document.getElementById('formsAuthenticationArea');
+                if (usernamepwdArea) {
+                    usernamepwdArea.style.display = 'none';
+                }
+
+                //Create SC
+                //Create span tag same as submit - added on 1/26/2015
+                var loginMessageArea = document.getElementById('loginMessage');
+                if (loginMessageArea) {
+                    var scelement = document.createElement("span");
+                    scelement.id = "signinsmartcard";
+                    scelement.className = "submit";
+                    scelement.innerHTML = "Sign in with PIN or smartcard";
+                    scelement.setAttribute("onclick", "SelectOption('CertificateAuthentication'); return false;");
+                    loginMessageArea.appendChild(scelement);
+                }
+
+                //Create SC message
+                var scMessageArea = document.getElementById('signinsmartcard');
+                if (scMessageArea) {
+                    var elementSCHelpText = document.createElement("span");
+                    elementSCHelpText.id = "helptext";
+                    elementSCHelpText.className = "tinyText";
+                    elementSCHelpText.innerHTML = "<br><br>Using a PIN or smartcard or virtual smartcard is faster and more secure than using a password.</a>";
+                    loginMessageArea.appendChild(elementSCHelpText);
+                }
+
+                //Expand username and password
+                var ausernamepwd = document.createElement('A');
+                ausernamepwd.onclick = function () {
+                    var usernamepwd = document.getElementById('formsAuthenticationArea');
+                    if (usernamepwd.style.display === '') {
+                        //Hide usernmae & pwd
+                        usernamepwd.style.display = 'none';
+                    } else {
+                        //Show username & pwd
+                        usernamepwd.style.display = '';
+                        ausernamepwd.innerHTML = "";
+
+                        if ((navigator.userAgent.match(/MSIE 7.0/)) == null) {
+                            var u = new InputUtil();
+                            u.setInitialFocus(Login.userNameInput);
+                        }
+                        HideSmartCard();
+                        /*
+                        //Hide SC button and text
+                        var scOption = document.getElementById('signinsmartcard');
+                        var scHelpText = document.getElementById('helptext');
+                        if(scOption) {
+                        scOption.style.display = 'none';
+                        }
+                        if(scHelpText) {
+                        scHelpText.style.display = 'none';
+                        }	
+                        var upMessageArea = document.getElementById('submissionArea');
+                        if(upMessageArea) {
+                            var elementUPHelpText = document.createElement("span");
+                            elementUPHelpText.id = "uphelptext";
+                            elementUPHelpText.className = "tinyText";
+                            //elementUPHelpText.innerHTML = "<br><br>You may receive a phone call or app notification to complete sign in. Locate your phone before clicking Sign in.</a>";
+                            
+                            var objuphelptext = document.getElementById('uphelptext');
+                            if(objuphelptext)
+                            {
+                                upMessageArea.removeChild(objuphelptext);
+                                upMessageArea.appendChild(elementUPHelpText);
+                            }
+                            else
+                            {
+                                upMessageArea.appendChild(elementUPHelpText);
+                            }
+                            }
+                            
+                            var uphelptext = document.getElementById('uphelptext');
+                            if (uphelptext) {
+                            var asc = document.createElement('A');
+                            asc.onclick = function () {
+                                            var usernamepwd = document.getElementById('formsAuthenticationArea');
+                                            if (usernamepwd.style.display === '') {
+                                            
+                                            usernamepwd.style.display = 'none';
+                                            //usernamepwd.style.display = '';
+                                            
+                                            ausernamepwd.innerHTML = "<br><br><p class='normalText'>Sign in with a username and password instead</p></a>";
+                                            ausernamepwd.className = "actionLink";
+                                            var scOption = document.getElementById('signinsmartcard');
+                                            var scHelpText = document.getElementById('helptext');
+                                            if(scOption) {
+                                            scOption.style.display = '';
+                                            }
+                                            if(scHelpText) {
+                                            scHelpText.style.display = '';
+                                            }	
+                                }
+                            }
+                            asc.setAttribute('href', '#');
+                            asc.innerHTML = "<br><br><p class='normalText'>Sign in with a smartcard instead</p></a>";
+                            asc.className = "actionLink";
+                            uphelptext.appendChild(asc);							
+                            }*/
+                    }
+                    return false;
+                };
+
+
+                var ierrorText = document.getElementById("errorText");
+
+                if (ierrorText) {
+                    var ierrorIncorrect = ierrorText.innerHTML;
+                    var isearchIncorrect = 'ID and password';
+                    var iIncorrectMessage = 0;
+
+                    iIncorrectMessage = ierrorIncorrect.indexOf(isearchIncorrect);
+
+                    if (iIncorrectMessage > 0) {
+                        var usernamepwdarea = document.getElementById('formsAuthenticationArea');
+
+                        if (usernamepwdarea) {
+                            usernamepwdarea.style.display = '';
+                            HideSmartCard();
+                        }
+
+                    }
+                    else {
+                        ausernamepwd.setAttribute('href', '#');
+                        ausernamepwd.innerHTML = "<br><br><p class='normalText'>Sign in with a username and password instead</p></a>";
+                        ausernamepwd.className = "actionLink";
+                        if (loginMessageArea) {
+                            loginMessageArea.appendChild(ausernamepwd);
+                        }
+                    }
+
+                }
+
+
+                //End
+
+                var input = document.getElementById('userNameInput');
+                if (input) {
+                    for (var i = 0; i < input.parentNode.childNodes.length; i++) {
+                        var child = input.parentNode.childNodes[i];
+                        if (child.tagName === 'INPUT' && child.tabIndex === -1) {
+                            input.parentNode.removeChild(child);
+                            break;
+                        }
+                    }
+                    input.placeholder = "someone@example.com";
+                    input.alt = "someone@example.com";
+                    input.autocomplete = "off";
+                }
+            }
+            else {
+                var iSubmissionArea = document.getElementById('submissionArea');
+                if (iSubmissionArea) {
+                    var elementHelpText = document.createElement("span");
+                    elementHelpText.id = "helptext";
+                    elementHelpText.className = "tinyText";
+                    if (bMFAServiceStatus == "False") {
+                        // Display below message during Phone authentication service outage
+                        //elementHelpText.innerHTML = "<br><br>Phone authentication service is experiencing some unexpected issues, we are working on it. You can still sign in with your smartcard or Windows Hello for Business (PIN).</a>";
+                        elementHelpText.innerHTML = "<br><br>Phone Authentication is experiencing a service degradation currently. Authentications may be delayed. Please try again later.</a>";
+                        elementHelpText.style.color = "red";
+                    }
+                    else {
+                        elementHelpText.innerHTML = "<br><br>You may receive a phone call or app notification to complete sign in. Locate your phone before clicking Sign in.";
+                    }
+                    iSubmissionArea.appendChild(elementHelpText);
+                }
+            }
+            //Track user-telemetry
+            if (pageloginForm) {
+                /* Commented due to IE 10 gesture issue
+                            if (typeof InputUtil != 'undefined')
+                        {
+                
+                            InputUtil.makePlaceholder = function (input) {
+                            var ua = navigator.userAgent;
+            
+                            if (ua != null && 
+                                (ua.match(/MSIE 9.0/) != null || 
+                                ua.match(/MSIE 8.0/) != null ||
+                                ua.match(/MSIE 7.0/) != null || 
+                                ua.match(/MSIE 11.0/) != null ||
+                                ua.match(/MSIE 10.0/) != null)) {
+                                var node = document.getElementById(input);
+                                if (node) {
+                                    var placeholder = node.getAttribute("placeholder");
+                                    if (placeholder != null && placeholder != '') {
+                                        var label = document.createElement('input');
+                                        label.type = "text";
+                                        label.value = placeholder;
+                                        label.readOnly = true;
+                                        label.style.position = 'absolute';
+                                        label.style.borderColor = 'transparent';
+                                        label.className = node.className + ' hint';
+                                        label.tabIndex = -1;
+                                        label.onfocus = function () { this.nextSibling.focus(); };
+            
+                                        node.style.position = 'relative';
+                                        node.parentNode.style.position = 'relative';
+                                        node.parentNode.insertBefore(label, node);
+                                        node.onkeyup = function () { InputUtil.showHint(this); };
+                                        node.onblur = function () { InputUtil.showHint(this); };
+                                        node.style.background = 'transparent';
+            
+                                        node.setAttribute("placeholder", "");
+                                        InputUtil.showHint(node);
+                                    }
+                                }
+                            }
+                            };
+                    }
+                */
+
+                function Login() {
+                }
+
+                Login.userNameInput = 'userNameInput';
+                Login.passwordInput = 'passwordInput';
+
+
+                Login.initialize = function () {
+                    if ((navigator.userAgent.match(/MSIE 7.0/)) == null) {
+
+                        if (typeof InputUtil != 'undefined') {
+
+                            var u = new InputUtil();
+
+                            u.checkError();
+                            u.setInitialFocus(Login.userNameInput);
+                            u.setInitialFocus(Login.passwordInput);
+                        }
+                    }
+                }();
+
+                Login.submitLoginRequest = function () {
+
+                    var userName = document.getElementById(Login.userNameInput);
+                    var password = document.getElementById(Login.passwordInput);
+
+                    if ((navigator.userAgent.match(/MSIE 7.0/)) == null) {
+                        if (typeof InputUtil != 'undefined') {
+
+                            var u = new InputUtil();
+                            var e = new LoginErrors();
+
+                            if (!userName.value || !userName.value.match('[@\\\\]')) {
+
+                                var iuserNameFormatError = e.userNameFormatError;
+                                var isearchuserNameFormat = "user@domain";
+                                var iIncorrectNameFormat = 0;
+                                iIncorrectNameFormat = iuserNameFormatError.indexOf(isearchuserNameFormat);
+
+                                if (iIncorrectNameFormat > 0) {
+                                    var customuserNameFormatError = "Enter your username in the format someone@example.com or DOMAIN\\user";
+                                    u.setError(userName, customuserNameFormatError);
+                                    return false;
+                                }
+                                else {
+                                    u.setError(userName, e.userNameFormatError);
+                                    return false;
+                                }
+                            }
+
+                            if (!password.value) {
+                                u.setError(password, e.passwordEmpty);
+                                return false;
+                            }
+                        }
+                    }
+
+                    var ilocationhref = location.href;
+                    var iwauthFlag = decodeURIComponent(location.href);
+                    var iIndexOfAuthn = 0;
+                    iIndexOfAuthn = iwauthFlag.indexOf("wauth");
+                    if (iIndexOfAuthn == -1) {
+                        var iloginFormactionUrl = ilocationhref + "&page_hint=pf";
+                        document.forms['loginForm'].action = iloginFormactionUrl;
+                    }
+
+                    document.forms['loginForm'].submit();
+                    return false;
+                };
+                if (typeof InputUtil != 'undefined') {
+                    InputUtil.makePlaceholder(Login.userNameInput);
+                    InputUtil.makePlaceholder(Login.passwordInput);
+                }
+            } //End of if (!hololens)
+        }
+        //End of Track user-telemetry
+    }
+}
+
+//
+// Telemetry Manager is the App Insights telemetry management object
+// Callers MUST call 'Initialize' before using the 'ProducePageDetectionTelemetry' method
+//
+TelemetryManager = {
+
+    /*
+     *  Produces all telemetry required for the following pages: 
+     *      Forms Page (including Sign-In Options if applicable)
+     *      AuthSelection Page 
+     *      Home Realm Discovery Page 
+     *      Phone Factor Authentication Page 
+     *      Phone Factor Error Page 
+     *      ADFS Error Page 
+     *      Phone Factor Authentication Options Page 
+     */
+    ProducePageDetectionTelemetry: function () {
+        if(console) console.log("Enter: TelemetryManager.ProducePageDetectionTelemetry");
+
+        var _self = this;
+
+        //
+        // Generic Page view tracking 
+        //
+        window.appInsights.trackPageView("Generic");
+
+        //
+        // Home Realm Discovery Page
+        //
+        var hrd = document.getElementById('hrd');
+        if (hrd) {
+            window.appInsights.trackPageView("HomeRealmDiscovery");
+            if(console) console.log("ProducePageDetectionTelemetry: Found HRD Page");
+            return;
+        }
+
+        //
+        // Forms Page (before creds are entered)
+        //
+        var pageloginForm = document.getElementById('loginForm');
+        if (!hrd && pageloginForm && document.title == 'Sign In') {
+            // TODO: We need to determine if this is visible or not if we want to distinguish between the selection page and forms page 
+            window.appInsights.trackEvent("FormsPageStart",
+                { CorrelationID: _self.requestID_mattbo, CurrentUri: _self.currentUri_mattbo, CurrentRealm: _self.mswtrealm_mattbo, wauth: _self.wauth_mattbo, wfresh: _self.wfresh_mattbo, wtrealm: _self.decodedwtrealm_mattbo }
+            );
+            _self.startedFormsPage = true;
+            if(console) console.log("ProducePageDetectionTelemetry: Found Forms Page");
+            return;
+        }
+
+        //
+        // Error Page
+        //
+        var ierrorText = document.getElementById("errorText");
+        if (ierrorText) {
+            var ierrorCurrent = ierrorText.innerHTML;
+            if (ierrorCurrent.length > 0) {
+                var pageTitle = document.title;
+
+                window.appInsights.trackEvent("ErrorPageStart",
+                    { CorrelationID: _self.requestID_mattbo, CurrentUri: _self.currentUri_mattbo, CurrentRealm: _self.mswtrealm_mattbo, wtrealm: _self.decodedwtrealm_mattbo, wfresh: _self.wfresh_mattbo, wauth: _self.wauth_mattbo, PageTitle: pageTitle }
+                );
+                if(console) console.log("ProducePageDetectionTelemetry: Found Error Page");
+
+                //
+                // Try to gather more error information from the page 
+                //
+                var erruserAccount = "";
+                var erractivityIdContent = "";
+                var errtimestampContent = "";
+                erruserAccount = _self.GetUserNameFromAuthArea();
+
+                var erractivityId = document.getElementById('activityId');
+                var errcontextId = document.getElementById('contextId');
+                var errtimestamp = document.getElementById('timestamp');
+                if ((erractivityId) && (erruserAccount) && (errcontextId) && (errtimestamp)) {
+                    erractivityIdContent = erractivityId.innerText;
+                    errcontextIdContent = errcontextId.innerText;
+                    errtimestampContent = errtimestamp.innerText;
+                    window.appInsights.trackEvent("ErrorDetailedPageStart",
+                        { CorrelationID: _self.requestID_mattbo, CurrentUri: _self.currentUri_mattbo, CurrentRealm: _self.mswtrealm_mattbo, wtrealm: _self.decodedwtrealm_mattbo, wfresh: _self.wfresh_mattbo, wauth: _self.wauth_mattbo, PageTitle: pageTitle, Username: erruserAccount, ActivityID: erractivityIdContent, ContextId: errcontextIdContent, ErrorTimestamp: errtimestampContent }
+                    );
+                    if(console) console.log("ProducePageDetectionTelemetry: Found Detailed Error Page");
+                }
+                return;
+            }
+        }
+
+        //
+        // AuthSelection Page
+        //
+        var authOptions = document.getElementById('authOptions')
+        var progress = document.getElementById('Progress')
+        if (authOptions && !progress) {
+            
+            var foundUsername = _self.GetUserNameFromAuthArea();
+            _self.Username_mattbo = foundUsername;
+
+            window.appInsights.trackEvent("AuthSelectionPageStart",
+                { CorrelationID: _self.requestID_mattbo, CurrentUri: _self.currentUri_mattbo, CurrentRealm: _self.mswtrealm_mattbo, wtrealm: _self.decodedwtrealm_mattbo, wfresh: _self.wfresh_mattbo, wauth: _self.wauth_mattbo, Username: _self.Username_mattbo }
+            );
+            if(console) console.log("ProducePageDetectionTelemetry: Found Auth Selection Page");
+
+            var certOption = document.getElementById('CertificateAuthentication');
+            if (certOption) {
+                certOption.addEventListener("click", function () { _self.AuthSelectionPageSubmitCallback("cert", "manual", _self); }, false);
+            }
+
+            var azureOption = document.getElementById('WindowsAzureMultiFactorAuthentication');
+            if (azureOption) {
+                azureOption.addEventListener("click", function () { _self.AuthSelectionPageSubmitCallback("phonefactor", "manual", _self); }, false);
+            }
+
+            return;
+        }
+
+        //
+        // Phone Factor Waiting Page 
+        //
+        var workArea = document.getElementById('workArea');
+        if (workArea) {
+            var authArea = document.getElementById('authArea');
+            if (authArea) {
+                var progressDiv = document.getElementById("Progress");
+                if (progressDiv) {
+                    var authMethod = document.getElementById('authMethod');
+                    if (authMethod) {
+                        var phonefactorUserID = _self.GetUserNameFromAuthArea();
+                        var errorDiv = document.getElementById('errorDiv');
+                        if (!errorDiv) {
+                            var greeting = document.getElementById('mfaGreeting');
+                            if(greeting){
+                                window.appInsights.trackEvent("PhoneFactorWaitingStart",
+                                    { CorrelationID: _self.requestID_mattbo, CurrentUri: _self.currentUri_mattbo, CurrentRealm: _self.mswtrealm_mattbo, wtrealm: _self.decodedwtrealm_mattbo, wfresh: _self.wfresh_mattbo, wauth: _self.wauth_mattbo, Username: phonefactorUserID }
+                                );
+                                if(console) console.log("ProducePageDetectionTelemetry: Found PFA Waiting Page");
+
+                                // Once we detect the pfa page, add a timer 
+                                _self.startedPfaWaiting = true;
+                                _self.Username_mattbo = phonefactorUserID;
+
+                                if (performance && performance.now()) {
+                                    _self.pfaTimestamp = performance.now();
+                                }
+
+                                if (Date && Date.now()) {
+                                    _self.pfaTimestampOldBrowser = Date.now();
+                                }                                
+                            }
+                        }
+
+                        return;
+                    }
+                }
+            }
+        }
+
+        if(console) console.log("Exit: TelemetryManager.ProducePageDetectionTelemetry");
+    },
+
+    GetUserNameFromAuthArea: function () {
+        var authchildren = document.getElementById('authArea').childNodes;
+        for (var i = 0; i < authchildren.length; i++) {
+            if(authchildren[i]){
+                if(authchildren[i].className){
+                    if (authchildren[i].className.indexOf('fieldMargin bigText') !== -1) {
+                        var tempuserAccount = authchildren[i].innerText;
+                        return tempuserAccount.replace("Welcome ", "");
+                    }
+                }
+            }
+        }
+    },
+
+    Initialize: function () {
+        if(console) console.log("Enter: TelemetryManager.Initialize");
+        _self = this;
+
+        // Collect some page details for later 
+        _self.currentUri_mattbo = window.location.href.split('?')[0];
+        _self.mswtrealm_mattbo = getQueryString("wtrealm") || 'NOTSET';
+        _self.decodedwtrealm_mattbo = decodeURIComponent(_self.mswtrealm_mattbo) || 'NOTSET';
+        _self.requestID_mattbo = getQueryString("client-request-id") || 'NOTSET';
+        _self.wfresh_mattbo = getQueryString("wfresh") || 'NOTSET';
+        _self.wauth_mattbo = getQueryString("wauth") || 'NOTSET';
+        _self.wauth_mattbo = decodeURIComponent(_self.wauth_mattbo);
+
+        _self.startedPfaWaiting = false;
+        _self.pfaTimestamp = null;
+        _self.pfaTimestampOldBrowser = null;
+        _self.startedAuthSelectionWaiting = false;
+        _self.authSelectionTimestamp = null;
+        _self.authSelectionTimestampOldBrowser = null;
+        _self.authSelectionLinkClicked = null;
+        _self.authSelectionMethod = null;
+        _self.Username_mattbo = 'NOTSET';
+        _self.startedFormsPage = false;
+
+        // Create App Insights object with settings 
+        if (!window.appInsights) {
+            if(console) console.log("TelemetryManager: Generating a new App Insights object");
+            var appInsights = _self.GenerateAppInsightsObject.call();
+
+            // Set App Insights object against the current window 
+            window.appInsights = appInsights;
+            if(console) console.log("TelemetryManager: Set new App Insights object against the current window");
+        }
+
+        //
+        // Add unload callback to window, so we can capture telemetry 
+        //
+        if (window.addEventListener) {
+            window.addEventListener("unload", function () { _self.LeavingCurrentPageCallback(_self); }, false);  //Modern browsers
+        } else if (window.attachEvent) {
+            window.attachEvent('onunload', function () { _self.LeavingCurrentPageCallback(_self); });            //Old IE
+        }
+
+        if(console) console.log("Exit: TelemetryManager.Initialize");
+    },
+
+    GenerateAppInsightsObject: function() {
+        return function (config) {
+            function r(config) { t[config] = function () { var i = arguments; t.queue.push(function () { t[config].apply(t, i) }) } } var t = { config: config }, u = document, e = window, o = "script", s = u.createElement(o), i, f; for (s.src = config.url || "//az416426.vo.msecnd.net/scripts/a/ai.0.js", u.getElementsByTagName(o)[0].parentNode.appendChild(s), t.cookie = u.cookie, t.queue = [], i = ["Event", "Exception", "Metric", "PageView", "Trace"]; i.length;) r("track" + i.pop()); return r("setAuthenticatedUserContext"), r("clearAuthenticatedUserContext"), config.disableExceptionTracking || (i = "onerror", r("_" + i), f = e[i], e[i] = function (config, r, u, e, o) { var s = f && f(config, r, u, e, o); return s !== !0 && t["_" + i](config, r, u, e, o), s }), t
+        }({
+            samplingPercentage: 100,
+            instrumentationKey: "b6982d5e-de82-42f8-9991-ab5d676ba229"
+        });
+    },
+
+    AuthSelectionPageSubmitCallback: function (linkClicked, selectionMethod, _self) {
+        if(console) console.log("Enter: TelemetryManager.AuthSelectionPageSubmitCallback");
+        
+        // ***************************************
+        // Add loading wheel for visual feedback 
+        // ***************************************
+        
+        var divToAppendTo = document.getElementById("authArea");
+
+        // Create the feedback loader
+        var loader = document.createElement("loader");
+        loader.innerHTML = "<style>#floatingCirclesG { position: relative; width: 125px; height: 125px; margin: auto; transform: scale(0.4); -o-transform: scale(0.4); -ms-transform: scale(0.4); -webkit-transform: scale(0.4); -moz-transform: scale(0.4); } .f_circleG { position: absolute; height: 22px; width: 22px; border-radius: 12px; -o-border-radius: 12px; -ms-border-radius: 12px; -webkit-border-radius: 12px; -moz-border-radius: 12px; animation-name: f_fadeG; -o-animation-name: f_fadeG; -ms-animation-name: f_fadeG; -webkit-animation-name: f_fadeG; -moz-animation-name: f_fadeG; animation-duration: 1.2s; -o-animation-duration: 1.2s; -ms-animation-duration: 1.2s; -webkit-animation-duration: 1.2s; -moz-animation-duration: 1.2s; animation-iteration-count: infinite; -o-animation-iteration-count: infinite; -ms-animation-iteration-count: infinite; -webkit-animation-iteration-count: infinite; -moz-animation-iteration-count: infinite; animation-direction: normal; -o-animation-direction: normal; -ms-animation-direction: normal; -webkit-animation-direction: normal; -moz-animation-direction: normal; } #frotateG_01 { left: 0; top: 51px; animation-delay: 0.45s; -o-animation-delay: 0.45s; -ms-animation-delay: 0.45s; -webkit-animation-delay: 0.45s; -moz-animation-delay: 0.45s; } #frotateG_02 { left: 15px; top: 15px; animation-delay: 0.6s; -o-animation-delay: 0.6s; -ms-animation-delay: 0.6s; -webkit-animation-delay: 0.6s; -moz-animation-delay: 0.6s; } #frotateG_03 { left: 51px; top: 0; animation-delay: 0.75s; -o-animation-delay: 0.75s; -ms-animation-delay: 0.75s; -webkit-animation-delay: 0.75s; -moz-animation-delay: 0.75s; } #frotateG_04 { right: 15px; top: 15px; animation-delay: 0.9s; -o-animation-delay: 0.9s; -ms-animation-delay: 0.9s; -webkit-animation-delay: 0.9s; -moz-animation-delay: 0.9s; } #frotateG_05 { right: 0; top: 51px; animation-delay: 1.05s; -o-animation-delay: 1.05s; -ms-animation-delay: 1.05s; -webkit-animation-delay: 1.05s; -moz-animation-delay: 1.05s; } #frotateG_06 { right: 15px; bottom: 15px; animation-delay: 1.2s; -o-animation-delay: 1.2s; -ms-animation-delay: 1.2s; -webkit-animation-delay: 1.2s; -moz-animation-delay: 1.2s; } #frotateG_07 { left: 51px; bottom: 0; animation-delay: 1.35s; -o-animation-delay: 1.35s; -ms-animation-delay: 1.35s; -webkit-animation-delay: 1.35s; -moz-animation-delay: 1.35s; } #frotateG_08 { left: 15px; bottom: 15px; animation-delay: 1.5s; -o-animation-delay: 1.5s; -ms-animation-delay: 1.5s; -webkit-animation-delay: 1.5s; -moz-animation-delay: 1.5s; } @keyframes f_fadeG { 0% { background-color: rgb(47, 146, 212); } 100% { background-color: rgb(255, 255, 255); } } @-o-keyframes f_fadeG { 0% { background-color: rgb(47, 146, 212); } 100% { background-color: rgb(255, 255, 255); } } @-ms-keyframes f_fadeG { 0% { background-color: rgb(47, 146, 212); } 100% { background-color: rgb(255, 255, 255); } } @-webkit-keyframes f_fadeG { 0% { background-color: rgb(47, 146, 212); } 100% { background-color: rgb(255, 255, 255); } } @-moz-keyframes f_fadeG { 0% { background-color: rgb(47, 146, 212); } 100% { background-color: rgb(255, 255, 255); } }</style><div id='floatingCirclesG'> <div class='f_circleG' id='frotateG_01'></div> <div class='f_circleG' id='frotateG_02'></div> <div class='f_circleG' id='frotateG_03'></div> <div class='f_circleG' id='frotateG_04'></div> <div class='f_circleG' id='frotateG_05'></div> <div class='f_circleG' id='frotateG_06'></div> <div class='f_circleG' id='frotateG_07'></div> <div class='f_circleG' id='frotateG_08'></div></div></div>"
+        
+        // Add the loader to the HTML page 
+        if(divToAppendTo && loader){
+            divToAppendTo.appendChild(loader);
+        }
+
+        // Collect telemetry
+        window.appInsights.trackEvent("AuthSelectionPicked",
+             { CorrelationID: _self.requestID_mattbo, CurrentUri: _self.currentUri_mattbo, CurrentRealm: _self.mswtrealm_mattbo, wauth: _self.wauth_mattbo, wfresh: _self.wfresh_mattbo, Type: linkClicked, SelectionMethod: selectionMethod, wtrealm: _self.decodedwtrealm_mattbo, Username: _self.Username_mattbo }
+        );
+
+        if(console) console.log("AuthSelectionPageSubmitCallback: Link Clicked: " + linkClicked);
+
+        // Start the auth selection timer to time from page submit to page unload 
+        _self.startedAuthSelectionWaiting = true;
+        _self.authSelectionLinkClicked = linkClicked;
+        _self.authSelectionMethod = selectionMethod;
+
+        if (performance && performance.now()) {
+            _self.authSelectionTimestamp = performance.now();
+        }
+
+        if (Date && Date.now()) {
+            _self.authSelectionTimestampOldBrowser = Date.now();
+        }
+
+        if(console) console.log("Exit: TelemetryManager.AuthSelectionPageSubmitCallback");
+    },
+
+    LeavingCurrentPageCallback: function (_self) {
+
+        // Grab the window appInsights object for local use 
+        var localAppInsights = window.appInsights;
+        var flushMePlease = false;
+
+        if (_self.startedFormsPage) {
+            // Collect telemetry 
+            _self.Username_mattbo = document.getElementById(Login.userNameInput).value;
+            localAppInsights.trackEvent("FormsPageEnd",
+                { CorrelationID: _self.requestID_mattbo, CurrentUri: _self.currentUri_mattbo, CurrentRealm: _self.mswtrealm_mattbo, wtrealm: _self.decodedwtrealm_mattbo, wfresh: _self.wfresh_mattbo, wauth: _self.wauth_mattbo, Username: _self.Username_mattbo }
+            );
+            _self.startedFormsPage = false;
+            flushMePlease = true;
+        }
+
+        var pfaTime = null;
+        if (_self.pfaTimestamp) {
+            pfaTime = (performance.now() - _self.pfaTimestamp) / 1000.0;
+        }
+
+        var pfaTimeOldBrowser = null;
+        if (_self.pfaTimestampOldBrowser) {
+            pfaTimeOldBrowser = (Date.now() - _self.pfaTimestampOldBrowser) / 1000.0;
+        }
+
+        if (pfaTime) {
+            localAppInsights.trackEvent("PhoneFactorLatency",
+                { CorrelationID: _self.requestID_mattbo, CurrentUri: _self.currentUri_mattbo, CurrentRealm: _self.mswtrealm_mattbo, wtrealm: _self.decodedwtrealm_mattbo, wfresh: _self.wfresh_mattbo, wauth: _self.wauth_mattbo, Username: _self.Username_mattbo },
+                { Latency: pfaTime }
+            );
+            flushMePlease = true;
+        } else if (pfaTimeOldBrowser) {
+            localAppInsights.trackEvent("PhoneFactorLatency",
+                { CorrelationID: _self.requestID_mattbo, CurrentUri: _self.currentUri_mattbo, CurrentRealm: _self.mswtrealm_mattbo, wtrealm: _self.decodedwtrealm_mattbo, wfresh: _self.wfresh_mattbo, wauth: _self.wauth_mattbo, Username: _self.Username_mattbo },
+                { OldBrowserLatency: pfaTimeOldBrowser }
+            );
+            flushMePlease = true;
+        }
+
+        if (_self.startedPfaWaiting) {
+
+            localAppInsights.trackEvent("PhoneFactorWaitingEnd",
+                { CorrelationID: _self.requestID_mattbo, CurrentUri: _self.currentUri_mattbo, CurrentRealm: _self.mswtrealm_mattbo, wtrealm: _self.decodedwtrealm_mattbo, wfresh: _self.wfresh_mattbo, wauth: _self.wauth_mattbo, Username: _self.Username_mattbo }
+            );
+            _self.startedPfaWaiting = false;
+            flushMePlease = true;
+        }
+
+        if (_self.startedAuthSelectionWaiting) {
+            localAppInsights.trackEvent("AuthSelectionPageEnd",
+                { CorrelationID: _self.requestID_mattbo, CurrentUri: _self.currentUri_mattbo, CurrentRealm: _self.mswtrealm_mattbo, wtrealm: _self.decodedwtrealm_mattbo, wfresh: _self.wfresh_mattbo, wauth: _self.wauth_mattbo, Username: _self.Username_mattbo, Type: _self.authSelectionLinkClicked, SelectionMethod: _self.authSelectionMethod }
+            );
+            _self.startedAuthSelectionWaiting = false;
+            flushMePlease = true;
+        }
+
+        var authSelectionTime = null;
+        if (_self.authSelectionTimestamp) {
+            authSelectionTime = (performance.now() - _self.authSelectionTimestamp) / 1000.0;
+        }
+
+        var authSelectionTimeOldBrowser = null;
+        if (_self.authSelectionTimestampOldBrowser) {
+            authSelectionTimeOldBrowser = (Date.now() - _self.authSelectionTimestampOldBrowser) / 1000.0;
+        }
+
+        if (authSelectionTime ) {
+            localAppInsights.trackEvent("AuthSelectionLatency",
+                { CorrelationID: _self.requestID_mattbo, Username: _self.Username_mattbo, wauth: _self.wauth_mattbo, wfresh: _self.wfresh_mattbo, wtrealm: _self.decodedwtrealm_mattbo, Type: _self.authSelectionLinkClicked, SelectionMethod: _self.authSelectionMethod },
+                { Latency: authSelectionTime }
+            );
+            flushMePlease = true;
+        } else if (authSelectionTimeOldBrowser) {
+            localAppInsights.trackEvent("AuthSelectionLatency",
+                { CorrelationID: _self.requestID_mattbo, Username: _self.Username_mattbo, wauth: _self.wauth_mattbo, wfresh: _self.wfresh_mattbo, wtrealm: _self.decodedwtrealm_mattbo, Type: _self.authSelectionLinkClicked, SelectionMethod: _self.authSelectionMethod },
+                { OldBrowserLatency: authSelectionTimeOldBrowser }
+            );
+            flushMePlease = true;
+        }
+
+        if (flushMePlease) {
+            if (localAppInsights) {
+                if (localAppInsights.flush) {
+                    localAppInsights.flush();
+                }
+            }
+        }
+    },
+};
+
+// Produce telemetry 
+if(console) console.log("TelemetryManager: Start trying to produce telemetry");
+var pageTelemetryManager = TelemetryManager;
+pageTelemetryManager.Initialize();
+pageTelemetryManager.ProducePageDetectionTelemetry();
+if(console) console.log("TelemetryManager: End trying to produce telemetry");
+//]]>
+</script>
+
+
+    </body>
+</html> 
+

@@ -1,0 +1,798 @@
+<HTML> 
+<HEAD> 
+ 
+<title>ScoresTime - Free Live Scores</title> 
+<meta name="description" content="Live Score and Results real time service - Soccer Live Scores and Sports Results all over the world... - All Sports WAP service."> 
+<meta name="keywords" content="livescores,live scores,livescore,live score,soccer scores,soccer results,results,result,live results,football,scores,score,world cup 2010,euro 2008,euro cup,euro championship,cricket,wap,livesport,livesports,sport,sports,goal,goals,free,free feed,stats,news,update,updates,real,time,real time,realtime,real-time,championship,play,team,teams,FIFA,UEFA"> 
+<meta name="RESOURCE-TYPE" content="DOCUMENT"> 
+<meta name="DISTRIBUTION" content="GLOBAL"> 
+<meta name="AUTHOR" content="ScoresTime"> 
+<meta name="COPYRIGHT" content="Copyright (c) by ScoresTime.com"> 
+<meta name="ROBOTS" content="INDEX,FOLLOW"> 
+<meta name="REVISIT-AFTER" content="1 DAYS"> 
+<meta name="RATING" content="GENERAL"> 
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"> 
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache"> 
+<META HTTP-EQUIV="expires" VALUE="Tue, 23 Jun 1998 01:46:05 GMT"> 
+ 
+<link rel="stylesheet" type="text/css" href="en.css">
+<script type="text/javascript" src="http://davidjbradshaw.com/iframe-resizer/js/iframeResizer.contentWindow.min.js"></script>
+<script type="text/javascript" src='ajax2.js'></script> 
+<script language="javascript"> 
+ 
+var host="http://feed.goalsfeed.com/";
+	var urlD=host+"files/all.htm?conf_path=../test/conf.php";
+	//var chURL="http://ec2-54-161-209-123.compute-1.amazonaws.com/scorestime/files/change.php?a=1";
+	var chURL=host+"files/change.htm?a=1";
+	var eventURL=host+"goals/soccer_goals.php";
+	var dayURL=host+"days/d";
+ 
+var xcomp=new Array();
+var xgame=new Array();
+var xspadd=new Array();
+var xevent=new Array();
+var addInfo=new Array();//addInfo[sportID][gameID]=Array("","15","40")
+addInfo[1]=Array();
+addInfo[2]=Array();
+addInfo[3]=Array();
+addInfo[4]=Array();
+addInfo[10]=Array();
+addInfo[11]=Array();
+addInfo[12]=Array();
+var lu1=new Array();    //number, name, (starting/bench)
+var lu2=new Array();
+var subs=new Array();   //minut, playerout, playerIn, side
+sports=Array(2,4,"Soccer");
+
+xcomp[1]=Array(906,"CONCACAF GOLD CUP: Group B","2017-07-13",2,"1",911,"CHAMPIONS LEAGUE: Second qualifying round","2017-07-12",12,"",1372,"EUROPA LEAGUE: Second qualifying round","2017-07-12",1,"",799,"JAPAN: Emperor Cup","2017-07-12",16,"",3166,"FINLAND: Kakkonen, Group B","2017-07-12",1,"1",3597,"ICELAND: 2. Deild","2017-07-12",1,"1",1421,"LATVIA: 1.Liga","2017-07-12",2,"1",213,"NORWAY: Eliteserien","2017-07-12",1,"1",3508,"SWEDEN: Allsvenskan U-21","2017-07-12",1,"1",776,"UEFA UNDER-19 CHAMPIONSHIP: Semifinal","2017-07-12",2,"",1705,"INDONESIA: Liga 1","2017-07-12",4,"1",1192,"KOREA REP.: K-League","2017-07-12",6,"1",3469,"NIGERIA: NPFL","2017-07-12",1,"1",1197,"USA: US Open Cup","2017-07-13",1,"",1388,"USA: NASL","2017-07-13",1,"1",1146,"ARGENTINA: Primera B Nacional","2017-07-12",2,"1",1146,"ARGENTINA: Primera B Nacional","2017-07-13",6,"1",64,"BRASIL: Serie A","2017-07-13",6,"1",3065,"COLOMBIA: National cup","2017-07-12",1,"",3065,"COLOMBIA: National cup","2017-07-13",3,"",845,"CONMEBOL: Copa Sudamericana","2017-07-13",3,"",3498,"AUSTRALIA: NPL Youth League, Queensland","2017-07-12",3,"1",320,"INTERNATIONAL: Club Friendlies","2017-07-12",58,"");xgame[1]=Array(635337,"Panama","Nicaragua","","1","00:30","-","-1","0",0,"0","-","-","","","","","","",635338,"USA","Martinique","","1","02:30","-","-1","0",0,"0","-","-","","","","","","",636430,"Spartaks","Astana","","0","18:00","HT","HT","0",0,"0","0","0","0","0","","","","",636432,"Malmo FF","Vardar","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",636434,"APOEL","Dudelange","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",636436,"Sherif","Kukesi","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",636438,"Zrinjski","Maribor","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",636440,"Hapoel Beer Sheva","Honved","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",636442,"BATE","Alashkert","","0","19:30","-","-1","0",0,"0","-","-","","","","","","",636444,"Zalgiris","Ludogorets","","0","20:00","-","-1","0",0,"0","-","-","","","","","","",636446,"Mariehamn","Legia","","0","20:00","-","-1","0",0,"0","-","-","","","","","","",636448,"Zilina","FC Kobenhavn","","0","20:15","-","-1","0",0,"0","-","-","","","","","","",636450,"Dundalk","Rosenborg","","0","20:45","-","-1","0",0,"0","-","-","","","","","","",636452,"FH Hafnarfjordur","LIF Vikingur","","0","21:15","-","-1","0",0,"0","-","-","","","","","","",636456,"Inter Baki","Fola Esch","","0","18:00","HT","HT","0",0,"0","0","0","1","0","","","","",652820,"Kashima Antlers","Montedio Yamagata","","0","12:00","FT","FT","0",1,"0","5","0","1","0","5","0","","",652821,"Iwaki","Shimizu S-Pulse","","0","12:00","FT","FT","0",2,"0","0","2","0","1","0","2","","",652822,"Kashiwa Reysol","Oita Trinita","","0","12:00","FT","FT","0",1,"0","2","0","0","0","2","0","","",652823,"Parceiro Nagano","Fagiano Okayama","","0","12:00","FT","FT","0",1,"0","1","0","0","0","0","0","","",652824,"Gamba Osaka","JEF United Ichihara","","0","12:00","FT","FT","0",1,"0","2","0","1","0","2","0","","",652825,"Jubilo Iwata","Shonan Bellmare","","0","12:00","FT","FT","0",1,"0","4","1","2","0","4","1","","",652826,"Omiya Ardija","Ehime FC","","0","12:00","AET","AET","0",1,"0","3","2","0","0","1","1","","",652827,"Urawa Red Diamonds","Roasso Kumamoto","","0","12:00","FT","FT","0",1,"0","1","0","1","0","1","0","","",652828,"Albirex Niigata","Cerezo Osaka","","0","12:00","AET","AET","0",2,"0","2","3","1","0","1","1","","",652829,"Vissel Kobe","Zweigen Kanazawa","","0","12:00","FT","FT","0",1,"0","3","1","1","0","3","1","","",652830,"Yokohama F. Marinos","Azul Claro Numazu","","0","12:00","FT","FT","0",1,"0","4","2","3","0","4","2","","",652831,"Kawasaki Frontale","Thespa Kusatsu","","0","12:00","FT","FT","0",1,"0","4","0","2","0","4","0","","",652832,"Vanraure Hachinohe","Nagoya Grampus Eight","","0","12:00","Ssp","Ssp","0",0,"0","-","-","","","","","","",652833,"Sanfrecce Hiroshima","Gifu","","0","12:00","FT","FT","0",1,"0","2","1","0","1","2","1","","",652834,"Sagan Tosu","Matsumoto Yamaga FC","","0","12:00","FT","FT","0",2,"0","1","2","0","0","1","2","","",652835,"Tsukuba University","Avispa Fukuoka","","0","12:30","FT","FT","0",1,"0","2","1","0","0","2","1","","",624066,"Jazz Pori","Viikingit","","1","17:30","2T","65","0",0,"0","0","2","0","1","","","","",630516,"Hottur","Vestri","","1","22:00","-","-1","0",0,"0","-","-","","","","","","",627983,"Progress","Preilu","","1","18:00","HT","HT","0",0,"0","0","0","0","0","","","","",627985,"Jekabpils SC","RTU","","1","18:00","HT","HT","0",0,"0","0","2","0","2","","","","",622812,"Valerenga","Haugesund","","2","19:00","-","-1","0",0,"0","-","-","","","","","","",621243,"Sundsvall U-21","Hammarby U-21","","1","17:00","FT","FT","0",1,"0","2","1","0","0","2","1","","",652836,"Portugal U-19","Netherlands U-19","","0","15:00","FT","FT","0",1,"0","1","0","1","0","1","0","","",652837,"England U-19","Czech Republic U-19","","0","18:00","HT","HT","0",0,"0","0","0","0","0","","","","",629765,"Persipura Jayapura","Perseru Serui","","1","08:30","FT","FT","0",0,"0","2","2","0","0","2","2","","",629766,"Semen Padang","Persija","","1","10:00","FT","FT","0",0,"0","1","1","0","0","1","1","","",629767,"Persib","Persela Lamongan","","1","13:30","FT","FT","0",0,"0","1","1","1","0","1","1","","",629769,"Gresik United","Arema","","1","13:30","FT","FT","0",2,"0","2","3","2","1","2","3","","",619100,"Gwangju Sangmu","Sangju Sangmu","","1","12:00","FT","FT","0",2,"0","1","2","1","1","1","2","","",619101,"Suwon Bluewings","Incheon United","","1","12:30","FT","FT","0",1,"0","3","0","1","0","3","0","","",619102,"Gangwon FC","Jeonnam Dragons","","1","12:30","FT","FT","0",0,"0","2","2","1","1","2","2","","",619103,"FC Seoul","Pohang Steelers","","1","12:30","FT","FT","0",1,"0","1","0","0","0","1","0","","",619104,"Daegu FC","Ulsan Hyundai","","1","12:30","FT","FT","0",2,"0","1","3","1","1","1","3","","",619105,"Jeju United","Jeonbuk Motors","","1","13:00","FT","FT","0",1,"0","2","1","2","1","2","1","","",609123,"Rivers United","MFM","","1","17:00","Pst","Pst","0",0,"0","?","?","","","","","","",652780,"Miami FC Blues","FC Cincinnati","","0","01:30","-","-1","0",0,"0","-","-","","","","","","",619736,"Jacksonville","Puerto Rico FC","","1","02:00","-","-1","0",0,"0","-","-","","","","","","",591759,"Flandria","Crucero del Norte","","1","20:00","-","-1","0",0,"0","-","-","","","","","","",591763,"Nueva Chicago","Argentinos Juniors","","1","20:35","-","-1","0",0,"0","-","-","","","","","","",591753,"Ferro Carril Oeste","Guilermo Brown","","1","01:05","-","-1","0",0,"0","-","-","","","","","","",591757,"Independiente Rivadavia","Douglas Haig","","1","01:05","-","-1","0",0,"0","-","-","","","","","","",591758,"Santamarina","Estudiantes San Luis","","1","01:30","-","-1","0",0,"0","-","-","","","","","","",591755,"Central Cordoba","Atletico Parana","","1","02:00","-","-1","0",0,"0","-","-","","","","","","",591756,"Boca Unidos","Villa Dalmine","","1","02:00","-","-1","0",0,"0","-","-","","","","","","",591762,"Gimnasia Jujuy","Instituto","","1","02:30","-","-1","0",0,"0","-","-","","","","","","",630933,"Atletico-MG","Santos","","1","00:30","-","-1","0",0,"0","-","-","","","","","","",630937,"Ponte Preta","Bahia","","1","00:30","-","-1","0",0,"0","-","-","","","","","","",630929,"Fluminense","Botafogo","","1","02:00","-","-1","0",0,"0","-","-","","","","","","",630931,"Palmeiras","Corinthians","","1","02:45","-","-1","0",0,"0","-","-","","","","","","",630934,"Atletico-PR","Cruzeiro","","1","02:45","-","-1","0",0,"0","-","-","","","","","","",630936,"Vitoria","Vasco","","1","02:45","-","-1","0",0,"0","-","-","","","","","","",635237,"Union Magdalena","Patriotas","","0","22:00","-","-1","0",0,"0","-","-","","","","","","",635239,"Indep. Medellin","Pasto","","0","02:30","-","-1","0",0,"0","-","-","","","","","","",635240,"Santa Fe Bogota","Deportivo La Equidad","","0","02:30","-","-1","0",0,"0","-","-","","","","","","",635238,"America de Cali","Rionegro Aguilas","","0","02:45","-","-1","0",0,"0","-","-","","","","","","",634526,"Bolivar","LDU-Quito","","0","00:15","-","-1","0",0,"0","-","-","","","","","","",634528,"Independiente","Deportivo Iquiue","","0","02:45","-","-1","0",0,"0","-","-","","","","","","",634530,"Nacional Asuncion","Olimpia","","0","02:45","-","-1","0",0,"0","-","-","","","","","","",613827,"Western Pride U-20","Moreton U-20","","1","10:45","FT","FT","0",1,"0","13","0","3","0","13","0","","",613828,"Sunshine Coast Fire U-20","Brisbane Strikers U-20","","1","11:30","FT","FT","0",2,"0","1","4","0","0","1","4","","",613829,"Brisbane City U-20","Brisbane Roar U-20","","1","11:45","FT","FT","0",0,"0","0","0","0","0","0","0","","",652839,"Motor Lublin","Gornik Leczna","","0","11:00","FT","FT","0",1,"0","4","2","1","1","4","2","","",652840,"Radomiak Radom","Wisla Pulawy","","0","11:00","FT","FT","0",0,"0","1","1","0","1","1","1","","",652838,"Maritimo","Portimonense","","0","11:30","FT","FT","0",1,"0","4","1","2","1","4","1","","",652845,"Skive IK","Esbjerg","","0","13:00","FT","FT","0",2,"0","0","2","0","1","0","2","","",652841,"Estoril","FUS Rabat","","0","14:00","-","-1","0",0,"0","-","-","","","","","","",652847,"Karvina","Zlate Moravce","","0","16:00","FT","FT","0",2,"0","2","3","0","2","2","3","","",652853,"Pogon Siedlce","Legionovia","","0","16:00","FT","FT","0",1,"0","2","1","1","1","2","1","","",652849,"Chrobry Glogow","Odra Opole","","0","17:00","FT","FT","0",0,"0","0","0","0","0","0","0","","",652850,"Katowice","Zlin","","0","17:00","FT","FT","0",0,"0","0","0","0","0","0","0","","",652851,"Kortrijk","Panathinaikos","","0","17:00","FT","FT","0",2,"0","1","2","0","0","1","2","","",652852,"Skalica","Podbeskidzie Bielsko Biala","","0","17:00","FT","FT","0",2,"0","1","3","0","2","1","3","","",652854,"Podbrezova","Pardubice","","0","17:00","FT","FT","0",1,"0","1","0","0","0","1","0","","",652855,"West Brom","Slavia Praha","","0","17:00","FT","FT","0",2,"0","1","2","1","0","1","2","","",652856,"Wigry S","Jonava","","0","17:00","FT","FT","0",0,"0","0","0","0","0","0","0","","",652870,"VV Venlo","PAOK","","0","17:00","FT","FT","0",2,"0","0","1","0","0","0","1","","",652846,"Chemnitzer","Dukla Praha","","0","18:00","1T","45","0",0,"0","0","0","","","","","","",652848,"Triglav","Istanbul Basaksehir","","0","18:00","HT","HT","0",0,"0","1","1","1","1","","","","",652858,"Feirense","Sp. Covilha","","0","18:00","HT","HT","0",0,"0","1","0","1","0","","","","",652859,"Niort","Les Herbiers","","0","18:00","1T","45","0",0,"0","0","0","","","","","","",652860,"Clermont","Le Puy Auvergne","","0","18:00","-","-1","0",0,"0","-","-","","","","","","",652861,"Dinamo Tb.","Zorya","","0","18:00","HT","HT","0",0,"0","0","0","0","0","","","","",652862,"Bourg-Peronnas","Andrezieux Boutheon","","0","18:00","HT","HT","0",0,"0","1","1","1","1","","","","",652864,"Erzgebirge Aue","Liberec","","0","18:00","1T","45","0",0,"0","0","0","","","","","","",652865,"Augsburg","Kaiserslautern","","0","18:00","HT","HT","0",0,"0","0","0","0","0","","","","",652866,"Chambly","Red Star","","0","18:00","1T","45","0",0,"0","0","0","","","","","","",652867,"Troyes","Lens","","0","18:00","FT","FT","0",0,"0","1","1","0","0","0","0","","",652868,"Dunkerque","Quevilly","","0","18:00","-","-1","0",0,"0","-","-","","","","","","",652869,"Stuttgart","Dynamo Dresden","","0","18:00","HT","HT","0",0,"0","1","0","1","0","","","","",652871,"Werder","Wolves","","0","18:00","HT","HT","0",0,"0","0","0","0","0","","","","",652872,"Tondela","Pacos de Ferreira","","0","18:30","1T","4","0",0,"0","0","0","","","","","","",652873,"Nantes","Servette","","0","18:30","1T","22","0",0,"0","1","0","","","","","","",652874,"Sochaux","Dijon","","0","18:30","1T","13","0",0,"0","0","1","","","","","","",652875,"Wattenscheid","Bochum","","0","18:30","1T","21","0",0,"0","0","1","","","","","","",652842,"Braga","Belenenses","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652876,"RW Hadamar","Wehen","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652877,"Angers","Orleans","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652878,"Athletic","Basel","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652879,"Cercle Brugge","Lokeren","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652880,"Marseille","Viitorul Constanta","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652881,"Groene Ster","Roda","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652882,"Moreirense","Chaves","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652883,"PSV","Sion","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652884,"Rodez Aveyron","Pau","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652885,"Brest","Concarneau","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652886,"Reims","Boulogne","","0","19:00","-","-1","0",0,"0","-","-","","","","","","",652887,"Eupen","Borussia M.","","0","19:15","-","-1","0",0,"0","-","-","","","","","","",652888,"Telstar","ADO&apos;20","","0","19:30","-","-1","0",0,"0","-","-","","","","","","",652889,"Oxford United","Middlesbrough","","0","19:30","-","-1","0",0,"0","-","-","","","","","","",652890,"Accrington Stanley","Huddersfield","","0","20:00","-","-1","0",0,"0","-","-","","","","","","",652891,"Young Boys","Stoke City","","0","20:00","-","-1","0",0,"0","-","-","","","","","","",652892,"Real","Setubal","","0","20:00","-","-1","0",0,"0","-","-","","","","","","",652894,"North Ferriby","Leeds","","0","20:30","-","-1","0",0,"0","-","-","","","","","","",652895,"Sporting","Fenerbahce","","0","20:30","-","-1","0",0,"0","-","-","","","","","","",652896,"Torquay","Bristol City","","0","20:30","-","-1","0",0,"0","-","-","","","","","","",652893,"Tranmere Rovers","Liverpool","","0","20:45","-","-1","0",0,"0","-","-","","","","","","",652897,"Telford","Aston Villa U-23","","0","20:45","-","-1","0",0,"0","-","-","","","","","","",652898,"Swansea","Barnet","","0","20:45","-","-1","0",0,"0","-","-","","","","","","",652899,"Livingston","Sunderland","","0","20:45","-","-1","0",0,"0","-","-","","","","","",""); 
+
+var sportID=new Array();
+sportID[0]=1;	//football
+sportID[1]=2;	//hockey
+sportID[2]=4;	//tennis
+sportID[3]=3;	//basketball
+sportID[4]=11;	//volleyball
+sportID[5]=10;	//handball
+sportID[6]=12;	//rugby
+ 
+ 
+var compName=new Array();
+var compDate=new Array();
+var compID=new Array();
+var compGameQ=new Array();
+var compStanding=new Array();
+var compIsHidden=new Array();
+var compIsClosed=new Array();
+var gameID=new Array();
+var gameRow=new Array();
+ 
+var gameTeam1=new Array();
+var gameTeam2=new Array();
+var gameLive=new Array();
+var gameH2H=new Array();
+var gameTime=new Array();
+var gameStatus=new Array();
+var gameMinute=new Array();
+var gameShowGoal=new Array();
+var gameResultChanged=new Array();
+var gameWinner=new Array();
+var gameServing=new Array();
+var gameResult1=new Array();
+var gameResult2=new Array();
+var gameIsGonFit=new Array();
+var pen1=new Array();
+var pen2=new Array();
+ 
+var gameShowTime=new Array();
+ 
+var redCard1=new Array();
+var redCard2=new Array();
+var corrGame=new Array();
+var corrComp=new Array();
+var compFitGamesQ=new Array();
+var sportFitGamesQ=new Array();
+var sportNotClosedFitCompsQ=new Array();
+var gameTrAddr=new Array();
+var gameDivAddr=new Array();
+var gameMinAddr=new Array();
+var gameBlinkAddr=new Array();
+var compTrAddr=new Array();
+var sportTrAddr=new Array();
+ 
+var blinker=0;
+var gameAddrFilled=0;		//tr addr:for gon
+var gameDivAddrFilled=0;	//td addr:for inner
+var gameMinuteAddrFilled=0;	//td addr:for minut
+var currentGon=0;
+var blinkAddrFilled=0;
+var currentShowingDay=0;
+var blinkTO;
+var timeInt=5000;
+ 
+function fill2Arrays(sportX)
+{
+	gameAddrFilled=0;
+	gameDivAddrFilled=0;
+	gameMinuteAddrFilled=0;
+	currentGon=0;
+	blinker=0;
+	blinkAddrFilled=0;
+	
+	sportFitGamesQ[sportX]=0;
+	sportNotClosedFitCompsQ[sportX]=0;
+	compName[sportX]=new Array();
+	compDate[sportX]=new Array();
+	compID[sportX]=new Array();
+	compGameQ[sportX]=new Array();
+	compStanding[sportX]=new Array();
+	compIsHidden[sportX]=new Array();
+	compIsClosed[sportX]=new Array();
+	compFitGamesQ[sportX]=new Array();
+	compTrAddr[sportX]=new Array();
+	
+	var jx=0;
+	
+	for(var i=0; i<xcomp[sportID[sportX]].length; i+=5)
+	{
+		compID[sportX][jx]=xcomp[sportID[sportX]][i];
+		compName[sportX][jx]=xcomp[sportID[sportX]][i+1];
+		compDate[sportX][jx]=xcomp[sportID[sportX]][i+2];
+		compGameQ[sportX][jx]=xcomp[sportID[sportX]][i+3];
+		compStanding[sportX][jx]=xcomp[sportID[sportX]][i+4];
+		compFitGamesQ[sportX][jx]=compGameQ[sportX][jx];
+		sportFitGamesQ[sportX]+=compFitGamesQ[sportX][jx];
+		sportNotClosedFitCompsQ[sportX]+=compFitGamesQ[sportX][jx];
+		compIsHidden[sportX][jx]=0;
+		compIsClosed[sportX][jx]=0;
+		jx++;
+	}
+	
+	gameID[sportX]=new Array();
+	gameRow[sportX]=new Array();
+	
+	gameTeam1[sportX]=new Array();
+	gameTeam2[sportX]=new Array();
+	gameLive[sportX]=new Array();
+	gameH2H[sportX]=new Array();
+	gameTime[sportX]=new Array();
+	gameStatus[sportX]=new Array();
+	gameMinute[sportX]=new Array();
+	gameShowGoal[sportX]=new Array();
+	gameResultChanged[sportX]=new Array();
+	gameWinner[sportX]=new Array();
+	gameServing[sportX]=new Array();
+	gameResult1[sportX]=new Array();
+	gameResult2[sportX]=new Array();
+	pen1[sportX]=new Array();
+	pen2[sportX]=new Array();
+	
+	gameShowTime[sportX]=new Array();
+	corrGame[sportX]=new Array();
+	corrComp[sportX]=new Array();
+	gameTrAddr[sportX]=Array();
+	gameDivAddr[sportX]=Array();
+	gameMinAddr[sportX]=Array();
+	gameBlinkAddr[sportX]=Array();
+	gameIsGonFit[sportX]=Array();
+	redCard1[sportX]=Array();
+	redCard2[sportX]=Array();
+	var jx=0;
+	var spX=sportX*3;
+	var hashivnerQ=2*sports[spX+1];
+	var step=11+hashivnerQ;
+	var currentGameTime=-1;
+	
+	for(i=0; i<xgame[sportID[sportX]].length; i+=step)
+	{
+		
+		gameID[sportX][jx]=xgame[sportID[sportX]][i];
+		corrGame[sportX][gameID[sportX][jx]]=jx;
+		gameTeam1[sportX][jx]=xgame[sportID[sportX]][i+1];
+		gameTeam2[sportX][jx]=xgame[sportID[sportX]][i+2];
+		gameLive[sportX][jx]=xgame[sportID[sportX]][i+3];
+		gameH2H[sportX][jx]=xgame[sportID[sportX]][i+4];
+		gameTime[sportX][jx]=xgame[sportID[sportX]][i+5];
+		gameShowTime[sportX][jx]=0;
+		if(gameTime[sportX][jx]!=currentGameTime)
+		{
+			gameShowTime[sportX][jx]=1;
+			currentGameTime=gameTime[sportX][jx];
+		}
+		
+		gameStatus[sportX][jx]=xgame[sportID[sportX]][i+6];
+		gameMinute[sportX][jx]=xgame[sportID[sportX]][i+7];
+		gameShowGoal[sportX][jx]=xgame[sportID[sportX]][i+8];
+		gameWinner[sportX][jx]=xgame[sportID[sportX]][i+9];
+		gameServing[sportX][jx]=xgame[sportID[sportX]][i+10];
+		redCard1[sportX][jx]=0;
+		redCard2[sportX][jx]=0;
+		pen1[sportX][jx]=""; pen2[sportX][jx]="";
+		if(xgame[sportID[sportX]][i+17]>xgame[sportID[sportX]][i+18]){
+			pen1[sportX][jx]="*";
+		}
+		if(xgame[sportID[sportX]][i+17]<xgame[sportID[sportX]][i+18]){
+			pen2[sportX][jx]="*";
+		}
+		
+		if(typeof(addInfo[sportID[sportX]][gameID[sportX][jx]])!="undefined")
+		{
+			for(var j=0; j<addInfo[sportID[sportX]][gameID[sportX][jx]].length; j+=3)
+			{
+				switch(addInfo[sportID[sportX]][gameID[sportX][jx]][j])
+				{
+					case "rc":
+							redCard1[sportX][jx]=addInfo[sportID[sportX]][gameID[sportX][jx]][j+1];
+							redCard2[sportX][jx]=addInfo[sportID[sportX]][gameID[sportX][jx]][j+2];
+						break;
+				}
+			}
+		
+		}
+		gameResultChanged[sportX][jx]=0;
+		gameResult1[sportX][jx]=new Array();
+		gameResult2[sportX][jx]=new Array();
+		gameIsGonFit[sportX][jx]=1;
+		var startAt=i+11;
+		var toPm=i+11+hashivnerQ;
+		var mx=0;
+		for(var j=startAt; j<toPm; j+=2)
+		{
+			gameResult1[sportX][jx][mx]=xgame[sportID[sportX]][j];
+			gameResult2[sportX][jx][mx]=xgame[sportID[sportX]][j+1];
+			mx++;
+		}
+		
+ 
+		jx++;
+	}
+	
+	xcomp[sportID[sportX]].length=0;
+	xgame[sportID[sportX]].length=0;
+	addInfo[sportID[sportX]].length=0;
+}
+ 
+var gameColorX=0;
+ 
+function sportTable(sportX)
+{
+	var spX=sportX*3;
+	var str=new CStringBuilder("");
+	var gameX=0;
+	
+    	var compDateX="";
+	
+	for(var i=0; i<compID[sportX].length; i++)
+	{
+		str.append("<table><tr><td colspan=2 height=6><spacer height=6 type=block></td></tr></table>");
+		if(compDateX!=compDate[sportX][i])
+		{
+			compDateX=compDate[sportX][i];
+			str.append("<table border=0 width=466><tr><td class=cet>All Match Times CET</td><td align=right class=dtf>"+dateInString(compDate[sportX][i])+"</td></tr></table>");
+			
+		}
+		
+		str.append("<table border=0 bordercolor='#cccccc' class=tblC cellpadding=2 cellspacing=0 width=466>");
+		str.append("<tr class=bg6>");
+		str.append("<td class=live_sport3>&nbsp;"+compName[sportX][i]+"</td>");
+		str.append("<td align=right>"+(compStanding[sportX][i]==1?"<a target=standings href='standings.php?f="+compID[sportX][i]+"' onclick='javascript:standings()' class=std2><img src='images/taz.gif' border=0>&nbsp;standing</a>":"")+"&nbsp;</td>");
+		str.append("</tr>");
+		str.append("</table>");
+		str.append("<table border=0 cellpadding=0 cellspacing=0 width=1 height=6><tr><td></td></tr></table><table border=0 cellpadding=1 cellspacing=0 width=466 class=bar><tr><td width=60 class=wtB>Kick off</td><td class=wtB align=right width=153>Home</td><td class=wtB width=45></td><td class=wtB width=153>&nbsp;Away</td><td class=wtB width=55 align=center>Stats</td></tr></table>");
+		str.append("<table border=0 cellpadding=0 cellspacing=0 bordercolor='#cccccc' width=466>");
+		
+		
+		gameShowTime[sportX][gameX]=1;
+		gameColorX=0;
+		for(var j=0; j<compGameQ[sportX][i]; j++)
+		{
+ 
+			corrComp[sportX][gameX]=i;
+			var corrClass=gameColorX%2?10:1;
+			gameRow[sportX][gameX]=corrClass;
+			
+			str.append("<tr id='s"+sportX+"gametr"+gameX+"'><td id='s"+sportX+"gdiv"+gameX+"'>")
+			str.append(game(sportX, gameX));
+			str.append("</td></tr>");
+	/*
+			str.append("<tr style='background-color:"+goalStyle[gameShowGoal[sportX][gameX]]+"' id='s"+sportX+"gametr"+gameX+"'><td colspan=3 align='left' class='gcov' id='s"+sportX+"gdiv"+gameX+"'>");
+			str.append("</td></tr>");
+*/	
+			gameColorX++;
+			gameX++;
+			
+		}
+		str.append("</table>");
+	}                   
+	
+	return str.toString();
+}
+
+var months=Array();
+months["01"]="January";
+months["02"]="February";
+months["03"]="March";
+months["04"]="April";
+months["05"]="May";
+months["06"]="June";
+months["07"]="July";
+months["08"]="August";
+months["09"]="September";
+months["10"]="October";
+months["11"]="November";
+months["12"]="December";
+function dateInString(date)
+{
+
+	var brokenStr=date.split("-");
+	return months[brokenStr[1]]+" "+brokenStr[2];
+}
+
+function statusIsFrom(statusStr, fromX)
+{
+	
+	for(var i=0; i<statusNames[fromX].length; i++)
+	{
+		if(statusStr==statusNames[fromX][i])return 1;
+	}
+	return 0;
+}
+ 
+var statusNames=new Array();
+statusNames[1]=new Array('1T','HT','2T','ET','11M','1S','2S','3S','4S','5S','1Q','E1Q','2Q','E2Q','3Q','E3Q','4Q','E4Q','OT','1P','E1P','2P','E2P','3P','E3P','OT','Bulit','T1','M1','B1','E1','T2','M2','B2','E2','T3','M3','B3','E3','T4','M4','B4','E4','T5','M5','B5','E5','T6','M6','B6','E6','T7','M7','B7','E7','T8','M8','B8','E8','T9','M9','B9','E9','T10','M10','B10','E10','T11','M11','B11','E11','T12','M12','B12','E12','T13','M13','B13','E13','T14','M14','B14','E14','T15','M15','B15','E15','T16','M16','B16','E16','T17','M17','B17','E17','T18','M18','B18','E18','T19','M19','B19','E19','T20','M20','B20','E20');
+statusNames[2]=new Array("-", " - ", "ToFin");
+statusNames[3]=new Array("FT","Pst","AET","Ssp","AOT", "Susp", "Ret","Res", "Pen", "Fin", 'F10', 'F11', 'F12', 'F13', 'F14', 'F15', 'F16', 'F17', 'F18', 'F19', 'F20');
+ 
+ 
+ 
+function game(sportX, gameX)
+{
+	var str=new CStringBuilder("");
+	var corrClass=gameRow[sportX][gameX];
+ 
+	var minuteClass="bk";
+	
+	if(statusIsFrom(gameStatus[sportX][gameX], 1))
+	{
+		minuteClass="rd";
+	}
+	str.append("<table border=0 cellpadding=0 cellspacing=0 bordercolor='#cccccc'>");
+	str.append("<tr align=center height=16>");
+	str.append("<td width=35 class=bg"+corrClass+"x>");
+	
+	if(gameShowTime[sportX][gameX])str.append(gameTime[sportX][gameX]);
+	str.append("</td>");
+	
+	
+    str.append("<td width=25 class=bg"+corrClass+"x  align=center><span id=ss"+gameID[sportX][gameX]+">");
+	str.append("<table cellspacing=0 cellpadding=0><tr><td id='sp"+sportX+"min"+gameX+"' class="+minuteClass+">");
+	if(gameMinute[sportX][gameX]!=-1)str.append(gameMinute[sportX][gameX]);
+	
+	str.append("</td><td id=sp"+sportX+"blnk"+gameX+" style='font-size:12px;color:#ffffff'>'</td></tr></table></span></td>");
+	
+	
+ 
+    str.append("<td width=153 class=bg"+corrClass+" align=right>"+pen1[sportX][gameX]+" "+gameTeam1[sportX][gameX]+"&nbsp;</td>");
+		str.append("<td width=45 class=bg"+corrClass+">"+resultLink(sportX, gameX)+"</td>");
+    str.append("<td width=153 class=bg"+corrClass+" align=left>&nbsp;"+gameTeam2[sportX][gameX]+" "+pen2[sportX][gameX]+"</td>");
+    str.append("<td width=55 class=goal"+corrClass+" >")
+	if(gameShowGoal[sportX][gameX]==1)
+	{
+		str.append("GOAL!!!");
+	}
+	else
+	{
+		if(gameH2H[sportX][gameX]==1)str.append("<a target=h2h href='h2h.php?f="+gameID[sportX][gameX]+"' onclick='javascript:h2h()' class=h2h><img alt='info' src='images/info.gif' border=0></a>");
+	}
+	str.append("</td>");
+		str.append("</tr></table>");
+ 
+	return str.toString();
+}
+ 
+var showResultLink=Array();
+showResultLink["-"]=0;
+showResultLink["1T"]=1;
+showResultLink["HT"]=1;
+showResultLink["2T"]=1;
+showResultLink["ET"]=1;
+showResultLink["FT"]=1;
+showResultLink["11M"]=1;
+showResultLink["Pst"]=0;
+showResultLink["Canc"]=0;
+showResultLink["AET"]=1;
+showResultLink["Pen"]=1;
+showResultLink["Ssp"]=1;
+ 
+ 
+function resultLink(sportX, gameX)
+{
+ 
+	if(showResultLink[gameStatus[sportX][gameX]])
+		return "<a target=goals href='goals.php?f="+gameID[sportX][gameX]+"' onclick='javascript:goals()' class=res><b>"+gameResult1[sportX][gameX][0]+" : "+gameResult2[sportX][gameX][0]+"</b></a>";
+	return "<b>"+gameResult1[sportX][gameX][0]+" : "+gameResult2[sportX][gameX][0]+"</b>";
+ 
+ 
+}
+ 
+var blinker=0;
+var reverse=Array(1,0);
+var blinkColor=Array();
+blinkColor[1]=Array("#ffffff","#CC0000");
+blinkColor[10]=Array("#F4F4F4","#CC0000");
+ 
+var blinkTime=Array(800, 400);
+function minuteBlink()
+{
+try{
+	if(!blinkAddrFilled)fillBlinkAddress();
+	for(var j=0; j<gameID[0].length; j++)
+	{
+		if(!isNaN(gameMinute[0][j]) && gameMinute[0][j]>0 && gameShowGoal[0][j]!=1)gameBlinkAddr[0][j].style.color=blinkColor[gameRow[0][j]][blinker];
+		else gameBlinkAddr[0][j].style.color=blinkColor[gameRow[0][j]][0];
+	}
+	blinker=reverse[blinker];
+	clearTimeout(blinkTO);
+	
+}catch(e){}
+	blinkTO=setTimeout('minuteBlink()', blinkTime[blinker]);
+}
+ 
+function fillBlinkAddress()
+{
+	for(var j=0; j<gameID[0].length; j++)
+	{
+		gameBlinkAddr[0][j]=document.getElementById("sp0blnk"+j);
+	}
+	
+	blinkAddrFilled=1;
+}
+ 
+ 
+function CStringBuilder(initialValue)
+{
+	
+	this.append			= CStringBuilder_Append;
+	this.clear			= CStringBuilder_Clear;
+	this.length			= CStringBuilder_Length;
+	this.toString		= CStringBuilder_ToString;
+ 
+	
+	this.buffer			= new Array();
+	this.bufferLength	= 0;
+	
+	
+	if(initialValue != null)
+		this.append(initialValue);
+}
+ 
+ 
+ 
+function CStringBuilder_Append(appendValue)
+{
+	
+	if(appendValue == null)
+	{
+		return;
+	}
+	
+	
+	this.bufferLength += appendValue.length;
+	
+	
+	this.buffer.push(appendValue)
+}
+ 
+ 
+function CStringBuilder_Clear()
+{
+	this.buffer = new Array();
+	this.bufferLength = 0;
+}
+ 
+ 
+function CStringBuilder_Length()
+{
+	return this.bufferLength;
+}
+ 
+function CStringBuilder_ToString()
+{
+	
+	return this.buffer.join("");
+}
+ 
+function start()
+{
+ 
+	showAll();
+	blinkTO=setTimeout('minuteBlink()', 400);
+	
+	
+//	showGon(xgon);
+	clearTimeout(changTO[0]);
+	changTO[0]=setTimeout('process("'+chURL+'", 0)', timeInt);
+	
+	checkingTO=setTimeout('checkByTS()', 60000);
+}
+ 
+function showAll()
+{
+	var jx=0;
+	for(var i=0; i<sports.length; i+=3)
+	{
+		fill2Arrays(jx);
+		jx++;
+	}
+	
+	jx=0;
+ 
+	var str=new CStringBuilder("");
+	var jx=0;
+	for(var i=0; i<sports.length; i+=3)
+	{
+		str.append(sportTable(jx));
+		jx++;
+	}
+	
+	document.getElementById("allCont").innerHTML=str.toString();
+	
+}
+ 
+function fillAllChanges()
+{
+	var jx=0;
+	var ret=1;
+	var zzz;
+	for(var i=0; i<sports.length; i+=3)
+	{
+		zzz=fillChanges(jx);
+		ret*=zzz;
+		jx++;
+	}
+	
+	if(checkGamesTimes)checkGamesTimes=0;
+	return ret;
+}
+ 
+var changedGames=Array();
+var resultChanged=Array();
+function fillChanges(sportX)
+{
+	
+	changedGames[sportX]=Array();
+	resultChanged[sportX]=Array();
+	var jx;
+	var gameIsChanged;
+	var resultIsChanged;
+	var spX=sportX*3;
+	var hashivnerQ=2*sports[spX+1];
+	var step=11+hashivnerQ;
+	for(i=0; i<xgame[sportID[sportX]].length; i+=step)
+	{
+		if(typeof(corrGame[sportX][xgame[sportID[sportX]][i]])=="undefined")
+		{
+		
+			return 0;
+		}
+		jx=corrGame[sportX][xgame[sportID[sportX]][i]];
+		gameIsChanged=0;
+		resultIsChanged=0;
+		var startAt=i+11;
+		var toPm=i+11+hashivnerQ;
+		var mx=0;
+		var k=0;
+		for(var j=startAt; j<toPm; j+=2)
+		{
+			if(gameResult1[sportX][jx][mx]!=xgame[sportID[sportX]][j])
+			{
+				gameResult1[sportX][jx][mx]=xgame[sportID[sportX]][j];
+				gameIsChanged=1;
+				if(!mx)
+				{
+					resultIsChanged=1;
+					
+				}
+			}
+			if(gameResult2[sportX][jx][mx]!=xgame[sportID[sportX]][j+1])
+			{
+				gameResult2[sportX][jx][mx]=xgame[sportID[sportX]][j+1];
+				gameIsChanged=1;
+				if(!mx){resultIsChanged=1;}
+			}
+			mx++;
+		}
+		if(gameResultChanged[sportX][jx]!=resultIsChanged){gameResultChanged[sportX][jx]=resultIsChanged;k=1;gameIsChanged=1;}
+		
+		if(gameLive[sportX][jx]!=xgame[sportID[sportX]][i+3]){gameLive[sportX][jx]=xgame[sportID[sportX]][i+3];gameIsChanged=1;}
+		if(checkGamesTimes)
+		{
+			if(gameTime[sportX][jx]!=xgame[sportID[sportX]][i+5]){gameTime[sportX][jx]=xgame[sportID[sportX]][i+5];gameIsChanged=1;}
+		}
+		if(gameStatus[sportX][jx]!=xgame[sportID[sportX]][i+6]){gameStatus[sportX][jx]=xgame[sportID[sportX]][i+6];gameIsChanged=1;}
+		if(gameMinute[sportX][jx]!=xgame[sportID[sportX]][i+7]){gameMinute[sportX][jx]=xgame[sportID[sportX]][i+7];gameIsChanged=1;}
+		if(gameShowGoal[sportX][jx]!=xgame[sportID[sportX]][i+8]){gameShowGoal[sportX][jx]=xgame[sportID[sportX]][i+8];gameIsChanged=1;}
+		if(gameWinner[sportX][jx]!=xgame[sportID[sportX]][i+9]){gameWinner[sportX][jx]=xgame[sportID[sportX]][i+9];gameIsChanged=1;}
+		if(gameServing[sportX][jx]!=xgame[sportID[sportX]][i+10]){gameServing[sportX][jx]=xgame[sportID[sportX]][i+10];gameIsChanged=1;}
+		if(typeof(addInfo[sportID[sportX]][gameID[sportX][jx]])!="undefined")
+		{
+			for(var j=0; j<addInfo[sportID[sportX]][gameID[sportX][jx]].length; j+=3)
+			{
+				switch(addInfo[sportID[sportX]][gameID[sportX][jx]][j])
+				{
+					case "rc":
+							if(redCard1[sportX][jx]!=addInfo[sportID[sportX]][gameID[sportX][jx]][j+1])
+							{
+								redCard1[sportX][jx]=addInfo[sportID[sportX]][gameID[sportX][jx]][j+1];
+								
+								gameIsChanged=1;
+							}
+							if(redCard2[sportX][jx]!=addInfo[sportID[sportX]][gameID[sportX][jx]][j+2])
+							{
+								redCard2[sportX][jx]=addInfo[sportID[sportX]][gameID[sportX][jx]][j+2];
+								
+								gameIsChanged=1;
+							}
+						break;
+				}
+			}
+		}
+		else
+		{
+			if(redCard1[sportX][jx]!=0 ||redCard2[sportX][jx]!=0){gameIsChanged=1;}
+			redCard1[sportX][jx]=0;
+			redCard2[sportX][jx]=0;
+		}
+		
+		
+		if(gameIsChanged)
+		{
+			changedGames[sportX].push(jx);
+			resultChanged[sportX].push(resultIsChanged);
+		}
+	}
+	addInfo[sportID[sportX]].length=0;
+	return 1;
+}
+ 
+function showAllChanges()
+{
+	var jx=0;
+	for(var i=0; i<sports.length; i+=3)
+	{
+		showChangedGames(jx);
+		jx++;
+	}
+}
+ 
+function fillMinuteAddr()
+{
+	var jx=0;
+	for(var i=0; i<sports.length; i+=3)
+	{
+		for(var j=0; j<gameID[jx].length; j++)
+		{
+			gameMinAddr[jx][j]=document.getElementById("sp"+jx+"min"+j);
+		}
+		jx++;
+	}
+	
+	gameMinuteAddrFilled=1;
+}
+ 
+function minuteUpd(sportX)
+{
+	
+	if(!gameMinuteAddrFilled)
+	{
+		fillMinuteAddr();
+	}
+	var str="";
+	
+	for(var i=0; i<gameMinute[sportX].length; i++)
+	{
+		if((gameMinute[sportX][i]>=1 && gameMinute[sportX][i]<=44 && gameStatus[sportX][i]=="1T")||(gameMinute[sportX][i]>=46 && gameMinute[sportX][i]<=89 && gameStatus[sportX][i]=="2T"))
+		{
+			gameMinute[sportX][i]++;
+			str=gameMinute[sportX][i];
+			try{
+				gameMinAddr[sportX][i].innerHTML=str;
+			}catch(e){
+//			alert(e+":::"+gameMinAddr[sportX][i]);
+			}
+			
+		}
+	}
+}
+ 
+function showChangedGames(sportX)
+{
+	if(!gameDivAddrFilled)
+	{
+		
+		fillGameDivs();
+	}
+	
+	
+	for(var i=0; i<changedGames[sportX].length; i++)
+	{
+		gameDivAddr[sportX][changedGames[sportX][i]].innerHTML=game(sportX, changedGames[sportX][i]);
+		gameBlinkAddr[sportX][changedGames[sportX][i]]=document.getElementById("sp0blnk"+changedGames[sportX][i]);
+		gameMinAddr[sportX][changedGames[sportX][i]]=document.getElementById("sp0min"+changedGames[sportX][i]);
+		
+		
+	}
+	
+	changedGames[sportX].length=0;
+	resultChanged[sportX].length=0;
+}
+ 
+function fillGameDivs()
+{
+	var jx=0;
+	for(var i=0; i<sports.length; i+=3)
+	{
+		for(var j=0; j<gameID[jx].length; j++)
+		{
+			gameDivAddr[jx][j]=document.getElementById("s"+jx+"gdiv"+j);
+		}
+		
+		jx++;
+	}
+	
+	gameDivAddrFilled=1;
+}
+ 
+ 
+opt="top=10,left=10,resizeable,scrollbars=yes,status=no";
+function goals(){
+	window.open("","goals","width=730,height=400,"+opt);
+}
+function goals_X(){
+	window.open("","goals_X","width=390,height=150,top=150,left=150,toolbar=no,scrollbars=no,location=0,statusbar=no,menubar=no,resizable=no");
+}
+ 
+function standings(){
+	window.open("","standings","width=488,height=450,"+opt);
+}
+function mr(){
+	window.open("","mr","width=720,height=550,"+opt);
+}
+function h2h(){
+	window.open("","h2h","width=560,height=550,"+opt);
+}
+</script> 
+</HEAD> 
+<body bgcolor="#ffffff" text="#000033" topmargin=2 leftmargin=2> 
+ 
+  <div align=center> 
+<!-- banner --> 
+<center> 
+<iframe frameborder="0" marginheight="0" marginwidth="0" width="468" 
+height="60" scrolling="no" 
+src="http://www.wettbasis.com/live-banner.html"></iframe> 
+</center> 
+<br> 
+<!-- banner --> 
+<div id="allCont"> 
+ 
+ 
+</div> 
+<SCRIPT> 
+start();
+</SCRIPT> 
+ 
+<!--
+<div class=pwd>Powered by <a href='http://www.scorespro.com/' target=_blank class=res>ScoresPro.com</a></div>
+</div>
+<br>
+<a href="http://www.betexplorer.com/top/in.php?id=423" target="_blank"><img src="http://www.betexplorer.com/top/button.php?id=423" border="0" width="1" height="1"></a>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-2023922-1";
+urchinTracker();
+</script>
+--> 
+</body> 
+</html> 
+ 

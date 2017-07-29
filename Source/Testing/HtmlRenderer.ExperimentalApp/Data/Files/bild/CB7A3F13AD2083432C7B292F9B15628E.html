@@ -1,0 +1,295 @@
+<html>
+<head>
+<title>City Creator - Build</title>
+<script language="JavaScript" src="js/detect.js?revision=2"></script>
+<script language="JavaScript" src="js/cookies.js"></script>
+<script language="JavaScript" src="js/build.js?revision=12"></script>
+<script language="JavaScript">
+<!--
+
+var current_tab = -1;
+var currently_dragging = 0;
+var drag_elm = null;
+var drag_offset_x = 0;
+var drag_offset_y = 0;
+var grid_w = 24;
+var grid_h = 12;
+var pieces = new Array();
+var bgs = new Array();
+var bg_id = 0;
+var bg_string = '#ffffff';
+var cookie_prefix_old = 'city_2_';
+var cookie_prefix = 'city3_2_';
+var cookie_hello = 'hello';
+var cookie_badcheck = 'badcheck';
+var first_tab = 5;
+
+function pre_init(){
+
+	if (!is.dom1){
+		if (readCookie(cookie_badcheck) == null){
+			alert("You don't appear to be using a recent browser.\n\nChances are that this site wont work for you. Sorry :(");
+		}
+		saveCookie(cookie_badcheck,'1',365);
+	}
+
+	piece_count = 80;
+	add_piece(81, 5, 0, 0, 0, 42, 47, 3, 2, '2/build_1.gif');
+	add_piece(82, 5, 1, 0, 1, 42, 47, 3, 2, '2/build_2.gif');
+	add_piece(83, 5, 2, 0, 2, 36, 38, 7, 8, '2/build_3.gif');
+	add_piece(84, 5, 3, 0, 3, 42, 59, 4, 2, '2/build_4.gif');
+	add_piece(85, 5, 4, 0, 4, 46, 48, 2, 1, '2/build_5.gif');
+	add_piece(86, 5, 5, 0, 5, 36, 41, 7, 4, '2/build_6.gif');
+	add_piece(87, 5, 6, 0, 6, 46, 60, 2, 1, '2/build_7.gif');
+	add_piece(88, 5, 7, 0, 7, 49, 48, 0, 1, '2/build_8.gif');
+	add_piece(89, 5, 8, 0, 8, 42, 52, 5, 7, '2/build_9.gif');
+	add_piece(90, 5, 9, 0, 9, 42, 51, 4, 10, '2/build_10.gif');
+	add_piece(91, 5, 10, 0, 10, 42, 56, 6, 5, '2/build_11.gif');
+	add_piece(92, 5, 11, 0, 11, 42, 56, 2, 5, '2/build_12.gif');
+	add_piece(93, 5, 12, 0, 12, 49, 37, 0, 5, '2/igloo_big.gif');
+	add_piece(94, 5, 13, 0, 13, 40, 27, 4, 5, '2/igloo_small.gif');
+	add_piece(95, 5, 14, 0, 14, 32, 27, 8, 12, '2/igloo_tunnel_1.gif');
+	add_piece(96, 5, 15, 0, 15, 32, 27, 8, 12, '2/igloo_tunnel_2.gif');
+	add_piece(97, 5, 16, 0, 16, 49, 58, 0, 3, '2/pipe_1.gif');
+	add_piece(98, 5, 17, 0, 17, 49, 29, 0, 8, '2/pipe_2.gif');
+	add_piece(99, 5, 18, 0, 18, 49, 29, 0, 8, '2/pipe_3.gif');
+	add_piece(100, 5, 19, 0, 19, 49, 52, 0, 9, '2/pipe_4.gif');
+	add_piece(101, 6, 0, 1, 0, 49, 39, 0, 10, '2/roof_1.gif');
+	add_piece(102, 6, 1, 1, 1, 49, 39, 0, 10, '2/roof_2.gif');
+	add_piece(103, 6, 2, 1, 2, 48, 39, 0, 10, '2/roof_3.gif');
+	add_piece(104, 6, 3, 1, 3, 48, 39, 0, 10, '2/roof_4.gif');
+	add_piece(105, 6, 4, 1, 4, 42, 39, 4, 10, '2/roof_5.gif');
+	add_piece(106, 6, 5, 1, 5, 48, 43, 1, 6, '2/roof_6.gif');
+	add_piece(107, 6, 6, 1, 6, 46, 34, 2, 15, '2/roof_7.gif');
+	add_piece(108, 6, 7, 1, 7, 46, 38, 2, 11, '2/roof_8.gif');
+	add_piece(109, 6, 8, 1, 8, 46, 37, 2, 12, '2/roof_9.gif');
+	add_piece(110, 6, 9, 1, 9, 46, 37, 2, 12, '2/roof_10.gif');
+	add_piece(111, 6, 10, 1, 10, 36, 30, 7, 16, '2/roof_11.gif');
+	add_piece(112, 6, 11, 1, 11, 36, 34, 7, 12, '2/roof_12.gif');
+	add_piece(113, 6, 12, 1, 12, 17, 15, 16, 20, '2/roof_13.gif');
+	add_piece(114, 6, 13, 1, 13, 46, 38, 2, 11, '2/roof_14.gif');
+	add_piece(115, 6, 14, 1, 14, 36, 28, 7, 17, '2/roof_15.gif');
+	add_piece(116, 6, 15, 1, 15, 36, 31, 7, 14, '2/roof_16.gif');
+	add_piece(117, 6, 16, 1, 16, 46, 61, 2, 0, '2/roof_17.gif');
+	add_piece(118, 6, 17, 1, 17, 48, 61, 0, 0, '2/roof_18.gif');
+	add_piece(119, 6, 18, 1, 18, 48, 61, 0, 0, '2/roof_19.gif');
+	add_piece(120, 6, 19, 1, 19, 35, 40, 7, 10, '2/logo_snow.gif');
+	add_piece(121, 7, 0, 2, 0, 30, 28, 10, 3, '2/person_1.gif');
+	add_piece(122, 7, 1, 2, 1, 18, 26, 19, 3, '2/person_2.gif');
+	add_piece(123, 7, 2, 2, 2, 39, 23, 5, 13, '2/snow_men.gif');
+	add_piece(124, 7, 3, 2, 3, 44, 27, 2, 34, '2/person_4.gif');
+	add_piece(125, 7, 4, 2, 4, 34, 27, 4, 5, '2/skiier_1.gif');
+	add_piece(126, 7, 5, 2, 5, 29, 27, 10, 3, '2/skiier_2.gif');
+	add_piece(127, 7, 6, 2, 6, 25, 28, 11, 10, '2/skiier_3.gif');
+	add_piece(128, 7, 7, 2, 7, 46, 37, 1, 6, '2/skiier_4.gif');
+	add_piece(129, 7, 8, 2, 8, 23, 29, 13, 10, '2/boarder_1.gif');
+	add_piece(130, 7, 9, 2, 9, 27, 33, 11, 8, '2/boarder_2.gif');
+	add_piece(131, 7, 10, 2, 10, 23, 32, 12, 9, '2/boarder_3.gif');
+	add_piece(132, 7, 11, 2, 11, 30, 24, 9, 14, '2/skiier_5.gif');
+	add_piece(133, 7, 12, 2, 12, 19, 23, 15, 7, '2/xmas_1.gif');
+	add_piece(134, 7, 13, 2, 13, 15, 29, 17, 3, '2/xmas_2.gif');
+	add_piece(135, 7, 14, 2, 14, 31, 35, 22, 7, '2/sleigh_1.gif');
+	add_piece(136, 7, 15, 2, 15, 31, 35, 21, 7, '2/sleigh_2.gif');
+	add_piece(137, 7, 16, 2, 16, 42, 35, 0, 7, '2/lorry_1.gif');
+	add_piece(138, 7, 17, 2, 17, 42, 35, 7, 7, '2/lorry_2.gif');
+	add_piece(139, 7, 18, 2, 18, 49, 37, 1, 11, '2/truck_1.gif');
+	add_piece(140, 7, 19, 2, 19, 49, 37, 0, 11, '2/truck_2.gif');
+	add_piece(141, 8, 0, 3, 0, 49, 25, 0, 0, '2/road_1.gif');
+	add_piece(142, 8, 1, 3, 1, 49, 25, 0, 0, '2/road_2.gif');
+	add_piece(143, 8, 2, 3, 2, 49, 25, 0, 0, '2/road_3.gif');
+	add_piece(144, 8, 3, 3, 3, 49, 25, 0, 0, '2/road_4.gif');
+	add_piece(145, 8, 4, 3, 4, 49, 25, 0, 0, '2/road_5.gif');
+	add_piece(146, 8, 5, 3, 5, 49, 25, 0, 0, '2/road_6.gif');
+	add_piece(147, 8, 6, 3, 6, 49, 25, 0, 0, '2/road_7.gif');
+	add_piece(148, 8, 7, 3, 7, 49, 25, 0, 0, '2/road_8.gif');
+	add_piece(149, 8, 8, 3, 8, 49, 25, 0, 0, '2/road_9.gif');
+	add_piece(150, 8, 9, 3, 9, 49, 25, 0, 0, '2/road_10.gif');
+	add_piece(151, 8, 10, 3, 10, 49, 25, 0, 0, '2/road_11.gif');
+	add_piece(152, 8, 11, 3, 11, 40, 23, 4, 7, '2/snow.gif');
+	add_piece(153, 8, 12, 3, 12, 30, 21, 19, 28, '2/wall_1.gif');
+	add_piece(154, 8, 13, 3, 13, 31, 21, 0, 28, '2/wall_2.gif');
+	add_piece(155, 8, 14, 3, 14, 18, 12, 16, 15, '2/corner_3.gif');
+	add_piece(156, 8, 15, 3, 15, 21, 13, 14, 35, '2/corner_4.gif');
+	add_piece(157, 8, 16, 3, 16, 27, 49, 11, 0, '2/tree_1.gif');
+	add_piece(158, 8, 17, 3, 17, 35, 49, 7, 0, '2/tree_2.gif');
+	add_piece(159, 8, 18, 3, 18, 30, 42, 9, 7, '2/tree_3.gif');
+	add_piece(160, 8, 19, 3, 19, 30, 42, 9, 7, '2/tree_4.gif');
+
+	add_bg(1, '', '#ffffff');
+	add_bg(2, '', '#000000');
+	add_bg(3, 'bgs/2/bg_1.gif', '');
+	add_bg(4, 'bgs/2/bg_2.gif', '');
+	add_bg(5, 'bgs/2/bg_3.gif', '');
+	add_bg(6, 'bgs/2/bg_4.gif', '');
+	add_bg(7, 'bgs/2/bg_5.gif', '');
+	add_bg(8, 'bgs/2/bg_6.gif', '');
+
+	bg_nosave(1); // set default background
+	load_pieces();
+
+}
+
+// -->
+</script>
+<style>
+
+body		{ background-color: #777777; }
+img		{ border: 0px; }
+form		{ border: 0px; margin: 0px; padding: 0px; }
+
+#outer		{ position: absolute; left:    50%; top:  20px; }
+#canvas		{ position: absolute; left: -370px; top:   0px; width: 740px; height: 439px; z-index: 1; }
+#loading	{ position: absolute; left:    0px; top: 200px; width: 740px; height:  20px; z-index: 0; text-align: center; color: #ffffff; font-family: arial, helvetica, sans-serif; align: center; }
+#canvasinner	{ position: absolute; left:    0px; top:   0px; width: 740px; height: 439px; z-index: 1; visibility: hidden; background-color: ; }
+#copyright	{ position: absolute; left: -370px; top: 442px; width: 740px; height:  20px; z-index: 1; visibility: hidden; }
+
+#bordertop	{ position: absolute; left:    0px; top:   0px; width: 740px; height:   8px; }
+#borderbottom	{ position: absolute; left:    0px; top: 430px; width: 740px; height:   9px; }
+#borderleft	{ position: absolute; left:    0px; top:   8px; width:  10px; height: 422px; }
+#borderright	{ position: absolute; left:  730px; top:   8px; width:  10px; height: 422px; }
+#pagebg		{ position: absolute; left:   10px; top:   8px; width: 720px; height: 422px; }
+
+#board		{ position: absolute; left:  257px; top:  28px; width: 469px; height: 364px; z-index: 10; }
+#boardback	{ position: absolute; left:  257px; top:  28px; width: 469px; height: 364px; background-color: #ffffff; }
+
+#grid		{ position: absolute; left:  257px; top:  28px; width: 469px; height: 364px; z-index: 15; visibility: hidden; }
+#shadow		{ position: absolute; left:   10px; top:  10px; width: 100px; height: 100px; z-index:  0; visibility: hidden; border: 1px solid #999999; }
+
+#logo		{ position: absolute; left:   14px; top:  12px; width: 231px; height:  45px; }
+
+div.taboff	{ position: absolute; top: 43px; height: 15px; }
+div.tabon	{ position: absolute; top: 43px; height: 15px; visibility: hidden; }
+div.palette	{ position: absolute; left: 14px; top: 61px; width: 231px; height: 334px; visibility: hidden; z-index: 2; }
+
+#instructions	{ position: absolute; left:  357px; top: 60px; width: 258px; background-image: url(images/pop_mid.gif); z-index: 100; visibility: hidden; text-align: left; }
+#about		{ position: absolute; left:  367px; top: 70px; width: 258px; background-image: url(images/pop_mid.gif); z-index: 100; visibility: hidden; text-align: left; }
+
+.popup		{ padding: 5px 10px; color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10px; }
+
+.copyright	{ color: #B9B9B9; font-family: arial, helvetica, sans-serif; font-size: 11px; line-height: 13px; }
+
+</style>
+</head>
+<body onLoad="init()">
+
+<div id="outer">
+<div id="canvas">
+<div id="loading">
+	loading, please wait... <img src="images/loading.gif" width="7" height="7"><br>
+	<br>
+	<div style="position: absolute; left: 270px; top: 30px; width: 200px; padding: 2px; border: 2px solid #ffffff; text-align: left;">
+		<div style="width: 0%; background-color: #ffffff" id="loadprogress">&nbsp;</div>
+	</div>
+</div>
+<div id="canvasinner">
+
+	<div id="bordertop"    ><img src="images/frame/border_top.gif"    width="740" height="8"  ></div>
+	<div id="borderbottom" ><img src="images/frame/border_bottom.gif" width="740" height="9"  ></div>
+	<div id="borderleft"   ><img src="images/frame/border_left.gif"   width="10"  height="422"></div>
+	<div id="borderright"  ><img src="images/frame/border_right.gif"  width="10"  height="422"></div>
+
+	<div id="pagebg"><img src="images/frame/main.gif" width="720" height="422"></div>
+
+	<div id="logo"><img src="images/frame/logo_2.gif" width="231" height="45"></div>
+
+	<div id="tab5off" class="taboff" style="width: 42px; left: 13px;"><a href="javascript:tab(5);"><img src="images/frame/tab_5_off.gif" width="42" height="15"></a></div>
+	<div id="tab5on"  class="tabon"  style="width: 42px; left: 13px;"><img src="images/frame/tab_5_on.gif" width="42" height="15"></div>
+	<div id="palette5" class="palette"></div>
+	<div id="tab6off" class="taboff" style="width: 34px; left: 55px;"><a href="javascript:tab(6);"><img src="images/frame/tab_6_off.gif" width="34" height="15"></a></div>
+	<div id="tab6on"  class="tabon"  style="width: 34px; left: 55px;"><img src="images/frame/tab_6_on.gif" width="34" height="15"></div>
+	<div id="palette6" class="palette"></div>
+	<div id="tab7off" class="taboff" style="width: 74px; left: 89px;"><a href="javascript:tab(7);"><img src="images/frame/tab_7_off.gif" width="74" height="15"></a></div>
+	<div id="tab7on"  class="tabon"  style="width: 74px; left: 89px;"><img src="images/frame/tab_7_on.gif" width="74" height="15"></div>
+	<div id="palette7" class="palette"></div>
+	<div id="tab8off" class="taboff" style="width: 78px; left: 163px;"><a href="javascript:tab(8);"><img src="images/frame/tab_8_off.gif" width="78" height="15"></a></div>
+	<div id="tab8on"  class="tabon"  style="width: 78px; left: 163px;"><img src="images/frame/tab_8_on.gif" width="78" height="15"></div>
+	<div id="palette8" class="palette"></div>
+
+	<div style="position: absolute; left: 259px; top: 8px; width: 29px; height: 17px;"><a href="./"          ><img src="images/frame/tab_home_off.gif"    width="29" height="17" border="0"></a></div>
+	<div style="position: absolute; left: 290px; top: 8px; width: 46px; height: 17px;"><a href="members.city"><img src="images/frame/tab_members_off.gif" width="46" height="17" border="0"></a></div>
+	<div style="position: absolute; left: 338px; top: 8px; width: 24px; height: 17px;"><a href="faq.city"    ><img src="images/frame/tab_faq_off.gif"     width="24" height="17" border="0"></a></div>
+	<div style="position: absolute; left: 673px; top: 8px; width: 50px; height: 17px;"><a href="build.city?city=3"><img src="images/frame/tab_city_3_off.gif" width="50" height="17" border="0"></a></div>
+	<div style="position: absolute; left: 631px; top: 8px; width: 39px; height: 17px;"><img src="images/frame/tab_city_2_on.gif" width="39" height="17" border="0"></div>
+	<div style="position: absolute; left: 585px; top: 8px; width: 43px; height: 17px;"><a href="build.city?city=1"><img src="images/frame/tab_city_1_off.gif" width="43" height="17" border="0"></a></div>
+	<div style="position: absolute; left: 547px; top: 8px; width: 35px; height: 16px;"><img src="images/frame/tab_label.gif" width="35" height="16"></div>
+
+	<div id="boardback"></div>
+	<div id="board"><div id="shadow"></div></div>
+
+	<div id="grid"><img src="images/grid.gif" width="469" height="364"></div>
+
+	<div style="position: absolute; left:  17px; top: 412px; width: 21px; height: 12px;"><a href="javascript:bg(1);"><img src="images/space.gif" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  42px; top: 412px; width: 21px; height: 12px;"><a href="javascript:bg(2);"><img src="images/space.gif" width="21" height="12" border="0"></a></div>
+	<div style="position: absolute; left:  78px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(3);"><img src="bgs/2/bg_1_thumb.gif" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 106px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(4);"><img src="bgs/2/bg_2_thumb.gif" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 134px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(5);"><img src="bgs/2/bg_3_thumb.gif" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 162px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(6);"><img src="bgs/2/bg_4_thumb.gif" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 190px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(7);"><img src="bgs/2/bg_5_thumb.gif" width="25" height="24" border="0"></a></div>
+	<div style="position: absolute; left: 218px; top: 400px; width: 25px; height: 24px;"><a href="javascript:bg(8);"><img src="bgs/2/bg_6_thumb.gif" width="25" height="24" border="0"></a></div>
+
+	<div style="position: absolute; left: 656px; top: 400px; width: 66px; height: 49px; z-index: 5;"><img src="images/frame/truck_2.gif" width="66" height="49"></div>
+
+	<div style="position: absolute; left: 287px; top: 403px; width: 59px; height: 16px;"><a href="javascript:show_top('instructions');"><img src="images/btn_instructions.gif" width="59" height="16" border="0"></a></div>
+	<div style="position: absolute; left: 355px; top: 403px; width: 52px; height: 16px;"><a href="javascript:show_top('about');"><img src="images/btn_about.gif" width="52" height="16" border="0"></a></div>
+	<div style="position: absolute; left: 416px; top: 403px; width: 71px; height: 16px;"><a href="javascript:send_card();"><img src="images/btn_save.gif" width="60" height="16" border="0"></a></div>
+	<div style="position: absolute; left: 491px; top: 403px; width: 50px; height: 16px;"><a href="javascript:delete_all();"><img src="images/btn_delete.gif" width="50" height="16" border="0"></a></div>
+
+	<div id="instructions">
+		<img src="images/pop_top_instructions.gif" width="258" height="27"><br>
+		<div class="popup">
+			Drag and drop pieces from the palettes on the left onto the space on the right. Clicking on a piece brings it to the front.<br>
+			<br>
+			Arrange them to make your city. (It might help to start by adding the roads)<br>
+			<br>
+			<img src="images/truck.gif" width="66" height="48" align="left">If you don't like a piece you can delete it by putting it in the dumper truck in the right corner.<br clear="all">
+			<br>
+			You can delete your whole town by clicking the 'Delete all' button.<br>
+			<br>
+			Click 'Save &amp; send' to send your unique city to your friends.<br>
+			<br>
+			<a href="javascript:hide_elm(get_elm('instructions'));"><img src="images/btn_close.gif" width="65" height="16" border="0"></a>
+		</div>
+		<img src="images/pop_bottom.gif" width="258" height="12"><br>
+	</div>
+
+	<div id="about">
+		<img src="images/pop_top_about.gif" width="258" height="27"><br>
+		<div class="popup">
+			City Creator is a joint project by Denise Wilton (also known as Pep) and Cal Henderson. Denise came up with the original idea and design, and Cal helped the idea along and made it all come to life by programming it.<br>
+			<br>
+			If you have an idea or want to get intouch, then drop us an email.<br>
+			<a href="mailto:cal@citycreator.com" style="color: #000000;">cal@citycreator.com</a><br>
+			<a href="mailto:denise@citycreator.com" style="color: #000000;">denise@citycreator.com</a><br>
+			<br>
+			Thanks for visiting, we hope you've enjoyed your stay :)<br>
+			<br>
+			<br>
+			&copy; 2002 Cal Henderson &amp; Denise Wilton. Don't steal our stuff. ta.<br>
+			<br>
+			<a href="javascript:hide_elm(get_elm('about'));"><img src="images/btn_close.gif" width="65" height="16" border="0"></a>
+		</div>
+		<img src="images/pop_bottom.gif" width="258" height="12"><br>
+	</div>
+</div>
+</div>
+<div id="copyright" class="copyright">
+&copy;2002-2003 Denise Wilton &amp; Cal Henderson
+</div>
+</div>
+
+<form action="save.city" method="post" name="sendform">
+<input type="hidden" name="city_id" value="2">
+<input type="hidden" name="city_pieces" value="">
+<input type="hidden" name="city_bg" value="">
+</form>
+
+<script language="Javascript">
+<!--
+
+pre_init();
+
+//-->
+</script>
+
+</body>
+</html>

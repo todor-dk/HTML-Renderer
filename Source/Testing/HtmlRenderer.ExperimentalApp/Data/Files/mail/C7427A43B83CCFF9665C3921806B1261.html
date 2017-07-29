@@ -1,0 +1,243 @@
+
+<!doctype html>
+<html class="m-scroll">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>Intermedia Customer Login</title>
+
+    <link rel="preload" href="/content/font/dinot-webfont.woff" as="font">
+    <link rel="preload" href="/content/font/dinot-medium-webfont.woff" as="font"/>
+
+    <link href="/ui-lib/styles/style.dark.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="/ui-lib/styles/projects/login.css" rel="stylesheet" type="text/css"/>
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet" type="text/css">
+
+    <script src="/ui-lib/scripts/libs/jquery/jquery-1.9.1.js" type="text/javascript"></script>
+    <script src="/content/library/jquery/jquery.tooltipster.min.js" type="text/javascript"></script>
+    
+    <script src="/ControlPanel/Scripts/jquery.validate-1.14.0.min.js" type="text/javascript"></script>
+
+    <script src="/content/library/svg4everybody.js" type="text/javascript"></script>
+
+    <!-- GA general tracking -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-214873-27', 'auto');
+  ga('send', 'pageview');
+
+<!-- GA events tracking -->
+function trackUlpLoginAttempt(p,r)
+//p — string, product ID
+//r - string, remember state
+{
+	var p = (typeof p === 'string' || p instanceof String) ? p : "(Unknown product)";	
+    var r = (typeof r === 'string' || r instanceof String) ? r : "(Unknown)";
+	ga('send', 'event', p, 'LoginAttempt', r);
+}
+
+function trackUlpLoginFailed(p,r)
+{
+	var p = (typeof p === 'string' || p instanceof String) ? p : "(Unknown product)";	
+	var r = (typeof r === 'string' || r instanceof String) ? r : "(Unknown)";
+	ga('send', 'event', p, 'LoginFailed', r);
+}
+
+function trackUlpLoginBySts(p)
+{
+    var p = (typeof p === 'string' || p instanceof String) ? p : "(Unknown product)";
+    p += '-STS';
+    ga('send', 'event', p, 'LoginSuccess', '');
+}
+</script>
+
+    <script src="/ControlPanel/Scripts/Login/main.js" type="text/javascript"></script>
+    <script src="/ControlPanel/Scripts/Login/validation.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="login-page">
+    <header class="login-header">
+         <div class="login-header-content">
+            <a href="https://www.intermedia.net" class="login-header-logo">
+                <span class="login-header-logo-full">
+                            <svg width="129" height="68">
+                                <image xlink:href="/Content/images/logo/logo-intermedia_129.svg" src="/Content/images/logo/logo-intermedia_129.png" width="129" height="68" />
+                            </svg>
+                        </span>
+                <span class="login-header-logo-mobile">
+                            <img src="/Content/images/logo/logo-intermedia_203.svg" width="203" height="32" />
+                        </span>
+            </a>
+            <div class="login-header-menu jMobileMenuBtn">
+                <ul class="login-header-menu-list jMobileMenu">
+                    <li class="login-header-menu-list-item">
+                        <a href="http://www.intermedia.net/support" target="_blank">Support</a>
+                    </li>
+                    <li class="login-header-menu-list-item">
+                        <a href="https://cp.serverdata.net/asp/administrator/Login.asp" target="_blank">Partner Portal</a>
+                    </li>
+                    <li class="login-header-menu-list-item">
+                        <a href="https://sp.serverdata.net/wp-login.php" target="_blank">Sales portal</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </header>
+
+<form action="/ControlPanel/Login" id="loginForm" method="post"><input class="jSelectedClientType" data-val="true" data-val-required="The ClientType field is required." id="ClientType" name="ClientType" type="hidden" value="WebMail" /><input class="jSelectedClientName" id="ClientName" name="ClientName" type="hidden" value="" /><input id="QueryStringAdditionalParams" name="QueryStringAdditionalParams" type="hidden" value="" /><input data-val="true" data-val-number="The field WelcomeMessageIndex must be a number." data-val-required="The WelcomeMessageIndex field is required." id="WelcomeMessageIndex" name="WelcomeMessageIndex" type="hidden" value="4" />        <section class="login-page-content">
+            <h1 class="login-page-greeting">Why, hello there!</h1>
+            <div class="login-forms">
+                <div class="login-forms-container">
+                    <div class="login-forms-loader jSpinner" style="display: none">
+                        <div class="login-forms-loader-content">
+                            <img src="/content/images/icons/48/progress_new_48.gif"/>
+                        </div>
+                    </div>
+
+                    <div class="login-forms-tabs">
+                        <a class="login-forms-tab m-active"
+                           href="/ControlPanel/Login?ClientType=WebMail">
+                            <img class="login-forms-tab-icon" src="/content/images/icons/60/exchange_60.svg" alt="" />
+                            For users
+                        </a>
+                        <a class="login-forms-tab m-admin "
+                           href="/ControlPanel/Login?ClientType=ControlPanel">
+                            <img class="login-forms-tab-icon" src="/content/images/icons/60/hostpilot_60.svg" alt="" />
+                            For admins
+                        </a>
+                        <a class="login-forms-tab m-voice "
+                           href="/ControlPanel/Login?ClientType=Voice">
+                            <img class="login-forms-tab-icon" src="/Content/images/icons/60/voice_60.svg" alt="" />
+                            Voice services
+                        </a>
+                    </div>
+
+                    <div class="login-form">
+
+
+
+
+<div class="login-form-products">
+    <a type="button"
+       onclick="selectClient('WebMail')"
+       class="btn login-form-product-btn jClientBtn jWebMailBtn">
+        <svg class="product-icon m-webmail" width="24" height="18">
+            <use xlink:href="/content/images/icons/24/envelop.svg#envelop"></use>
+        </svg>
+        Webmail
+    </a>
+    <a type="button"
+       onclick=selectClient(&#39;UserSettings&#39;)
+       class="btn login-form-product-btn jClientBtn jUserSettingsBtn"
+       >
+        <svg class="product-icon m-myservices" width="24" height="20">
+            <use xlink:href="/Content/images/icons/24/person.svg#myServices"></use>
+        </svg>
+        My Services
+        <i class="login-form-product-btn-info jTooltipTop" title="Change your password, request new services, and perform other basic user tasks. <a href='http://www.intermedia.net/blog/2014/08/01/new-video-how-my-services-empowers-intermedias-end-users/' target='_blank'>Watch the video</a>"></i>
+    </a>
+    <a type="button"
+       onclick=selectClient(&#39;Iam&#39;)
+       class="btn login-form-product-btn jClientBtn jIamBtn"
+       >
+        <svg class="product-icon m-iam m-active" width="24" height="24">
+            <use xlink:href="/Content/images/icons/24/appid.svg#active"></use>
+        </svg>
+        <svg class="product-icon m-iam m-passive" width="24" height="24">
+            <use xlink:href="/Content/images/icons/24/appid.svg#passive"></use>
+        </svg>
+        AppID
+        <i class="login-form-product-btn-info jTooltipTop" title="AppID is a single sign-on tool that securely stores your passwords for 1,500+ web apps. <a href='http://www.intermedia.net/products/appid/' target='_blank'>Learn more</a>"></i>
+    </a>
+    <a type="button"
+       onclick=selectClient(&#39;SecuriSync&#39;)
+       class="btn login-form-product-btn jClientBtn jSecuriSyncBtn"
+       >
+        <svg class="product-icon m-securisync m-active" width="24" height="24">
+            <use xlink:href="/Content/images/icons/24/securisync.svg#colored"></use>
+        </svg>
+        <svg class="product-icon m-securisync m-passive" width="24" height="24">
+            <use xlink:href="/Content/images/icons/24/securisync.svg#grey"></use>
+        </svg>
+        SecuriSync
+        <i class="login-form-product-btn-info jTooltipTop" title="SecuriSync is our file sharing and backup tool. Log in here for web access to your files. <a href='http://www.intermedia.net/products/securisync' target='_blank'>Learn more</a>"></i>
+    </a>
+</div>
+<div class="login-form-fields">
+    <div class="login-form-validation-wrap">
+        <div class="validation-input m-wide">
+            <input autocomplete="off" autofocus="" class="login-form-field jLoginField" id="Login" name="Login" placeholder="Login (email)" tabindex="1" type="text" value="" />
+        </div>
+        <div class="validation-input m-wide">
+            <input autocomplete="off" class="login-form-field" id="Password" name="Password" placeholder="Password" tabindex="2" type="password" value="" />
+        </div>
+    </div>
+
+    <input data-val="true" data-val-required="The Show field is required." id="Captcha_Show" name="Captcha.Show" type="hidden" value="False" />
+<input id="Captcha_Id" name="Captcha.Id" type="hidden" value="b030de3458eb49f5bf2da005d4cef456" />
+
+
+
+    <div class="login-form-options">
+        <div class="login-form-remember">
+            <input name="RememberMe"
+                   class="input-checkbox-icon jChbRememberMe"
+                   type="checkbox"
+                   value="true"
+                   tabindex="3"
+                   
+                   />
+            <span class="input-checkbox-label">Remember me</span>
+        </div>
+        <span class="login-form-forget">
+    
+        <a class="jForgotPassword" 
+           href="#"
+           onclick="forgotPasswordClick('/ControlPanel/Login/ForgotPassword?clientType=WebMail&amp;login=0')" >Forgot password?</a>
+</span>
+    </div>
+
+
+    <button type="submit" class="btn m-success m-large login-form-button">LOGIN</button>
+</div>
+<div class="mt4 text-center"><a class="muted" href="https://www.intermedia.net/products/appid-enterprise" target="_blank">Powered by Intermedia AppID&reg;</a></div>
+
+
+<script type="text/javascript">
+    initUserValidation();
+
+    function selectClient(clientType) {
+        $(".jSelectedClientType").val(clientType);
+        $(".jClientBtn").removeClass("m-selected");
+        $(".j" + clientType + "Btn").addClass("m-selected");
+    }
+
+    $(".jWebMailBtn").addClass("m-selected");
+</script>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+</form></div>
+<footer class="login-footer">
+    <div class="login-footer-content">
+<iframe src="https://www.intermedia.net/banner/ulp-user?tab=user" frameborder="0" height="200" width="1080" scrolling="no" style="visibility:hidden;" onload="this.style.visibility = 'visible';" ></iframe>    </div>
+</footer>
+<div class="login-feedback m-closed">
+    <div class="login-feedback-accordion m-right">
+        <a class="login-feedback-trigger" href="mailto:feedback@intermedia.net?subject=Unified Login Page &gt; Feedback" style="padding-left: 4px; text-transform: uppercase; font-size: 14px; font-family: DINOTMedium;">Feedback</a>
+    </div>
+</div>
+
+
+
+</body>
+</html>

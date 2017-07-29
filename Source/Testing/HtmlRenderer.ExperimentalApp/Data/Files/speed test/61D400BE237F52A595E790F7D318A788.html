@@ -1,0 +1,80 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Eastern Oregon Net, Inc. Speed Test</title>
+<script>
+// Cross-browser event handler
+ function listenToEvent (element, ev, fn){
+   // Non IE
+   if (element.addEventListener) {
+     element.addEventListener(ev, fn, false);
+   // IE
+   } else if (element.attachEvent) {
+     element.attachEvent('on' + ev, fn);
+   }
+ }
+
+ function handleResultData (event){
+   // Only allow messages from the correct speedtest custom url to prevent XSS attacks.
+   // https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+   // REPLACE THE URL BELOW WITH YOUR SPECIFIC SPEEDTEST CUSTOM TEST URL
+   if (event.origin !== 'http://eoni.speedtestcustom.com') {
+     Return;
+   }
+
+   // event.data is the resultData object
+   // REMOVE THIS LINE AND ADD YOUR DATA CONSUMER HERE
+	var xhr1 = new XMLHttpRequest();
+	var fd1 = new FormData();
+	fd1.append('Latency', event.data.latency.minimum);
+	fd1.append('download', event.data.download);
+	fd1.append('upload', event.data.upload);
+	xhr1.onreadstatechange = function()
+	{
+		if (4 == this.readyState && 200 == this.status)
+		{
+			// Request to record result worked.
+			console.log("Sent results to EONI database.");
+		}
+	};
+	xhr1.open('POST', 'http://cfsubmit.eoni.com/speedtest/insert_record2.cfm');
+	xhr1.send(fd1);
+	
+	var xhr2 = new XMLHttpRequest();
+	var fd2 = new FormData();
+	fd2.append('testId', event.data.config.testId);
+	fd2.append('serverId', event.data.config.serverId);
+	fd2.append('method', event.data.config.testMethod);
+	fd2.append('host', event.data.config.host);
+	fd2.append('serverVersion', event.data.config.serverVersion);
+	fd2.append('platform', event.data.device.platform);
+	fd2.append('startTimestamp', event.data.start.timestamp);
+	fd2.append('endtimestamp', event.data.end.timestamp);
+	fd2.append('download', event.data.download);
+	fd2.append('units', event.data.units);
+	fd2.append('minLatency', event.data.latency.minimum);
+	fd2.append('jitter', event.data.latency.jitter);
+	fd2.append('port', event.data.config.port);
+	fd2.append('upload', event.data.upload);
+	xhr2.onreadystatechange = function()
+	{
+		if (4 == this.readyState && 200 == this.status)
+		{
+			console.log("Sent results to new EONI database.");
+		}
+	};
+	xhr2.open('POST', 'http://cfsubmit.eoni.com/speedtest/insert_record_new.cfm');
+	xhr2.send(fd2);
+ }
+
+ // Attach the event handler for 'message' to window
+ listenToEvent(window, 'message', handleResultData);
+
+</script>
+</head>
+<body>
+For the most accurate test results please close other windows, applications, stop streaming video, audio, or doing online backup services before you click "GO".
+<hr>
+<iframe width="100%" height="600px" frameborder="0" src="http://eoni.speedtestcustom.com"></iframe>
+</BODY>
+</HTML>

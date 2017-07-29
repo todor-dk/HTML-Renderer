@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+
+
+<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head><link rel="canonical" href="https://technet.microsoft.com/en-us/library/ff849732.aspx" />
+    <title>Troubleshooting no incoming email from web</title>
+
+
+
+
+
+
+
+<meta name="DCS.dcsuri" content="/en-us/library/ff849732(d=default,l=en-us,v=technet.10).aspx" />
+
+<meta name="NormalizedUrl" content="https://technet.microsoft.com/en-us/library/ff849732(d=default,l=en-us,v=technet.10).aspx" />
+
+<meta name="ms.normalizedurl" content="https://technet.microsoft.com/en-us/library/ff849732(d=default,l=en-us,v=technet.10).aspx" />
+
+<meta name="DCS.appliesToProduct" content="Forefront TMG" />
+
+<meta name="AmbientContext" content="{&quot;layout.limit_max_width&quot;:false,&quot;AmbientContextId&quot;:&quot;DE85D248-6435-4B60-90E1-74F25BF0680D&quot;,&quot;display.use_large_font&quot;:true,&quot;insight.perf_timing&quot;:true,&quot;AmbientContextDownstream&quot;:{&quot;LogTrace&quot;:false},&quot;display.high_contrast&quot;:false,&quot;insight.use_wedcs_vnext&quot;:true}" />
+
+<meta name="VotingContextUrl" content="https://technet.microsoft.com/en-us/library/ff849732(d=default,l=en-us,v=technet.10).aspx" />
+
+<meta name="MN" content="61C41DD0-9:49:20 AM" />
+
+<meta name="Search.ShortId" content="ff849732" />
+
+<meta name="ms.shortidmsdn" content="ff849732" />
+
+<meta name="ms.locale" content="en-us" />
+
+<meta name="ms.prodver" content="TechNet.10" />
+
+<meta name="ms.contentlang" content="EN" />
+
+<meta name="ms.lang" content="EN" />
+
+<meta name="ms.loc" content="US" />
+
+<meta name="ms.sitever" content="2017.07.03.3" />
+
+<meta name="ms.assetid" content="e7bf92c8-986c-4d0e-a0e0-245ab664b29f" />
+
+<meta name="ms.auth" content="0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    
+        
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript" data-do-not-move="true">
+        //<![CDATA[
+        var AmbientContext = null;
+
+        (function(){
+            var root = (function(){return this;}).call(null);
+
+            var GetCookie = function(name){
+                var cookies = root.document.cookie ? root.document.cookie.split('; ') : [];
+                for (var i = 0; i < cookies.length; i++) {
+                    var pos = cookies[i].indexOf('=');
+                    if (name === root.decodeURIComponent(cookies[i].slice(0, pos)))
+                    {
+                        var cookie = cookies[i].slice(pos + 1).replace(/\+/g, ' ');
+                        cookie = root.decodeURIComponent(cookie);
+                        return cookie;
+                    }
+                }
+            };
+
+            var JsonDeserialize = function(content) {
+                return root.JSON && root.JSON.parse ? root.JSON.parse(content) : (new Function('return (' + content + ')'))();
+            };
+
+            try {
+                AmbientContext = GetCookie('AmbientContext');
+                AmbientContext = AmbientContext && JsonDeserialize(AmbientContext);
+            } catch(ex) {
+            } finally {
+                AmbientContext = AmbientContext || null;
+            }
+        })();
+        //]]>
+    </script>
+
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js" data-do-not-move="true" data-provides="jQuery"></script>
+    
+<link rel="stylesheet" type="text/css" href="https://i-technet.sec.s-msft.com/Combined.css?resources=0:ImageSprite,0:TopicResponsive,0:TopicResponsive.MediaQueries,1:CodeSnippet,1:ProgrammingSelector,1:ExpandableCollapsibleArea,0:CommunityContent,1:TopicNotInScope,1:FeedViewerBasic,1:ImageSprite,2:Header.2,2:HeaderFooterSprite,2:Header.MediaQueries,2:Banner.MediaQueries,3:megabladeMenu.1,3:MegabladeMenu.MediaQueries,3:MegabladeMenuSpriteCluster,0:Breadcrumbs,0:Breadcrumbs.MediaQueries,0:ResponsiveToc,0:ResponsiveToc.MediaQueries,0:LibraryMemberFilter,4:StandardRating,2:Footer.2,5:LinkList,2:Footer.MediaQueries,1:SiteFeedbackLink,0:BaseResponsive,6:MsdnResponsive,0:Tables.MediaQueries,7:SkinnyRatingResponsive,7:SkinnyRatingV2;/Areas/Library/Content:0,/Areas/Epx/Content/Css:1,/Areas/Epx/Themes/TechNet/Content:2,/Areas/Epx/Themes/Shared/Content:3,/Areas/Global/Content:4,/Areas/Epx/Themes/Base/Content:5,/Areas/Library/Themes/Msdn/Content:6,/Areas/Library/Themes/TechNet/Content:7&amp;amp;v=0874711AC2DACE4D4087F7B38F3A8977" /></head>
+<body class="library Chrome">
+    <div id="page">
+
+        
+
+        
+    
+        
+        
+    <div id="ux-header" dir="ltr" class="ltr " ms.pgarea="header">
+        
+        
+
+        <div class="upperBand">
+            <div class="row1">
+                <div class="msLogoAndMegablade">
+                    <a class="msdnLogoImg" href="https://technet.microsoft.com/en-us" title="Technet home" ms.cmpgrp="mslogo">
+                        <div id="msft-logo" class="msft-logo"></div>
+                    </a><div class="GrayPipe"></div><div class="megabladeMenu" ms.cmpgrp="megablade">
+    
+        
+    
+    <div id="megabladeContainer" class="ltr">
+        <div id="megabladeContainerCenter">
+            <div id="megabladeMainMenu" tabindex="0" role="button" aria-label="technet" aria-expanded="false">TechNet</div>
+            <ul id="megabladeItems">
+                        <li data-value="hh326172" class="bladeItem bladeItemWithMenu">
+                            <a href="" onclick="return false;" role="button" aria-expanded="false">Products</a><span class="caret"></span>
+                            <div class="navpage"><div class="menuContainerLayout">
+  <h5>Products</h5>
+  <ul>
+    <li>
+      <a href="https://technet.microsoft.com/windows">Windows</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/library/bb625087.aspx">Windows Server</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/library/cc507089.aspx">System Center</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/microsoft-edge">Microsoft Edge</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayout">
+  <h5> </h5>
+  <ul>
+    <li>
+      <a href="https://technet.microsoft.com/office">Office</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/en-us/office/dn788774">Office 365</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/en-us/office/dn788775">Exchange Server</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayout">
+  <h5> </h5>
+  <ul>
+    <li>
+      <a href="https://msdn.microsoft.com/library/mt590198(v=sql.1)">SQL Server</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/office/dn788776">SharePoint Products</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/office/dn788773">Skype for Business</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/bb421517.aspx?wt.svl=more_centers_link">See all products »</a>
+    </li>
+  </ul>
+</div></div>
+                        </li>
+                        <li data-value="hh880860" class="bladeItem bladeItemWithMenu">
+                            <a href="" onclick="return false;" role="button" aria-expanded="false">IT Resources</a><span class="caret"></span>
+                            <div class="navpage"><div class="menuContainerLayout">
+  <h5>Resources</h5>
+  <ul>
+    <li>
+      <a href="https://channel9.msdn.com/">Channel 9 Video</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/evalcenter/">Evaluation Center</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/bb291022">Learning Resources</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/dn440144">Microsoft Tech Companion App</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/dn550853" title="Microsoft Technical Communities">Microsoft Technical Communities</a>
+    </li>
+    <li>
+      <a href="https://mva.microsoft.com/?CR_CC=200157774">Microsoft Virtual Academy</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/scriptcenter">Script Center</a>
+    </li>
+    <li>
+      <a href="https://blogs.technet.microsoft.com/serverandtools/">Server and Tools Blogs</a>
+    </li>
+    <li>
+      <a href="https://blogs.technet.microsoft.com/">TechNet Blogs</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayout">
+  <h5> </h5>
+  <ul>
+    <li>
+      <a href="https://technet.microsoft.com/cc543196">TechNet Flash Newsletter</a>
+    </li>
+    <li>
+      <a href="https://gallery.technet.microsoft.com/">TechNet Gallery</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/library/default.aspx">TechNet Library</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/magazine/default.aspx">TechNet Magazine</a>
+    </li>
+    <li>
+      <a href="https://social.technet.microsoft.com/wiki">TechNet Wiki</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/sysinternals">Windows Sysinternals</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/virtuallabs">Virtual Labs</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Solutions</h5>
+  <ul>
+    <li>
+      <a href="https://technet.microsoft.com/network">Networking</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/cloud/private-cloud">Cloud and Datacenter</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/security">Security</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/server-cloud/solutions/virtualization.aspx">Virtualization</a>
+    </li>
+  </ul>
+</div></div>
+                        </li>
+                        <li data-value="hh371326" class="bladeItem bladeItemWithMenu">
+                            <a href="" onclick="return false;" role="button" aria-expanded="false">Downloads</a><span class="caret"></span>
+                            <div class="navpage"><div class="menuContainerLayout">
+  <h5>Updates</h5>
+  <ul>
+    <li>
+      <a href="https://support.microsoft.com/en-us">Service Packs</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/security/bulletin">Security Bulletins</a>
+    </li>
+    <li>
+      <a href="https://support.microsoft.com/en-us/help/12373/windows-update-faq">Windows Update</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Trials</h5>
+  <ul>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-technical-preview">Windows Server 2016</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/evaluate-system-center-technical-preview">System Center 2016</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise">Windows 10 Enterprise</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/evaluate-sql-server-2016">SQL Server 2016</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/" title="See all trials">See all trials »</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Related Sites</h5>
+  <ul>
+    <li>
+      <a href="https://www.microsoft.com/en-us/download">Microsoft Download Center</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/">TechNet Evaluation Center</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/download/driver.aspx?q=driver">Drivers</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/sysinternals">Windows Sysinternals</a>
+    </li>
+    <li>
+      <a href="https://gallery.technet.microsoft.com/">TechNet Gallery</a>
+    </li>
+  </ul>
+</div></div>
+                        </li>
+                        <li data-value="jj837158" class="bladeItem bladeItemWithMenu">
+                            <a href="" onclick="return false;" role="button" aria-expanded="false">Training</a><span class="caret"></span>
+                            <div class="navpage"><div class="menuContainerLayout">
+  <h5>Training</h5>
+  <ul>
+    <li>
+      <a href="https://www.microsoft.com/handsonlabs">Expert-led, virtual classes</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/training.aspx">Training Catalog</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/find-partner.aspx">Class Locator</a>
+    </li>
+    <li>
+      <a href="https://mva.microsoft.com/">Microsoft Virtual Academy</a>
+    </li>
+    <li>
+      <a href="https://mva.microsoft.com/en-US/training-courses/windows-server-2012-training-technical-overview-8564?l=BpPnn410_6504984382">Free Windows Server 2012 courses</a>
+    </li>
+    <li>
+      <a href="https://mva.microsoft.com/product-training/windows?CR_CC=200155697#!lang=1033" title="Free Windows 8 courses">Free Windows 8 courses</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/sql-training.aspx">SQL Server training</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/on-demand-online-courses.aspx">Microsoft Official Courses On-Demand</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Certifications</h5>
+  <ul>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/certification-overview.aspx">Certification overview</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/mcsa-windows-10-certifications.aspx" title="MCSA: Windows 10">MCSA: Windows 10</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/mcsa-windows-server-certification.aspx">Windows Server Certification (MCSE)</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/private-cloud-certification.aspx">Private Cloud Certification (MCSE)</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/mcsa-sql-certification.aspx">SQL Server Certification (MCSE)</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Other resources</h5>
+  <ul>
+    <li>
+      <a href="https://events.microsoft.com/">Microsoft Events</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/second-shot.aspx">Second shot for certification</a>
+    </li>
+    <li>
+      <a href="https://borntolearn.mslearn.net/b/?Redirected=true">Born To Learn blog</a>
+    </li>
+    <li>
+      <a href="https://www.technicalcommunity.com/default.aspx" title="Microsoft Technical Communities">Find technical communities in your area</a>
+    </li>
+  </ul>
+</div></div>
+                        </li>
+                        <li data-value="hh371327" class="bladeItem bladeItemWithMenu">
+                            <a href="" onclick="return false;" role="button" aria-expanded="false">Support</a><span class="caret"></span>
+                            <div class="navpage"><div class="menuContainerLayout">
+  <h5>Support options</h5>
+  <ul>
+    <li>
+      <a href="https://support.microsoft.com/gp/contactus81?Audience=Commercial">For business</a>
+    </li>
+    <li>
+      <a href="https://msdn.microsoft.com/hh361695">For developers</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/ms772425">For IT professionals</a>
+    </li>
+    <li>
+      <a href="https://support.microsoft.com/en-us/assistedsupportproducts">For technical support</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/microsoftservices/support.aspx">Support offerings</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>More support</h5>
+  <ul>
+    <li>
+      <a href="https://premier.microsoft.com/">Microsoft Premier Online</a>
+    </li>
+    <li>
+      <a href="https://social.technet.microsoft.com/forums/">TechNet Forums</a>
+    </li>
+    <li>
+      <a href="https://social.msdn.microsoft.com/forums/">MSDN Forums</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/security/bulletin">Security Bulletins &amp; Advisories</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Not an IT pro?</h5>
+  <ul>
+    <li>
+      <a href="https://support.microsoft.com/">Microsoft Customer Support</a>
+    </li>
+    <li>
+      <a href="https://answers.microsoft.com/en-us">Microsoft Community Forums</a>
+    </li>
+  </ul>
+</div></div>
+                        </li>
+            </ul>
+        </div>
+    </div>
+    
+
+</div>
+                </div>
+
+                <div class="controls" ms.cmpgrp="aux nav">
+                    <div id="setting-menu">
+                        <div class="mobile-setting-icon"></div>
+                    </div>
+                    <div class="controlsInternal">
+                        
+    <form class="selectLocale" id="selectLocaleForm" action="https://technet.microsoft.com/en-us/SelectLocale">
+        <input type="hidden" name="fromPage" value="https%3a%2f%2ftechnet.microsoft.com%2fen-us%2flibrary%2fff849732.aspx" />
+        <a href="#" onclick="$('#selectLocaleForm').submit();return false;" title="Change your language">United States (English)</a>
+    </form>
+
+
+                        <a class="scarabLink" href="https://login.live.com/login.srf?wa=wsignin1.0&amp;rpsnv=13&amp;ct=1499878160&amp;rver=6.7.6640.0&amp;wp=mcmbi&amp;wlcxt=technet%24technet%24technet&amp;wreply=https%3a%2f%2ftechnet.microsoft.com%2fen-us%2flibrary%2fff849732.aspx&amp;lc=1033&amp;id=254354&amp;mkt=en-us">Sign in</a>
+                    </div>
+                </div>
+
+                <div class="clear"></div>
+            </div>
+
+            <div class="row2">
+                <div id="gripAndBrandLogo">
+                    <div id="grip-menu">
+                        <div id="grip" class="menu-icon"></div>
+                    </div>
+                    <div class="brandLogo" ms.cmpgrp="brandlogo">
+                        <a href="https://technet.microsoft.com/" title="Microsoft TechNet"><img alt="Microsoft TechNet" src="https://i-technet.sec.s-msft.com/Areas/Epx/Themes/TechNet/Content/Images/BrandLogoTechNetNew.png?v=636347038889993248"></img></a>
+                    </div>
+                </div>
+                <div id="drawer">
+
+                </div>
+                <div id="search-menu">
+                    <div class="mobile-search-icon"></div>
+                </div>
+                
+
+    <div class="SearchBox" ms.cmpgrp="aux nav" role="search">
+        <form id="HeaderSearchForm" name="HeaderSearchForm" method="get" onsubmit="return Epx.Controls.SearchBox.searchBoxOnSubmit(this);">
+            <input id="HeaderSearchTextBox" name="query" type="text" maxlength="200" onfocus="Epx.Controls.SearchBox.watermarkFocus(event, this.title)" onblur="Epx.Controls.SearchBox.watermarkBlur(event, this.title)" aria-labelledby="HeaderSearchButton" />
+            <button id="HeaderSearchButton" value="" type="submit" class="header-search-button" ms.title="search"></button>
+        </form>
+
+        
+        
+
+    </div>
+
+                <div class="clear"></div>
+             </div>
+
+            <div class="row3">
+
+            </div>
+        </div>
+        <div class="lowerBand">
+            <div class="ux-nav" role="navigation" aria-label="header toc" ms.cmpgrp="main nav">
+                <div class="TocNavigation">
+   
+   <div class="toclevel1">
+          <a class="normal" href="https://technet.microsoft.com/" title="Home">Home</a>
+          <a class="active" href="https://technet.microsoft.com/library/" title="Library">Library</a>
+          <a class="normal" href="https://social.technet.microsoft.com/wiki" title="Wiki">Wiki</a>
+          <a class="normal" href="https://technet.microsoft.com/bb291022" title="Learn">Learn</a>
+          <a class="normal" href="https://gallery.technet.microsoft.com/" title="Gallery">Gallery</a>
+          <a class="normal" href="https://technet.microsoft.com/bb403698" title="Downloads">Downloads</a>
+          <a class="normal" href="https://technet.microsoft.com/ms772425" title="Support">Support</a>
+          <a class="normal" href="https://social.technet.microsoft.com/forums/en-us/home" title="Forums">Forums</a>
+          <a class="normal" href="https://blogs.technet.microsoft.com/" title="Blogs">Blogs</a>
+
+    </div>
+  
+</div>
+            </div>
+        </div>
+    </div>
+
+<div id="jumpInfo" style="display: none">We’re sorry. The content you requested has been removed. You’ll be auto redirected in 1 second.</div>
+
+
+
+
+<link type="text/css" rel="stylesheet" />
+<link type="text/css" rel="stylesheet" />
+
+
+    <div id="breadcrumbs" ms.pgarea="body" ms.cmpgrp="breadcrumbs">
+        <div id="breadcrumbDesktop" class="breadCrumb">
+                        <span class="breadcrumbEllipsis"><a href="https://technet.microsoft.com/en-us/library/ff684071.aspx" title=" Forefront Threat Management Gateway (TMG)"></a></span>
+                        <span><a href="https://technet.microsoft.com/en-us/library/ff355324.aspx" title="Forefront Threat Management Gateway (TMG) 2010"><span>Forefront Threat Management Gateway (TMG) 2010</span></a></span>
+                        <span><a href="https://technet.microsoft.com/en-us/library/dd897100.aspx" title="Forefront TMG Troubleshooting"><span>Forefront TMG Troubleshooting</span></a></span>
+                        <span class="breadcrumbDropSmall">
+                            <a id="breadcrumbDropDownButton" href="#" targethref="https://technet.microsoft.com/en-us/library/dd897100.aspx" title="Troubleshooting email protection"><span>Troubleshooting email protection</span></a>
+                        </span>
+        </div>
+        <div id="breadcrumbDropDownMenu"></div>
+
+        <div id="breadcrumbTablet" class="breadCrumb">
+                        <span class="breadcrumbEllipsis"><a href="https://technet.microsoft.com/en-us/library/dd897100.aspx" title="Forefront TMG Troubleshooting"></a></span>
+                    <span><a href="https://technet.microsoft.com/en-us/library/ff849730.aspx" title="Troubleshooting email protection"><span>Troubleshooting email protection</span></a></span>
+                <span class="breadcrumbDropSmall"><a id="tocDropDownButton" href="#" title="Troubleshooting no incoming email from web"><span>Troubleshooting no incoming email from web</span></a></span>
+        </div>
+        <div id="tocDropDownMenu"></div>
+        <div id="breadcrumbMobile" class="breadCrumb">
+                <span class="breadcrumbEllipsis"><a href="https://technet.microsoft.com/en-us/library/ff849730.aspx" title="Troubleshooting email protection"></a></span>
+            <span class="breadcrumbDropSmall"><a id="tocPopupButton" href="#" title="Troubleshooting no incoming email from web"><span>Troubleshooting no incoming email from web</span></a></span>
+        </div>
+    </div>
+    <div id="tocPopupMenu">
+        <div id="tocPopMenuClose" class="tocCloseLarge"></div>
+        <div id="tocTitle">Troubleshooting no incoming email from web</div>        
+    </div>
+
+    
+
+
+        <div id="body" ms.pgarea="body" class="">
+            <span id="tabletView_large"></span>
+            <span id="tabletView_small"></span>
+            <span id="mobileView"></span>
+            
+
+
+
+
+    <div id="leftNav" ms.cmpgrp="left toc" role="navigation" aria-label="left toc">
+
+    
+
+
+<div id="tocnav" class="ArchiveV2">
+    <div class="tocunselected">
+        <div id="tocExpandArea">
+            <span class="toc_empty"></span>
+            <span id="tocExpandButton"><a href="javascript:void(0)" aria-label="expand sibling toc" role="button"></a></span>
+        </div>
+        <div id="tocExpand"></div>
+    </div>
+    <div class="tocselected"></div>
+    <div class="tocunselected">
+                <div class="toclevel current" data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/ff849732.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Troubleshooting no incoming email from web">Troubleshooting no incoming email from web</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/ff849726.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Troubleshooting email not sent from the internal Hub">Troubleshooting email not sent from the internal Hub</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/ff849724.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Troubleshooting spam levels too high">Troubleshooting spam levels too high</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/ff849727.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Troubleshooting no email for a specific user">Troubleshooting no email for a specific user</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/ff849725.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Troubleshooting Edge Subscription not working">Troubleshooting Edge Subscription not working</a>                </div>
+    </div>
+    <a id="tocMenuToggler" href="javascript:void(0)" role="button">
+        <span id="tocMenuTogglerIcon" class="tocMenuCollapse" role="button" aria-expanded="true" aria-label="Table of contents menu"></span>
+        <div id="tocMenuTogglerLabel">TOC</div>
+    </a>
+</div>            <div style="display:none">
+                <div id="CollapseLocalizeString">Collapse the table of content</div>
+                <div id="ExpandLocalizeString">Expand the table of content</div>
+            </div>
+        <div>
+            <a id="isd_archiveControlResponsive" style="display:none;" href="javascript:void(0)" role="button" aria-label="Hide Archived Versions" data-include-archive="Show Archived Versions" data-exclude-archive="Hide Archived Versions">
+            </a>
+            <div id="isd_archiveInstrument" style="display:none">This documentation is archived and is not being maintained.</div>
+        </div>
+    </div>
+     <div id="content" class="content" ms.cmpgrp="content body" role="main">
+
+
+
+
+
+
+
+
+    <div id="archiveDisclaimerText" style="display:none">This documentation is archived and is not being maintained.</div>
+
+
+
+<div xmlns="http://www.w3.org/1999/xhtml">
+<div class="topic" xmlns="http://www.w3.org/1999/xhtml" xmlns:mtps="http://msdn2.microsoft.com/mtps" xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:cs="http://msdn.microsoft.com/en-us/">
+  <h1 class="title">Troubleshooting no incoming email from web</h1>
+  
+  <p>Updated: February 1, 2011</p><div id="mainSection">
+    <div id="mainBody">
+      <p>
+        
+      </p>
+      <p>This topic provides guidance for diagnosing and resolving issues you may encounter with no incoming email from the web and Forefront TMG.</p>
+      <a id="BKMK_TSflowchart">
+        
+      </a>
+      <div><h2 class="LW_CollapsibleArea_TitleDiv"><div><a class="LW_CollapsibleArea_TitleAhref" title="Collapse" role="heading"><span class="cl_CollapsibleArea_expanding LW_CollapsibleArea_Img"></span><span class="LW_CollapsibleArea_Title">Flowchart for troubleshooting no email from web</span></a><div id="Anchor_0" class="LW_CollapsibleArea_Anchor_Div"><a href="/en-us/library/ff849732.aspx#Anchor_0" class="LW_CollapsibleArea_Anchor_Img" title="Right-click to copy and share the link for this section"></a></div><div class="LW_CollapsibleArea_HrDiv"><hr class="LW_CollapsibleArea_Hr" /></div></div></h2><div class="sectionblock">
+        <p>This flowchart guides you through the steps that are required for troubleshooting when no email is received from the web.</p>
+        <img id="3ffe6059-d4da-432f-84da-fdd03a6487e6" alt="No email received from web troubleshooting flow" src="https://i-technet.sec.s-msft.com/dynimg/IC479004.gif" title="No email received from web troubleshooting flow" xmlns="" />
+      </div></div>
+      <div><h2 class="LW_CollapsibleArea_TitleDiv"><div><a class="LW_CollapsibleArea_TitleAhref" title="Collapse" role="heading"><span class="cl_CollapsibleArea_expanding LW_CollapsibleArea_Img"></span><span class="LW_CollapsibleArea_Title">Procedures for troubleshooting no email from web</span></a><div id="Anchor_1" class="LW_CollapsibleArea_Anchor_Div"><a href="/en-us/library/ff849732.aspx#Anchor_1" class="LW_CollapsibleArea_Anchor_Img" title="Right-click to copy and share the link for this section"></a></div><div class="LW_CollapsibleArea_HrDiv"><hr class="LW_CollapsibleArea_Hr" /></div></div></h2><div class="sectionblock">
+        <p>The following procedures describe the steps you might need to take when you use the flowchart to troubleshoot no email from the web:</p>
+        <ul>
+          <li class="unordered">
+            <a href="#checkedge">How to check if Edge Subscription is configured</a>
+            <br />
+            <br />
+          </li>
+          <li class="unordered">
+            <a href="#backupexch">How to backup Exchange and FPE configuration</a>
+            <br />
+            <br />
+          </li>
+          <li class="unordered">
+            <a href="#checkentries">How to check entries in TMG log with any SMTP traffic</a>
+            <br />
+            <br />
+          </li>
+          <li class="unordered">
+            <a href="#checkexch">How to check that Exchange message tracking is enabled</a>
+            <br />
+            <br />
+          </li>
+          <li class="unordered">
+            <a href="#checkmessage">How to check if there are messages from the specific user in tracking log incoming messages</a>
+            <br />
+            <br />
+          </li>
+          <li class="unordered">
+            <a href="#disableenable">How to disable/enable e-mail policy integration mode</a>
+            <br />
+            <br />
+          </li>
+          <li class="unordered">
+            <a href="#messagesdeliver">How to investigate why messages are not delivered</a>
+            <br />
+            <br />
+          </li>
+          <li class="unordered">
+            <a href="#configureexchange">How to configure Exchange routes</a>
+            <br />
+            <br />
+          </li>
+          <li class="unordered">
+            <a href="#checkrules">How to check rules</a>
+            <br />
+            <br />
+          </li>
+          <li class="unordered">
+            <a href="#checksystem">How to check system policy rules</a>
+            <br />
+            <br />
+          </li>
+          <li class="unordered">
+            <a href="#checklistener">How to check and configure the Internet (external) mail route listener settings according to MX record</a>
+            <br />
+            <br />
+          </li>
+        </ul>
+        <a id="checkedge">
+          
+        </a>
+        <h4 class="subHeading">How to check if Edge Subscription is configured</h4>
+        <div class="subSection">
+          <p>Check if Edge Subscription is configured on each array member.</p>
+          <h4 class="subHeading">To check if Edge Subscription is configured:</h4>
+          <div class="subSection">
+            <ul>
+              <li>
+                <p>For each array member, use one of the following methods to check if Edge Subscription is configured:</p>
+                <ul>
+                  <li class="unordered">
+													In the Exchange Management Console (EMC), expand the <strong>Organization Configuration</strong> node, select <strong>Hub Transport</strong>  and then click the <strong>Edge Subscriptions</strong> tab.<br /><br /></li>
+                  <li class="unordered">
+													Run the <strong>Get-EdgeSubscription</strong> cmdlet on each array member.<br /><br /></li>
+                  <li class="unordered">
+													In the Forefront TMG Management console, in the tree, click <strong>E-Mail Policy</strong>, and in the <strong>E-Mail Policy Settings</strong> area check the <strong>Edge Subscription Connectivity</strong> status.<br /><br /></li>
+                </ul>
+                <p>For more information, see <a href="https://technet.microsoft.com/en-us/library/">Subscribing the Edge Transport Server to the Exchange Organization</a> and <a href="https://technet.microsoft.com/en-us/library/">Using Mail Protection with Exchange EdgeSync on Forefront TMG</a>.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <a id="backupexch">
+          
+        </a>
+        <h4 class="subHeading">How to backup Exchange and FPE configuration</h4>
+        <div class="subSection">
+          <p>For each array member, backup the Forefront Protection 2010 for Exchange (FPE) configuration as well as the Exchange Edge configuration.</p>
+          <h4 class="subHeading">To backup Exchange and FPE configuration:</h4>
+          <div class="subSection">
+            <ol class="ordered">
+              <li>
+                <p>On each array member, follow the recommended backup and restore procedures for Forefront Protection 2010 for Exchange Server (FPE). See <a href="https://technet.microsoft.com/en-us/library/">Backing up and restoring</a>.</p>
+              </li>
+              <li>
+                <p>Backup the Exchange Edge configuration:</p>
+                <ol class="ordered">
+                  <li>
+													Copy the ExportEdgeConfig.ps1 script to the root folder of your user profile on the server that you are backing up.The ExportEdgeConfig.ps1 script is located in the \Scripts folder in your Exchange installation folder. The default location for this folder is C:\Program Files\Microsoft\Exchange Server\Scripts.<br /><br /></li>
+                  <li>
+													Capture the configuration with the ExportEdgeConfig.ps1 script by running the following command in the Exchange Management Shell:<br /><br /><code>./ExportEdgeConfig -cloneConfigData:"C:\CloneConfigData.xml"</code><br /><br /><div class="alert"><table summary="table"><tr><th align="left" scope="col"><img id="note" alt="note" src="https://i-technet.sec.s-msft.com/areas/global/content/clear.gif" title="note" xmlns="" class="cl_IC101471" />Note: </th></tr><tr><td>
+														Replace C:\CloneConfigData.xml with the full path of the XML backup file to be created by the ExportEdgeConfig.ps1 script.<p></p>
+														The confirmation message, "Edge configuration data is exported successfully to: C:/CloneConfigData.xml," appears.<p></p></td></tr></table><p></p></div></li>
+                  <li>
+													Copy the output file to a secure location.<br /><br /></li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <a id="checkentries">
+          
+        </a>
+        <h4 class="subHeading">How to check entries in TMG log with any SMTP traffic</h4>
+        <div class="subSection">
+          <p>Check the TMG log for SMTP traffic.</p>
+          <h4 class="subHeading">To check entries in TMG log with any SMTP traffic:</h4>
+          <div class="subSection">
+            <ol class="ordered">
+              <li>
+                <p>In the Forefront TMG Management console, in the tree, click <strong>Logs &amp; Reports</strong>.</p>
+              </li>
+              <li>
+                <p>In the details pane, click the <strong>Logging</strong> tab. </p>
+              </li>
+              <li>
+                <p>On the <strong>Tasks</strong> tab, click <strong>Edit Filter</strong>.</p>
+              </li>
+              <li>
+                <p>In <strong>Filter by</strong>, select <strong>Protocol</strong>.</p>
+              </li>
+              <li>
+                <p>In <strong>Condition</strong>, select <strong>Contains</strong> and in <strong>Value</strong>, select <strong>SMTP</strong>, and then click <strong>Add To List</strong>.</p>
+              </li>
+              <li>
+                <p>Click <strong>Start Query</strong>.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <a id="checkexch">
+          
+        </a>
+        <h4 class="subHeading">How to check that Exchange message tracking is enabled</h4>
+        <div class="subSection">
+          <p>Check if Exchange message tracking is enabled.</p>
+          <h4 class="subHeading">To check that Exchange message tracking is enabled:</h4>
+          <div class="subSection">
+            <ol class="ordered">
+              <li>
+                <p>For Exchange 2000 and Exchange 2003, message tracking is enabled on a per-server basis:</p>
+                <ol class="ordered">
+                  <li>
+													In Exchange System Manager, right-click on the server and select <strong>Properties</strong>.<br /><br /></li>
+                  <li>
+													On the <strong>General</strong> tab, ensure that <strong>Enable message tracking</strong> is selected.<br /><br /></li>
+                </ol>
+              </li>
+              <li>
+                <p>For Exchange 2007, message tracking is enabled by default, however, in the event that it was disabled, it not possible to configure message tracking with the Exchange Management Console.  Use the Exchange Management Shell (EMS) to enable message tracking (in the event that it was disabled) by entering the following:</p>
+                <p>
+                  <code>Set-TransportServer &lt;SERVERNAME&gt; –MessageTrackingLogEnabled $true</code>
+                </p>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <a id="checkmessage">
+          
+        </a>
+        <h4 class="subHeading">How to check if there are messages from the specific user in tracking log incoming messages</h4>
+        <div class="subSection">
+          <p>Check if there are messages from the specific user in the tracking log incoming messages. For more information, see <a href="https://technet.microsoft.com/en-us/library/">Managing Message Tracking</a>) and <a href="https://technet.microsoft.com/en-us/library/">How to Search Message Tracking Logs</a>.</p>
+          <h4 class="subHeading">To check if there are messages from the specific user in tracking log incoming messages:</h4>
+          <div class="subSection">
+            <ol class="ordered">
+              <li>
+                <p>For Exchange 2000 and Exchange 2003, the message tracking logs are stored in the \Program Files\exchsrvr\{servername}.log folder.</p>
+              </li>
+              <li>
+                <p>For Exchange 2007, the default folder is \Program Files\Microsoft\Exchange Server\TransportRoles\Logs\MessageTracking.</p>
+              </li>
+              <li>
+                <p>Ensure that the Microsoft Exchange Transport Log Search service is started.</p>
+              </li>
+              <li>
+                <p>Run the following command in Exchange Management Shell:</p>
+                <p>
+                  <code>Get-MessageTrackingLog &lt;SearchFilters&gt;</code>
+                </p>
+                <p>For example, to search the message tracking log for all entries from 7/28/2006 8:00 AM to 7/28/2006 5:00 PM for all FAIL events sent to pat@contoso.com, run the following command:</p>
+                <p>
+                  <code>Get-MessageTrackingLog -ResultSize Unlimited -Start "7/28/2006 8:00AM" -End "7/28/2006 5:00PM" -EventId "Fail" -Recipient "pat@contoso.com"</code>
+                </p>
+              </li>
+              <li>
+                <p>Open the Exchange Management Console:</p>
+                <ol class="ordered">
+                  <li>
+													In the console tree, click <strong>Toolbox</strong>. In the result pane, click <strong>Message Tracking</strong>. In the action pane, click <strong>Open tool</strong>.<br /><br /></li>
+                  <li>
+													In the <strong>Message Tracking Parameters</strong> dialog box, set the search criteria for your message tracking log search by selecting the check box next to the search criteria name and entering a value for the search criteria. To remove search criteria, clear the check box next to the search criteria name.<br /><br /></li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <a id="disableenable">
+          
+        </a>
+        <h4 class="subHeading">How to disable/enable e-mail policy integration mode</h4>
+        <div class="subSection">
+          <p>You may need to disable or enable e-mail policy integration mode depending on where you are in the troubleshooting flow.</p>
+          <h4 class="subHeading">To disable/enable e-mail policy integration mode:</h4>
+          <div class="subSection">
+            <ol class="ordered">
+              <li>
+                <p>In the Forefront TMG Management console, in the tree, click <strong>Troubleshooting</strong>.</p>
+              </li>
+              <li>
+                <p>In the <strong>Tasks</strong> pane, click <strong>Control E-Mail Policy Integration</strong>.</p>
+              </li>
+              <li>
+                <p>From <strong>Status</strong>, select <strong>Disabled</strong> or <strong>Enabled</strong>.</p>
+              </li>
+              <li>
+                <p>Click <strong>OK</strong>.</p>
+              </li>
+              <li>
+                <p>Click <strong>Apply</strong>.</p>
+              </li>
+              <li>
+                <p>Enter a change description and then click <strong>Apply</strong>.</p>
+              </li>
+              <li>
+                <p>To check the status, in the Forefront TMG Management console, in the tree, click <strong>E-Mail Policy</strong>, and in the <strong>E-Mail Policy Settings</strong> area check the <strong>E-Mail Policy Integration mode</strong> status.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <a id="messagesdeliver">
+          
+        </a>
+        <h4 class="subHeading">How to investigate why messages are not delivered</h4>
+        <div class="subSection">
+          <p>Use the Exchange Management Shell to investigate why messages are not delivered. See <a href="https://technet.microsoft.com/en-us/library/">Exchange Management Shell</a> and <a href="https://technet.microsoft.com/en-us/library/">Get-AgentLog</a>.</p>
+          <h4 class="subHeading">To investigate why messages are not delivered:</h4>
+          <div class="subSection">
+            <ol class="ordered">
+              <li>
+                <p>Run Exchange Management Shell.</p>
+              </li>
+              <li>
+                <p>Use get-agentlog to investigate why the messages are not delivered.</p>
+                <p>
+                  <code>Get-AgentLog [-EndDate &lt;DateTime&gt;] [-Location &lt;LocalLongFullPath&gt;] [-StartDate &lt;DateTime&gt;]</code>
+                </p>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <a id="configureexchange">
+          
+        </a>
+        <h4 class="subHeading">How to configure Exchange routes</h4>
+        <div class="subSection">
+          <p>You may need to modify the Exchange routes,</p>
+          <h4 class="subHeading">To configure Exchange routes:</h4>
+          <div class="subSection">
+            <ol class="ordered">
+              <li>
+                <p>In the Forefront TMG Management console, in the tree, click <strong>E-Mail Policy</strong>.</p>
+              </li>
+              <li>
+                <p>Select a route.</p>
+              </li>
+              <li>
+                <p>In the <strong>Tasks</strong> tab, click <strong>Edit Selected Route</strong>.</p>
+              </li>
+              <li>
+                <p>Modify the route according to the revised configuration.</p>
+              </li>
+              <li>
+                <p>Click <strong>Apply</strong>.</p>
+              </li>
+              <li>
+                <p>Enter a change description and then click <strong>Apply</strong>.</p>
+                <div class="alert">
+                  <table summary="table">
+                    <tr>
+                      <th align="left" scope="col">
+                        <img id="Tip" alt="Tip" src="https://i-technet.sec.s-msft.com/dynimg/IC115537.gif" title="Tip" xmlns="" />Tip: </th>
+                    </tr>
+                    <tr>
+                      <td>
+												You can query a DNS domain nameserver to identify the IP address, for example, using NSLOOKUP.<p></p></td>
+                    </tr>
+                  </table>
+                  <p>
+                    
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <a id="checkrules">
+          
+        </a>
+        <h4 class="subHeading">How to check rules</h4>
+        <div class="subSection">
+          <p>Check that the rule does not block SMTP traffic or the internal SMTP server.</p>
+          <h4 class="subHeading">To check rules:</h4>
+          <div class="subSection">
+            <ol class="ordered">
+              <li>
+                <p>In the Forefront TMG Management console, in the tree, click <strong>Firewall Policy</strong>.</p>
+              </li>
+              <li>
+                <p>Select a rule and click <strong>Edit Selected Rule</strong>.</p>
+              </li>
+              <li>
+                <p>Make sure that the rule does not block SMTP traffic or the internal SMTP server.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <a id="checksystem">
+          
+        </a>
+        <h4 class="subHeading">How to check system policy rules</h4>
+        <div class="subSection">
+          <p>Check whether the SMTP and EdgeSynch system policy rules are enabled.</p>
+          <h4 class="subHeading">To check system policy rules:</h4>
+          <div class="subSection">
+            <ol class="ordered">
+              <li>
+                <p>In the Forefront TMG Management console, in the tree, click <strong>Firewall Policy</strong>.</p>
+              </li>
+              <li>
+                <p>In the <strong>Tasks</strong> pane, click <strong>Show System Policy Rules</strong>.</p>
+              </li>
+              <li>
+                <p>Double-click on the following rules and check if the following rules are enabled:</p>
+                <ul>
+                  <li class="unordered">
+													Allow SMTP traffic to the local host for mail protection and filtering<br /><br /></li>
+                  <li class="unordered">
+													Allow SMTP traffic to the Internet for mail protection and filtering<br /><br /></li>
+                  <li class="unordered">
+													For Edge Subscription: Allow LDAP\LDAPS traffic to the local host for the Exchange Server EdgeSync synchronization process<br /><br /></li>
+                </ul>
+              </li>
+              <li>
+                <p>If the rules are not enabled, in the <strong>Tasks</strong> tab, click <strong>Edit System Policy</strong>.</p>
+              </li>
+              <li>
+                <p>Select <strong>Various &gt; E-Mail Policy</strong> and select <strong>Enable this configuration group</strong>.</p>
+              </li>
+              <li>
+                <p>Click <strong>OK</strong>.</p>
+              </li>
+              <li>
+                <p>Click <strong>Apply</strong>.</p>
+              </li>
+              <li>
+                <p>Enter a change description and then click <strong>Apply</strong>.</p>
+              </li>
+              <li>
+                <p>For Edge Subscription: </p>
+                <ol class="ordered">
+                  <li>
+													In the Forefront TMG Management console, in the tree, click <strong>E-Mail Policy</strong>.<br /><br /></li>
+                  <li>
+													In the <strong>Tasks</strong> tab, click <strong>Enable Connectivity for EdgeSync Traffic</strong>.<br /><br /></li>
+                  <li>
+													Click <strong>OK</strong>.<br /><br /></li>
+                  <li>
+													Click <strong>Apply</strong>.<br /><br /></li>
+                  <li>
+													Enter a change description and then click <strong>Apply</strong>.<br /><br /></li>
+                </ol>
+              </li>
+            </ol>
+          </div>
+        </div>
+        <a id="checklistener">
+          
+        </a>
+        <h4 class="subHeading">How to check and configure the Internet (external) mail route listener settings according to MX record</h4>
+        <div class="subSection">
+          <p>Check that the mail exchanger (MX) resource record for your domain registered on Internet DNS servers, points to the external IP address of Forefront TMG.</p>
+          <h4 class="subHeading">To check and configure the Internet (external) mail route listener settings according to MX record:</h4>
+          <div class="subSection">
+            <ol class="ordered">
+              <li>
+                <p>Check that the mail exchanger (MX) resource record for your domain registered on Internet DNS servers, points to the external IP address of Forefront TMG. Forefront TMG will respond to SMTP session initiation messages (HELO, EHLO) with this public domain name or IP address.</p>
+              </li>
+              <li>
+                <p>Check that the Internet mail route listener is configured correctly on the external NIC according to the MX record settings:</p>
+                <ol class="ordered">
+                  <li>
+													In the Forefront TMG Management console, in the tree, click <strong>E-Mail Policy</strong> node.<br /><br /></li>
+                  <li>
+													Select <strong>External_Mail_Servers</strong>, and in the <strong>Tasks</strong> pane, click <strong>Edit Selected Route</strong>.<br /><br /></li>
+                  <li>
+													On the <strong>Routing</strong> tab, check the <strong>Mail relay method</strong>. <br /><br /></li>
+                  <li>
+													Click <strong>Advanced</strong> and then check the <strong>Authentication</strong> and <strong>Source Address for Routing</strong>.<br /><br /></li>
+                  <li>
+													On the <strong>Listener</strong> tab, check the <strong>FQDN or IP address</strong> ….<br /><br /></li>
+                </ol>
+              </li>
+              <li>
+                <p>Telnet into the MX record IP from an external network. Check that the response receives the FQDN defined in the SMTP route.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</div></div>
+
+
+
+
+
+
+<div class="libraryMemberFilter">
+    <div class="filterContainer">
+        <span>Show:</span>
+        <label>
+            <input type="checkbox" class="libraryFilterInherited" checked="checked" value="Inherit" />Inherited
+        </label>
+        <label>
+            <input type="checkbox" class="libraryFilterProtected" checked="checked" value="Protected" />Protected
+        </label>
+    </div>
+</div>
+    
+<input type="hidden" id="libraryMemberFilterEmptyWarning" value="There are no members available with your current filter settings." />
+
+
+
+    </div>
+<div id="rightNavigationMenu" ms.cmpgrp="right nav">
+    <div id="mobileButtons">
+        <div id="navigationButtons">
+            <a id="isd_print" href="https://technet.microsoft.com/en-us/library/ff849732(d=printer).aspx" rel="nofollow"><ins class="print"></ins>Print </a>
+            <a id="isd_printABook" href="/en-us/library/export/help/?returnurl=%2fen-us%2flibrary%2fff849732.aspx">
+                <ins class="export"></ins>Export (<span class="count">0</span>)
+            </a>
+        </div>
+    </div>
+    <div id="navMain">
+        <div id="closeNavigation">
+            <a class="tocCloseSmall" id="closeButton"></a>
+        </div>
+        <div id="navigationButtons">
+            <a id="isd_print" href="https://technet.microsoft.com/en-us/library/ff849732(d=printer).aspx" rel="nofollow"><ins class="print"></ins>Print </a>
+            <a id="isdShare" href="#" role="button" aria-expanded="false">
+                <ins class="share"></ins>Share
+            </a>
+            <div id="socials" style="display: none">
+                <a class="isdFacebook" href="#" aria-label="Share on Facebook">
+                    <ins class="facebook"></ins>
+                </a>
+                <a class="isdTwitter" href="#" aria-label="Share on Twitter">
+                    <ins class="twitter"></ins>
+                </a>
+                <a class="isdGooglePlus" href="#" aria-label="Share on Google+">
+                    <ins class="googlePlus"></ins>
+                </a>
+            </div>
+        </div>
+        <div id="indoc_toc" style="display: none" ms.cmpgrp="indoc toc">
+            <div id="indoc_title">IN THIS ARTICLE</div>
+            <ul id="indoc_toclist"></ul>
+        </div>
+    </div>
+</div>
+<div id="rightNavigationMenuThumbnail" class="rightNavigationMenuThumbnail">
+</div>
+
+
+
+
+        </div>
+        <div class="clear"></div>
+
+        
+    
+
+<input name="__RequestVerificationToken" type="hidden" value="nJ_MdiflG-BwZBgr8N8zvMeCRAv5_84DqJsE87qrh1H_QV8xaexbJ_tV2cDmWNZeJJ-76CczxQWW9a_-0D8uWFPH3mw1" />
+<input id="ratingValueSubmitUrl" type="hidden" value="https://technet.microsoft.com/en-us/library/feedback/rate/ff849732.aspx" />
+<input id="ratingAdditionalSubmitUrl" type="hidden" value="https://technet.microsoft.com/en-us/library/feedback/additional/ff849732.aspx" />
+<input id="isTopicRated" type="hidden" value="false" />
+
+
+
+      <div id="lib-footer">
+
+
+    <div id="standardRatingBefore" class="clear stdr-container-before"></div>
+    <div id="standardRating" class="stdr-container" ms.pgarea="body">
+        <div class="stdr-close"></div>
+        <div class="stdr-vote stdr-content">
+            <div class="stdr-content">
+                <span class="stdr-votetitle">Is this page helpful?</span>
+                <button class="stdr-yes" aria-label="Yes, this page was helpful">Yes</button>
+                <button class="stdr-no" aria-label="No, this page was not helpful">No</button>
+                <input id="s_ratingValue" type="hidden" value="" />
+            </div>
+        </div>
+        <div class="stdr-feedback" style="display: none">
+            <div class="stdr-form">
+                <div class="stdr-fieldtitle">Additional feedback?</div>
+                <textarea class="stdr-detail" rows="6" maxlength="1500"></textarea>
+                <div>
+                    <span class="stdr-count"><span class="stdr-charcnt">1500</span> characters remaining</span>
+                    <div class="stdr-buttons">
+                        <button class="stdr-provide" aria-label="Submit my additional feedback">Submit</button>
+                        <button class="stdr-skip" aria-label="Skip additional feedback">Skip this</button>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="stdr-thanks" style="display: none">
+            <div class="stdr-content">
+                <span class="stdr-thankyou">Thank you!</span>
+                <span class="stdr-appreciate">We appreciate your feedback.</span>
+            </div>
+        </div>
+
+        
+        <div id="contentFeedbackQAContainer" style="display: none;"></div>
+    </div>
+    <div id="standardRatingPlaceholder" style="display: none"></div>
+    
+        
+        
+    <div id="ux-footer" dir="ltr" class="ltr" role="contentinfo" ms.pgarea="footer">
+        <div class="ux-footer-clear"></div>
+        <div id="footerWrapper">
+            <div id="footerLeft">
+                <div id="footerProfileFeedback">
+                    <div id="footerProfileLink">
+                        <div data-fragmentName="ManageProfileLink" id="Fragment_ManageProfileLink" xmlns="http://www.w3.org/1999/xhtml">
+  <a href="https://social.technet.microsoft.com/profile" xmlns="http://www.w3.org/1999/xhtml">Manage Your Profile</a>
+</div>
+                    </div>
+                    <div id="Feedback">
+                        <div class="feedbackListItem">
+                            <div class="divider">|</div>
+                            
+
+
+
+
+
+<div class="FooterSiteFeedBack">
+    <a id="SiteFeedbackLinkOpener" href="javascript:void(0)">
+        <span class="FeedbackButton clip20x21" id="FeedbackButton">
+            <img id="feedBackImg" class="cl_footer_feedback_icon" src="https://i-technet.sec.s-msft.com/Areas/Epx/Content/Images/ImageSprite.png?v=636347038791710855" alt="Site Feedback" />
+        </span>
+        Site Feedback
+    </a>
+    
+    <div id="SiteFeedbackLinkContainer" class="SiteFeedbackLinkContainer" style="display: none;">
+    <form id="siteFeedbackForm" method="post" action="https://technet.microsoft.com/en-us/library/feedback/add/ff849732(v=office.15).aspx">
+        <div class="SiteFeedbackLinkTitleContainer">
+            <div class="SiteFeedbackLinkTitle">
+                Site Feedback
+            </div>
+            <div class="SiteFeedbackLinkCancel">
+                <a id="SiteFeedbackLinkCloser" role="button" aria-label="Close Site Feedback" href="javascript:void(0)">x</a>
+            </div>
+        </div>
+        <div class="SiteFeedbackLinkData">
+            <div class="SiteFeedbackLinkInfoText">
+                Tell us about your experience...
+            </div>
+            <div class="QuestionText">
+                Did the page load quickly?
+            </div>
+            <div class="AnswerText">
+                
+                <span>
+                    Yes<span>
+                        <input aria-label="Yes" id="searchBox" name="searchBox" type="radio" value="1" /></span></span>
+                
+                <span>
+                    No<span>
+                        <input aria-label="No" id="searchBox" name="searchBox" type="radio" value="0" /></span></span>
+                
+            </div>
+            <div class="QuestionText">
+                Do you like the page design?
+            </div>
+            <div class="AnswerText">
+                
+                <span>
+                    Yes<span>
+                        <input aria-label="Yes" id="tabbedCode" name="tabbedCode" type="radio" value="1" /></span></span>
+                
+                <span>
+                    No<span>
+                        <input aria-label="No" id="tabbedCode" name="tabbedCode" type="radio" value="0" /></span></span>
+                
+            </div>
+            <div class="QuestionText">
+                Tell us more
+            </div>
+            <div class="SiteFeedbackLinkTextAreaContainer">
+                <textarea id="feedbackText" data-maxlength="4000" name="feedbackText" cols="25" rows="5" class="SiteFeedbackLinkTextArea" aria-label="Feedback Text"></textarea>
+                
+                <input type="hidden" id="feedbackSiteName" name="feedbackSiteName" value="" />
+                <input type="hidden" id="feedbackPriority" name="feedbackPriority" value="" />
+                <input type="hidden" id="feedbackSourceUrl" name="feedbackSourceUrl" value="" />
+                <input type="hidden" id="ClientIP" name="ClientIP" value="" />
+                <input type="hidden" id="ClientOS" name="ClientOS" value="" />
+                <input type="hidden" id="ClientBrowser" name="ClientBrowser" value="" />
+                <input type="hidden" id="ClientTime" name="ClientTime" value="" />
+                <input type="hidden" id="ClientDate" name="ClientDate" value="" />
+                
+            </div>
+            <div>
+                <input id="siteFeedbackSubmit" type="submit" value="Send" class="SiteFeedbackLinkSubmit" aria-label="Send" />
+            </div>
+        </div>
+        <input type="hidden" id="returnUrl" name="returnUrl" value="https://technet.microsoft.com/en-us/library/ff849732.aspx" />
+    </form>
+</div>
+    
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+                <div id="footerGroup">
+                    <div id="LinkGroup">
+                        <div id="Links1"><div data-fragmentName="FooterLinks" id="Fragment_FooterLinks" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <ul class="links horizontal">
+      <li>
+        <a href="https://technet.microsoft.com/cc543196.aspx" xmlns="http://www.w3.org/1999/xhtml">Flash Newsletter</a>
+      </li>
+      <li class="divider">|</li>
+      <li>
+        <a href="https://technet.microsoft.com/cc512759.aspx" xmlns="http://www.w3.org/1999/xhtml">Contact Us</a>
+      </li>
+      <li class="divider">|</li>
+      <li>
+        <a href="https://privacy.microsoft.com/privacystatement" xmlns="http://www.w3.org/1999/xhtml">Privacy Statement</a>
+      </li>
+      <li class="divider">|</li>
+      <li>
+        <a href="https://technet.microsoft.com/cc300389.aspx" xmlns="http://www.w3.org/1999/xhtml">Terms of Use</a>
+      </li>
+      <li class="divider">|</li>
+      <li>
+        <a href="https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/" xmlns="http://www.w3.org/1999/xhtml">Trademarks</a>
+      </li>
+      <li class="divider">|</li>
+    </ul>
+  </div>
+</div></div>
+                    </div>
+                </div>
+                <div style="clear:both"></div>
+                <div id="Links2"></div>
+            </div>
+            <div id="footerRight">
+                <div id="FooterLogoContainer"><div id="FooterLogo"></div></div>
+                <div id="FooterCopyright">© 2017 Microsoft</div>
+            </div>
+        </div>
+    </div>
+
+      </div>
+
+        <div class="footerPrintView">
+            <div class="footerCopyrightPrintView">© 2017 Microsoft</div>
+        </div>
+
+        
+        
+        
+        
+        
+        
+
+        
+            
+
+
+
+    <input id="tocPaddingPerLevel" type="hidden" value="17" />
+
+
+
+        <input id="MtpsDevice" type="hidden" value="Default" />
+
+
+<![CDATA[ Third party scripts and code linked to or referenced from this website are licensed to you by the parties that own such code, not by Microsoft.  See ASP.NET Ajax CDN Terms of Use – http://www.asp.net/ajaxlibrary/CDN.ashx. ]]>
+
+        
+        
+        
+            
+        
+
+<![CDATA[ WebTrends view model not available or IncludeLegacyWebTrendsScriptInGlobal feature flag is off]]>
+
+
+
+
+<div id="globalRequestVerification">
+    <input name="__RequestVerificationToken" type="hidden" value="3p4O2CZPpE2NSd6HzKq9nAYLf9WgDfrbClKp3FjFZZ04T4-3c4XCJUfTHHhTF3bce6WTw74meG93wPvjoA9yXBPvqBI1" />
+</div>
+
+
+    </div>
+
+    
+    
+
+    
+
+    
+<script type="text/javascript" class="mtps-injected">
+/*<![CDATA[*/
+(function(window,document){"use strict";function preload(scripts){for(var result=[],script,e,i=0;i<scripts.length;i++)script=scripts[i],script.hasOwnProperty("url")&&(e=document.createElement("script"),e.src=script.url,script.throwaway=e),result.push(script);return result}function inject(scripts,index){var script,elem;if(index>=scripts.length){delete mtps.injectScripts;return}script=scripts[index];elem=document.createElement("script");elem.className="mtps-injected";elem.async=!1;var isLoaded=!1,timeoutId=0,injectNextFnName="",injectNext=elem.onerror=function(){isLoaded||(isLoaded=!0,inject(scripts,index+1),window.clearTimeout(timeoutId),elem.onload=elem.onerror=elem.onreadystatechange=null,injectNextFnName&&delete mtps[injectNextFnName],elem.removeEventListener&&elem.removeEventListener("load",injectNext,!1))};elem.addEventListener?elem.addEventListener("load",injectNext,!1):elem.readyState==="uninitialized"?elem.onreadystatechange=function(){(this.readyState==="loaded"||this.readyState==="complete")&&injectNext()}:elem.onload=injectNext;script.hasOwnProperty("url")?(timeoutId=window.setTimeout(injectNext,12e4),elem.src=script.url):(injectNextFnName="_injectNextScript_"+index,mtps[injectNextFnName]=injectNext,timeoutId=window.setTimeout(injectNext,2e3),elem.text="try {\n"+script.txt+"\n} finally { MTPS."+injectNextFnName+" && MTPS."+injectNextFnName+"(); }");parent.appendChild(elem)}var mtps=window.MTPS||(window.MTPS={}),parent=document.getElementsByTagName("head")[0];mtps.injectScripts=function(scripts){inject(preload(scripts),0)}})(window,document);
+MTPS.injectScripts([
+	{ txt: "/**/\r\n(window.MTPS || (window.MTPS = {})).cdnDomains || (window.MTPS.cdnDomains = { \r\n\t\"image\": \"https://i-technet.sec.s-msft.com\", \r\n\t\"js\": \"https://i2-technet.sec.s-msft.com\", \r\n\t\"css\": \"https://i-technet.sec.s-msft.com\", \r\n\t\"ttf\": \"https://i-technet.sec.s-msft.com\"\r\n});\r\n/**/" },
+	{ txt: "//\n\n        window.appInsightsId = \u0027c48d7639-e2ae-45e0-b536-c9b172c95e44\u0027;\n        //" },
+	{ url: "https://i2-technet.sec.s-msft.com/Combined.js?resources=0:Utilities,1:Breadcrumbs,2:LibraryRightNavigationMenu,2:PrintExportButton,3:StandardRating,0:Topic,1:ResponsiveSupport,0:AppInsightsPerf,1:ResponsiveToc,0:ABTestControl,2:WEDCS;/Areas/Epx/Content/Scripts:0,/Areas/Library/Content:1,/Areas/Library/Themes/Base/Content:2,/Areas/Global/Content:3\u0026amp;hashKey=BE4DE1626D9A02F40208057AC4C82646\u0026amp;v=5B856A58A2C14A14356ADF3AA3B36F73" },
+	{ txt: "var omnitureTracking = \"false\";" },
+	{ url: "https://i2-technet.sec.s-msft.com/Combined.js?resources=0:megabladeMenu.1,1:SearchBox;/Areas/Epx/Themes/Shared/Content:0,/Areas/Epx/Themes/Base/Content:1\u0026amp;hashKey=F6DE63F37E6BFBE8E78C84CFE28A5B67\u0026amp;v=5B856A58A2C14A14356ADF3AA3B36F73" },
+	{ url: "https://i3.services.social.microsoft.com/search/Widgets/SearchBox.jss?boxid=HeaderSearchTextBox\u0026btnid=HeaderSearchButton\u0026brand=TechNet\u0026loc=en-us\u0026watermark=TechNet\u0026focusOnInit=false" },
+	{ url: "https://i2-technet.sec.s-msft.com/Combined.js?resources=0:JumpRedirect,1:Header.2;/Areas/Epx/Themes/Base/Content:0,/Areas/Epx/Themes/TechNet/Content:1\u0026amp;hashKey=6BEF94D681BADBDC25ABE184A5312ADD\u0026amp;v=5B856A58A2C14A14356ADF3AA3B36F73" },
+	{ txt: "MTPS = window.MTPS || {}; MTPS.LocalizedStrings = window.MTPS.LocalizedStrings || {}; MTPS.LocalizedStrings.ExpandButtonTooltip = \u0027Expand\u0027; MTPS.LocalizedStrings.CollapseButtonTooltip = \u0027Collapse\u0027; MTPS.LocalizedStrings.EnhancedExpandTooltip = \u0027Click to expand. Double-click to expand all.\u0027; MTPS.LocalizedStrings.EnhancedCollapseTooltip = \u0027Click to collapse. Double-click to collapse all.\u0027; MTPS.LocalizedStrings.ExpandAllButtonTooltip = \u0027Expand All\u0027; MTPS.LocalizedStrings.CollapseAllButtonTooltip = \u0027Collapse All\u0027;" },
+	{ url: "https://i2-technet.sec.s-msft.com/Combined.js?resources=0:LibraryMemberFilter,1:SiteFeedbackLink,1:Toc_Fixed,1:CodeSnippet,1:TopicNotInScope,1:VersionSelector,1:SurveyBroker;/Areas/Library/Content:0,/Areas/Epx/Content/Scripts:1\u0026amp;hashKey=DB72A174A0119883B2C35F4D5C13FED9\u0026amp;v=5B856A58A2C14A14356ADF3AA3B36F73" },
+	{ txt: "$(document).ready(function() {\n        try {\n            var token = $(\"#globalRequestVerification input[name=\u0027__RequestVerificationToken\u0027]\").clone();\n            $(\"#siteFeedbackForm\").append(token);\n        } catch(err) {\n            \n        }\n    });" }
+]);
+
+/*]]>*/
+</script></body>
+</html>

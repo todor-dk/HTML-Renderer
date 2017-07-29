@@ -1,0 +1,585 @@
+
+
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:og="http://ogp.me/ns#"
+      xmlns:fb="http://www.facebook.com/2008/fbml">
+<head><meta name="viewport" content="width=960,initial-scale=1.0,maximum-scale=3, user-scalable=yes" /><meta charset="utf-8" /><meta property="og:updated_time" content="2017-07-12T16:43:58.055Z" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="og:url" content="http://www.aul.ie/homepage.aspx?oid=1001" /><meta property="og:title" content="Comortais Competition Managenent" />
+<meta name="twitter:title" content="Comortais Competition Managenent" />
+<meta property="og:description" content="Competition Software for managing events, leagues, cups" />
+<meta name="twitter:description" content="Competition Software for managing events, leagues, cups" />
+<meta property="og:image" content="http://www.comortais.com/images/fbimage2.png" />
+<meta name="twitter:image" content="http://www.comortais.com/images/fbimage2.png" />
+<title>
+	AUL Home 
+</title>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <link href="/css/cobo.css" rel="stylesheet" />
+  <link media="handheld, only screen and (max-width: 480px), only screen and (max-device-width: 480px)" href="/css/mobile.css" rel="stylesheet" />
+
+  
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/redmond/jquery-ui.css"  />
+  <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyC3BlIf_vDAr1os7lj0H8lek9YqNh7SSjs"></script>
+    <script src='https://cdn.rawgit.com/Pagawa/PgwSlideshow/master/pgwslideshow.min.js'></script>
+    <link rel='stylesheet' href='https://cdn.rawgit.com/Pagawa/PgwSlideshow/master/pgwslideshow.min.css' />
+    <script src="css/jquery.timer.js"></script>
+<style>
+
+  .tbldiv {
+  display:inline-block;max-width:230px;
+  padding:20px;margin:2px 10px 10px 10px;
+  overflow:scroll;
+  height:240px;
+  font-size:x-small;
+  border: solid 1px #525252;
+  
+  }
+
+  .tblhdr {
+    text-align:center;
+    width:100%;
+    min-height:22px;
+  }
+
+  .navslide {
+    cursor:pointer;
+  }
+
+.slides {  
+  margin: 0 auto;  
+}
+.slides  ul {
+  list-style: inside none disc;
+  margin: 0;
+  padding: 0;
+}
+  .homeImgCell {
+    overflow-x:hidden;
+  }
+</style>
+    <script type="text/javascript">
+      var geocoder;
+      var map;
+      var editing;
+      var CoordWas;
+
+
+      function initialize() {
+        //Initialize Google Maps      
+        editing = false;
+        var mapOptions = {
+          zoom: 15,
+          //center: latlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+          //mapTypeId: google.maps.MapTypeId.HYBRID
+        }
+        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        mapShow();
+      }
+
+      function mapShow() {
+
+        var latlngDB;
+        latlngDB = '';
+
+
+      if (latlngDB.length < 5) {
+        //alert('geocoding');        
+        codeAddress();
+      } else {
+        //alert('using coords');
+        var latSplit = latlngDB.split(",");
+        //alert(latSplit[0] + latSplit[1]);
+        var latlng = new google.maps.LatLng(parseFloat(latSplit[0]), parseFloat(latSplit[1]));
+        map.setCenter(latlng);
+        var marker = new google.maps.Marker({
+          map: map,
+          position: latlng
+        });
+      }
+    }
+
+    function codeAddress() {
+      //use GeoCoder to look up address
+      //var address = ''
+      var address, vaddress;
+      if (editing) {
+        address = $("#txtVenue").val();
+        vaddress = $("#txtVenueAddress").val();
+      } else {
+        address = '';
+        vaddress = '';
+      };
+
+
+      if (vaddress != '') {
+        address = address + ' ' + vaddress;
+      };
+
+      geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'address': address }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          map.setCenter(results[0].geometry.location);
+          var marker = new google.maps.Marker({
+            map: map,
+            position: results[0].geometry.location
+          });
+        } else {
+          //alert('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    }
+
+      var timer = $.timer(
+        function () {
+          moveTables();
+        },
+        6000,
+        true
+      );
+      var newstimer = $.timer(
+        function () {
+          moveNews();
+        },
+        9000,
+        true
+      );
+
+      var curNews = 0
+      function moveNews() {
+        var tdn = $(".newsdiv").length;
+        if (tdn === 0) return false;
+        if (curNews === 0) {
+          $("#nd1").show();
+          curNews = 1;
+          return false;
+        } else {
+        };
+
+        $("#nd" + curNews).effect('slide',{mode:'hide'},1000);
+        
+        curNews++;
+        if (curNews > tdn) {
+          curNews = 1;
+        }
+        
+        $("#nd" + curNews).effect('slide', { direction: 'horizontal', mode: 'show' }, 1000);
+
+      }
+
+
+      var curview = 0;
+      var timerOn = 1;
+      function moveTables() {        
+        var tdc = $(".tbldiv").length;         
+        if (tdc === 0) return false;
+        if (curview === 0) {
+          $("#td1").show();
+          $("#td2").show("slow");
+          $("#td3").show("slow");
+          for (var ix = 4; ix <= tdc; ix++) {
+            $("#td" +ix).hide();
+          }
+          curview = 1;
+          return false;
+        } else {
+          var curviewwas = curview - 1;
+          if (curviewwas === 0) curviewwas = tdc;
+          if (curviewwas === 1) {
+            $("#td1").insertAfter($("#td" + (tdc)));
+          } else {
+            $("#td" + curviewwas).insertAfter($("#td" + (curviewwas - 1)));
+          }
+        };
+
+        if (tdc < 4) { return false }
+
+        $("#td" + curview).hide("slow");
+        var nextone = (curview + 3) % tdc;
+        if (nextone === 0) nextone = tdc;                
+        $("#td" + nextone).show("slow");               
+        curview++;
+        if (curview > tdc) {
+          curview = 1;
+        }        
+      }
+
+
+
+
+
+      
+      $(document).ready(function () {
+
+        
+        $(".newsdiv").hide();
+        $(".tbldiv").hide();
+        moveNews();
+        moveTables();
+
+        $(".smallbutton").button();
+
+        $("#selClubs").change(function (e) {
+          //var burl = this.getAttribute("data-url") + "&c=" + encodeURIComponent($("#selClubs option:selected").text());
+          var burl = this.getAttribute("data-url") + "&cid=" + $("#selClubs option:selected").val();          
+          window.location = burl;
+        });
+
+        $("#selMore").change(function (e) {
+          //var burl = this.getAttribute("data-url") + "&c=" + encodeURIComponent($("#selClubs option:selected").text());
+       
+          var burl = this.getAttribute("data-url") + "&ct=userd" + "&usersec=" + $("#selMore option:selected").val();
+          
+          window.location = burl;
+        });
+
+
+
+        $("#btnAdd").button().click(function (e) { newItem(e) });
+
+        $("#selCompetitions").change(function (e) {
+          var curl='competition.aspx?id=' + $("#selCompetitions option:selected").val()
+          //alert($("#selCompetitions option:selected").val());
+          window.location = curl;
+        });
+
+        //initialize();
+        
+
+        $('.pgwSlideshow').pgwSlideshow({
+          autoSlide: true,
+          intervalDuration: 5000,
+          displayControls: true,
+          displayList: false
+        });
+        $(document).tooltip({
+          track: false,
+          content: function () {
+            return $(this).attr("title");
+          }
+        });
+
+        $(".tbldiv").click(function (e) {      
+          if (timerOn === 1)
+          {
+            timer.stop(); $(".tbldiv").show(); timerOn = 0;
+          } else
+          {
+            timer.reset();
+            timerOn = 1; $(".tbldiv").hide(); curview = 0; moveTables();
+          }                    
+        });
+
+        $(".navslide").click(function (e) {          
+          moveNews();          
+        });
+
+
+      });
+
+      function newItem(e) {
+        e.preventDefault();
+
+        $("#dialog-new").dialog({
+          resizable: true,
+          width: 400,
+          modal: false,
+          buttons: {
+            'Create New Item': function () {
+
+
+              var cType = $("#itemType").val()
+              $(this).dialog("close");
+
+              if (cType == '') { return };
+
+              var url = 'homepedit.aspx?o=1001&c=o%7e1001&cid=0&compId=0&ct=&new=' + cType;
+
+              window.location = url;
+
+              //addCompetition(cName, cType)
+
+            },
+            'Cancel': function () {
+              $(this).dialog("close");
+            }
+          }
+        });
+      }
+
+    </script>
+</head>
+<body>
+  <form method="post" action="./homepage.aspx?oid=1001" id="ctl01">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['ctl01'];
+if (!theForm) {
+    theForm = document.ctl01;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+
+<script src="/ScriptResource.axd?d=nnHyWnZ5bTPuYszCeiYmK6M6SGuZer8kKeB04PBKn2B3FPqQnRCrR6-yoqN0w51qbiLacvpLBfaw4BfyrrPl0c3rl4N6okGKmqnt6kqcwktVdruYkbzL1hLKatqG3r4JfBPjUUtqmxbxWJ4xAVskdQslnZnLIkTwX8HWLUVvcYA1&amp;t=5f9d5645" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<script src="/ScriptResource.axd?d=geiJw278ELCE4oVrRV2zH5Xx4I66p8p4UQbHQOnPgkDhhuf3VMr8b64_wVUajEPQdY0lzoDLfPgH8gYYO3_7Nwalw0Y0kZzCk1kOhDWpyomMpG-xim8XwrAyFu-nLdnhyo-la925himv_-QhNjE7-ny181QjcL7gn4bsFn0Er3cJCqLPMe1p7tpTN8ODo-wK0&amp;t=5f9d5645" type="text/javascript"></script>
+<script src="Scripts/WebForms/WebForms.js" type="text/javascript"></script>
+<script src="Scripts/WebForms/WebUIValidation.js" type="text/javascript"></script>
+<script src="Scripts/WebForms/Focus.js" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="NCE+in4JsEU7Q+cE+gFT4PMKEFhTL1mT+6NwkcQL03G2M7av3sAnJdR4jLYteULgEzfkYLTdeFVSIV/9YsgP9fvXFStyZfOHxEhajJbeUMvxsilYiQWsKVVqGJVv2rEWBssnL+gKfOSSzu/N12LHEQpOW+ZclAftzt4brmXLn39ZK0kJ/FLpRPz587CwcHqSL3KqiP7m1OsH4vYJ/vER9ubwjOH/rHG1O3BmpJRtqL3fIexsU5uyF58lVCg1vjxr+8NwCoGhQ7rIlTtjumjYpvX5Oywv64v6a7bug0poRnJLuKTIw0vJ9G7iPxEZt00bvVXxvY+5FZt6gY6ccXrmoxgeDnqkRoxK3igLcat1oTR8wVCYVaC+CHxEgl0VczyeJ6zjC0SHpfkSflR7IKArk5XFzoE3ZbKqoz21oCp8MNurIhLcMLIZBc8Nm86w5X9gwABrTIfW5mL9q806rTfqKeSOCTYKK/llft5W4NoqU7q11hQQbtWlLe8Dbm0M5EOT3tj+PeyiQQ81J/b1w1wMrBZefpnIHkfn4RUvqvGpmL4u1n/ssE0r7dJO4YLoVYvlO3k/UK0pgq+LKFMmfg+qKyJBeOGjwPJb5SGop1SgEzZK9/GLlrMiazQSMSLrxVdg/z5NB+OAy5YUjQvuspWa5oz4gAtOgnMfZ+cY04lAc72LGbnFyCvovyuoPXC58d1xYeP2WGjE0WDy7MQ+nmOuuA8Z5BgzzucxpqkYHBS79Sm+eVPT1nNDGybXFSyRZvHR" />
+</div>
+    <div id="divViewport">
+    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ctl07', 'ctl01', [], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+    <header>
+        <script type="text/javascript">
+          $(document).ready(function () {            
+            $(".loginbutton").button();
+            $("#ddlStyle").change(ssSave);
+            $("#ddlLang").change(lSave);
+          });
+          function ssSave() {            
+            var sName = $("#ddlStyle").val();
+            var theUrl = "ComortaisWS.asmx/saveUserStyleSheet";
+                
+            $.ajax({
+              type: "POST",
+              url: theUrl,
+              data: '{"sSheet":"' + sName + '"}',
+              contentType: "application/json;charset=utf-8",
+              dataType: "json",
+              success: function (msg) {
+                //alert(msg.d);
+                window.location.reload(true);
+              },
+              error: function (msg) { alert('error saving style'); }
+            });
+
+
+
+
+           
+          };
+
+          function lSave() {
+            var sLang = $("#ddlLang").val();
+            var theUrl = "ComortaisWS.asmx/saveLanguage";
+
+            $.ajax({
+              type: "POST",
+              url: theUrl,
+              data: '{"sLang":"' + sLang + '"}',
+              contentType: "application/json;charset=utf-8",
+              dataType: "json",
+              success: function (msg) {
+                //alert(msg.d);
+                window.location.reload(true);
+              },
+              error: function (msg) { alert('error saving language'); }
+            });
+
+
+
+
+
+          };
+
+
+        </script>
+
+        <div class="content-wrapper" style="padding-left:10px;">
+            <div class="float-left" style="width:100%">
+                
+                   
+                  <div><a href='http://www.aul.ie'><img src='http://aul.comortais.com/images/aullogo.jpg' style='max-height:120px;width:100%' /></a></div>
+            </div>
+
+
+
+            <div class="float-left" style="text-align:center;display:none;" >
+              <select name="ctl00$ddlLang" id="ddlLang" class="coLang">
+	<option selected="selected" value="English">English</option>
+	<option value="Français">Fran&#231;ais</option>
+	<option value="Português">Portugu&#234;s</option>
+	<option value="Español">Espa&#241;ol</option>
+	<option value="Gaeilge">Gaeilge</option>
+	<option value="Türk">T&#252;rk</option>
+	<option value="Deutsch">Deutsch</option>
+
+</select>  
+            </div>
+              
+
+              
+            
+            
+            <div id="divMenu" class="menu-bar">     
+                <div id="menuwrapper">
+                  <nav>  
+                    <ul id="menu">      
+                      <li><a href='/homepage.aspx?oid=1001'>Home</a></li><li><a href='/competitions.aspx?oid=1001'>Competitions</a></li><li><a href='/genp.aspx?pcts=ven&orgid=1001'>Venues</a></li><li><a href='/referees.aspx?oid=1001'>Referees</a></li>   
+                    
+            <div class="float-right" style="border:medium; min-width:180px;">
+                <section id="login">
+                    
+                            <ul>
+                                <li></li>
+                                <li><a href="Account/Login.aspx" id="LoginView1_loginLink" class="loginbutton">Log in</a></li>
+                            </ul>
+                                            
+                </section>                                                                                             
+            </div>
+                                                           
+                   </ul>
+
+                  </nav> 
+                                  
+                </div>  
+                            
+            </div>
+       </div>
+    </header>
+    <div id="body">
+      <div >
+        
+
+        <section class="content-wrapper main-content clear-fix">
+            
+
+<div id="fb-root"></div>
+<script>(function (d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
+
+  <div class="ErrorWrapper" id="err">
+    <div id="ertext"></div>
+  </div>
+
+      
+   
+   
+   
+   <div class='coHeading ui-corner-all ui-widget-header'><div class='float-left' style='width:100%'><a href='roundup.aspx?oid=1001&show=r&sort=d' class='smallbutton'>Latest Results</a>&emsp;<a href='roundup.aspx?oid=1001&show=f' class='smallbutton'>Next Games</a>&emsp;<a href='homepage.aspx?oid=1001&ct=userd&usersec=Complex' class='smallbutton'>Complex</a>&emsp;<a href='homepage.aspx?oid=1001&ct=userd&usersec=Man Of The Match' class='smallbutton'>Man Of The Match</a>&emsp;<a href='homepage.aspx?oid=1001&ct=userd&usersec=Club Of The Month' class='smallbutton'>Club Of The Month</a>&emsp;<a href='homepage.aspx?oid=1001&ct=news' class='smallbutton'>News</a>&emsp;<a href='homepage.aspx?oid=1001&ct=contact' class='smallbutton'>Contacts</a>&emsp;<a href='homepage.aspx?oid=1001&ct=gal' class='smallbutton'>Galleries</a>&emsp;<a href='homepage.aspx?oid=1001&ct=dl' class='smallbutton'>Downloads</a>&emsp;<a href='homepage.aspx?oid=1001&ct=mrpts' class='smallbutton'>Match Reports</a>&emsp;</div><div class='float-below'><div class='float-left'><span style='font-size:x-small'>Clubs:</span> <select id='selClubs' class='ui-widget' style='font-size:x-small;' data-url='homepage.aspx?oid=1001&compid=0'><option></option><option value=10119>Baldoyle Grange United</option></select></div><div class='float-right'><select id='selMore' class='ui-widget' style='font-size:x-small;margin-left:10px;' data-url='homepage.aspx?oid=1001&compid=0'><option value='0'>More</option><option value=Nivea+Men+Man+Of+The+Match>Nivea Men Man Of The Match</option><option value=Superior+Racking+Man+Of+The+Match>Superior Racking Man Of The Match</option></select></div></div></div>
+   <div class= 'ui-widget-header ui-corner-all ui-widget coSection' style='text-align: center;'><div style='padding:0;vertical-align:middle;display:inline-block;width:19%'><a href='https://twitter.com/heraldstriker' target='_blank''><img src='http://aul.comortais.com/images/Uploads/kSRg-utE_400x400.jpg' style='max-height:75px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:19%'><a href='http://www.herald.ie/' target='_blank''><img src='http://test.comortais.com/images/Uploads/logo-herald.png' style='max-height:75px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:19%'><a href='http://www.rpd.ie/' target='_blank''><img src='http://test.comortais.com/images/Uploads/RPD.jpg' style='max-height:75px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:19%'><a href='http://www.firstireland.ie/index-2-personal-schemes-clubcare.php' target='_blank''><img src='http://test.comortais.com/images/Uploads/First Ireland.png' style='max-height:75px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:19%'><a href='http://www.umbro.ie/' target='_blank''><img src='http://test.comortais.com/images/Uploads/UMBRO1.jpg' style='max-height:75px;' /></a></div></div>
+   <div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Welcome to the Official AUL Website!!<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=522'></a></div><div class='ui-corner-all ui-widget-content coSection'><p><p>Welcome to the Athletic Union League.</p><p>The AUL is one of the biggest junior football leagues in Ireland. In Season 2016/17 we have over 130 teams and cater for almost 4,000 players</p><p></p></p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=522'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>22/07/2016</span></div></div><div class='coSection ui-widget-content' style='overflow:hidden;height:260px;'><div id='nd1' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'><img src='http://www.comortais.com/images/stock/football.png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Manager Wanted<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p></p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>04/07/2017</span></div></div></div><div id='nd2' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div><a href='genp.aspx?pcts=preview&orgid=1001&fixid=17967'><img src='http://www.comortais.com/images/stock/matchreport.jpg' style='max-height:230px;'  style='width:95%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Rivervalley Rangers v St Peters<a class='ui-icon ui-icon-circle-arrow-e float-right' href='genp.aspx?pcts=preview&orgid=1001&fixid=17967'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><h6><a href='competition.aspx?oid=1001&id=1116'>FAI Junior Cup</a> 13/03 13:00<br /><i><a href='genp.aspx?pcts=preview&orgid=1001&fixid=17967'>Rivervalley Rangers 0 - 1 St Peters</a></i></h6><p><p>Herald Striker</p><p>Like This Page · 7 mins · </p><p> </p><p></p><p>RIVERVALLEY RANGERS.............0</p><p>St PETER'S FC..............................1</p><p></p><p>By JOHN MOONEY</p><p></p><p>A PENALTY with ten minutes remaining in this FAI Junior Cup quarter final between Rivervalley Rangers and St Peters, Athlone was the deciding factor in the AUL on Sunday afternoon.</p><p></p><p>With the clock running down, and extra time looming, the visitors struck gold when Noel Magee was fouled in the area and he dusted himself down before coolly slotting home from the spot.</p></p><i><a href='genp.aspx?pcts=preview&orgid=1001&fixid=17967'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>16/03/2016</span></div></div></div><div id='nd3' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=765'><img src='http://www.comortais.com/images/stock/fixtures1.jpg' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Formation Meeting 6th July<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=765'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>Formation Meeting Thursday 6th July at 8pm in the Complex.</p><div>All clubs must attend.</div><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=765'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>29/06/2017</span></div></div></div><div id='nd4' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=763'><img src='http://www.comortais.com/images/stock/referee2.jpg' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Tommy Clements Cup<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=763'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>Referees interested in officiating in The Tommy</p><div>Clements cup should contact Ben Finlay immediately.</div><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=763'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>13/06/2017</span></div></div></div><div id='nd5' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=762'><img src='http://aul.ie/images/Uploads/Noticeboard20.png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Noticeboard for 13th June<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=762'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>The AUL would like to offer it’s condolences to the family of Tommy Seery</p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=762'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>11/06/2017</span></div></div></div><div id='nd6' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'><img src='http://www.comortais.com/images/stock/football.png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Manager Wanted<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p></p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>04/07/2017</span></div></div></div><div id='nd7' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=753'><img src='http://www.aul.ie/images/Uploads/100_0495.JPG' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Clontarf FC Div 3A Champions<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=753'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>Clontarf FC Div 3A Champions</p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=753'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>03/06/2017</span></div></div></div><div id='nd8' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Noticeboard 6th June 2017<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=755'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>Congratulations to Donnycarney FC on winning the Superior Racking and Shelving Cup on Friday night.</p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=755'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>03/06/2017</span></div></div></div><div id='nd9' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Noticeboard for 30\05\17<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=751'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>Well done to Howth Celtic on reaching the Leinster Junior Shield final after a fine 3-0 away win over Albion Rovers on Sunday afternoon.</p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=751'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>28/05/2017</span></div></div></div><div id='nd10' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=750'><img src='http://www.aul.ie/images/Uploads/Noticeboard20.png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Noticeboard for 16th May<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=750'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>Well done to Sheriff YC as they beat Evergreen from Kilkenny 2-0</p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=750'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>14/05/2017</span></div></div></div><div id='nd11' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'><img src='http://www.comortais.com/images/stock/football.png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Manager Wanted<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p></p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>04/07/2017</span></div></div></div><div id='nd12' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=735'><img src='http://www.aul.ie/images/Uploads/Noticeboard20.png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Noticeboard for 2nd May<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=735'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>The AUL AGM is on Thursday the 11th of May in the Complex at 8pm. </p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=735'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>30/04/2017</span></div></div></div><div id='nd13' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=732'><img src='http://www.comortais.com/images/stock/cup3.jpg' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Donnycarney FC Champions<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=732'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p></p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=732'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>26/04/2017</span></div></div></div><div id='nd14' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=728'><img src='http://www.aul.ie/images/Uploads/Noticeboard20.png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Noticeboard for 25th April<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=728'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>Well done to Sheriff YC on reaching the Leinster Junior Cup final. They beat New Oak Boys from Carlow 6-1 in Clontarf.</p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=728'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>23/04/2017</span></div></div></div><div id='nd15' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Ely Woodlawn win div 1<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=726'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p></p><div>Congratulations to Ely Woodlawn on wrapping up div 1 last night</div><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=726'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>19/04/2017</span></div></div></div><div id='nd16' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'><img src='http://www.comortais.com/images/stock/football.png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Manager Wanted<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p></p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>04/07/2017</span></div></div></div><div id='nd17' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=723'><img src='http://www.aul.ie/images/Uploads/Noticeboard20.png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Noticeboard for April 18th<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=723'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>Baldoyle /Grange had a fantastic win over East Wall/Bessborough in Premier A.</p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=723'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>16/04/2017</span></div></div></div><div id='nd18' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=721'><img src='http://www.comortais.com/images/stock/trophy1.jpg' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Kilmore Celtic win Promotion to Premier B<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=721'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>Congratulations to Kilmore Celtic on achieving promotion to Premier B for next season. </p><div>They did this playing attractive football and now they look forward to the big push for Premier A.</div><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=721'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>14/04/2017</span></div></div></div><div id='nd19' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=715'><img src='http://www.aul.ie/images/Uploads/Noticeboard20.png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Noticeboard for April 11th<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=715'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p>Management meeting this Thursday at 8pm in the Complex. All clubs must be in attendance as fines will be issued for non attendance as per rule.</p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=715'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>09/04/2017</span></div></div></div><div id='nd20' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=710'><img src='http://www.aul.ie/images/Uploads/Noticeboard201[1].png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Noticeboard for 4th April<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=710'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p><p>This Wednesday in the new indoor arena in the National Sports Celtre in Abbotstown sees the final of the FAI Futsal Cup with both finalists from the AUL Futsal League.</p><p></p><p>Transylvania FC will play Puskas Hagi in what looks likely to be a cracking final. We urge all football supporters to come along and enjoy this final and perhaps you might get the bug and enter a Futsal teams next season into the expanding AUL Futsal League. Remember the winners of this final represent Ireland on a higher stage.</p></p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=710'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>02/04/2017</span></div></div></div><div id='nd21' class='newsdiv' style='position:absolute;top:1px;left:1px;width:99%'><div class='coSection ui-corner-all ui-widget-content coControl'><div class='homeRow'><div class='float-left homeImgCell' style='width:40%;margin-right:5px;min-width:200px;' '><div style='text-align:center;max-width:96%'><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'><img src='http://www.comortais.com/images/stock/football.png' style='max-height:230px;'  style='max-width:96%' /></a></div></div><div class='homeCell' style='min-width:200px'><div class='ui-corner-all ui-widget-header news-header' style='text-align:center'>Manager Wanted<a class='ui-icon ui-icon-circle-arrow-e float-right' href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'></a></div><div class='ui-corner-all ui-widget-content coSection' style='min-height:190px;'><p></p><i><a href='homepageitem.aspx?o=1001&c=o%7e1001&item=766'>more..</a></i></div></div><span class='float-right' style='font-size:x-small;font-style:italic;'>04/07/2017</span></div></div></div><div class='navslide float-right' style='height:250px;width:10px;'></div></div><div class= 'ui-widget-header ui-corner-all ui-widget coSection' style='text-align: center;'><div style='padding:0;vertical-align:middle;display:inline-block;width:32%'><span>Superior Racking<br><br></span><a href='http://superiorracking.ie/' target='_blank''><img src='http://aul.comortais.com/images/Uploads/Superior Racking.png' style='max-height:85px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:32%'><span><br></span><a href='http://www.elastoplast.co.uk/' target='_blank''><img src='http://test.comortais.com/images/Uploads/Elastoplast.png' style='max-height:85px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:32%'><span>Keith Bruen Coaches<br><br></span><img src='http://test.comortais.com/images/Uploads/Keith Bruen Coaches.jpg' style='max-height:85px;' /></div></div><div class='coSection ui-widget ui-widget-content' style='text-align:center;'><div id='td1' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1157' target='_blank'>Superior Racking & Shelving Cup</a></div><img src='images/competitions/tiny-1157.jpg' style='vertical-align:top' /></div><div id='td2' class='tbldiv ui-corner-all'><div class='ui-widget-content tblhdr'><a href='competition.aspx?oid=1001&id=1157' target='_blank'>Superior Racking & Shelving Cup</a></div><img src='images/competitions/ts-1157.jpg' style='vertical-align:top;' /></div><div id='td3' class='tbldiv ui-corner-all'><div class='ui-widget-content tblhdr' ><a href='competition.aspx?oid=1001&id=1157' target='_blank'>Superior Racking & Shelving Cup</a></div><img src='images/competitions/cs-1157.jpg' style='vertical-align:top;' /></div><div id='td4' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1156' target='_blank'>AUL MSS/J.J O'Toole Cup</a></div><img src='images/competitions/tiny-1156.jpg' style='vertical-align:top' /></div><div id='td5' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1150' target='_blank'>AUL Jim Cullen Cup 2016/17</a></div><img src='images/competitions/tiny-1150.jpg' style='vertical-align:top' /></div><div id='td6' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1151' target='_blank'>AUL Elastoplast Sports Shield 2016/17</a></div><img src='images/competitions/tiny-1151.jpg' style='vertical-align:top' /></div><div id='td7' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1142' target='_blank'>AUL Frank Roe Cup 2016/17</a></div><img src='images/competitions/tiny-1142.jpg' style='vertical-align:top' /></div><div id='td8' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1143' target='_blank'>AUL Unidare Cup 2016/2017</a></div><img src='images/competitions/tiny-1143.jpg' style='vertical-align:top' /></div><div id='td9' class='tbldiv ui-corner-all'><div class='ui-widget-content tblhdr'><a href='competition.aspx?oid=1001&id=1143' target='_blank'>AUL Unidare Cup 2016/2017</a></div><img src='images/competitions/ts-1143.jpg' style='vertical-align:top;' /></div><div id='td10' class='tbldiv ui-corner-all'><div class='ui-widget-content tblhdr' ><a href='competition.aspx?oid=1001&id=1143' target='_blank'>AUL Unidare Cup 2016/2017</a></div><img src='images/competitions/cs-1143.jpg' style='vertical-align:top;' /></div><div id='td11' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1144' target='_blank'>FAI Umbro Junior Cup 2016/17</a></div><img src='images/competitions/tiny-1144.jpg' style='vertical-align:top' /></div><div id='td12' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1145' target='_blank'>Leinster Junior Cup 2016/17</a></div><img src='images/competitions/tiny-1145.jpg' style='vertical-align:top' /></div><div id='td13' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1149' target='_blank'>LFA Senior Cup 2016/17</a></div><img src='images/competitions/tiny-1149.jpg' style='vertical-align:top' /></div><div id='td14' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1146' target='_blank'>Leinster Junior Shield 2016/17</a></div><img src='images/competitions/tiny-1146.jpg' style='vertical-align:top' /></div><div id='td15' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1137' target='_blank'>Tommy Clements Cup 2016</a></div><img src='images/competitions/tiny-1137.jpg' style='vertical-align:top' /></div><div id='td16' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1153' target='_blank'>FAI Oscar Traynor Competition 2016/17</a></div><img src='images/competitions/tiny-1153.jpg' style='vertical-align:top' /></div><div id='td17' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1152' target='_blank'>FAI Futsal Cup 2016/17</a></div><img src='images/competitions/tiny-1152.jpg' style='vertical-align:top' /></div><div id='td18' class='tbldiv ui-corner-all'><div class='ui-widget-content tblhdr'><a href='competition.aspx?oid=1001&id=1152' target='_blank'>FAI Futsal Cup 2016/17</a></div><img src='images/competitions/ts-1152.jpg' style='vertical-align:top;' /></div><div id='td19' class='tbldiv ui-corner-all'><div class='ui-widget-header tblhdr'><a href='competition.aspx?oid=1001&id=1124' target='_blank'>AUL Premier A 2016/17</a></div><img src='images/competitions/tiny-1124.jpg' style='vertical-align:top' /></div><div id='td20' class='tbldiv ui-corner-all'><div class='ui-widget-content tblhdr'><a href='competition.aspx?oid=1001&id=1124' target='_blank'>AUL Premier A 2016/17</a></div><img src='images/competitions/ts-1124.jpg' style='vertical-align:top;' /></div></div>
+   <div class= 'ui-widget-header ui-corner-all ui-widget coSection' style='text-align: center;'><div style='padding:0;vertical-align:middle;display:inline-block;width:32%'><span>Click here for Superior Racking<br>Man Of The Match<br><br></span><a href='http://aul.comortais.com/homepage.aspx?oid=1001&compid=0&ct=userd&usersec=Man+Of+The+Match' target='_blank''><img src='http://aul.comortais.com/images/Uploads/Superior Racking1.png' style='max-height:70px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:32%'><span>Pitch Check<br><br></span><a href='http://soccer-ireland.com/football-grounds/pitch-check.htm' target='_blank''><img src='http://test.comortais.com/images/Uploads/unplayable8.jpg' style='max-height:70px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:32%'><span>Click here for First Ireland<br>Club Of The Month<br><br></span><a href='http://aul.comortais.com/homepage.aspx?oid=1001&compid=0&ct=userd&usersec=Club+Of+The+Month' target='_blank''><img src='http://test.comortais.com/images/Uploads/First Ireland1.png' style='max-height:70px;' /></a></div></div><div class= 'ui-widget-header ui-corner-all ui-widget coSection' style='text-align: center;'><div style='padding:0;vertical-align:middle;display:inline-block;width:24%'><a href='http://www.firstireland.ie/index-2-personal-schemes-clubcare.php' target='_blank''><img src='http://aul.comortais.com/images/Uploads/FirstIreland-Soccer.jpg' style='max-height:150px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:24%'><a href='http://www.quoteyoungdriverinsurance.ie/' target='_blank''><img src='http://test.comortais.com/images/Uploads/FirstIreland-Car.jpg' style='max-height:150px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:24%'><a href='http://www.theredcard.ie/' target='_blank''><img src='http://test.comortais.com/images/Uploads/Show Racism Red Card Logo.jpg' style='max-height:150px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:24%'><a href='https://payments.fai.ie/coach-education.html' target='_blank''><img src='http://test.comortais.com/images/Uploads/FAI Coaching Course Banner.jpg' style='max-height:150px;' /></a></div></div><div class= 'ui-widget-header ui-corner-all ui-widget coSection' style='text-align: center;'><div style='padding:0;vertical-align:middle;display:inline-block;width:24%'><span>Athletic Union League is affiliated with<br><br></span><a href='http://www.leinsterfa.ie/' target='_blank''><img src='http://aul.comortais.com/images/Uploads/lfaSmall.png' style='max-height:60px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:24%'><span><br><br></span><a href='http://www.fai.ie/' target='_blank''><img src='http://test.comortais.com/images/Uploads/FAI Logo.png' style='max-height:60px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:24%'><span><br><br></span><a href='http://www.uefa.com/' target='_blank''><img src='http://test.comortais.com/images/Uploads/UEFA.png' style='max-height:60px;' /></a></div><div style='padding:0;vertical-align:middle;display:inline-block;width:24%'><span><br><br></span><a href='http://www.fifa.com/' target='_blank''><img src='http://test.comortais.com/images/Uploads/FIFA Logo.png' style='max-height:60px;' /></a></div></div>
+   
+   
+  <div id="dialog-new" title="New Web Page Item" style="display:none">
+    <p><span class="ui-icon ui-icon-gear" style="float: left; margin: 0 7px 20px 0;"></span>
+    Create New Web Page Item</p>
+    <table border="0" style="width:100%" class="pGrid">
+      <tbody>
+        <tr>
+          <td><label for="compType">Type:</label></td>
+          <td><select id='itemType'><option value='2'>Standard Item (Text and/or Photo)</option><option value='3'>Google Map</option><option value='4'>Google Satellite Map</option><option value='5'>Youtube Video</option><option value='6'>Twitter Feed</option><option value='7'>Facebook Feed</option><option value='8'>I-Frame</option><option value='11'>Download</option><option value='12'>Image Gallery</option><option value='13'>Advertising Banner</option><option value='14'>Form Feedback</option><option value='1'>Home Logo</option></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>   
+
+
+
+        </section>
+      </div>
+      
+      
+
+    </div>
+
+<div id="footer">
+    <footer id="fter" style="width:90%;margin:0 auto;">
+        <div style="width:40%;" class="float-left">
+          <div style="font-size:small;margin-top:2px;margin-right:2px;">Theme: <select name="ctl00$ddlStyle" id="ddlStyle" class="coTheme">
+	<option value="Black Tie">Black Tie</option>
+	<option value="Blitzer">Blitzer</option>
+	<option value="Cupertino">Cupertino</option>
+	<option value="Dark Hive">Dark Hive</option>
+	<option value="Dot Luv">Dot Luv</option>
+	<option value="Eggplant">Eggplant</option>
+	<option value="Excite Bike">Excite Bike</option>
+	<option value="Flick">Flick</option>
+	<option value="Hot Sneaks">Hot Sneaks</option>
+	<option value="Humanity">Humanity</option>
+	<option value="Le Frog">Le Frog</option>
+	<option value="Mint Choc">Mint Choc</option>
+	<option value="Overcast">Overcast</option>
+	<option value="Pepper Grinder">Pepper Grinder</option>
+	<option selected="selected" value="Redmond">Redmond</option>
+	<option value="Smoothness">Smoothness</option>
+	<option value="South Street">South Street</option>
+	<option value="Start">Start</option>
+	<option value="Sunny">Sunny</option>
+	<option value="Swanky Purse">Swanky Purse</option>
+	<option value="Trontastic">Trontastic</option>
+	<option value="UI Darkness">UI Darkness</option>
+	<option value="UI Lightness">UI Lightness</option>
+	<option value="Vader">Vader</option>
+
+</select></div>
+        </div>
+        <div  class ="float-right" style="margin-right:10px;">
+            <span>&copy; Comortais Ltd. 2017                   
+            </span>
+        </div>
+
+      </footer>
+</div>
+
+
+      </div>
+  </form>
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date(); a = s.createElement(o),
+    m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+  ga('create', 'UA-43453238-1', 'comortais.com');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>

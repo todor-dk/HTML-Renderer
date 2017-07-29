@@ -1,0 +1,322 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>NY.Gov Login</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<script async="true" src="ga.js"></script>
+	<script src="jquery-1.9.1.min.js"></script>
+    <link href="Main_Style.css" rel="stylesheet" type="text/css">
+    
+    <!--[if lt IE 9]>
+	<style type="text/css">
+    button {
+    	border: 1px solid #eeeeee;
+    }
+	
+    </style>
+	<![endif]-->
+    
+    <noscript>JavaScript must be enabled for this page to work.</noscript>
+	<script type="text/javascript">
+	<!-- Hide script
+	function qs(vars, key) {
+    	return vars[key];
+	}
+	
+     function getUrlParams(){
+	    var vars = [], hash;
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++){
+			hash = hashes[i].split('=');
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
+		}
+		return vars;
+	 }
+	
+	  function GetCookie(name){
+         var arg = name + "=";
+         var alen = arg.length;
+         var clen = document.cookie.length;
+         var i = 0;
+         while (i < clen){
+            var j = i + alen;
+            if (document.cookie.substring(i, j) == arg){
+            	return GetCookieVal (j);
+            }
+            i = document.cookie.indexOf(" ", i) + 1;
+            if (i == 0){
+            	break;
+            }
+         }
+         return null;
+      }
+	  
+	  function GetCookieVal (offset){
+         var endstr = document.cookie.indexOf (";", offset);
+            if (endstr == -1){
+               endstr = document.cookie.length;
+            }
+         return decodeURI(document.cookie.substring(offset, endstr));
+      }
+	  
+	function ExtractInteger(sValue){
+		var sDigits = "";
+		if (sValue!=null){
+			for (var i = sValue.length - 1; i >= 0; i--){
+				var c = sValue.charAt(i);
+				if (c < "0" || c > "9")
+					break;
+				sDigits = c + sDigits;
+			}
+		}
+		return (sDigits.length > 0) ? parseInt(sDigits) : NaN;
+	}
+	  
+	$(document).ready(function(){	
+	  //get this data once and set it
+	  var targetUrl = $('input[name=TARGET]').val();
+	  if (targetUrl==null || targetUrl==""){ 
+		   var parms = getUrlParams();	
+		   if (parms!=null){
+		   		var targetParm = qs(parms, 'TARGET');
+				if (targetParm != null){
+					//strip off $SM$ $ & create full target url	
+					var targetValue = targetParm.replace("$SM$","");
+					targetValue = targetValue.replace(/[$]/g,"");
+					//This is for me need to strip off the -SM- or -'s
+					targetValue = targetValue.replace("-SM-", "");
+					targetValue = targetValue.replace(/[-]/g,"");
+					if (targetValue!=null){
+						targetUrl = unescape(targetValue);
+					}			
+				}
+		
+		   	    var smauthreasonParm = qs(parms, 'SMAUTHREASON');
+				if (smauthreasonParm != null){
+			    	//set hidden field in login form
+					$('input[name=smauthreason]').val(smauthreasonParm);				
+				}
+		   }
+		   
+			//set hidden field TARGET on login form
+			$('input[name=TARGET]').val(targetUrl);
+	  }
+	  
+	  //show the message based on cookie each time the page loads
+	  $('#smtrynomsg').text('');  	  	 
+	  var smtrynos = GetCookie('SMTRYNO');
+	  var smtryno = ExtractInteger(smtrynos);	
+	  if (smtryno!=null && smtryno!=NaN){
+		  var errMsg = " You have entered an invalid username or password.";
+		  var warningMsg = "After 5 invalid attempts, your NY.gov ID will be locked.";
+		  if (smtryno==1 || smtryno==2){ 
+				$('#smtrynomsg').text(errMsg);
+			  } else if (smtryno==3) {
+				$('#smtrynomsg').text(errMsg + " " + warningMsg);
+			  } else if (smtryno > 3) {
+				$('#smtrynomsg').text(warningMsg);
+			  } else {
+				$('#smtrynomsg').text('');
+			  }
+		   } else {
+			  $('#smtrynomsg').text('');
+		   }	  
+	});
+	// End Hiding -->
+	</script>
+
+</head>
+<body class="stdBody">
+
+<br>
+
+	
+   
+<table width="960" border="0" cellpadding="0" cellspacing="0" align="center"> 
+<tr align="center">
+                <td align="center" colspan="3">
+                     <img src="images/NYstateofhealth_logo-761x92.gif" width="760" height="100" alt="" />
+                </td>
+      </tr>
+  <tr><td colspan="3">&nbsp;</td></tr>
+  <tr><td colspan="3">&nbsp;</td></tr>
+  <tr><td colspan="3">&nbsp;</td></tr>
+
+
+							
+<tr class="readacceptable" align="center">
+<td>
+	<table style="height: 270px; border: #d5d5d5 1px solid; margin-top:15px" cellpadding="10" cellspacing="0" width="300" align="center">
+			<tr>
+            <td width="95%" align="left">
+              <p>
+               <br>
+               To access NY State of Health, you will need an NY.gov ID.  This ID can be used to access other State services.  If you already have an NY.gov ID, you can use it to log in to NY State of Health. </p>
+                <p>Click on the "Create a Personal NY.gov ID" button at the bottom of the page to create an NY.gov ID. You will need to enter your name and email address and choose a user name.  You will receive an email with instructions on how to activate your account, set up your security questions, and choose your password.  You can then log in to NY State of Health! 
+                <br>
+                <br>
+             </p>
+             </td>	
+        </tr>	
+    </table>
+</td>
+<td>
+<form onSubmit="return ValidateForm(this)" action="/siteminderagent/dmsforms/doLogin.fcc" method="post">
+
+  <!-- Login box Start //-->
+  <table border="0" cellpadding="0" cellspacing="0" width="350" align="center">
+	<tbody>
+       <script type="text/javascript">   
+		<!-- Hide script
+		  function ValidateForm(){
+			if (String(document.getElementById('USERNAME').value) == ""){
+			  alert("Please enter your user name");
+			  return false;
+			}
+			if (String(document.getElementById('PASSWORD').value) == ""){
+			  alert("Please enter your password");
+			  return false;
+			}
+			return true;
+		  }
+		// End script hiding -->
+	    </script>
+
+            <tr id='errorMessage'>
+                <td align="center">
+                     <div class='AlrtMsgTxt' id='smtrynomsg'></div>
+                </td>
+            </tr>
+			<tr>
+			<td align="center" width="45%">
+				<div class="nygovimage">
+			    	<h3>
+				    	<span class="title">NY.gov ID</span>
+				    </h3>		
+				</div>  	
+				<div id="logincontainer">
+				<!-- Main Container --> 
+				       <div class="inputFields">
+			              <table border="0" cellpadding="0" cellspacing="0" width="220">
+	       					<tbody>
+                                <tr><td align="left">
+                                    <p class="textinputalign">
+                                      <label for="USERNAME" class="bluetext">Username: </label><br>
+                                      <input name="USERNAME" id="USERNAME" class="textbox" type="text" maxlength="128" autocomplete="off"><br>
+                                      <br>
+                                      <label for="PASSWORD" class="bluetext">Password: </label><br>
+                                      <input name="PASSWORD" id="PASSWORD" class="textbox" type="password" maxlength="75" autocomplete="off">
+                                    </p>
+                                </td></tr>
+                                <tr><td height="10"></td></tr>
+	    			         </tbody>
+                           </table>
+	    			   </div>     
+						<table align="center" border="0" cellpadding="0" cellspacing="0" width="200">    			        
+			                <tbody><tr><td>
+				                <input value="Sign In" alt="Sign In" id="signin" class="signinbutton" type="submit">
+				                <input name="TARGET" value="" type="hidden">
+				                <input name="smauthreason" value="" type="hidden">
+				                <input name="postpreservationdata" value="" type="hidden">
+			                 </td></tr>
+			                 <tr><td height="5"></td></tr>
+			                 <tr><td class="signInLinks">
+				                <label class="oftforgotlinkslabel">Forgot your</label>
+				                <a href="javascript:void(0)" onClick="window.open('/FUIDV3/fuid.xhtml');return false;" class="oftforgotlinks">Username</a>
+                                <label class="oftforgotlinkslabel">or</label>
+				                <a href="javascript:void(0)" onClick="window.open('/FPSV3/fps.xhtml');return false;" class="oftforgotlinks">Password</a>
+				                <label class="oftforgotlinkslabel">?</label>
+			                 </td></tr>
+			                 <tr><td class="signInLinks"><a href="javascript:void(0)" onClick="window.open('/sreg/tos.jsp');return false;" class="oftforgotlinks">NY.gov ID - Terms of Service</a>
+			                 </td></tr>
+		                 </tbody>
+                      </table>
+					&nbsp;
+				</div>
+                <!-- Main Container -->
+		  </td>
+		  </tr></tbody></table>
+		<!-- Login box end //-->
+    </form>
+	</td>
+    <td>
+    <table border="0" cellpadding="0" cellspacing="0" width="300" align="center">
+    </table>
+    </td>
+    </tr>
+
+<form action="https://my.ny.gov/SelfRegV3/selfreg.xhtml" method="GET">
+<table cellpadding="0" cellspacing="0" border="0" width="960" align="center">
+<tr><td>&nbsp;</td></tr>
+<tr><td>&nbsp;</td></tr>
+	<tr><td align="center"><b><label class="oftforgotlinkslabel">Don't have an account?</label></b></td></tr>
+
+	                   <tr><td align="center">
+
+			            				
+			  		  				
+			  		  						<table border="0" cellpadding="2" cellspacing="2" width="250" align="center">
+			  							    <tr><td>
+													<input type="submit" value="Create a Personal NY.gov ID" alt="Sign In" id="signin" class="signinbutton">
+													<input name="app" value="nyapphbeind" type="hidden">
+
+			  		  			                 </td></tr>
+			  		  			                 
+			  		  		                 </table>
+			  		  						&nbsp;
+			  		  				
+
+
+
+			            </td></tr>
+			            <tr><td>&nbsp;</td></tr>
+			            <tr><td>&nbsp;</td></tr>
+			            <tr><td>&nbsp;</td></tr>
+
+</table>
+
+
+</form>
+    </table>
+
+  <script type="text/javascript">
+  <!--
+  	document.getElementById('USERNAME').focus();
+  //-->
+  </script>
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-1481478-26']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 
+        'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
+
+<br>
+<br>
+
+
+<table style="height: 18px; background-color: #414D68; border: #999 1px solid;" border="0" cellpadding="0" cellspacing="0" width="960" align="center">
+    <tbody>
+        <tr>
+			<td>
+				<div id="footer" class="footerfont" align="center">
+					Copyright © 2013 - New York State Office of Information Technology Services (ITS) &nbsp;
+					Build: 8/19/2013 9:30 AM &nbsp;
+					S: 9B &nbsp;
+				</div>
+			</td>
+			<td><a href="https://my.ny.gov/SelfRegV3/agencycontact.xhtml" class="bannertext">Contact Us</a></td>
+		</tr>		
+	</tbody>
+</table>
+
+</body></html>

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Rip, Convert, Edit and Download your favorite online videos and audio from YouTube and other sites to MP3, MP4, WEBM, F4V, and 3GP formats for free!" /><meta name="keywords" content="YouTube to MP3 Converter, YouTube downloader, Download YouTube music" /><meta property="og:image" content="https://ripfrom.net/css/images/default-share-image.jpg" /><title>Rip, convert & download YouTube videos to MP3, AVI and other formats - RipFrom.net</title>	<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+	    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/flags.css" />
+		<link rel="stylesheet" type="text/css" href="css/custom.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	
+<link rel="alternate" hreflang="de" href="/de/"/>
+<link rel="alternate" hreflang="es" href="/es/"/>
+<link rel="alternate" hreflang="fr" href="/fr/"/>
+<link rel="alternate" hreflang="hr" href="/hr/"/>
+<link rel="alternate" hreflang="it" href="/it/"/>
+<link rel="alternate" hreflang="lt" href="/lt/"/>
+<link rel="alternate" hreflang="hu" href="/hu/"/>
+<link rel="alternate" hreflang="fil" href="/fil/"/>
+<link rel="alternate" hreflang="pl" href="/pl/"/>
+<link rel="alternate" hreflang="pt" href="/pt/"/>
+<link rel="alternate" hreflang="ru" href="/ru/"/>
+<link rel="alternate" hreflang="ro" href="/ro/"/>
+<link rel="alternate" hreflang="fi" href="/fi/"/>
+<link rel="alternate" hreflang="tr" href="/tr/"/>
+<link rel="alternate" hreflang="el" href="/el/"/>
+<link rel="alternate" hreflang="bg" href="/bg/"/>
+<link rel="alternate" hreflang="ar" href="/ar/"/>
+<link rel="alternate" hreflang="hi" href="/hi/"/>
+<link rel="alternate" hreflang="zh" href="/zh/"/>
+<link rel="alternate" hreflang="ja" href="/ja/"/>	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
+			<script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="94u0y91kn800i19"></script>
+				<script type="text/javascript" src="https://js.live.net/v5.0/OneDrive.js" id="onedrive-js" client-id="000000004018CC5A"></script>
+		<script type="text/javascript">
+		var conversionLogLength = 0;
+		var conversionInProgress = false;
+		var failedAjaxRequests = 0;
+		var maxAjaxRequestTries = 20;
+		var conversionStopping = false;
+		var timer;
+		
+		function updateVideoDownloadProgress(percentage, isRealTime)
+		{
+			percentage = parseInt(percentage);
+			if (isRealTime)
+			{
+//				$("#progress").css("width", percentage + "%").html(percentage + "%");
+					var progress = document.getElementById('progress');
+					var progress_value = document.getElementById('progress_value');
+					progress.style.width = progress_value.innerHTML = Math.floor(parseInt(percentage)/2) + '%';
+			}
+			else
+			{
+				$("#progress").addClass("progress-striped").css("width", percentage + "%").html("&nbsp;");
+			}
+		}
+
+		function updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle)
+		{
+			conversionInProgress = true;
+			var progress = document.getElementById('progress');
+				var progress_value = document.getElementById('progress_value');
+			document.getElementById('conversion-status').innerHTML = "Converting file. . .";
+			$.ajax({
+				type : "POST",
+				url : "ffmpeg_progress.php",
+				data : "uniqueId=1499877439_5966503febb7f0.08514471&logLength=" + conversionLogLength + "&convertedFile=" + encodeURI(convertedFile) + "&tempFileType=" + encodeURI(tempFileType),
+				success : function(retVal, status, xhr) {
+					var retVals = retVal.split('|');
+					if (retVals[3] == 2)
+					{
+//						progress.style.width = progress.innerHTML = parseInt(retVals[1]) + '%';
+							progress.style.width = progress_value.innerHTML = 50 + Math.floor(parseInt(retVals[1])/2) + '%';
+
+						if (parseInt(retVals[1]) < 100)
+						{
+							conversionLogLength = parseInt(retVals[0]);
+							if (!conversionStopping)
+							{
+								timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 500);
+							}
+						}
+						else
+						{
+							conversionInProgress = false;
+							showConversionResult(convertedFile, convertedFileNiceName, vidTitle, retVals[2]);
+						}
+					}
+					else
+					{
+						if (++failedAjaxRequests < maxAjaxRequestTries && !conversionStopping)
+						{
+							timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 100);
+						}
+						else
+						{
+							conversionInProgress = false;
+							showConversionResult(convertedFile, convertedFileNiceName, vidTitle, 2);
+						}
+					}
+				},
+				error : function(xhr, status, ex) {
+					if (++failedAjaxRequests < maxAjaxRequestTries && !conversionStopping)
+					{
+						timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 100);
+					}
+					else
+					{
+						conversionInProgress = false;
+						showConversionResult(convertedFile, convertedFileNiceName, vidTitle, 2);
+					}
+				}
+			});
+		}
+
+		function showConversionResult(convertedFile, convertedFileNiceName, vidTitle, success)
+		{
+			$("#preview").css("display", "none");
+			var convertSuccessMsg = '';
+			if (success == 1)
+			{
+				var isEditableRegex = new RegExp('(\.(webm|mp4|mp3|aac|m4a|f4v))$', 'i');
+				var isEditable = isEditableRegex.test(convertedFile);
+				//        		convertSuccessMsg += '<p class="bg-success padding-msg"><b><i class="fa fa-thumbs-up"></i> Success!</b></p>';
+        		convertSuccessMsg += '<p><img src="" alt="preview image" style="width:160px" /></p>';
+        		convertSuccessMsg += '<p dir="ltr"><b></b></p>';
+        		convertSuccessMsg += '<h4 style="margin-bottom:15px;text-transform:uppercase;"><span class="label label-dark"><i class="fa fa-youtube-play"></i><i class="fa fa-long-arrow-right"></i></span></h4>';
+        		convertSuccessMsg += '<p><a id="btn_download" class="btn btn-lg btn-bright download-buttons" href="https://ripfrom.net/index.php?output=' + (encodeURI(convertedFile)).replace(/~/g, "%7e") + '">Download converted file</a></p><p>';
+				          			convertSuccessMsg += ' <a class="btn btn-info download-buttons" id="dropboxLink" href="https://ripfrom.net/output/' + encodeURI(convertedFile) + '"><i class="fa fa-dropbox"></i> Save to Dropbox</a>';
+								          			convertSuccessMsg += ' <a class="btn btn-primary download-buttons" id="onedriveLink" href="https://ripfrom.net/output/' + encodeURI(convertedFile) + '"><i class="fa fa-cloud"></i> Save to OneDrive</a>';
+				        		convertSuccessMsg += (isEditable) ? ' <a id="editFurtherButton" class="btn btn-warning download-buttons" href="edit.php?vid_name=' + encodeURI(convertedFile) + '&vid_title=' + encodeURI(vidTitle) + '&vid_id=&vid_image=&vid_host=" title="Crop file and/or Edit file info (i.e., title, artist, etc.)."><i class="fa fa-scissors"></i> Edit file further</a>' : '';
+        		convertSuccessMsg += '</p><br><p><a href="/en/">Convert another video</a></p>';
+        									}
+			else
+			{
+        		convertSuccessMsg = '<p class="bg-danger padding-msg"><i class="fa fa-exclamation-triangle"></i> Error generating converted file!<br /><br /><a href="https://ripfrom.net/">Please, try again.</a></p>';
+			}
+			$("#conversionSuccess").html(convertSuccessMsg).find("#dropboxLink, #onedriveLink, #editFurtherButton").each(function(){
+				if ($(this).attr("id") == "editFurtherButton")
+				{
+					$(this).tooltip();
+				}
+				else
+				{
+										
+					$(this).click(function() {
+						saveToCloud($(this), convertedFileNiceName);
+						return false;
+					});
+				}
+			});
+		}
+
+		function saveToCloud(buttonObj, convertedFileNiceName)
+		{
+			var options = {
+				success: function() {
+					// Indicate to the user that the file has been saved.
+					buttonObj.html('<span class="fa fa-check" style="color:#fff"></span> ' + buttonObj.text());
+				},
+				progress: function(progress) {
+					buttonObj.html('<span class="fa fa-refresh fa-spin" style="color:#fff"></span> ' + buttonObj.text());
+				},
+				error: function(errorMessage) {
+					buttonObj.html('<span class="fa fa-exclamation-triangle" style="color:red"></span> ' + buttonObj.text());
+				}
+			};
+			switch (buttonObj.attr("id"))
+			{
+				case "dropboxLink":
+					Dropbox.save(buttonObj.attr("href"), convertedFileNiceName, options);
+					break;
+				case "onedriveLink":
+					options.file = buttonObj.attr("href");
+					options.fileName = convertedFileNiceName;
+					OneDrive.save(options);
+					break;
+			}
+		}
+
+		function stopConversion()
+		{
+			var redirectUrl = 'https://ripfrom.net/index.php';
+			if (!conversionStopping)
+			{
+				failedAjaxRequests = 0;
+				clearTimeout(timer);
+				conversionStopping = true;
+			}
+			if (conversionInProgress)
+			{
+				$.ajax({
+					type : "POST",
+					url : "ffmpeg_stop.php",
+					data : "token=1499877439_5966503febb7f0.08514471",
+					success : function(retVal, status, xhr) {
+						window.location.href = redirectUrl;
+					},
+					error : function(xhr, status, ex) {
+						if (++failedAjaxRequests < maxAjaxRequestTries)
+						{
+							timer = setTimeout(function(){stopConversion();}, 100);
+						}
+					}
+				});
+			}
+			else
+			{
+				window.location.href = redirectUrl;
+			}
+		}
+
+		// If this is iframe, and parent receives URL-initiated conversion request, forward request to iframe
+		if (window.location != window.parent.location)
+		{
+			if (parent.location.search != "")
+			{
+				var queryStrParams = [];
+				var queryStrParts = parent.location.search.replace(/\?/, "").split("&");
+				for (var i=0; i<queryStrParts.length; i++)
+				{
+					queryStrParams.push(queryStrParts[i].split("=")[0]);
+				}
+				if (($.inArray('vidHost', queryStrParams) != -1 && $.inArray('vidID', queryStrParams) != -1) || $.inArray('url', queryStrParams) != -1)
+				{
+					var iframeQueryStr = parent.location.search;
+					parent.history.replaceState("object or string", "Title", "/");
+					window.location.href = window.location.href.replace(/\?.*/, "") + iframeQueryStr;
+				}
+			}
+		}
+
+		$(document).ready(function(){
+			$(function(){
+				$('[data-toggle="tooltip"]').tooltip();
+			});
+			$("#volumeSlider").slider({
+				range: "min",
+				min: 0,
+				max: 1024,
+				value: 256,
+				slide: function(event, ui) {
+					var percent = Math.floor((ui.value / 256) * 100);
+					$("#volumeVal").html(percent + '%');
+					$("input[name='volume']").val(ui.value);
+				}
+			});
+			$("#toggleOptionsDisplay span").click(function(){
+				$("#moreOptions").toggle('fast', function(){
+					var linkText = ($(this).css('display') == 'none') ? "Show more options &#187;" : "Hide more options &#171;";
+					$("#toggleOptionsDisplay span").html(linkText);
+				});
+			});
+			(function(){
+				var siteNames = $(".siteNames");
+				var examples = $("#examples span");
+				var exampleIndex = -1;
+				function animateIt(elementGroup){
+					var nextFuncCall = (elementGroup != examples) ? showNextExample : null;
+					elementGroup.eq(exampleIndex)
+						.fadeIn({
+							duration: 700
+						})
+						.delay(6000)
+						.fadeOut(700, nextFuncCall);
+				}
+				function showNextExample(){
+					exampleIndex = (++exampleIndex > examples.length - 1) ? 0 : exampleIndex;
+					animateIt(siteNames);
+					animateIt(examples);
+				}
+				showNextExample();
+			})();
+			if (typeof stLight != "undefined")
+			{
+				stLight.options({publisher: "INSERT_PUBLIC_KEY_HERE", doNotHash: true, doNotCopy: false, hashAddressBar: false});
+			}
+			if (!document.getElementById('preview'))
+			{
+				$("#conversionForm").css("display", "block");
+			}
+			$("#videoURL").focus();
+       					history.pushState(null, null, '/en/');
+			window.addEventListener('popstate', function(event) {
+			    window.location.assign('/en/');
+			});
+		});
+	</script><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-19238729-7', 'auto');
+  ga('send', 'pageview');
+
+</script><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-7480661591323981",
+    enable_page_level_ads: true
+  });
+</script></head>
+<body dir="ltr">
+	<!--Navbar -->
+	<nav class="navbar navbar-inverse">
+		<div class="container">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/en/"><i class="fa fa-headphones"></i> RipFrom.net</a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul id="menuPageLinks" class="nav navbar-nav">
+							
+
+<li class="active"><a href="/en/">Home</a></li>
+<li><a href="recent.php">Recent Downloads</a></li>
+<li><a href="top.php">Top 100 Downloads</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="flag16 us"></span> US<span class="caret"></span></a>						<ul class="dropdown-menu" role="menu">
+						<li><a class="jslang" data-lang="de" dir="ltr" href="/de/"><span class="flag16 de"></span> &nbsp;Deutsch</a></li><li><a class="jslang" data-lang="en" dir="ltr" href="/en/"><span class="flag16 us"></span> &nbsp;English (US)</a></li><li><a class="jslang" data-lang="es" dir="ltr" href="/es/"><span class="flag16 es"></span> &nbsp;Español</a></li><li><a class="jslang" data-lang="fr" dir="ltr" href="/fr/"><span class="flag16 fr"></span> &nbsp;Français</a></li><li><a class="jslang" data-lang="hr" dir="ltr" href="/hr/"><span class="flag16 hr"></span> &nbsp;Hrvatski</a></li><li><a class="jslang" data-lang="it" dir="ltr" href="/it/"><span class="flag16 it"></span> &nbsp;Italiano</a></li><li><a class="jslang" data-lang="lt" dir="ltr" href="/lt/"><span class="flag16 lt"></span> &nbsp;Lietuvių</a></li><li><a class="jslang" data-lang="hu" dir="ltr" href="/hu/"><span class="flag16 hu"></span> &nbsp;Magyar</a></li><li><a class="jslang" data-lang="fil" dir="ltr" href="/fil/"><span class="flag16 ph"></span> &nbsp;Pilipino</a></li><li><a class="jslang" data-lang="pl" dir="ltr" href="/pl/"><span class="flag16 pl"></span> &nbsp;Polski</a></li><li><a class="jslang" data-lang="pt" dir="ltr" href="/pt/"><span class="flag16 pt"></span> &nbsp;Português</a></li><li><a class="jslang" data-lang="ru" dir="ltr" href="/ru/"><span class="flag16 ru"></span> &nbsp;Pусский</a></li><li><a class="jslang" data-lang="ro" dir="ltr" href="/ro/"><span class="flag16 ro"></span> &nbsp;Română</a></li><li><a class="jslang" data-lang="fi" dir="ltr" href="/fi/"><span class="flag16 fi"></span> &nbsp;Suomi</a></li><li><a class="jslang" data-lang="tr" dir="ltr" href="/tr/"><span class="flag16 tr"></span> &nbsp;Türkce</a></li><li><a class="jslang" data-lang="el" dir="ltr" href="/el/"><span class="flag16 gr"></span> &nbsp;ελληνικά</a></li><li><a class="jslang" data-lang="bg" dir="ltr" href="/bg/"><span class="flag16 bg"></span> &nbsp;Български</a></li><li><a class="jslang" data-lang="ar" dir="ltr" href="/ar/"><span class="flag16 sa"></span> &nbsp;عربي</a></li><li><a class="jslang" data-lang="hi" dir="ltr" href="/hi/"><span class="flag16 in"></span> &nbsp;हिन्दी</a></li><li><a class="jslang" data-lang="zh" dir="ltr" href="/zh/"><span class="flag16 cn"></span> &nbsp;中国</a></li><li><a class="jslang" data-lang="ja" dir="ltr" href="/ja/"><span class="flag16 jp"></span> &nbsp;日本の</a></li>						</ul>
+					</li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div><!-- /.container-fluid -->
+	</nav>
+<section class="sec-converter">
+	<div class="container">
+		<!-- Converter Box -->
+		<div class="row">
+			<div class="col-lg-12 col-lg-offset-2_">
+				<div class="converter-box text-center bg-white">
+					<div class="converter converter2 text-center">
+						<div class="my-placeholder" style="max-width:768px; height:90px;margin:-10px auto 20px auto;">ADS</div>			
+												<form action="?" method="post" id="conversionForm" style="display:none">
+							<h1 class="text-gray" style="margin-bottom:16px">
+							Convert <span class="siteNames" style="display:inline">YouTube</span><span class="siteNames" style="display:none">Dailymotion</span><span class="siteNames" style="display:none">Vimeo</span><span class="siteNames" style="display:none">Facebook</span><span class="siteNames" style="display:none">Metacafe</span><span class="siteNames" style="display:none">VK</span><span class="siteNames" style="display:none">SoundCloud</span><span class="siteNames" style="display:none">Instagram</span><span class="siteNames" style="display:none">AOL</span><span class="siteNames" style="display:none">RedTube</span><span class="siteNames" style="display:none">XVideos</span><span class="siteNames" style="display:none">Pornhub</span><span class="siteNames" style="display:none">Vevo</span> content to webm, mp4, mp3, aac, m4a, f4v, 3gp, or avi formats!							</h1>
+							<input type="text" class="form-control input-lg bg-light-gray" id="videoURL" name="videoURL" placeholder="Enter the link to the media " dir="ltr" />
+							<p class="example-urls" id="examples">
+							(i.e., "<span class="urls" style="display:inline">http://youtube.com/watch?v=HMpmI2F2cMs</span><span class="urls" style="display:none">http://www.dailymotion.com/video/x31j7ik_chapman-stick_music</span><span class="urls" style="display:none">http://vimeo.com/72695254</span><span class="urls" style="display:none">http://www.facebook.com/photo.php?v=10151848825508876</span><span class="urls" style="display:none">http://www.metacafe.com/watch/10856331/fart_attack/</span><span class="urls" style="display:none">http://vk.com/video4643923_163339118</span><span class="urls" style="display:none">http://soundcloud.com/foolsgoldrecs/funkin-matt-america</span><span class="urls" style="display:none">http://instagram.com/p/vIyKcyNdV-</span><span class="urls" style="display:none">http://on.aol.com/video/dogs-hang-ten-518439815</span><span class="urls" style="display:none">http://www.redtube.com/692255</span><span class="urls" style="display:none">http://www.xvideos.com/video472420/brandi_corbin</span><span class="urls" style="display:none">http://www.pornhub.com/view_video.php?viewkey=1629795426</span><span class="urls" style="display:none">http://www.vevo.com/watch/taylor-swift/Wildest-Dreams/USCJY1531576</span>")							</p>
+							<div id="moreOptions" class="margin-top-10" style="display:none" align="center">
+								<p>Volume control: (<span id="volumeVal">100%</span>)</p>
+								<p id="volumeSlider"></p>
+								<input type="hidden" name="volume" />
+							</div>
+						<div style="padding-top:20px;">
+							<select class="form-control input-lg bg-light-gray" name="ftype" id="ftype" style="vertical-align:middle; width: auto; padding-right:0; display:inline-block;">
+							<optgroup dir="ltr" label="audio"><option dir="ltr" value="3" selected="selected">MP3 (128kb)</option><option dir="ltr" value="4">MP3 (256kb)</option><option dir="ltr" value="10">MP3 (320kb)</option><option dir="ltr" value="5">AAC</option><option dir="ltr" value="6">M4A</option></optgroup><optgroup dir="ltr" label="video"><option dir="ltr" value="2">MP4</option><option dir="ltr" value="8">3GP</option><option dir="ltr" value="9">AVI</option><option dir="ltr" value="7">F4V</option><option dir="ltr" value="1">WEBM</option></optgroup>							</select> &nbsp; 
+							<button id="btn_convert" type="submit" name="submitForm" class="btn btn-lg btn-bright">Convert It!</button><input type="hidden" name="formToken" value="1499877439_5966503febb7f0.08514471" />
+						</div>
+						</form>
+											</div>
+				</div>
+			</div>
+		</div>
+	</div><!-- container -->
+</section>
+
+
+<section class="sec-list">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<h3>Recently converted and downloaded</h3>
+	<div class="row"><div class="col-lg-6 col-md-6 list-row clearfix"><a class="list-image img-thumbnail" href="https://www.youtube.com/watch?v=StIBeDCU5bA" target="_blank" rel="nofollow"><img src="/css/images/placeholder.gif" data-src="https://img.youtube.com/vi/StIBeDCU5bA/0.jpg" alt="Caitlin Mcswain ! Playboy&#039;s Amateur Girls"><div class="duration">1:01</div></a><div class="list-info" data-url="https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DStIBeDCU5bA" data-ftype="mp3"><h4><a href="https://www.youtube.com/watch?v=StIBeDCU5bA" target="_blank" rel="nofollow">Caitlin Mcswain ! Playboy&#039;s Amateur Girls</a></h4><a href="#" class="btn btn-info">Convert it for me <i class="fa fa-refresh hidden-xs"></i></a> <div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					mp3 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu"><li><a href="#">mp3</a></li><li><a href="#">aac</a></li><li><a href="#">m4a</a></li><li role="separator" class="divider"></li><li><a href="#">mp4</a></li><li><a href="#">3gp</a></li><li><a href="#">avi</a></li><li><a href="#">f4v</a></li><li><a href="#">webm</a></li></ul></div></div></div>
+<div class="col-lg-6 col-md-6 list-row clearfix"><a class="list-image img-thumbnail" href="https://www.youtube.com/watch?v=ShCGtRUlTCg" target="_blank" rel="nofollow"><img src="/css/images/placeholder.gif" data-src="https://img.youtube.com/vi/ShCGtRUlTCg/0.jpg" alt="Kendrick Lamar - humble lyrics"><div class="duration">2:58</div></a><div class="list-info" data-url="https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DShCGtRUlTCg" data-ftype="mp3"><h4><a href="https://www.youtube.com/watch?v=ShCGtRUlTCg" target="_blank" rel="nofollow">Kendrick Lamar - humble lyrics</a></h4><a href="#" class="btn btn-info">Convert it for me <i class="fa fa-refresh hidden-xs"></i></a> <div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					mp3 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu"><li><a href="#">mp3</a></li><li><a href="#">aac</a></li><li><a href="#">m4a</a></li><li role="separator" class="divider"></li><li><a href="#">mp4</a></li><li><a href="#">3gp</a></li><li><a href="#">avi</a></li><li><a href="#">f4v</a></li><li><a href="#">webm</a></li></ul></div></div></div>
+</div>
+<div class="row"><div class="col-lg-6 col-md-6 list-row clearfix"><a class="list-image img-thumbnail" href="https://www.youtube.com/watch?v=AHCaHBYsrE0" target="_blank" rel="nofollow"><img src="/css/images/placeholder.gif" data-src="https://img.youtube.com/vi/AHCaHBYsrE0/0.jpg" alt="Kendrick Lamar - HUMBLE. (Lyrics)"><div class="duration">2:58</div></a><div class="list-info" data-url="https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DAHCaHBYsrE0" data-ftype="mp3"><h4><a href="https://www.youtube.com/watch?v=AHCaHBYsrE0" target="_blank" rel="nofollow">Kendrick Lamar - HUMBLE. (Lyrics)</a></h4><a href="#" class="btn btn-info">Convert it for me <i class="fa fa-refresh hidden-xs"></i></a> <div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					mp3 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu"><li><a href="#">mp3</a></li><li><a href="#">aac</a></li><li><a href="#">m4a</a></li><li role="separator" class="divider"></li><li><a href="#">mp4</a></li><li><a href="#">3gp</a></li><li><a href="#">avi</a></li><li><a href="#">f4v</a></li><li><a href="#">webm</a></li></ul></div></div></div>
+<div class="col-lg-6 col-md-6 list-row clearfix"><a class="list-image img-thumbnail" href="https://www.youtube.com/watch?v=tvTRZJ-4EyI" target="_blank" rel="nofollow"><img src="/css/images/placeholder.gif" data-src="https://img.youtube.com/vi/tvTRZJ-4EyI/0.jpg" alt="Kendrick Lamar - HUMBLE."><div class="duration">3:04</div></a><div class="list-info" data-url="https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DtvTRZJ-4EyI" data-ftype="mp3"><h4><a href="https://www.youtube.com/watch?v=tvTRZJ-4EyI" target="_blank" rel="nofollow">Kendrick Lamar - HUMBLE.</a></h4><a href="#" class="btn btn-info">Convert it for me <i class="fa fa-refresh hidden-xs"></i></a> <div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					mp3 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu"><li><a href="#">mp3</a></li><li><a href="#">aac</a></li><li><a href="#">m4a</a></li><li role="separator" class="divider"></li><li><a href="#">mp4</a></li><li><a href="#">3gp</a></li><li><a href="#">avi</a></li><li><a href="#">f4v</a></li><li><a href="#">webm</a></li></ul></div></div></div>
+</div>
+<div class="row"><div class="col-lg-6 col-md-6 list-row clearfix"><a class="list-image img-thumbnail" href="https://www.youtube.com/watch?v=D8zlUUrFK-M" target="_blank" rel="nofollow"><img src="/css/images/placeholder.gif" data-src="https://img.youtube.com/vi/D8zlUUrFK-M/0.jpg" alt="Jurassic Park theme song."><div class="duration">3:21</div></a><div class="list-info" data-url="https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DD8zlUUrFK-M" data-ftype="mp3"><h4><a href="https://www.youtube.com/watch?v=D8zlUUrFK-M" target="_blank" rel="nofollow">Jurassic Park theme song.</a></h4><a href="#" class="btn btn-info">Convert it for me <i class="fa fa-refresh hidden-xs"></i></a> <div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					mp3 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu"><li><a href="#">mp3</a></li><li><a href="#">aac</a></li><li><a href="#">m4a</a></li><li role="separator" class="divider"></li><li><a href="#">mp4</a></li><li><a href="#">3gp</a></li><li><a href="#">avi</a></li><li><a href="#">f4v</a></li><li><a href="#">webm</a></li></ul></div></div></div>
+<div class="col-lg-6 col-md-6 list-row clearfix"><a class="list-image img-thumbnail" href="https://www.youtube.com/watch?v=o2WamOKFaCo" target="_blank" rel="nofollow"><img src="/css/images/placeholder.gif" data-src="https://img.youtube.com/vi/o2WamOKFaCo/0.jpg" alt="Mohamed Mounir - Ana Mennek Etaalemt (EXCLUSIVE) l (محمد منير - أنا منّك إتعلمت (فيديو كليب حصري"><div class="duration">4:32</div></a><div class="list-info" data-url="https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Do2WamOKFaCo" data-ftype="mp3"><h4><a href="https://www.youtube.com/watch?v=o2WamOKFaCo" target="_blank" rel="nofollow">Mohamed Mounir - Ana Mennek Etaalemt (EXCLUSIVE) l (محمد منير - أنا منّك إتعلمت (فيديو كليب حصري</a></h4><a href="#" class="btn btn-info">Convert it for me <i class="fa fa-refresh hidden-xs"></i></a> <div class="btn-group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					mp3 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu"><li><a href="#">mp3</a></li><li><a href="#">aac</a></li><li><a href="#">m4a</a></li><li role="separator" class="divider"></li><li><a href="#">mp4</a></li><li><a href="#">3gp</a></li><li><a href="#">avi</a></li><li><a href="#">f4v</a></li><li><a href="#">webm</a></li></ul></div></div></div>
+</div>
+					<div class="text-center"><a class="btn btn-lg btn-default" href="recent.php">All recently converted and downloaded videos</a></div>
+				</div>
+		</div>
+	</div><!-- container -->
+</section>
+
+<section class="sec-info">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="text-justify">
+<h3>
+	What is RipFrom.net?
+</h3>
+<p>
+	RipFrom.net is a free online service for ripping, converting, editing and downloading online video to MP3 audio, AVI video and other popular file formats. You don't need registration, accounts, payments and other bothering things to convert your favorite video to MP3 or AVI format, the only thing you need is the link to your video. Submit the link and after a few moments you will be able to download converted file, ready to settle happily on your computer or mobile device. Rip, convert and download anything, anywhere and completely free. We'll do our best to satisfy your needs and exceed your expectations.
+</p>
+<h3>
+	How can I rip and download YouTube video as MP3 music track?
+</h3>
+<p> 
+	Just insert the link to the page with YouTube video then click &laquo;Convert It!&raquo; button and wait for a short while for conversion process completion. Now your MP3 audio file is ready, so you can edit, download or share it via clouds to other computers or mobile devices.
+</p>
+<h3>
+	Convert and download audio and video from virtually any site.
+</h3>
+<p>
+	Do you prefer to listen music and watch clips not only on YouTube? Do your music and video collection is spread among different sites? Now you can rip and download your favorite media from all those sources in one place. With RipFrom.net great service, you can convert music and video from a big number of video hosting sites including Dailymotion, Vimeo, Facebook, Metacafe, VK, SoundCloud, Instagram, AOL, Vevo and much more! Enjoy the best MP3 music and AVI video on your desktop or mobile device from all over the net.
+</p>
+<h3>
+	Rip YouTube videos to MP3 on any OS and device.
+</h3>
+<p>
+	Whether you have Windows, OS X, Android, iOS or Linux desktop or mobile device,  you can easily convert your favorite YouTube videos into the most popular audio or video formats with online RipFrom.net converter. Just insert the link to your belowed YouTube videos and get high-quality MP3 tracks delivered straight to your device independently from OS it currently running.
+</p>
+<h3>
+	Enjoy converted video and music files anywhere.
+</h3>
+<p>
+	Do you prefer to watch ripped videos and listen to converted music not only on your desktop computer, but also on mp3 players, tablets and smartphones? With our service you are not limited to converting online media to only one format. RipFrom.net allows you to convert from YouTube 2 mp3, avi, 3gp, mp4 or any other format supported by your device, so that you can seamlessly transit converted music and video files from your desktop to your mp3 player, phone, or music library.
+</p>
+<h3>
+	Share converted MP3 music files between different devices.
+</h3>
+<p>
+	Do you prefer to share your media library across your computer and phone? Using RipFrom.net cloud features, you can easily share converted MP3 music and AVI video files among all your devices. Just upload converted media to the cloud and get instant access to ripped files from any of you devices, including, but not limited to phones, tablets, laptops and desktop computers. Enjoy the same music on all your devices.
+</p>
+<h3>
+	Enjoy your MP3 music instantly with RipFrom.net YouTube converter.
+</h3>
+<p>
+	With RipFrom.net you can rip, convert  and download your favorite online videos to any audio or video format of your choice in a few seconds. Simply insert the link to YouTube video you want to convert, and click &laquo;Convert It!&raquo; button. A few moments later, you can enjoy converted audio or video files saved locally to your device. Upload your ready-made MP3, MP4 or AVI files to your iTunes library, your smartphone or tablet so that you can listen to your music and watch videos on-the-go without internet access.
+</p>
+<h3>
+	Why should you use RipFrom.net online video conversion service?
+</h3>
+<p>
+	We tried to take into account all your needs and demands while creating RipFrom.net online conversion service. We wish to make simple, fast, reliable and free assistant for all the fans of quality online music and video, who needs to convert it to format of your choice including mp3, avi, mp4 and much more. From any site, on any platform and device. Rip, convert and download your favorite online video now with RipFrom.net and see why thousands of happy customers use our service for all of their conversion needs.
+</p>
+</div>	
+
+			</div>
+		</div>
+	</div><!-- container -->
+</section>
+
+		<section class="sec-infoboxes">
+	<div class="container">
+		<!-- Info boxes -->
+		<div class="row" dir="ltr">
+
+<div class="col-lg-3 col-md-6 col-sm-6">
+<i class="fa fa-youtube"></i>
+<h2>Supported Portals</h2>
+<p>YouTube, Dailymotion, Vimeo, Facebook, Metacafe, VK, SoundCloud, Instagram, AOL, RedTube, XVideos, Pornhub, and Vevo</p>
+</div> 
+<div class="col-lg-3 col-md-6 col-sm-6">
+<i class="fa fa-scissors"></i>
+<h2>File Editor</h2><p>With our file editor you can cut out a desired fragment from your media file or modify ID3 metadata of your MP3 audiofiles.</p>
+</div> 
+<div class="col-lg-3 col-md-6 col-sm-6">
+<i class="fa fa-cloud"></i>
+<h2>Cloud Support</h2><p>Save your files in the Dropbox or Microsoft OneDrive cloud and it is available on any of your devices.</p>
+</div> 
+<div class="col-lg-3 col-md-6 col-sm-6">
+<i class="fa fa-apple"></i>
+<h2>Cross Platform</h2><p>All Devices and Mobile Devices with OSX, Windows, Linux, iOS, Windows Phone and Android are supported.</p>
+</div> 
+
+		</div><!-- /.row -->
+	</div><!-- /.container -->
+</section>
+	<!-- Fixed Footer -->
+	<footer class="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-9 col-md-8 col-sm-7 col-xs-12">
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+							<p><a href="/en/">Home</a></p>
+							<p><a href="recent.php">Recent Downloads</a></p>
+							<p><a href="top.php">Top 100 Downloads</a></p>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+							<p><a href="plugin2.php">Get Plugin</a></p>
+							<p><a href="faq.php">FAQ</a></p>
+							<p><a href="dmca.php">DMCA</a></p>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+							<p><a href="terms.php">Terms of Service</a></p>
+							<p><a href="policy.php">Privacy Policy</a></p>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+							<p><a href="about.php">About</a></p>
+							<p><a href="contact.php">Contact</a></p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-4 col-sm-5 col-xs-12">
+	    			<div class="copyright" dir="ltr">
+						<p>&copy; 2014-2017 RipFrom.net</p>
+					</div>
+				</div>
+			</div><!-- row -->
+		</div>
+	</footer>
+</body>
+</html>

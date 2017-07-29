@@ -1,0 +1,1430 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>  
+
+            <link rel="canonical" href="http://blog.csdn.net/yangtrees/article/details/8194925"/> 
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848"> 
+       
+    <title>每日一题(5)——公正陪审团问题(动态规划) - 小熊不去实验室
+        - CSDN博客</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="问题ID：POJ1015中文：描述在遥远的国家佛罗布尼亚，嫌犯是否有罪，须由陪审团决定。陪审团是由法官从公众中挑选的。先随机挑选n个人作为陪审团的候选人，然后再从这n个人中选m人组成陪审团。选m人的办法是：控方和辩方会根据对候选人的喜欢程度，给所有候选人打分，分值从0到20。为了公平起见，法官选出陪审团的原则是：选出的m个人，必须满足辩方总分和控方总分的差的绝对值最小。如果有多" />
+
+    <meta name="keywords" content="" />
+
+   
+    <script src="http://static.blog.csdn.net/scripts/blog_static_head.min.js" type="text/javascript"></script>
+
+    
+        <!--new top-->
+                      <!--new top-->
+    
+      <!-- ad begin -->
+         
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/dark1/css/style.css?v=1.1" />
+
+    
+
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/sangni007/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default_relax.css" />
+ 
+
+
+
+    <link href="http://c.csdnimg.cn/blog/csdn_public_blog_detail.min.css" type="text/css" rel="stylesheet" />
+     
+         <link rel="stylesheet" href="http://static.blog.csdn.net/css/csdn_blog_detail.min.css" />
+
+  
+
+
+    <!-- 请置于所有广告位代码之前 --> 
+            <script src="http://dup.baidustatic.com/js/ds.js"></script>
+
+</head>
+
+
+<body>
+     
+        <div class="tracking-ad" data-view="true" data-mod="ad_popu_72"  data-mtp="62" data-order="40" data-con="ad_content_2072" >
+                     <script id="popuLayer_js_q" src="http://ads.csdn.net/js/popuLayer.js" defer="defer"  type="text/javascript"></script>
+                <div id="layerd" style="position: fixed;bottom:0px;right:0px;line-height:0px;z-index:1000">
+    	                <div class="J_close layer_close" style="display:;background-color:#efefef;padding:0px;color:#333;font:12px/24px Helvetica,Tahoma,Arial,sans-serif;text-align:right;">关闭</div><!-- 广告占位容器 --><div id="cpro_u2895327"></div></div>
+                <script>  document.getElementById("popuLayer_js_q").onload = function () { var styObjd = styObj = { width: "300px", "height": parseInt(250) + 28 }; window.CSDN.Layer.PopuLayer("#layerd", { storageName: "layerd", styleObj: styObjd, total: 50, expoire: 1000 * 60 }); }</script><!-- 投放代码 --><script type="text/javascript">                    /*服务器频道首页置顶Banner960*90，创建于2014-7-3*/    (window.cproArray = window.cproArray || []).push({ id: "u2895327" });  </script>  <script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+     
+        </div>
+
+    <!-- 广告位开始 -->
+        
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/yangtrees">小熊不去实验室</a></h2>
+            <h3>Keep marching, Don&#39;t settle —— 把自己带到离梦想最近的地方!</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/yangtrees?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/yangtrees?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/yangtrees/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "sangni007";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/yangtrees";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/75028508">
+<font color=red><strong>CSDN日报20170712——《AI 大行其道，你准备好了吗？》</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/74550215">
+<font color=blue><strong>征文 | 你会为 AI 转型么？</strong></font></a>
+&nbsp;&nbsp;&nbsp;&nbsp
+
+
+<a href="http://ask.csdn.net/subjects/31">
+<font color=red><strong>专家问答 | 资深Java工程师带你解读MyBatis</strong></font></a>
+
+
+</div>                        </div>
+
+                        
+
+
+
+  
+
+
+
+
+
+
+<script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+      var isBole = false; 
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=%e6%af%8f%e6%97%a5%e4%b8%80%e9%a2%98(5)%e2%80%94%e2%80%94%e5%85%ac%e6%ad%a3%e9%99%aa%e5%ae%a1%e5%9b%a2%e9%97%ae%e9%a2%98(%e5%8a%a8%e6%80%81%e8%a7%84%e5%88%92)&u=http://blog.csdn.net/yangtrees/article/details/8194925"
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+    <h1>
+        <span class="link_title"><a href="/yangtrees/article/details/8194925">
+        每日一题(5)——公正陪审团问题(动态规划)        
+           
+        </a>
+        </span>
+
+         
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_r">
+            <span class="link_postdate">2012-11-17 22:45</span>
+            <span class="link_view" title="阅读次数">2324人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(2)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('%e6%af%8f%e6%97%a5%e4%b8%80%e9%a2%98(5)%e2%80%94%e2%80%94%e5%85%ac%e6%ad%a3%e9%99%aa%e5%ae%a1%e5%9b%a2%e9%97%ae%e9%a2%98(%e5%8a%a8%e6%80%81%e8%a7%84%e5%88%92)','8194925');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(8194925,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label  onclick="GetCategoryArticles('1228038','sangni007','top','8194925');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">算法<em>（45）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/sangni007/article/category/1228038"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_1228038">                            
+                            </ul>
+                        </div>
+                    </label>                    
+                    <label  onclick="GetCategoryArticles('1292382','sangni007','top','8194925');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">动态规划<em>（6）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/sangni007/article/category/1292382"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_1292382">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+        <div   class="bog_copyright">         
+            <p  class="copyright_p" >版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+
+<div id="article_content" class="article_content tracking-ad" data-mod=popu_307  data-dsm = "post" >
+
+<p><span style="font-size:14px">问题ID：POJ</span><span style="font-size:14px">1015</span></p>
+<div lang="en-US" class="ptx"><span style="font-size:14px">中文：</span></div>
+<div lang="en-US" class="ptx">
+<dl class="problem-content"><dt><span style="font-size:14px">描述</span></dt><dd><span style="font-size:14px">在遥远的国家佛罗布&#23612;亚，嫌犯是否有罪，须由陪审团决定。陪审团是由法官从公众中挑选的。先随机挑选n个人作为陪审团的候选人，然后再从这n个人中选m人组成陪审团。选m人的办法是：<br>
+<br>
+控方和辩方会根据对候选人的喜欢程度，给所有候选人打分，分&#20540;从0到20。为了公平起见，法官选出陪审团的原则是：选出的m个人，必须满足辩方总分和控方总分的差的绝对&#20540;最小。如果有多种选择方案的辩方总分和控方总分的之差的绝对&#20540;相同，那么选辩控双方总分之和最大的方案即可。</span></dd><dt><span style="font-size:14px">输入</span></dt><dd><span style="font-size:14px">输入包含多组数据。每组数据的第一行是两个整数n和m，n是候选人数目，m是陪审团人数。注意，1&lt;=n&lt;=200, 1&lt;=m&lt;=20 而且 m&lt;=n。接下来的n行，每行表示一个候选人的信息，它包含2个整数，先后是控方和辩方对该候选人的打分。候选人按出现的先后从1开始编号。两组有效数据之间以空行分隔。最后一组数据n=m=0</span></dd><dt><span style="font-size:14px">输出</span></dt><dd><span style="font-size:14px">对每组数据，先输出一行，表示答案所属的组号,如 'Jury #1', 'Jury #2', 等。接下来的一行要象例子那样输出陪审团的控方总分和辩方总分。再下来一行要以升序输出陪审团里每个成员的编号，两个成员编号之间用空&#26684;分隔。每组输出数据须以一个空行结束。</span></dd><dt><span style="font-size:14px">样例输入</span></dt><dd>
+<pre><span style="font-size:14px">4 2 
+1 2 
+2 3 
+4 1 
+6 2 
+0 0 </span></pre>
+</dd><dt><span style="font-size:14px">样例输出</span></dt><dd>
+<pre><span style="font-size:14px">Jury #1 
+Best jury has value 6 for prosecution and value 4 for defence: 
+ 2 3 </span></pre>
+</dd></dl>
+</div>
+<p><span style="font-size:14px">这个问题我想了好久还是不会做，还是要努力，总结网上的解法：</span></p>
+<p><span style="font-size:14px; color:#006600">在遥远的国家佛罗布&#23612;亚，嫌犯是否有罪，须由陪审团决定。陪审团是由法官从公众中挑选的。先随机挑选n 个人作为陪审团的候选人，然后再从这n 个人中选m 人组成陪审团。选m 人的办法是：控方和辩方会根据对候选人的喜欢程度，给所有候选人打分，分&#20540;从0 到20。为了公平起见，法官选出陪审团的原则是：选出的m 个人，必须满足辩方总分和控方总分的差的绝对&#20540;最小。如果有多种选择方案的辩方总分和控方总分的之差的绝对&#20540;相同，那么选辩控双方总分之和最大的方案即可。最终选出的方案称为陪审团方案。</span></p>
+<p><span style="font-size:14px; color:#006600">&nbsp;&nbsp;&nbsp; 为叙述问题方便，现将任一选择方案中，辩方总分和控方总分之差简称为“辩控差”，辩方总分和控方总分之和称为“辩控和”。第i 个候选人的辩方总分和控方总分之差记为V(i)，辩方总分和控方总分之和记为S(i)。现用f(j, k)表示，取j 个候选人，使其辩控差为k 的所有方案中，辩控和最大的那个方案（该方案称为“方案f(j, k)”）的辩控和。并且，我们还规定，如果没法选j 个人，使其辩控差为k，那么f(j, k)的&#20540;就为-1，也称方案f(j,
+ k)不可行。本题是要求选出m 个人，那么，如果对k 的所有可能的取&#20540;，求出了所有的f(m, k) (-20×m≤ k ≤ 20×m)，那么陪审团方案自然就很容易找到了。</span></p>
+<p><span style="font-size:14px; color:#006600">&nbsp;&nbsp;&nbsp; 问题的关键是建立递推关系。需要从哪些已知条件出发，才能求出f(j, k)呢？显然，方案f(j, k)是由某个可行的方案f(j-1, x)，( -20×m ≤ x ≤ 20×m)演化而来的。可行方案f(j-1, x)能演化成方案f(j, k)的必要条件是：存在某个候选人i，i 在方案f(j-1, x)中没有被选上，且x&#43;V(i) = k。在所有满足该必要条件的f(j-1, x)中，选出 f(j-1, x) &#43;
+ S(i) 的&#20540;最大的那个，那么方案f(j-1, x)再加上候选人i，就演变成了方案 f(j, k)。这中间需要将一个方案都选了哪些人都记录下来。不妨将方案f(j, k)中最后选的那个候选人的编号，记在二维数组的元素path[j][k]中。那么方案f(j, k)的倒数第二个人选的编号，就是path[j-1][k-V[path[j][k]]。假定最后算出了解方案的辩控差是k，那么从path[m][k]出发，就能顺藤摸瓜一步步求出所有被选中的候选人。初始条件，只能确定f(0, 0) = 0。由此出发，一步步自底向上递推，就能求出所有的可行方案f(m,
+ k)( -20×m ≤ k ≤ 20×m)。实际解题的时候，会用一个二维数组f 来存放f(j, k)的&#20540;。而且，由于题目中辩控差的&#20540;k 可以为负数，而程序中数租下标不能为负数，所以，在程序中不妨将辩控差的&#20540;都加上400，以免下标为负数导致出错，即题目描述中，如果辩控差为0，则在程序中辩控差为400。</span></p>
+<p><span style="font-size:14px; color:#006600"></span>&nbsp;</p>
+<p><span style="font-size:14px; color:#ff0000">解题的关键在于理解：</span></p>
+<p><span style="font-size:14px; color:#ff0000">f[m][k]保存双方控辩和：m=选取人数，k=控辩差；</span></p>
+<p><span style="font-size:14px; color:#ff0000">根据f[m-1][k]计算f[m][k]：<span style="font-size:14px; color:#ff0000">遍历n个候选人员i [0,n)，</span>if( f[j][k]&#43;P[i]&#43;D[i] &gt; f[j&#43;1][<u>k&#43;P[i]-D[i]</u>] ) ,若未出现过，则选择该人；</span></p>
+<p><span style="font-size:14px; color:#ff0000">Path[m][k]保存第m个选取人员的编号；</span></p>
+<p><span style="font-size:14px; color:#ff0000"></span>&nbsp;</p>
+<pre class="cpp" name="code">#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+#include&lt;iostream&gt;
+#include&lt;string.h&gt;
+using namespace std;
+int f[30][1000];
+//f[j,k]表示：取j个候选人，使其辩控差为k的方案中
+//辩控和最大的那个方案（该方案称为“方案f(j,k)”)的控辩和
+int Path[30][1000];
+//Path数组用来记录选了哪些人
+//方案f(j,k)中最后选的那个候选人的编号，记在Path[j][k]中
+int P[300];//控方打分 
+int D[300]; //辩方打分
+
+int Answer[30];//存放最终方案的人选
+
+int cmp(const void *a,const void *b)
+{
+    return *(int *)a-*(int *)b;
+}     
+int main()
+{
+   int i,j,k;
+    int t1,t2;
+    int n,m;
+    int nMinP_D;//辩控双方总分一样时的辩控差
+    int iCase;//测试数据编号
+    iCase=0;
+    while(scanf(&quot;%d %d&quot;,&amp;n,&amp;m))
+    {
+        if(n==0&amp;&amp;m==0)break;
+        iCase++;
+        for(i=1;i&lt;=n;i++)
+           scanf(&quot;%d %d&quot;,&amp;P[i],&amp;D[i]);
+        memset(f,-1,sizeof(f));
+        memset(Path,0,sizeof(Path));
+        nMinP_D=m*20;//题目中的辩控差为0，对应于程序中的辩控差为m*20
+        f[0][nMinP_D]=0;
+         for(j=0;j&lt;m;j++)//每次循环选出第j个人，共要选出m人 
+        {
+            for(k=0;k&lt;=nMinP_D*2;k++)//可能的辩控差为[0，nMinP_D*2] 
+               if(f[j][k]&gt;=0)//方案f[j,k]可行 
+               {
+                   for(i=1;i&lt;=n;i++)
+                       if(f[j][k]+P[i]+D[i]&gt;f[j+1][k+P[i]-D[i]])//若f[j+1][k+P[i]-D[i]]已经有值，则保存较大的一个
+                       {
+                           t1=j;t2=k;
+                           while(t1&gt;0&amp;&amp;Path[t1][t2]!=i)//验证i是否在前面出现过
+                           {
+                               t2-=P[Path[t1][t2]]-D[Path[t1][t2]];//减前一个元素的控辩差
+                               t1--;
+                           }
+                           if(t1==0)
+                           {
+                               f[j+1][k+P[i]-D[i]]=f[j][k]+P[i]+D[i];
+                               Path[j+1][k+P[i]-D[i]]=i;
+                           }         
+                       }    
+               }    
+        }   
+        i=nMinP_D;
+        j=0;
+        while(f[m][i+j]&lt;0&amp;&amp;f[m][i-j]&lt;0)  j++;//计算j
+        if(f[m][i+j]&gt;f[m][i-j])  k=i+j;//计算k
+        else k=i-j;
+        printf(&quot;Jury #%d\n&quot;,iCase);
+        printf(&quot;Best jury has value %d for prosecution and value %d for defence:\n&quot;,(k-nMinP_D+f[m][k])/2,(f[m][k]-k+nMinP_D)/2);
+        for(i=1;i&lt;=m;i++)
+        {
+            Answer[i]=Path[m-i+1][k]; 
+            k-=P[Answer[i]]-D[Answer[i]];
+        }
+        qsort(Answer+1,m,sizeof(int),cmp);
+        for(i=1;i&lt;=m;i++)  
+          printf(&quot; %d&quot;,Answer[i]);
+        printf(&quot;\n\n&quot;);     
+        
+    }  
+    return 0;   
+}</pre>
+<p><br>
+&nbsp;</p>
+<p>&nbsp;</p>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   
+
+<!--172.16.140.15-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+
+
+ 
+
+
+        <div id="digg" ArticleId="8194925" >
+            <dl id="btnDigg" class="digg digg_disable"  onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>1</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable"  onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='http://blog.csdn.net/sangni007/article/details/8191707';">上一篇</span><a href="http://blog.csdn.net/sangni007/article/details/8191707" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">每日一题(4)——动态规划《Introduction to Algorithms》总结篇</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='http://blog.csdn.net/sangni007/article/details/8201060';">下一篇</span><a href="http://blog.csdn.net/sangni007/article/details/8201060" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">每日一题(6)——循环移位(Chen Jack am I)</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+            <div class="similar_article"   >
+                    <h4></h4>
+                    <div class="similar_c"style="margin:20px 0px 0px 0px">
+                        <div class="similar_c_t">
+                          &nbsp;&nbsp;相关文章推荐
+                        </div>
+                   
+                        <div class="similar_wrap tracking-ad" data-mod="popu_36" >                       
+                            <ul class="similar_list fl">    
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yangliuy/article/details/6039876" title="POJ 1015 公正陪审团问题 动态规划" strategy="BlogCommendFromCsdn" target="_blank">POJ 1015 公正陪审团问题 动态规划</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/Aiphis/article/details/47662573" title="每日一题(1)——滑雪问题(动态规划)" strategy="BlogCommendFromCsdn" target="_blank">每日一题(1)——滑雪问题(动态规划)</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blogdown.iteye.com/blog/1728758" title="动态规划——找零钱问题 收藏" strategy="BlogCommendFromCsdn" target="_blank">动态规划——找零钱问题 收藏</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://luotuoass.iteye.com/blog/1435952" title="[topCoder-每日一二题]--[6]----动态规划" strategy="BlogCommendFromCsdn" target="_blank">[topCoder-每日一二题]--[6]----动态规划</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/sangni007/article/details/8204743" title="每日一题(7)——0-1背包问题(动态规划)" strategy="BlogCommendFromCsdn" target="_blank">每日一题(7)——0-1背包问题(动态规划)</a>
+                                   </li>
+                            </ul>
+                              <ul class="similar_list fr">      
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/morgan_xww/article/details/5824949" title="POJ 1015 陪审团人选 [动态规划]" strategy="BlogCommendFromCsdn" target="_blank">POJ 1015 陪审团人选 [动态规划]</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/Aiphis/article/details/47662483" title="每日一题(19)——数组分割（动态规划）" strategy="BlogCommendFromCsdn" target="_blank">每日一题(19)——数组分割（动态规划）</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://bcyy.iteye.com/blog/1875045" title="杭电OJ——1024  Max Sum Plus Plus（另类的动态规划！）" strategy="BlogCommendFromCsdn" target="_blank">杭电OJ——1024  Max Sum Plus Plus（另类的动态规划！）</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/sangni007/article/details/8238467" title="每日一题(18)——买书问题（动态规划）" strategy="BlogCommendFromCsdn" target="_blank">每日一题(18)——买书问题（动态规划）</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://zyfromcq.iteye.com/blog/1233471" title="0/1背包问题的动态规划法求解 —— Java 实现" strategy="BlogCommendFromCsdn" target="_blank">0/1背包问题的动态规划法求解 —— Java 实现</a>
+                                   </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>   
+      
+</div>
+
+     <div>
+           
+
+       
+                           
+            <!-- 广告位：PC端-博客内容页-banner1-960*90 --> 
+            <script> 
+                (function() { 
+                    var s = "_" + Math.random().toString(36).slice(2); 
+                    document.write('<div id="' + s + '"></div>'); 
+                    (window.slotbydup=window.slotbydup || []).push({ 
+                        id: '4228013', 
+                        container: s, 
+                        size: '0,0', 
+                        display: 'inlay-fix' 
+                    }); 
+                })(); 
+            </script>
+    </div>
+
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/sangni007/svc/GetSuggestContent/8194925",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+        <dl class="blog-ass-articl tracking-ad" id="res-relatived" data-mod="popu_84"  > 
+             <dt><span>猜你在找</span></dt>    
+           
+    
+           
+
+                        <dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;">
+                             <a href="http://edu.csdn.net/huiyiCourse/series_detail/46" title="机器学习之概率与统计推断" strategy="undefined" target="_blank">机器学习之概率与统计推断</a>
+                        </dd>
+                        <dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;">
+                             <a href="http://edu.csdn.net/huiyiCourse/series_detail/49" title="机器学习之数学基础" strategy="undefined" target="_blank">机器学习之数学基础</a>
+                        </dd>
+                        <dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;">
+                             <a href="http://edu.csdn.net/huiyiCourse/series_detail/48" title="机器学习之凸优化" strategy="undefined" target="_blank">机器学习之凸优化</a>
+                        </dd>
+                        <dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;">
+                             <a href="http://edu.csdn.net/huiyiCourse/series_detail/47" title="机器学习之矩阵" strategy="undefined" target="_blank">机器学习之矩阵</a>
+                        </dd>
+                        <dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;">
+                             <a href="http://edu.csdn.net/huiyiCourse/detail/421" title="响应式布局全新探索" strategy="undefined" target="_blank">响应式布局全新探索</a>
+                        </dd>
+                        <dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;">
+                             <a href="http://edu.csdn.net/huiyiCourse/detail/426" title="探究Linux的总线、设备、驱动模型" strategy="undefined" target="_blank">探究Linux的总线、设备、驱动模型</a>
+                        </dd>
+                        <dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;">
+                             <a href="http://edu.csdn.net/huiyiCourse/detail/422" title="深度学习基础与TensorFlow实践" strategy="undefined" target="_blank">深度学习基础与TensorFlow实践</a>
+                        </dd>
+                        <dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;">
+                             <a href="http://edu.csdn.net/huiyiCourse/series_detail/45" title="深度学习之神经网络原理与实战技巧" strategy="undefined" target="_blank">深度学习之神经网络原理与实战技巧</a>
+                        </dd>
+                        <dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;">
+                             <a href="http://edu.csdn.net/huiyiCourse/series_detail/43" title="前端开发在线峰会" strategy="undefined" target="_blank">前端开发在线峰会</a>
+                        </dd>
+                        <dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;">
+                             <a href="http://edu.csdn.net/huiyiCourse/series_detail/44" title="TensorFlow实战进阶：手把手教你做图像识别应用" strategy="undefined" target="_blank">TensorFlow实战进阶：手把手教你做图像识别应用</a>
+                        </dd>
+        </dl>
+
+
+
+
+            
+                                    
+            
+                                    
+
+        <!-- 广告位开始 -->
+        <!-- 广告位结束 -->
+
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '8194925';
+    var commentscount = 2;
+    var islock = false
+</script>
+
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+    var articletitle='每日一题(5)——公正陪审团问题(动态规划)';
+
+</script>
+
+
+
+
+
+
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/sangni007" target="_blank">
+    <img src="http://avatar.csdn.net/A/9/8/1_sangni007.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/sangni007" class="user_name" target="_blank">sangni007</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=sangni007','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                         <div class="ico_expert" title="CSDN博客准专家"  onclick="javascript:location='http://blog.csdn.net/experts/rule.html'" style=" cursor:pointer;width:54px;height:60px;background:url('http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/bokezhunzhuanjiamiddle.png') no-repeat" ></div>
+                <div id="bms_box">
+                                            <a  target="_blank">
+                                                    <img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/zhuanlandaren.png" onmouseover="m_over_m(this,2)" onmouseout="m_out_m()" alt="2" >
+                                            </a>
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>1216113次</span></li>
+    <li>积分：<span>14256</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog7.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：14256 </div>
+        </span>  </li>
+    <li>排名：<span>第685名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>177篇</span></li>
+    <li>转载：<span>67篇</span></li>
+    <li>译文：<span>5篇</span></li>
+    <li>评论：<span>1174条</span></li>
+</ul>
+</ul>
+</div>
+
+
+
+
+<div id="custom_column_21787095" class="panel">
+<ul class="panel_head"><span>博主描述</span></ul>
+<ul class="panel_body">
+
+小硕一枚，目前从业方向：基于交互式设备的应用研发，主要关注：Kinect、LeapMotion、Oculus等交互式设备或可穿戴设备 ；希望和大家交流，共同提高。大家如果对文章有什么问题，发邮件可能无法及时回复，请直接在文章评论栏留言。本人微博：
+<p>&nbsp;<a title="小熊不去实验室" href="http://weibo.com/2525704033/profile?rightmod=1&amp;wvr=5&amp;mod=personinfo" target="_blank">小熊不去实验室</a></p>
+
+</ul>
+</div><div id="panel_Category" class="panel">
+    <ul class="panel_head"><span>博客专栏</span></ul>
+    <ul class="panel_body" id="sp_column">
+    <table cellpadding="0" cellspacing="0"><tr>
+    <td style="padding:10px 10px 0 0;">
+    <a href="http://blog.csdn.net/column/details/stylizefliter.html" target="_blank"><img src="http://img.blog.csdn.net/20151123175556208" style="width:75px;height:75px;" /></a>
+    </td>
+    <td style="padding:10px 0; vertical-align:top;">
+    <a href="http://blog.csdn.net/column/details/stylizefliter.html" target="_blank">图像滤镜</a>
+    <p>文章：15篇</p>
+    <span>阅读：79039</span>
+    </td>
+    </tr></table>
+    <table cellpadding="0" cellspacing="0"><tr>
+    <td style="padding:10px 10px 0 0;">
+    <a href="http://blog.csdn.net/column/details/opencvcv.html" target="_blank"><img src="http://img.blog.csdn.net/20151123175211942" style="width:75px;height:75px;" /></a>
+    </td>
+    <td style="padding:10px 0; vertical-align:top;">
+    <a href="http://blog.csdn.net/column/details/opencvcv.html" target="_blank">学习OpenCV</a>
+    <p>文章：71篇</p>
+    <span>阅读：612581</span>
+    </td>
+    </tr></table>
+    </ul>
+</div><div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body" class="form_search">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search csdn-tracking-statistics" target="_blank"  data-mod="popu_306">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+
+   
+    $(function () {
+        $("#btnSubmit").unbind("click");
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {           
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            if ($("#inputSearch").val() == "") {               
+                alert("请录入搜索关键词！");                         
+                return false;
+            }
+            //var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";           
+            var url = "https://www.baidu.com/s?wd=" + encodeURIComponent($("#inputSearch").val()) + "%20site%3Ablog.csdn.net"
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/sangni007/article/category/1106771" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">OpenCV</a><span>(81)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1106976" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">计算机视觉</a><span>(39)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1121168" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">机器学习</a><span>(26)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1306968" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">特征篇</a><span>(11)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1252982" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">matlab</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1228038" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">算法</a><span>(46)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1125809" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C++</a><span>(25)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1122643" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">基本</a><span>(19)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1253001" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">杂谈</a><span>(21)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1311610" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Qt</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1358005" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">数据库</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1360034" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Kinect</a><span>(16)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1365714" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">OpenGL</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1376753" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Ogre</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1376756" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">计算机图形学</a><span>(11)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1419044" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">笔试面试</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1453489" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">滤镜</a><span>(15)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1539843" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">shader</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1635715" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Leap</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1701719" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Unity</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/1818787" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">CUDA</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/2215587" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">并行计算</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/2312319" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">UDK</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/sangni007/article/category/2737569" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Cinder</a><span>(1)</span>
+                </li>
+</ul>
+</div>
+
+<div id="custom_column_20939933" class="panel">
+<ul class="panel_head"><span>Tech Blog 0</span></ul>
+<ul class="panel_body">
+
+<p><span style="color:rgb(0,153,0)">全能系：</span> </p>
+<p></p>
+<p>&nbsp;<a title="打开刘未鹏主页" href="http://mindhacks.cn/topics/machine-learning/" target="_blank">刘未鹏</a>
+</p>
+<p>&nbsp;<a title="打开浙大sophia主页" href="http://blog.csdn.net/abcjennifer" target="_blank">Sophia_qing</a>
+</p>
+<p>&nbsp;<a title="打开丕子主页" href="http://www.zhizhihu.com/" target="_blank">丕子</a> </p>
+<p><span style="color:rgb(0,153,0)">ML系：</span> </p>
+<p></p>
+<p>&nbsp;<a title="打开博客园LeftNotEsay主页" href="http://leftnoteasy.cnblogs.com/" target="_blank">LeftNotEsay(博客园)</a>
+</p>
+<p>&nbsp;<a title="打开pluskid主页" href="http://blog.pluskid.org/" target="_blank">pluskid.org</a>
+</p>
+<p>&nbsp;<a title="打开FreeMind主页" href="http://freemind.pluskid.org/archive/" target="_blank">pluskid_archive</a>
+</p>
+<p><span style="color:rgb(0,153,0)">CV系：</span> </p>
+<p></p>
+<p>&nbsp;<a title="打开甘苦人生主页" href="http://blog.csdn.net/zouxy09?viewmode=contents" target="_blank">甘苦人生（Kinect）
+</a></p>
+<p>&nbsp;<a title="打开千里8848主页" href="http://blog.sina.com.cn/u/1662667972" target="_blank">千里8848（新浪）
+</a></p>
+<p>&nbsp;<a title="打开yang_xian主页" href="http://blog.csdn.net/yang_xian521" target="_blank">递归是神
+</a></p>
+<p></p>
+<p>&nbsp;<a title="打开箫鸣主页" href="http://ilovecode.cn/" target="_blank">箫鸣</a> </p>
+<p>&nbsp;<a title="打开箫鸣主页" href="http://blog.csdn.net/guoming0000" target="_blank">箫鸣CSDN</a>
+</p>
+<p>&nbsp;<a title="打开宇宙的奇点主页" href="http://zhou24388.blog.163.com/blog/#m=0" target="_blank">宇宙的奇点</a>
+</p>
+<p>&nbsp;<a title="打开邹永华主页" href="http://yuhuazou.sinaapp.com" target="_blank">邹永华</a>
+</p>
+<p>&nbsp;<a title="打开tornadomeet主页" href="http://www.cnblogs.com/tornadomeet/" target="_blank">Kinect君(博客园)</a>
+</p>
+<p></p>
+
+</ul>
+</div>
+
+<div id="custom_column_21945292" class="panel">
+<ul class="panel_head"><span>Tech Blog 1</span></ul>
+<ul class="panel_body">
+
+<p><span style="color:#009900">算法系：</span> </p>
+<p></p>
+<p>&nbsp;<a title="打开编程大牛主页" href="http://blog.csdn.net/v_JULY_v" target="_blank">v_JULY_v</a>
+</p>
+<p>&nbsp;<a title="打开MoreWindows主页" href="http://blog.csdn.net/MoreWindows?viewmode=contents" target="_blank">MoreWindows</a>
+</p>
+<p>&nbsp;<a title="打开小田主页" href="http://blog.csdn.net/tianshuai11" target="_blank">小田</a>
+</p>
+<p>&nbsp;<a title="打开CSDN奇迹园主页" href="http://blog.csdn.net/yangliuy?viewmode=contents" target="_blank">奇迹园</a>
+</p>
+<p>&nbsp;<a title="打开CSDN大周寒辞主页" href="http://blog.csdn.net/ztz0223?viewmode=contents" target="_blank">大周寒辞</a>
+</p>
+<p>&nbsp;<a title="打开C" href="http://blog.csdn.net/ClamReason?viewmode=contents" target="_blank">ClamReasen</a>
+</p>
+<p>&nbsp;<a title="打开辉爷主页" href="http://blog.csdn.net/insistgogo" target="_blank">小灰灰</a></p>
+<p>&nbsp;<a title="打开嘉爷主页" href="http://blog.csdn.net/zhaojinjia" target="_blank">嘉爷</a></p>
+<p>&nbsp;<a title="打开主页" href="http://blog.csdn.net/htyurencaotang" target="_blank">蔫坏~</a></p>
+
+</ul>
+</div><div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/yangtrees/article/details/7453987" title="学习OpenCV——行人检测&amp;人脸检测(总算运行出来了)">学习OpenCV——行人检测&amp;人脸检测(总算运行出来了)</a><span>(114)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7471222" title="学习OpenCV——HOG+SVM">学习OpenCV——HOG+SVM</a><span>(98)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7444470" title="学习OpenCV——车牌检测(定位)">学习OpenCV——车牌检测(定位)</a><span>(56)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7533988" title="学习OpenCV——ORB &amp; BRIEF（特征点篇）&amp;Location">学习OpenCV——ORB &amp; BRIEF（特征点篇）&amp;Location</a><span>(38)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7544401" title="学习OpenCV——Hog.detectMultiScale的心得">学习OpenCV——Hog.detectMultiScale的心得</a><span>(38)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/8724120" title="Ogre学习教程：Ogre1.8.1+VS2010环境配置">Ogre学习教程：Ogre1.8.1+VS2010环境配置</a><span>(36)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7447206" title="学习OpenCV——SVM">学习OpenCV——SVM</a><span>(35)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7566284" title="学习OpenCV——hand tracking手势跟踪">学习OpenCV——hand tracking手势跟踪</a><span>(31)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/8116835" title="Compressive Tracking——CT跟踪">Compressive Tracking——CT跟踪</a><span>(31)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/8456237" title="学习OpenCV——BOW特征提取函数（特征点篇）">学习OpenCV——BOW特征提取函数（特征点篇）</a><span>(30)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/yangtrees/article/details/7453987" title="学习OpenCV——行人检测&amp;人脸检测(总算运行出来了)">学习OpenCV——行人检测&amp;人脸检测(总算运行出来了)</a><span>(45721)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7482960" title="学习OpenCV——Surf（特征点篇）&amp;flann">学习OpenCV——Surf（特征点篇）&amp;flann</a><span>(34814)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7506052" title="机器学习——Gradient Boost Decision Tree(&amp;Treelink)">机器学习——Gradient Boost Decision Tree(&amp;Treelink)</a><span>(31815)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7471222" title="学习OpenCV——HOG+SVM">学习OpenCV——HOG+SVM</a><span>(22918)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7463431" title="学习OpenCV——HoG特征详解（特征点篇）">学习OpenCV——HoG特征详解（特征点篇）</a><span>(22883)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7547350" title="学习OpenCV——Fast检测与Surf&amp;Brief匹配（娱乐）">学习OpenCV——Fast检测与Surf&amp;Brief匹配（娱乐）</a><span>(22439)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7444470" title="学习OpenCV——车牌检测(定位)">学习OpenCV——车牌检测(定位)</a><span>(21852)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7533988" title="学习OpenCV——ORB &amp; BRIEF（特征点篇）&amp;Location">学习OpenCV——ORB &amp; BRIEF（特征点篇）&amp;Location</a><span>(20323)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/7447206" title="学习OpenCV——SVM">学习OpenCV——SVM</a><span>(19273)</span>
+</li>
+<li>
+<a href="/yangtrees/article/details/8075911" title="学习OpenCV——Kalman滤波">学习OpenCV——Kalman滤波</a><span>(19000)</span>
+</li>
+</ul>
+</div>
+<div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/sangni007/article/month/2014/11">2014年11月</a><span>(1)</span></li><li><a href="/sangni007/article/month/2014/10">2014年10月</a><span>(1)</span></li><li><a href="/sangni007/article/month/2014/09">2014年09月</a><span>(2)</span></li><li><a href="/sangni007/article/month/2014/07">2014年07月</a><span>(3)</span></li><li><a href="/sangni007/article/month/2014/06">2014年06月</a><span>(1)</span></li><li><a href="/sangni007/article/month/2014/05">2014年05月</a><span>(1)</span></li><li><a href="/sangni007/article/month/2014/04">2014年04月</a><span>(3)</span></li><li><a href="/sangni007/article/month/2014/03">2014年03月</a><span>(1)</span></li><li><a href="/sangni007/article/month/2014/02">2014年02月</a><span>(5)</span></li><li><a href="/sangni007/article/month/2013/12">2013年12月</a><span>(3)</span></li><li><a href="/sangni007/article/month/2013/11">2013年11月</a><span>(1)</span></li><li><a href="/sangni007/article/month/2013/10">2013年10月</a><span>(1)</span></li><li><a href="/sangni007/article/month/2013/09">2013年09月</a><span>(1)</span></li><li><a href="/sangni007/article/month/2013/08">2013年08月</a><span>(7)</span></li><li><a href="/sangni007/article/month/2013/07">2013年07月</a><span>(1)</span></li><li><a href="/sangni007/article/month/2013/06">2013年06月</a><span>(18)</span></li><li><a href="/sangni007/article/month/2013/05">2013年05月</a><span>(7)</span></li><li><a href="/sangni007/article/month/2013/04">2013年04月</a><span>(6)</span></li><li><a href="/sangni007/article/month/2013/03">2013年03月</a><span>(14)</span></li><li><a href="/sangni007/article/month/2013/01">2013年01月</a><span>(9)</span></li><li><a href="/sangni007/article/month/2012/12">2012年12月</a><span>(15)</span></li><li><a href="/sangni007/article/month/2012/11">2012年11月</a><span>(48)</span></li><li><a href="/sangni007/article/month/2012/10">2012年10月</a><span>(12)</span></li><li><a href="/sangni007/article/month/2012/09">2012年09月</a><span>(19)</span></li><li><a href="/sangni007/article/month/2012/08">2012年08月</a><span>(6)</span></li><li><a href="/sangni007/article/month/2012/07">2012年07月</a><span>(4)</span></li><li><a href="/sangni007/article/month/2012/06">2012年06月</a><span>(7)</span></li><li><a href="/sangni007/article/month/2012/05">2012年05月</a><span>(17)</span></li><li><a href="/sangni007/article/month/2012/04">2012年04月</a><span>(26)</span></li><li><a href="/sangni007/article/month/2012/03">2012年03月</a><span>(9)</span></li>
+</div>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/blogdevteam/article/details/74779821" target="_blank">* CSDN日报20170706——《屌丝程序员的逆袭之旅》</a></li>
+<li><a href="http://blog.csdn.net/phodal/article/details/74516182" 
+target="_blank">* 探讨后端选型中不同语言及对应的Web框架</a></li>
+<li><a href="http://blog.csdn.net/briblue/article/details/74616922"target="_blank">* 细说反射，Java 和 Android 开发者必须跨越的坎</a></li>
+<li><a href="http://blog.csdn.net/xiaopihaierletian/article/details/74688643" 
+target="_blank">* 深度学习 | 反向传播与它的直观理解</a></li>
+<li><a href="http://blog.csdn.net/liyuanxiang1984/article/details/74611136" 
+target="_blank">* ArcGIS 水文分析实战教程——雨量计算与流量统计</a></li>
+<li><a href="http://blog.csdn.net/broadview2006/article/details/74431515" 
+target="_blank">* 每周荐书：Android、Keras、ES6（评论送书）</a></li>
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/yangtrees/article/details/7566284#comments">学习OpenCV——hand tracking手势跟踪</a>
+    <p style="margin:0px;"><a href="/sanra123" class="user_name">sanra123</a>:
+人脸是会造成影响的
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yangtrees/article/details/8740933#comments">图像处理基本概念——卷积，滤波，平滑</a>
+    <p style="margin:0px;"><a href="/yuanhuiling" class="user_name">yuanhuiling</a>:
+“然后将模版g(x)在模版中移动,每到一个位置,就把f(x)与g(x)的定义域相交的元素卷积定义上是...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yangtrees/article/details/8740933#comments">图像处理基本概念——卷积，滤波，平滑</a>
+    <p style="margin:0px;"><a href="/yuanhuiling" class="user_name">yuanhuiling</a>:
+&quot;然后将模版g(x)在模版中移动,每到一个位置,就把f(x)与g(x)的定义域相交的元素卷积定义上是...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yangtrees/article/details/8456237#comments">学习OpenCV——BOW特征提取函数（特征点篇）</a>
+    <p style="margin:0px;"><a href="/lujingyuyu" class="user_name">lujingyuyu</a>:
+请问是用sift提取的特征吗
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yangtrees/article/details/10118223#comments">计算机视觉、机器学习相关领域论文和源代码大集合</a>
+    <p style="margin:0px;"><a href="/ARKE92" class="user_name">ARKE92</a>:
+厉害了，我的楼主。
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yangtrees/article/details/7530354#comments">学习OpenCV——Fast（特征点篇）  (&amp;DrawMatchFlags)</a>
+    <p style="margin:0px;"><a href="/ITealover" class="user_name">ITealover</a>:
+FastFeatureDetector fast(40);抽象类类型不允许使用，，博主我是openc...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yangtrees/article/details/7530354#comments">学习OpenCV——BOW特征提取函数（特征点篇）</a>
+    <p style="margin:0px;"><a href="/ren_zhi_jiao" class="user_name">ren_zhi_jiao</a>:
+小熊大神好，kmeans 聚类不是基于距离的么？怎么感觉结果不像是基于距离的呢？我想把特征基于距离聚...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yangtrees/article/details/7471222#comments">学习OpenCV——HOG+SVM</a>
+    <p style="margin:0px;"><a href="/liuqinglong110" class="user_name">liuqinglong110</a>:
+不知道楼主是否编译过上面的代码？    CvSVM svm = CvSVM();  这一行代码无法编...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yangtrees/article/details/9095731#comments">学习OpenCV：滤镜系列（2）——扩张&amp;挤压</a>
+    <p style="margin:0px;"><a href="/ruilove_555" class="user_name">ruilove_555</a>:
+楼主，norm函数找不到是怎么回事
+    </p>
+    </li>
+    <li>
+   
+         <a href="/yangtrees/article/details/39961801#comments">解决KinectSDK 包含头文件&quot;NuiApi.h&quot;报错问题</a>
+    <p style="margin:0px;"><a href="/zkl99999" class="user_name">zkl99999</a>:
+for the kinect v1, you need to download kinect v1....
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+                   <!-- 广告位开始 -->                    <!-- 广告位结束 -->
+                   <div class="tracking-ad" data-view="true"  data-mtp="63" data-order="40" data-con="ad_content_1260" style="width: 200px; height: 500px;">
+                         <div id="nav_show_top_stop" style="width: 200px;height: 500px;z-index:1000"><div id="cpro_u2734128"></div>
+                             <div id="cpro_u3031287"></div></div>
+                   </div>
+    <script type="text/javascript">
+        setTimeout(function () {
+            var naviga_offsetTop = 0;
+            function naviga_stay_top() { var scrollTop = jQuery(document).scrollTop(); if (scrollTop > naviga_offsetTop) { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": "0px" }); } else { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": naviga_offsetTop - scrollTop + "px" }); } }
+            function onload_function() { naviga_offsetTop = jQuery("#nav_show_top_stop").position().top; jQuery(window).bind("scroll", naviga_stay_top); jQuery(window).bind("mousewheel", naviga_stay_top); jQuery(document).bind("scroll", naviga_stay_top); jQuery(document).bind("mousewheel", naviga_stay_top); } jQuery(document).ready(onload_function);
+
+        }, 200);
+    </script>
+<script type="text/javascript">(window.cproArray = window.cproArray || []).push({ id: "u2734128" });  </script> 
+                    <script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script> 
+                   <script type="text/javascript">
+                       /*PC端-博客内容页左侧Button2-200*200-2017/7/10*/
+                       (window.cproArray = window.cproArray || []).push({ id: "u3031287" });
+</script>
+<script type="text/javascript" src="http://cpro.baidustatic.com/cpro/ui/c.js"></script>
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+
+
+
+
+
+
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+
+     
+
+   
+        <!--new top-->
+   
+   
+
+    
+    
+    
+   
+
+   
+
+
+       <script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+          <script type="text/javascript">
+              //$(function () {
+              //    setTimeout(function () {
+              //        var searchtitletags = articletitle + ',' + $("#tags").html();
+              //        searchService({
+              //            index: 'blog',
+              //            query: searchtitletags,
+              //            from: 5,
+              //            size: 5,
+              //            appendTo: '#res',
+              //            url: 'recommend',
+              //            his: 2,
+              //            client: "blog_cf_enhance",
+              //            tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+              //        });
+              //    }, 1000);
+              //});
+
+         </script>
+    
+    <script src="http://static.blog.csdn.net/scripts/csdn_blog_detail.min.js" type="text/javascript"></script>
+        
+    <script type="text/javascript" src="http://c.csdnimg.cn/blog/csdn_public_blog_detail.min.js?20170626001"></script>
+
+    <script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=1272304"></script>
+
+     
+    
+
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    
+    
+        
+     
+
+    
+          
+    <div class="pop_CA_cover"  style="display:none"></div>
+    <div class="pop pop_CA"  style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon"  id="fapancle"  onclick="$('.pop_CA').hide();$('.pop_CA_cover').hide();"></span>
+          </div>
+          <iframe src="" id="fa" frameborder="0" width="100%" height="360"  scrolling="no" ></iframe>
+    </div>
+
+
+        <script type="text/javascript">
+
+            $(function () {
+                var fromjs = $("#fromjs");
+                if (fromjs.length > 0) {
+                    $("#fromjs .markdown_views pre").addClass("prettyprint");
+                    prettyPrint();
+
+                    $('pre.prettyprint code').each(function () {
+                        var lines = $(this).text().split('\n').length;
+                        var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                        $(this).addClass('has-numbering').parent().append($numbering);
+                        for (i = 1; i <= lines; i++) {
+                            $numbering.append($('<li/>').text(i));
+                        };
+                        $numbering.fadeIn(1700);
+                    });
+
+                    $('.pre-numbering li').css("color", "#999");
+                }
+            });
+
+            $(".markdown_views a[target!='_blank']").attr("target", "_blank");
+
+            //$(".toc a[target='_blank']").attr("target", "");
+
+            setTimeout(function () {
+                $(".toc a[target='_blank']").attr("target", "");
+            }, 500);
+
+        </script>
+
+</body>
+</html>   

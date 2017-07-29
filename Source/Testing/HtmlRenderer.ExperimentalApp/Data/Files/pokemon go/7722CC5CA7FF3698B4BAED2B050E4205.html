@@ -1,0 +1,1607 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+
+        <meta charset="utf-8" >
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+        <meta name="description" content="Pokémon Go IV Calculator (also known as Pokemon IV Calculator) is a tool for calculating your Pokémon’s Individual Values (IVs). Individual Values: Attack, Defense, and Stamina. Base Stats." >
+        <meta name="author" content="=" >
+        <meta property="og:title" content="Pokémon Go IV Calculator" />
+        <meta property="og:description" content="Pokémon Go IV Calculator (also known as Pokemon IV Calculator) is a tool for calculating your Pokémon’s Individual Values (IVs). Individual Values: Attack, Defense, and Stamina. Base Stats." />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="PokéGo" />
+        <meta property="og:url" content="http://www.pokego.org/iv-calculator/" />
+        <meta property="og:image" content="http://www.pokego.org/assets/img/pokemon-iv-calculator.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="fb:app_id" content="1651616698390092" />
+        <link rel="icon" type="image/png" href="http://www.pokego.org/assets/img/favicon.ico" />
+        <link rel="canonical" href="http://www.pokego.org/iv-calculator/" />
+
+        <title>Pokémon Go IV Calculator - PokéGo</title>
+
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+        <script type="text/javascript" src="assets/libs/Blob.js"></script>
+        <script type="text/javascript" src="assets/libs/FileSaver.min.js"></script>
+        <script type="text/javascript" src="assets/libs/angular.js"></script>
+        <script type="text/javascript" src="assets/libs/angular-route.min.js"></script>
+        <script type="text/javascript" src="assets/libs/angular-animate.min.js"></script>
+        <script type="text/javascript" src="assets/libs/ui-bootstrap-2.1.3.min.js"></script>
+        <script type="text/javascript" src="assets/libs/js.cookie.js"></script>
+        <script type="text/javascript" src="app/app.module.js"></script>
+        <script type="text/javascript" src="app/app.routes3.js"></script>
+        <script type="text/javascript" src="app/components/calc/calc.controller.js"></script>
+        <script type="text/javascript" src="app/factories/gameData.factory.js"></script>
+        <script type="text/javascript" src="app/factories/calcData.factory.js"></script>
+        <link rel="stylesheet" href="assets/css/flags.css" />
+        <style>
+            .blockbox {
+                display: block;
+                width: 100%;
+                min-width: 34px;
+                height: 34px;
+                box-shadow: none;
+            }
+
+            .centered {
+                display: flex;
+                justify-content: space-around;
+                margin-bottom: 10px;
+            }
+
+            .toggle-img {
+                cursor: pointer;
+                /*max-height: 130px;*/
+                max-width: 100%;
+                margin: 5px;
+            }
+
+            .not-selected {
+                opacity: 0.3;
+            }
+
+            .btn-calc {
+                margin: 15px 10px 5px;
+                flex-grow: 1;
+            }
+
+            input[type="number"] {
+                -webkit-appearance: textfield;
+                -moz-appearance: textfield;
+            }
+
+            .clear-label {
+                color: rgba(0, 0, 0, 0);
+            }
+
+            .check-img {
+                cursor: pointer;
+                display: block;
+                border: 2px solid rgba(0, 0, 0, 0);
+                border-radius: 19px;
+                width: 38px;
+                height: 38px;
+                position: relative;
+                bottom: 2px;
+                margin: 4px auto 0px;
+            }
+
+            .check-img:focus {
+                outline: none;
+                border-color: rgba(51, 122, 183, 0.3);
+
+            }
+
+            .check-img.not-selected:focus {
+                border-color: #337ab7;
+            }
+
+            .results {
+                margin: 15px 0px;
+            }
+
+            .table * {
+                text-align: center;
+            }
+
+            .table th, .table td {
+                padding: 8px 0px !important;
+            }
+
+            .error-message {
+                font-size: 18px;
+                text-align: center;
+                margin-top: 20px;
+            }
+
+
+            .donate-btn {
+                position: relative;
+                margin-left: 10px;
+            }
+
+            .collapsible {
+                margin: 10px 0px;
+            }
+
+            .glyphicon {
+                top: 3px;
+                left: 3px;
+            }
+
+            .source {
+                margin-left: 15px;
+            }
+
+            th, td {
+                width: 20%;
+            }
+
+            .orderby {
+                color: #d32026;
+            }
+
+            .stats-toggle {
+                display: flex;
+                justify-content: space-around;
+            }
+
+            .active-item {
+                background-color: #f5f5f5;
+            }
+
+            .inactive-item a, .inactive-item:hover {
+                background-color: white !important;
+            }
+
+            .form-control-static {
+                font-weight: normal;
+            }
+
+        </style>
+        <!-- Bootstrap core CSS -->
+        <link href="/assets/css/bootstrap.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="/assets/css/main.css?v=1.7" rel="stylesheet">
+
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                        (i[r].q = i[r].q || []).push(arguments)
+                    }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-80418622-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    </head>
+
+<body ng-app="pogoApp">
+    <div id="fb-root"></div>
+    <script>(function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.7&appId=1651616698390092";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+    <!-- Static navbar -->
+    <div class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://www.pokego.org/">PokéGo</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://www.pokego.org/pokedex/">Pokédex</a></li>
+                    <li>
+                        <div class="dropdown">
+                            <button class="btn btn-menu dropdown-toggle" type="button" id="calculators-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Calculators
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="calculators-menu">
+                                <li><a href="http://www.pokego.org/iv-calculator/">IV Calculator</a></li>
+                                <li><a href="http://www.pokego.org/evolution-cp-calculator/">Evolution CP Calculator</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="dropdown">
+                            <button class="btn btn-menu dropdown-toggle" type="button" id="moves-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Moves
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="moves-menu">
+                                <li><a href="http://www.pokego.org/quick-moves/">Quick Moves</a></li>
+                                <li><a href="http://www.pokego.org/charge-moves/">Charge Moves</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="dropdown">
+                            <button class="btn btn-menu dropdown-toggle" type="button" id="useful-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Useful Pages
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="useful-menu">
+                                <li><a href="http://www.pokego.org/rare-pokemon-list/">Rare Pokémon</a></li>
+                                <li><a href="http://www.pokego.org/pokemon-go-level-rewards/">Level Rewards</a></li>
+                                <li><a href="http://www.pokego.org/tutorial/">Pokémon Go Tutorial</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="dropdown">
+                            <button class="btn btn-menu dropdown-toggle" type="button" id="links-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                Links
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="links-menu">
+                                <li><a href="http://www.pokemon.com/us/pokemon-video-games/pokemon-go/">Pokémon GO</a></li>
+                                <li><a href="https://play.google.com/store/apps/details?id=com.nianticlabs.pokemongo&hl=en">Android App</a></li>
+                                <li><a href="https://itunes.apple.com/nz/app/pokemon-go/id1094591345?mt=8">iOS App</a></li>
+                                <li><a href="https://www.reddit.com/r/pokemongo/">Reddit</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+
+<div class="container pt">
+    <div class="row">
+	
+	<div class="adsense1">	
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<!-- pokego-main-first -->
+	<ins class="adsbygoogle"
+		 style="display:block"
+		 data-ad-client="ca-pub-9551900711934655"
+		 data-ad-slot="2143626479"
+		 data-ad-format="auto"></ins>
+	<script>
+	(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+	</div>
+	
+        <div class="col-lg-12">
+            <ol class="breadcrumb hidden-xs hidden-md">
+                <li><a href="/">Home</a></li>
+                <li class="active">Pokémon Go IV Calculator</li>
+            </ol>
+            <h1 id="focusas">Pokémon Go IV Calculator</h1>
+            <div class="description hidden-xs hidden-md">Pokémon Go Individual Value (IV) Calculator</div>
+					<div class="social-sharing">
+						<div class="gplus"><div class="g-plusone" data-size="medium" data-width="300"></div></div>			
+						<div class="fb-like" data-layout="button_count" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div>		
+					</div>
+        </div>
+        <div class="col-lg-8">
+            <div ng-view></div>
+			
+			<div class="adsense">				
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- pokego-main-under -->
+			<ins class="adsbygoogle"
+				 style="display:block"
+				 data-ad-client="ca-pub-9551900711934655"
+				 data-ad-slot="2490427678"
+				 data-ad-format="auto"></ins>
+			<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			</div> 	
+			
+			<p>Our <strong>Pokémon Go IV Calculator</strong> has been updated based on the BoredMai <a href="https://github.com/BoredMai/PokemonGOIVCalculator">work</a>.</p>
+            <p><strong>Pokémon Go IV Calculator</strong>. Pokémon Go IV Calculator (also known as <a href="http://www.pokego.org/iv-calculator/">Pokemon IV Calculator</a>) is a tool for calculating your Pokémon’s Individual Values (IVs). So far, there are three Individual Values in the Pokémon Go game, namely Attack, Defense, and Stamina. These three values define your character’s potential and ability as a Gym attacker or defender. This page will be dedicated to <a href="https://play.google.com/store/apps/details?id=com.nianticlabs.pokemongo&hl=en">Pokémon Go</a> IV Calculator and all related details.</p>
+            <h2>What is Pokémon IV and why it’s important?</h2>
+            <p>Each Pokémon in the Pokémon Go game is unique. First of all, each Pokémon type has <a href="#base-stats">Base Stats</a> for <strong>Attack</strong>, <strong>Defense</strong> and <strong>Stamina</strong>. What is more, each Pokémon has its Individual Values that increases Base Stats for Attack, Defense and Stamina by 0-15 extra points. These Individual Values differ from Pokémon to Pokémon and it’s what makes each Pokémon unique even though they belong to the same type.</p>
+            <p>As we have already mentioned, there are three <strong>Individual Values</strong> in the Pokémon Go game. It’s Attack, Defense, and Stamina. Attack determines a Pokémon’s strength in taking a Gym, while Defense and Stamina determine its strength in defending it. This means having a Pokémon with better or worse Individual Values increases or decreases its chances in winning Gym battles. Simply saying, it’s a direct advantage or disadvantage in Gym battles!</p>
+            <p>We would guess the majority of Trainers are already asking where they could check those Individual Values. This is where things get a bit complicated. Individual Values cannot be seen in the game as these stats are simply not displayed. Luckily, we are here to offer you a Pokémon IV calculator which you can use on the top of this page to calculate your Pokémon Individual Values.</p>
+            <h2 id="base-stats">Pokémon Go Base Stats</h2>
+            <p>Want to find out Base Stats (Attack, Defense and Stamina) for each Pokémon? Please find all Pokémon with Base Attack, Base Defense and Base Stamina next to them. We have also included Total and Average numbers to make it easier for you to sort them out.</p>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="thead-default">
+                        <tr>
+                            <th>No.</th>
+                            <th>Pokémon</th>
+                            <th>Base Stamina</th>
+                            <th>Base Attack</th>
+                            <th>Base Defense</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Bulbasaur</td>
+                            <td>90</td>
+                            <td>126</td>
+                            <td>126</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Ivysaur</td>
+                            <td>120</td>
+                            <td>156</td>
+                            <td>158</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Venusaur</td>
+                            <td>160</td>
+                            <td>198</td>
+                            <td>200</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Charmander</td>
+                            <td>78</td>
+                            <td>128</td>
+                            <td>108</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Charmeleon</td>
+                            <td>116</td>
+                            <td>160</td>
+                            <td>140</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Charizard</td>
+                            <td>156</td>
+                            <td>212</td>
+                            <td>182</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>Squirtle</td>
+                            <td>88</td>
+                            <td>112</td>
+                            <td>142</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>Wartortle</td>
+                            <td>118</td>
+                            <td>144</td>
+                            <td>176</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>Blastoise</td>
+                            <td>158</td>
+                            <td>186</td>
+                            <td>222</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>Caterpie</td>
+                            <td>90</td>
+                            <td>62</td>
+                            <td>66</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>Metapod</td>
+                            <td>100</td>
+                            <td>56</td>
+                            <td>86</td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td>Butterfree</td>
+                            <td>120</td>
+                            <td>144</td>
+                            <td>144</td>
+                        </tr>
+                        <tr>
+                            <td>13</td>
+                            <td>Weedle</td>
+                            <td>80</td>
+                            <td>68</td>
+                            <td>64</td>
+                        </tr>
+                        <tr>
+                            <td>14</td>
+                            <td>Kakuna</td>
+                            <td>90</td>
+                            <td>62</td>
+                            <td>82</td>
+                        </tr>
+                        <tr>
+                            <td>15</td>
+                            <td>Beedrill</td>
+                            <td>130</td>
+                            <td>144</td>
+                            <td>130</td>
+                        </tr>
+                        <tr>
+                            <td>16</td>
+                            <td>Pidgey</td>
+                            <td>80</td>
+                            <td>94</td>
+                            <td>90</td>
+                        </tr>
+                        <tr>
+                            <td>17</td>
+                            <td>Pidgeotto</td>
+                            <td>126</td>
+                            <td>126</td>
+                            <td>122</td>
+                        </tr>
+                        <tr>
+                            <td>18</td>
+                            <td>Pidgeot</td>
+                            <td>166</td>
+                            <td>170</td>
+                            <td>166</td>
+                        </tr>
+                        <tr>
+                            <td>19</td>
+                            <td>Rattata</td>
+                            <td>60</td>
+                            <td>92</td>
+                            <td>86</td>
+                        </tr>
+                        <tr>
+                            <td>20</td>
+                            <td>Raticate</td>
+                            <td>110</td>
+                            <td>146</td>
+                            <td>150</td>
+                        </tr>
+                        <tr>
+                            <td>21</td>
+                            <td>Spearow</td>
+                            <td>80</td>
+                            <td>102</td>
+                            <td>78</td>
+                        </tr>
+                        <tr>
+                            <td>22</td>
+                            <td>Fearow</td>
+                            <td>130</td>
+                            <td>168</td>
+                            <td>146</td>
+                        </tr>
+                        <tr>
+                            <td>23</td>
+                            <td>Ekans</td>
+                            <td>70</td>
+                            <td>112</td>
+                            <td>112</td>
+                        </tr>
+                        <tr>
+                            <td>24</td>
+                            <td>Arbok</td>
+                            <td>120</td>
+                            <td>166</td>
+                            <td>166</td>
+                        </tr>
+                        <tr>
+                            <td>25</td>
+                            <td>Pikachu</td>
+                            <td>70</td>
+                            <td>124</td>
+                            <td>108</td>
+                        </tr>
+                        <tr>
+                            <td>26</td>
+                            <td>Raichu</td>
+                            <td>120</td>
+                            <td>200</td>
+                            <td>154</td>
+                        </tr>
+                        <tr>
+                            <td>27</td>
+                            <td>Sandshrew</td>
+                            <td>100</td>
+                            <td>90</td>
+                            <td>114</td>
+                        </tr>
+                        <tr>
+                            <td>28</td>
+                            <td>Sandslash</td>
+                            <td>150</td>
+                            <td>150</td>
+                            <td>172</td>
+                        </tr>
+                        <tr>
+                            <td>29</td>
+                            <td>Nidoran</td>
+                            <td>110</td>
+                            <td>100</td>
+                            <td>104</td>
+                        </tr>
+                        <tr>
+                            <td>30</td>
+                            <td>Nidorina</td>
+                            <td>140</td>
+                            <td>132</td>
+                            <td>136</td>
+                        </tr>
+                        <tr>
+                            <td>31</td>
+                            <td>Nidoqueen</td>
+                            <td>180</td>
+                            <td>184</td>
+                            <td>190</td>
+                        </tr>
+                        <tr>
+                            <td>32</td>
+                            <td>Nidoran</td>
+                            <td>92</td>
+                            <td>110</td>
+                            <td>94</td>
+                        </tr>
+                        <tr>
+                            <td>33</td>
+                            <td>Nidorino</td>
+                            <td>122</td>
+                            <td>142</td>
+                            <td>128</td>
+                        </tr>
+                        <tr>
+                            <td>34</td>
+                            <td>Nidoking</td>
+                            <td>162</td>
+                            <td>204</td>
+                            <td>170</td>
+                        </tr>
+                        <tr>
+                            <td>35</td>
+                            <td>Clefairy</td>
+                            <td>140</td>
+                            <td>116</td>
+                            <td>124</td>
+                        </tr>
+                        <tr>
+                            <td>36</td>
+                            <td>Clefable</td>
+                            <td>190</td>
+                            <td>178</td>
+                            <td>178</td>
+                        </tr>
+                        <tr>
+                            <td>37</td>
+                            <td>Vulpix</td>
+                            <td>76</td>
+                            <td>106</td>
+                            <td>118</td>
+                        </tr>
+                        <tr>
+                            <td>38</td>
+                            <td>Ninetales</td>
+                            <td>146</td>
+                            <td>176</td>
+                            <td>194</td>
+                        </tr>
+                        <tr>
+                            <td>39</td>
+                            <td>Jigglypuff</td>
+                            <td>230</td>
+                            <td>98</td>
+                            <td>54</td>
+                        </tr>
+                        <tr>
+                            <td>40</td>
+                            <td>Wigglytuff</td>
+                            <td>280</td>
+                            <td>168</td>
+                            <td>108</td>
+                        </tr>
+                        <tr>
+                            <td>41</td>
+                            <td>Zubat</td>
+                            <td>80</td>
+                            <td>88</td>
+                            <td>90</td>
+                        </tr>
+                        <tr>
+                            <td>42</td>
+                            <td>Golbat</td>
+                            <td>150</td>
+                            <td>164</td>
+                            <td>164</td>
+                        </tr>
+                        <tr>
+                            <td>43</td>
+                            <td>Oddish</td>
+                            <td>90</td>
+                            <td>134</td>
+                            <td>130</td>
+                        </tr>
+                        <tr>
+                            <td>44</td>
+                            <td>Gloom</td>
+                            <td>120</td>
+                            <td>162</td>
+                            <td>158</td>
+                        </tr>
+                        <tr>
+                            <td>45</td>
+                            <td>Vileplume</td>
+                            <td>150</td>
+                            <td>202</td>
+                            <td>190</td>
+                        </tr>
+                        <tr>
+                            <td>46</td>
+                            <td>Paras</td>
+                            <td>70</td>
+                            <td>122</td>
+                            <td>120</td>
+                        </tr>
+                        <tr>
+                            <td>47</td>
+                            <td>Parasect</td>
+                            <td>120</td>
+                            <td>162</td>
+                            <td>170</td>
+                        </tr>
+                        <tr>
+                            <td>48</td>
+                            <td>Venonat</td>
+                            <td>120</td>
+                            <td>108</td>
+                            <td>118</td>
+                        </tr>
+                        <tr>
+                            <td>49</td>
+                            <td>Venomoth</td>
+                            <td>140</td>
+                            <td>172</td>
+                            <td>154</td>
+                        </tr>
+                        <tr>
+                            <td>50</td>
+                            <td>Diglett</td>
+                            <td>20</td>
+                            <td>108</td>
+                            <td>86</td>
+                        </tr>
+                        <tr>
+                            <td>51</td>
+                            <td>Dugtrio</td>
+                            <td>70</td>
+                            <td>148</td>
+                            <td>140</td>
+                        </tr>
+                        <tr>
+                            <td>52</td>
+                            <td>Meowth</td>
+                            <td>80</td>
+                            <td>104</td>
+                            <td>94</td>
+                        </tr>
+                        <tr>
+                            <td>53</td>
+                            <td>Persian</td>
+                            <td>130</td>
+                            <td>156</td>
+                            <td>146</td>
+                        </tr>
+                        <tr>
+                            <td>54</td>
+                            <td>Psyduck</td>
+                            <td>100</td>
+                            <td>132</td>
+                            <td>112</td>
+                        </tr>
+                        <tr>
+                            <td>55</td>
+                            <td>Golduck</td>
+                            <td>160</td>
+                            <td>194</td>
+                            <td>176</td>
+                        </tr>
+                        <tr>
+                            <td>56</td>
+                            <td>Mankey</td>
+                            <td>80</td>
+                            <td>122</td>
+                            <td>96</td>
+                        </tr>
+                        <tr>
+                            <td>57</td>
+                            <td>Primeape</td>
+                            <td>130</td>
+                            <td>178</td>
+                            <td>150</td>
+                        </tr>
+                        <tr>
+                            <td>58</td>
+                            <td>Growlithe</td>
+                            <td>110</td>
+                            <td>156</td>
+                            <td>110</td>
+                        </tr>
+                        <tr>
+                            <td>59</td>
+                            <td>Arcanine</td>
+                            <td>180</td>
+                            <td>230</td>
+                            <td>180</td>
+                        </tr>
+                        <tr>
+                            <td>60</td>
+                            <td>Poliwag</td>
+                            <td>80</td>
+                            <td>108</td>
+                            <td>98</td>
+                        </tr>
+                        <tr>
+                            <td>61</td>
+                            <td>Poliwhirl</td>
+                            <td>130</td>
+                            <td>132</td>
+                            <td>132</td>
+                        </tr>
+                        <tr>
+                            <td>62</td>
+                            <td>Poliwrath</td>
+                            <td>180</td>
+                            <td>180</td>
+                            <td>202</td>
+                        </tr>
+                        <tr>
+                            <td>63</td>
+                            <td>Abra</td>
+                            <td>50</td>
+                            <td>110</td>
+                            <td>76</td>
+                        </tr>
+                        <tr>
+                            <td>64</td>
+                            <td>Kadabra</td>
+                            <td>80</td>
+                            <td>150</td>
+                            <td>112</td>
+                        </tr>
+                        <tr>
+                            <td>65</td>
+                            <td>Alakazam</td>
+                            <td>110</td>
+                            <td>186</td>
+                            <td>152</td>
+                        </tr>
+                        <tr>
+                            <td>66</td>
+                            <td>Machop</td>
+                            <td>140</td>
+                            <td>118</td>
+                            <td>96</td>
+                        </tr>
+                        <tr>
+                            <td>67</td>
+                            <td>Machoke</td>
+                            <td>160</td>
+                            <td>154</td>
+                            <td>144</td>
+                        </tr>
+                        <tr>
+                            <td>68</td>
+                            <td>Machamp</td>
+                            <td>180</td>
+                            <td>198</td>
+                            <td>180</td>
+                        </tr>
+                        <tr>
+                            <td>69</td>
+                            <td>Bellsprout</td>
+                            <td>100</td>
+                            <td>158</td>
+                            <td>78</td>
+                        </tr>
+                        <tr>
+                            <td>70</td>
+                            <td>Weepinbell</td>
+                            <td>130</td>
+                            <td>190</td>
+                            <td>110</td>
+                        </tr>
+                        <tr>
+                            <td>71</td>
+                            <td>Victreebel</td>
+                            <td>160</td>
+                            <td>222</td>
+                            <td>152</td>
+                        </tr>
+                        <tr>
+                            <td>72</td>
+                            <td>Tentacool</td>
+                            <td>80</td>
+                            <td>106</td>
+                            <td>136</td>
+                        </tr>
+                        <tr>
+                            <td>73</td>
+                            <td>Tentacruel</td>
+                            <td>160</td>
+                            <td>170</td>
+                            <td>196</td>
+                        </tr>
+                        <tr>
+                            <td>74</td>
+                            <td>Geodude</td>
+                            <td>80</td>
+                            <td>106</td>
+                            <td>118</td>
+                        </tr>
+                        <tr>
+                            <td>75</td>
+                            <td>Graveler</td>
+                            <td>110</td>
+                            <td>142</td>
+                            <td>156</td>
+                        </tr>
+                        <tr>
+                            <td>76</td>
+                            <td>Golem</td>
+                            <td>160</td>
+                            <td>176</td>
+                            <td>198</td>
+                        </tr>
+                        <tr>
+                            <td>77</td>
+                            <td>Ponyta</td>
+                            <td>100</td>
+                            <td>168</td>
+                            <td>138</td>
+                        </tr>
+                        <tr>
+                            <td>78</td>
+                            <td>Rapidash</td>
+                            <td>130</td>
+                            <td>200</td>
+                            <td>170</td>
+                        </tr>
+                        <tr>
+                            <td>79</td>
+                            <td>Slowpoke</td>
+                            <td>180</td>
+                            <td>110</td>
+                            <td>110</td>
+                        </tr>
+                        <tr>
+                            <td>80</td>
+                            <td>Slowbro</td>
+                            <td>190</td>
+                            <td>184</td>
+                            <td>198</td>
+                        </tr>
+                        <tr>
+                            <td>81</td>
+                            <td>Magnemite</td>
+                            <td>50</td>
+                            <td>128</td>
+                            <td>138</td>
+                        </tr>
+                        <tr>
+                            <td>82</td>
+                            <td>Magneton</td>
+                            <td>100</td>
+                            <td>186</td>
+                            <td>180</td>
+                        </tr>
+                        <tr>
+                            <td>83</td>
+                            <td>Farfetchd</td>
+                            <td>104</td>
+                            <td>138</td>
+                            <td>132</td>
+                        </tr>
+                        <tr>
+                            <td>84</td>
+                            <td>Doduo</td>
+                            <td>70</td>
+                            <td>126</td>
+                            <td>96</td>
+                        </tr>
+                        <tr>
+                            <td>85</td>
+                            <td>Dodrio</td>
+                            <td>120</td>
+                            <td>182</td>
+                            <td>150</td>
+                        </tr>
+                        <tr>
+                            <td>86</td>
+                            <td>Seel</td>
+                            <td>130</td>
+                            <td>104</td>
+                            <td>138</td>
+                        </tr>
+                        <tr>
+                            <td>87</td>
+                            <td>Dewgong</td>
+                            <td>180</td>
+                            <td>156</td>
+                            <td>192</td>
+                        </tr>
+                        <tr>
+                            <td>88</td>
+                            <td>Grimer</td>
+                            <td>160</td>
+                            <td>124</td>
+                            <td>110</td>
+                        </tr>
+                        <tr>
+                            <td>89</td>
+                            <td>Muk</td>
+                            <td>210</td>
+                            <td>180</td>
+                            <td>188</td>
+                        </tr>
+                        <tr>
+                            <td>90</td>
+                            <td>Shellder</td>
+                            <td>60</td>
+                            <td>120</td>
+                            <td>112</td>
+                        </tr>
+                        <tr>
+                            <td>91</td>
+                            <td>Cloyster</td>
+                            <td>100</td>
+                            <td>196</td>
+                            <td>196</td>
+                        </tr>
+                        <tr>
+                            <td>92</td>
+                            <td>Gastly</td>
+                            <td>60</td>
+                            <td>136</td>
+                            <td>82</td>
+                        </tr>
+                        <tr>
+                            <td>93</td>
+                            <td>Haunter</td>
+                            <td>90</td>
+                            <td>172</td>
+                            <td>118</td>
+                        </tr>
+                        <tr>
+                            <td>94</td>
+                            <td>Gengar</td>
+                            <td>120</td>
+                            <td>204</td>
+                            <td>156</td>
+                        </tr>
+                        <tr>
+                            <td>95</td>
+                            <td>Onix</td>
+                            <td>70</td>
+                            <td>90</td>
+                            <td>186</td>
+                        </tr>
+                        <tr>
+                            <td>96</td>
+                            <td>Drowzee</td>
+                            <td>120</td>
+                            <td>104</td>
+                            <td>140</td>
+                        </tr>
+                        <tr>
+                            <td>97</td>
+                            <td>Hypno</td>
+                            <td>170</td>
+                            <td>162</td>
+                            <td>196</td>
+                        </tr>
+                        <tr>
+                            <td>98</td>
+                            <td>Krabby</td>
+                            <td>60</td>
+                            <td>116</td>
+                            <td>110</td>
+                        </tr>
+                        <tr>
+                            <td>99</td>
+                            <td>Kingler</td>
+                            <td>110</td>
+                            <td>178</td>
+                            <td>168</td>
+                        </tr>
+                        <tr>
+                            <td>100</td>
+                            <td>Voltorb</td>
+                            <td>80</td>
+                            <td>102</td>
+                            <td>124</td>
+                        </tr>
+                        <tr>
+                            <td>101</td>
+                            <td>Electrode</td>
+                            <td>120</td>
+                            <td>150</td>
+                            <td>174</td>
+                        </tr>
+                        <tr>
+                            <td>102</td>
+                            <td>Exeggcute</td>
+                            <td>120</td>
+                            <td>110</td>
+                            <td>132</td>
+                        </tr>
+                        <tr>
+                            <td>103</td>
+                            <td>Exeggutor</td>
+                            <td>190</td>
+                            <td>232</td>
+                            <td>164</td>
+                        </tr>
+                        <tr>
+                            <td>104</td>
+                            <td>Cubone</td>
+                            <td>100</td>
+                            <td>102</td>
+                            <td>150</td>
+                        </tr>
+                        <tr>
+                            <td>105</td>
+                            <td>Marowak</td>
+                            <td>120</td>
+                            <td>140</td>
+                            <td>202</td>
+                        </tr>
+                        <tr>
+                            <td>106</td>
+                            <td>Hitmonlee</td>
+                            <td>100</td>
+                            <td>148</td>
+                            <td>172</td>
+                        </tr>
+                        <tr>
+                            <td>107</td>
+                            <td>Hitmonchan</td>
+                            <td>100</td>
+                            <td>138</td>
+                            <td>204</td>
+                        </tr>
+                        <tr>
+                            <td>108</td>
+                            <td>Lickitung</td>
+                            <td>180</td>
+                            <td>126</td>
+                            <td>160</td>
+                        </tr>
+                        <tr>
+                            <td>109</td>
+                            <td>Koffing</td>
+                            <td>80</td>
+                            <td>136</td>
+                            <td>142</td>
+                        </tr>
+                        <tr>
+                            <td>110</td>
+                            <td>Weezing</td>
+                            <td>130</td>
+                            <td>190</td>
+                            <td>198</td>
+                        </tr>
+                        <tr>
+                            <td>111</td>
+                            <td>Rhyhorn</td>
+                            <td>160</td>
+                            <td>110</td>
+                            <td>116</td>
+                        </tr>
+                        <tr>
+                            <td>112</td>
+                            <td>Rhydon</td>
+                            <td>210</td>
+                            <td>166</td>
+                            <td>160</td>
+                        </tr>
+                        <tr>
+                            <td>113</td>
+                            <td>Chansey</td>
+                            <td>500</td>
+                            <td>40</td>
+                            <td>60</td>
+                        </tr>
+                        <tr>
+                            <td>114</td>
+                            <td>Tangela</td>
+                            <td>130</td>
+                            <td>164</td>
+                            <td>152</td>
+                        </tr>
+                        <tr>
+                            <td>115</td>
+                            <td>Kangaskhan</td>
+                            <td>210</td>
+                            <td>142</td>
+                            <td>178</td>
+                        </tr>
+                        <tr>
+                            <td>116</td>
+                            <td>Horsea</td>
+                            <td>60</td>
+                            <td>122</td>
+                            <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>117</td>
+                            <td>Seadra</td>
+                            <td>110</td>
+                            <td>176</td>
+                            <td>150</td>
+                        </tr>
+                        <tr>
+                            <td>118</td>
+                            <td>Goldeen</td>
+                            <td>90</td>
+                            <td>112</td>
+                            <td>126</td>
+                        </tr>
+                        <tr>
+                            <td>119</td>
+                            <td>Seaking</td>
+                            <td>160</td>
+                            <td>172</td>
+                            <td>160</td>
+                        </tr>
+                        <tr>
+                            <td>120</td>
+                            <td>Staryu</td>
+                            <td>60</td>
+                            <td>130</td>
+                            <td>128</td>
+                        </tr>
+                        <tr>
+                            <td>121</td>
+                            <td>Starmie</td>
+                            <td>120</td>
+                            <td>194</td>
+                            <td>192</td>
+                        </tr>
+                        <tr>
+                            <td>122</td>
+                            <td>Mime</td>
+                            <td>80</td>
+                            <td>154</td>
+                            <td>196</td>
+                        </tr>
+                        <tr>
+                            <td>123</td>
+                            <td>Scyther</td>
+                            <td>140</td>
+                            <td>176</td>
+                            <td>180</td>
+                        </tr>
+                        <tr>
+                            <td>124</td>
+                            <td>Jynx</td>
+                            <td>130</td>
+                            <td>172</td>
+                            <td>134</td>
+                        </tr>
+                        <tr>
+                            <td>125</td>
+                            <td>Electabuzz</td>
+                            <td>130</td>
+                            <td>198</td>
+                            <td>160</td>
+                        </tr>
+                        <tr>
+                            <td>126</td>
+                            <td>Magmar</td>
+                            <td>130</td>
+                            <td>214</td>
+                            <td>158</td>
+                        </tr>
+                        <tr>
+                            <td>127</td>
+                            <td>Pinsir</td>
+                            <td>130</td>
+                            <td>184</td>
+                            <td>186</td>
+                        </tr>
+                        <tr>
+                            <td>128</td>
+                            <td>Tauros</td>
+                            <td>150</td>
+                            <td>148</td>
+                            <td>184</td>
+                        </tr>
+                        <tr>
+                            <td>129</td>
+                            <td>Magikarp</td>
+                            <td>40</td>
+                            <td>42</td>
+                            <td>84</td>
+                        </tr>
+                        <tr>
+                            <td>130</td>
+                            <td>Gyarados</td>
+                            <td>190</td>
+                            <td>192</td>
+                            <td>196</td>
+                        </tr>
+                        <tr>
+                            <td>131</td>
+                            <td>Lapras</td>
+                            <td>260</td>
+                            <td>186</td>
+                            <td>190</td>
+                        </tr>
+                        <tr>
+                            <td>132</td>
+                            <td>Ditto</td>
+                            <td>96</td>
+                            <td>110</td>
+                            <td>110</td>
+                        </tr>
+                        <tr>
+                            <td>133</td>
+                            <td>Eevee</td>
+                            <td>110</td>
+                            <td>114</td>
+                            <td>128</td>
+                        </tr>
+                        <tr>
+                            <td>134</td>
+                            <td>Vaporeon</td>
+                            <td>260</td>
+                            <td>186</td>
+                            <td>168</td>
+                        </tr>
+                        <tr>
+                            <td>135</td>
+                            <td>Jolteon</td>
+                            <td>130</td>
+                            <td>192</td>
+                            <td>174</td>
+                        </tr>
+                        <tr>
+                            <td>136</td>
+                            <td>Flareon</td>
+                            <td>130</td>
+                            <td>238</td>
+                            <td>178</td>
+                        </tr>
+                        <tr>
+                            <td>137</td>
+                            <td>Porygon</td>
+                            <td>130</td>
+                            <td>156</td>
+                            <td>158</td>
+                        </tr>
+                        <tr>
+                            <td>138</td>
+                            <td>Omanyte</td>
+                            <td>70</td>
+                            <td>132</td>
+                            <td>160</td>
+                        </tr>
+                        <tr>
+                            <td>139</td>
+                            <td>Omastar</td>
+                            <td>140</td>
+                            <td>180</td>
+                            <td>202</td>
+                        </tr>
+                        <tr>
+                            <td>140</td>
+                            <td>Kabuto</td>
+                            <td>60</td>
+                            <td>148</td>
+                            <td>142</td>
+                        </tr>
+                        <tr>
+                            <td>141</td>
+                            <td>Kabutops</td>
+                            <td>120</td>
+                            <td>190</td>
+                            <td>190</td>
+                        </tr>
+                        <tr>
+                            <td>142</td>
+                            <td>Aerodactyl</td>
+                            <td>160</td>
+                            <td>182</td>
+                            <td>162</td>
+                        </tr>
+                        <tr>
+                            <td>143</td>
+                            <td>Snorlax</td>
+                            <td>320</td>
+                            <td>180</td>
+                            <td>180</td>
+                        </tr>
+                        <tr>
+                            <td>144</td>
+                            <td>Articuno</td>
+                            <td>180</td>
+                            <td>198</td>
+                            <td>242</td>
+                        </tr>
+                        <tr>
+                            <td>145</td>
+                            <td>Zapdos</td>
+                            <td>180</td>
+                            <td>232</td>
+                            <td>194</td>
+                        </tr>
+                        <tr>
+                            <td>146</td>
+                            <td>Moltres</td>
+                            <td>180</td>
+                            <td>242</td>
+                            <td>194</td>
+                        </tr>
+                        <tr>
+                            <td>147</td>
+                            <td>Dratini</td>
+                            <td>82</td>
+                            <td>128</td>
+                            <td>110</td>
+                        </tr>
+                        <tr>
+                            <td>148</td>
+                            <td>Dragonair</td>
+                            <td>122</td>
+                            <td>170</td>
+                            <td>152</td>
+                        </tr>
+                        <tr>
+                            <td>149</td>
+                            <td>Dragonite</td>
+                            <td>182</td>
+                            <td>250</td>
+                            <td>212</td>
+                        </tr>
+                        <tr>
+                            <td>150</td>
+                            <td>Mewtwo</td>
+                            <td>212</td>
+                            <td>284</td>
+                            <td>202</td>
+                        </tr>
+                        <tr>
+                            <td>151</td>
+                            <td>Mew</td>
+                            <td>200</td>
+                            <td>220</td>
+                            <td>220</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            <h2>How Pokémon Go IV Calculators Works?</h2>
+            <p>IV Calculator is one of the most popular tools among Pokémon Go players and that’s the main reason why we have so many of them already. As far as we know most of the <strong>Pokémon IV Calculators</strong> are using the same Pokémon Go <a href="https://gist.github.com/anonymous/540700108cf0f051e11f70273e9e2590">stats</a> as well as reversed <a href="https://www.reddit.com/r/pokemongodev/comments/4t7xb4/exact_cp_formula_from_stats_and_cpm_and_an_update/">formulas</a> (shared by <a href="https://www.reddit.com/user/__isitin__">__isitin__</a>):</p>
+            <blockquote>
+                <p>CP = (BaseAtk + IndAtk) * (BaseDef + IndDef)^0.5 * (BaseSta + IndSta)^0.5 * (ECpM)^2 / 10</p>
+                <p>HP = ECpM * (BaseSta + IndSta)</p>
+            </blockquote>
+            <p>Too complicated to get the reversed formula? Use Pokémon IV Calculator on the top of this page! By determining which of you current Pokémon has the highest IV, you’ll know which ones are worth keeping and which ones should be immediately sent to Professor Willow.</p>
+            <h2>How to Use Pokémon Go IV Calculator?</h2>
+            <p>We have tried to make our IV Calculator as easy to use as possible. Yet, here’s a short how to use guide if you find it difficult to use:</p>
+            <ol>
+                <li>Choose Pokémon from the drop down list.</li>
+                <li>Set Trainer level.</li>
+                <li>Set Pokémon level by changin the Arch position over Pokémon on the right (below if using mobile device). Please double check Stardust and Candy values (adjust Arch position to correct).</li>
+                <li>Set Pokémon CP.</li>
+                <li>Set Pokémon HP.</li>
+                <li>Press <strong>Calculate IV</strong> button and you will see your Pokémon IV!</li>
+            </ol>
+            <p>It’s easy as that. Just in case you have more questions, please check <a href="#faq">FAQ</a>FAQ section or leave your question in the comments section below.</p>
+            <img src="/assets/img/pokemon-iv-calculator.png" alt="pokemon go iv calculator" class="img-responsive"/><br>
+            <h2 id="faq">Frequently Asked Question</h2>
+            <ol>
+                <li>What are the best possible IVs?<br>100% for all the categories, but that Pokémon might not be easy to find, though.
+                </li>
+                <li>How accurate is this Pokémon IV calculator?<br>It will be accurate in most cases, yet in some cases it may need some improvements.
+                </li>
+                <li>I have only one Pokémon of that type with very low Individual Values. Should I keep it?<br>We would suggest keeping it until you find a better one.
+                </li>
+                <li>Why is Pokémon IV important?<br>Pokémon IVs determine its strength and future potential after fully leveled / evolved. Without knowing your Pokémon IV you can mistakenly send super strong Pokémon to Professor Willow.
+                </li>
+                <li>How important are IVs?<br>IVs can make up to 20% difference in attack, defense, or stamina.
+                </li>
+                <li>How to find out my Pokémon IVs?<br>IVs are not visible in your Pokémon Go game. You can only calculate them using Pokémon IV Calculator. You need to know your Trainer Level, Pokémon Level (Arch Position), Pokémon CP and HP.
+                </li>
+                <li>Does Pokémon IVs change during evolution or power up process?<br>No, Pokémon IV stays the same when evolving or powering up your Pokémon.
+                </li>
+            </ol>
+            <p>For questions, comments and suggestions leave a message in the comments section below.</p>
+            <div class="fb-comments" data-numposts="5"></div>
+		    <h2>Comments</h2>
+
+    <div class="panel-group" id="comments">
+                    <div class="panel panel-default">
+                <div class="panel-heading"><span>miqueias </span></div>
+                <div class="panel-footer"><span><small>February 26, 2017</small></span></div>
+                <div class="panel-body">santos 
+</div>
+            </div>
+                        <div class="panel panel-default">
+                <div class="panel-heading"><span>mohammed</span></div>
+                <div class="panel-footer"><span><small>February 09, 2017</small></span></div>
+                <div class="panel-body">belig</div>
+            </div>
+                        <div class="panel panel-default">
+                <div class="panel-heading"><span>SK</span></div>
+                <div class="panel-footer"><span><small>January 11, 2017</small></span></div>
+                <div class="panel-body">Me</div>
+            </div>
+                        <div class="panel panel-default">
+                <div class="panel-heading"><span>Ana laura</span></div>
+                <div class="panel-footer"><span><small>November 27, 2016</small></span></div>
+                <div class="panel-body">Rodrigues</div>
+            </div>
+                        <div class="panel panel-default">
+                <div class="panel-heading"><span>Anonymous</span></div>
+                <div class="panel-footer"><span><small>November 26, 2016</small></span></div>
+                <div class="panel-body">Has this calculator been updated with the recent CP changes??</div>
+            </div>
+                        <div class="panel panel-default">
+                <div class="panel-heading"><span>jim berry</span></div>
+                <div class="panel-footer"><span><small>November 24, 2016</small></span></div>
+                <div class="panel-body">Any timetable for updating to take into consideration the recent CP changes?   Thanks.</div>
+            </div>
+                        <div class="panel panel-default">
+                <div class="panel-heading"><span>R Breton</span></div>
+                <div class="panel-footer"><span><small>November 23, 2016</small></span></div>
+                <div class="panel-body">Seems to be broken due to the new CP values updated by Niantic.</div>
+            </div>
+                        <div class="panel panel-default">
+                <div class="panel-heading"><span>Sebastian</span></div>
+                <div class="panel-footer"><span><small>November 17, 2016</small></span></div>
+                <div class="panel-body">Terrible no funciona esto </div>
+            </div>
+                        <div class="panel panel-default">
+                <div class="panel-heading"><span>ggyyk</span></div>
+                <div class="panel-footer"><span><small>November 09, 2016</small></span></div>
+                <div class="panel-body">Yes</div>
+            </div>
+                        <div class="panel panel-default">
+                <div class="panel-heading"><span>awd</span></div>
+                <div class="panel-footer"><span><small>October 06, 2016</small></span></div>
+                <div class="panel-body">alert(1);</div>
+            </div>
+                </div>
+            <a href="#load" id="load">Load more</a>
+            <br>
+    <input type="hidden" id="ids" value="1005, 964, 847, 605, 584, 565, 553, 515, 459, 220">
+    <div id="commentx">
+        <form class="form-horizontal" role="form" method="post" id="addcomment">
+            <div class="form-group">
+                <label for="name" class="col-sm-3 control-label">Your Name</label>
+
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="name" placeholder="First & Last Name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="message" class="col-sm-3 control-label">Your Comment</label>
+
+                <div class="col-sm-9">
+                    <textarea class="form-control" rows="4" id="comment"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-9 col-sm-offset-3">
+                    <input id="submit" name="submit" type="submit" value="Send" class="btn btn-primary">
+                    <small><span id="error"></span></small>
+                </div>
+            </div>
+        </form>
+    </div>
+<script>
+
+    var oper = 0;
+    $("#addcomment").submit(function (event) {
+        if (oper == 0) {
+            oper = 1;
+            $.post("/includes/comment.php", {
+                address: '/iv-calculator/',
+                name: $("#name").val(),
+                comment: $("#comment").val(),
+                type: $("select:first").val(),
+                action: 'add'
+            })
+                .done(function (data) {
+                    data = jQuery.parseJSON(data);
+                    if (data.error == '0') {
+                        $('#ids').val($('#ids').val() + data.ids);
+                        $("#comments").prepend(data.comments);
+                        document.getElementById('commentx').innerHTML = "<b><label style=\"margin-right:-16%;float:right;\" class=\"col-sm-6 control-label\">Thank you for your comment.</label></b>";
+                    }
+                    else {
+                        $("#error").text(data.error);
+                    }
+                    oper = 0;
+                });
+        }
+        event.preventDefault();
+
+    });
+    $("#load").click(function () {
+        $.post("/includes/comment.php", {address: '/iv-calculator/', ids: $('#ids').val(), action: 'load'})
+            .done(function (data) {
+                data = jQuery.parseJSON(data);
+                if (data.ar == '1') {
+                    $("#load").hide();
+                }
+                $("#comments").append(data.comments);
+                $('#ids').val($('#ids').val() + data.ids);
+            });
+        return false;
+    });
+</script>
+        </div>
+        <div class="col-lg-4">
+		
+		   	<div class="adsense">			
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- pokego-sidebar -->
+			<ins class="adsbygoogle"
+				 style="display:block"
+				 data-ad-client="ca-pub-9551900711934655"
+				 data-ad-slot="3967160878"
+				 data-ad-format="auto"></ins>
+			<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			</div> 
+		
+            <div class="fb-page" data-href="https://www.facebook.com/Pok%C3%A9go-164686687263642/" data-tabs="timeline"
+                 data-small-header="false" data-adapt-container-width="true" data-hide-cover="false"
+                 data-show-facepile="true">
+                <blockquote cite="https://www.facebook.com/Pok%C3%A9go-164686687263642/" class="fb-xfbml-parse-ignore">
+                    <a href="https://www.facebook.com/Pok%C3%A9go-164686687263642/">Pokégo</a></blockquote>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <p><a href="http://www.pokego.org/">PokeGo.org</a> is dedicated to all news, updates and tips concerning Pokémon Go game. It’s operated by fans. We are not Nintendo / Creatures Inc. / GAME FREAK inc. or Pokémon Go. If you have any questions, comments or suggestions please <a href="/cdn-cgi/l/email-protection#9aeaf5f1fffdf5b4f5e8fddafdf7fbf3f6b4f9f5f7">Contact Us</a>. You can also find us on <a href="https://www.facebook.com/pokemongocalculators/">Facebook</a>.</p>
+				<p><a href="http://www.pokego.org/terms-privacy/">Terms of Use and Privacy Policy</a></p>				
+            </div>
+            <div class="col-lg-6">
+                <p>Pokémon © 2002–2016 Pokémon. © 1995–2016 Nintendo / Creatures Inc. / GAME FREAK inc. TM, ® and Pokémon character names are trademarks of Nintendo. No copyright or trademark infringement is intended in using Pokémon content on Pokego.org</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/assets/js/bootstrap.min.js"></script>
+<script>/* <![CDATA[ */(function(d,s,a,i,j,r,l,m,t){try{l=d.getElementsByTagName('a');t=d.createElement('textarea');for(i=0;l.length-i;i++){try{a=l[i].href;s=a.indexOf('/cdn-cgi/l/email-protection');m=a.length;if(a&&s>-1&&m>28){j=28+s;s='';if(j<m){r='0x'+a.substr(j,2)|0;for(j+=2;j<m&&a.charAt(j)!='X';j+=2)s+='%'+('0'+('0x'+a.substr(j,2)^r).toString(16)).slice(-2);j++;s=decodeURIComponent(s)+a.substr(j,m-j)}t.innerHTML=s.replace(/</g,'&lt;').replace(/\>/g,'&gt;');l[i].href='mailto:'+t.value}}catch(e){}}}catch(e){}})(document);/* ]]> */</script></body>
+</html>

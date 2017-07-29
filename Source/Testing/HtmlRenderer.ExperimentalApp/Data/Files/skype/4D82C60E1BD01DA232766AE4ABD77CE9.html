@@ -1,0 +1,1474 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="p:domain_verify" content="837a6eba3027451d94420a35e35abfd1" />
+	<title>  Run Skype on Raspberry Pi</title>
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="https://eltechs.com/wp-content/themes/eltechs/style.css" />
+	<link rel="stylesheet" type="text/css" href="https://eltechs.com/wp-content/themes/eltechs/css/tooltipster.css" />
+	<link rel="stylesheet" type="text/css" href="https://eltechs.com/wp-content/themes/eltechs/css/themes/tooltipster-light.css" />
+	<link rel="stylesheet" type="text/css" href="https://eltechs.com/wp-content/themes/eltechs/reset.css" />
+	<link rel="stylesheet"type="text/css" href="https://eltechs.com/wp-content/themes/eltechs/superfish.css" />
+	
+	<script type="text/javascript" src="https://eltechs.com/wp-content/themes/eltechs/js/jquery-1.8.0.min.js"></script>
+	<script type="text/javascript" src="https://eltechs.com/wp-content/themes/eltechs/js/slides.min.jquery.js"></script>
+	<script type="text/javascript" src="https://eltechs.com/wp-content/themes/eltechs/js/jquery.animate-colors-min.js"></script>
+	<script type="text/javascript" src="https://eltechs.com/wp-content/themes/eltechs/js/jquery.tooltipster.js"></script>
+	<script type="text/javascript" src="https://eltechs.com/wp-content/themes/eltechs/js/superfish.js"></script>
+	<script type="text/javascript" src="https://eltechs.com/wp-content/themes/eltechs/js/hoverIntent.js"></script>
+	
+	<script type="text/javascript">
+		function createCookie(name,value,days) {
+			if (days) {
+				var date = new Date();
+				date.setTime(date.getTime()+(days*24*60*60*1000));
+				var expires = "; expires="+date.toGMTString();
+			}
+			else var expires = "";
+			document.cookie = name+"="+value+expires+"; path=/";
+		}
+
+		function readCookie(name) {
+			var nameEQ = name + "=";
+			var ca = document.cookie.split(';');
+			for(var i=0;i < ca.length;i++) {
+				var c = ca[i];
+				while (c.charAt(0)==' ') c = c.substring(1,c.length);
+				if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+			}
+			return null;
+		}
+
+		function eraseCookie(name) {
+			createCookie(name,"",-1);
+		}
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+	</script>
+
+<script type="text/javascript">
+function checkEmail(eml)
+{
+  var checkEmailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if ( eml == '' )
+  {
+    return false;
+  }
+  return checkEmailRegExp.test(eml);
+}
+</script>
+	
+	<script type="text/javascript">
+		var userlangX=readCookie('ppkcookie');
+				function initialize(){
+		createCookie('ppkcookie','ru',7);
+		var userlang=readCookie('ppkcookie');
+		}
+		function initialize2(){
+		createCookie('ppkcookie','en',7);
+		var userlang=readCookie('ppkcookie');
+		}
+	</script>
+
+	<script type="text/javascript">	
+	$(document).ready(function(){ 
+		
+		$('.lang-ru a').click(function() {
+			initialize();
+		})
+		$('.lang-en a').click(function() {
+			initialize2();
+		})
+	    
+		$('a[href^="mailto:"]').each(function() {
+		  this.href = this.href.replace('x', '@').replace('z', '.');
+		  this.innerHTML = this.href.replace('mailto:', '');
+		 });
+	
+		$('ul.sf-menu').superfish({
+			delay: 1,
+			animation:   {height:'show'}, 
+			animationOut:   {height:'hide'},
+			speed: 100,
+			speedOut: 100
+		});
+	
+		$('.tooltip').tooltipster({
+		theme: '.tooltipster-light'
+		});
+		  
+		$("ul li:first-child").addClass("alpha_item");
+		$("ul li:last-child").addClass("omega_item");
+		
+		$(".button").hover(function() {
+        $(this).animate({backgroundColor:'#737373'}, 100);
+        }, function() {
+        $(this).animate({backgroundColor:'#1f9bd7'}, 100);
+		});
+		$(".buttonred").hover(function() {
+        $(this).animate({backgroundColor:'#737373'}, 100);
+        }, function() {
+        $(this).animate({backgroundColor:'#ba1d1d'}, 100);
+		});
+
+		$(".onethird").hover(function() {
+        $(".icon-img", $(this)).animate({backgroundColor:'#1f9bd7'}, "slow");
+        }, function() {
+         $(".icon-img", $(this)).animate({backgroundColor:'#b9b9b9'}, "slow");
+		});
+		
+
+    }); 
+	</script>	
+	<script type="text/javascript">
+		$(function(){
+			$('#slides').slides({
+				 play: 15000,
+				pause: 2500,
+				hoverPause: true,
+				preload: true,
+				generateNextPrev: true
+			});
+		});
+	</script>
+	
+	<!--[if IE 6 ]><link rel="stylesheet" type="text/css" href="https://eltechs.com/wp-content/themes/eltechs/ie6.css" /><![endif]-->
+	<!--[if IE 7 ]><link rel="stylesheet" type="text/css" href="https://eltechs.com/wp-content/themes/eltechs/ie7.css" /><![endif]-->
+	<!--[if IE 8 ]><link rel="stylesheet" type="text/css" href="https://eltechs.com/wp-content/themes/eltechs/ie8.css" /><![endif]-->
+		
+
+
+	<style type="text/css">
+	.page-id-150 #singlehead h1 
+		{
+			
+		}
+	</style>	
+
+
+	
+	<link rel='dns-prefetch' href='//eltechs.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Eltechs ExaGear &raquo; Feed" href="https://eltechs.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Eltechs ExaGear &raquo; Comments Feed" href="https://eltechs.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Eltechs ExaGear &raquo; Run Skype on Raspberry Pi Comments Feed" href="https://eltechs.com/run-skype-on-raspberry-pi/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/eltechs.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.7.5"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),!(j.toDataURL().length<3e3)&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,65039,8205,55356,57096),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,55356,57096),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55357,56425,55356,57341,8205,55357,56507),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55357,56425,55356,57341,55357,56507),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='contact-form-7-css'  href='https://eltechs.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=4.7' type='text/css' media='all' />
+<link rel='stylesheet' id='geotarget-css'  href='https://eltechs.com/wp-content/plugins/geotargeting/public/css/geotarget-public.css?ver=1.3' type='text/css' media='all' />
+<link rel='stylesheet' id='lightboxStyle-css'  href='https://eltechs.com/wp-content/plugins/lightbox-plus/css/overtext/colorbox.css?ver=2.6' type='text/css' media='screen' />
+<script type='text/javascript' src='https://eltechs.com/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://eltechs.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript' src='https://eltechs.com/wp-content/plugins/geotargeting/public/js/geotarget-public.js?ver=1.3'></script>
+<script type='text/javascript' src='https://eltechs.com/wp-content/plugins/geotargeting/public/js/ddslick.js?ver=1.3'></script>
+<script type='text/javascript' src='https://eltechs.com/wp-content/plugins/lightbox-plus/js/jquery.colorbox.1.3.32.js?ver=1.3.32'></script>
+<script type='text/javascript' src='https://eltechs.com/wp-content/plugins/lightbox-plus/css/overtext/helper.js?ver=2.6'></script>
+<!-- Lightbox Plus ColorBox v2.6/1.3.32 - 2013.01.24 - Message: 1-->
+<script type="text/javascript">
+jQuery(document).ready(function($){
+  $("a[rel*=lightbox]").colorbox({speed:0,width:false,height:false,innerWidth:false,innerHeight:false,initialWidth:false,initialHeight:false,maxWidth:false,maxHeight:false,scalePhotos:false,opacity:0,preloading:false,current:" {current}  {total}",previous:"",next:"",close:"",overlayClose:false,loop:false,scrolling:false,escKey:false,arrowKey:false,top:false,right:false,bottom:false,left:false});
+  $(".lbp_secondary").colorbox({speed:300,width:"100%",height:"100%",innerWidth:"50%",innerHeight:"50%",initialWidth:"30%",initialHeight:"40%",maxWidth:"90%",maxHeight:"90%",opacity:0.8,iframe:true});
+});
+</script>
+<link rel='https://api.w.org/' href='https://eltechs.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://eltechs.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://eltechs.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Webinar On-Demand: Cross-architecture virtualization solution by Eltechs for running Intel x86 applications on Toradex’s ARM®-based modules' href='https://eltechs.com/webinar-on-demand-cross-architecture-virtualization-solution-by-eltechs-for-running-intel-x86-applications-on-toradexs-arm-based-modules/' />
+<link rel='next' title='Eltechs Engine is used to port Metal Gear Rising: Revengeance on Android' href='https://eltechs.com/eltechs-engine-is-used-to-port-metal-gear-rising-revengeance-on-android/' />
+<meta name="generator" content="WordPress 4.7.5" />
+<link rel="canonical" href="https://eltechs.com/run-skype-on-raspberry-pi/" />
+<link rel='shortlink' href='https://eltechs.com/?p=2194' />
+<link rel="alternate" type="application/json+oembed" href="https://eltechs.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Feltechs.com%2Frun-skype-on-raspberry-pi%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://eltechs.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Feltechs.com%2Frun-skype-on-raspberry-pi%2F&#038;format=xml" />
+
+
+<!-- Plugin: Open external links a new window. Plugin by Kristian Risager Larsen, http://kristianrisagerlarsen.dk . Download it at http://wordpress.org/extend/plugins/open-external-links-in-a-new-window/ -->
+<script type="text/javascript">//<![CDATA[
+	function external_links_in_new_windows_loop() {
+		if (!document.links) {
+			document.links = document.getElementsByTagName('a');
+		}
+		var change_link = false;
+		var force = '';
+		var ignore = '';
+
+		for (var t=0; t<document.links.length; t++) {
+			var all_links = document.links[t];
+			change_link = false;
+			
+			if(document.links[t].hasAttribute('onClick') == false) {
+				// forced if the address starts with http (or also https), but does not link to the current domain
+				if(all_links.href.search(/^http/) != -1 && all_links.href.search('eltechs.com') == -1) {
+					// alert('Changeda '+all_links.href);
+					change_link = true;
+				}
+					
+				if(force != '' && all_links.href.search(force) != -1) {
+					// forced
+					// alert('force '+all_links.href);
+					change_link = true;
+				}
+				
+				if(ignore != '' && all_links.href.search(ignore) != -1) {
+					// alert('ignore '+all_links.href);
+					// ignored
+					change_link = false;
+				}
+
+				if(change_link == true) {
+					// alert('Changed '+all_links.href);
+					document.links[t].setAttribute('onClick', 'javascript:window.open(\''+all_links.href+'\'); return false;');
+					document.links[t].removeAttribute('target');
+				}
+			}
+		}
+	}
+	
+	// Load
+	function external_links_in_new_windows_load(func)
+	{	
+		var oldonload = window.onload;
+		if (typeof window.onload != 'function'){
+			window.onload = func;
+		} else {
+			window.onload = function(){
+				oldonload();
+				func();
+			}
+		}
+	}
+
+	external_links_in_new_windows_load(external_links_in_new_windows_loop);
+	//]]></script>
+
+<script data-cfasync="false" src="//load.sumome.com/" data-sumo-platform="wordpress" data-sumo-site-id="c1739d26f4daecf5c49e083702d5e53e2cb2ba4d2cbc0515ee3f01a9311fec36" async></script><style type="text/css">
+.qtranxs_flag_en {background-image: url(https://eltechs.com/wp-content/plugins/qtranslate/flags/gb.png); background-repeat: no-repeat;}
+.qtranxs_flag_ru {background-image: url(https://eltechs.com/wp-content/plugins/qtranslate/flags/ru.png); background-repeat: no-repeat;}
+</style>
+<link hreflang="en" href="https://eltechs.com/en/run-skype-on-raspberry-pi/" rel="alternate" />
+<link hreflang="ru" href="https://eltechs.com/ru/run-skype-on-raspberry-pi/" rel="alternate" />
+<link hreflang="x-default" href="https://eltechs.com/run-skype-on-raspberry-pi/" rel="alternate" />
+<meta name="generator" content="qTranslate-X 3.4.6.8" />
+<meta name="keywords" content="raspberry pi, skype, exagear desktop, arm, raspberry pi 2, raspbian, raspberry pi 3" />
+<meta name="description" content="How to run Skype on Raspberry Pi 2 and Raspberry Pi 3 using ExaGear Desktop which allows to run x86 apps on Raspberry Pi devices. Step-by-step instruction." />
+		<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+		
+<!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+
+  // Very first landing page
+  var first_landing_page = readCookie("first_landing_page");
+  if ( first_landing_page === null ) {
+    first_landing_page = document.location.pathname;
+    createCookie( "first_landing_page", first_landing_page, 350);
+  }
+  _paq.push(['setCustomDimension', 1, first_landing_page]);
+
+  // Very first source-medium
+  var first_source_medium = readCookie("first_source_medium");
+  if ( first_source_medium === null )  {
+    var source = getParameterByName('utm_source');
+    var medium = getParameterByName('utm_medium');
+    var referrer = document.referrer;
+    if ( source || medium ) {
+      first_source_medium = source + " - " + medium;
+    } else if ( referrer) {
+      referrer_name = referrer.split( '/')[2];
+      if ( referrer_name.split( '.' ).length >= 3 ) {
+        if ( referrer_name.split( '.' )[1] == "google"){
+          referrer_name = "google"
+        }
+      }
+      first_source_medium = referrer_name + " - " + "referrer";
+    } else {
+      first_source_medium = "direct";
+    }
+    createCookie( "first_source_medium", first_source_medium, 350);
+  }
+  _paq.push(['setCustomDimension', 2, first_source_medium]);
+ 
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://an.eltechs.com/";
+    _paq.push(['setTrackerUrl', u+'p']);
+    _paq.push(['setSiteId', '1']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'j'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="https://an.eltechs.com/p?idsite=1" style="border:0;" alt="" /></p></noscript>
+<!-- End Piwik Code -->
+	
+</head>
+<body class="post-template-default single single-post postid-2194 single-format-standard">
+
+<div id="wrapper">
+	<div id="header">
+		<div class="fixwidth clearfix">
+			<div id="logo">
+				<a href="https://eltechs.com" title="Eltechs ExaGear"></a>
+			</div>
+			
+			<div id="lefthead" class="clearfix">
+				<div id="headcontacts">
+					<ul>
+						<li class="headphone"></li>
+						<li class="heademail"><a href="mailto:supportxeltechszcom">supportxeltechszcom</a></li>
+						<li class="headlang">
+<ul class="language-chooser language-chooser-text qtranxs_language_chooser" id="qtranslate-chooser">
+<li class="lang-en active"><a href="https://eltechs.com/en/run-skype-on-raspberry-pi/" hreflang="en" title="En (en)" class="qtranxs_text qtranxs_text_en"><span>En</span></a></li>
+<li class="lang-ru"><a href="https://eltechs.com/ru/run-skype-on-raspberry-pi/" hreflang="ru" title="Ru (ru)" class="qtranxs_text qtranxs_text_ru"><span>Ru</span></a></li>
+</ul><div class="qtranxs_widget_end"></div>
+</li>
+					</ul>
+				</div>
+				
+				<div class="clear"></div>
+				
+				<div id="nav" class="clearfix">			
+					<ul id="menu-tops" class="sf-menu"><li id="menu-item-23" class="home-icon menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-23"><a href="https://eltechs.com/">Eltechs ExaGear</a></li>
+<li id="menu-item-5715" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-5715"><a href="https://eltechs.com/company/">Company</a>
+<ul class="sub-menu">
+	<li id="menu-item-403" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-403"><a rel="nofollow" href="https://eltechs.com/company/about-our-company/">About our company</a></li>
+	<li id="menu-item-36" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-36"><a rel="nofollow" href="https://eltechs.com/company/about-us/">Our team</a></li>
+	<li id="menu-item-35" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-35"><a rel="nofollow" href="https://eltechs.com/company/media-about-us/">Media about us</a></li>
+	<li id="menu-item-34" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-34"><a rel="nofollow" href="https://eltechs.com/company/partners/">Partners</a></li>
+	<li id="menu-item-5748" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5748"><a rel="nofollow" href="https://eltechs.com/company/investors/">Investors</a></li>
+	<li id="menu-item-26" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-26"><a rel="nofollow" href="https://eltechs.com/company/careers/">Careers</a></li>
+	<li id="menu-item-351" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-351"><a rel="nofollow" href="https://eltechs.com/company/our-logo/">Our Logo</a></li>
+</ul>
+</li>
+<li id="menu-item-957" class="menu-item menu-item-type-post_type menu-item-object-page current-post-parent menu-item-has-children menu-item-957"><a href="https://eltechs.com/product/">Product</a>
+<ul class="sub-menu">
+	<li id="menu-item-1348" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1348"><a href="https://eltechs.com/product/eltechs-engine/">Eltechs Engine</a></li>
+	<li id="menu-item-1248" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1248"><a href="https://eltechs.com/product/exagear-desktop/">ExaGear Desktop</a></li>
+	<li id="menu-item-5531" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5531"><a title="ExaGear for Chromebook" href="https://eltechs.com/product/exagear-desktop-chromebook/">ExaGear for Chromebook</a></li>
+	<li id="menu-item-669" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-669"><a href="https://eltechs.com/product/exagear-mobile/">ExaGear Mobile</a>
+	<ul class="sub-menu">
+		<li id="menu-item-1314" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1314"><a href="https://eltechs.com/product/exagear-mobile/exagear-rpg/">ExaGear RPG</a></li>
+		<li id="menu-item-856" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-856"><a href="https://eltechs.com/product/exagear-mobile/exagear-strategies/">ExaGear Strategies</a></li>
+		<li id="menu-item-860" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-860"><a href="https://eltechs.com/product/exagear-mobile/heretic-by-eltechs/">Heretic by Eltechs</a></li>
+	</ul>
+</li>
+	<li id="menu-item-954" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-954"><a href="https://eltechs.com/product/exagear-server/">ExaGear Server</a>
+	<ul class="sub-menu">
+		<li id="menu-item-612" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-612"><a href="https://eltechs.com/product/exagear-server/pilot-version/">Pilot version</a></li>
+	</ul>
+</li>
+</ul>
+</li>
+<li id="menu-item-1926" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-1926"><a href="https://eltechs.com/communities/">Communities</a>
+<ul class="sub-menu">
+	<li id="menu-item-1927" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1927"><a href="http://forum.eltechs.com/">Forum</a></li>
+	<li id="menu-item-345" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-345"><a href="https://eltechs.com/category/blog/">Eltechs Blog</a></li>
+</ul>
+</li>
+<li id="menu-item-24" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-24"><a href="https://eltechs.com/contacts/">Contact</a>
+<ul class="sub-menu">
+	<li id="menu-item-382" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-382"><a href="https://eltechs.com/contacts/">Contact us</a></li>
+	<li id="menu-item-25" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-25"><a href="https://eltechs.com/contacts/feedback/">Feedback</a></li>
+</ul>
+</li>
+</ul>				</div><!--//nav-->
+				
+			</div><!--//lefthead-->
+			
+		</div><!--//fixwidth-->	
+		
+	</div><!--//header-->
+	
+	<div class="clear"></div>
+        <div id="singlecontent" class="content">
+                                                <div id="post-2194">
+                                <div class="entry">
+                                        <div style="background-color: #d8dfcf; height: 230px; text-align: center;">
+<div style="display: inline-block; text-align: left; vertical-align: top; width: 940px; height: 220px; position: relative;">
+<div style="width: 354px; height: 230px; background: url('/wp-content/uploads/2015/08/cover_08-e1440436937162.jpg') no-repeat; position: absolute; left: 750px; z-index: 1;"></div>
+<div style="padding: 40px 0px 20px 0px; text-align: center;">
+<h1><span style="color: #000000; z-index: 2; position: relative;">Run Skype on Raspberry Pi</span></h1>
+<h3><span style="color: #000000; z-index: 2; position: relative;">Step-by-step instruction on running Skype on Raspberry Pi </span></h3>
+<h3><span style="color: #000000; z-index: 2; position: relative;">using ExaGear Desktop</span></h3>
+</div>
+</div>
+</div>
+<div style="padding: 20px 0 20px 0;">
+<div class="fixwidth clearfix">
+<p><iframe src="https://www.youtube.com/embed/sjqtrWCcj-0" height="360" width="640" allowfullscreen="" frameborder="0"></iframe></p>
+<p style="text-align: left; font-size: 18px; line-height: 22px;">Skype is available on many platforms but not on Raspberry Pi (or <a href="/run-skype-on-chromebook/">ARM-based Chromebooks</a>). In this post, we will tell you how to run Skype on Raspberry Pi 2 and Raspberry Pi 3 using <a title="ExaGear Desktop description" href="/product/exagear-desktop/">ExaGear Desktop</a>, which allows to run x86 apps on ARM mini PCs.</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px;">We had a lot of requests about running Skype with ExaGear, but could not publish a corresponding instruction earlier. The thing is that for playing sound Skype uses PulseAudio sound server, which was not stable on Raspberry Pi. Fortunately starting with Raspbian launched in May 2016 things have become better. Below we give some hints how to configure PulseAudio and run Skype on your RPi 2 or RPi 3.</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px;">P.S.: keep in mind that with ExaGear Desktop you can use not only Skype but other chat (e.g. <a href="/run-telegram-on-raspberry-pi/">Telegram</a>), music (e.g. <a href="/run-spotify-on-raspberry-pi/">Spotify</a>), productivity (e.g. <a href="/run-dropbox-on-raspberry-pi/">Dropbox</a>) and many other apps on your Raspberry Pi.</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;"><strong> </strong></p>
+</div>
+</div>
+<div style="background-color: #eeeeee; padding: 20px 0 55px 0;">
+<div class="fixwidth clearfix">
+<h2 style="text-align: left;">Raspberry Pi test stand configuration</h2>
+<table class="fixwidth lined">
+<tbody>
+<tr>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">Model</p>
+</td>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">Raspberry Pi 2 Model B</p>
+</td>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">Raspberry Pi 3</p>
+</td>
+</tr>
+<tr>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">Frequency</p>
+</td>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">1000 MHz</p>
+</td>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">1200 MHz</p>
+</td>
+</tr>
+<tr>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">Memory</p>
+</td>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">1 GB RAM</p>
+</td>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">1 GB RAM</p>
+</td>
+</tr>
+<tr>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">Operating System</p>
+</td>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">Raspbian Jessie from Jan 2017</p>
+</td>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">Raspbian Jessie from Jan 2017</p>
+</td>
+</tr>
+<tr>
+<td class="bright" style="vertical-align: middle;" valign="middle" width="33%">
+<p style="text-align: left; font-size: 18px; margin-bottom: 0px; vertical-align: middle;">Software</p>
+</td>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 10px;">Skype for Linux v4.3.0.37</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">Eltechs ExaGear Desktop for Raspberry Pi 2</p>
+</td>
+<td class="bright" width="33%">
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 10px;">Skype for Linux v4.3.0.37</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">Eltechs ExaGear Desktop for Raspberry Pi 3</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div style="padding: 20px 0 20px 0;">
+<div class="fixwidth clearfix">
+<h2 style="text-align: left;">Skype installation instruction</h2>
+<h3 style="text-align: left;">Configure host Raspbian system</h3>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;">1. Configure PulseAudio. As described in <a href="https://www.raspberrypi.org/blog/another-update-raspbian/">release notes of Raspbian</a> remove the volumealsa plugin from the taskbar – just right-click anywhere on the taskbar, choose &#8220;Add/Remove Panel Items&#8221;, and remove the &#8220;Volume Control (ALSA)&#8221; item from the list.</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;"><img class="alignnone size-full wp-image-6369" alt="Raspbian-Task-Bar-Add-Remove-Panel-Items-700x467" src="/wp-content/uploads/2017/02/Raspbian-Task-Bar-Add-Remove-Panel-Items-700x467.png" width="700" height="467" srcset="https://eltechs.com/wp-content/uploads/2017/02/Raspbian-Task-Bar-Add-Remove-Panel-Items-700x467.png 700w, https://eltechs.com/wp-content/uploads/2017/02/Raspbian-Task-Bar-Add-Remove-Panel-Items-700x467-300x200.png 300w" sizes="(max-width: 700px) 100vw, 700px" /></p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;"><img class="alignnone size-full wp-image-6370" alt="Raspbian Panel Applets - Volume Control (ALSA)" src="/wp-content/uploads/2017/02/Raspbian-Volume-Control-ALSA-700x467.png" width="700" height="467" srcset="https://eltechs.com/wp-content/uploads/2017/02/Raspbian-Volume-Control-ALSA-700x467.png 700w, https://eltechs.com/wp-content/uploads/2017/02/Raspbian-Volume-Control-ALSA-700x467-300x200.png 300w" sizes="(max-width: 700px) 100vw, 700px" /></p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;">2. Reboot the system to apply PuleAudio configuration changes.</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;">3. In order to be able to adjust the volume level install pavucontrol. Open Terminal (command line) and execute the following command:</p>
+<table class="fixwidth lined" style="margin-bottom: 20px;">
+<tbody>
+<tr>
+<td class="list-item init" width="100%">
+<pre>$ sudo apt-get install pavucontrol</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;">Now you can open Volume Control window from Start menu -> Sound &#038; Video -> PulseAudio Volume Control:</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;"><img class="alignnone size-full wp-image-6370" alt="Raspbian Panel Applets - Volume Control (ALSA)" src="/wp-content/uploads/2017/07/PulseAudioVolumeControl.png"  /></p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;">4. Please note that you should set your Raspberry Pi 2 device overclocked in order to achieve good quality Skype voice calls. Execute the following command in Terminal (command line):</p>
+<table class="fixwidth lined" style="margin-bottom: 20px;">
+<tbody>
+<tr>
+<td class="list-item init" width="100%">
+<pre>$ sudo raspi-config</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;">Select Overclock section and then &#8220;Pi2&#8221; (1000 MHz).</p>
+<h3 style="text-align: left;">Install ExaGear Desktop</h3>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;">5. Download ExaGear Desktop archive with installation packages and license key. Unpack downloaded archive using the following command in Terminal:</p>
+<table class="fixwidth lined" style="margin-bottom: 20px;">
+<tbody>
+<tr>
+<td class="list-item init" width="100%">
+<pre>$ tar -xvzpf exagear-desktop-rpi3.tar.gz</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;">6. Install and activate ExaGear on your ARM device by running install-exagear.sh script in a directory with deb packages and one license key:</p>
+<table class="fixwidth lined" style="margin-bottom: 20px;">
+<tbody>
+<tr>
+<td class="list-item init" width="100%">
+<pre>$ sudo ./install-exagear.sh</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 style="text-align: left;">Launch guest x86 system</h3>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;">7. Enter the guest x86 system using the following command:</p>
+<table class="fixwidth lined" style="margin-bottom: 20px;">
+<tbody>
+<tr>
+<td class="list-item init" width="100%">
+<pre style="margin-bottom: 5px;">$ exagear</pre>
+<pre>Starting the shell in the guest image /opt/exagear/images/debian-8</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;">8. Now you are in the x86 environment that can be checked by running the &#8216;arch&#8217; command:</p>
+<table class="fixwidth lined" style="margin-bottom: 20px;">
+<tbody>
+<tr>
+<td class="list-item init" width="100%">
+<pre style="margin-bottom: 5px;">$ arch</pre>
+<pre>i686</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;">9. It is recommended to update apt-get repositories on the first launch of the guest system:</p>
+<table class="fixwidth lined" style="margin-bottom: 20px;">
+<tbody>
+<tr>
+<td class="list-item init" width="100%">
+<pre>$ sudo apt-get update</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 style="text-align: left;">Install Skype</h3>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;">10. Download Skype for Debian:</p>
+<table class="fixwidth lined" style="margin-bottom: 20px;">
+<tbody>
+<tr>
+<td class="list-item init" width="100%">
+<pre style="margin-bottom: 5px;">$ sudo apt-get install wget</pre>
+<pre>$ wget http://download.skype.com/linux/skype-debian_4.3.0.37-1_i386.deb</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;">11. Install Skype:</p>
+<table class="fixwidth lined" style="margin-bottom: 20px;">
+<tbody>
+<tr>
+<td class="list-item init" width="100%">
+<pre style="margin-bottom: 5px;">$ sudo dpkg -i skype-debian_4.3.0.37-1_i386.deb; sudo apt-get install -f</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 style="text-align: left;">Run Skype</h3>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;">12. Run Skype from Raspbian Start menu:</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;"><img class="alignnone size-full wp-image-6371" alt="Run Skype on Raspberry Pi using ExaGear Desktop" src="/wp-content/uploads/2017/02/Run-Skype-on-Raspberry-Pi-using-ExaGear-Desktop-700x467.png" width="700" height="467" srcset="https://eltechs.com/wp-content/uploads/2017/02/Run-Skype-on-Raspberry-Pi-using-ExaGear-Desktop-700x467.png 700w, https://eltechs.com/wp-content/uploads/2017/02/Run-Skype-on-Raspberry-Pi-using-ExaGear-Desktop-700x467-300x200.png 300w" sizes="(max-width: 700px) 100vw, 700px" /></p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;">13. Check that Skype Sound Devices use PulseAudio server:</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;"><img class="alignnone size-full wp-image-6372" alt="Skype Options - Sound Devices" src="/wp-content/uploads/2017/02/Skype-options-Sound-Devices-700x388.png" width="700" height="388" srcset="https://eltechs.com/wp-content/uploads/2017/02/Skype-options-Sound-Devices-700x388.png 700w, https://eltechs.com/wp-content/uploads/2017/02/Skype-options-Sound-Devices-700x388-300x166.png 300w" sizes="(max-width: 700px) 100vw, 700px" /></p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 5px;">This is it. Now you can make your Skype calls.</p>
+</div>
+</div>
+<div style="background-color: #eeeeee; padding: 20px 0 20px 0;">
+<div class="fixwidth clearfix">
+<h2 style="text-align: left;">Final notes</h2>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 10px;">Here you can find a brilliant lifehack of how to <a href="https://www.raspberrypi.org/forums/viewtopic.php?f=62&amp;t=142492&amp;p=941868">make video and audio calls work great</a>.</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 10px;">It is also worth noting that with <a title="ExaGear Desktop" href="/product/exagear-desktop/">ExaGear Desktop</a> you can run other x86 apps on Raspberry Pi 2 and Raspberry Pi 3. ExaGear also supports other ARM-based devices, such as Odroid, Banana Pi, Beagleboard, Cubox, Jetson, Cubieboard etc.</p>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 0px;">Please note that running Skype on Raspberry Pi 1 and Raspberry Pi Zero is not possible because of lack of NEON support in the hardware of these devices.</p>
+<h4 style="text-align: center; padding: 40px 0 20px 0; z-index: 2; position: relative;"><a class="button" href="/product/exagear-desktop/exagear-desktop-features-and-prices/">Get my ExaGear Desktop</a></h4>
+</div>
+</div>
+<div style="padding: 20px 0 20px 0;"></div>
+<div style="padding: 20px 0 20px 0;">
+<div class="fixwidth clearfix">
+<table class="fixwidth" style="margin-top: 20px; margin-bottom: 20px;">
+<tbody>
+<tr>
+<td>
+<h3>Also on Eltechs</h3>
+</td>
+</tr>
+<tr>
+<td class="bright" style="vertical-align: top;" width="15%"><a href="/run-plex-media-server-on-raspberry-pi/"><img class="alignnone size-thumbnail wp-image-3010" alt="Run Plex Media Server on Raspberry Pi" src="/wp-content/uploads/2016/06/2016-06-29-194953_1184x624_scrot-150x150.png" width="130" /></a></td>
+<td class="bright" style="vertical-align: top;" width="32%">
+<h3><a href="/run-plex-media-server-on-raspberry-pi/">Run Plex Media Server on Raspberry Pi</a></h3>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;">Install PC version of PlexServer on your Raspberry Pi using ExaGear Desktop and get access to your media.</p>
+</td>
+<td class="bright" width="6%"></td>
+<td class="bright" style="vertical-align: top;" width="15%"><a href="/gaming-beyond-retropie/"><img class="alignnone size-thumbnail wp-image-4343" alt="Gaming Beyond RetroPie" src="/wp-content/uploads/2017/02/PC_games_on_RPi_440-resized1.jpg" width="150" height="150" /></a></td>
+<td class="bright" style="vertical-align: top;" width="32%">
+<h3><a href="/gaming-beyond-retropie/">Gaming Beyond RetroPie</a></h3>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;">How to run some iconic PC games like Arcanum, Disciples II and Fallout on Raspberry Pi with Exagear Desktop.</p>
+</td>
+</tr>
+<tr>
+<td class="bright" style="vertical-align: top;" width="15%"><a href="/set-up-vpn-on-raspberry-pi/"><img class="alignnone size-large wp-image-2339" alt="Set Up VPN on Raspberry Pi" src="/wp-content/uploads/2016/07/run_pia_vpn_on_raspberry_pi_450-150x150.png" width="130" /></a></td>
+<td class="bright" style="vertical-align: top;" width="32%">
+<h3><a href="/set-up-vpn-on-raspberry-pi/">Set Up VPN on Raspberry Pi</a></h3>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;">Set up VPN on Raspberry Pi and encrypt your connection to protect your privacy. Step-by-step instruction on running PIA VPN Service on Raspberry Pi.</p>
+</td>
+<td class="bright" width="6%"></td>
+<td class="bright" style="vertical-align: top;" width="15%"><a href="/run-google-chrome-on-raspberry-pi/"><img class="alignnone size-thumbnail wp-image-4343" alt="Run Netflix via Google Chrome on Raspberry Pi" src="/wp-content/uploads/2016/05/netflix_via_google_chrome_on_raspberry_pi-150x150.png" width="150" height="150" /></a></td>
+<td class="bright" style="vertical-align: top;" width="32%">
+<h3><a href="/run-google-chrome-on-raspberry-pi/">Run Google Chrome on Raspberry Pi</a></h3>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;">Step-by-step instruction on running Google Chrome browser and Netflix on Raspberry Pi with the help of ExaGear Desktop.</p>
+</td>
+</tr>
+<tr>
+<td class="bright" style="vertical-align: top;" width="15%"><a href="/run-teamviewer-on-raspberry-pi/"><img class="alignnone size-thumbnail wp-image-3317" alt="Run TeamViewer on Raspberry Pi" src="/wp-content/uploads/2016/03/TeamViewer-on-Raspberry-Pi-setup-unattended-access-150x150.png" width="130" /></a></td>
+<td class="bright" style="vertical-align: top;" width="32%">
+<h3><a href="/run-teamviewer-on-raspberry-pi/">Run TeamViewer on Raspberry Pi</a></h3>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;">In this post we will tell you how to run TeamViewer on Raspberry Pi 2 using ExaGear Desktop which allows running x86 apps on ARM mini PCs.</p>
+</td>
+<td class="bright" width="6%"></td>
+<td class="bright" style="vertical-align: top;" width="15%"><a href="/run-spotify-on-raspberry-pi/"><img class="alignnone size-thumbnail wp-image-4343" alt="Run Spotify on Raspberry Pi" src="/wp-content/uploads/2015/12/Spotify_on_Raspberry_Pi_2_small-150x150.png" width="150" /></a></td>
+<td class="bright" style="vertical-align: top;" width="32%">
+<h3><a href="/run-spotify-on-raspberry-pi/">Run Spotify on Raspberry Pi</a></h3>
+<p style="text-align: left; font-size: 18px; line-height: 22px; margin-bottom: 15px;">Step-by-step instruction on running Spotify on Raspberry Pi with the help of ExaGear Desktop and getting access to millions of songs.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: center; margin: 10px 0px 10px 0;"><i>ExaGear is registered trademark of Eltechs, Inc. Raspberry Pi is a trademark of the Raspberry Pi Foundation. Skype is a trademark of Skype or related entities. Other trademarks and product names are the property of their respective owners.</i></p>
+</div>
+</div>
+                                                                        </div>
+                        </div>
+                        <div class="fixwidth">
+                        
+<div id="disqus_thread">
+            <div id="dsq-content">
+
+
+            <ul id="dsq-comments">
+                    <li class="comment even thread-even depth-1" id="dsq-comment-294">
+        <div id="dsq-comment-header-294" class="dsq-comment-header">
+            <cite id="dsq-cite-294">
+                <span id="dsq-author-user-294">Фидан</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-294" class="dsq-comment-body">
+            <div id="dsq-comment-message-294" class="dsq-comment-message"><p>На Raspberry Pi Model B (512 Мб) пойдет?</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-2" id="dsq-comment-296">
+        <div id="dsq-comment-header-296" class="dsq-comment-header">
+            <cite id="dsq-cite-296">
+                <span id="dsq-author-user-296">kambarg</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-296" class="dsq-comment-body">
+            <div id="dsq-comment-message-296" class="dsq-comment-message"><p>Нет, потому что на этой модели устройства нет поддержки NEON (к сожалению, хасрдварное ограничение).</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment even thread-odd thread-alt depth-1" id="dsq-comment-302">
+        <div id="dsq-comment-header-302" class="dsq-comment-header">
+            <cite id="dsq-cite-302">
+                <span id="dsq-author-user-302">Kaldrosan</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-302" class="dsq-comment-body">
+            <div id="dsq-comment-message-302" class="dsq-comment-message"><p>Video does not work on Raspbian or Ubuntu. Tested with multiple cameras that work fine with other tools.</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-2" id="dsq-comment-308">
+        <div id="dsq-comment-header-308" class="dsq-comment-header">
+            <cite id="dsq-cite-308">
+                <span id="dsq-author-user-308">kambarg</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-308" class="dsq-comment-body">
+            <div id="dsq-comment-message-308" class="dsq-comment-message"><p>Hi! I got usb camera and will test Skype outgoing video on Raspberry Pi 2 soon.<br />
+Incoming video worked for me.</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+    <li class="comment even depth-2" id="dsq-comment-312">
+        <div id="dsq-comment-header-312" class="dsq-comment-header">
+            <cite id="dsq-cite-312">
+                <span id="dsq-author-user-312">alex leitner</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-312" class="dsq-comment-body">
+            <div id="dsq-comment-message-312" class="dsq-comment-message"><p>did you took care if the linux drivers are working for your cam. for me some did not. then i gave a try with ubuntu mate for rpi. there is a better driver support. i even use a tv-webcam with integrated stereo mics. better try mate&#8230;</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-3" id="dsq-comment-315">
+        <div id="dsq-comment-header-315" class="dsq-comment-header">
+            <cite id="dsq-cite-315">
+                <span id="dsq-author-user-315">kambarg</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-315" class="dsq-comment-body">
+            <div id="dsq-comment-message-315" class="dsq-comment-message"><p>I used Trust USB camera and it worked right after plugging in to the Raspberry Pi with Raspbian 8. It didn&#8217;t require any drivers or so.</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment even thread-even depth-1" id="dsq-comment-311">
+        <div id="dsq-comment-header-311" class="dsq-comment-header">
+            <cite id="dsq-cite-311">
+                <span id="dsq-author-user-311">alex leitner</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-311" class="dsq-comment-body">
+            <div id="dsq-comment-message-311" class="dsq-comment-message"><p>very cool option. going to try a pine64+ skype client for tv and dedicate it to my parents to keep in touch with my lil son &#8230; i am looking forward..</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-326">
+        <div id="dsq-comment-header-326" class="dsq-comment-header">
+            <cite id="dsq-cite-326">
+                <span id="dsq-author-user-326">Refaat Ghanem</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-326" class="dsq-comment-body">
+            <div id="dsq-comment-message-326" class="dsq-comment-message"><p>Hello, is it possible to launch a video call with python script??</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+    <li class="comment even thread-even depth-1" id="dsq-comment-344">
+        <div id="dsq-comment-header-344" class="dsq-comment-header">
+            <cite id="dsq-cite-344">
+                <span id="dsq-author-user-344">Marcello Fini</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-344" class="dsq-comment-body">
+            <div id="dsq-comment-message-344" class="dsq-comment-message"><p>Hello, I bought with two webcams (a logitech and a trust). Both work as far as video is concerned, but audio is only one way and only works sometimes / for a short time!<br />
+Specifically, the microphone of the webcam is not functional. Any clue?</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-2" id="dsq-comment-365">
+        <div id="dsq-comment-header-365" class="dsq-comment-header">
+            <cite id="dsq-cite-365">
+                <span id="dsq-author-user-365">kambarg</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-365" class="dsq-comment-body">
+            <div id="dsq-comment-message-365" class="dsq-comment-message"><p>My trust camera has builtin microphone and  two cables &#8211; a USB and a separate cable for audio in. As long as Raspberry Pi doesn&#8217;t have audio in I use USB sound card to which I plugin the second cable. This way microphone works.</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment even thread-odd thread-alt depth-1" id="dsq-comment-362">
+        <div id="dsq-comment-header-362" class="dsq-comment-header">
+            <cite id="dsq-cite-362">
+                <span id="dsq-author-user-362">Toshibochan</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-362" class="dsq-comment-body">
+            <div id="dsq-comment-message-362" class="dsq-comment-message"><p>How I can add push button to make a call?</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-2" id="dsq-comment-377">
+        <div id="dsq-comment-header-377" class="dsq-comment-header">
+            <cite id="dsq-cite-377">
+                <span id="dsq-author-user-377">kambarg</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-377" class="dsq-comment-body">
+            <div id="dsq-comment-message-377" class="dsq-comment-message"><p>What do you mean, what is push button?</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment even thread-even depth-1" id="dsq-comment-363">
+        <div id="dsq-comment-header-363" class="dsq-comment-header">
+            <cite id="dsq-cite-363">
+                <span id="dsq-author-user-363">Toshibochan</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-363" class="dsq-comment-body">
+            <div id="dsq-comment-message-363" class="dsq-comment-message"><p>Is possible to use gpio pin to use push button and make call? </p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-381">
+        <div id="dsq-comment-header-381" class="dsq-comment-header">
+            <cite id="dsq-cite-381">
+                <span id="dsq-author-user-381">Fawad Ahmad</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-381" class="dsq-comment-body">
+            <div id="dsq-comment-message-381" class="dsq-comment-message"><p>hey very helpful tutuorial<br />
+skype is running on my raspberry pi 2 but can&#8217;t hear a sound and also mic is not functional<br />
+i am trying with usb sound card<br />
+any help???</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment even depth-2" id="dsq-comment-384">
+        <div id="dsq-comment-header-384" class="dsq-comment-header">
+            <cite id="dsq-cite-384">
+                <span id="dsq-author-user-384">kambarg</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-384" class="dsq-comment-body">
+            <div id="dsq-comment-message-384" class="dsq-comment-message"><p>Did you check headphones and mic work without Skype?</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-3" id="dsq-comment-385">
+        <div id="dsq-comment-header-385" class="dsq-comment-header">
+            <cite id="dsq-cite-385">
+                <span id="dsq-author-user-385">Fawad Ahmad</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-385" class="dsq-comment-body">
+            <div id="dsq-comment-message-385" class="dsq-comment-message"><p>thank you @kambarg for replying<br />
+only headphones is working<br />
+i checked it with the command &#8220;speaker-test -c2&#8221; and also listen songs on youtube..it is working well but when i make a test call on skype ,nothing hears</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment even depth-4" id="dsq-comment-386">
+        <div id="dsq-comment-header-386" class="dsq-comment-header">
+            <cite id="dsq-cite-386">
+                <span id="dsq-author-user-386">kambarg</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-386" class="dsq-comment-body">
+            <div id="dsq-comment-message-386" class="dsq-comment-message"><p>Try this:<br />
+$ sudo raspi-config<br />
+select Advanced -&gt; Sound -&gt; Headphones<br />
+I noticed that sometimes automatic option that is set by default doesn&#8217;t work properly.</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment odd alt thread-even depth-1" id="dsq-comment-382">
+        <div id="dsq-comment-header-382" class="dsq-comment-header">
+            <cite id="dsq-cite-382">
+                <span id="dsq-author-user-382">Fawad Ahmad</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-382" class="dsq-comment-body">
+            <div id="dsq-comment-message-382" class="dsq-comment-message"><p>is it possible to make calls through  skype running on pi without pulseaudio???</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment even depth-2" id="dsq-comment-383">
+        <div id="dsq-comment-header-383" class="dsq-comment-header">
+            <cite id="dsq-cite-383">
+                <span id="dsq-author-user-383">kambarg</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-383" class="dsq-comment-body">
+            <div id="dsq-comment-message-383" class="dsq-comment-message"><p>Read this<br />
+<a href="https://www.raspberrypi.org/forums/viewtopic.php?f=62&#038;t=142492&#038;p=941868" rel="nofollow">https://www.raspberrypi.org/forums/viewtopic.php?f=62&#038;t=142492&#038;p=941868</a></p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-389">
+        <div id="dsq-comment-header-389" class="dsq-comment-header">
+            <cite id="dsq-cite-389">
+                <span id="dsq-author-user-389">Dobson Sky</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-389" class="dsq-comment-body">
+            <div id="dsq-comment-message-389" class="dsq-comment-message"><p>works great on rasp 3 .thanks !</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment even depth-2" id="dsq-comment-400">
+        <div id="dsq-comment-header-400" class="dsq-comment-header">
+            <cite id="dsq-cite-400">
+                <span id="dsq-author-user-400">Kudlaty</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-400" class="dsq-comment-body">
+            <div id="dsq-comment-message-400" class="dsq-comment-message"><p>Hi, which guest system have you used to install skype?</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-3" id="dsq-comment-484">
+        <div id="dsq-comment-header-484" class="dsq-comment-header">
+            <cite id="dsq-cite-484">
+                <span id="dsq-author-user-484">Dobson Sky</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-484" class="dsq-comment-body">
+            <div id="dsq-comment-message-484" class="dsq-comment-message"><p>sorry for late reply , hope i understand your question , i followed the procedure above so </p>
+<p> guest x86 system</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment even thread-even depth-1" id="dsq-comment-439">
+        <div id="dsq-comment-header-439" class="dsq-comment-header">
+            <cite id="dsq-cite-439">
+                <span id="dsq-author-user-439">Edward Firmo</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-439" class="dsq-comment-body">
+            <div id="dsq-comment-message-439" class="dsq-comment-message"><p>Did you guys saw that Microsoft have release a new Alpha version of Skype for Linux?</p>
+<p><a href="https://community.skype.com/t5/Linux/Skype-for-Linux-Alpha-and-calling-on-Chrome-amp-Chromebooks/td-p/4434299" rel="nofollow">https://community.skype.com/t5/Linux/Skype-for-Linux-Alpha-and-calling-on-Chrome-amp-Chromebooks/td-p/4434299</a></p>
+<p>I will try to run it on my RPi this weekend, but will be glad is someone can share experience and first impression.</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-2" id="dsq-comment-456">
+        <div id="dsq-comment-header-456" class="dsq-comment-header">
+            <cite id="dsq-cite-456">
+                <span id="dsq-author-user-456">Joe Smith</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-456" class="dsq-comment-body">
+            <div id="dsq-comment-message-456" class="dsq-comment-message"><p>So did it run? Thanks</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment even depth-3" id="dsq-comment-457">
+        <div id="dsq-comment-header-457" class="dsq-comment-header">
+            <cite id="dsq-cite-457">
+                <span id="dsq-author-user-457">kambarg</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-457" class="dsq-comment-body">
+            <div id="dsq-comment-message-457" class="dsq-comment-message"><p>It is 64-bit version. Currently official version of Raspbian for RPi 3 is 32-bit so you cannot test 64-bit apps there.</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-4" id="dsq-comment-458">
+        <div id="dsq-comment-header-458" class="dsq-comment-header">
+            <cite id="dsq-cite-458">
+                <span id="dsq-author-user-458">Joe Smith</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-458" class="dsq-comment-body">
+            <div id="dsq-comment-message-458" class="dsq-comment-message"><p>Thank you for your response.</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment even thread-odd thread-alt depth-1" id="dsq-comment-440">
+        <div id="dsq-comment-header-440" class="dsq-comment-header">
+            <cite id="dsq-cite-440">
+                <span id="dsq-author-user-440">Bob Dylan</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-440" class="dsq-comment-body">
+            <div id="dsq-comment-message-440" class="dsq-comment-message"><p>sadly Alpha Skype is 64 bit with no plans to support 32 bit.. Exagear only supports 32 bit applications</p>
+<p>I cant get audio to work proplerly on skype exagear ive. ive been troubleshooting for the past few days straight.</p>
+<p>Guess im out 27 dollars</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-2" id="dsq-comment-493">
+        <div id="dsq-comment-header-493" class="dsq-comment-header">
+            <cite id="dsq-cite-493">
+                <span id="dsq-author-user-493">kambarg</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-493" class="dsq-comment-body">
+            <div id="dsq-comment-message-493" class="dsq-comment-message"><p>Hi Bob!<br />
+Eltechs is planning to release x86 64-bit apps support soon. Currently solution is being tested. And if your license key is for Pi 3 or for ARMv8 devices then you will get this update for free.</p>
+<p>As for 32-bit Skype, there are 2 options:<br />
+1. use skype v 4.3 as described in this tutorial (just make sure you did accurately all prerequisits)<br />
+2. use skype 4.2. This approach was found by some users (see comments above and below) and as I understand in this case skype uses alsa instead of pulseaudio and works more stable.</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment even thread-even depth-1" id="dsq-comment-441">
+        <div id="dsq-comment-header-441" class="dsq-comment-header">
+            <cite id="dsq-cite-441">
+                <span id="dsq-author-user-441">Bob Dylan</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-441" class="dsq-comment-body">
+            <div id="dsq-comment-message-441" class="dsq-comment-message"><p>Wow i got it to work with 2 way video calls and sound<br />
+Its laggy as all heck but it works.</p>
+<p>What i did:<br />
+I added this step i found in a thread from 2015<br />
+<a href="http://www.cnx-software.com/2015" rel="nofollow">http://www.cnx-software.com/2015</a><br />
+5) Pulseaudio by default does not accept socket calls. You can change it using paprefs utility.<br />
+$ sudo apt-get install paprefs<br />
+$ sudo paprefs<br />
+Select “Network Server” and check “Enable network access to local sound devices”.</p>
+<p>6) Run skype with the following option:<br />
+$ PULSE_SERVER=127.0.0.1 skype</p>
+<p>After that i made sure to keep pulse audio while making calls in order to tweak settings</p>
+<p>Eventually it worked</p>
+<p>-bob dylan</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-492">
+        <div id="dsq-comment-header-492" class="dsq-comment-header">
+            <cite id="dsq-cite-492">
+                <span id="dsq-author-user-492">el jugador</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-492" class="dsq-comment-body">
+            <div id="dsq-comment-message-492" class="dsq-comment-message"><p>I solved the audio and mic problem with a downgrade (skype 4.3 to 4.2). in 4.3 I had only virtual devices and couldnt change them. In 4.2 to select the correct devices was possible&#8230;</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+    <li class="comment even thread-even depth-1" id="dsq-comment-553">
+        <div id="dsq-comment-header-553" class="dsq-comment-header">
+            <cite id="dsq-cite-553">
+                <span id="dsq-author-user-553">goha</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-553" class="dsq-comment-body">
+            <div id="dsq-comment-message-553" class="dsq-comment-message"><p>Ecco il tutorial in italiano di come gestire Skype e Spotify:  <a href="http://www.conticello.it/blog/?p=160" rel="nofollow">http://www.conticello.it/blog/?p=160</a></p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+    <li class="comment odd alt thread-odd thread-alt depth-1" id="dsq-comment-557">
+        <div id="dsq-comment-header-557" class="dsq-comment-header">
+            <cite id="dsq-cite-557">
+                <span id="dsq-author-user-557">ああああああああ</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-557" class="dsq-comment-body">
+            <div id="dsq-comment-message-557" class="dsq-comment-message"><p>Hi<br />
+Does it work on video chat ?</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment even depth-2" id="dsq-comment-558">
+        <div id="dsq-comment-header-558" class="dsq-comment-header">
+            <cite id="dsq-cite-558">
+                <span id="dsq-author-user-558">goha</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-558" class="dsq-comment-body">
+            <div id="dsq-comment-message-558" class="dsq-comment-message"><p>Yes, it works. But video from RPi freezes sometime. I don&#8217;t know for sure but it might depend on which camera you connect to RPi.</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-3" id="dsq-comment-559">
+        <div id="dsq-comment-header-559" class="dsq-comment-header">
+            <cite id="dsq-cite-559">
+                <span id="dsq-author-user-559">ああああああああ</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-559" class="dsq-comment-body">
+            <div id="dsq-comment-message-559" class="dsq-comment-message"><p>Really? thank you</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment even thread-even depth-1" id="dsq-comment-562">
+        <div id="dsq-comment-header-562" class="dsq-comment-header">
+            <cite id="dsq-cite-562">
+                <span id="dsq-author-user-562">Toshiyuki Takamatsu</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-562" class="dsq-comment-body">
+            <div id="dsq-comment-message-562" class="dsq-comment-message"><p>Hi I want ask if have Python skype to use in raspberry pi? I want make skype video doorbell using raspberry pi!</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-2" id="dsq-comment-565">
+        <div id="dsq-comment-header-565" class="dsq-comment-header">
+            <cite id="dsq-cite-565">
+                <span id="dsq-author-user-565">ああああああああ</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-565" class="dsq-comment-body">
+            <div id="dsq-comment-message-565" class="dsq-comment-message"><p>実は私も同じことを考えています。コマンドラインかパイソンで動きそうですよね。<br />
+ちなみにもうすでにExaGearをダウンロードしましたか？</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment even depth-3" id="dsq-comment-566">
+        <div id="dsq-comment-header-566" class="dsq-comment-header">
+            <cite id="dsq-cite-566">
+                <span id="dsq-author-user-566">Toshiyuki Takamatsu</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-566" class="dsq-comment-body">
+            <div id="dsq-comment-message-566" class="dsq-comment-message"><p>ExaGearダウンロードしてませんよ！ ExaGearではなにできる？</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment odd alt depth-4" id="dsq-comment-567">
+        <div id="dsq-comment-header-567" class="dsq-comment-header">
+            <cite id="dsq-cite-567">
+                <span id="dsq-author-user-567">ああああああああ</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-567" class="dsq-comment-body">
+            <div id="dsq-comment-message-567" class="dsq-comment-message"><p>x86系のCPUで動いているソフトが動くみたい。<br />
+SkypeはRaspberry piみたいなARM系のCPUでは動かないので<br />
+ExaGearを使ってバーチャルマシーンみたいな感じでx86系のソフトを<br />
+動かしているのだと思いますよ。</p>
+</div>
+        </div>
+
+    <ul class="children">
+    <li class="comment even depth-5" id="dsq-comment-568">
+        <div id="dsq-comment-header-568" class="dsq-comment-header">
+            <cite id="dsq-cite-568">
+                <span id="dsq-author-user-568">Toshiyuki Takamatsu</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-568" class="dsq-comment-body">
+            <div id="dsq-comment-message-568" class="dsq-comment-message"><p>I need Python code. I want make skype video doorbell</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+    <li class="comment odd alt depth-5" id="dsq-comment-571">
+        <div id="dsq-comment-header-571" class="dsq-comment-header">
+            <cite id="dsq-cite-571">
+                <span id="dsq-author-user-571">goha</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-571" class="dsq-comment-body">
+            <div id="dsq-comment-message-571" class="dsq-comment-message"><p>You can install python in command line terminal and then use it to run your python script.</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+    <li class="comment even thread-odd thread-alt depth-1" id="dsq-comment-563">
+        <div id="dsq-comment-header-563" class="dsq-comment-header">
+            <cite id="dsq-cite-563">
+                <span id="dsq-author-user-563">Toshiyuki Takamatsu</span>
+            </cite>
+        </div>
+        <div id="dsq-comment-body-563" class="dsq-comment-body">
+            <div id="dsq-comment-message-563" class="dsq-comment-message"><p>Anyone know how to make skype call from Python or command line on raspberry pi?</p>
+</div>
+        </div>
+
+    </li><!-- #comment-## -->
+            </ul>
+
+
+        </div>
+
+    </div>
+
+<script type="text/javascript">
+var disqus_url = 'https://eltechs.com/run-skype-on-raspberry-pi/';
+var disqus_identifier = '2194 http://eltechs.com/?p=2194';
+var disqus_container_id = 'disqus_thread';
+var disqus_shortname = 'eltechs';
+var disqus_title = "Run Skype on Raspberry Pi";
+var disqus_config_custom = window.disqus_config;
+var disqus_config = function () {
+    /*
+    All currently supported events:
+    onReady: fires when everything is ready,
+    onNewComment: fires when a new comment is posted,
+    onIdentify: fires when user is authenticated
+    */
+    
+    
+    this.language = '';
+        this.callbacks.onReady.push(function () {
+
+        // sync comments in the background so we don't block the page
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = '?cf_action=sync_comments&post_id=2194';
+
+        var firstScript = document.getElementsByTagName('script')[0];
+        firstScript.parentNode.insertBefore(script, firstScript);
+    });
+    
+    if (disqus_config_custom) {
+        disqus_config_custom.call(this);
+    }
+};
+
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+
+                        </div>
+                        
+        </div><!--//content-->
+	<div id="subfooter" class="subfooter-nomargin">
+		<div class="fixwidth clearfix">
+                <ul id="menu-bottom" class="bot-menu"><li id="menu-item-1969" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1969"><a>Company</a>
+<ul class="sub-menu">
+	<li id="menu-item-1967" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1967"><a rel="nofollow" href="https://eltechs.com/company/about-our-company/">About our company</a></li>
+	<li id="menu-item-1968" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1968"><a rel="nofollow" href="https://eltechs.com/company/about-us/">Our team</a></li>
+	<li id="menu-item-1972" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1972"><a rel="nofollow" href="https://eltechs.com/company/media-about-us/">Media about us</a></li>
+	<li id="menu-item-1973" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1973"><a rel="nofollow" href="https://eltechs.com/company/partners/">Partners</a></li>
+	<li id="menu-item-5749" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5749"><a rel="nofollow" href="https://eltechs.com/company/investors/">Investors</a></li>
+	<li id="menu-item-1974" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1974"><a rel="nofollow" href="https://eltechs.com/company/careers/">Careers</a></li>
+	<li id="menu-item-1975" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1975"><a rel="nofollow" href="https://eltechs.com/company/our-logo/">Our Logo</a></li>
+</ul>
+</li>
+<li id="menu-item-1970" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1970"><a>Product</a>
+<ul class="sub-menu">
+	<li id="menu-item-1971" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1971"><a href="https://eltechs.com/product/eltechs-engine/">Eltechs Engine</a></li>
+	<li id="menu-item-1976" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1976"><a href="https://eltechs.com/product/exagear-desktop/">ExaGear Desktop</a></li>
+	<li id="menu-item-5532" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-5532"><a href="https://eltechs.com/product/exagear-desktop-chromebook/">ExaGear for Chromebook</a></li>
+	<li id="menu-item-1978" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1978"><a href="https://eltechs.com/product/exagear-server/">ExaGear Server</a></li>
+	<li id="menu-item-2282" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2282"><a href="https://eltechs.com/product/exagear-mobile/">ExaGear Mobile</a></li>
+</ul>
+</li>
+<li id="menu-item-1982" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1982"><a>Communities</a>
+<ul class="sub-menu">
+	<li id="menu-item-1988" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1988"><a href="http://forum.eltechs.com/">Forum</a></li>
+	<li id="menu-item-5261" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-5261"><a href="https://eltechs.com/category/blog/">Eltechs Blog</a></li>
+</ul>
+</li>
+<li id="menu-item-1985" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-1985"><a>Contacts</a>
+<ul class="sub-menu">
+	<li id="menu-item-1987" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1987"><a href="https://eltechs.com/contacts/">Contact us</a></li>
+	<li id="menu-item-1986" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1986"><a href="https://eltechs.com/contacts/feedback/">Feedback</a></li>
+</ul>
+</li>
+</ul>		</div><!--//fixwidth-->
+		
+	</div><!--//subfooter-->
+
+	<div id="footer">
+		<div class="fixwidth clearfix">
+
+
+
+<div class="alignleft">
+<p id="sharetext">Share with friends</p>
+			<ul id="social-links">
+
+				<li id="twitter"><a href="https://twitter.com/share?text=Eltechs%20Run Skype on Raspberry Pi" class="tooltip" target="_blank" title="twitter"></a></li>
+				<li id="facebook"><a href="http://www.facebook.com/share.php?u=https://eltechs.com/run-skype-on-raspberry-pi/" class="tooltip" target="_blank" title="facebook"></a></li>
+				<li id="linkedin"><a href="https://www.linkedin.com/cws/share?url=https://eltechs.com/run-skype-on-raspberry-pi/" class="tooltip" target="_blank" title="linked in"></a></li>
+				<li id="gplus"><a href="https://plus.google.com/share?url=https://eltechs.com/run-skype-on-raspberry-pi/" class="tooltip" target="_blank" title="google plus"></a></li>
+			</ul><!--//social-links-->
+			</div>
+
+<div id="copyrights">
+<table cellpadding="0" cellspacing="0" width="100%" style="width:100%; height:35px;">
+<tr>
+<td style="text-align:right;">
+				<a href="http://sk.ru/net/1120061/" id="slogo" class="slogo_bg_en"></a>
+</td>
+<td style="text-align:right; width:170px;">
+				<a href="" id="flogo"></a>
+</td>
+</tr>
+</table>
+				<div class="clear"></div>
+				<p><a style="margin-right:20px; border:0px;" href="https://eltechs.com/privacy-policy/">Privacy Policy</a><a style="margin-right:190px; border:0px;" href="https://eltechs.com/terms-of-use/">Terms of use</a>©2013-2017 Eltechs, Inc. All rights reserved.</p>
+			</div><!--//copyrights-->
+			
+			
+		</div><!--//fixwidth-->
+		
+	</div><!--//footer-->
+
+</div><!--//wrapper-->
+        <script type="text/javascript">
+        // <![CDATA[
+        var disqus_shortname = 'eltechs';
+        (function () {
+            var nodes = document.getElementsByTagName('span');
+            for (var i = 0, url; i < nodes.length; i++) {
+                if (nodes[i].className.indexOf('dsq-postid') != -1 && nodes[i].parentNode.tagName == 'A') {
+                    nodes[i].parentNode.setAttribute('data-disqus-identifier', nodes[i].getAttribute('data-dsqidentifier'));
+                    url = nodes[i].parentNode.href.split('#', 1);
+                    if (url.length == 1) { url = url[0]; }
+                    else { url = url[1]; }
+                    nodes[i].parentNode.href = url + '#disqus_thread';
+                }
+            }
+            var s = document.createElement('script');
+            s.async = true;
+            s.type = 'text/javascript';
+            s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+        // ]]>
+        </script>
+        <script type='text/javascript' src='https://eltechs.com/wp-includes/js/comment-reply.min.js?ver=4.7.5'></script>
+<script type='text/javascript' src='https://eltechs.com/wp-content/plugins/contact-form-7/includes/js/jquery.form.min.js?ver=3.51.0-2014.06.20'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var _wpcf7 = {"recaptcha":{"messages":{"empty":"Please verify that you are not a robot."}}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://eltechs.com/wp-content/plugins/contact-form-7/includes/js/scripts.js?ver=4.7'></script>
+<script type='text/javascript' src='https://eltechs.com/wp-includes/js/wp-embed.min.js?ver=4.7.5'></script>
+
+<script type="text/javascript">
+  window.intercomSettings = {
+    app_id: "cbydoywz"
+  };
+</script>
+<script type="text/javascript">(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/cbydoywz';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+
+<script type="text/javascript">
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-39021365-1', 'auto');
+  ga('send', 'pageview', document.location.pathname);
+
+</script>
+
+<!-- Facebook Pixel Code -->
+<script type="text/javascript">
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init', '143274986182985', {em: 'insert_email_variable,'});
+
+fbq('track', 'PageView');
+</script>
+
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=143274986182985&ev=PageView&noscript=1" /></noscript>
+<!-- DO NOT MODIFY -->
+<!-- End Facebook Pixel Code -->
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter44426464 = new Ya.Metrika({
+                    id:44426464,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/44426464" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+</body>
+</html>

@@ -1,0 +1,519 @@
+
+
+<!DOCTYPE html>
+<!--[if gt IE 9]><!-->
+<html lang="en" class="no-js">
+<!--<![endif]-->
+<head><meta charset="utf-8" />
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" /><![endif]-->
+    <meta name="description" /><meta name="keywords" /><meta name="robots" content="index, follow" /><meta name="author" /><meta name="format-detection" content="telephone=no" /><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui" /><link rel="shortcut icon" href="Images/Nbricon.ico" type="image/x-icon" /><link href="//CDN.nabors.com/Nabors1.0//Styles/bootstrap.min.css" rel="stylesheet"/>
+<link href="//CDN.nabors.com/Nabors1.0//Styles/kendo.common-bootstrap.min.css" rel="stylesheet"/>
+<link href="//CDN.nabors.com/Nabors1.0//Styles/kendo.bootstrap.min.css" rel="stylesheet"/>
+<link href="//CDN.nabors.com/Nabors1.0//Styles/kendo.nabors.app.css" rel="stylesheet"/>
+<link href="//CDN.nabors.com/Nabors1.0//Styles/kendo.nabors.landing.css" rel="stylesheet"/>
+<link href="//CDN.nabors.com/Nabors1.0//Styles/kendo.nabors.mobile.app.css" rel="stylesheet"/>
+<link rel="stylesheet" href="Styles/print.css" media="print" />
+	
+	<script src="//cdn.nabors.com/Nabors1.0/Scripts/modernizr-2.6.2.js"></script>
+    <script src="//cdn.nabors.com/Nabors1.0/Scripts/js/libs.js"></script>
+    <script src="//kendo.cdn.telerik.com/2016.1.226/js/jszip.min.js"></script>
+    <script src="//cdn.nabors.com/Nabors1.0/Scripts/bootstrap.min.js"></script>
+    <script src="//cdn.nabors.com/Nabors1.0/Scripts/bootstrap-session-timeout.js"></script>
+        <script src="//cdn.nabors.com/Nabors1.0/Scripts/kendo.custom.min.js"></script>
+	<script>
+        if (typeof kendo == "undefined") {
+            document.write(decodeURIComponent('%3Cscript src="/Scripts/kendo/kendo.all.min.js" %3E%3C/script%3E'));
+        }
+    </script>
+	  	<script type="text/javascript" src="../Scripts/jquery.cookie.js"></script>
+<title>
+
+</title></head>
+<body>
+    <div data-role="view" class="wrapper">
+        <header id="frmheader" data-role="header" data-Name="Header">
+            <div class="container-fluid reset-padding wrap-header" style="padding-left:0px;margin-left:0px">
+			   <div class="row" style="padding-top: 0px;">
+					<div class="col-md-3 col-lg-3 col-md-push-9 col-lg-push-9 right-col hidden-xs hidden-sm" style="padding-top:10px;color:white;">					  
+					</div>
+				   <div class="col-md-9 col-lg-9 col-md-pull-3 col-lg-pull-3">
+						<div class="logo" >
+							<a style="cursor:pointer" title="my nabors">
+								<img id="myNaborsLogo" src="../Images/myNaborslogo.png" alt="myNabors"> 
+							</a>
+						</div>
+					</div>
+				</div>			  
+            </div>
+        </header>		
+	
+		
+        
+    <div data-role="view" class="wrapper sectionCenterAlign" id="frmLogin" data-name="Login">
+        <div id="ContentPlaceHolder1_tbl" class="container-fluid">
+            <div class="row">
+                <div class="col-lg-5 col-md-6 col-sm-6 col-xs-12">
+				 <ul class="nav nav-tabs customTabs">
+                <li class="active" id="liEmployee">
+                    <a href="#tblEmployee" data-toggle="tab" class="active"><i class="glyphicon glyphicon-user"></i>&nbsp;<span class="tabFont" data-bind="text:lnEmployee"></span></a>
+                </li>
+                <li id="liVendor" data-bind="visible: isViewEnabled">
+                    <a href="#tblVendor" data-toggle="tab"><i class="glyphicon glyphicon-list-alt"></i>&nbsp;<span class="tabFont" data-bind="text:lnVendor"></span></a>
+                </li>
+                <li id="liCandidate" data-bind="visible: isViewEnabled">
+                    <a href="#tblCandidate" data-toggle="tab"><i class="glyphicon glyphicon-book"></i>&nbsp;<span class="tabFont" data-bind="text:lnCandidate"></span></a>
+                </li>
+
+            </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tblEmployee">
+                           
+                            <div class="container-fluid LoginHeaderBG">
+								 <div class="form-group" style="margin-bottom: 2px !important">
+                                <h4 class="LoginSectionHeader">
+                                    <label data-bind="text:lnLoginHeader"></label>
+                                </h4>
+                            </div>
+                                <div class="form-group" style="margin-top: 15px !important">
+                                    <label data-bind="text:lnLoginID"></label>
+                                    <div class="requiredBar">
+                                        <input type="text" id="sUserID" name="sUserID" data-bind="value: LoginUserName, events: { change: OnUsernameChange }" maxlength="30" class="k-textbox appLoginControls" />
+                                        <span class="k-invalid-msg" data-for="sUserID" data-bind="text:lnEmployeeRequiredMsg"></span>
+                                    </div>
+
+                                </div>
+                                <div id="registered" class="form-group">
+                                    <label data-bind="text:lnEmployeePwd"></label>
+                                    <div class="requiredBar">
+                                        <input type="password" id="sUserPwd" name="sUserPwd" data-bind="value: LoginUserPwd, events: { keyup: OnPasswordkeyup}" maxlength="30" class="k-textbox appLoginControls" />
+                                        <span class="k-invalid-msg" data-for="sUserPwd" data-bind="text:lnPasswordRequiredMsg"></span>
+                                    </div>
+                                </div>
+                                <div id="nonRegistered" style="display: none">
+                                    <div class="form-group">
+                                        <label data-bind="text:lnSSN"></label>
+                                        <div class="requiredBar">
+                                            <input name="ctl00$ContentPlaceHolder1$txtSSN" type="password" id="ContentPlaceHolder1_txtSSN" data-bind="value: LoginUserSSN" onkeypress="return isNumberKey(event)" placeholder="SSN" class="k-textbox appLoginControls" />
+                                            <span class="k-invalid-msg" data-for="txtSSN" data-bind="text:lnSSNRequiredMsg"></span>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label data-bind="text:lnDOB"></label>
+                                        <div class="requiredBar">
+                                            <input name="ctl00$ContentPlaceHolder1$txtBirth" type="text" id="ContentPlaceHolder1_txtBirth" data-bind="value: LoginUserDOB" class="appLoginControls" data-role="datepicker" placeholder="MM/dd/yyyy" />
+                                            <br />
+                                            <span class="k-invalid-msg" data-for="txtBirth" data-bind="text:lnDOBRequiredMsg"></span>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group" style="display: none">
+                                        <label>Personal Email Address:</label>
+                                        <div class="requiredBar">
+                                            <input name="ctl00$ContentPlaceHolder1$txtEmail" type="text" id="ContentPlaceHolder1_txtEmail" placeholder="email" style="width: 100%" class="k-textbox" />
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label data-bind="text:lnCode"></label>
+                                        <div class="requiredBar">
+                                            <div class='boldText'><span style='margin:5px;float:left;'><input id=ctl00$ContentPlaceHolder1$ccValidate  name=ctl00$ContentPlaceHolder1$ccValidate class='textBox_style' type=text size=5 maxlength=5 value=''> <span class='redText'>*</span></span><br clear='all'><span style='margin:5px;float:left;'><img src="CaptchaImage.aspx?guid=b831041f-beb3-402c-bc99-06befa05b988" border='0' width=180 height=50></span></div>
+                                            <span class="k-invalid-msg" data-for="ccValidate"></span>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <br />
+                                </div>
+
+                                <div class="form-group">
+                                    <button role="button" id="btnLogin" class="k-button k-primary" data-bind="events: { click: OnEmployeeSignClick }"><span data-bind="text:lnSignIn"></span></button>
+                                    <a class="ForgotLink" data-bind="events: { click: OnEmployeeForgotPwdClick }">Forgot/Reset Password/Unlock Account</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tblVendor">
+                            
+                            
+                             <div class="container-fluid LoginHeaderBG">
+							 <div class="form-group" style="margin-bottom: 2px !important">
+                                            <h4 class="LoginSectionHeader">
+                                                <label data-bind="text:lnVendorHeader"></label>
+                                            </h4>
+                                        </div>
+                                        <div class="form-group" style="margin-top: 15px !important">
+                                            <label data-bind="text:lnVendorNo"></label>
+                                            <div class="requiredBar">
+                                                <input type="text" id="sVendorNo" name="sVendorNo" data-bind="value:LoginVendorNo" maxlength="30" class="k-textbox appLoginControls" />
+                                                <span class="k-invalid-msg" data-for="sVendorNo" data-bind="text:lnVendorNoRequiredMsg"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-bind="text:lnVendorUsername"></label>
+                                            <div class="requiredBar">
+                                                <input type="text" id="sVendorUserID" name="sVendorUserID" data-bind="value:LoginVendorUserID" maxlength="30" class="k-textbox appLoginControls" />
+                                                <span class="k-invalid-msg" data-for="sVendorUserID" data-bind="text:lnVendorIDRequiredMsg"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-bind="text:lnVendorPwd"></label>
+                                            <div class="requiredBar">
+                                                <input id="sVendorUserPwd" name="sVendorUserPwd" type="password" data-bind="value:LoginVendorPwd" maxlength="30" class="k-textbox appLoginControls" />
+                                                <span class="k-invalid-msg" data-for="sVendorUserPwd" data-bind="text:lnVendorPwdRequiredMsg"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button role="button" class="k-button k-primary" id="btnVendorLogin" data-bind="events: { click: OnVendorSignInClick }"><span data-bind="    text: lnSignIn"></span></button>
+                                            <a style="float: right" class="ForgotLink" data-bind="events: { click: OnVendorForgotPwdClick }">Forgot/Reset Password/Unlock Account</a>
+                                        </div>
+										 <div class="form-group" style="margin-bottom: 2px !important">
+                                            <h4 class="LoginSectionHeader">
+                                                <label >US & Canada Vendors</label>
+                                            </h4>
+                                        </div>
+										  <div class="form-group" style="margin-top: 15px !important">
+                                          <a href="Vendors/Default.aspx">Register, Training Documents & Login </a>
+                                        </div>
+                                 </div>
+                        </div>
+                        <div class="tab-pane" id="tblCandidate">
+                              
+                            <div class="container-fluid LoginHeaderBG">
+                                      <div class="form-group" style="margin-bottom: 2px !important">
+                                            <h4 class="LoginSectionHeader">
+                                                <label data-bind="text:lnCandidateHeader"></label>
+                                            </h4>
+                                        </div>
+                                        <div class="form-group" style="margin-top: 15px !important">
+                                            <label data-bind="text:lnCandidateID"></label>
+                                            <div class="requiredBar">
+                                                <input type="text" id="sCandidateUserID" name="sCandidateUserID" data-bind="value: CandidateUserID" maxlength="30" class="k-textbox appLoginControls" />
+                                                <span class="k-invalid-msg" data-for="sCandidateUserID" data-bind="text:lnCandidateIDRequiredMsg"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label data-bind="text:lnCandidatePwd"></label>
+                                            <div class="requiredBar">
+                                                <input type="password" id="sCandidatePwd" name="sCandidatePwd" data-bind="value: CandidatePwd" maxlength="30" class="k-textbox appLoginControls" />
+                                                <span class="k-invalid-msg" data-for="sCandidatePwd" data-bind="text:lnCandidatePwdRequiredMsg"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button role="button" class="k-button k-primary" id="btnCustomerLogin" data-bind="events: { click: OnCandidateSignInClick }"><span data-bind="text:lnSignIn"></span></button>
+                                            <a style="float: right" class="ForgotLink" data-bind="events: { click: OnCandidateForgotPwdClick }">Forgot/Reset Password/Unlock Account</a>
+                                        </div>
+                                    </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+                <div class="col-lg-7 col-md-6 col-sm-6 col-xs-12">
+                    <h4 class="LoginHeader">
+                        <label data-bind="text:lnApplications"></label>
+                    </h4>
+                    <div class="container-fluid LoginHeaderAppBG">
+                        <div class="appLogoIcons">
+                            <div class="text-center">
+                                <img src="Images/OutlookIcon.png" height="50" width="50" onclick="javascript:window.open('https://email.nabors.com/');" style="cursor: pointer;" title="Microsoft Outlook" />
+                                <span style="display: block" class="hidden-xs"><a id="lnkOutlook" href="https://email.nabors.com/" target="_blank">Outlook</a></span>
+                            </div>
+                        </div>
+                        <div class="appLogoIcons">
+                            <div class="text-center">
+                                <img src="Images/CitrixIcon.png" height="50" width="50" onclick="javascript:window.open('https://desktopapps.nabors.com/');" style="cursor: pointer;" title="Nabors Remote Desktop" />
+                                <span style="display: block" class="hidden-xs"><a id="lnkCitrix" href="https://desktopapps.nabors.com/" target="_blank">Citrix</a></span>
+                            </div>
+                        </div>
+                        <div class="appLogoIcons">
+                            <div class="text-center">
+                                <img src="Images/OracleIcon.jpeg" height="50" width="50" onclick="javascript:window.open('https://nofp.nabors.com/OA_HTML/AppsLogin');" style="cursor: pointer;" title="Oracle Financials" />
+                                <span style="display: block" class="hidden-xs"><a id="lnkFinancials" href="https://nofp.nabors.com/OA_HTML/AppsLogin" target="_blank">Financials</a></span>
+                            </div>
+                        </div>
+                        <div class="appLogoIcons" data-bind="visible: isViewEnabled">
+                            <div class="text-center">
+                                <img src="Images/salesforce.png" height="50" width="50" onclick="javascript:window.open('https://nabors.my.salesforce.com/home/home.jsp');" style="cursor: pointer;" title="Salesforce" />
+                                <span style="display: block" class="hidden-xs"><a id="lnkSalesforce" href="https://nabors.my.salesforce.com/home/home.jsp" target="_blank">Salesforce</a></span>
+                            </div>
+                        </div>
+                        <div class="appLogoIcons">
+                            <div class="text-center">
+                                <img src="Images/yammer.png" height="50" width="50" onclick="javascript:window.open('https://www.yammer.com/nabors.com');" style="cursor: pointer;" title="Yammer" />
+                                <span style="display: block" class="hidden-xs"><a id="lnkYammer" href="https://www.yammer.com/nabors.com" target="_blank">Yammer</a></span>
+                            </div>
+                        </div>
+                        <div class="appLogoIcons">
+                            <div class="text-center">
+                                <img src="Images/BI.png" height="50" width="50" onclick="javascript:window.open('https://mybit.nabors.com');" style="cursor: pointer;" title="myBIT" />
+                                <span style="display: block" class="hidden-xs"><a id="lnkmyBIT" href="https://mybit.nabors.com" target="_blank">myBIT</a></span>
+                            </div>
+                        </div>
+                        <div class="appLogoIcons" data-bind="visible: isViewEnabled">
+                            <div class="text-center">
+                                <img src="Images/JobSeekersIcon.png" height="50" width="50" onclick="javascript: window.open('http://www.nabors.com/careers');" style="cursor: pointer;" title="Nabors Careers" />
+                                <span style="display: block" class="hidden-xs"><a id="lnkCareers" href="http://www.nabors.com/careers" target="_blank">Careers</a></span>
+                            </div>
+                        </div>
+                        <div class="appLogoIcons">
+                            <div class="text-center">
+                                <img src="Images/SOIcon.jpg" height="50" width="50" onclick="javascript: window.open('/SafetyObservation/Addso.aspx');" style="cursor: pointer;" title="Safety Observation" />
+                                <span style="display: block" class="hidden-xs"><a id="lnkSO" href="/SafetyObservation/Addso.aspx" target="_blank">Safety Observation</a></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+           
+            
+
+            <section style="margin-left: 0px; margin-right:0px;margin-top:30px" data-bind="visible: isViewEnabled">
+                <div class="row" style="margin-top: 0px; padding-top: 0px;">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6" style="max-height:none !important">
+                        <h4 class="LoginSectionHeader"><a href="https://www.nabors.com/careers">Careers
+                        <img src="Images/small-go.png" alt="Go" style="float:right" ></a></h4>
+                        <div class="form-group">
+                            <a href="https://www.nabors.com/careers">
+                            <img src="//cdn.nabors.com/Nabors1.0/Images/home-ex-image.jpg" style="width:100%"></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6" style="max-height:none !important">
+
+
+                        <h4 class="LoginSectionHeader">
+                            <a data-video="https://nabors.blob.core.windows.net/library-container/related-videos/clint-ford-technology.mp4?sfvrsn=2" href="#video-modal" role="button" data-toggle="modal">Technology
+                            <img src="Images/small-go.png" alt="Go" style="float: right">
+                        </a></h4>
+                          <div class="form-group">
+                            <a class="video-thumbnail home" data-video="https://nabors.blob.core.windows.net/library-container/related-videos/clint-ford-technology.mp4?sfvrsn=2" href="#video-modal" role="button" data-toggle="modal">
+                                <div class="video-overlay"></div>
+                                <img alt="" class="video-image" src="//cdn.nabors.com/Nabors1.0/Images/home_video_hover.jpg" style="width: 100%">
+                            </a>
+							
+  						<div tabindex="-1" class="modal hide fade" id="video-modal" role="dialog" aria-hidden="true" aria-labelledby="video-modal-label"> <div id="video-modal-inner"> <button class="close" aria-hidden="true" type="button" data-dismiss="modal">&times;</button> <div id="video-player"></div> </div> </div>
+								
+                       </div>
+
+                    </div>
+                       <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6" style="max-height:none !important" >
+                        <h4 class="LoginSectionHeader"><a href="https://www.nabors.com/premium-assets">Premium Assets
+                                    <img alt="Go" src="Images/small-go.png" style="float: right"></a></h4>
+                          <div class="form-group">
+                            <a href="https://www.nabors.com/premium-assets">
+                                <img src="//cdn.nabors.com/Nabors1.0/Images/operations_worldwide.jpg" style="width: 100%"></a>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6" style="max-height:none !important">
+                        <h4 class="LoginSectionHeader"><a href="#" target="_blank">&nbsp;<img alt="Go" style="float: right" src="Images/small-go.png"></a></h4>
+                        <figure>
+                            <a href="#" target="_blank">
+                            &nbsp;
+                        </figure>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="max-height:none !important"  >
+                        <h4 class="LoginSectionHeader" ><a href="https://investor.nabors.com/news.aspx?iid=4010705">News &amp; Events
+                                    <img src="Images/small-go.png" alt="Go" style="float: right"></a></h4>
+                        <div id="feedContent">
+                            Loading News....
+                        </div>
+                        <div style="font-size: small; float: right; margin-right: 15px;">
+                            <a href="https://phx.corporate-ir.net/phoenix.zhtml?c=70888&p=irol-news&nyo=0">More..
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="max-height:none !important">
+                        <h4 class="LoginSectionHeader">
+                            <a href="#">Investor Resources
+									<img alt="Go" src="Images/small-go.png" style="float: right">
+                            </a>
+                        </h4>
+                        <img title="AnnualCover_forWeb" style="float: left" class="investorresources" src="https://nabors.blob.core.windows.net/library-container/about/annualcover_forweb.jpg?sfvrsn=2">
+                        <ul style="list-style: none; list-style-image: none; margin: 0; padding: 0; float: left; margin-left: 10px">
+                            <li>
+                                <div class="sfdownloadFileWrp"><a href="https://investor.nabors.com/interactive/newlookandfeel/4010705/pdf/Nabors_10-K_printing_FINAL.pdf" target="_blank"><span class="sfpdf">2015 Annual Report</span></a>&nbsp;</div>
+                            </li>
+                            <li>
+                                <div class="sfdownloadFileWrp"><span class="sfpdf"><a href="https://investor.nabors.com/Doc/Index?did=36305180" target="_blank">2016 Proxy Statement</a></span></div>
+                            </li>
+                            <li>
+                                <div class="sfdownloadFileWrp"><a href="https://nabors.blob.core.windows.net/library-container/corporate_governance/annualmeeting2016.pdf?sfvrsn=2" target="_blank">2016 Annual Meeting Information</a>&nbsp;</div>
+                            </li>
+                            &nbsp;
+                        </ul>
+                    </div>
+
+                 
+
+
+
+
+                    
+
+                </div>
+            </section>
+            <section style="margin-left: 0px; margin-right:0px;margin-top:30px" data-bind="invisible: isViewEnabled">
+                <div class="row" style="margin-top: 0px; padding-top: 0px;">                   
+                    <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6" style="max-height:none !important">
+
+
+                        <h4 class="LoginSectionHeader">
+                            <a data-video="https://nabors.blob.core.windows.net/library-container/related-videos/clint-ford-technology.mp4?sfvrsn=2" href="#video-modal" role="button" data-toggle="modal">Technology
+                            <img src="Images/small-go.png" alt="Go" style="float: right">
+                        </a></h4>
+                          <div class="form-group">
+                            <a class="video-thumbnail home" data-video="https://nabors.blob.core.windows.net/library-container/related-videos/clint-ford-technology.mp4?sfvrsn=2" href="#video-modal" role="button" data-toggle="modal">
+                                <div class="video-overlay"></div>                                
+                                <img alt="" class="video-image" id="imgTechnology" style="width: 100%" data-bind="invisible: isViewEnabled">
+                            </a>
+							
+  						<div tabindex="-1" class="modal hide fade" id="video-modal" role="dialog" aria-hidden="true" aria-labelledby="video-modal-label"> <div id="video-modal-inner"> <button class="close" aria-hidden="true" type="button" data-dismiss="modal">&times;</button> <div id="video-player"></div> </div> </div>
+								
+                       </div>
+
+                    </div>
+                   
+                </div>
+            </section>			
+
+            <div class="modal fade" data-keyboard="false" data-backdrop="static" id="dvTrustMachine" role="dialog" style="padding: 50px;">
+                <div class="modal-dialog modal-md modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><span data-bind="text:lnSignInAlert"></span></h4>
+                        </div>
+                        <div class="modal-body">
+                            <p><span data-bind="text:lnSignAlertHeader"></span></p>
+                            <p><span data-bind="text:lnTrust"></span></p>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button data-role="button" class="k-button k-primary" id="btnTrustMachine" data-bind="events: { click: OnEmployeeTrustMachineClick }"><span data-bind="text:lnYes"></span></button>
+                            <button data-role="button" class="k-button k-primary" id="btnDoNotTrustMachine" data-bind="events: { click: OnEmployeeNoTrustMachineClick }"><span data-bind="text:lnNo"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" data-keyboard="false" data-backdrop="static" id="dvCJESSupplier" role="dialog" style="padding: 50px;">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Nabors and C & J Transaction Related Systems Changes</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                System does not recognize your access to myNabors. If you are a C&J (formerly known as Nabors Completion & Production Services Co. and Nabors Production Services Ltd.) Supplier, please access <a href="http://www.myCJES.com" target="_blank">www.myCJES.com</a>.
+                               If you are valid Supplier for Nabors (not to NCPS and NPSL companies) and received this in error, please contact the Vendor Services at 866-579-1569.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-role="button" class="k-button k-primary" id="btnCJESSuppAck" data-bind="events: { click: OnCJESSuppAck }"><span data-bind="text:lnAckTxt"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" data-keyboard="false" data-backdrop="static" id="dvCommonVendor" role="dialog" style="padding: 50px;">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Nabors and C & J Transaction Related Systems Changes</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Note that you are accessing myNabors and you will only see Nabors related transactions (POs and Invoices). If you need to access any C&J (NCPS and NPSL) related transaction, please access <a href="http://www.myCJES.com" target="_blank">www.myCJES.com</a>.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-role="button" class="k-button k-primary" id="btnCommonSuppAck" data-bind="events: { click: OnCommonSuppAck }"><span data-bind="text:lnAckTxt"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" data-keyboard="false" data-backdrop="static" id="dvGenericMessage" role="dialog" style="padding: 50px;">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Nabors and C & J Transaction Related Systems Changes</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                On May 26, 2015, all computer systems for Nabors Completions & Production Services (now known as C&J Well Services, Inc.) ("NCPS") 
+                                and Nabors Production Services Ltd (now known as CJ Energy Production Services – Canada Ltd.) ("NPSL") will be separated and using their own systems under myCJES.com. 
+                            </p>
+                            <p>
+                                <b><u>Attention to NCPS and NPSL Employees:</u></b>
+                                You will no longer be allowed to use myNabors.com or other Nabors systems. Please use <a href="http://www.myCJES.com" target="_blank">www.myCJES.com</a>
+                            </p>
+                            <p>
+                                <b><u>Attention to Suppliers:</u></b>
+                                Please see the additional information below:
+                                <ul>
+                                    <li>If you provide services to both C&J (NCPS and NPSL) and Nabors companies, note that your transactions (POs and Invoices) have been split between myNabors and myCJES systems. 
+                                        You will only see relevant transactions in the corresponding systems. For C&J transactions, you must access <a href="http://www.myCJES.com" target="_blank">www.myCJES.com</a>
+                                        and for Nabors transactions, you must access <a href="http://www.myNabors.com/login.aspx" target="_blank">www.myNabors.com</a>
+                                    </li>
+                                    <li>If you provide services to only C&J (NCPS and NPSL), your access to myNabors.com has been disabled and transactions (POs and Invoices) have been moved to myCJES systems. 
+                                        You will be allowed to access <a href="http://www.myCJES.com/login.aspx" target="_blank">www.myCJES.com</a>
+                                    </li>
+                                    <li>If you provide services to only Nabors (not to NCPS and NPSL), you will not have access to myCJES.com and you will continue to have access to 
+                                        <a href="http://www.myNabors.com/login.aspx" target="_blank">www.myNabors.com</a> and all your transactions (POs and Invoices) will be available
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-role="button" class="k-button k-primary" id="btnGenericAck" data-bind="events: { click: OnGenericAck }"><span data-bind="text:lnAckTxt"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <input type="hidden" id="hdnUID" />
+    <input type="hidden" id="hdnPageType" />
+    <input type="hidden" id="hdnMessage" />    
+    <script type="text/javascript" src="../Scripts/ViewModel/Login.js?Version=1.0.0.7"></script>
+
+
+    </div>
+       
+   <div id="Searching_Modal" class="modal fade" tabindex="-1" role="dialog" style="padding:50px;">
+            <div class="modal-dialog">
+			  <div class="modal-content">
+                <div style="margin:10px">
+                        <img src="../Images/loading-image.gif" /> 
+                        <div style="float:right" class="blueLink">Please wait while your request is processing...</div>
+                    </div>
+					
+				</div>
+            </div>
+        </div>
+		
+	   
+	
+	 <script type="text/javascript" src="../Scripts/Common/Library.js?Version=1.0.0.6"></script>
+     <script type="text/javascript" src="../Scripts/Model/LoadModel.js"></script>
+     <script type="text/javascript" src="../Scripts/ViewModel/LoadGenericVM.js"></script>
+     <script type="text/javascript" src="../Scripts/ViewModel/HeaderVM.js?Version=1.0.0.1"></script>
+	
+    
+    <!--[if lt IE 8]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
+    <noscript>JavaScript is off. Please enable to view full site.</noscript>    
+</body>
+  
+
+</html>
+

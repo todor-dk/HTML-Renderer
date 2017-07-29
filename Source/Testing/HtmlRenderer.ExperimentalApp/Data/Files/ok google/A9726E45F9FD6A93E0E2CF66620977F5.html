@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html class="google mmfb" data-ng-app="tips.app" data-ng-controller="AppCtrl as appCtrl"  lang="en"
+      data-url="//www.gstatic.com/cavalry/coligo/gtips/production/en/data.json">
+<head>
+  <meta charset="utf-8">
+  <script>
+    (function(H){H.className=H.className.replace(/\bgoogle\b/,'google-js')})(document.documentElement)
+  </script>
+  <meta content="initial-scale=1, minimum-scale=1, width=device-width" name="viewport">
+  <meta content="Tips and tricks you didn't know you could do with Google for on the go, at work and having fun." name="description">
+  <title>Google</title>
+  <script src="//www.google.com/js/google.js">
+  </script>
+  <script>
+    var tipsAnalyticsTracker=new gweb.analytics.AutoTrack({profile:"UA-44966988-1"});
+  </script>
+  <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|Product+Sans:400&amp;lang=en" rel="stylesheet">
+  <link href="//www.google.com/css/maia.css" rel="stylesheet">
+  <link href="//www.gstatic.com/external_hosted/normalize/v3_0_1/normalize.min.css" rel="stylesheet">
+  <link href="//fonts.googleapis.com/css?family=Roboto:100,300,400|Roboto+Slab:100,300,400,700&amp;lang=en" rel="stylesheet">
+  <link href="/apptips/css/tips.min.css" rel="stylesheet">
+  <link href="/apptips/images/favicon.ico" rel="shortcut icon" type="image/x-icon">
+  <base href="/apptips/tips/">
+  <script src="https://apis.google.com/js/api.js"></script>
+</head>
+<body class="tips lang-en">
+
+<div class="maia-header" id="maia-header" role="banner">
+  <div class="maia-aux">
+    <h1>
+      <a href="/apptips/tips/" data-g-event="Maia: Header" data-g-action="Maia: Header" data-g-label="Google"><img alt="Google" src="//www.google.com/images/branding/googlelogo/1x/googlelogo_color_116x41dp.png" srcset="//www.google.com/images/branding/googlelogo/2x/googlelogo_color_116x41dp.png 2x"></a>
+    </h1>
+
+<div class="top-nav" data-ng-if="appCtrl.isReady" data-ng-cloak>
+    <a href="/apptips/tips/"  class="active" >{[ 'Tips' | translate ]}</a>
+    <a href="/apptips/apps/" >{[ 'Apps' | translate ]}</a>
+</div>
+    <a class="maia-teleport" href="#content">Skip to content</a>
+    <div class="maia-util">
+      <div class="util-item">
+        <div data-search-box=""></div>
+      </div>
+      <div class="util-item" data-ng-if="appCtrl.isReady" data-user-info="appCtrl.user"></div>
+    </div>
+  </div>
+</div>
+<div id="maia-main" role="main">
+  <div class="maia-teleport" id="content"></div>
+<div class="tips-main-content" data-ui-view=""></div>
+<script type="text/ng-template" id="product-header.html">
+<div class="product-header" data-ng-style="{'background-color': '#' + ctrl.product.color.secondary.hex, 'color': '#' + ctrl.product.textColor_}">
+  <div class="product-header-title">{[ ::ctrl.product.title ]}</div>
+  <div class="product-header-description">{[ ::ctrl.product.description1 ]}</div>
+  <div class="product-header-cta-wrapper" data-ng-style="{'color': '#' + ctrl.product.color.secondary.hex, 'background-color': '#' + ctrl.product.textColor_}">
+    <a data-ng-style="{'border-color': '#' + ctrl.product.textColor_, 'color': '#' + ctrl.product.textColor_}" data-ng-href="{[ ::ctrl.product.ctaData.tips.url | utmPassThrough ]}" class="cta-link product-header-cta" target="_blank">{[ ::ctrl.product.ctaData.tips.text ]}</a>
+  </div>
+</div></script>
+<script type="text/ng-template" id="search-box.html">
+
+<a data-ng-if="!searchBoxCtrl.searchVisible" data-ng-click="searchBoxCtrl.searchVisible = !searchBoxCtrl.searchVisible">
+  <svg class="icon icon-search" viewBox="0 0 24 24" height="20" width="20" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+</a>
+<div class="search-box-wrapper tip-side-padding" data-ng-if="searchBoxCtrl.searchVisible">
+  <a class="search-box-back-button" data-ng-href="{[ searchBoxCtrl.previousState ]}" data-ng-click="searchBoxCtrl.searchVisible = !searchBoxCtrl.searchVisible">
+    <svg class="icon icon-expand_more rotate-90" viewBox="0 0 24 24" height="26" width="26" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+  </a>
+  <div class="search-box-input-wrapper">
+    <input class="search-box" type="text" data-ng-model="searchBoxCtrl.query" data-ng-model-options="{debounce: 300}" autofocus>
+    <button class="search-clear" data-ng-show="searchBoxCtrl.query !== ''" data-ng-click="searchBoxCtrl.clearQuery()"><svg class="icon icon-cancel" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+</button>
+  </div>
+</div></script>
+<script type="text/ng-template" id="search.html">
+<div class="search-overlay">
+  <div class="search-result-counts">
+    <div class="site-width">
+      <span data-ng-if="searchCtrl.results.counts.total">Results:</span>
+      <span data-ng-if="searchCtrl.results.counts.tips" data-ng-pluralize count="searchCtrl.results.counts.tips" when="{'one': '1 Tip', 'other': '{} Tips'}"></span>
+      <span data-ng-if="searchCtrl.results.counts.tips && searchCtrl.results.counts.collections">|</span>
+      <span data-ng-if="searchCtrl.results.counts.collections" data-ng-pluralize count="searchCtrl.results.counts.collections" when="{'one': '1 Collection', 'other': '{} Collections'}"></span>
+
+      <span data-ng-if="!searchCtrl.results.counts.total">No results found</span>
+      <div class="search-error" data-ng-if="searchCtrl.results.counts.total === 0">
+        <p>Aw snap!</p>
+        <p>You've found an area that we don't have tips for yet.</p>
+        <p>But fear not, we're working hard to create more tips everyday.</p>
+      </div>
+    </div>
+  </div>
+  <div data-tips-collection="searchCtrl.results.tips" data-collection-slug="searchCtrl.state.params.collectionSlug" data-tip-slug="searchCtrl.state.params.tipSlug"></div>
+</div></script>
+<script type="text/ng-template" id="share-menu.html">
+
+<div class="share-buttons" data-ng-class="{'share-buttons-expanded': shareMenuCtrl.isOpen}">
+  <button class="share-button share-button-share" type="button" data-ng-click="shareMenuCtrl.isOpen = !shareMenuCtrl.isOpen;" aria-role="button" aria-controls="share-menu">
+    <svg class="icon icon-share" viewBox="0 0 24 24" height="20" width="20" xmlns="http://www.w3.org/2000/svg" data-ng-if='!shareMenuCtrl.isOpen'>
+    <path d="M0 0h24v24H0z" fill="none"/>
+    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+</svg>
+
+    <svg class="icon icon-close" viewBox="0 0 24 24" height="10" width="10" xmlns="http://www.w3.org/2000/svg" data-ng-if='shareMenuCtrl.isOpen'>
+  <title>close</title>
+  <polygon points="21.57 0 12 9.58 2.42 0 0 2.42 9.58 12 0 21.57 2.42 24 12 14.42 21.57 24 24 21.57 14.42 12 24 2.42 21.57 0"/>
+</svg>
+
+  </button>
+  <div id="share-menu" class="share-menu" aria-hidden="{[ !shareMenuCtrl.isOpen ]}" role="region" aria-expanded="{[ shareMenuCtrl.isOpen ]}">
+    <button class="share-button share-button-gplus" type="button" data-share-button data-network="gplus" data-url="{[ ::shareMenuCtrl.url ]}" data-message="{[ ::shareMenuCtrl.message ]}">
+      <svg class="icon icon-gplus" viewBox="0 0 24 24" height="20" width="20" xmlns="http://www.w3.org/2000/svg" >
+  <path d="M0,11.6c0.2-4.1,3.5-7.2,7.6-7.2c1.9,0,3.7,0.7,5.1,1.9c-0.6,0.7-1.3,1.4-1.9,2C9,6.9,6.6,6.8,4.8,8.1 c-2.1,1.6-2.6,4.7-0.9,6.8c0.2,0.3,0.5,0.5,0.7,0.8c2.3,2.1,6.7,1.1,7.3-2.2H7.6v-2.6h7.3c0.3,2.1-0.2,4.2-1.4,5.9 c-2.1,2.6-5.6,3.5-8.7,2.3C1.8,17.9-0.2,14.9,0,11.6z"/>
+  <path d="M19.6,8.7h2.2v2.2H24V13h-2.2v2.2h-2.2v-2.1h-2.2v-2.2h2.2C19.6,10.1,19.6,9.4,19.6,8.7z"/>
+</svg>
+
+    </button>
+    <button class="share-button share-button-facebook" type="button" data-share-button data-network="facebook" data-url="{[ ::shareMenuCtrl.url ]}" data-message="{[ ::shareMenuCtrl.message ]}">
+      <svg class="icon icon-facebook" viewBox="0 0 24 24" height="20" width="20" xmlns="http://www.w3.org/2000/svg" >
+  <title>facebook</title>
+  <path d="M-4.37,23.9H8.55V13.46H5V9.38H8.55v-3C8.55,2.9,10.67,1,13.78,1a28.85,28.85,0,0,1,3.14.16V4.8H14.77c-1.69,0-2,.8-2,2v2.6h4l-0.52,4.07H12.75V23.9h6.87"/>
+</svg>
+
+    </button>
+    <button class="share-button share-button-twitter" type="button" data-share-button data-network="twitter" data-url="{[ ::shareMenuCtrl.url ]}" data-message="{[ ::shareMenuCtrl.message ]}">
+      <svg class="icon icon-twitter" viewBox="0 0 24 24" height="20" width="20" xmlns="http://www.w3.org/2000/svg" >
+  <title>twitter</title>
+  <path d="M24,4.31a9.84,9.84,0,0,1-2.83.78,4.94,4.94,0,0,0,2.16-2.72,9.86,9.86,0,0,1-3.13,1.19A4.93,4.93,0,0,0,11.82,8,14,14,0,0,1,1.67,2.9,4.93,4.93,0,0,0,3.19,9.48,4.9,4.9,0,0,1,1,8.86V8.92a4.93,4.93,0,0,0,3.95,4.83,4.94,4.94,0,0,1-2.22.08,4.93,4.93,0,0,0,4.6,3.42,9.88,9.88,0,0,1-6.12,2.11A10,10,0,0,1,0,19.29,13.94,13.94,0,0,0,7.55,21.5a13.91,13.91,0,0,0,14-14q0-.32,0-0.64A10,10,0,0,0,24,4.31Z"/>
+</svg>
+
+    </button>
+  </div>
+</div>
+<div class="share-overlay" data-ng-click="shareMenuCtrl.isOpen = false" ng-if="shareMenuCtrl.isOpen"></div></script>
+<script type="text/ng-template" id="tip-collection.html">
+<div data-ng-if="tipsCollectionCtrl.showFilters" data-tips-filter="tipsCollectionCtrl.currentFilter" data-current-order="tipsCollectionCtrl.currentOrder"></div>
+
+<div class="tip-list" data-tips-list data-tips="tipsCollectionCtrl.filteredTips" data-limit="tipsCollectionCtrl.limit" data-current-product="tipsCollectionCtrl.currentFilter.productSlugs" data-current-collection="tipsCollectionCtrl.currentFilter.collectionSlugs" data-ng-class="{'recommended': tipsCollectionCtrl.currentFilter.recommended, 'collection': tipsCollectionCtrl.currentFilter.productSlugs}"></div>
+
+<div class="infinite-scroll" ng-if="tipsCollectionCtrl.showMoreButton">
+  <button class="load-more-tips-button" type="button" ng-click="tipsCollectionCtrl.onMoreTipsClick()">{[ 'More Tips' | translate ]}</button>
+</div></script>
+<script type="text/ng-template" id="tip-filter.html">
+
+
+<div data-sticky="tipFilterCtrl.sticky">
+  <div class="sticky-element">
+    <div class="secondary-nav-wrapper">
+      <ul class="secondary-nav" data-ng-class="{'has-product': tipFilterCtrl.currentProduct}">
+        <li class="secondary-nav-item">
+          <a class="secondary-nav-link" data-ng-class="{'active': tipFilterCtrl.currentType === 'recommended'}" data-ui-sref="home({type: 'recommended'})">{[ 'Recommended' | translate ]}</a>
+        </li>
+        <li class="secondary-nav-item" data-ng-class="{'has-product': tipFilterCtrl.currentProduct}">
+          <a class="secondary-nav-link" data-ng-class="{'active': tipFilterCtrl.currentType === 'all'}" data-ui-sref="home({type: 'all'})">
+            <span data-ng-if="!tipFilterCtrl.currentProduct">{[ 'All' | translate ]}</span>
+            <span data-ng-if="tipFilterCtrl.currentProduct">
+              {[ tipFilterCtrl.currentProduct.title ]} tips
+              <svg class="icon icon-cancel" viewBox="0 0 24 24" height="20" width="20" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+            </span>
+          </a>
+        </li>
+        <li class="secondary-nav-item">
+          <a class="secondary-nav-link" data-ng-class="{'active': tipFilterCtrl.currentType === 'collections'}" data-ui-sref="home({type: 'collections'})">{[ 'Collections' | translate ]}</a>
+        </li>
+      </ul>
+
+
+    </div>
+  </div>
+</div></script>
+<script type="text/ng-template" id="template-bundle.html">
+<div
+    class="bundle bundle-{[ ::tipListItemCtrl.tip.slug ]} bundle-type-{[ ::tipListItemCtrl.tip.type ]}"
+    id="{[ ::tipListItemCtrl.tip.slug ]}"
+    data-ng-class="{'bundle-expanded': tipListItemCtrl.tip.expanded}">
+  <a
+      class="bundle-link"
+      data-ng-href="{[ tipListItemCtrl.getTipUrl() | utmPassThrough ]}"
+      data-g-action="Bundle Open"
+      data-g-label="{[ tipListItemCtrl.getEventLabel() ]}"
+      data-g-event="{[ tipListItemCtrl.getEventCategory() ]}-page"></a>
+  <div
+      class="bundle-wrapper bundle-product-{[ ::tipListItemCtrl.tip.slug ]}"
+      data-sticky="tipListItemCtrl.tip.expanded"
+      data-offset="-60">
+    <div class="bundle-content-wrapper">
+      <div
+          class="bundle-content sticky-element"
+          data-ng-style="{'background-image': 'url(//www.gstatic.com/cavalry/coligo/gtips/production/en/' + tipListItemCtrl.bgImage + ')'}">
+        <div data-ng-if="tipListItemCtrl.tip.expanded" class="bundle-bg"></div>
+        <div class="bundle-content-inner">
+          <div
+              class="bundle-products tip-side-padding"
+              data-ng-if="tipListItemCtrl.tip.bundle.products.length">
+            <div
+                data-ng-repeat="product in tipListItemCtrl.tip.bundle.products track by product.id" class="bundle-product">
+              <img
+                  class="bundle-product-img"
+                  data-ng-src="//www.gstatic.com/cavalry/coligo/gtips/production/en/{[ ::product.media[0].src ]}">
+            </div>
+          </div>
+          <div class="bundle-close-button-wrapper tip-side-padding">
+            <a
+                class="bundle-close-button"
+                data-ui-sref="home"
+                data-g-action="Bundle Close"
+                data-g-label="{[ tipListItemCtrl.getEventLabel() ]}"
+                data-g-event="{[ tipListItemCtrl.getEventCategory() ]}-page">
+              <svg class="icon icon-close" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" >
+  <title>close</title>
+  <polygon points="21.57 0 12 9.58 2.42 0 0 2.42 9.58 12 0 21.57 2.42 24 12 14.42 21.57 24 24 21.57 14.42 12 24 2.42 21.57 0"/>
+</svg>
+
+            </a>
+          </div>
+          <div class="bundle-headline tip-side-padding">{[ ::tipListItemCtrl.tip.bundle.headline ]}</div>
+        </div>
+      </div>
+    </div>
+    <div
+        class="bundle-expanded-info sticky-trigger"
+        data-ng-if="tipListItemCtrl.tip.expanded">
+      <div
+          class="tip-list"
+          data-tips-list data-tips="tipListItemCtrl.tip.bundle.tips"
+          data-current-product="tipListItemCtrl.tip.type === 'product' ? tipListItemCtrl.tip.slug : null"
+          data-current-collection="tipListItemCtrl.tip.type === 'category' ? tipListItemCtrl.tip.slug : null"
+          data-is-bundle="true"></div>
+    </div>
+    <div class="mobile--bundle-close-button-wrapper">
+      <a
+          class="mobile--bundle-close-button"
+          data-ui-sref="home"
+          data-g-action="Bundle Close"
+          data-g-label="{[ tipListItemCtrl.getEventLabel() ]}"
+          data-g-event="{[ tipListItemCtrl.getEventCategory() ]}-page">
+        <svg class="icon icon-close" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" >
+  <title>close</title>
+  <polygon points="21.57 0 12 9.58 2.42 0 0 2.42 9.58 12 0 21.57 2.42 24 12 14.42 21.57 24 24 21.57 14.42 12 24 2.42 21.57 0"/>
+</svg>
+
+      </a>
+    </div>
+  </div>
+</div></script>
+<script type="text/ng-template" id="template-tip.html">
+<div
+    data-ng-if="tipListItemCtrl.tip.type === 'tip'"
+    class="tip-wrapper tip-{[ ::tipListItemCtrl.tip.slug ]} tip-product-{[ tipListItemCtrl.product.slug ]}"
+    id="{[ ::tipListItemCtrl.tip.id ]}"
+    data-ng-class="{'tip-collection': tipListCtrl.currentCollection}">
+  <div class="tip-product tip-side-padding">
+    <div class="tip-product-data site-width">
+      <img
+          class="tip-product-image"
+          data-ng-src="//www.gstatic.com/cavalry/coligo/gtips/production/en/{[ ::tipListItemCtrl.product.media[0].src ]}">
+      {[ ::tipListItemCtrl.product.title ]}
+      <svg class="icon icon-star" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" data-ng-if="tipListItemCtrl.tip.recommended">
+    <path d="M0 0h24v24H0z" fill="none"/>
+    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+      <img
+          data-ng-repeat="partner in tipListItemCtrl.tip.partners track by partner.id"
+          class="tip-partner-image"
+          data-ng-src="//www.gstatic.com/cavalry/coligo/gtips/production/en/{[ ::partner.media[0].src ]}">
+    </div>
+  </div>
+
+  <div class="tip-headline-wrapper tip-side-padding">
+    <div class="site-width">
+      <div class="tip-actions-desktop">
+        <div class="tip-learn-more-button">
+          {[ 'Learn More' | translate ]}
+          <svg class="icon icon-expand_more" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+        </div>
+        <div
+            class="tip-try-it-button-wrapper"
+            data-ng-if="tipListItemCtrl.tip.tourCtaUrl">
+          <a
+              class="tip-try-it-button"
+              target="_blank"
+              href="{[ ::tipListItemCtrl.tip.tourCtaUrl | utmPassThrough ]}"
+              data-g-action="{[ ::tipListItemCtrl.tip.tourCtaLabel ]}"
+              data-g-label="{[ tipListItemCtrl.getEventLabel() ]}"
+              data-g-event="{[ tipListItemCtrl.getEventCategory() ]}-page">
+              {[ ::tipListItemCtrl.tip.tourCtaLabel ]}
+          </a>
+        </div>
+      </div>
+      <div class="tip-headline">{[ ::tipListItemCtrl.tip.title ]}</div>
+    </div>
+  </div>
+
+  <a
+      class="tip-link"
+      data-ng-href="{[ tipListItemCtrl.getTipUrl() | utmPassThrough ]}"
+      data-g-action="Tip Open"
+      data-g-label="{[ tipListItemCtrl.getEventLabel() ]}"
+      data-g-event="{[ tipListItemCtrl.getEventCategory() ]}-page"></a>
+
+  <div
+      id="tip-expanded-info-for-{[ ::tipListItemCtrl.tip.id ]}"
+      class="tip-expanded-info">
+    <div class="tip-expanded-info-wrapper">
+      <div class="tip-main-tip tip-side-padding">
+        <div class="site-width">
+          {[ ::tipListItemCtrl.tip.headline ]}
+        </div>
+      </div>
+
+      <div class="tip-side-padding">
+        <div class="site-width">
+          <ol class="tip-steps" data-ng-if="tipListItemCtrl.tip.steps.length">
+            <li
+                class="tip-step"
+                data-ng-repeat="step in tipListItemCtrl.tip.steps"
+                data-ng-if="step">
+              <div class="tip-step-text">{[ ::step.body ]}</div>
+              <div
+                  class="tip-step-image-wrapper"
+                  data-ng-if="tipListItemCtrl.tip.showImages && step.image">
+                <img
+                    class="tip-step-image"
+                    alt="{[ ::step.image.altText ]}"
+                    data-ng-src="//www.gstatic.com/cavalry/coligo/gtips/production/en/{[ ::step.image.src ]}">
+              </div>
+            </li>
+          </ol>
+
+          <div
+              class="tip-show-images-button-wrapper"
+              data-ng-if="tipListItemCtrl.tip.hasStepImages">
+            <button
+                class="tip-show-images-button"
+                type="button"
+                data-ng-click="tipListItemCtrl.toggleTipImages(tipListItemCtrl.tip)">
+              <svg class="icon icon-photo_library" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M0 0h24v24H0z" fill="none"/>
+    <path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/>
+</svg>
+
+              <span data-ng-if="!tipListItemCtrl.tip.showImages">{[ 'Read tip with images' | translate ]}</span>
+              <span data-ng-if="tipListItemCtrl.tip.showImages">{[ 'Hide images' | translate ]}</span>
+            </button>
+          </div>
+
+          <div
+              class="tip-video"
+              data-youtube-video="tipListItemCtrl.tip.video"
+              data-player="tipListItemCtrl.tip.player"
+              data-ng-if="tipListItemCtrl.tip.video"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+      class="tip-actions tip-side-padding clearfix"
+      data-ng-class="{'tip-actions-no-cta': !tipListItemCtrl.tip.tourCtaUrl}">
+    <div class="site-width">
+      <div class="tip-learn-more-button">
+        {[ 'Learn More' | translate ]}
+        <svg class="icon icon-expand_more" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+      </div>
+      <div
+          class="tip-try-it-button-wrapper"
+          data-ng-if="tipListItemCtrl.tip.tourCtaUrl">
+        <a
+            class="tip-try-it-button"
+            target="_blank"
+            href="{[ ::tipListItemCtrl.tip.tourCtaUrl | utmPassThrough ]}"
+            data-g-action="{[ ::tipListItemCtrl.tip.tourCtaLabel ]}"
+            data-g-label="{[ tipListItemCtrl.getEventLabel() ]}"
+            data-g-event="{[ tipListItemCtrl.getEventCategory() ]}-page">{[ ::tipListItemCtrl.tip.tourCtaLabel ]}</a>
+      </div>
+      <a
+          class="tip-close-button"
+          data-ng-href="{[ tipListItemCtrl.getParentUrl() | utmPassThrough ]}"
+          data-g-action="Tip Close"
+          data-g-label="{[ tipListItemCtrl.getEventLabel() ]}"
+          data-g-event="{[ tipListItemCtrl.getEventCategory() ]}-page">
+        <svg class="icon icon-expand_more flip-x" viewBox="0 0 24 24" height="40" width="40" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+      </a>
+    </div>
+  </div>
+</div></script>
+<script type="text/ng-template" id="tip-list-item.html">
+<div data-ng-include="tipListItemCtrl.templateUrl"></div></script>
+<script type="text/ng-template" id="tip-list.html">
+<ul data-ng-cloak>
+  <li class="tip tip-type-{[ ::tip.type ]}" data-ng-repeat="tip in tipListCtrl.tips | limitTo:tipListCtrl.limit track by tip.id" data-tips-list-item data-tip="tip" data-tip-type="{[ ::tip.type ]}" data-is-in-bundle="tipListCtrl.isBundle" data-current-product="tipListCtrl.currentProduct" data-current-collection="tipListCtrl.currentCollection"></li>
+</ul></script>
+<script type="text/ng-template" id="user-info.html">
+<a
+    class="sign-in-btn-wrapper"
+    data-ng-if="userInfoCtrl.showSignIn === true && !userInfoCtrl.userInfo"
+    data-ng-cloak>
+  <span
+      class="maia-button"
+      id="sign-in-btn"
+      data-g-action="Sign In"
+      data-g-event="Tips: Sign in"
+      data-g-label="Global Nav"
+      event="autotrack-data-g">{[ 'Sign-in CTA' | translate ]}</span>
+</a>
+<div class="user-info" data-ng-show="userInfoCtrl.userInfo" data-ng-cloak>
+  <div
+      class="user-profile"
+      data-ng-style="{'background-image': 'url('+ userInfoCtrl.userInfo.image + ')'}"
+      data-ng-click="userInfoCtrl.toggleAccountBox($event)"></div>
+
+  <div class="user-account-box" data-ng-show="userInfoCtrl.showAccountBox" data-ng-cloak>
+    <div class="user-account-box-user">
+      <div
+          class="user-profile"
+          data-ng-style="{'background-image': 'url('+ userInfoCtrl.userInfo.image + ')'}"></div>
+      <div class="user-account-info">
+        <p class="user-account-name">{[ ::userInfoCtrl.userInfo.name ]}</p>
+        <p class="user-account-email">{[ ::userInfoCtrl.userInfo.email ]}</p>
+        <p><a href="https://www.google.co.uk/intl/en-GB/policies/privacy/" target="_blank">Privacy</a></p>
+        <p><a class="blue-button" href="https://myaccount.google.com/" target="_blank">My account</a></p>
+      </div>
+    </div>
+    <div class="user-account-options">
+      <a class="gray-button btn-sign-out">Sign out</a>
+    </div>
+  </div>
+</div></script>
+<script type="text/ng-template" id="youtube-video.html">
+
+<div class="yt-video">
+  <div
+      data-ng-hide="ctrl.videoIsPlaying"
+      class="content yt-video-thumb"
+      data-ng-style="{'background-image': 'url({[ ::ctrl.video.image ]})'}"
+      data-ng-click="ctrl.playVideo()">
+    <svg class="icon icon-play_circle_outline yt-play-icon" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M0 0h24v24H0z" fill="none"/>
+    <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+</svg>
+
+  </div>
+  <div class="content yt-video-iframe"></div>
+</div></script>
+<script type="text/ng-template" id="pages.home.html">
+
+<div class="header-view" data-ui-view="header">
+  <div class="product-carousel" data-ng-class="{'expanded': ctrl.carouselExpanded}">
+  <h2 class="product-carousel-header">{[ 'Do more with Google' | translate ]}</h2>
+
+
+  <div id="product-list" class="products" data-ng-show="ctrl.carouselExpanded" aria-expanded="{[ !!ctrl.carouselExpanded ]}">
+    <div class="glue-pagination glue-pagination-carousel" data-glue-pagination-model="ctrl.paginationModel" data-ng-cloak>
+      <div class="product-carousel-mask">
+        <ul class="glue-pagination-pages glue-pagination-slide" data-glue-slide-options="ctrl.slideOptions" data-ng-style="{'width': ctrl.paginationModel.totalPages * 100 + '%'}">
+          <li class="product" data-ng-repeat="product in ctrl.data.products track by product.id">
+            <a class="product-link" ui-sref="product({ productSlug: product.slug, type: ctrl.tipsType })">
+              <img class="product-image" data-ng-src="//www.gstatic.com/cavalry/coligo/gtips/production/en/{[::product.media[0].src]}" alt="{[ ::product.title ]}">
+              {[ ::product.title ]}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="glue-pagination-previous" data-glue-pagination-label="Previous">
+        <svg class="icon icon-chevron_left" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+      </div>
+      <div class="glue-pagination-page-list glue-pagination-page-list-dots"></div>
+      <div class="glue-pagination-next" data-glue-pagination-label="Next">
+        <svg class="icon icon-chevron_right" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+      </div>
+    </div>
+  </div>
+  <button class="product-carousel-toggle-button" data-ng-click="ctrl.carouselExpanded = !ctrl.carouselExpanded;" aria-role="button" aria-controls="product-list">
+    {[ 'Product Tips' | translate ]}
+    <svg class="icon icon-expand_more" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" data-ng-class={'flip-x':ctrl.carouselExpanded}>
+    <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+  </button>
+</div>
+
+</div>
+
+<div data-tips-collection="ctrl.data.tipsWithCollections" data-collection-slug="ctrl.state.params.collectionSlug" data-tip-slug="ctrl.state.params.tipSlug" data-current-filter="ctrl.currentFilter" data-current-order="ctrl.currentOrder"></div>
+
+<div data-ui-view="footer" class="footer">
+  <div class="product-carousel expanded">
+  <h2 class="product-carousel-header">{[ 'See tips by product' | translate ]}</h2>
+
+
+  <div id="product-list-expanded" class="products" aria-expanded="{[ !!ctrl.carouselExpanded ]}">
+    <div class="glue-pagination glue-pagination-carousel" data-glue-pagination-model="ctrl.paginationModel" data-ng-cloak>
+      <div class="product-carousel-mask">
+        <ul class="glue-pagination-pages glue-pagination-slide" data-glue-slide-options="ctrl.slideOptions" data-ng-style="{'width': ctrl.paginationModel.totalPages * 100 + '%'}">
+          <li class="product" data-ng-repeat="product in ctrl.data.products track by product.id">
+            <a class="product-link" ui-sref="product({ productSlug: product.slug, type: ctrl.tipsType })">
+              <img class="product-image" data-ng-src="//www.gstatic.com/cavalry/coligo/gtips/production/en/{[::product.media[0].src]}" alt="{[ ::product.title ]}">
+              {[ ::product.title ]}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="glue-pagination-previous" data-glue-pagination-label="Previous">
+        <svg class="icon icon-chevron_left" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+      </div>
+      <div class="glue-pagination-page-list glue-pagination-page-list-dots"></div>
+      <div class="glue-pagination-next" data-glue-pagination-label="Next">
+        <svg class="icon icon-chevron_right" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg" >
+    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+</svg>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</div></script>
+<script type="text/ng-template" id="pages.search.html">
+<div data-search="ctrl.stateParams.query"></div></script>
+<script type="text/ng-template" id="product-styles.html">
+<style>
+  .tip-product-{[ product.slug ]} {
+    border-color: #{[ product.color.primary.hex ]};
+    color: #{[ product.color.primary.hex ]};
+    fill: #{[ product.color.primary.hex ]};
+  }
+
+  @media (min-width: 768px) {
+    .tip-product-{[ product.slug ]}:hover {
+                                     background-color: #{[ product.color.secondary.hex ]};
+                                     color: #{[ product.color.text.hex ]};
+                                     fill: #{[ product.color.text.hex ]};
+                                   }
+
+    .tip-product-{[ product.slug ]}:hover .tip-actions-desktop .tip-try-it-button {
+                                     background-color: #{[ product.color.text.hex ]};
+                                     color: #{[ product.color.primary.hex ]};
+                                   }
+  }
+
+  .tip-product-{[ product.slug ]} .yt-video-thumb:before {
+                                    background-color: $color-video-overlay;
+                                  }
+
+  .tip-product-{[ product.slug ]}.tip-expanded {
+                                   color: #{[ product.color.text.hex ]};
+                                   fill: #{[ product.color.primary.hex ]};
+                                 }
+
+  .tip-product-{[ product.slug ]}.tip-expanded .tip-product,
+                                 .tip-product-{[ product.slug ]}.tip-expanded .tip-try-it-button {
+                                                                  background-color: #{[ product.color.primary.hex ]};
+                                                                }
+
+  .tip-product-{[ product.slug ]}.tip-expanded .tip-step,
+                                 .tip-product-{[ product.slug ]}.tip-expanded .tip-show-images-button {
+                                                                  color: #{[ product.color.primary.hex ]};
+                                                                }
+
+  .tip-product-{[ product.slug ]}.tip-expanded .tip-headline-wrapper,
+                                 .tip-product-{[ product.slug ]}.tip-expanded .tip-main-tip {
+                                                                  background-color: #{[ product.color.secondary.hex ]};
+                                                                }
+
+  .tip-product-{[ product.slug ]}.tip-expanded .tip-try-it-button:hover {
+                                   color: #{[ product.color.primary.hex ]};
+                                 }
+
+  .bundle-product-{[ product.slug ]} .bundle-content-inner,
+                                     .bundle-product-{[ product.slug ]} .mobile--bundle-close-button-wrapper {
+  background-color: rgba({[ product.color.primary.rgb ]}, .9);
+  }
+
+  .bundle-product-{[ product.slug ]} .bundle-headline {
+                                       color: #{[ product.color.text.hex ]};
+                                     }
+</style></script>
+
+</div>
+
+<div class="maia-footer" id="maia-footer">
+  <div id="maia-footer-global">
+    <div class="maia-aux">
+      <ul>
+        <li>
+          <a href="https://www.google.com/">Google</a>
+        </li>
+        <li>
+          <a href="https://www.google.com/intl/en/about/">About Google</a>
+        </li>
+        <li>
+          <a href="https://www.google.com/intl/en/policies/privacy/">Privacy</a>
+        </li>
+        <li>
+          <a href="https://www.google.com/intl/en/policies/terms/">Terms</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<script src="//www.gstatic.com/external_hosted/modernizr/modernizr.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-animate.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-aria.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-resource.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-route.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.9/angular-touch.min.js"></script>
+<script src="//www.gstatic.com/external_hosted/gsap/v1_18_0/TweenLite.min.js"></script>
+<script src="//www.gstatic.com/external_hosted/ng_ui_router/release/angular-ui-router.min.js"></script>
+
+
+<script id="app-script" src="/apptips/js/tips.min.js"></script>
+
+</body>
+</html>

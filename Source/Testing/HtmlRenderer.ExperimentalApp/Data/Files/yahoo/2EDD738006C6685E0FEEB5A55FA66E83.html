@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge; charset=utf-8" />
+	
+
+
+
+
+<script title="Google analytics">
+
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};
+    ga.l=+new Date;
+
+    var pogo = pogo || {};
+    pogo.ga = pogo.ga || {};
+    pogo.ga.ec = pogo.ga.ec || {};
+
+
+    pogo.ga.create = function(account, fields) {
+        ga('create', account, 'auto', fields);
+    };
+
+    pogo.ga.require = function(plugin) {
+        ga('require', plugin);
+    };
+
+    pogo.ga.setPage = function(page) {
+        ga('set', 'page', page);
+    };
+
+    pogo.ga.setCustomDimension = function(key, value) {
+        ga('set', key, value);
+    };
+
+    pogo.ga.sendEvent = function(category, action, label, value, fields) {
+        ga('send', 'event', category, action, label, value, fields);
+    };
+
+    pogo.ga.sendPageView = function(pageName) {
+        if(pageName )
+        {
+            ga('set', 'page', pageName);
+        }
+        ga('send', 'pageview');
+    };
+
+    pogo.ga.sendSocial = function(category, action, label) {
+        ga('send', 'social', category, action, label);
+    };
+
+    pogo.ga.ec.addToCart = function (data) {
+        if(data.products)
+        {
+            var products = data.products;
+
+            products.forEach(function(product){
+                ga('ec:addProduct', {
+                'id': product.productId,
+                'name': product.productName,
+                'category': data.flow,
+                'price': product.price,
+                'quantity': 1
+                });
+            });
+            ga('ec:setAction', 'add');
+
+            pogo.ga.sendEvent(data.flow,'add product','add to cart');
+        }
+    };
+
+    pogo.ga.ec.payment = function (data)
+    {
+        pogo.ga.ec.send(data);
+    };
+    
+    pogo.ga.ec.review = function (data)
+    {
+         pogo.ga.ec.send(data);
+    };
+    
+    pogo.ga.ec.confirm = function (data)
+    {
+        if(data.payment && data.products)
+        {
+            var payment = data.payment;
+            var products = data.products;
+            var totalPrice=0;
+            ga('set', '&cu', payment.currency);
+            if(payment.type) {
+                pogo.ga.setCustomDimension('dimension5',payment.type );
+            }
+
+            products.forEach(function(product){
+                ga('ec:addProduct', {
+                'id': product.productId,
+                'name': product.productName,
+                'category': data.flow,
+                'price': product.price,
+                'quantity': 1
+                });
+            });
+
+            ga('ec:setAction', 'purchase', {
+                'id': data.transactionId,
+                'revenue': payment.revenue,
+                'tax': payment.tax,
+            });
+            pogo.ga.ec.send(data);
+        }
+    };
+
+    pogo.ga.ec.send = function (data)
+    {
+        var pageName;
+        if(data.pageName && data.step){
+            pageName = data.pageName + "/" + data.step;
+        }
+        pogo.ga.sendPageView(pageName);
+    };
+    
+    (function() {
+        
+        var fields = {
+            userId: '6804538161967016'
+        };
+
+        var clientId = getParameterByName('clientId', location.href);
+
+        if (clientId) {
+            fields.clientId = clientId;
+        }
+
+        pogo.ga.create('UA-37502549-1', fields);
+
+        
+        pogo.ga.require('displayfeatures');
+
+        
+        pogo.ga.require('ec');
+
+        
+        
+
+        
+        pogo.ga.setCustomDimension('dimension1', 'GUEST');
+        
+        pogo.ga.setCustomDimension('dimension3', 'desktop');
+        
+        pogo.ga.setCustomDimension('dimension6', '6804538161967016');
+        
+
+        
+        
+
+        
+        var intcmp = getParameterByName('intcmp', location.href);
+
+        if (intcmp) {
+            ga('ec:addPromo', {
+                'id': intcmp,
+                'name': intcmp
+            });
+            ga('ec:setAction', 'promo_click');
+        }
+        
+        	pogo.ga.sendPageView();
+        
+
+        
+        
+
+        if (document.readyState === 'complete' ||
+            (document.readyState !== 'loading' && !document.documentElement.doScroll)) {
+            postInit();
+        } else {
+            window.addEventListener('DOMContentLoaded', postInit);
+        }
+
+
+        function postInit()
+        {
+            sendIntcmpImpressions();
+            attachClientIdToExternalLines();
+        }
+        
+        function sendIntcmpImpressions() {
+            var forEach = function (array, callback, scope) {
+                for (var i = 0; i < array.length; i++) {
+                    callback.call(scope, array[i], i);
+                }
+            };
+            var intcmps = {};
+            var intcmpLinks = document.querySelectorAll('a[href*=intcmp]');
+            if(intcmpLinks.length) {
+                forEach(intcmpLinks, function (el) {
+                    var intcmp = getParameterByName('intcmp', el.href);
+                    if (!intcmps[intcmp]) {
+                        intcmps[intcmp] = true;
+                        ga('ec:addPromo', {
+                            'id': intcmp,
+                            'name': intcmp
+                        });
+                    }
+                });
+                //pogo.ga.sendEvent('internal promotions', 'impression');
+            }
+            
+        }
+        
+        function attachClientIdToExternalLines()
+        {
+            ga(function(tracker){
+                var clientId = tracker.get('clientId');
+                if(clientId) {
+                    document.querySelectorAll('a[href*="/action/pogop/pogogems/fund.do"]').forEach(
+                            function (link) {
+                                var  hl = link.href;
+                                if(hl && hl.indexOf('http') == 0)
+                                {
+                                    var clid = getParameterByName('clientId',hl);
+                                    if(!clid) {
+                                        if(link.href.indexOf("?") == -1) {
+                                           link.href += '?clientId=' + clientId;
+                                        } else {
+                                            link.href += '&clientId=' + clientId;
+                                        }
+                                    }
+                                }
+                            }
+                        );
+                    }   
+                }
+            );
+        }
+        
+        function getParameterByName(name, url) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
+                results = regex.exec(url);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+    })();
+
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	
+	
+
+	<script src="/v/G31y2g/js/errors.js" type="text/javascript" charset="utf-8" ></script>
+	
+	
+		
+			<script src="/v/IDINnQ/js/featuretest.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/GIv25Q/include/js/shared/RequireJS.js" type="text/javascript" charset="utf-8" ></script>
+		
+	
+
+	
+		
+			
+
+
+
+
+<title>Pogo: SCRABBLE</title>
+
+
+
+    <link rel="StyleSheet" href="/v/D-T9jw/include/css/rooms/invalid.css"/>
+
+
+
+
+
+<script src="/v/HGS21A/include/js/libraries/jquery.js" type="text/javascript" charset="utf-8" ></script>
+
+
+
+
+
+
+
+
+
+
+<script src="/v/HIrTBw/js/rooms2.js" type="text/javascript" charset="utf-8" ></script>
+<script language="JavaScript">
+
+
+
+function fixUrl(url) {
+	if ((typeof(url) === 'undefined') || !url.length) {
+		return '';
+	}
+	if (url.indexOf('?') < 0) {
+		return (url + '?');
+	}
+	var lastChar = url.charAt(url.length-1);
+	if ((lastChar == '?') || (lastChar == '&')) {
+		return url;
+	}
+	return (url + '&');
+}
+var roomtabs_url = fixUrl('');
+var roomslist_url = fixUrl(fixUrl('/games/scrabble') + 'listOnly=true');
+var connect = fixUrl('');
+function oldLoadRoomsList(paramName, paramValue) {
+    window.location = roomtabs_url + paramName + '=' + paramValue;
+    return false;
+}
+function loadRoomsList(paramName, paramValue) {
+	
+	
+		
+		
+			oldLoadRoomsList(paramName, paramValue);
+	
+
+	return true;
+}
+function rule(rule) {
+	return loadRoomsList('rule', rule);
+}
+function tab(tab) {
+	return loadRoomsList('tab', tab);
+}
+function viewall(viewall) {
+	return loadRoomsList('viewall', viewall);
+}
+function sort(sort) {
+	return loadRoomsList('sort', sort);
+}
+function rc(roomkey) {
+    
+        
+		
+        
+            
+                
+                    
+                    
+                                            
+                        openPopupWithJavaTest(connect+"rkey="+roomkey, "", "","no");
+                    
+                
+            
+        
+    
+}
+function auto(apid,auto,rule,tab,intcmp) { 
+    var ruleStr = "";
+    if (rule.length > 0) {
+        ruleStr = "&rule="+rule;
+    }
+    var intcmpStr = "";
+    if (intcmp != null && intcmp.length > 0) {
+        intcmpStr = "&intcmp="+intcmp;
+	}
+    
+        
+		
+        
+            
+                
+                    
+                    
+                                            
+                        openPopupWithJavaTest(connect+"apid="+apid+"&auto="+auto+ruleStr+"&tab="+tab+intcmpStr, "", "","no");
+                    
+                
+            
+        
+    
+}
+</script>
+
+
+
+		
+		
+	
+	<script type="text/javascript" src="/v/GyfXLQ/js/std.js"> </script>
+<script type="text/javascript" src="/v/CjsBMQ/js/ad.js"> </script>
+<script language="Javascript">
+setWindowName("Main");
+</script>
+
+	
+	
+	
+
+
+	
+	<meta name="msvalidate.01" content="F6F676EB374D905262C4FF19D14E715D" />
+	
+		
+			
+
+
+    
+        
+            
+            
+			
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                <link rel="canonical" href="http://www.pogo.com/games/scrabble"/>
+            
+        
+    
+
+		
+		
+		
+	
+	
+	
+	
+	<!--[if gte IE 9]>
+	<style type="text/css">
+		.gradient {
+			filter: none;
+		}
+	</style>
+	<![endif]-->
+	
+
+
+
+</head>
+<body onLoad="if (window.setupPage) {setupPage();} if (window.Markup ) Markup.initMarkup();">
+
+
+
+<!-- Begin comScore Tag -->
+<script>
+  var _comscore = _comscore || [];
+  _comscore.push({ c1: "2", c2: "6035165" });
+  (function() {
+    var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
+    s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+    el.parentNode.insertBefore(s, el);
+  })();
+</script>
+<noscript>
+  <img src="http://b.scorecardresearch.com/p?c1=2&c2=6035165&cv=2.0&cj=1" />
+</noscript>
+<!-- End comScore Tag -->
+
+
+<div style="position:absolute; visibility:hidden;">
+	
+</div>
+<div id="master" align="center">
+	
+	
+	
+		
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+	
+		
+		
+	
+
+
+
+
+
+	
+	
+		<link rel="StyleSheet" href="/v/IOrJ9A/include/styles/global.css"/>
+	
+
+
+
+
+
+
+	
+		
+		
+			<script src="/v/HGS0iA/include/js/libraries/jqueryui.js" type="text/javascript" charset="utf-8" ></script>
+		
+	
+
+	
+		
+		
+			<script src="/v/HjJLDQ/include/js/category/gamesearchJQ.js" type="text/javascript" charset="utf-8" ></script>
+		
+	
+
+	
+		
+		
+			<script src="/v/Ho00CA/include/js/header/header-2013.js" type="text/javascript" charset="utf-8" ></script>
+		
+	
+
+
+<!--[if lte IE 9]>
+<style type="text/css">
+@import "/include/styles/navigation/header-ie.css";
+</style>
+<![endif]-->
+
+
+
+
+
+
+
+
+
+
+<div id="pogo-header" class="narrow pogo guest">
+		<div class="header">
+		
+			
+			
+			
+			
+				
+				
+						<a href="http://www.pogo.com/?pageSection=guest_header_logo" id="pogo-logo">
+							<img src="http://cdn.pogo.com/v/GLSU3A/img/header/new/logo.png" alt="Pogo.com, Free Online Games" width="128" height="48"  />
+						</a>
+				
+			
+			
+				
+				
+					
+					
+					
+						<h1>
+							
+									
+									
+									
+							
+
+
+
+
+
+
+
+
+
+						</h1>
+					
+					
+					
+				
+			
+			
+			
+
+			
+				
+				<div class="playerCard-guest">
+					
+					<div id="empty-info" class="utility-links">
+						<a href="http://www.pogo.com/action/pogo/createAccount.do" id="player-card-mini">
+							<span class="guestIcon"></span>
+						</a>
+						<div id="player-links">
+							<div id="name-auth"><a href="http://www.pogo.com/action/pogo/createAccount.do">Guest</a></div>
+						</div>
+                        <div class="badges">
+                            <span class="hdr-badgeIcon"></span>
+                            <span id="badgeCount">0</span>
+                        </div>
+						<div class="tokens">
+							<span class="tokenIcon"></span>
+							<span id="tokenBalance">0</span>
+						</div>
+						<div class="gems">
+							<span class="gemIcon"></span>
+							<span id="gemBalance">0</span>
+						</div>
+					</div>
+					
+					<div id="register-login">
+							
+							<a href="http://www.pogo.com/action/pogo/createAccount.do?pageSection=guest_pro_reg" id="register-link" title="Register">Register</a>
+							or
+							
+							<a href="https://www.pogo.com/action/pogo/signin.do?returnType=roomSel&pageSection=guest_pro_signin" id="sign-in-link" title="Sign In">Sign In</a>  
+					</div>
+				</div>
+			
+
+			
+			<div id="nav">
+				<ul>
+					<li id="tn-home" class=""><a class="navlink" href="http://www.pogo.com/?pageSection=guest_header_home">Home</a></li>
+					
+				
+				
+					
+					
+							<li id="tn-friends" class="">	<a class="navlink" href="http://www.pogo.com/benefits?pageSection=guest_friends">Friends</a></li>
+					
+						
+					
+						
+					
+					
+						
+						
+							
+						
+					
+					<li id="tn-badges"  class=""><a class="navlink" href="http://www.pogo.com/challenge/badge-central.do?pageSection=guest_header_badges">Badges</a></li>
+					
+						
+					
+
+
+	<li id="tn-tournament" class="">
+		<a class="navlink" href="http://www.pogo.com/tournament.do">Tournament 
+				<span id="tournamentNotificationsCount" style="display: none;" class="notification-count"></span>
+		</a>
+	</li>
+
+
+					<li id="tn-miniMall"  class=""><a class="navlink" href="http://www.pogo.com/benefits?pageSection=guest_header_mini_mall">Minis</a></li>
+					
+					
+					
+					
+					
+					
+				</ul>
+			</div>
+
+						
+			
+				
+			
+
+
+
+
+
+
+
+
+
+<div id="game-finder-unauth" title="Search Game">
+	
+	<form name="gameSearchForm" method="post" action="/misc/gamesearch/gamesearch.do?pageSection=guest-game_search" onsubmit="GameSearch.clearInputText()" id="searchBoxForm">
+		
+		
+			
+			
+			
+			
+			<input type="text" name="pogoword" maxlength="60" size="24" tabindex="1" value="Find a game!" onblur="GameSearch.updateInputText()" onfocus="GameSearch.clearInputText()" class="finder-field" id="gameFinderInput" alt="Find a game!">
+			<input type="image" value="SEARCH" src="/img/gamesearch/common/search-icon.png" var="searchButton" class="search-button"/>
+		
+		
+		
+	</form>
+</div>
+			
+
+			
+			
+									
+				
+				
+			
+
+
+
+
+
+
+
+
+
+
+<div id="catBelt">
+	<ul id="catList" class="items10">		
+	
+		
+			
+			
+			
+				
+			
+			<li id="allgames" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/all-games?pageSection=guest_categorybar_allgames">
+					All Games
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="puzzle" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/puzzle-games?pageSection=guest_categorybar_puzzle">
+					Puzzle
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="card" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/card-games?pageSection=guest_categorybar_card">
+					Card
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="board" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/board-games?pageSection=guest_categorybar_board">
+					Board
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="word" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/word-games?pageSection=guest_categorybar_word">
+					Word
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="downloads" class="">
+			
+				
+					
+				
+				
+						
+				<a href="http://downloadgames.pogo.com/?refid=10&pageSection=guest_categorybar_downloads">
+					Downloads
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="puzzle.hidden" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/hidden-object-games?pageSection=guest_categorybar_puzzle.hidden">
+					Hidden Object
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="casino.bingo" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/bingo-games?pageSection=guest_categorybar_casino.bingo">
+					Bingo
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="casino" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/casino-games?pageSection=guest_categorybar_casino">
+					Casino
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="casino.slots" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/slots-games?pageSection=guest_categorybar_casino.slots">
+					Slots
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="puzzle.mahjong" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/mahjong-games?pageSection=guest_categorybar_puzzle.mahjong">
+					Mahjong
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="clubpogo" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/clubpogo-games?pageSection=guest_categorybar_clubpogo">
+					Club
+				</a>					
+			</li>
+			
+		
+		
+			<li id="more">
+				<a href="#tn-more" title="">
+					More<span></span>
+				</a>
+			</li>
+		
+	</ul>
+</div>
+
+
+	
+	<div id="subCategory">
+		<h3>Genres</h3>
+		<ul id="subCatGenres">
+			
+						
+			
+				<li>
+					
+					<a href="http://www.pogo.com/strategy-games?pageSection=guest_subcategory_genres_strategy">Strategy</a>
+				</li>
+			
+				<li>
+					
+					<a href="http://www.pogo.com/brain-games?pageSection=guest_subcategory_genres_brain">Brain</a>
+				</li>
+			
+				<li>
+					
+					<a href="http://www.pogo.com/classic-games?pageSection=guest_subcategory_genres_classic">Classic</a>
+				</li>
+			
+				<li>
+					
+					<a href="http://www.pogo.com/family-games?pageSection=guest_subcategory_genres_family">Family</a>
+				</li>
+			
+				<li>
+					
+					<a href="http://www.pogo.com/multiplayer-games?pageSection=guest_subcategory_genres_multiplayer">Multiplayer</a>
+				</li>
+			
+		</ul>
+		<h3 class="second-heading">More Games Categories</h3>
+		<ul id="subCatMoreGames">
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/arcade-games?pageSection=guest_subcategory_more_arcade">Arcade</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/sports-games?pageSection=guest_subcategory_more_sports">Sports</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/match-3-games?pageSection=guest_subcategory_more_puzzle.match3">Match-3</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/solitaire-games?pageSection=guest_subcategory_more_card.solitaire">Solitaire</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/poker-games?pageSection=guest_subcategory_more_casino.poker">Poker</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/java-games?pageSection=guest_subcategory_more_java">Java Games</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/free-game-events?intcmp=category_nav&pageSection=guest_subcategory_more_sponsored">Sponsored</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/coincasino-games?pageSection=guest_subcategory_more_coincasino">Coin Casino</a>
+				</li>
+			
+						
+		</ul>	
+	</div>
+
+	
+						
+						
+		</div>
+	</div>
+
+
+	
+
+
+
+<script language="JavaScript">
+<!--
+function confirm_entry() {
+	input_box=confirm("Please confirm that you selected Other Region.");
+	if (input_box==true){
+		window.location = "/games/scrabble?guest_country=YY";
+	} else {
+	}
+}
+-->
+</script>
+<!--
+session:
+session country:
+guest   country:Country[XX,XXX,999,Unknown Country]
+-->
+<div style="padding:6px 6px 0 6px;background-color:#e5fe99;width:744px;">
+    <div class="page-hdr-wrapper">
+
+        <div style="height:34px;background:#bbe344 url('/img/global/page-hdr-bkg.gif') repeat-x top left;">
+		    <img src="/img/roomsel/en_US/hdr-select-country.gif" alt="Select Your Country" width="224" height="33" style="float:left;">
+            <img src="/img/global/page-hdr-curve.gif" style="float:right;" alt="" />
+        </div>
+
+		<div class="page-body" id="lgrn-borders">
+            <div style="background:#fff url(/img/roomsel/en_US/bg-scrabble-map.jpg) no-repeat top left;">
+            <div class="content-map">
+				<h1>You're on your way to SCRABBLE!&#8482;</h1>
+				<ul>
+					<li class="y"><a href="?guest_country=US">United States and Canada</a></li>
+					<li class="n"><a href="javascript:confirm_entry()">US/Other region</a></li>
+				</ul>
+				<h3 style="visibility:hidden;">Please select your location above</h3>
+			</div>
+            </div>
+            <div class="disclaimer">
+                SCRABBLE&reg; trademark. All intellectual property rights in and to the game are owned in the United States by Hasbro, Inc., in Canada by Hasbro Canada, Inc., and throughout the rest of the world by J.W. Spear &amp; Sons, Ltd., a subsidiary of Mattel, Inc. SCRABBLE&reg; and associated trademarks and trade dress used under license from Mattel, Inc. All Rights Reserved. The Mattel name and logo are trademarks of Mattel, Inc. and used with permission. Mattel and J.W. Spear &amp; Sons are not affiliated with Hasbro or Hasbro Canada.
+			</div>
+		</div>
+	</div>
+</div>
+
+	
+		
+		
+			
+		
+
+
+
+
+	
+	
+		<!-- EAD doubleclick Track --> 
+		
+			
+			
+			
+		<script type="text/javascript">
+var axel = Math.random() + "";
+var a = axel * 10000000000000;
+document.write('<iframe src="http://4112862.fls.doubleclick.net/activityi;src=4112862;type=pogor986;cat=usfoo134;u1=;u2=;ord=1;num=' + a + '?" width="1" height="1" frameborder="0" style="display:none"></iframe>');
+</script>
+<noscript>
+<iframe src="http://4112862.fls.doubleclick.net/activityi;src=4112862;type=pogor986;cat=usfoo134;u1=;u2=;ord=1;num=1?" width="1" height="1" frameborder="0" style="display:none"></iframe>
+</noscript>
+    	 <div align="center">	
+                
+            
+    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                
+            
+
+            
+            
+            
+            
+            	<div class="footer-center narrow" >
+            
+                    <div id="footer">
+                                    
+                        
+                        
+                        
+                                
+                        <ul class="categories" >
+                    
+                            <li id="Games" class="category">
+                                <h3>Games</h3>
+                                <ul class="links">
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/puzzle-games?pageSection=footer_puzzle">Puzzle Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/mahjong-games?pageSection=footer_puzzle.mahjong">Mahjong Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/match-3-games?pageSection=footer_puzzle.match3">Match-3 Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/hidden-object-games?pageSection=footer_puzzle.hidden">Hidden Object Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/board-games?pageSection=footer_board">Board Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/card-games?pageSection=footer_card">Card Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/solitaire-games?pageSection=footer_card.solitaire">Solitaire Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/word-games?pageSection=footer_word">Word Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/casino-games?pageSection=footer_casino">Casino Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/slots-games?pageSection=footer_casino.slots">Slots Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/poker-games?pageSection=footer_casino.poker">Poker Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/bingo-games?pageSection=footer_casino.bingo">Bingo Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/sports-games?pageSection=footer_sports">Sports Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/bowling-games?pageSection=footer_sports.bowling">Bowling Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/arcade-games?pageSection=footer_arcade">Arcade Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/brain-games?pageSection=footer_brain">Brain Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/classic-games?pageSection=footer_classic">Classic Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/family-games?pageSection=footer_family">Family Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/fun-games?pageSection=footer_fun">Fun Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/strategy-games?pageSection=footer_strategy">Strategy Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/multiplayer-games?pageSection=footer_multiplayer">Multiplayer Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://downloads.pogo.com/?site=pogo&pageSection=footer_downloads">Download Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/clubpogo-games?pageSection=footer_clubpogo">Club Pogo</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/all-games?pageSection=footer_allgames">All Free Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/category/allgames.do?filters=starter&pageSection=footer_starter">Starter Challenges Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/java-games?pageSection=footer_java">Java Games</a></li>
+                                          
+                                    
+                                          
+                                              
+                                              
+                                              <li><a href="http://www.pogo.com/coincasino-games?pageSection=footer_coincasino">Coin Casino</a></li>
+                                          
+                                    
+                                    
+                                    
+                                    
+                                        
+                                            
+                                            
+                                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+                                    
+                                </ul>
+                            </li>
+            
+                            <li id="Pogo" class="category">
+                                <h3>Pogo</h3>
+                                <ul class="links">
+                                    
+                                    
+                                    
+                                    
+                                        
+                                            
+                                                
+                                                
+                                            
+
+
+
+
+
+
+
+
+
+
+
+
+	<li><a href="http://www.clubpogo.com/?site=pogo&pageSection=footer_joinclubpogo">Club Pogo</a></li>
+
+
+
+
+
+	
+	
+	
+		
+	
+	
+	<li><a href="http://www.pogo.com/benefits?pageSection=footer_friends">My Friends</a></li>
+
+
+
+
+
+
+
+	<b></b>
+
+
+
+	<li><a href="http://www.pogo.com/prize/prize.do?pageSection=footer_prize">Prizes</a></li>
+
+
+
+
+
+	
+	<li><a href="http://www.pogo.com/prize/rules.do?pageSection=footer_prizerules" rel="nofollow">Prize Rules</a></li>
+
+
+
+
+
+
+
+	<li><a href="http://games-forum.pogo.com/?pageSection=footer_forums">Games Forum</a></li>
+
+
+
+	<li><a href="http://help.pogo.com/?site=pogo">Help</a></li>
+
+
+
+
+
+	<li><a href="https://jobs.ea.com/">Jobs</a></li>
+
+
+
+
+
+
+	
+	
+	<li><a href="https://www.pogo.com/action/pogo/signin.do?pageSection=footer_login" rel="nofollow">Sign In</a></li>
+	<li><a href="http://www.pogo.com/action/pogo/createAccount.do?pageSection=footer_register" rel="nofollow">Register</a></li>
+
+
+
+
+	<li><a href="http://www.pogo.com/sitemap?pageSection=footer_sitemap">Sitemap</a></li>
+
+
+
+
+
+
+
+     <li><a href="/free-game-events">Promotions</a></li>
+
+
+
+                                        
+                                    
+                                    
+                                </ul>
+                            </li>
+            
+                            <li id="EA" class="category">
+                                <h3>EA</h3>
+                                <ul class="links">
+                                    
+                                    
+                                    
+                                    
+                                        
+                                            
+                                                
+                                                
+                                            
+
+
+
+
+
+
+
+
+
+
+
+
+	<li><a href="http://www.pogo.com/misc/advertise.jsp?pageSection=footer_advertise" rel="nofollow">Advertise</a></li>
+
+
+
+
+
+	<li><a href="http://www.info.ea.com/?pageSection=footer_corpinfo" rel="nofollow">Corporate Info</a></li>
+
+
+
+
+
+	<li><a class="popup||1021|600|yes|true" href="http://www.ea.com/legal?pageSection=footer_legalnotice" rel="nofollow">Legal</a></li>
+
+
+
+
+
+	<li><a class="popup||800|600|yes|true" href="http://tos.ea.com/legalapp/WEBPRIVACY/US/en/PC/?pageSection=footer_privacy" rel="nofollow"><span>Privacy and Cookie Policy</span> (Your Privacy Rights)</a></li>
+
+
+
+
+
+	<li><a class="popup||800|600|yes|true" href="http://tos.ea.com/legalapp/WEBTERMS/US/en/PC?pageSection=footer_tos" rel="nofollow">User Agreement</a></li>
+
+
+
+
+
+	<li><a href="http://preferences.truste.com/2.0/?type=pogo&affiliateId=156" target="_blank" rel="nofollow">Advertising Choices</a></li>
+
+
+
+
+
+                                        
+                                    
+                                    
+                                </ul>
+                            </li>
+                    
+                            <li id="Platforms" class="category">
+                                <h3>Platforms</h3>
+                                <ul class="links">
+                                    
+                                                        
+                                                            
+                                                        
+
+
+
+	
+
+<ul>
+		<li><a href="http://www.ea.com/pc">PC Games</a></li>
+		<li><a href="http://www.ea.com/wii">Wii</a></li>
+		<li><a href="http://www.ea.com/xbox-360">Xbox</a></li>
+		<li><a href="http://www.ea.com/ps3">PS3</a></li>
+		<li><a href="http://www.ea.com/iphone">iPhone</a></li>
+		<li><a href="http://www.ea.com/ipad">iPad</a></li>
+		<li><a href="http://www.ea.com/mobile">Mobile</a></li>
+</ul> 
+                                                    
+                                </ul>
+                            </li>
+                    
+                        </ul>
+                                
+                        <div id="copyright-text-new">
+                            
+                            
+                                
+                                
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    Play <a href="http://www.pogo.com/">FREE online games</a>! Welcome to Pogo.com, a great place to play <a href="http://www.pogo.com/">free online games</a>, including <a href="http://www.pogo.com/puzzle-games">puzzle games</a>, <a href="http://www.pogo.com/word-games">word games</a>, <a href="http://www.pogo.com/card-games">card games</a>, and <a href="http://www.pogo.com/board-games">board games</a>. Unlike other free online games sites, we offer a variety of classic Hasbro board games like <a href="http://www.pogo.com/games/risk">RISK</a>, <a href="http://www.pogo.com/games/yahtzee-party">Yahtzee</a>, <a href="http://www.pogo.com/games/scrabble">Scrabble</a>, and <a href="http://www.pogo.com/games/monopoly">Monopoly</a>. We also have popular games like <a href="http://www.pogo.com/games/online-chess">Chess</a>, <a href="http://www.pogo.com/games/rainy-day-spider-solitaire">Spider Solitaire</a>, <a href="http://www.pogo.com/games/cribbage">Cribbage</a>, and <a href="/games/bej3">Bejeweled</a>.  Make friends and play free online games at Pogo.com!
+                                
+                            
+                            <p>&copy; 2017 Electronic Arts Inc. Trademarks belong to their respective owners. All rights reserved.</p>
+                        </div>
+                                
+                        
+                            
+
+	
+	
+	
+<iframe width="1" height="1" hspace="0" vspace="0" frameborder="0" scrolling="no" src="http://fls.doubleclick.net/activityi;src=1494613;type=usfoo615;cat=usfoo777;ord=1204779732"></iframe>
+	
+
+                        
+                                
+                    </div>
+            	</div>
+
+            
+           
+
+	
+
+
+
+
+	<iframe	src="//pogo.ea.com/sso?l="	
+	    style='display: none'> 
+	</iframe>
+
+	
+</div>
+
+
+
+
+
+<div id="modal_overlay"></div>
+
+
+
+
+
+</body>
+</html>

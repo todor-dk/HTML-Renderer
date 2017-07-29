@@ -1,0 +1,81 @@
+<html>
+<head>
+	  
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+<meta name="viewport" content="width = device-width , initial-scale = 1.0 , user-scalable = no , minimum-scale = 1.0 , maximum-scale = 1.0 , minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/png" href="/eeLayout/messengerpostmedia/1.0.a/images/webapp/favicon.png">
+
+
+<style>
+	html, body{
+		overflow:hidden;
+	}
+	body{
+		margin: 0 !important; 
+		height: auto;
+	}
+	#mainframe {
+		padding:0px;
+		position: relative;
+		margin:0px;
+		border: none; 
+		-webkit-overflow-scrolling: touch;
+		width:100%;
+		height:100%;
+	}
+</style>
+<title>messengerpostmedia</title>
+</head>
+<body id="body" name="body">
+<iframe id="mainframe" name="mainframe" frameBorder='0' scrolling="no"></iframe>
+<script type="text/javascript">
+
+try{
+	if(localStorage.getItem("bbchoice") == "bb_classic"){
+		cookie_set("bbchoice",localStorage.getItem("bbchoice"),null,"/");
+	}
+}catch(e){}
+
+function resizeContent(){		
+	var frameM = document.getElementById("mainframe");
+	var bElem = document.getElementById("body");
+	if (window.innerWidth){
+		var cWidth = window.innerWidth;
+		var cHeight = window.innerHeight;
+	}else if(document.documentElement.clientWidth){ //IE
+		var cWidth = document.documentElement.clientWidth;
+		var cHeight = document.documentElement.clientHeight;
+	}else{ //Fallback
+		var cWidth = document.body.clientWidth;
+		var cHeight = document.body.clientHeight;
+	}
+	bElem.style.width = (cWidth) + "px";
+	bElem.style.height = (cHeight) + "px";
+	frameM.style.width = (cWidth) + "px";
+	frameM.style.height = (cHeight)  + "px";
+	//If the content extends beyond the window, try to resize accordingly
+	if(frameM.contentWindow.document.body){
+		var frameC = frameM.contentWindow.document.body;
+		if(frameC.scrollHeight && (frameC.scrollHeight > cHeight)){
+			bElem.style.height = (frameC.scrollHeight) + "px";
+			frameM.style.height = (frameC.scrollHeight) + "px";
+		}
+	}
+}
+
+function loadinFrame(){
+		 var frameSrc = "//messengerpostmedia.ny.newsmemory.com/ee/_nmum/_default_bb_include_inframe.php?pSetup=messengerpostmedia_live20151230&isFrame=1&bbtype=type_html5";  // USING NEW MOBILE SPLASH PAGE 20150203
+		// //Include js variables to the frame
+	 if(document.compatMode){
+		 frameSrc += ("&docMode="+document.compatMode);
+	 }
+	 document.getElementById("mainframe").src = frameSrc;
+}
+//Set the listener for window changes
+window.onload = new function(){ loadinFrame(); };
+var mFrame = document.getElementById("mainframe");
+mFrame.onload = mFrame.onreadystatechange = window.onresize = resizeContent;    			
+</script>
+</body>
+</html>

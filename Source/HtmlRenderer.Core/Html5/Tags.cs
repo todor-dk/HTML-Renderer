@@ -58,49 +58,49 @@ namespace Scientia.HtmlRenderer.Html5
 
         public const string Frameset = "frameset";
 
-        public const string Address = "address ";
+        public const string Address = "address";
 
-        public const string Article = "article ";
+        public const string Article = "article";
 
-        public const string Aside = "aside ";
+        public const string Aside = "aside";
 
-        public const string BlockQuote = "blockquote ";
+        public const string BlockQuote = "blockquote";
 
-        public const string Center = "center ";
+        public const string Center = "center";
 
-        public const string Details = "details ";
+        public const string Details = "details";
 
         public const string Dialog = "dialog";
 
-        public const string Dir = "dir ";
+        public const string Dir = "dir";
 
-        public const string Div = "div ";
+        public const string Div = "div";
 
-        public const string Dl = "dl ";
+        public const string Dl = "dl";
 
-        public const string FieldSet = "fieldset ";
+        public const string FieldSet = "fieldset";
 
-        public const string FigCaption = "figcaption ";
+        public const string FigCaption = "figcaption";
 
-        public const string Figure = "figure ";
+        public const string Figure = "figure";
 
-        public const string Footer = "footer ";
+        public const string Footer = "footer";
 
-        public const string Header = "header ";
+        public const string Header = "header";
 
-        public const string HGroup = "hgroup ";
+        public const string HGroup = "hgroup";
 
-        public const string Main = "main ";
+        public const string Main = "main";
 
-        public const string Nav = "nav ";
+        public const string Nav = "nav";
 
-        public const string Ol = "ol ";
+        public const string Ol = "ol";
 
         public const string P = "p";
 
-        public const string Section = "section ";
+        public const string Section = "section";
 
-        public const string Summary = "summary ";
+        public const string Summary = "summary";
 
         public const string Ul = "ul";
 
@@ -275,8 +275,8 @@ namespace Scientia.HtmlRenderer.Html5
             NoScript, Object, Ol, P, Param, PlainText, Pre, Script, Section, Select, Source, Style, Summary, Table, TBody, Td, Template,
             TextArea, TFoot, Th, THead, Title, Tr, Track, Ul, Wbr, Xmp
 
-            // MathML_TODO ... MathML Tags
-            // SVG_TODO ... SVG Tags
+            // MathML_TO-DO ... MathML Tags
+            // SVG_TO-DO ... SVG Tags
         };
 
         /// <summary>
@@ -388,7 +388,7 @@ namespace Scientia.HtmlRenderer.Html5
             // specification are in the HTML namespace ("https://www.w3.org/1999/xhtml"),
             // and all attributes defined or mentioned in this specification have no namespace.
 
-            // Currently, we do not support other namespaces. MathML_TODO SVG_TODO.
+            // Currently, we do not support other namespaces. MathML_TO-DO SVG_TO-DO.
             return true;
         }
 
@@ -405,7 +405,7 @@ namespace Scientia.HtmlRenderer.Html5
             // An <ms> element in the MathML namespace
             // An <mtext> element in the MathML namespace
 
-            // MathML_TODO...MathML Tags
+            // MathML_TO-DO...MathML Tags
             return false;
         }
 
@@ -426,8 +426,8 @@ namespace Scientia.HtmlRenderer.Html5
 
             // A <title> element in the SVG namespace
 
-            // MathML_TODO...MathML Tags
-            // SVG_TODO ... SVG Tags
+            // MathML_TO-DO...MathML Tags
+            // SVG_TO-DO ... SVG Tags
             return false;
         }
 

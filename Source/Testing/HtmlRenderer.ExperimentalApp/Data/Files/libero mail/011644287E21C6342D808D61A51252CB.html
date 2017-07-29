@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<title>Email.it: la mail gratuita su piattaforma ZIMBRA Network Edition</title>
+<meta name="description" content="La tua nuova mail gratis: ricerca rapida dei messaggi, accesso da qualsiasi dispositivo, 1GB di spazio espandibile, server sicuri situati in Italia." />
+<meta name="keywords" content="mail,imap,gratis,e-mail,casella,posta,zimbra" />
+
+<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" href="/css/main.css" />
+
+<script src="//code.jquery.com/jquery-1.12.1.min.js"></script>
+<script src="/js/jquery-ui-1.11.4.custom.min.js"></script>
+
+<link href="/css/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Duru+Sans" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.1.47/jquery.form-validator.min.js"></script> -->
+ <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.2.8/jquery.form-validator.min.js"></script> 
+
+
+	
+	
+	
+	
+<script>
+$(function() {
+	
+
+$.validate({
+		modules : 'security',
+		onModulesLoaded : function() {
+	    var optionalConfig = {
+	      fontSize: '12pt',
+	      padding: '4px',
+	      bad : 'Pessima',
+	      weak : 'Debole',
+	      good : 'Buona',
+	      strong : 'Sicura'
+	    };
+	    $('input[name="pass_confirmation"]').displayPasswordStrength(optionalConfig);
+  	},
+    onError : function() {
+    },
+    onSuccess : function() {
+
+      ///////
+      $("#submit_form").prop('disabled', true);
+      $("#submit_form").val('Verifica in corso...');
+      ///////
+      
+			if( document.getElementById('pass_confirmation').value.length < 8 ){
+				alert("ERRORE: La password deve essere di almeno 8 caratteri.");
+				///////
+	      $("#submit_form").prop('disabled', false);
+	      $("#submit_form").val('Avanti');
+	      ///////
+				return false;
+			}
+      
+      
+     	var response = $("#response").val();
+		
+			if(response!=''){
+
+				var okreg = checkMail( $("#username").val() );
+
+					if(okreg==1){
+						
+						var okpwd = checkPwd( $("#pass_confirmation").val() );
+						
+	
+						if(okpwd==1){
+
+							$.ajax({
+								method: "POST",
+								url: "mkremazxi.php",
+								async: false,
+								dataType: 'json',
+								contentType: "application/x-www-form-urlencoded;charset=ISO-8859-1",
+				        cache: false,
+				        timeout: 30000,
+								data: $("#registrazione_emailit").serialize()
+							}).done(function( m ) {
+								
+								var _html = '';
+								
+								if(m.captcha){
+									_html = 'Verifica la voce "non sono un robot" ';
+								}else if(m.no_data){
+									_html = 'Errore: Verifica i parametri di registrazione richiesti per la corretta attivazione della tua casella di posta';
+								}else if(m.tmp_insert == 0 ){
+									
+									$("#submit_form").val('Registrazione in corso. Attendere...');
+									
+									setTimeout(function() {
+									    window.location.replace("https://mail.email.it/riconoscimento.php");
+									}, 1000);
+									
+								}else if(m.n_sess){
+									_html = 'Ti chiediamo di attendere un p&ograve; di tempo prima di poter registrare nuove caselle di posta.';
+								}else if(m.ko_user){
+									_html = 'Errore: Il nome della casella di posta da te inserito non &egrave; valido. Ti preghiamo di inserire un nome differente';
+								}else if(m.ko_user_length){
+									_html = 'Errore: La casella deve essere compresa tra 4 e 20 caratteri';
+								}else if(m.diff_user){
+									_html = 'Errore: 0x1790';
+								}else if(m.ko_pass){
+									_html = 'Errore: Le password inserite non coincidono';
+								}else if(m.ko_pass_sec){
+									_html = 'Errore: La password &egrave; troppo semplice';
+									 $( "#pass_confirmation" ).removeClass( "valid" ).addClass( "error" );
+									 $( "#pass" ).removeClass( "valid" ).addClass( "error" );
+							 }else if(m.ko_pass_chnum){
+									_html = 'Errore: La password deve contenere almeno una lettera e almeno un numero';
+									 $( "#pass_confirmation" ).removeClass( "valid" ).addClass( "error" );
+									 $( "#pass" ).removeClass( "valid" ).addClass( "error" );	
+									
+								}else if(m.ko_pass_spazi){
+									_html = 'Errore: La tua password non pu&ograve; contenere spazi';
+									 $( "#pass_confirmation" ).removeClass( "valid" ).addClass( "error" );
+									 $( "#pass" ).removeClass( "valid" ).addClass( "error" );
+								}else if(m.ko_pass_easy){
+									_html = 'Errore: La password &egrave; troppo semplice';
+									 $( "#pass_confirmation" ).removeClass( "valid" ).addClass( "error" );
+									 $( "#pass" ).removeClass( "valid" ).addClass( "error" );
+								}else if(m.ko_pass_chars){
+									_html = 'Errore: La password che hai inserito contiene caratteri non ammessi. Ti preghiamo di rimuoverli';
+									 $( "#pass_confirmation" ).removeClass( "valid" ).addClass( "error" );
+									 $( "#pass" ).removeClass( "valid" ).addClass( "error" );
+								}else if(m.ko_user_easy){
+									_html = 'Errore: Ti chiediamo di scegliere un nome differente per la tua casella di posta';
+								}else if(m.ko_dati_reg){
+									_html = 'Errore: Ti chiediamo di inserire il tuo nome e cognome';
+								}else if(m.cond){
+									_html = 'Errore: Non hai accettato le codizioni';
+								}else if(m.privacy){
+									_html = 'Errore: Non hai accettato la privacy';
+								}else if(m.altern){
+									_html = 'Errore: La casella di posta alternativa non risulta corretta';
+								}else if(m.sex){
+									_html = 'Errore: Non hai impostato il sesso';
+								}else if(m.ko_data){
+									_html = 'Errore: La data di nascita inserita non risulta corretta';	
+								}else if(m.ko_data16){
+									_html = 'Errore: La registrazione non &egrave; consentita ai minori di 16 anni';		
+								}else if(m.flag_blocca){
+
+									if(m.flag_blocca==1){
+										_html = 'Account non registrabile come Free www.email.it/no_reg.php';
+									}else if(m.flag_blocca==2){
+										_html = 'Registrazione non consentita www.email.it/no_reg.php';
+									}else if(m.flag_blocca==3){
+										_html = 'La password scelta risulta bloccata www.email.it/no_reg.php';
+									}else if(m.flag_blocca==4){
+										_html = 'Username giÃ  prenotato www.email.it/no_reg.php';
+									}else if(m.flag_blocca==6){
+										_html = 'Errore Interno di Registrazione www.email.it/no_reg.php';
+									}else if(m.flag_blocca==9){
+										_html = 'Errore Interno di Registrazione. Codice errore 89562';
+									}else if(m.flag_blocca==12){
+										_html = 'Errore Interno di Registrazione. Codice errore 99196';
+									}else if(m.flag_blocca==17){
+										_html = 'Errore: Non &egrave; consentito registrare ulteriori caselle gratuite in data odierna. Ti consigliamo di attendere 24 ore per effettuare una nuova registrazione, oppure di attivare una casella Professionale.';
+									}
+
+								}else if(m.flag_blocca_naz){
+									_html = 'Errore: Non &egrave; attualmente consentita la registrazione di caselle gratuite dall\'estero';
+								}else if(m.aval_user){
+									_html = 'Errore: Il nome della casella risulta gi&agrave;  occupato. Ti chiediamo di scegliere un altro nome per la tua casella di posta';
+								}else if(m.max_reg){
+									_html = 'Ti preghiamo di aspettare un pi&ugrave; di tempo prima di registrare un\'altra casella. Maggiori informazioni';
+								}else if(m.ko_db){
+									_html = 'Errore generico: 0x0001';
+								}else if(m.ko_ko){
+									
+									if(m.ko_ko==111){
+										_html = 'Errore generico: 0x0111';
+									}else if(m.ko_ko==112){
+										_html = 'Errore generico: 0x0112';
+									}else if(m.ko_ko==113){
+										_html = 'Errore generico: 0x0113';
+									}else if(m.ko_ko==114){
+										_html = 'Errore generico: 0x0114';
+									}
+									
+								}
+								
+								
+								if(!m.ok){
+									
+									///////
+						      $("#submit_form").prop('disabled', false);
+						      $("#submit_form").val('Avanti');
+						      ///////
+						      
+						      grecaptcha.reset(widgetId1);
+						      $("#response").val("");
+									
+								}
+
+								if(_html!=''){
+									/////
+									$("#error_jxp").html(_html);
+									$("#error_jxp").fadeIn('slow');
+									setTimeout(function() {
+									    $('#error_jxp').fadeOut('slow');
+									}, 10000);
+									/////
+								}
+					
+							});
+							
+							/*
+							if(!m.ok){
+								///////
+					      $("#submit_form").prop('disabled', false);
+					      $("#submit_form").val('Registra');
+					      ///////
+				    	}
+							*/
+							
+							return false;
+							
+						}else{
+							///////
+				      $("#submit_form").prop('disabled', false);
+				      $("#submit_form").val('Avanti');
+				      ///////
+							return false;
+						}
+						
+					}else{
+						///////
+			      $("#submit_form").prop('disabled', false);
+			      $("#submit_form").val('Avanti');
+			      ///////
+			      
+			      /////
+			      _html = 'Errore: Il nome della casella di posta da te inserito non &egrave; valido. Ti preghiamo di inserire un nome differente';
+						$("#error_jxp").html(_html);
+						$("#error_jxp").fadeIn('slow');
+						setTimeout(function() {
+						    $('#error_jxp').fadeOut('slow');
+						}, 10000);
+						/////
+			      
+						return false;
+					}
+	            
+	      //}, 2000);
+				
+				
+				
+				
+			}else{
+				
+				alert("Verificare il controllo di sicurezza");
+				
+				///////
+	      $("#submit_form").prop('disabled', false);
+	      $("#submit_form").val('Avanti');
+	      ///////
+	      
+				return false;
+			}
+      
+      
+      
+      
+      
+      
+    },
+    onValidate : function() {
+      return {
+        
+      }
+    }
+  	
+	});
+	
+	
+	
+function getUrlParameter(sParam)
+{
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+} 
+
+	var tech = getUrlParameter('newusername');
+	
+	if(tech){
+		
+		var use_ = tech.trim();
+		
+		var re = new RegExp("%20", 'g');
+		use_ = use_.replace(re, '');
+		
+		var re = new RegExp("%27", 'g');
+		use_ = use_.replace(re, '');
+		
+		var re = new RegExp("%22", 'g');
+		use_ = use_.replace(re, '');
+		
+		use_ = use_.replace(/[{()} ]/g, '');
+		
+		checkMail( use_ );
+	}
+	
+
+	function checkEmail(emailAddress) {
+	  var espressione = /^[_a-z0-9+-]+(\.[_a-z0-9+-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)+$/;
+		var espressione2 = /^@[a-z0-9-]+(\.[a-z0-9-]+)+$/;
+		
+		if (!espressione.test(emailAddress) && !espressione2.test(emailAddress) ){
+		    return false;
+		}else{
+				return true;
+		}
+	}
+	
+	
+	
+	
+	$( "#username" ).change(function() {
+		var p = $(this).val();
+		var p = p.replace("\'", ""); 
+		var p = p.replace("\"", ""); 
+		
+		var p = p.trim();
+		
+		var re = new RegExp("%20", 'g');
+		p = p.replace(re, '');
+		
+		var re = new RegExp("%27", 'g');
+		p = p.replace(re, '');
+		
+		var re = new RegExp("%22", 'g');
+		p = p.replace(re, '');
+		
+		p = p.replace(/[{()} ]/g, '');
+		
+		$(this).val(p);
+		checkMail( p );
+	});
+	
+	
+	$( "#domanda_pref" ).change(function() {
+		$("#domanda").val( $(this).val() ) ;
+	});
+	
+	$( "#pers_dom" ).click(function() {
+		$("#pers").toggle("slow") ;
+	});
+	
+	
+
+	
+	
+	$(document).on('click', '#button_restore', function(){
+	    
+	    		
+		var u = $("#username").val();
+		var p = $("#pass_confirmation").val();
+		var pr = $("#pass").val();
+		
+		
+		
+		if( p != '' && pr != '' ){
+		
+		
+			$.ajax({
+				method: "POST",
+				url: "rescasagiz.php",
+				dataType: 'json',
+				data: { user: u , pwd : p , pwdr : pr }
+			}).done(function( msg ) {
+
+				/*
+				*
+				*/	
+				
+				if( msg.restored==1 ){
+					
+					hhtml = '<div style="margin:5px 0px 5px 0px;color:green;"  >Casella recuperata. Procedi con la registrazione<br/>Inserisci una <b>nuova</b> password per la casella:</div>';
+					$("#esito").html(hhtml);
+					
+					$("#pass_confirmation").val('');
+					$("#pass").val('');
+					$("#dati_reg").css("display","block");
+					
+					$("#pass_confirmation").attr("data-validation","strength");
+					$("#pass_confirmation").attr("data-validation-strength","1");
+					$("#pass_confirmation").attr("title","Digita una password di almeno 8 caratteri, combinando numeri, lettere maiuscole/minuscole e caratteri speciali. L'indicatore a lato ti dir&agrave; il livello di sicurezza della password scelta. Non sono ammessi '~\%/Â£{|} e lettere accentate.");
+					
+					$("#btregag").html('');
+					
+					/*$('#registrazione_emailit #pass').removeAttr('style');
+					$('#registrazione_emailit #pass_confirmation').removeAttr('style');*/
+					
+					$(".strength-meter").detach();
+					
+					
+				}else if( msg.errore==1 ){
+					
+					hhtml = '<div style="margin:5px 0px 5px 0px;color:red;" >ERRORE: Password errata</div>';
+					$("#esito").html(hhtml).fadeOut().fadeIn();
+					
+					$(".strength-meter").detach();
+					
+					
+				}else if( msg.db==1 ){
+					
+					hhtml = '<div style="margin:5px 0px 5px 0px;color:red;" >ERRORE: Errore inatteso durante la registrazione. Ti preghiamo di riprovare pi&ugrave; tardi</div>';
+					$("#esito").html(hhtml);
+					
+				}else if( msg.err_pwd==1 ){
+					
+					hhtml = '<div style="margin:5px 0px 5px 0px;color:red;" >ERRORE: Le password immesse non coincidono</div>';
+					$("#esito").html(hhtml);
+					
+				}
+				
+				
+	
+			});
+		
+		
+		}
+	
+		
+		
+		
+	});
+	
+	
+	
+
+	function checkMail(mmail){
+		
+		var ret = 0;
+		
+		var u = mmail.replace(/ /g,'');
+		u = u.replace("@email.it", ""); 
+		
+		var pos = u.indexOf("@");
+		if(pos!=-1){
+			res = u.split("@"); 
+			u = res[0];
+		}
+
+		var l_u = u.length;
+		
+		$("#username").val(u);
+		
+		
+
+		//if( checkEmail(u+"@email.it") && u!=''){
+		if( u!=''){
+			
+			$.ajax({
+				method: "POST",
+				url: "kcusemrz.php",
+				dataType: 'json',
+				async: false,
+        cache: false,
+        timeout: 30000,
+				data: { name: u }
+			}).success(function( msg ) {
+
+
+				if(msg.confirm==0){
+
+					ret = 0;
+					
+				}else{
+
+					ret = 1;
+					
+					//altra
+					$("#dati_reg").css("display","block");
+					$("#esito").html('<div style="margin:5px 0px 5px 0px;color:green;"  >L\'user e\' disponibile. Prosegui con la registrazione</div>');
+					$("#btregag").html('');
+					
+					
+					
+				}
+				
+				
+				/*
+				*
+				*/	
+				
+				if( msg.dispo==1 ){
+
+					hhtml = '<div style="margin:7px 0px 5px 0px;color:#dc6f05;" ><b>Attenzione</b>: la casella desiderata non e\' disponibile. Ti chiediamo di sceglierne un\'altra</div>';
+					$("#esito").html(hhtml);
+					
+				}else if( msg.aging==1 ){
+
+					hhtml = '<div style="margin:5px 0px 5px 0px;color:#dc6f05;" >La casella e\' stata eliminata in data '+msg.aging_data+'.<br/></div>\
+					<b>Sei il precedente proprietario della casella?</b><br/>Puoi registrarla nuovamente digitando l\'ultima password valida.<br/>\
+					<b>Non sei tu il proprietario?</b><br/>Puoi registrarla subito come casella professionale: <a href="http://posta.email.it/ordina-ora-casella-ze-pro/?user='+$("#username").val()+'" target="_blank" class="" >Ordina ora</a>\
+					<br/><br/>';
+					$("#esito").html(hhtml);
+					
+					$("#dati_reg").css("display","none");
+					
+					hhtml = '<input type="button" name="ok" id="button_restore" class="but_reg_z" value=" Recupera casella " /><br/><br/>';
+					$("#btregag").html(hhtml);
+					
+					
+					$("#pass_confirmation").removeAttr("data-validation");
+					$("#pass_confirmation").removeAttr("data-validation-strength");
+					$("#pass_confirmation").removeAttr("title");
+					
+					
+					
+					
+					
+				}else if( msg.err==1 ){
+					
+					hhtml = '<div style="margin:5px 0px 5px 0px;color:red;" >ERRORE: Errore inatteso durante la registrazione. Ti preghiamo di riprovare piÃ¹ tardi</div>';
+					$("#esito").html(hhtml);
+					
+				}else if( msg.err_pwd==1 ){
+					
+					hhtml = '<div style="margin:7px 0px 5px 0px;color:red;" >Errore: La casella deve essere di almeno 4 caratteri</div>';
+					$("#esito").html(hhtml);
+					
+					
+				}else if( msg.err_u==1 ){
+
+					hhtml = 'Errore: Casella non corretta. Il nome della casella pu&ograve; contenere lettere e numeri (a-zA-Z0-9) e i seguenti caratteri: .-_';
+					$("#esito").html(hhtml);
+
+				}
+
+
+			});
+			
+		}else{
+
+			ret = 0;
+			
+		}
+		
+
+		return ret;
+		
+		
+	}
+	
+	
+	
+	function checkPwd(ppwd){
+
+		var ret = 0;
+		
+		
+		if(ppwd.length > 7 && ppwd.length < 21){
+			
+			ret = 1;
+			
+		}else{
+			
+			ret = 0;
+			alert("ERRORE: La sicurezza della password scelta risulta troppo bassa. \nTi consigliamo di proteggere la tua casella con una password piu' sicura.\nLa password deve contenere almeno 8 caratteri.");
+			
+		}
+		
+		
+		return ret;
+		
+		
+	}
+	
+		$( ".totl" ).tooltip({ position: { my: "right-15 center", at: "left center" } });
+ 	
+});
+
+
+</script>	
+</head>
+
+
+<body style="background-color:#414653;color:#f1f1f1;font-family:verdana,tahoma, arial;">
+	
+	<div style="background:#f1f1f1;padding:5px;box-shadow: 2px 2px 5px #c1c1c1;text-align:left;" >
+		<a href="http://www.email.it" ><img src="img/emailit_logo.png" alt="" style="float:left;" /></a>
+    	<a href="http://hosting.email.it/email-it-gold-partner-di-zimbra/?utm_source=home&utm_medium=pulsantemenu&utm_name=goldpartner&utm_campaign=goldpartner" ><img src="img/zimbra-gold-partner1.png" alt="" style="float:right;" /></a>
+		<div style="clear:both;" ></div>
+	</div>
+	
+	<div id="totale" style="width:1000px;background:#414653;" >
+	
+		
+		<p style="text-align:center;margin-bottom:30px;margin-top:20px;margin-right:70px;" >
+			<span style="font-family: 'Nunito';font-weight: 300;font-size:32px;line-height:1;" >Crea la tua mail GRATUITA @email.it<br />su piattaforma Zimbra Network Edition<br /></span>
+		</p>
+		
+		
+		<div style="width:450px;float:left;" >
+				
+			<!-- font-family: 'Duru Sans', sans-serif; -->
+			
+			<p style="text-align:center;margin-bottom:30px;margin-top:20px;" >
+				<span style="font-family: 'Nunito';font-weight: 300;font-size:22px;" >La casella di posta per ogni tua esigenza.</span><br /><br />
+        <span style="font-family: 'Nunito';font-weight: 300;font-size:16px;color:#ff922b;" >Max n. registrazioni gratuite: 5 caselle per utente <span  class="cFc cBlu" style="cursor:pointer;" id="5caselle"><img src="/img/info-icona.png" border="0" style="vertical-align:bottom;" /></span></span>
+			</p>
+			 <div id="id_5caselle" class="cF dettaglibox"> 
+            
+            <img class="cFcc" src="/img/no.png" style="border:0px solid white;cursor:pointer;vertical-align:top;float:right;" alt="" />
+            <h2>Quante caselle gratuite posso registrare?</h2>
+            Ogni utente pu&ograve; registrare fino a 5 account gratuiti associati allo stesso numero di cellulare.<br />
+            Una volta raggiunto il numero massimo di caselle gratuite registrate, sar&agrave; necessario eliminarne una esistente per poterne registrare una nuova.<br />  
+            Non ci sono limitazioni al numero di caselle acquistabili. 
+                          
+          </div>
+			
+		
+			
+		  <div style="font-size:11px;font-size:18px;" >
+			    
+			    <div style="float:left;width:400px;">
+          <img src="/img/zimbra-free/spazioweb-ico.png" alt="" style="float:left;width:70px;padding:15px;" />
+          <div style="float:left;padding-top:30px;" >1 GB di spazio<br /><span style="color:#b7b7b7;font-size:11px;" >espandibili fino a 25GB, <a href="http://posta.email.it/passaggio-da-casella-gratuita-a-professionale.php" class="link_blu" >scopri come</a></span></div>
+          </div>
+          
+          <div style="float:left;width:400px;">
+			    <img src="/img/zimbra-free/smtp-ico.png" alt="" style="float:left;width:70px;padding:15px;" />
+          <div style="float:left;padding-top:30px;" >SMTP con autenticazione<br /><span style="color:#b7b7b7;font-size:11px;" ><a href="http://posta.email.it/autenticazione-smtp.php" class="link_blu" >perch&egrave; utilizzare l'autenticazione?</a></span></div>
+          </div>
+          
+          <div style="float:left;width:400px;">
+          <img src="/img/zimbra-free/accesso-ico.png" alt="" style="float:left;width:70px;padding:15px;" />
+          <div style="float:left;padding-top:30px;" >Accesso da PC, smartphone<br /> e tablet</div>
+          </div>
+          <div style="float:left;width:400px;">
+          <img src="/img/zimbra-free/certificazione-cellulare-ico.png" alt="" style="float:left;width:70px;padding:15px;" />
+          <div style="float:left;padding-top:15px;" >Sicurezza password con la<br />certificazione tramite<br />numero di cellulare  
+          <span  class="cFc cBlu" style="cursor:pointer;color:#c0dce5;text-decoration:underline;font-size:11px;" id="certifnumero">scopri come</span></div>
+          <div id="id_certifnumero" class="cF dettaglibox"> 
+            
+            <img class="cFcc" src="/img/no.png" style="border:0px solid white;cursor:pointer;vertical-align:top;float:right;" alt="" />
+            <h2>Certificazione tramite numero di cellulare</h2>
+            Per completare correttamente la procedura di registrazione ti verr&agrave; richiesto di inserire il tuo numero di cellulare.<br /><br />
+            Questa operazione di certificazione del numero &egrave; obbligatoria e ti permetter&agrave; di recuperare autonomamente la password della tua casella, 24h su 24, senza dover attendere l'intervento di un operatore.<br /><br />
+            Il numero &egrave; richiesto unicamente per certificare la tua identit&agrave; e verr&agrave; trattato nel rispetto dei principi di protezione della privacy stabiliti dal decreto legislativo n. 196 del 30 giugno 2003 e dalle altre norme vigenti in materia.<br /><br /> 
+            E' un dato strettamente riservato che NON sar&agrave; mai utilizzato per altri fini.  
+                          
+          </div>
+          </div> 
+          <div style="float:left;width:400px;padding-bottom:30px;">
+          <img src="/img/zimbra-free/assistenza-ico.png" alt="" style="float:left;width:70px;padding:15px;" />
+          <div style="float:left;padding-top:30px;" >Assistenza standard<br /><span style="color:#b7b7b7;font-size:11px;" >vuoi anche l'assistenza telefonica? <a href="http://posta.email.it/passaggio-da-casella-gratuita-a-professionale.php" class="link_blu" >Scopri come!</a></span></div>
+          </div>
+          
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>ESCLUSIVO: <a href="http://blog.email.it/pop3-no-grazie/" target="_blank" style="color:#FF922B;">POP3? No grazie!</a> </b> <br /><br />
+          <div style="float:left;width:400px;border-top: 1px solid white;">
+          <div style="float:left;padding-top:30px;" ><span style="font-family: 'Nunito';font-weight:bold;font-size:22px;">Non basta?</span><br /><span style="color:#b7b7b7;font-size:11px;" >Desideri un upgrade? <a href="http://posta.email.it/passaggio-da-casella-gratuita-a-professionale.php" class="link_blu" >Con le caselle @email.it &egrave; possibile!</a></span></div>
+          </div>
+            
+
+			    <div style="clear:both;" ></div>
+			   
+			</div>
+			
+			<br /><br /><br />
+			
+		</div>
+		
+		
+		<div class="formregzfree" >
+		
+		
+
+			<form id="registrazione_emailit" name="registrazione_email.it" method="POST" action="" > 
+					
+				<!-- -->
+				<input type="hidden" id="response" value="" />
+				<input type="hidden" name="regfk" id="regfk" value="" />
+				<input type="hidden" name="p2a" id="p2a" value="0" />
+        <input type="hidden" name="p2b" id="p2b" value="0" /> 
+				<!-- -->
+				
+				<p class="titol" style="margin-top:0px;">
+					DATI CASELLA
+				</p>
+		    
+		    		<table >
+							<tr>
+								<td valign="top"  style="width:194px;" >
+									<p class="tit" >
+										Nome
+									</p>
+								</td>
+								<td valign="top"  style="width:194px;" >
+									<p class="tit" >
+										Cognome
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td valign="top" style="width:194px;" >
+									<p class="in" >
+										<input type="input" placeholder="Nome" data-validation-error-msg="Digitare il nome dell'intestatario della casella email" data-validation="required" class="totl" maxlength="25" id="nome" name="nome" title="Inserisci il nome del proprietario della casella. Attenzione: l'inserimento di dati fasulli pu&ograve; comportare l'eliminazione senza preavviso alcuno della casella registrata e l'impossibilita' di recuperare la propria password se dimenticata."  size="20" value="" />
+									</p>
+								</td>
+								<td valign="top" style="width:194px;" >
+									<p class="in" >
+										<input type="input" placeholder="Cognome" data-validation-error-msg="Digitare il cognome dell'intestatario della casella email" data-validation="required" class="totl" maxlength="25" id="cognome" name="cognome" title="Inserisci il cognome del proprietario della casella. Attenzione: l'inserimento di dati fasulli pu&ograve; comportare l'eliminazione senza preavviso alcuno della casella registrata e l'impossibilita' di recuperare la propria password se dimenticata." size="20" value="" />
+									</p>
+								</td>
+							</tr>
+							
+							
+							
+							
+						</table>
+		     
+				<!-- -->
+			 	<p class="tit" >
+					Scegli il tuo nome utente
+				</p>
+		  	<p class="in" >
+		  		<label style="position:relative;" >
+			      <input type="input" class="totl" autocomplete="off" name="username" title="Inserisci il Nome della casella di posta che desideri creare, es: mario.rossi" id="username" maxlength="25" size="40" value="" />
+						<span id="placeholder_email" >@email.it</span>
+					</label>
+		  	</p>
+				<!-- -->
+				
+				<span id="esito" ></span>			
+				
+				<p class="tit" >
+					Password
+				</p>
+				
+				<p class="in" >
+					<input type="password" class="totl" data-validation-error-msg="Digita una password di almeno 8 caratteri, combinando numeri, lettere maiuscole/minuscole e caratteri speciali. L'indicatore a lato ti dir&agrave; il livello di sicurezza della password scelta. Non sono ammessi '~\%/Â£{|} e lettere accentate." data-validation="strength" data-validation-strength="1" name="pass_confirmation" style="width:260px;" maxlength="20" id="pass_confirmation" title="Inserisci la password per la tua casella di posta. Si consiglia una password di almeno 8 caratteri composta da lettere maiuscole e minuscole, numeri e caratteri speciali. NON sono ammessi: '~\%/Â£{|} e lettere accentate"  size="20" value=""  />
+				</p>
+			
+				
+				<p class="tit" >
+					Conferma la password
+				</p>
+				
+				<p class="in" >
+					<input type="password" class="totl" id="pass" maxlength="20" style="width:260px;" name="pass" data-validation-error-msg="La password di conferma non corrisponde a quella digitata sopra" data-validation="confirmation" title="Inserisci nuovamente la password per confermarne l'esattezza" size="20" value="" />
+				</p>
+			 
+			 <div id="btregag" ></div>
+			 
+			 <div id="dati_reg">
+			 
+			 <p class="tit" >
+					Data di nascita
+				</p>
+				
+				<p class="in" >
+					
+						<select name="nato_giorno" id="nato_giorno" data-validation="required" data-validation-error-msg="Indicare il giorno di nascita dell'intestatario della casella email" style="color:gray;"  title="Data di nascita: indicare la reale data di nascita dell'intestatario della casella. Attenzione: l'inserimento di dati fasulli pu&ograve; comportare l'eliminazione senza preavviso alcuno della casella registrata e l'impossibilita' di recuperare la propria password se dimenticata." class="colorDate sect" >
+														<option value="" >Giorno</option>
+														<option value="01">01</option>
+														<option value="02">02</option>
+														<option value="03">03</option>
+														<option value="04">04</option>
+														<option value="05">05</option>
+														<option value="06">06</option>
+														<option value="07">07</option>
+														<option value="08">08</option>
+														<option value="09">09</option>
+														<option value="10">10</option>
+														<option value="11">11</option>
+														<option value="12">12</option>
+														<option value="13">13</option>
+														<option value="14">14</option>
+														<option value="15">15</option>
+														<option value="16">16</option>
+														<option value="17">17</option>
+														<option value="18">18</option>
+														<option value="19">19</option>
+														<option value="20">20</option>
+														<option value="21">21</option>
+														<option value="22">22</option>
+														<option value="23">23</option>
+														<option value="24">24</option>
+														<option value="25">25</option>
+														<option value="26">26</option>
+														<option value="27">27</option>
+														<option value="28">28</option>
+														<option value="29">29</option>
+														<option value="30">30</option>
+														<option value="31">31</option>
+													</select>
+													
+													<select name="nato_mese" id="nato_mese" data-validation="required" style="color:gray;" title="Data di nascita: indicare la reale data di nascita dell'intestatario della casella. Attenzione: l'inserimento di dati fasulli pu&ograve; comportare l'eliminazione senza preavviso alcuno della casella registrata e l'impossibilita' di recuperare la propria password se dimenticata." data-validation-error-msg="Indicare il mese di nascita dell'intestatario della casella email" class="colorDate sect" >
+														<option value="">Mese</option>
+														<option value="1">Gennaio</option>
+														<option value="2">Febbraio</option>
+														<option value="3">Marzo</option>
+														<option value="4">Aprile</option>
+														<option value="5">Maggio</option>
+														<option value="6">Giugno</option>
+														<option value="7">Luglio</option>
+														<option value="8">Agosto</option>
+														<option value="9">Settembre</option>
+														<option value="10">Ottobre</option>
+														<option value="11">Novembre</option>
+														<option value="12">Dicembre</option>
+													</select>
+													
+													<input size="6" class="totl" name="nato_anno" data-validation="number" data-validation-allowing="range[1900;2010]" data-validation-error-msg="Indicare l'anno di nascita dell'intestatario della casella email" placeholder="anno" id="nato_anno" title="Data di nascita: indicare la reale data di nascita dell'intestatario della casella. Attenzione: l'inserimento di dati fasulli pu&ograve; comportare l'eliminazione senza preavviso alcuno della casella registrata e l'impossibilita' di recuperare la propria password se dimenticata." maxlength="4" value="" type="text" />
+													
+				</p>
+				
+				<p class="tit" >
+					Sesso
+				</p>
+				
+				<p class="in" >
+				
+										<select name="sesso" data-validation="required" data-validation-error-msg="Indicare il sesso dell'intestatario della casella email" id="sesso" title="Sesso" class="sect" >
+											<option value="">-</option>
+											<option value="M">Maschio</option>
+											<option value="F">Femmina</option>
+										</select>
+			 	</p>
+			 
+				
+				<div style="margin-top:5px;margin-bottom:15px;" ></div>
+				
+				
+				
+				
+				
+				
+						
+					
+						
+					  <div style="margin-top:5px;margin-bottom:15px;" ></div>	
+						
+						<!-- <div style="border:1px solid #dadada;background:#f1f1f1;padding:5px 5px 5px 15px;margin-bottom:10px;" >  -->
+						
+			   
+						
+						<p class="titol">
+					  ACCETTAZIONE CONDIZIONI CONTRATTUALI
+				    </p>
+					
+						
+						<span style="font-style:italic;" >Informativa trattamento dati personali</span>
+		        <br />
+	          <textarea cols="50" rows="5" style="font-size:10px;" readonly>La tutela della vostra Privacy è uno dei nostri principali obiettivi.
+
+Riportiamo di seguito l'Informativa al trattamento dei dati personali che viene presentata in fase di registrazione e/o di acquisto dei servizi Email.it.
+
+I dati personali raccolti mediante le procedure di registrazione ai servizi Email.it sono memorizzati su database elettronici di proprieta' di Email.it s.r.l., con sede legale in Ivrea, Via Cesare Pavese 6, che ne sara' titolare e responsabile per il trattamento.
+
+I dati personali dell'utente saranno utilizzati da Email.it s.r.l. nel rispetto dei principi di protezione della privacy stabiliti dal decreto legislativo n. 196 del 30 giugno 2003 e dalle altre norme vigenti in materia. La presente informativa riguarda i dati personali inviati dall'utente al momento della registrazione e/o acquisto di abbonamento, nonché quelli eventualmente ricavati dalle visite e navigazioni nel nostro Sito. Email.it sottopone i dati personali degli utenti a tutte le operazioni di trattamento individuate dal d. lgs. 196/2003 - ovvero, alla raccolta, registrazione, organizzazione, conservazione, elaborazione, modifica, selezione, estrazione, raffronto, utilizzo, interconnessione ed ogni altra operazione utile alla fornitura dei servizi richiestici, ivi compresa la comunicazione a terzi, ove necessaria - prevalentemente con modalità automatizzate ed informatizzate. Tali dati potranno anche essere organizzati in banche dati o archivi. 
+In particolare, le finalità del trattamento dei dati personali sono le seguenti:
+
+1) finalita' del trattamento che non necessitano del consenso dell'utente/cliente
+1.a) fornire i servizi previsti;
+1.b) fornire le informazioni necessarie per la gestione di reclami e/o contenziosi e/o inviare comunicazioni relative al servizio;
+1.c) provvedere a tutti gli eventuali adempimenti contabili e fiscali;
+1.d) ottemperare agli obblighi previsti dalla legge, da regolamenti o normative comunitarie.
+I suoi dati potranno essere inoltre oggetto di trattamento in relazione alla sua eventuale partecipazione ad operazioni a premio direttamente gestite da Email.it
+Le finalita' riportate nei punti 1.a, 1.b, 1.c, 1.d
+ non necessitano del suo consenso ai sensi dell'articolo 24 comma 1, lettera b, del d.lgs 196/2003
+
+2) Finalita' del trattamento che necessitano del consenso dell'utente (obbligatorio per gli utenti dei servizi di Email.it gratuiti):
+2.a) inviare comunicazioni sulle novita' ed informazioni di carattere pubblicitario relative a prodotti e servizi di Email.it S.r.l. e/o società affiliate e/o controllate;
+2.b) inviare comunicazioni ed informazioni di carattere pubblicitario relative a prodotti ed iniziative di terzi;
+senza che ciò determini la cessione dei dati personali a soggetti terzi. Email.it si impegna a non cedere mai i dati dei propri clienti a terzi.
+
+Queste finalita' necessitano del Suo espresso consenso ai sensi degli articoli 23 e 130 del d.lgs 196/03.
+
+Il Cliente potra' accedere ai propri dati in qualsiasi momento ed esercitare i diritti di cui all'art. 7 del d.lgs 196/2003.
+I dati personali sono suddivisi in due categorie: obbligatori e facoltativi, come risulta nella procedura di registrazione. Il conferimento dei dati obbligatori ed il relativo trattamento per le finalità sopra indicate sono strettamente funzionali all'esecuzione dei servizi indicati. L'eventuale rifiuto dell'utente a fornire tali dati o l'eventuale rifiuto di consentire al loro trattamento comporterà l'impossibilita' di usufruire del servizio erogato da Email.it.
+Gli altri dati raccolti servono ad aiutare Email.it ad offrire un servizio sempre migliore. Rispetto ad essi, il Cliente e' libero di fornirli o meno.
+
+Email.it informa che, ai sensi dell'art. 7 del D. lgs 196/2003, gli utenti hanno diritto di:
+- conoscere l'esistenza di trattamenti di dati che li riguardano;
+- essere informati degli estremi del titolare e responsabile del trattamento;
+- ottenere a cura del titolare del trattamento: la conferma dell'esistenza di dati personali, la comunicazione dei medesimi e della loro origine, nonché della logica e delle finalità del trattamento;
+- la cancellazione, la trasformazione in forma anonima o il blocco di dati trattati in violazione della legge;
+- l'aggiornamento, la rettifica e l'integrazione dei dati;
+- l'attestazione che le operazioni di cui al precedente punto sono state portate a conoscenza di coloro a cui i dati sono stati comunicati e/o diffusi;
+- opporsi, in tutto o in parte, per legittimi motivi al trattamento;
+- modificare il proprio consenso, opponendosi successivamente, in tutto o in parte, al trattamento per fini di informazione commerciale ovvero per il compimento di ricerche di mercato o di comunicazione commerciale e simili.
+
+In qualsiasi momento il cliente potra' accedere liberamente ai propri dati per aggiornarli, modificarli, integrarli o semplicemente opporsi al loro utilizzo, cancellandoli tramite questi due link presenti in www.email.it :
+
+
+Per la visualizzazione, modifica, aggiornamento dei dati forniti in sede di registrazione ai servizi gratuiti: clicca qui
+Per la visualizzazione, modifica, aggiornamento dei dati forniti in sede di ordine per i servizi a pagamento il Cliente puo' accedere alla sua Scheda cliente e quindi all'opzione "Modifica dati".
+
+Per la cancellazione definitiva dei dati forniti in sede di registrazione ai servizi gratuiti: clicca qui
+
+
+Il titolare del trattamento dati è:
+Email.it Srl, con sede legale in via Pavese 6, 10015 Ivrea (TO)
+Le eventuali istanze ai sensi dell'art. 7 del D. Lgs. 196/03 dovranno essere indirizzate a:
+Email.it Srl - Ufficio Tutela dati personali - via Cesare Pavese, 6 - 10015 IVREA (TO).
+
+
+</textarea>
+	          
+	          <p>
+	          	<input type="checkbox" data-validation="required" data-validation-error-msg="Per terminare la registrazione devi accettare l'informativa sulla privacy" class="checkbox" name="privacy" value="1" id="privacy" /> Ho preso visione e accetto l'informativa sul trattamento dei dati personali
+	          </p>
+	          
+	          <p>
+							<input type="checkbox" data-validation="required" data-validation-error-msg="Per terminare la registrazione devi accettare le condizioni di utilizzo"  class="checkbox" id="condizioni" name="condizioni" value="1" /> Accetto le <a href="http://www.email.it/contratto.php" target="_blank">condizioni di utilizzo</a> <span style="color:red;" id="checkCond" ></span>
+						</p>
+						
+						
+						
+						<div class="g-recaptcha" id="email.it_recaptcha" ></div>
+						
+						
+						<!-- -->
+						<p><input type="submit" id="submit_form" style="background:#418bbb;color:white;padding:8px;border:2px solid #f1f1f1;border-radius:5px;font-size:14px;font-family:tahoma, verdana,arial;font-weight:bold;cursor:pointer;" value="Avanti &raquo;" /></p>
+						<!-- -->
+						
+           </div>
+            
+            
+						<p id="error_jxp" style="display:none;color:red;font-weight:bold;border:2px solid red;padding:5px;margin-right:10px;" ></p>
+						
+						
+				
+					
+					
+			</form>
+			
+			
+			
+		</div> <!-- regfreez -->
+		
+		
+		<div style="clear:both;" ></div>
+			
+			
+			
+			
+				<div style="border-top:1px solid #dadada;margin-top:55px;margin-bottom:35px;padding-top:10px;" >
+
+			
+			<div class="txtInfo">
+		Copyright 2001 - 2017 Email.it Srl - C.F e P.iva: 08440250010<br />REA: TO 972876 - Cap. sociale &euro; 101.000 i.v.<br />Email.it &reg; &egrave; un marchio registrato di Email.it Srl in Italia.
+	</div>
+			
+		</div>
+		
+		
+	</div>
+
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit&hl=it" async defer></script>
+
+<script type="text/javascript">
+var verifyCallback = function(response) {
+  $("#response").val("1");
+};
+var verifyExpCallback = function(response) {
+  $("#response").val("");
+};
+var widgetId1;
+var onloadCallback = function() {
+  widgetId1 = grecaptcha.render('email.it_recaptcha', {
+    'sitekey' : '6LflTwUTAAAAALA6mVVc0AQi5Gr726RPhgb9Zuhl',
+    'callback' : verifyCallback,
+    'type' : 'image',
+    'expired-callback' : verifyExpCallback,
+    'theme' : 'light'
+  });
+};	
+</script>
+
+<style>
+.dettaglibox {
+    background: white none repeat scroll 0 0;
+    border: 4px solid #363637;
+    border-radius: 15px;
+    box-shadow: 10px 10px 60px #888;
+    display: none;
+    left: 300px;
+    padding: 20px 20px 20px 20px;
+    position: absolute;
+    top: 300px;
+    width: 400px;
+    color:#000000;
+    font-size:12px;
+}
+</style>
+
+<script>
+
+    jQuery(document).ready(function($){
+        $(".cFc").click(function() {
+         
+          $(".cF").css("display","none");
+
+          
+
+
+          $("#id_"+$(this).attr('id')).css("display","block");
+
+
+
+        });
+
+        $(".cFcc").click(function() {
+         
+          $(".cF").css("display","none");
+
+        });
+
+
+    });
+
+</script>
+
+<!-- inizio analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1813127-22', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-1813127-15', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<!-- fine analytics -->
+
+</body>
+</html>

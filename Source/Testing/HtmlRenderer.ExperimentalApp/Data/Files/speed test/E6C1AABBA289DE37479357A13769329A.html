@@ -1,0 +1,265 @@
+
+
+ 
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+    <!-- meta name="description" content="Test your Internet Speed with Verizon's reliable and accurate broadband speed test." / --> 
+    <meta name="description" content="Use the Verizon Speed Test to measure your network's upload and download speeds." />
+    <meta name="keywords" lang="en" content="speed test, bandwidth speed test, broadband speed test, dsl, router, ip address, ookla, speed, test, speedtest, speed test, bandwidth speed test, internet speed test, Internet Connection Speed, Speed Test, Speed Test Internet, Speed Test, Internet Speed Check, Bandwidth Speed Test, Internet Speed, speedtest, Boost, Internet Speed Checker, Test Internet Speed, broadband speed test, verizon speed test, internet speed test, dsl speed test, internet speed check, speed check verizon, internet, network, connection, broadband, bandwidth, latency, ping, throughput, download, upload, connection, dsl, fios, quantum, adsl, cable, t1, voip, isp, ip, ip address, tcp, ds3,verizon" />  
+    <meta name="ROBOTS" content="NOYDIR,NOODP" />     
+    <title>Speed Test - Internet Customer Service | Verizon</title>
+    <script type="text/javascript" src="/Services/Speedtest/jquery-1.9.1.js" ></script>
+    <script type="text/javascript"  src="/Services/Speedtest/jquery-ui-1.10.3.custom.js" ></script>
+    <script type="text/javascript" src="/Services/Speedtest/swfobject.js" ></script>  
+
+    <script type="text/javascript" src="//nexus.ensighten.com/verizon/Bootstrap.js"></script>
+
+    <script type="text/javascript" src="/Services/Speedtest/bootstrap.js" ></script>       
+    <link rel="canonical" href="https://www.verizon.com/speedtest/" />  
+    <link rel="stylesheet" type="text/css" href="/Services/Speedtest/Css/bootstrap.css"/>     
+    <link rel="stylesheet" type="text/css" href="/Services/Speedtest/Css/STStyle.css"/>     
+    <link href="/Services/Speedtest/css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css"/>
+    <style type="text/css">
+        .ui-dialog-titlebar { border:0; background:none; color:#000000; }
+        ul.nobullet {list-style-type: none;padding-bottom: 21px;padding-top: 5px;padding-left: 5px;margin: 1px;}
+	    ul.nobullet li { padding-bottom: 1px; padding-left: 10px;}
+	    ul.nobulletOne {list-style-type: none;padding-bottom: 6px;padding-top: 5px;padding-left: 5px;margin: 1px;}
+	    ul.nobulletOne li { padding-bottom: 1px; padding-left: 10px;}
+    </style>
+     <script type="text/javascript">       
+         var SCState = 'False';       
+    </script>
+   
+    <script language="javascript" type="text/javascript">
+        var postUrl = '/Services/Speedtest/Home/PageStatus';
+        var postResultUrl = '/Services/Speedtest/Home/SaveResult';
+        var postCheckStatusUrl = '/Services/Speedtest/STGateway/CheckStatus';
+        var postCheckNdtResultUrl = '/Services/Speedtest/STGateway/CheckNdtResult';
+        var serviceType = "";
+        var routerImageName = "";
+        
+        $(document).ready(function () {
+            if (document.getElementById('sessionID') != null)
+                currentSessionID = document.getElementById('sessionID').title;
+            //var postUrl = "Home/PageStatus";
+            $("#btnIntCont").click(function () {
+
+
+                $.post(postUrl, { SessionID: currentSessionID, PageName: "Introduction", ButtonClicked: "Start", SelectedData: "" }, null);
+                return false;
+            });
+
+
+            $('body').on('click', 'a.state-button', function () {
+
+                var statejq = document.getElementById("state");
+                var state_selectedjq = statejq[statejq.selectedIndex].text;
+                checkStateSelection_ookla();
+                $.post(postUrl, { SessionID: currentSessionID, PageName: "ServerSelection", ButtonClicked: "Continue", SelectedData: state_selectedjq }, null);
+
+                return false;
+
+            });
+
+
+
+            $('body').on('click', 'a.newState', function () {
+                isManualStateSelection = 'Y';
+                $.post(postUrl, { SessionID: currentSessionID, PageName: "TestResult", ButtonClicked: "SelectNew State", SelectedData: "" }, null);
+                routeControl('disclaimer_ookla');
+                //isManualStateSelection = '';
+                return false;
+
+            });
+
+            $("#divId").dialog({
+                autoOpen: false,
+                modal: true,
+                height: $(window).height() - 200,
+                width: $(window).width() - 400
+            });
+
+
+
+        });
+    </script>
+ <script language="javascript" type="text/javascript">
+     function showDialog() {
+         $("#vzSt_link1").dialog({ height: 300, width: 500, modal: true });
+         $.post(postUrl, { SessionID: currentSessionID, PageName: "TestResult", ButtonClicked: "Clicked", SelectedData: "How does Speed Test work" }, null);
+         return false;
+     }
+
+     function showDialog(ID, QT) {
+         
+        //if ((typeof SCState != "undefined") && (SCState == 'False')) {
+        //     if (QT.indexOf("test work") >= 0) {
+        //         scLinkTrackID('faq: test work');
+        //     } else if (QT.indexOf("terms mean") >= 0) {
+        //         scLinkTrackID('faq: terms mean');
+        //     } else if (QT.indexOf("test results") >= 0) {
+        //         scLinkTrackID('faq: impact results');
+        //     } else if (QT.indexOf("my speed") >= 0) {
+        //         scLinkTrackID('info: improve speeds');
+        //     }
+        //}
+
+
+         $.post(postUrl, { SessionID: currentSessionID, PageName: "TestResult", ButtonClicked: "Clicked", SelectedData: QT }, null);
+
+         var top = ($(window).height() / 2) - ($("#" + ID).outerHeight());
+         $("#" + ID).css("top", top);
+         $("#" + ID).modal('show');
+         return false;
+     }
+
+     function showDialog1() {
+         $("#vzSt_link2").dialog({ height: 300, width: 500, modal: true });
+
+         $.post(postUrl, { SessionID: currentSessionID, PageName: "TestResult", ButtonClicked: "Clicked", SelectedData: "Not the speed you expected" }, null);
+         return false;
+     }
+
+     function showDialog2() {
+         $("#vzSt_link3").dialog({ height: 400, width: 500, modal: true });
+         $.post(postUrl, { SessionID: currentSessionID, PageName: "TestResult", ButtonClicked: "Clicked", SelectedData: "Factors that can impact internet speed" }, null);
+         return false;
+     }
+
+     function openWindow(url2open) {
+
+         window.open(url2open, '_blank');
+         $.post(postUrl, { SessionID: currentSessionID, PageName: "TestResult", ButtonClicked: "Clicked", SelectedData: url2open }, null);
+         return false;
+     }
+     function showDialogX(url4Dialog) {
+         $("#divId").dialog("open");
+         $("#modalIframeId").attr("src", url4Dialog);
+         $.post(postUrl, { SessionID: currentSessionID, PageName: "TestResult", ButtonClicked: "Clicked", SelectedData: url4Dialog }, null);
+
+         return false;
+     }
+</script>
+
+
+
+    
+
+
+</head>
+
+<body leftmargin="0" topmargin="0" marginwidth="0"  marginheight="0">
+            <div id="top_header" align="center" style="width: 100%;height: 85px;background: url('images/myvz-global-header-bk4x105.png') 0 0 repeat;">
+     <table align="center" style="width:850px;height: 70px;">
+     		<tr>     		
+     		<td valign="bottom" align="left" style="width: 850px;">
+      		<img src="images/verizonLogo2.png" />
+      		</td>
+      	</tr>
+      </table>
+      </div>
+
+        <div style="display: none;" id="500_500_router" title="Your Router">
+        <!--<img src="images/Actiontec_MI424WR.jpg" align="center">-->
+
+      
+        </div>
+        <div style="display: none;" id="550_600_Connect" title="To connect your computer to your Verizon router"><ol><li class="points">Plug one end of the Ethernet cable into your computer or laptop.</li><li class="points">Plug the remaining end of the cable into a yellow Ethernet port found in the back of your router.</li><li class="points">make sure the router has power and ready (LAN lights are solid or flashing <font color="#00FF00"><b>GREEN</b></font>).</li>
+        </ol><br /><br /><img src="images/Ndt/fiosrouter_computer.png" align="center"/></br></br></div>
+
+        <div id="dvFAQsS" > 
+             <div id="dvFQS"><div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="seeDetailsLabel" aria-hidden="true" id="300_500_FAQ50"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h6 class="nomar nopad">SPEED TEST FAQ</h6></div><div class="modal-body"><h14><b>How does the test work?</b></br></br><p style="text-align: justify">The Verizon Speed Test sends and receives bursts of random data for 30 seconds.  It calculates the upload and download speeds of your connection, by measuring how many "bits" of data were transferred during that 30 second period of time.</p></h14></div></div><div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="seeDetailsLabel" aria-hidden="true" id="500_500_FAQ51"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h6 class="nomar nopad">SPEED TEST FAQ</h6></div><div class="modal-body"><h14><b>What do the test terms mean?</b></br></br><p style="text-align: justify"><b>Download Speed:</b> The speed of the connection when downloading from the Internet to your computer.</p><p style="text-align: justify"><b>Upload Speed:</b> The speed of the connection when uploading data from your computer to another computer somewhere on the Internet.</p><p style="text-align: justify"><b>Latency:</b> A synonym for delay is an expression of how much time it takes for a packet of data to get from one designated point to another.  In the Measuring Broadband America study, latency was measured by sending a packet that is returned to the sender and the round-trip time is considered the latency.</p></h14></div></div><div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="seeDetailsLabel" aria-hidden="true" id="570_500_FAQ52"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h6 class="nomar nopad">SPEED TEST FAQ</h6></div><div class="modal-body"><h14><b>What factors impact my test results?</b></br></br><p style="text-align: justify">The speed you get depends on lots of things, like network and Internet congestion, your computer&#39;s configuration, Wi-Fi adapters used, others using Video On Demand, the wiring in your location, etc.  Therefore we cannot guarantee a specific speed.<br><br>Your results will also be affected if you run the test while connected to a Virtual Private Network (<b>VPN</b>).  Here are some things to check:</p><ul><li>Are you plugged into your router?</li><li>Did you run the test while connected to a VPN?</li><li>If you subscribed to FiOS Service with 100Mbps or greater, are you using a 10/100/1000 gigabit Network Interface Card(<b>NIC</b>)? </li></ul></h14></div></div></div><div id="dvFAQS" style="display: none;"><div id=faqs><span class="normal"><ul class="nobullet" ><li><a href="javascript:void(null);" onclick="return showDialog('300_500_FAQ50','How does the test work?')" ><h5>How does the test work?</h5></a></li><li><a href="javascript:void(null);" onclick="return showDialog('500_500_FAQ51','What do the test terms mean?')" ><h5>What do the test terms mean?</h5></a></li><li><a href="javascript:void(null);" onclick="return showDialog('570_500_FAQ52','What factors impact my test results?')" ><h5>What factors impact my test results?</h5></a></li></ul></span></div></div><div id="dvLINKS" style="display: none;"><div id=lnks><span class="normal"><ul class="nobulletOne"><li><a name="&lid=tools: quick guides" href="javascript:void(null);" onclick="return openWindow('http://www22.verizon.com/Support/Residential/QuickGuides/index.htm')"  ><h5>Verizon QuickGuides</h5></a></li><li><a name="&lid=tools: quick guides" href="javascript:void(null);" onclick="return openWindow('http://my.verizon.com/services/speedoptimizer/FIOS/')"  ><h5>FiOS Optimizer Tool</h5></a></li><li><a name="&lid=tools: quick guides" href="javascript:void(null);" onclick="return openWindow('http://my.verizon.com/services/speedtest/DefaultNdt.aspx')"  ><h5>Network Diagnostic Tool</h5></a></li><li><a name="&lid=tools: quick guides" href="javascript:void(null);" onclick="return openWindow('https://www.verizon.com/speedtest/')"  ><h5>Verizon Speed Test</h5></a></li></ul></span></div></div><div id="dvMoreInfo" style="display: none;"><div id=moreInfos><span class="normal"><ul class="nobulletOne"><li><a name="&lid=info: impact speeds" href="javascript:void(null);" onclick="return openWindow('http://www.verizon.com/Support/Residential/Internet/FiosInternet/General+Support/Getting+Started/QuestionsOne/85257.htm')"><h5>What factors impact my speed?</h5></a></li><li><a href="javascript:void(null);" onclick="return showDialog('350_500_MORE_INFO_FAQ63','How can I improve my speed?')"><h5>How can I improve my speed?</h5></a></li> <li><a name="&lid=info: Data package" href="javascript:void(null);" onclick="return openWindow('http://www22.verizon.com/ForYourHome/MyAccount/Protected/Account/MyAccountServicesInternet.aspx')"><h5>What speed plan do I have?</h5></a></li></ul></span></div></div><div id="dvMOREFQS"><div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="seeDetailsLabel" aria-hidden="true" id="350_500_MORE_INFO_FAQ63"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h6 class="nomar nopad">SPEED TEST MORE INFO</h6></div><div class="modal-body"><h14><b>How can I improve my speed?</b></br></br><p style="text-align: justify">Your computer settings may be slowing you down.  Select the <b>Run FiOS Optimizer Tool</b> link found in the <b>Related Links</b> section below the <b>FAQs</b> to reconfigure your settings and maximize your speeds</p><p style="text-align: justify"><strong>Note:</strong> If you have a laptop, run the FiOS Optimizer Tool in wired (with the Ethernet cable plugged into the router) and wireless modes.</p></h14></div></div></div>
+        </div>
+        <div id="dvService" style="display: none;"> 
+            
+        </div>
+    <div>
+        <script language="javascript" type="text/javascript">
+            var baseUri = "http://testmyspeed.verizon.net/Services/Speedtest/";
+        </script>
+        <div style="margin-left:15px;margin-bottom:-19px" id="st_content">
+            <div id="first" style="display: none;"></div>        
+            <div id="second" style="display: none;">                          
+                                            
+                <div id="newadded" >
+                   <table cellpadding="0" cellspacing="0">
+                       <tr valign="top">
+                         <td valign="top">
+				<div id="speed_moredetail"></div>    
+		                   <div id="stheader" class="roofline">
+			                    <br />
+		                <p class="box_top">Find your real speed</p>
+                                <p class="box_header"> VERIZON SPEED TEST</p>
+		                <p class="box_desc">For the most accurate results. Make sure your computer is wired directly to your router</br>before running the speed test.</p>
+                            </div>                                            
+                            <div id="wrapper">                                 
+                                    <div id="speedtest1" ></div>  
+                                    <div id="bottombox" style="margin-left:-15px;margin-bottom:0px">
+                                        <table cellpadding="0" cellspacing="0">                                          
+                                                <tr valign="top">                                                
+                                                    <td  border="none" valign="top" halign="left">
+                                                        <div id="vMoreContainer" style="display:none;" class="boxsmall1">
+                                                            <p class="boxsmall1_title">MORE INFO</p>						    
+                                                            <div id="vMoreInfoss"></div>                                                    
+                                                        </div>
+                                                    </td>
+                                                    <td border="none" valign="top" halign="left">
+                                                        <div id="vLinkContainer" style="display:none" class="boxsmall1">
+                                                             <p class="boxsmall1_title">SUPPORT TOOLS</p>						 
+                                                            <div id="vLinkss"></div>                                                    
+                                                            </div>
+                                                    </td>
+                                                </tr>
+                                        </table>  
+                                   </div>                                                                                                                                      
+                             </div>
+                            </td>
+                            <td width="35%" valign="top">
+                                <div id="secondPART">
+                                    <div id="resultBanner" name="&lid=iha: lrn more"></div>				
+                                   <div class="box">					
+                                        <p class="box_title">SPEED TEST FAQS</p>
+                                        <div id="vFaqss"></div>                                    
+                                    </div>                                           
+                                    <div id="bottomBanner" name="&lid=speed: explore plans"></div>
+                                </div>
+                           </td>
+                        </tr>
+                   </table>
+                 </div>
+             </div>
+         </div>
+       
+        <script type="text/javascript" language="javascript" src="/Services/Speedtest/speedtest2.js" ></script>
+
+        </div>
+        <div id="sessionID" style='visibility:hidden' title="26202119">26202119</div>
+        <div id="main"></div>
+          <script type="text/javascript">
+              defaultImg = "default_banner.jpg";
+              defaultUrl = "http://www.verizon.com/inhomeagent";
+              bottomImagePath = "internet_speed_banner.jpg";
+              bottomImageUrl = "http://www.verizon.com/home/fios-fastest-internet/#fastest-internet-plans";
+              showModal = "N";
+              customerType = "";
+              serviceType = "";
+              statederived = "";
+              controlType = "netguage";            
+        </script>
+            
+    <div id="divId" title="">
+        <iframe id="modalIframeId" width="100%" height="100%" marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto" title="Dialog Title">Your browser does not suppr</iframe>
+    </div>
+                 <div  style="width: 100%;" align="center">
+            <div id="footerredbar" style = "height: 5px;min-width:995px;background:#B40404;margin:17px 0;overflow:hidden;"></div>
+            <div class="FixLay">
+              <div class="footerCopyright" style="width: 700px;"><b>&copy; 2014 Verizon All Rights Reserved.</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Note: Best viewed with 1024 x 768 screen resolution</div>
+            </div>
+            </div>            
+
+  
+</body>
+</html>

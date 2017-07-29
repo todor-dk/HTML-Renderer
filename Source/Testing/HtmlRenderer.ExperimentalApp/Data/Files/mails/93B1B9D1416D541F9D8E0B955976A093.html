@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+  <title>PHP: imap_mail - Manual </title>
+
+ <link rel="shortcut icon" href="http://php.net/favicon.ico">
+ <link rel="search" type="application/opensearchdescription+xml" href="http://php.net/phpnetimprovedsearch.src" title="Add PHP.net search">
+ <link rel="alternate" type="application/atom+xml" href="http://php.net/releases/feed.php" title="PHP Release feed">
+ <link rel="alternate" type="application/atom+xml" href="http://php.net/feed.atom" title="PHP: Hypertext Preprocessor">
+
+ <link rel="canonical" href="http://php.net/manual/en/function.imap-mail.php">
+ <link rel="shorturl" href="http://php.net/imap-mail">
+ <link rel="alternate" href="http://php.net/imap-mail" hreflang="x-default">
+
+ <link rel="contents" href="http://php.net/manual/en/index.php">
+ <link rel="index" href="http://php.net/manual/en/ref.imap.php">
+ <link rel="prev" href="http://php.net/manual/en/function.imap-mail-move.php">
+ <link rel="next" href="http://php.net/manual/en/function.imap-mailboxmsginfo.php">
+
+ <link rel="alternate" href="http://php.net/manual/en/function.imap-mail.php" hreflang="en">
+ <link rel="alternate" href="http://php.net/manual/pt_BR/function.imap-mail.php" hreflang="pt_BR">
+ <link rel="alternate" href="http://php.net/manual/zh/function.imap-mail.php" hreflang="zh">
+ <link rel="alternate" href="http://php.net/manual/fr/function.imap-mail.php" hreflang="fr">
+ <link rel="alternate" href="http://php.net/manual/de/function.imap-mail.php" hreflang="de">
+ <link rel="alternate" href="http://php.net/manual/ja/function.imap-mail.php" hreflang="ja">
+ <link rel="alternate" href="http://php.net/manual/ro/function.imap-mail.php" hreflang="ro">
+ <link rel="alternate" href="http://php.net/manual/ru/function.imap-mail.php" hreflang="ru">
+ <link rel="alternate" href="http://php.net/manual/es/function.imap-mail.php" hreflang="es">
+ <link rel="alternate" href="http://php.net/manual/tr/function.imap-mail.php" hreflang="tr">
+
+<link rel="stylesheet" type="text/css" href="http://php.net/cached.php?t=1421837618&amp;f=/fonts/Fira/fira.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://php.net/cached.php?t=1421837618&amp;f=/fonts/Font-Awesome/css/fontello.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://php.net/cached.php?t=1478800802&amp;f=/styles/theme-base.css" media="screen">
+<link rel="stylesheet" type="text/css" href="http://php.net/cached.php?t=1449787206&amp;f=/styles/theme-medium.css" media="screen">
+
+ <!--[if lte IE 7]>
+ <link rel="stylesheet" type="text/css" href="http://php.net/styles/workarounds.ie7.css" media="screen">
+ <![endif]-->
+
+ <!--[if lte IE 8]>
+ <script type="text/javascript">
+  window.brokenIE = true;
+ </script>
+ <![endif]-->
+
+ <!--[if lte IE 9]>
+ <link rel="stylesheet" type="text/css" href="http://php.net/styles/workarounds.ie9.css" media="screen">
+ <![endif]-->
+
+ <!--[if IE]>
+ <script type="text/javascript" src="http://php.net/js/ext/html5.js"></script>
+ <![endif]-->
+
+ <base href="http://php.net/manual/en/function.imap-mail.php">
+
+</head>
+<body class="docs ">
+
+<nav id="head-nav" class="navbar navbar-fixed-top">
+  <div class="navbar-inner clearfix">
+    <a href="/" class="brand"><img src="/images/logos/php-logo.svg" width="48" height="24" alt="php"></a>
+    <div id="mainmenu-toggle-overlay"></div>
+    <input type="checkbox" id="mainmenu-toggle">
+    <ul class="nav">
+      <li class=""><a href="/downloads">Downloads</a></li>
+      <li class="active"><a href="/docs.php">Documentation</a></li>
+      <li class=""><a href="/get-involved" >Get Involved</a></li>
+      <li class=""><a href="/support">Help</a></li>
+    </ul>
+    <form class="navbar-search" id="topsearch" action="/search.php">
+      <input type="hidden" name="show" value="quickref">
+      <input type="search" name="pattern" class="search-query" placeholder="Search" accesskey="s">
+    </form>
+  </div>
+  <div id="flash-message"></div>
+</nav>
+<div class="headsup"><a href='/conferences/index.php#id2017-07-10-1'>php[world] 2017</a></div>
+<nav id="trick"><div><dl>
+<dt><a href='/manual/en/getting-started.php'>Getting Started</a></dt>
+	<dd><a href='/manual/en/introduction.php'>Introduction</a></dd>
+	<dd><a href='/manual/en/tutorial.php'>A simple tutorial</a></dd>
+<dt><a href='/manual/en/langref.php'>Language Reference</a></dt>
+	<dd><a href='/manual/en/language.basic-syntax.php'>Basic syntax</a></dd>
+	<dd><a href='/manual/en/language.types.php'>Types</a></dd>
+	<dd><a href='/manual/en/language.variables.php'>Variables</a></dd>
+	<dd><a href='/manual/en/language.constants.php'>Constants</a></dd>
+	<dd><a href='/manual/en/language.expressions.php'>Expressions</a></dd>
+	<dd><a href='/manual/en/language.operators.php'>Operators</a></dd>
+	<dd><a href='/manual/en/language.control-structures.php'>Control Structures</a></dd>
+	<dd><a href='/manual/en/language.functions.php'>Functions</a></dd>
+	<dd><a href='/manual/en/language.oop5.php'>Classes and Objects</a></dd>
+	<dd><a href='/manual/en/language.namespaces.php'>Namespaces</a></dd>
+	<dd><a href='/manual/en/language.errors.php'>Errors</a></dd>
+	<dd><a href='/manual/en/language.exceptions.php'>Exceptions</a></dd>
+	<dd><a href='/manual/en/language.generators.php'>Generators</a></dd>
+	<dd><a href='/manual/en/language.references.php'>References Explained</a></dd>
+	<dd><a href='/manual/en/reserved.variables.php'>Predefined Variables</a></dd>
+	<dd><a href='/manual/en/reserved.exceptions.php'>Predefined Exceptions</a></dd>
+	<dd><a href='/manual/en/reserved.interfaces.php'>Predefined Interfaces and Classes</a></dd>
+	<dd><a href='/manual/en/context.php'>Context options and parameters</a></dd>
+	<dd><a href='/manual/en/wrappers.php'>Supported Protocols and Wrappers</a></dd>
+</dl>
+<dl>
+<dt><a href='/manual/en/security.php'>Security</a></dt>
+	<dd><a href='/manual/en/security.intro.php'>Introduction</a></dd>
+	<dd><a href='/manual/en/security.general.php'>General considerations</a></dd>
+	<dd><a href='/manual/en/security.cgi-bin.php'>Installed as CGI binary</a></dd>
+	<dd><a href='/manual/en/security.apache.php'>Installed as an Apache module</a></dd>
+	<dd><a href='/manual/en/security.sessions.php'>Session Security</a></dd>
+	<dd><a href='/manual/en/security.filesystem.php'>Filesystem Security</a></dd>
+	<dd><a href='/manual/en/security.database.php'>Database Security</a></dd>
+	<dd><a href='/manual/en/security.errors.php'>Error Reporting</a></dd>
+	<dd><a href='/manual/en/security.globals.php'>Using Register Globals</a></dd>
+	<dd><a href='/manual/en/security.variables.php'>User Submitted Data</a></dd>
+	<dd><a href='/manual/en/security.magicquotes.php'>Magic Quotes</a></dd>
+	<dd><a href='/manual/en/security.hiding.php'>Hiding PHP</a></dd>
+	<dd><a href='/manual/en/security.current.php'>Keeping Current</a></dd>
+<dt><a href='/manual/en/features.php'>Features</a></dt>
+	<dd><a href='/manual/en/features.http-auth.php'>HTTP authentication with PHP</a></dd>
+	<dd><a href='/manual/en/features.cookies.php'>Cookies</a></dd>
+	<dd><a href='/manual/en/features.sessions.php'>Sessions</a></dd>
+	<dd><a href='/manual/en/features.xforms.php'>Dealing with XForms</a></dd>
+	<dd><a href='/manual/en/features.file-upload.php'>Handling file uploads</a></dd>
+	<dd><a href='/manual/en/features.remote-files.php'>Using remote files</a></dd>
+	<dd><a href='/manual/en/features.connection-handling.php'>Connection handling</a></dd>
+	<dd><a href='/manual/en/features.persistent-connections.php'>Persistent Database Connections</a></dd>
+	<dd><a href='/manual/en/features.safe-mode.php'>Safe Mode</a></dd>
+	<dd><a href='/manual/en/features.commandline.php'>Command line usage</a></dd>
+	<dd><a href='/manual/en/features.gc.php'>Garbage Collection</a></dd>
+	<dd><a href='/manual/en/features.dtrace.php'>DTrace Dynamic Tracing</a></dd>
+</dl>
+<dl>
+<dt><a href='/manual/en/funcref.php'>Function Reference</a></dt>
+	<dd><a href='/manual/en/refs.basic.php.php'>Affecting PHP's Behaviour</a></dd>
+	<dd><a href='/manual/en/refs.utilspec.audio.php'>Audio Formats Manipulation</a></dd>
+	<dd><a href='/manual/en/refs.remote.auth.php'>Authentication Services</a></dd>
+	<dd><a href='/manual/en/refs.utilspec.cmdline.php'>Command Line Specific Extensions</a></dd>
+	<dd><a href='/manual/en/refs.compression.php'>Compression and Archive Extensions</a></dd>
+	<dd><a href='/manual/en/refs.creditcard.php'>Credit Card Processing</a></dd>
+	<dd><a href='/manual/en/refs.crypto.php'>Cryptography Extensions</a></dd>
+	<dd><a href='/manual/en/refs.database.php'>Database Extensions</a></dd>
+	<dd><a href='/manual/en/refs.calendar.php'>Date and Time Related Extensions</a></dd>
+	<dd><a href='/manual/en/refs.fileprocess.file.php'>File System Related Extensions</a></dd>
+	<dd><a href='/manual/en/refs.international.php'>Human Language and Character Encoding Support</a></dd>
+	<dd><a href='/manual/en/refs.utilspec.image.php'>Image Processing and Generation</a></dd>
+	<dd><a href='/manual/en/refs.remote.mail.php'>Mail Related Extensions</a></dd>
+	<dd><a href='/manual/en/refs.math.php'>Mathematical Extensions</a></dd>
+	<dd><a href='/manual/en/refs.utilspec.nontext.php'>Non-Text MIME Output</a></dd>
+	<dd><a href='/manual/en/refs.fileprocess.process.php'>Process Control Extensions</a></dd>
+	<dd><a href='/manual/en/refs.basic.other.php'>Other Basic Extensions</a></dd>
+	<dd><a href='/manual/en/refs.remote.other.php'>Other Services</a></dd>
+	<dd><a href='/manual/en/refs.search.php'>Search Engine Extensions</a></dd>
+	<dd><a href='/manual/en/refs.utilspec.server.php'>Server Specific Extensions</a></dd>
+	<dd><a href='/manual/en/refs.basic.session.php'>Session Extensions</a></dd>
+	<dd><a href='/manual/en/refs.basic.text.php'>Text Processing</a></dd>
+	<dd><a href='/manual/en/refs.basic.vartype.php'>Variable and Type Related Extensions</a></dd>
+	<dd><a href='/manual/en/refs.webservice.php'>Web Services</a></dd>
+	<dd><a href='/manual/en/refs.utilspec.windows.php'>Windows Only Extensions</a></dd>
+	<dd><a href='/manual/en/refs.xml.php'>XML Manipulation</a></dd>
+	<dd><a href='/manual/en/refs.ui.php'>GUI Extensions</a></dd>
+</dl>
+<dl>
+<dt>Keyboard Shortcuts</dt><dt>?</dt>
+<dd>This help</dd>
+<dt>j</dt>
+<dd>Next menu item</dd>
+<dt>k</dt>
+<dd>Previous menu item</dd>
+<dt>g p</dt>
+<dd>Previous man page</dd>
+<dt>g n</dt>
+<dd>Next man page</dd>
+<dt>G</dt>
+<dd>Scroll to bottom</dd>
+<dt>g g</dt>
+<dd>Scroll to top</dd>
+<dt>g h</dt>
+<dd>Goto homepage</dd>
+<dt>g s</dt>
+<dd>Goto search<br>(current page)</dd>
+<dt>/</dt>
+<dd>Focus search box</dd>
+</dl></div></nav>
+<div id="goto">
+    <div class="search">
+         <div class="text"></div>
+         <div class="results"><ul></ul></div>
+   </div>
+</div>
+
+  <div id="breadcrumbs" class="clearfix">
+    <div id="breadcrumbs-inner">
+          <div class="next">
+        <a href="function.imap-mailboxmsginfo.php">
+          imap_mailboxmsginfo &raquo;
+        </a>
+      </div>
+              <div class="prev">
+        <a href="function.imap-mail-move.php">
+          &laquo; imap_mail_move        </a>
+      </div>
+          <ul>
+            <li><a href='index.php'>PHP Manual</a></li>      <li><a href='funcref.php'>Function Reference</a></li>      <li><a href='refs.remote.mail.php'>Mail Related Extensions</a></li>      <li><a href='book.imap.php'>IMAP</a></li>      <li><a href='ref.imap.php'>IMAP Functions</a></li>      </ul>
+    </div>
+  </div>
+
+
+
+
+<div id="layout" class="clearfix">
+  <section id="layout-content">
+  <div class="page-tools">
+    <div class="change-language">
+      <form action="/manual/change.php" method="get" id="changelang" name="changelang">
+        <fieldset>
+          <label for="changelang-langs">Change language:</label>
+          <select onchange="document.changelang.submit()" name="page" id="changelang-langs">
+            <option value='en/function.imap-mail.php' selected="selected">English</option>
+            <option value='pt_BR/function.imap-mail.php'>Brazilian Portuguese</option>
+            <option value='zh/function.imap-mail.php'>Chinese (Simplified)</option>
+            <option value='fr/function.imap-mail.php'>French</option>
+            <option value='de/function.imap-mail.php'>German</option>
+            <option value='ja/function.imap-mail.php'>Japanese</option>
+            <option value='ro/function.imap-mail.php'>Romanian</option>
+            <option value='ru/function.imap-mail.php'>Russian</option>
+            <option value='es/function.imap-mail.php'>Spanish</option>
+            <option value='tr/function.imap-mail.php'>Turkish</option>
+            <option value="help-translate.php">Other</option>
+          </select>
+        </fieldset>
+      </form>
+    </div>
+    <div class="edit-bug">
+      <a href="https://edit.php.net/?project=PHP&amp;perm=en/function.imap-mail.php">Edit</a>
+      <a href="https://bugs.php.net/report.php?bug_type=Documentation+problem&amp;manpage=function.imap-mail">Report a Bug</a>
+    </div>
+  </div><div id="function.imap-mail" class="refentry">
+ <div class="refnamediv">
+  <h1 class="refname">imap_mail</h1>
+  <p class="verinfo">(PHP 4, PHP 5, PHP 7)</p><p class="refpurpose"><span class="refname">imap_mail</span> &mdash; <span class="dc-title">Send an email message</span></p>
+
+ </div>
+ <div class="refsect1 description" id="refsect1-function.imap-mail-description">
+  <h3 class="title">Description</h3>
+  <div class="methodsynopsis dc-description">
+   <span class="type">bool</span> <span class="methodname"><strong>imap_mail</strong></span>
+    ( <span class="methodparam"><span class="type">string</span> <code class="parameter">$to</code></span>
+   , <span class="methodparam"><span class="type">string</span> <code class="parameter">$subject</code></span>
+   , <span class="methodparam"><span class="type">string</span> <code class="parameter">$message</code></span>
+   [, <span class="methodparam"><span class="type">string</span> <code class="parameter">$additional_headers</code><span class="initializer"> = <strong><code>NULL</code></strong></span></span>
+   [, <span class="methodparam"><span class="type">string</span> <code class="parameter">$cc</code><span class="initializer"> = <strong><code>NULL</code></strong></span></span>
+   [, <span class="methodparam"><span class="type">string</span> <code class="parameter">$bcc</code><span class="initializer"> = <strong><code>NULL</code></strong></span></span>
+   [, <span class="methodparam"><span class="type">string</span> <code class="parameter">$rpath</code><span class="initializer"> = <strong><code>NULL</code></strong></span></span>
+  ]]]] )</div>
+
+  <p class="para rdfs-comment">
+   This function allows sending of emails with correct handling of
+   Cc and Bcc receivers. 
+  </p>
+  <p class="para">
+   The parameters <code class="parameter">to</code>, <code class="parameter">cc</code>
+   and <code class="parameter">bcc</code> are all strings and are all parsed
+   as <a href="http://www.faqs.org/rfcs/rfc822" class="link external">&raquo;&nbsp;RFC822</a> address lists.
+  </p>
+ </div>
+
+ <div class="refsect1 parameters" id="refsect1-function.imap-mail-parameters">
+  <h3 class="title">Parameters</h3>
+  <p class="para">
+   <dl>
+
+    
+     <dt>
+<code class="parameter">to</code></dt>
+
+     <dd>
+
+      <p class="para">
+       The receiver
+      </p>
+     </dd>
+
+    
+    
+     <dt>
+<code class="parameter">subject</code></dt>
+
+     <dd>
+
+      <p class="para">
+       The mail subject
+      </p>
+     </dd>
+
+    
+    
+     <dt>
+<code class="parameter">message</code></dt>
+
+     <dd>
+
+      <p class="para">
+       The mail body, see <span class="function"><a href="function.imap-mail-compose.php" class="function">imap_mail_compose()</a></span>
+      </p>
+     </dd>
+
+    
+    
+     <dt>
+<code class="parameter">additional_headers</code></dt>
+
+     <dd>
+
+      <p class="para">
+       As string with additional headers to be set on the mail
+      </p>
+     </dd>
+
+    
+    
+     <dt>
+<code class="parameter">cc</code></dt>
+
+     <dd>
+
+      <p class="para">
+      </p>
+     </dd>
+
+    
+    
+     <dt>
+<code class="parameter">bcc</code></dt>
+
+     <dd>
+
+      <p class="para">
+       The receivers specified in <code class="parameter">bcc</code> will get the
+       mail, but are excluded from the headers.
+      </p>
+     </dd>
+
+    
+    
+     <dt>
+<code class="parameter">rpath</code></dt>
+
+     <dd>
+
+      <p class="para">
+       Use this parameter to specify return path upon mail delivery failure.
+       This is useful when using PHP as a mail client for multiple users.
+      </p>
+     </dd>
+
+    
+   </dl>
+
+  </p>
+ </div>
+
+ <div class="refsect1 returnvalues" id="refsect1-function.imap-mail-returnvalues">
+  <h3 class="title">Return Values</h3>
+  <p class="para">
+   Returns <strong><code>TRUE</code></strong> on success or <strong><code>FALSE</code></strong> on failure.
+  </p>
+ </div>
+
+ <div class="refsect1 seealso" id="refsect1-function.imap-mail-seealso">
+  <h3 class="title">See Also</h3>
+  <p class="para">
+   <ul class="simplelist">
+    <li class="member"><span class="function"><a href="function.mail.php" class="function" rel="rdfs-seeAlso">mail()</a> - Send mail</span></li>
+    <li class="member"><span class="function"><a href="function.imap-mail-compose.php" class="function" rel="rdfs-seeAlso">imap_mail_compose()</a> - Create a MIME message based on given envelope and body sections</span></li>
+   </ul>
+  </p>
+ </div>
+
+</div>
+<section id="usernotes">
+ <div class="head">
+  <span class="action"><a href="/manual/add-note.php?sect=function.imap-mail&amp;redirect=http://php.net/manual/en/function.imap-mail.php"><img src='/images/notes-add@2x.png' alt='add a note' width='12' height='12'> <small>add a note</small></a></span>
+  <h3 class="title">User Contributed Notes <span class="count">3 notes</span></h3>
+ </div><div id="allnotes">
+  <div class="note" id="91693">  <div class="votes">
+    <div id="Vu91693">
+    <a href="/manual/vote-note.php?id=91693&amp;page=function.imap-mail&amp;vote=up" title="Vote up!" class="usernotes-voteu">up</a>
+    </div>
+    <div id="Vd91693">
+    <a href="/manual/vote-note.php?id=91693&amp;page=function.imap-mail&amp;vote=down" title="Vote down!" class="usernotes-voted">down</a>
+    </div>
+    <div class="tally" id="V91693" title="50% like this...">
+    0
+    </div>
+  </div>
+  <a href="#91693" class="name">
+  <strong class="user"><em>Mathias Rav</em></strong></a><a class="genanchor" href="#91693"> &para;</a><div class="date" title="2009-06-23 09:07"><strong>8 years ago</strong></div>
+  <div class="text" id="Hcom91693">
+<div class="phpcode"><code><span class="html">
+As per <a href="http://bugs.php.net/bug.php?id=30688" rel="nofollow" target="_blank">http://bugs.php.net/bug.php?id=30688</a> the $rpath argument is ignored, and since the (as of now) 4 year old bug is tagged WONTFIX in the bug tracker, this function is effectively deprecated in favour of mail().</span>
+</code></div>
+  </div>
+ </div>
+  <div class="note" id="60023">  <div class="votes">
+    <div id="Vu60023">
+    <a href="/manual/vote-note.php?id=60023&amp;page=function.imap-mail&amp;vote=up" title="Vote up!" class="usernotes-voteu">up</a>
+    </div>
+    <div id="Vd60023">
+    <a href="/manual/vote-note.php?id=60023&amp;page=function.imap-mail&amp;vote=down" title="Vote down!" class="usernotes-voted">down</a>
+    </div>
+    <div class="tally" id="V60023" title="43% like this...">
+    -4
+    </div>
+  </div>
+  <a href="#60023" class="name">
+  <strong class="user"><em>uphonesimon at gmail dot com</em></strong></a><a class="genanchor" href="#60023"> &para;</a><div class="date" title="2005-12-22 11:45"><strong>11 years ago</strong></div>
+  <div class="text" id="Hcom60023">
+<div class="phpcode"><code><span class="html">
+make sure you've correctly setup the SMTP parameters in php.ini<br />and aslo make sure that the SMTP server accepts relay<br /><br />for some mail servers, you have to open up an imap stream, log in, and then you can send mail through imap_mail</span>
+</code></div>
+  </div>
+ </div>
+  <div class="note" id="10463">  <div class="votes">
+    <div id="Vu10463">
+    <a href="/manual/vote-note.php?id=10463&amp;page=function.imap-mail&amp;vote=up" title="Vote up!" class="usernotes-voteu">up</a>
+    </div>
+    <div id="Vd10463">
+    <a href="/manual/vote-note.php?id=10463&amp;page=function.imap-mail&amp;vote=down" title="Vote down!" class="usernotes-voted">down</a>
+    </div>
+    <div class="tally" id="V10463" title="41% like this...">
+    -6
+    </div>
+  </div>
+  <a href="#10463" class="name">
+  <strong class="user"><em>bandpay at hotmail dot com</em></strong></a><a class="genanchor" href="#10463"> &para;</a><div class="date" title="2001-01-05 06:01"><strong>16 years ago</strong></div>
+  <div class="text" id="Hcom10463">
+<div class="phpcode"><code><span class="html">
+Extending the above note.<br />When the socket connection is stablished, it works exactly as if you had openned a telnet connection to the news server. If you don't know what kind of headers you have to send to the news server, then I'll suggest that you better give it a try and play with a telnet connection like this:<br /><br />telenet news.servername.com 119<br /><br />eaxmple:<br /><br />telnet news.euroconnect.dk 119<br />Trying 195.184.44.30...<br />Connected to news.euroconnect.net (195.184.44.30).<br />Escape character is '^]'.<br />200 news.euroconnect.net (Typhoon v1.2.1)<br /><br />then you'll receive confirmation from the server that you are connected. Now type "help" and enter, and you'll see what commands are supported.<br /><br />eaxmle:<br /><br />help<br />100 Legal Commands<br />&nbsp; article [&lt;messageid&gt;|number]<br />&nbsp; authinfo type value<br />&nbsp; body [&lt;messageid&gt;|number]<br />&nbsp; date<br />&nbsp; group newsgroup<br />&nbsp; head [&lt;messageid&gt;|number]<br />&nbsp; help<br />&nbsp; last<br />&nbsp; list [active wildmat|active.times|counts wildmat]<br />&nbsp; list [overview.fmt|newsgroups wildmat]<br />&nbsp; listgroup newsgroup<br />&nbsp; mode reader<br />&nbsp; newgroups yyyymmdd hhmmss [GMT]<br />&nbsp; newnews newsgroups yyyymmdd hhmmss [GMT]<br />&nbsp; next<br />&nbsp; post<br />&nbsp; stat [&lt;messageid&gt;|number]<br />&nbsp; xhdr field [range]<br />&nbsp; xover [range]<br />&nbsp; xpat field range pattern<br />&nbsp; quit<br /><br />If you want to post a message, you can start by entring the "post" command.<br /><br />example:<br /><br />post<br />340 Send Article to be Posted<br /><br />From here you can start to enter the header information.<br />The most important headers are:<br />From:<br />Subject:<br />Newsgroup:<br /><br />after the ":" a "white space" must follow.<br /><br />If you are posting the multipart message then remember <br />MIME-Version: 1.0<br /><br />This one is also one of the important headers when you are posting a multipart message. The boundary must follow the content type in the same line.<br /><br />Content-Type: multipart/mixed; boundary="------------4A11A9ABCFCA70DD4E0C3605"<br /><br />Take a look at the article below to find out more about headers and packing of the message.<br /><br /><a href="http://www.phpbuilder.com/columns/kartic20000807.php3" rel="nofollow" target="_blank">http://www.phpbuilder.com/columns/kartic20000807.php3</a></span>
+</code></div>
+  </div>
+ </div></div>
+
+ <div class="foot"><a href="/manual/add-note.php?sect=function.imap-mail&amp;redirect=http://php.net/manual/en/function.imap-mail.php"><img src='/images/notes-add@2x.png' alt='add a note' width='12' height='12'> <small>add a note</small></a></div>
+</section>    </section><!-- layout-content -->
+        <aside class='layout-menu'>
+    
+        <ul class='parent-menu-list'>
+                                    <li>
+                <a href="ref.imap.php">IMAP Functions</a>
+    
+                                    <ul class='child-menu-list'>
+    
+                          
+                        <li class="">
+                            <a href="function.imap-8bit.php" title="imap_&#8203;8bit">imap_&#8203;8bit</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-alerts.php" title="imap_&#8203;alerts">imap_&#8203;alerts</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-append.php" title="imap_&#8203;append">imap_&#8203;append</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-base64.php" title="imap_&#8203;base64">imap_&#8203;base64</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-binary.php" title="imap_&#8203;binary">imap_&#8203;binary</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-body.php" title="imap_&#8203;body">imap_&#8203;body</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-bodystruct.php" title="imap_&#8203;bodystruct">imap_&#8203;bodystruct</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-check.php" title="imap_&#8203;check">imap_&#8203;check</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-clearflag-full.php" title="imap_&#8203;clearflag_&#8203;full">imap_&#8203;clearflag_&#8203;full</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-close.php" title="imap_&#8203;close">imap_&#8203;close</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-create.php" title="imap_&#8203;create">imap_&#8203;create</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-createmailbox.php" title="imap_&#8203;createmailbox">imap_&#8203;createmailbox</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-delete.php" title="imap_&#8203;delete">imap_&#8203;delete</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-deletemailbox.php" title="imap_&#8203;deletemailbox">imap_&#8203;deletemailbox</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-errors.php" title="imap_&#8203;errors">imap_&#8203;errors</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-expunge.php" title="imap_&#8203;expunge">imap_&#8203;expunge</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-fetch-overview.php" title="imap_&#8203;fetch_&#8203;overview">imap_&#8203;fetch_&#8203;overview</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-fetchbody.php" title="imap_&#8203;fetchbody">imap_&#8203;fetchbody</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-fetchheader.php" title="imap_&#8203;fetchheader">imap_&#8203;fetchheader</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-fetchmime.php" title="imap_&#8203;fetchmime">imap_&#8203;fetchmime</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-fetchstructure.php" title="imap_&#8203;fetchstructure">imap_&#8203;fetchstructure</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-fetchtext.php" title="imap_&#8203;fetchtext">imap_&#8203;fetchtext</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-gc.php" title="imap_&#8203;gc">imap_&#8203;gc</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-get-quota.php" title="imap_&#8203;get_&#8203;quota">imap_&#8203;get_&#8203;quota</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-get-quotaroot.php" title="imap_&#8203;get_&#8203;quotaroot">imap_&#8203;get_&#8203;quotaroot</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-getacl.php" title="imap_&#8203;getacl">imap_&#8203;getacl</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-getmailboxes.php" title="imap_&#8203;getmailboxes">imap_&#8203;getmailboxes</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-getsubscribed.php" title="imap_&#8203;getsubscribed">imap_&#8203;getsubscribed</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-header.php" title="imap_&#8203;header">imap_&#8203;header</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-headerinfo.php" title="imap_&#8203;headerinfo">imap_&#8203;headerinfo</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-headers.php" title="imap_&#8203;headers">imap_&#8203;headers</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-last-error.php" title="imap_&#8203;last_&#8203;error">imap_&#8203;last_&#8203;error</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-list.php" title="imap_&#8203;list">imap_&#8203;list</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-listmailbox.php" title="imap_&#8203;listmailbox">imap_&#8203;listmailbox</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-listscan.php" title="imap_&#8203;listscan">imap_&#8203;listscan</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-listsubscribed.php" title="imap_&#8203;listsubscribed">imap_&#8203;listsubscribed</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-lsub.php" title="imap_&#8203;lsub">imap_&#8203;lsub</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-mail-compose.php" title="imap_&#8203;mail_&#8203;compose">imap_&#8203;mail_&#8203;compose</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-mail-copy.php" title="imap_&#8203;mail_&#8203;copy">imap_&#8203;mail_&#8203;copy</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-mail-move.php" title="imap_&#8203;mail_&#8203;move">imap_&#8203;mail_&#8203;move</a>
+                        </li>
+                          
+                        <li class="current">
+                            <a href="function.imap-mail.php" title="imap_&#8203;mail">imap_&#8203;mail</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-mailboxmsginfo.php" title="imap_&#8203;mailboxmsginfo">imap_&#8203;mailboxmsginfo</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-mime-header-decode.php" title="imap_&#8203;mime_&#8203;header_&#8203;decode">imap_&#8203;mime_&#8203;header_&#8203;decode</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-msgno.php" title="imap_&#8203;msgno">imap_&#8203;msgno</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-num-msg.php" title="imap_&#8203;num_&#8203;msg">imap_&#8203;num_&#8203;msg</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-num-recent.php" title="imap_&#8203;num_&#8203;recent">imap_&#8203;num_&#8203;recent</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-open.php" title="imap_&#8203;open">imap_&#8203;open</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-ping.php" title="imap_&#8203;ping">imap_&#8203;ping</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-qprint.php" title="imap_&#8203;qprint">imap_&#8203;qprint</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-rename.php" title="imap_&#8203;rename">imap_&#8203;rename</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-renamemailbox.php" title="imap_&#8203;renamemailbox">imap_&#8203;renamemailbox</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-reopen.php" title="imap_&#8203;reopen">imap_&#8203;reopen</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-rfc822-parse-adrlist.php" title="imap_&#8203;rfc822_&#8203;parse_&#8203;adrlist">imap_&#8203;rfc822_&#8203;parse_&#8203;adrlist</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-rfc822-parse-headers.php" title="imap_&#8203;rfc822_&#8203;parse_&#8203;headers">imap_&#8203;rfc822_&#8203;parse_&#8203;headers</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-rfc822-write-address.php" title="imap_&#8203;rfc822_&#8203;write_&#8203;address">imap_&#8203;rfc822_&#8203;write_&#8203;address</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-savebody.php" title="imap_&#8203;savebody">imap_&#8203;savebody</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-scan.php" title="imap_&#8203;scan">imap_&#8203;scan</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-scanmailbox.php" title="imap_&#8203;scanmailbox">imap_&#8203;scanmailbox</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-search.php" title="imap_&#8203;search">imap_&#8203;search</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-set-quota.php" title="imap_&#8203;set_&#8203;quota">imap_&#8203;set_&#8203;quota</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-setacl.php" title="imap_&#8203;setacl">imap_&#8203;setacl</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-setflag-full.php" title="imap_&#8203;setflag_&#8203;full">imap_&#8203;setflag_&#8203;full</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-sort.php" title="imap_&#8203;sort">imap_&#8203;sort</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-status.php" title="imap_&#8203;status">imap_&#8203;status</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-subscribe.php" title="imap_&#8203;subscribe">imap_&#8203;subscribe</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-thread.php" title="imap_&#8203;thread">imap_&#8203;thread</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-timeout.php" title="imap_&#8203;timeout">imap_&#8203;timeout</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-uid.php" title="imap_&#8203;uid">imap_&#8203;uid</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-undelete.php" title="imap_&#8203;undelete">imap_&#8203;undelete</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-unsubscribe.php" title="imap_&#8203;unsubscribe">imap_&#8203;unsubscribe</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-utf7-decode.php" title="imap_&#8203;utf7_&#8203;decode">imap_&#8203;utf7_&#8203;decode</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-utf7-encode.php" title="imap_&#8203;utf7_&#8203;encode">imap_&#8203;utf7_&#8203;encode</a>
+                        </li>
+                          
+                        <li class="">
+                            <a href="function.imap-utf8.php" title="imap_&#8203;utf8">imap_&#8203;utf8</a>
+                        </li>
+                            
+                    </ul>
+                    
+            </li>
+                        
+                    </ul>
+    </aside>
+
+
+  </div><!-- layout -->
+         
+  <footer>
+    <div class="container footer-content">
+      <div class="row-fluid">
+      <ul class="footmenu">
+        <li><a href="/copyright.php">Copyright &copy; 2001-2017 The PHP Group</a></li>
+        <li><a href="/my.php">My PHP.net</a></li>
+        <li><a href="/contact.php">Contact</a></li>
+        <li><a href="/sites.php">Other PHP.net sites</a></li>
+        <li><a href="/mirrors.php">Mirror sites</a></li>
+        <li><a href="/privacy.php">Privacy policy</a></li>
+      </ul>
+      </div>
+    </div>
+  </footer>
+
+    
+ <!-- External and third party libraries. -->
+ <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://php.net/cached.php?t=1421837618&amp;f=/js/ext/modernizr.js"></script>
+<script type="text/javascript" src="http://php.net/cached.php?t=1421837618&amp;f=/js/ext/hogan-2.0.0.min.js"></script>
+<script type="text/javascript" src="http://php.net/cached.php?t=1421837618&amp;f=/js/ext/typeahead.min.js"></script>
+<script type="text/javascript" src="http://php.net/cached.php?t=1421837618&amp;f=/js/ext/mousetrap.min.js"></script>
+<script type="text/javascript" src="http://php.net/cached.php?t=1421837618&amp;f=/js/search.js"></script>
+<script type="text/javascript" src="http://php.net/cached.php?t=1478627406&amp;f=/js/common.js"></script>
+
+<a id="toTop" href="javascript:;"><span id="toTopHover"></span><img width="40" height="40" alt="To Top" src="/images/to-top@2x.png"></a>
+
+</body>
+</html>
+

@@ -38,7 +38,7 @@ namespace HtmlRenderer.TestLib.Dom
             if (other == null)
                 return false;
 
-            if (!this.CompareName(other, context))
+            if (!this.CompareName(other))
                 return false;
             
             if (!this.OwnerElement.CompareReference(other.OwnerElement, context))
@@ -49,7 +49,7 @@ namespace HtmlRenderer.TestLib.Dom
             return true;
         }
 
-        public bool CompareName(ReferenceAttr other, CompareContext context)
+        public bool CompareName(ReferenceAttr other)
         {
             if (Object.ReferenceEquals(this, other))
                 return true;
@@ -75,7 +75,7 @@ namespace HtmlRenderer.TestLib.Dom
             if (other == null)
                 return false;
 
-            if (!this.CompareName(other, context))
+            if (!this.CompareName(other))
                 return false;
 
             if (!this.OwnerElement.CompareDom(other.OwnerElement, context))
@@ -86,7 +86,7 @@ namespace HtmlRenderer.TestLib.Dom
             return true;
         }
 
-        public bool CompareName(Attr other, CompareContext context)
+        public bool CompareName(Attr other)
         {
             if (Object.ReferenceEquals(this, other))
                 return true;

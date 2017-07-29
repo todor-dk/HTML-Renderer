@@ -1,0 +1,2739 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="pt-br"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="pt-br"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="pt-br"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="pt-br"> <!--<![endif]-->
+    <head>
+       
+        <meta charset="iso-8859-1">
+<link href="./favicon.ico" type="image/x-icon" rel="icon" />
+<link href="./favicon.ico" type="image/x-icon" rel="shortcut icon" />
+        <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+        <title>Delboni Auriemo Medicina Diagnóstica</title>
+        
+        <meta name="viewport" content="width=device-width">
+        <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" />
+
+                <link href="/min2/?f=/js/jquery/colorbox/colorbox.css,/css/common.css,/css/fontawesome/css/font-awesome.css,/temas/da/bootstrap/css/bootstrap.min.css,/js/jquery/jquery-ui/css/smoothness/jquery-ui-1.9.2.custom.min.css,/temas/da/css/style.css,/temas/da/css/socialid-1444930603584.css,/js/jquery/foundation-orbit/css/jquery.foundation.orbit.css,/js/jquery/jquery-simplyscroll/jquery.simplyscroll.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/temas/da/pre-agendamento/assets/shims/styles/shim.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/temas/da/pre-agendamento/assets/bootstrap.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/temas/da/pre-agendamento/assets/common.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/temas/da/pre-agendamento/chosen.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/temas/da/pre-agendamento/ie.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/temas/da/pre-agendamento/jqueryui.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/temas/da/pre-agendamento/pre.css?v=2" media="screen" rel="stylesheet" type="text/css" >
+        <!--<link href="/temas/da/outubro-rosa/css/style2.css" rel="stylesheet" type="text/css">-->
+        <!--<link href="/temas/da/novembro-azul/css/style.css" rel="stylesheet" type="text/css">-->
+
+        <!--[if lt IE 8]>
+            <link href="/css/fontawesome/css/font-awesome-ie7.css" rel="stylesheet" type="text/css" >
+        <![endif]-->
+
+        <!--[if lt IE 9]>
+            <script src="/js/vendor/html5-3.6-respond-1.1.0.min.js"></script>
+        <![endif]-->
+
+                    <script type="text/javascript">
+                (function(i, s, o, g, r, a, m){i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function(){
+                (i[r].q = i[r].q || []).push(arguments)}, i[r].l = 1 * new Date(); a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+                })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+                ga('create', 'UA-20868993-1', 'auto');
+                ga('send', 'pageview');
+            </script>
+        
+        <script>
+            var socialidConfig = {
+            loginAppId: 332            };
+        </script>
+    </head>
+
+    <body ng-app="socialidApp" ng-controller="MainCtrl" id="ng-app">
+                 
+        <header>
+            <div class="content">
+                <div class="grafismo-left"></div>
+                <a href="/"><h1><img src="/temas/da/img/bg/bg-logo.png" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></h1></a>
+
+                <div class="resultados-exames" style="display: none">
+                    <form action="https://sislu.dasa.com.br/sislu/portal/Portal.action" method="post" target="_blank" class="form-inline" id="envia-resultado-exame">
+    <fieldset>
+        <input type="hidden" name="marca" value="A" />
+        <input type="hidden" name="exibirPesquisa" value="true" />
+        <legend class="hide">Retire o seu Exame</legend>
+        <label class="hide">Protocolo</label>
+        <input name="codigo" type="text" placeholder="Protocolo" class="input-medium" required="required" />
+        <label class="hide">Senha</label>
+        <input name="senha" type="password" placeholder="Senha" class="input-medium" required="required" />
+        <button type="submit" name="enviar" class="btn btn-primary">Ok</button>
+    </fieldset>
+</form>                </div>
+                <div id="user-header-logged-out" ng-controller="LoggedOutCtrl">
+  <div class="header-top">
+    <div class="info-area">
+      <p class="title">
+        <span class="icon"></span>
+        Atendimento ao cliente
+      </p>
+                      <p><span class="city-name">São Paulo:</span> (11) 3049-6999 </p>                      <p><span class="city-name"> Santos:</span> (13) 4004-6999</p>          </div><div class="access-fap-password">
+      <p class="title">
+        Resultados de exame:
+      </p>
+      <form id="form-fap-password" class="control-group">
+        <input type="text" placeholder="Protocolo" name="code" id="code" ng-model="protocol.code"><input type="password" placeholder="********" name="password" id="password" ng-model="protocol.password"><button type="submit" title="Ok" ng-click="viewProtocol()" analytics-on analytics-category="Formulários" analytics-event="Consultar Laudo" analytics-label="Ok"></button>
+      </form>
+    </div>
+  </div>
+  <div class="header-bottom">
+    <div class="info-area">
+      <p class="title">
+        <span class="icon"></span>
+         Núcleo de Assessoria Médica
+      </p>
+                      <p><span class="city-name">São Paulo:</span> (11) 3047-4484 </p>                      <p><span class="city-name"> Santos:</span> (13) 4004-6999</p>          </div><div class="social-networks">
+      <p class="title">
+        Acesse através de <br/>
+        suas redes sociais:
+      </p><div class="social-networks-buttons">
+        <ul class="row-fluid">
+          <li class="facebook span3">
+            <button type="button" id="facebook-login-round" title="Login com Facebook" loading-button-click="" class="logged-out-header-button" analytics-on analytics-category="Formulários" analytics-event="Consultar Laudo" analytics-label="Facebook"></button>
+          </li>
+          <li class="gplus span3">
+            <button type="button" id="gplus-login-round" title="Login com Google+" loading-button-click="" class="logged-out-header-button" analytics-on analytics-category="Formulários" analytics-event="Consultar Laudo" analytics-label="Google Plus"></button>
+          </li>
+          <li class="linkedin span3">
+            <button type="button" id="linkedin-login-round" title="Login com LinkedIn" loading-button-click="" class="logged-out-header-button" analytics-on analytics-category="Formulários" analytics-event="Consultar Laudo" analytics-label="LinkedIn"></button>
+          </li>
+          <li class="email span3">
+            <button type="button" id="email-login-round" title="Login com Email" ng-click="loginEmail()" analytics-on analytics-category="Formulários" analytics-event="Consultar Laudo" analytics-label="E-mail"></button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+                <nav id="main-menu">
+                    <ul>
+                        <li> 
+                            <a href="/paginas/clientes/intro-clientes">Clientes</a>
+                        </li>
+                        <li>
+                            <a href="/paginas/medicos/intro-medicos">Médicos</a>
+                        </li>
+                        <li>
+                            <a href="/paginas/empresas/intro-empresas">Empresas</a>
+                        </li>
+                        <li>
+                            <a class="exames-particulares" target="_blank" href="/particular">Exames Particulares</a>
+                        </li>
+                    </ul>
+                    <div class="search-header">
+                                                <form action="/buscar" method="get" class="form-inline">
+                            <div class="input-append">
+                                <input class="input-large" type="text" placeholder="O que você procura?" name="q">
+                                <button type="submit" name="buscar" class="btn"><i class="icon-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        <div class="modal fade" id="socialid-modal" tabindex="-1" role="dialog" aria-labelledby="socialid-modal-title" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog view-frame" id="socialid-modal-dialog" ng-view>
+  </div>
+</div>
+        <script type="text/ng-template" id="terms_of_service.html">
+  <div class="modal-content" id="terms-of-service">
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Termos de <br>
+        Serviços
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="body">
+      <p class="title">
+        Termos de Serviços Dasa
+      </p>
+      <div class="content">
+        <p>
+          Olá Usuário do <b>Portal DELBONI AURIEMO</b>. A seguir apresentamos a Política de Uso e Privacidade da funcionalidade que permite a autenticação mediante uso de conta de acesso de rede social, contendo as principais regras que devem ser observadas por todos que o utilizam.
+        </p>
+        <p>
+          Ao visitar ou utilizar este <b>Portal</b> pressupõe-se a leitura e concordância com todos os termos abaixo.
+        </p>
+        <ol>
+          <li>
+            <b>Definições</b>
+            <ol>
+              <li>
+                Para os fins deste documento, devem se considerar as seguintes definições e descrições para seu melhor entendimento:
+                <dl>
+                  <dt>
+                    <i>Anti-Spam</i>:
+                  </dt>
+                  <dd>
+                    Sistema que evita correspondências não desejadas, como publicidade em massa, pelo bloqueio de mensagens ou as movendo para pasta específica.
+                  </dd>
+                  <dt>
+                    Aplicativo:
+                  </dt>
+                  <dd>
+                    Denominação do Plug-in a ser utilizado pelo Usuário para acessar seus exames no laboratório <b>DELBONI AURIEMO</b> com mais facilidade.
+                  </dd>
+                  <dt>
+                    Conta de Acesso:
+                  </dt>
+                  <dd>
+                    Credencial de um Usuário cadastrado que permite o acesso ao <b>Portal</b>, que é definido por uma senha e um Nome de Usuário.
+                  </dd>
+                  <dt>
+                    <i>Crawler / Spider</i>:
+                  </dt>
+                  <dd>
+                    Programa desenvolvido para atuar ou obter informações de modo automatizado em sites.
+                  </dd>
+                  <dt>
+                    DELBONI AURIEMO:
+                  </dt>
+                  <dd>
+                    DIAGNOSTICOS DA AMERICA S/A – DIVISÃO DELBONI AURIEMO, pessoa jurídica de direito privado, inscrita no CNPJ/MF sob o nº 61.486.650/0001-83, com sede na Avenida Juruá, nº 434, Alphaville, na cidade de Barueri, Estado de São Paulo. Controladora do <b>Portal</b>.
+                  </dd>
+                  <dt>
+                    FACEBOOK:
+                  </dt>
+                  <dd>
+                    Site e serviço de rede social lançado, desenvolvido e operado pelo Facebook Inc..
+                  </dd>
+                  <dt>
+                    GOOGLE+:
+                  </dt>
+                  <dd>
+                    Site e serviço de rede social lançado, desenvolvido e operado pelo Google Inc..
+                  </dd>
+                  <dt>
+                    <i>Layout</i>:
+                  </dt>
+                  <dd>
+                    Conjunto compreendido entre aparência, design e fluxos do <b>Portal</b>.
+                  </dd>
+                  <dt>
+                    <i>Link</i>:
+                  </dt>
+                  <dd>
+                    Terminologia para endereço de internet.
+                  </dd>
+                  <dt>
+                    LINKEDIN:
+                  </dt>
+                  <dd>
+                    Site e serviço de rede social voltada para profissionais do mercado de trabalho, lançado, desenvolvido e operado pela LinkedIn Corporation.
+                  </dd>
+                  <dt>
+                    <i>Login</i>:
+                  </dt>
+                  <dd>
+                    Autenticação para utilização do <b>Portal</b> se utilizando de Conta de Acesso.
+                  </dd>
+                  <dt>
+                    <i>Logs</i>:
+                  </dt>
+                  <dd>
+                    Registros de atividades do Usuário efetuadas no <b>Portal</b>.
+                  </dd>
+                  <dt>
+                    Nome de Usuário:
+                  </dt>
+                  <dd>
+                    Credencial de um Usuário que, em conjunto com a senha, permite o acesso às áreas restritas do <b>Portal</b>. O Nome de Usuário pode ser definido a partir de diversas informações do Usuário, tais como seu e-mail, número do CIP (Código de Identificação Personalizado), data de nascimento ou número do protocolo.
+                  </dd>
+                  <dt>
+                    Portal:
+                  </dt>
+                  <dd>
+                    Designa o site direcionado pelo domínio "www.delboniauriemo.com.br", seus subdomínios ou demais domínios a ele direcionados.
+                  </dd>
+                  <dt>
+                    Senha:
+                  </dt>
+                  <dd>
+                    Conjunto de caracteres que formam a chave de acesso ao <b>Portal</b>, servindo também como prova de identidade digital do Usuário, cujo conhecimento deve ser exclusivo e único.
+                  </dd>
+                  <dt>
+                    <i>Session ID</i>:
+                  </dt>
+                  <dd>
+                    Informação utilizada para permitir o acesso ao <b>Portal</b>.
+                  </dd>
+                  <dt>
+                    <i>Site</i>:
+                  </dt>
+                  <dd>
+                    Denominação para página de internet.
+                  </dd>
+                  <dt>
+                    Usuário:
+                  </dt>
+                  <dd>
+                    Pessoa que utilizará o <b>Aplicativo</b> ou acessa e interage com as atividades oferecidas pelo <b>Portal</b> por meio de sua Conta de Acesso.
+                  </dd>
+                  <dt>
+                    <i>Webmastering</i>:
+                  </dt>
+                  <dd>
+                    Compreende a criação, programação, desenvolvimento, controle e disponibilidade de páginas de internet.
+                  </dd>
+                </dl>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Acesso e Restrições de funcionalidade</b>
+            <ol>
+              <li>
+                O <b>Portal</b> é dedicado à hospedagem do <i>site</i> de internet do laboratório <b>DELBONI AURIEMO</b>, oferecendo aos Usuários uma variedade de ferramentas e facilidades relacionadas à área de saúde, tais como o acesso rápido e direto a exames e laudos através de <i>login</i> mediante Nome de Usuário e Senha.
+              </li>
+              <li>
+                Este <b>Aplicativo</b> foi desenvolvido para ser manipulado por Usuários humanos com a finalidade específica de facilitar sua consulta aos exames e laudos emitidos e preparados pelo <b>DELBONI AURIEMO</b>. Quaisquer usos fora deste escopo deverão ser previamente autorizados pelo <b>DELBONI AURIEMO</b>, sob pena de exclusão da Conta de Acesso e das interações que não atenderem a essa condição, sem direito a qualquer indenização ou ressarcimento, sob qualquer hipótese.
+              </li>
+              <li>
+                Somente é permitido o acesso ao presente <b>Aplicativo</b> por maiores de 18 anos ou emancipados.
+                <ol>
+                  <li>
+                    Caso menores incapazes tiverem interesse em utilizar o <b>Aplicativo</b>, deverão ser representados ou assistidos por pais ou responsáveis caso esses estejam de acordo com a utilização.
+                  </li>
+                </ol>
+              </li>
+              <li>
+                Ao concordar com a presente Política de Uso e Privacidade o Usuário declara ser plenamente capaz e, caso seja relativamente ou absolutamente incapaz, que recebe a assistência ou representação adequada por pai ou responsável ao firmar o presente documento digitalmente.
+                <ol>
+                  <li>
+                    O <b>DELBONI AURIEMO</b> não será responsável por quaisquer danos, prejuízos ou frustrações que o Usuário sofrer caso não tenha atendido ao disposto nas cláusulas 2.3., 2.3.1. e 2.4., sobretudo se tiver confirmado sua declaração em falso.
+                  </li>
+                </ol>
+              </li>
+              <li>
+                É ônus dos Usuários arcar com os meios necessários para utilizar o <b>Portal</b>, incluindo a posse de equipamento necessário, bem como em contratar prestador de serviços de telecomunicações para obter acesso à Internet.
+              </li>
+              <li>
+                Não é permitido ao Usuário acessar as áreas de programação do <b>Aplicativo</b>, seu banco de dados ou qualquer outro conjunto de informações que faça parte da atividade da administração e gerenciamento dos sistemas do <b>Portal</b>.
+              </li>
+              <li>
+                Não será permitido aos Usuários acessar as áreas de programação do <b>Aplicativo</b>, seu banco de dados ou qualquer outro conjunto de informações que faça parte da atividade de <i>Webmastering</i>, realizar ou permitir que se realize qualquer tipo de engenharia reversa, tradução, decompilação, cópia, modificação, reprodução, locação, sublocação, sublicenciamento, publicação, divulgação, transmissão, empréstimo, distribuição ou, de qualquer outra forma, a disposição de ferramentas de consulta deste <b>Portal</b> e de suas funcionalidades para terceiros sem a prévia e expressa autorização do <b>DELBONI AURIEMO</b>, ficando o Usuário que o fizer sujeito à legislação brasileira, sem prejuízo da obrigação de reparar os danos que causar.
+              </li>
+              <li>
+                É proibida a utilização de programas do tipo <i>spider / crawler</i> ou de mineração de dados, que tenham como finalidade a quebra de sistemas de segurança, senha, CAPTCHA, ou ainda de qualquer tipo ou espécie correlato, além de outros aqui não tipificados, mas que atue de modo automatizado, tanto para realizar operações massificadas ou para quaisquer outras finalidades, sob pena de aplicação da legislação correlata de proteção dos interesses do <b>DELBONI AURIEMO</b>, sem prejuízo da obrigação de reparar quaisquer perdas e danos eventualmente apurados e/ou suportados pelo <b>DELBONI AURIEMO</b> e que decorrerem desta utilização indevida.
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Funcionamento do <b>Aplicativo</b></b>
+            <ol>
+              <li>
+                O <b>Aplicativo</b> é apresentado ao público na maneira como está disponível, podendo passar por constantes aprimoramentos e atualizações, não ficando obrigado o <b>DELBONI AURIEMO</b> a manter em operação determinadas estruturas, funcionalidades ou <i>layout</i>, se não por sua própria conveniência.
+              </li>
+              <li>
+                Caso seja o primeiro acesso do Usuário, será necessária a criação de uma conta de acesso no <b>Portal</b> com a indicação de certos dados cadastrais.
+                <ol>
+                  <li>
+                    Para a criação do cadastro o Usuário terá duas opções, o preenchimento de um formulário específico ou a vinculação direta a um perfil de uma das redes sociais suportadas pelo <b>Portal</b>, consistentes em <b>FACEBOOK</b>, <b>GOOGLE+</b> e <b>LINKEDIN</b>, preenchendo as informações requisitadas, a exemplo número do CIP (Código de Identificação Personalizado) ou número de protocolo do exame.
+                  </li>
+                  <li>
+                    Com a vinculação do perfil de uma rede social não será necessário, em acessos subsequentes do Usuário ao <b>Portal</b>, que seja informado o Nome de Usuário, mas apenas a senha.
+                  </li>
+                </ol>
+              </li>
+              <li>
+                O <b>DELBONI AURIEMO</b> envida seus esforços para a disponibilidade contínua e permanente do <b>Portal</b>, ficando sujeita, todavia, a eventos extraordinários, como desastres naturais, falhas ou colapsos nos sistemas centrais de comunicação e acesso à internet ou fatos de terceiro que fogem de sua esfera de vigilância e responsabilidade.
+              </li>
+              <li>
+                O <b>DELBONI AURIEMO</b> não se responsabiliza por qualquer dano, prejuízo ou perda no dispositivo móvel dos Usuários causados por falhas no sistema, no servidor ou na conexão à Internet, ainda que decorrentes de condutas de terceiros, inclusive por ações de <i>softwares</i> maliciosos como vírus, cavalos de tróia e outros tipos de conteúdo que possam, de algum modo, danificar o equipamento ou a conexão dos Usuários em decorrência do acesso, utilização ou navegação ao conteúdo de terceiros, bem como pela transferência de dados, arquivos, imagens, textos, áudios, vídeos ou <i>links</i> por outros Usuários por meio do <b>Portal</b> e seu <b>Aplicativo</b>.
+              </li>
+              <li>
+                É dever dos Usuários a leitura da Política de Uso e Privacidade do <b>Portal</b> sempre que o acessarem, devendo manter o compromisso em agir conforme o estabelecido em seu teor.
+              </li>
+              <li>
+                Os Usuários não possuem qualquer direito de exigir a disponibilidade do <b>Portal</b>, tampouco poderão pleitear indenização ou reparação de danos caso este permanecer fora de uso, independente da motivação.
+              </li>
+              <li>
+                O <b>DELBONI AURIEMO</b> não se responsabiliza pelos atos praticados por Usuários no <b>Portal</b>, devendo cada um ser responsabilizado de acordo com a qualidade e atitudes ocasionadas em razão do uso das ferramentas nele disponibilizadas.
+              </li>
+              <li>
+                O cadastro de Usuários é gratuito e garantirá acesso ao <b>Portal</b> e às suas funcionalidades, podendo, contudo, o ingresso a determinadas áreas estar restrito a informações e dados relacionados com a contratação de serviços do <b>DELBONI AURIEMO</b>, sendo necessário, por exemplo, o fornecimento do número CIP ou o número do protocolo de atendimento.
+              </li>
+              <li>
+                O <b>DELBONI AURIEMO</b> poderá alterar os critérios de elegibilidade de acesso ao <b>Portal</b> ou da realização de atividades neste a qualquer momento, sem que para isso tenha que fazer qualquer tipo de comunicação ou aviso ao Usuário. O <b>DELBONI AURIEMO</b> também possui a faculdade de se recusar a conceder Conta de Acesso a qualquer pessoa ou entidade que utilizar de forma fraudulenta ou de qualquer forma violar ou tentar violar a Política de Uso e Privacidade deste <b>Aplicativo</b> ou de qualquer documento legal de seu <b>Portal</b>.
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Comunicação do <b>Portal</b> com seus Usuários</b>
+            <ol>
+              <li>
+                O <b>DELBONI AURIEMO</b> poderá utilizar todos os canais de comunicação fornecidos e autorizados com seus Usuários, nas suas mais diversas modalidades, incluindo, mas não se limitando a, e-mail, ligação telefônica, envio de SMS ou qualquer outra forma de mensagem eletrônica instantânea.
+                <ol>
+                  <li>
+                    A responsabilidade pelo recebimento dos comunicados é exclusiva dos Usuários, por isso é indispensável que sempre forneçam os dados corretos e precisos, além de os manterem atualizados.
+                  </li>
+                  <li>
+                    É igualmente de suas alçadas deixarem seus sistemas de <i>anti-spam</i> configurados de modo que não interfiram no recebimento dos comunicados e materiais encaminhados pelo <b>DELBONI AURIEMO</b> ou quaisquer avisos encaminhados pelo <b>Portal</b>, não sendo aceitável nenhuma escusa caso não tenha tido acesso a algum <i>e-mail</i> em virtude desse bloqueio ou filtro similar.
+                  </li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Privacidade dos Usuários no <b>Portal</b></b>
+            <ol>
+              <li>
+                Os dados e informações serão obtidos quando o Usuário inserir informações voluntariamente no <b>Portal</b> ou entrar em contato por meio dos canais de acesso disponíveis, além do acesso às informações armazenadas nos dispositivos dos Usuários.
+              </li>
+              <li>
+                O <b>Portal</b> realizará coleta de alguns dados e informações do Usuário para funcionar adequadamente e oferecer a melhor experiência possível da comodidade proposta, a saber:
+                <ol type="a">
+                  <li>
+                    Quando o Usuário cria uma Conta de Acesso no <b>Portal</b>;
+                  </li>
+                  <li>
+                    Ao entrar em contato com o <b>Portal</b>, por quaisquer dos meios disponíveis;
+                  </li>
+                  <li>
+                    Participação de pesquisas on-line;
+                  </li>
+                  <li>
+                    Interação com as ferramentas e interfaces disponibilizadas no <b>Portal</b>;
+                  </li>
+                  <li>
+                    Dados classificados como públicos no ambiente de rede social escolhido, tal qual a foto utilizada e descrição do perfil.
+                  </li>
+                </ol>
+              </li>
+              <li>
+                Os dados e informações coletados estarão armazenados em ambiente seguro sob responsabilidade do <b>DELBONI AURIEMO</b>, observado o estado da técnica disponível, e somente poderão ser acessadas por pessoas qualificadas e autorizadas por ela.
+              </li>
+              <li>
+                Considerando que nenhum sistema de segurança é absolutamente seguro, o <b>DELBONI AURIEMO</b> se exime de quaisquer responsabilidades por eventuais danos e/ou prejuízos decorrentes de falhas, vírus ou invasões do banco de dados do <b>Portal</b>, salvo nos casos em que tiver agido com dolo ou culpa.
+              </li>
+              <li>
+                Os dados e informações do Usuário descritos em 3.1, além dos conteúdos de caráter não privado poderão ser utilizados para as seguintes finalidades:
+                <ol type="a">
+                  <li>
+                    Responder a eventuais dúvidas e solicitações do Usuário;
+                  </li>
+                  <li>
+                    Cumprimento de ordem legal ou judicial;
+                  </li>
+                  <li>
+                    Constituir, defender ou exercer regularmente direitos em âmbito judicial ou administrativo;
+                  </li>
+                  <li>
+                    Garantir a segurança dos Usuários e administradores;
+                  </li>
+                  <li>
+                    Manter atualizados os cadastros dos Usuários e administradores para fins de contato por telefone fixo, celular, correio eletrônico, SMS, mala direta, redes sociais ou por outros meios de comunicação;
+                  </li>
+                  <li>
+                    Realizar o enriquecimento da base de dados dos Usuários com a finalidade de customização dos serviços, melhor atendimento, promoção do <b>Portal</b> e desenvolvimento de novos produtos;
+                  </li>
+                  <li>
+                    Promover o serviço e seus parceiros, comerciais ou não, e informar sobre novas oportunidades e benefícios para o Usuário;
+                  </li>
+                  <li>
+                    Gerar análises e estudos, sejam estatísticos ou identificáveis, com base no comportamento de uso das ferramentas, <i>site</i>, produtos e serviços do <b>Portal</b>;
+                  </li>
+                  <li>
+                    Aperfeiçoar o uso e a experiência interativa durante a navegação do Usuário no <b>Portal</b>; e
+                  </li>
+                  <li>
+                    Aprimorar o funcionamento do <b>Portal</b> bem como das demais ferramentas e plataformas lançadas pelo <b>DELBONI AURIEMO</b> e/ou seus parceiros, comerciais ou não, que se relacionam, direta ou indiretamente, ao <b>Portal</b>, seu ambiente ou propostas de uso.
+                  </li>
+                </ol>
+              </li>
+              <li>
+                A base de dados formada pelo <b>DELBONI AURIEMO</b>, por meio da coleta de dados do dispositivo ou <b>Portal</b> não será compartilhada, vendida, cedida, transferida, informada ou alugada a terceiros para propósitos de marketing, podendo ser compartilhada apenas com o grupo econômico do <b>DELBONI AURIEMO</b> ou parceiros de negócios visando o benefício e geração de resultados mútuos, como o fornecimento ou melhora dos produtos, serviços e propaganda do <b>DELBONI AURIEMO</b>.
+              </li>
+              <li>
+                Os dados adquiridos somente poderão ser acessados por profissionais devidamente autorizados pelo <b>DELBONI AURIEMO</b>, respeitando a necessidade a que serão submetidos, a relevância para os objetivos do <b>Portal</b> e os interesses do Usuário, além de preservar sua privacidade, nos termos da lei e deste documento.
+              </li>
+              <li>
+                Caso o Usuário deixe de utilizar os serviços oferecidos pelo <b>Portal</b>, o <b>DELBONI AURIEMO</b> poderá, para fins de auditoria e preservação de direitos, permanecer com o registro de dados e informações do Usuário pelo período máximo de 5 (cinco) anos, a não ser que seja exigido mantê-los por período superior por motivo legal, requisição administrativa de autoridade ou ordem judicial, possuindo a faculdade de excluí-los definitivamente segundo sua conveniência, nos termos da lei.
+              </li>
+              <li>
+                O Usuário poderá exigir do <b>DELBONI AURIEMO</b> os dados registrados que lhe dizem respeito, da mesma forma que poderá solicitar sua alteração ou exclusão definitiva quando encerrar o uso do <b>Portal</b>. Para tanto, deverá entrar em contato através dos meios disponibilizados pelo <b>Portal</b> para solicitar essas providências caso não seja oferecida a funcionalidade correspondente na interface.
+                <ol>
+                  <li>
+                    O pedido de exclusão de dados feito pelo Usuário será totalmente atendido após vencer o prazo indicado em 5.8, contudo, ainda que armazenados para fins de auditoria, não mais passarão pelo tratamento discriminado em 5.5, f., g., h., i. e j.
+                  </li>
+                </ol>
+              </li>
+              <li>
+                O <b>DELBONI AURIEMO</b> efetuará registro de todas as atividades efetuadas pelos Usuários no <b>Portal</b>, também por meio de <i>logs</i>, incluindo:
+                <ol type="a">
+                  <li>
+                    Endereço IP do Usuário;
+                  </li>
+                  <li>
+                    Ações efetuadas pelo Usuário no <b>Portal</b>;
+                  </li>
+                  <li>
+                    Mensagens, avisos e documentos disponibilizados ao Usuário no uso do <b>Portal</b>;
+                  </li>
+                  <li>
+                    Ferramentas e funcionalidades acessadas pelo Usuário;
+                  </li>
+                  <li>
+                    Datas e horários de cada ação e de acesso a cada ferramenta do <b>Portal</b>;
+                  </li>
+                  <li>
+                    Informações sobre o dispositivo utilizado, versão de sistema operacional, dentre outros aplicativos instalados;
+                  </li>
+                  <li>
+                    <i>Session ID</i>, quando disponível; e
+                  </li>
+                  <li>
+                    Outras informações necessárias para a sua adequada autenticação.
+                  </li>
+                </ol>
+              </li>
+              <li>
+                Os registros mencionados no item 5.1 poderão ser utilizados pela <b>DIAGNÓSTICOS DA AMÉRICA S/A</b> como meio probatório em casos de:
+                <ol type="a">
+                  <li>
+                    Atos ilícitos ou contrários à esta Política de Uso e de Privacidade;
+                  </li>
+                  <li>
+                    Identificação de alterações indevidas em seus sistemas e cadastros;
+                  </li>
+                  <li>
+                    Demais ações que possam colocar em risco a segurança e continuidade da plataforma, do <b>Portal</b> e de seus Usuários ou dispositivos nos quais o <b>Portal</b> está instalado.
+                  </li>
+                </ol>
+              </li>
+              <li>
+                Outras tecnologias poderão ser utilizadas para a obtenção de dados de utilização do <b>Portal</b> pelo Usuário, respeitando sempre os termos desta Política e as opções do Usuário a respeito de sua coleta e armazenamento.
+              </li>
+              <li>
+                O <b>Portal</b> também possui documento próprio, denominado Política de Privacidade, que regula o tratamento dado às informações de cadastro e demais dados coletados.
+                <ol>
+                  <li>
+                    A Política de Privacidade pode ser acessada no <i>link</i> encontrado no rodapé do <b>Portal</b>.
+                  </li>
+                  <li>
+                    Caso alguma disposição da Política de Privacidade conflitar com qualquer outra do presente documento, deverá prevalecer o descrito na norma que trate do assunto em conflito com mais especificidade.
+                  </li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Obrigações do DELBONI AURIEMO</b>
+            <ol>
+              <li>
+                O <b>DELBONI AURIEMO</b> se obriga com os seus Usuários a:
+                <ol>
+                  <li>
+                    Manter o ambiente do <b>Aplicativo</b> e <b>Portal</b> seguros, tais quais suas operações de gerenciamento e dados registrados para tanto, salvo por ato destrutivo de terceiro que vá além dos esforços empenhados e do estado atual da tecnologia, hipótese que não se responsabilizará por danos oriundos dessa prática danosa.
+                  </li>
+                  <li>
+                    Preservar a funcionalidade do <b>Aplicativo</b> e <b>Portal</b>, utilizando <i>layout</i> que respeita a usabilidade, segurança e agilidade, facilitando o uso sempre que possível e garantindo ambiente confiável para processar suas operações.
+                  </li>
+                  <li>
+                    Exibir as funcionalidades de maneira clara, completa, precisa e suficiente de modo que exista a exata percepção das operações realizadas.
+                  </li>
+                  <li>
+                    Garantir, por meio do estado da técnica disponível, o sigilo e confidencialidade dos dados inseridos nas funcionalidades oferecidas em seu <b>Portal</b>, somente sendo acessíveis aos profissionais do <b>DELBONI AURIEMO</b> conforme o previsto nesta Política de Uso e Privacidade e na Política de Privacidade, além de quem o Usuário declinar ou de si próprio.
+                  </li>
+                  <li>
+                    O <b>DELBONI AURIEMO</b> poderá realizar manutenções preventivas ou emergenciais no <b>Portal</b>, sendo que, para tanto, eventuais paradas do serviço, indisponibilidades ou impossibilidade de acesso podem ocorrer nestas situações, devendo as manutenções preventivas prescindirem de aviso aos Usuários quando causarem eventuais indisponibilidades, diferentemente das emergenciais, que podem ocorrer sem aviso prévio.
+                  </li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Obrigações do Usuário</b>
+            <ol>
+              <li>
+                Os Usuários se obrigam a utilizar o <b>Portal</b> com retidão ética, sempre respeitando as condições que regem sua utilização.
+              </li>
+              <li>
+                Ao fornecer dados e informações os Usuários se obrigam a fazê-lo sempre com compromisso de veracidade e autenticidade, sob pena da aplicação das penas da lei, de indenizar a quem causar dano e de ter a Conta de Acesso do <b>Portal</b> bloqueada ou excluída.
+              </li>
+              <li>
+                Na incidência de danos ao <b>Portal</b> ou a terceiros, o responsável se compromete a arcar com todas as obrigações de indenizar o sujeito lesado, não devendo o <b>DELBONI AURIEMO</b> responder por tais prejuízos.
+              </li>
+              <li>
+                Os Usuários devem utilizar os recursos do <b>Portal</b> para as finalidades que foi constituído, sob pena da aplicação das penas da lei, de indenizarem a quem causarem dano e de terem sua conta de acesso bloqueada ou excluída.
+              </li>
+              <li>
+                Também, os Usuários devem manter o sigilo dos dados de sua Conta de Acesso, sua senha e demais dispositivos de autenticação em relação a terceiros, não os divulgando ou compartilhando com quem quer que seja, sob pena da exclusão da conta e de terem de ressarcir os danos que sobrevierem dessa divulgação indevida.
+                <ol>
+                  <li>
+                    Caso o Usuário suspeite que a confidencialidade de sua senha foi quebrada ou que houve o comprometimento de algum dispositivo de autenticação, este deverá proceder sua troca ou atualização o mais rápido possível. Se não conseguir acessar a Internet para obter suporte, deverá buscar atendimento dentre os canais disponíveis.
+                  </li>
+                </ol>
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Direitos autorais e propriedade intelectual do <b>Portal</b></b>
+            <ol>
+              <li>
+                O uso comercial da expressão <b>DELBONI AURIEMO</b> ou ainda de palavras que se assemelhem a estas, porém com grafia diferenciada, como marcas, nomes empresariais ou nomes de domínio, além dos conteúdos das telas do <b>Portal</b>, assim como os programas de computador, bancos de dados, redes e seus arquivos são de propriedade do <b>DELBONI AURIEMO</b> e estão protegidos pelas leis e tratados internacionais de proteção à propriedade intelectual, incluindo, mas não se limitando, às Leis Federais 9.609/98, 9.610/98, 9.279/96 e 10.406/2002.
+              </li>
+              <li>
+                Ao acessar o <b>Portal</b>, os Usuários declaram que irão respeitar todos os direitos de propriedade intelectual do <b>DELBONI AURIEMO</b>, incluindo, mas não se limitando, aos programas de computador, direitos autorais e direitos de propriedade industrial sobre as marcas, patentes, nomes de domínio, denominação social e desenhos industriais, depositados ou registrados em nome do <b>DELBONI AURIEMO</b>, tal qual de todos os direitos referentes a terceiros que porventura estejam, ou estiveram, de alguma forma, disponíveis no <b>Portal</b>. O direito ao acesso ou ao uso de suas funcionalidades não conferem aos Usuários quaisquer direitos ao uso dos nomes, títulos, palavras, frases, marcas, patentes, nomes de domínio, denominação social, obras literárias, artísticas, lítero-musicais, imagens, dados e informações, dentre outras, que nele estejam ou estiveram disponíveis.
+              </li>
+              <li>
+                A utilização das funcionalidades oferecidas do <b>Portal</b> se dará na forma de prestação de serviço (<i>software as a service</i> ou <i>SaaS</i>), não conferindo ao Usuário nenhum direito sobre o <i>software</i> utilizado pelo <b>DELBONI AURIEMO</b>, além da concessão de acesso.
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Atendimento do <b>Portal</b></b>
+            <ol>
+              <li>
+                Caso haja alguma dúvida sobre as condições estabelecidas neste termo ou qualquer documento do <b>Portal</b>, por favor entre em contato conosco por meio do canal "Fale Conosco" disponível no <b>Portal</b>. Será um prazer ajudar a esclarecer qualquer uma de suas dúvidas.
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Modificações destes Termos e Condições</b>
+            <ol>
+              <li>
+                A presente Política de Uso e Privacidade está sujeita a melhoria e aprimoramento, trazendo como reflexos constantes mudanças em ajustes de seus termos. Assim, o <b>DELBONI AURIEMO</b> se reserva o direito de modificá-lo a qualquer momento, de forma unilateral, sem que para isso tenha qualquer obrigação de avisar previamente o Usuário. Por isso, recomenda-se sempre ao acessar o <b>Aplicativo</b> ou <b>Portal</b>, o Usuário cheque a versão em vigor.
+              </li>
+              <li>
+                Ao utilizar o <b>Aplicativo</b>, o <b>Portal</b> e suas funcionalidades, os Usuários aceitam guiar-se pela Política de Uso e Privacidade que se encontra vigente na data e, portanto, devem verificar seu teor a cada vez que forem acessá-lo.
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Disposições Gerais</b>
+            <ol>
+              <li>
+                A tolerância do eventual descumprimento de quaisquer das cláusulas e condições do presente instrumento não constituirá novação das obrigações aqui estipuladas e tampouco impedirá ou inibirá a exigibilidade das mesmas a qualquer tempo.
+              </li>
+              <li>
+                O <b>Portal</b> tem como base o horário oficial de Brasília.
+              </li>
+              <li>
+                Caso alguma disposição desta Política de Uso e Privacidade seja considerada ilegítima por autoridade da localidade que o Usuário acessa o <b>Aplicativo</b> ou <b>Portal</b>, ou mantém vínculo, as demais condições permanecerão em pleno vigor e efeito até segunda ordem.
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Lei aplicável e Jurisdição</b>
+            <ol>
+              <li>
+                A Política de Uso e Privacidade aqui descrita será interpretada segundo a legislação brasileira, no idioma português, sendo eleito o Foro da Comarca de São Paulo no Estado de São Paulo para dirimir qualquer litígio, questão ou dúvida superveniente, com expressa renúncia de qualquer outro, por mais privilegiado que seja.
+              </li>
+            </ol>
+          </li>
+          <li>
+            <b>Registro público</b>
+            <ol>
+              <li>
+                O presente documento está registrado no Cartório de Títulos e Documentos da Comarca de Barueri – SP sob o número 1084492 em 23 de Junho de 2015.
+              </li>
+            </ol>
+          </li>
+        </ol>
+        <p>
+          <b>Atualização: 23 de junho de 2015.</b>
+        </p>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+      <div class="agree-option">
+        <button type="button" title="Não concordo com os termos" class="disagree-button" ng-click="disagreeTerms()"></button>
+      </div><div class="agree-option">
+        <button type="button" title="Concordo com os termos" class="agree-button" loading-button-click="agreeTerms()"></button>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="login_options.html">
+  <div class="modal-content" id="login-options">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Entre usando suas <br>
+        Redes Sociais
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="left">
+      <p class="intro-message">
+        Olá, gostaria de associar o seu login com suas redes sociais?
+      </p>
+      <ul class="social-networks button-container">
+        <li class="facebook"><button type="button" id="facebook-login-square" title="Associar Facebook" loading-button-click="" class="inverse-button" analytics-on analytics-category="Formulários" analytics-event="Consultar Laudo" analytics-label="Facebook"></button>
+        </li><li class="gplus"><button type="button" id="gplus-login-square" title="Associar Google+" loading-button-click="" class="inverse-button" analytics-on analytics-category="Formulários" analytics-event="Consultar Laudo" analytics-label="Google Plus"></button>
+        </li><li class="linkedin last-child"><button type="button" id="linkedin-login-square" title="Associar LinkedIn" loading-button-click="" class="inverse-button" analytics-on analytics-category="Formulários" analytics-event="Consultar Laudo" analytics-label="LinkedIn"></button></li>
+      </ul>
+      <p class="advantages-message">
+        As vantagens de usar suas Redes Sociais:
+      </p>
+      <ul class="advantages">
+        <li>
+          <span class="bullet-red"></span>
+          Tenha seu perfil personalizado
+        </li>
+        <li>
+          <span class="bullet-red"></span>
+          Históricos de seus protocolos
+        </li>
+        <li>
+          <span class="bullet-red"></span>
+          Notificações periódicas
+        </li>
+      </ul>
+      <div class="footer">
+        <a href="#/login/email" analytics-on analytics-category="Formulários" analytics-event="Consultar Laudo" analytics-label="E-mail">
+          <span class="small-arrow"></span>
+          ou se preferir, faça seu login por e-mail
+        </a>
+      </div>
+    </div><div class="right">
+      <p class="intro-message">
+        Ou se preferir, acesse os resultados dos seus exames diretamente.
+      </p>
+      <div class="button-container">
+        <button type="button" title="Ir direto para os resultados dos meus exames" ng-click="viewProtocol()" analytics-on analytics-category="Formulários" analytics-event="Consultar Laudo" analytics-label="Direto"></button>
+      </div>
+      <div>
+        <a href="#/faq">
+          <span class="small-arrow"></span>
+          Problemas para acessar seus protocolos?
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="create_password.html">
+  <div class="modal-content" id="create-password">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Finalizando o <br>
+        seu cadastro
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div id="user-badge">
+  <div class="user-picture">
+    <img src="/temas/da/img/socialid-avatar.png" ng-src="{{user.pictureUrl}}"></img>
+  </div><div class="user-info">
+  <p class="title">
+    Perfil do Paciente
+  </p>
+  <p class="user-identification" ng-if="user.age">
+    {{user.name}}, {{user.age}} anos
+  </p>
+  <p class="user-identification" ng-if="!user.age">
+    {{user.name}}
+  </p>
+  <p class="user-message" ng-if="user.message">
+    {{user.message}}
+  </p>
+  </div>
+</div>
+    <div class="explanation-area">
+      <div class="question-mark">
+      </div><div class="explanation">
+        <p class="title">
+          Por que eu preciso de uma senha Web?
+        </p>
+        <p>
+          Com essa senha, você poderá acessar todos os seus protocolos com segurança. Sempre que o sistema pedir a senha para acessar um laudo, use essa senha web.
+        </p>
+      </div>
+    </div>
+    <div class="signup-area">
+      <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+      <form>
+        <div class="row">
+          <fieldset class="control-group">
+            <label class="control-label" for="user-signup-web-email">
+              Digite seu E-mail:
+            </label>
+            <input type="email" name="email" id="user-signup-web-email" placeholder="Digite seu E-mail" ng-model="user.email">
+          </fieldset><fieldset class="control-group">
+            <label class="control-label" for="user-signup-web-password">
+              Digite sua senha:
+            </label>
+            <input type="password" name="password" id="user-signup-web-password" placeholder="Digite sua Senha" ng-model="user.password">
+          </fieldset><fieldset class="control-group last-child">
+            <label class="control-label" for="user-signup-web-password-confirmation">
+              Confirme sua senha:
+            </label>
+            <input type="password" name="password-confirmation" id="user-signup-web-password-confirmation" placeholder="Confirme sua Senha" ng-model="user.password_confirmation">
+          </fieldset>
+        </div>
+        <div class="button-container">
+          <button type="submit" title="Criar minha senha" loading-button-click="createPassword()"></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="login_password.html">
+  <div class="modal-content" id="login-password">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Digite o seu <br>
+        e-mail e senha
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div id="user-badge">
+  <div class="user-picture">
+    <img src="/temas/da/img/socialid-avatar.png" ng-src="{{user.pictureUrl}}"></img>
+  </div><div class="user-info">
+  <p class="title">
+    Perfil do Paciente
+  </p>
+  <p class="user-identification" ng-if="user.age">
+    {{user.name}}, {{user.age}} anos
+  </p>
+  <p class="user-identification" ng-if="!user.age">
+    {{user.name}}
+  </p>
+  <p class="user-message" ng-if="user.message">
+    {{user.message}}
+  </p>
+  </div>
+</div>
+    <div class="login-area">
+      <p class="title">
+        Use os seus dados para acessar seus laudos.
+      </p>
+      <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+      <form>
+        <fieldset class="control-group">
+          <label class="control-label" for="user-login-web-email">
+            Seu E-mail:
+          </label>
+          <input type="email" name="email" id="user-login-web-email" placeholder="Digite seu E-mail" ng-model="user.email" disabled>
+        </fieldset><fieldset class="control-group">
+          <label class="control-label" for="user-login-web-password">
+            Senha Web:
+          </label>
+          <input type="password" name="password" id="user-login-web-password" placeholder="Digite sua Senha" ng-model="user.password">
+          <div class="password-instructions">
+            <a href=""popover="A senha Web é uma senha de segurança para garantir o sigilo dos seus exames. Se você esqueceu sua senha, clique no link abaixo para recuperá-la." popover-trigger="mouseenter" popover-placement="top">
+              <span class="icon"></span>
+              O que é senha Web?
+            </a>
+          </div>
+        </fieldset><button type="submit" title="Entrar" loading-button-click="loginPassword()"></button>
+      </form>
+    </div>
+    <div class="footer">
+      <span class="small-arrow"></span>
+      <span>
+        Esqueceu sua senha?
+        <a href="#login/remember">
+          Clique aqui para recuperá-la.
+        </a>
+      </span>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="remember_password.html">
+  <div class="modal-content" id="remember-password">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Redefinir senha
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p class="instructions">
+      Digite o seu e-mail cadastrado para receber uma nova senha.
+    </p>
+    <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+    <form>
+      <fieldset class="control-group">
+        <input type="email" name="email" placeholder="Digite seu E-mail" ng-model="user.email">
+      </fieldset><button type="submit" title="Recuperar minha senha" loading-button-click="rememberPassword()"></button>
+    </form>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="reset_password.html">
+  <div class="modal-content" id="reset-password">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Cadastrar uma <br>
+        nova senha
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p class="instructions">
+      Cadastre a sua nova senha preechendo os dois campos.
+    </p>
+    <p class="reminder">
+      * Lembrando que sua senha deve ter no mínimo 8 caracteres, 1 número e 1 letra em maiúsculo.
+    </p>
+    <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+    <form>
+      <fieldset class="control-group">
+        <label class="control-label" for="reset-password-password">
+          Digite sua nova senha:
+        </label>
+        <input type="password" name="password" placeholder="Digite sua nova senha" ng-model="user.password" id="reset-password-password">
+      </fieldset>
+      <fieldset class="control-group">
+        <label class="control-label" for="reset-password-password-confirmation">
+          Confirme sua nova senha:
+        </label>
+        <input type="password" name="password-confirmation" placeholder="Confirme sua nova senha" ng-model="user.password_confirmation" id="reset-password-password-confirmation">
+      </fieldset>
+      <div class="button-container">
+        <button type="submit" title="Cadastrar uma nova senha" loading-button-click="updatePassword()"></button>
+      </div>
+    </form>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="reset_password_success.html">
+  <div class="modal-content" id="reset-password-success">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Cadastrar uma <br>
+        nova senha
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <span class="icon"></span>
+    <p>
+      Sua nova senha foi cadastrada com sucesso.
+    </p>
+    <p>
+      Faça login na parte superior do site para acessar seus exames.
+    </p>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="list_protocols.html">
+  <div class="modal-content" id="list-protocols">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Meus Laudos
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div id="user-badge">
+  <div class="user-picture">
+    <img src="/temas/da/img/socialid-avatar.png" ng-src="{{user.pictureUrl}}"></img>
+  </div><div class="user-info">
+  <p class="title">
+    Perfil do Paciente
+  </p>
+  <p class="user-identification" ng-if="user.age">
+    {{user.name}}, {{user.age}} anos
+  </p>
+  <p class="user-identification" ng-if="!user.age">
+    {{user.name}}
+  </p>
+  <p class="user-message" ng-if="user.message">
+    {{user.message}}
+  </p>
+  </div>
+</div>
+    <div class="form-container">
+      <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+      <div alert type="'success'" id="recently-added-protocol-success" close="">
+        Seu protocolo <span class="code"></span> foi adicionado com sucesso. <a href=""><b>Clique aqui</b></a> para visualizá-lo.
+      </div>
+      <form>
+        <fieldset class="control-group">
+          <label class="control-label" for="user-reports-protocol">
+            Nº Protocolo:
+          </label>
+          <input type="text" name="protocol" id="user-reports-protocol" placeholder="Digite o protocolo" ng-model="protocol.code">
+        </fieldset><fieldset class="control-group">
+          <label class="control-label" for="user-reports-password">
+            Senha:
+          </label>
+          <input type="password" name="password" id="user-reports-password" placeholder="Digite a senha" ng-model="protocol.password">
+          <div class="password-instructions">
+            <a href="" popover="A senha do protocolo é uma senha de segurança para garantir o sigilo dos seus exames. Essa senha você recebe ao fazer exames em qualquer unidade Delboni." popover-trigger="mouseenter" popover-placement="bottom">
+              <span class="icon"></span>
+              O que é a senha do protocolo?
+            </a>
+          </div>
+        </fieldset><button type="submit" title="Adicionar protocolo" loading-button-click="addProtocol()"></button>
+      </form>
+    </div>
+    <div class="table-container" ng-if="totalItems > 0">
+      <table class="table table-stripped reports-table">
+        <thead>
+          <tr>
+            <th class="padding-left"></th>
+            <th class="title protocol">
+              <span class="icon"></span>
+              Protocolo
+            </th>
+            <th class="title location">
+              <span class="icon"></span>
+              Unidade
+            </th>
+            <th class="title date">
+              <span class="icon"></span>
+              Data
+            </th>
+            <th class="title reports">
+              <span class="icon"></span>
+              Laudos
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="protocol in protocols">
+            <td class="padding-left"></td>
+            <td class="protocol">
+              {{protocol.code}}
+            </td>
+            <td class="location">
+              {{protocol.unit}}
+            </td>
+            <td class="date">
+              {{protocol.date | date:'dd/MM/yyyy'}}
+            </td>
+            <td class="reports">
+              <div class="reports-container">
+                <button type="submit" title="Remover laudo" loading-button-click="destroyProtocol(protocol.id)" class="inverse-button"></button>
+                <a href="" ng-click="getProtocol(protocol.id)" analytics-on analytics-category="Formulários" analytics-event="Consultar Laudo" analytics-label="Visualizar">
+                  Visualizar
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <pagination total-items="totalItems" page="currentPage" on-select-page="pageChanged(page)" direction-links="directionLinks" boundary-links="boundaryLinks" items-per-page="itemsPerPage" max-size="maxSize" class="pagination-centered" ng-if="totalItems > 0"></pagination>
+    <div class="no-reports" ng-if="totalItems == 0">
+      <div class="alert alert-info">
+        {{user.name}}, você não associou nenhum protocolo.
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="contact_us.html">
+  <div class="modal-content" id="contact-us">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-phone">
+      </span><span class="modal-title">
+        Canais de <br>
+        Atendimento
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p>
+      Confira os telefones de contato para cliente e o  núcleo de assessoria médica (NAM).
+    </p>
+    <div class="contact-area">
+      <p class="title">
+        Atendimento ao cliente
+      </p>
+      <p>
+                                                                                <span class="city-name">São Paulo</span>: (11) 3049-6999 &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;<span class="city-name"> Santos</span>: (13) 4004-6999      </p>
+    </div>
+    <div class="contact-area last-child">
+      <p class="title">
+         Núcleo de Assessoria Médica
+      </p>
+      <p>
+                                                                                <span class="city-name">São Paulo</span>: (11) 3047-4484 &nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;<span class="city-name"> Santos</span>: (13) 4004-6999      </p>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="login_email.html">
+  <div class="modal-content" id="login-email">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Acesse seus exames <br>
+        através do e-mail
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="left">
+      <p class="instructions">
+        Já possuo uma conta no Delboni
+      </p>
+      <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+      <form>
+        <fieldset class="control-group">
+          <label class="control-label" for="login-email-email">
+            E-mail:
+          </label>
+          <input type="email" name="email" placeholder="E-mail" ng-model="user.email" id="login-email-email">
+        </fieldset>
+        <fieldset class="control-group">
+          <label class="control-label" for="login-email-password">
+            Senha:
+          </label>
+          <input type="password" name="password" placeholder="Senha" ng-model="user.password" id="login-email-password">
+          <div>
+            <span class="small-arrow"></span>
+            <span>
+              <a href="#/login/remember">
+                Esqueceu a senha?
+              </a>
+            </span>
+          </div>
+        </fieldset>
+        <div class="button-container">
+          <button type="submit" title="Acessar os meus exames" loading-button-click="loginPassword()"></button>
+        </div>
+      </form>
+      <div class="footer">
+        <span class="small-arrow"></span>
+        <span>
+          <a href="#/confirm/email">
+            Reenviar e-mail de confirmação
+          </a>
+        </span>
+      </div>
+    </div><div class="right">
+      <p class="instructions">
+        Ainda não tem uma conta no Delboni?
+      </p>
+      <div class="button-container">
+        <button type="button" title="Crie a sua conta agora" ng-click="createAccount()"></button>
+      </div>
+      <p>
+        Crie sua conta gratuitamente no Delboni.
+      </p>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="create_user.html">
+  <div class="modal-content" id="create-user">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Crie sua conta
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p class="instructions">
+      Crie sua conta, é fácil e rápido! Lembre-se que os campos com * são obrigatórios.
+    </p>
+    <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+    <form>
+      <div class="row">
+        <div class="left">
+          <fieldset class="control-group">
+            <label class="control-label" for="create-user-name">
+              *Nome e Sobrenome:
+            </label>
+            <input type="text" name="nome" placeholder="*Nome e Sobrenome" ng-model="user.name" id="create-user-name">
+          </fieldset>
+        </div><div class="right">
+          <fieldset class="control-group">
+            <label class="control-label" for="create-user-email">
+              *E-mail:
+            </label>
+            <input type="email" name="email" placeholder="*E-mail" ng-model="user.email" id="create-user-email">
+          </fieldset>
+        </div>
+      </div>
+      <div class="row">
+        <div class="left">
+          <fieldset class="control-group">
+            <label class="control-label" for="create-user-password">
+              *Senha:
+            </label>
+            <input type="password" name="password" placeholder="*Senha" ng-model="user.password" id="create-user-password">
+          </fieldset>
+        </div><div class="right">
+          <fieldset class="control-group">
+            <label class="control-label" for="create-user-password-confirmation">
+              *Confirmação de senha:
+            </label>
+            <input type="password" name="password_confirmation" placeholder="*Confirmação de senha" ng-model="user.password_confirmation" id="create-user-password-confirmation">
+          </fieldset>
+        </div>
+      </div>
+      <div class="row">
+        <div class="left">
+          <fieldset class="control-group birthday-group">
+            <label class="control-label" for="create-user-birthday">
+              Data de nascimento:
+            </label>
+            <button type="button" class="calendar-icon"></button>
+            <input type="text" name="birthday" placeholder="dd/mm/aaaa" ng-model="user.birthday" id="create-user-birthday" class="datepicker">
+          </fieldset>
+        </div><div class="right">
+          <fieldset class="control-group gender-group">
+            <label class="control-label" for="create-user-gender">
+              Sexo:
+            </label>
+            <select name="gender" placeholder="Sexo" ng-model="user.gender" id="create-user-gender">
+              <option value="" disabled selected>Sexo</option>
+              <option value="I">Indefinido</option>
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+            </select>
+          </fieldset>
+        </div>
+      </div>
+      <div class="row">
+        <div class="left">
+          <fieldset class="control-group">
+            <label class="control-label" for="create-user-phone">
+              Número do celular:
+            </label>
+            <input type="text" name="phone" placeholder="(99) 99999-9999" ng-model="user.phone" id="create-user-phone" class="phone-number">
+          </fieldset>
+        </div>
+      </div>
+      <div class="row footer button-container">
+        <div class="right">
+          <button type="submit" title="Criar minha conta" loading-button-click="createUser()"></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="create_user_success.html">
+  <div class="modal-content" id="create-user-success">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Crie sua conta
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p>
+      Falta pouco, basta conferir o e-mail em sua caixa. Depois, clique no link para ativar a sua conta.
+    </p>
+    <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="create_user_social.html">
+  <div class="modal-content" id="create-user-social">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Crie sua conta
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p class="instructions">
+      Crie sua conta, é fácil e rápido! Lembre-se que os campos com * são obrigatórios.
+    </p>
+    <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+    <form>
+      <div class="row">
+        <div class="left">
+          <fieldset class="control-group">
+            <label class="control-label" for="create-user-social-name">
+              *Nome e Sobrenome:
+            </label>
+            <input type="text" name="nome" placeholder="*Nome e Sobrenome" ng-model="user.name" id="create-user-social-name">
+          </fieldset>
+        </div><div class="right">
+          <fieldset class="control-group">
+            <label class="control-label" for="create-user-social-email">
+              *E-mail:
+            </label>
+            <input type="email" name="email" placeholder="*E-mail" ng-model="user.email" id="create-user-social-email">
+          </fieldset>
+        </div>
+      </div>
+      <div class="row footer button-container">
+        <div class="right">
+          <button type="submit" title="Criar minha conta" loading-button-click="createUser()"></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="create_user_social_success.html">
+  <div class="modal-content" id="create-user-social-success">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Crie sua conta
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p>
+      Falta pouco, basta conferir o e-mail em sua caixa. Depois, clique no link para ativar a sua conta.
+    </p>
+    <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+    <div class="button-container">
+      <button type="button" loading-button-click="reload()" title="Ok"></button>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="create_user_conflict.html">
+  <div class="modal-content" id="create-user-conflict">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Cadastro já existente
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div id="user-badge">
+      <div class="user-picture">
+        <img src="/temas/da/img/socialid-avatar.png" ng-src="{{user.pictureUrl}}"></img>
+      </div><div class="user-info">
+      <p class="title">
+        Identificamos que o seu email já está associado ao usuário:
+      </p>
+      <p class="user-identification">
+        {{user.name}}
+      </p>
+      </div>
+    </div>
+    <div class="left">
+      <p class="instructions">
+        Se for você mesmo, faça login:
+      </p>
+      <br/>
+      <ul>
+        <li ng-repeat="provider in user.providers" class="{{provider}}">
+          <button type="button" id="{{provider}}-login-conflict" title="Login com {{provider}}" loading-button-click="startLogin(provider)" class="inverse-button"></button>
+        </li>
+        <li class="email" ng-if="user.hasPassword">
+          <button type="button" id="email-login-conflict" title="Login com Email" ng-click="loginEmail()"></button>
+        </li>
+      </ul>
+    </div><div class="right">
+      <p class="instructions">
+        Caso não seja você, cria uma nova conta com um email diferente:
+      </p>
+      <div class="button-container">
+        <button type="button" title="Crie a sua conta agora" ng-click="createAccount()"></button>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="confirm_email_success.html">
+  <div class="modal-content" id="confirm-email-success">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Confirmação <br>
+        de e-mail
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <span class="icon"></span>
+    <p>
+      Sua conta foi criada com sucesso.
+    </p>
+    <p>
+      Faça login na parte superior do site para acessar seus exames.
+    </p>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="confirm_email.html">
+  <div class="modal-content" id="confirm-email">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Confirmação <br>
+        de e-mail
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <p class="instructions">
+      Digite o seu e-mail cadastrado para receber o e-mail de confirmação.
+    </p>
+    <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+    <form>
+      <fieldset class="control-group">
+        <input type="email" name="email" placeholder="Digite seu E-mail" ng-model="user.email">
+      </fieldset><button type="submit" title="Reenviar e-mail" loading-button-click="confirmEmail()"></button>
+    </form>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="user_settings.html">
+  <div class="modal-content" id="user-settings">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Informações <br>
+        do meu perfil
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="left">
+      <div class="user-picture-container" ng-if="user.pictureUrl">
+        <div class="user-picture">
+          <img ng-src="{{user.pictureUrl}}"></img>
+        </div>
+      </div>
+      <p class="title">
+        {{user.firstName}}
+      </p>
+      <p class="connect-message">
+        Que tal associar novas redes sociais à sua conta?
+      </p>
+      <ul class="social-networks-connect">
+        <li class="facebook">
+          <button type="button" id="facebook-connect" title="{{connectButtonTitle('facebook')}} Facebook" class="link inverse-button" ng-class="connectedToClass('facebook')" loading-button-click="connectProvider('facebook')"></button>
+          <button type="button" id="facebook-disconnect" title="Desassociar Facebook" class="unlink inverse-button" loading-button-click="disconnectProvider('facebook')" ng-if="connectedTo('facebook')"></button>
+        </li>
+        <li class="gplus">
+          <button type="button" id="gplus-connect" title="{{connectButtonTitle('gplus')}} Google+" class="link inverse-button" ng-class="connectedToClass('gplus')" loading-button-click="connectProvider('gplus')"></button>
+          <button type="button" id="gplus-disconnect" title="Desassociar Google+" class="unlink inverse-button" loading-button-click="disconnectProvider('gplus')" ng-if="connectedTo('gplus')"></button>
+        </li>
+        <li class="linkedin last-child">
+          <button type="button" id="linkedin-connect" title="{{connectButtonTitle('linkedin')}} LinkedIn" class="link inverse-button" ng-class="connectedToClass('linkedin')" loading-button-click="connectProvider('linkedin')"></button>
+          <button type="button" id="linkedin-disconnect" title="Desassociar LinkedIn" class="unlink inverse-button" loading-button-click="disconnectProvider('linkedin')" ng-if="connectedTo('linkedin')"></button>
+        </li>
+      </ul>
+    </div><div class="right">
+      <div class="alert-area">
+  <div alert ng-repeat="alert in alerts.get()" type="alert.type" close="alerts.close($index)">{{alert.msg}}</div>
+</div>
+      <form>
+        <fieldset class="control-group">
+          <label class="control-label" for="user-settings-name">
+            Nome e Sobrenome:
+          </label><div class="input-area">
+            <input type="text" name="name" id="user-settings-name" placeholder="Nome e Sobrenome" ng-model="userEditable.name">
+          </div>
+        </fieldset>
+        <fieldset class="control-group birthday-group">
+          <label class="control-label" for="user-settings-birthday">
+            Data de nascimento:
+          </label><div class="input-area">
+            <button type="button" class="calendar-icon"></button>
+            <input type="text" name="birthday" placeholder="dd/mm/aaaa" ng-model="userEditable.birthday" class="datepicker" id="user-settings-birthday" ng-change="userSettings.onBirthdayChange()">
+          </div>
+        </fieldset>
+        <fieldset class="control-group gender-group">
+          <label class="control-label" for="user-settings-gender">
+            Sexo:
+          </label><div class="input-area">
+              <select name="gender" placeholder="Sexo" ng-model="userEditable.gender" id="user-settings-gender">
+              <option value="" disabled selected>Sexo</option>
+              <option value="I">Indefinido</option>
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+            </select>
+          </div>
+        </fieldset>
+        <fieldset class="control-group phone-group">
+          <label class="control-label" for="user-settings-phone-number">
+            Número do celular:
+          </label><div class="input-area">
+            <input type="text" name="phone_number" id="user-settings-phone-number" placeholder="(99) 99999-9999" ng-model="userEditable.phone" class="phone-number">
+          </div>
+        </fieldset>
+        <fieldset class="control-group password-group">
+          <label class="control-label" for="user-settings-password">
+            Redefinir senha:
+          </label><div class="button-area">
+            <button class="btn-redefine-password" type="button" title="Redefinir Senha" loading-button-click="resetPassword()"></button>
+          </div>
+        </fieldset>
+        <fieldset class="control-group email-group">
+          <label class="control-label" for="user-settings-email">
+            Endereço de e-mail:
+            <div class="status" ng-class="emailConfirmedClass()">
+              <span class="icon"></span>
+              {{emailConfirmedLabel()}}
+            </div>
+          </label><div class="input-area" style="display: none">
+            <input type="email" name="email" id="user-settings-email" placeholder="E-mail" ng-model="userEditable.email">
+          </div><div class="value-area">
+            {{userEditable.email}}
+          </div>
+          <button class="edit-icon" title="Editar e-mail"></button>
+          <div class="resend-confirmation-email-area" ng-if="!user.isEmailConfirmed">
+            <span class="small-arrow"></span>
+            <span>
+              <a href="" ng-click="confirmEmail()">
+                Reenviar e-mail de confirmação
+              </a>
+            </span>
+          </div>
+        </fieldset>
+        <div class="email-unconfirmed-alert" ng-if="!user.isEmailConfirmed">
+          <span class="title">Atenção:</span> Acesse sua conta para confirmar seu endereço de e-mail.
+        </div>
+      </form>
+    </div>
+    <div class="footer button-container">
+      <div class="actions">
+        <a href="#/user/delete">Remover minha conta</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="#/faq">Problemas para acessar seus protocolos?</a>
+      </div>
+      <div class="buttons">
+        <button class="btn-cancel" type="submit" title="Cancel" ng-click="cancel()"></button>
+        <button class="btn-save" type="submit" title="Salvar" loading-button-click="updateUser()"></button>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="delete_user.html">
+  <div class="modal-content" id="delete-user">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Removendo <br>
+        sua conta
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="description">
+      <h5>Atenção:</h5>
+      <p>Se você remover sua conta, todos os seus números de protocolos e senhas associados a sua conta serão removidos.</p>
+      <p>Tem certeza que deseja fazer isso?</p>
+    </div>
+    <div class="buttons">
+      <form id="delete-account-form" action="/socialid/user" method="POST" display="none">
+        <input type="hidden" name="_method" value="delete">
+      </form>
+      <button class="btn-cancel" type="button" title="Cancelar" ng-click="cancel()"></button>
+      <button class="btn-remove-account" type="button" title="Remover minha conta" loading-button-click="deleteAccount()"></button>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="delete_user_success.html">
+  <div class="modal-content" id="delete-user-success">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Removendo <br>
+        sua conta
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <span class="icon"></span>
+    <p>
+      Sua conta foi removida com sucesso.
+    </p>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="faq.html">
+  <div class="modal-content" id="faq">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+    <div class="modal-tab">
+      <span class="title-arrow">
+      </span><span class="modal-title">
+        Delboni / Social ID <br>
+        Central de Ajuda Social
+      </span>
+    </div>
+  </div>
+  <div class="modal-body">
+    <div class="banner"></div>
+    <div class="title-container">
+      <p class="title">
+        <span class="button"><button class="btn-back" type="button" title="Voltar" ng-click="back()"></button></span>
+        Central de ajuda, dúvidas e esclarecimentos sobre o Social ID.
+      </p>
+    </div>
+    <div class="list-container">
+      <ol class="outer-list">
+        <li>
+          <div class="body">
+            <div class="question">
+              O que é o Protocolo?
+            </div>
+            <div class="answer">
+              <p>
+                Protocolo é um número que todo cliente recebe ao realizar um atendimento na rede Delboni. Com o número de Protocolo e Senha, você pode consultar os resultados de seus exames de qualquer lugar através do site <a href="http://www.delboniauriemo.com.br" target="_blank">http://www.delboniauriemo.com.br</a>
+              </p>
+            </div>
+          </div><div class="icon-container">
+            <div class="icon"></div>
+          </div>
+        </li>
+        <li>
+          <div class="body">
+            <div class="question">
+              Como eu associo minhas redes sociais a uma conta no site Delboni? Quais são as vantagens?
+            </div>
+            <div class="answer">
+              <p>
+                É fácil. Selecione a rede social de sua preferência, digite seus dados de acesso a esta rede e clique em OK. Pronto, você já associou sua rede social a uma conta no Delboni. A principal vantagem para o cliente Delboni é o seu histórico. Não importa quantas vezes você vá a qualquer unidade da rede Delboni, sempre que você associar seu Protocolo e Senha à sua conta no site, seu histórico ficará guardado e disponível sempre que você precisar.
+              </p>
+            </div>
+          </div><div class="icon-container">
+            <div class="icon"></div>
+          </div>
+        </li>
+        <li>
+          <div class="body">
+            <div class="question">
+              Tenho duas contas no site Delboni. É possível associar minhas redes sociais às duas contas?
+            </div>
+            <div class="answer">
+              <p>
+                Não é possível associar suas redes sociais a duas contas diferentes. O ideal é que você as associe a uma única conta.
+              </p>
+            </div>
+          </div><div class="icon-container">
+            <div class="icon"></div>
+          </div>
+        </li>
+        <li>
+          <div class="body">
+            <div class="question">
+              Entrei com minha rede social, porém não a quero mais usar para acessar o site. Como faço para removê-la da minha conta?
+            </div>
+            <div class="answer">
+              <p>
+                Para você remover sua rede do Facebook, Google+ ou LinkedIn do site Delboni, será necessário seguir os seguintes passos:
+              </p>
+              <ol class="inner-list">
+                <li>
+                  Entre em sua conta no site Delboni com seu e-mail ou suas redes sociais;
+                </li>
+                <li>
+                  Clique na setinha da caixa com a sua foto para abrir o menu;
+                </li>
+                <li>
+                  Clique na opção "Minhas Configurações";
+                </li>
+                <li>
+                  Coloque o cursor do mouse sobre o ícone X ao lado do botão da rede social que deseja desassociar e clique;
+                </li>
+                <li>
+                  Confirme a exclusão.
+                </li>
+              </ol>
+              <p>
+                Sua rede foi removida com êxito.
+              </p>
+            </div>
+          </div><div class="icon-container">
+            <div class="icon"></div>
+          </div>
+        </li>
+        <li>
+          <div class="body">
+            <div class="question">
+              Como faço para remover a minha conta?
+            </div>
+            <div class="answer">
+              <p>
+                Para você remover sua conta, será necessário seguir os seguintes passos:
+              </p>
+              <ol class="inner-list">
+                <li>
+                  Entre em sua conta no site Delboni com seu e-mail ou suas redes sociais;
+                </li>
+                <li>
+                  Clique na setinha da caixa com a sua foto para abrir o menu;
+                </li>
+                <li>
+                  Clique na opção "Minhas Configurações";
+                </li>
+                <li>
+                  Clique no link: "Remover minha conta" na parte inferior à sua esquerda;
+                </li>
+                <li>
+                  Confirme a exclusão da conta.
+                </li>
+              </ol>
+              <p>
+                Sua conta foi removida com êxito.
+              </p>
+            </div>
+          </div><div class="icon-container">
+            <div class="icon"></div>
+          </div>
+        </li>
+        <li>
+          <div class="body">
+            <div class="question">
+              Como faço para remover um número de protocolo da minha lista?
+            </div>
+            <div class="answer">
+              <p>
+                Na sua lista de Protocolos e Senhas associadas, coloque o cursor do mouse no ícone X correspondente - ele fica junto à coluna Laudos, à sua direita - e clique em "Remover".
+              </p>
+            </div>
+          </div><div class="icon-container">
+            <div class="icon"></div>
+          </div>
+        </li>
+        <li>
+          <div class="body">
+            <div class="question">
+              Como faço para cadastrar uma nova senha?
+            </div>
+            <div class="answer">
+              <p>
+                Se você costuma acessar sua conta com o e-mail, siga os seguintes passos:
+              </p>
+              <ol class="inner-list">
+                <li>
+                  Clique no botão E-mail para fazer login;
+                </li>
+                <li>
+                  Clique no link "Esqueceu a senha?";
+                </li>
+                <li>
+                  Digite o endereço do seu e-mail cadastrado;
+                </li>
+                <li>
+                  Você receberá um e-mail para cadastrar uma nova senha;
+                </li>
+                <li>
+                  Digite 2 vezes a sua nova senha.
+                </li>
+              </ol>
+              <p>
+                Se você já estiver logado no sistema, siga os seguintes passos:
+              </p>
+              <ol class="inner-list">
+                <li>
+                  Clique na setinha da caixa com a sua foto para abrir o menu;
+                </li>
+                <li>
+                  Clique na opção "Minhas Configurações";
+                </li>
+                <li>
+                  Clique no botão "Redefinir senha";
+                </li>
+                <li>
+                  Você receberá um e-mail para cadastrar uma nova senha;
+                </li>
+                <li>
+                  Digite 2 vezes a sua nova senha.
+                </li>
+              </ol>
+            </div>
+          </div><div class="icon-container">
+            <div class="icon"></div>
+          </div>
+        </li>
+        <li>
+          <div class="body">
+            <div class="question">
+              Como posso ter certeza que minhas informações médicas não ficarão expostas nas minhas redes sociais?
+            </div>
+            <div class="answer">
+              <p>
+                Não há nenhuma possibilidade de compartilhamento das suas informações. Primeiro, pelo fato de que essas informações são 100% sigilosas. Segundo, o contrato de uso do serviço - que está disponível <a href="#/terms">aqui</a> - descreve com total credibilidade a nossa política de privacidade dentro de todos os aspectos legais, respeitando a confidencialidade dos nossos clientes. Essas informações jamais serão expostas em qualquer rede social ou qualquer outro ambiente.
+              </p>
+            </div>
+          </div><div class="icon-container">
+            <div class="icon"></div>
+          </div>
+        </li>
+        <li>
+          <div class="body">
+            <div class="question">
+              Se eu não quiser acessar o site Delboni com as minhas redes sociais, quais são minhas opções?
+            </div>
+            <div class="answer">
+              <p>
+                Você pode acessar usando seu número de Protocolo e Senha normalmente ou, se preferir, usando o seu e-mail pessoal.
+              </p>
+            </div>
+          </div><div class="icon-container">
+            <div class="icon"></div>
+          </div>
+        </li>
+        <li>
+          <div class="body">
+            <div class="question">
+              Como faço para falar com a Central de Atendimento ao Cliente?
+            </div>
+            <div class="answer">
+              <p>
+                Se você estiver em São Paulo, ligue para: (11) 3049-6999.
+              </p>
+              <p>
+                Se você estiver em Santos, ligue para: (13) 4004-6999.
+              </p>
+            </div>
+          </div><div class="icon-container">
+            <div class="icon"></div>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="loading.html">
+  <div class="modal-content" id="loading">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+  </div>
+  <div class="modal-body">
+    <div class="loading-container">
+      <div class="loading"></div>
+    </div>
+    <p class="title">
+      Por favor, aguarde
+    </p>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="tour_intro.html">
+  <div class="modal-content" id="tour-intro">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <div class="modal-title">
+      <span class="delboni">Delboni</span>
+      <span>Social-ID</span>
+    </div>
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+  </div>
+  <div class="modal-body">
+    <div class="instruction">
+      <div class="welcome">Seja Bem-vindo ao</div>
+      <div class="tour">Tour Delboni Social-ID</div>
+      <a href="/#tour" class="bt-tour"></a>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="tour.html">
+  <div class="modal-content" id="tour">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <div class="bg-header"></div>
+  </div>
+  <div class="modal-body">
+    <div class="tour">
+      <ul>
+        <li>
+          <p class="tour-title">Associe suas redes sociais com facilidade e segurança.</p>
+          <div class="tour-image">
+            <img src="/temas/da/img/tour/tour-bg-2.png"></img>
+          </div>
+          <p class="tour-description">É fácil. Você escolhe a rede social de sua preferência e associa com a sua conta Delboni.</p>
+        </li>
+        <li>
+          <p class="tour-title">Pronto. Você já associou sua rede social a uma conta do site Delboni.</p>
+          <div class="tour-image">
+            <img src="/temas/da/img/tour/tour-bg-3.png"></img>
+          </div>
+          <p class="tour-description">Agora com a conta criada, você poderá associar os seus laudos.</p>
+        </li>
+        <li>
+          <p class="tour-title">Praticidade. Acesse o seu histórico de exames quando quiser.</p>
+          <div class="tour-image">
+            <img src="/temas/da/img/tour/tour-bg-4.png"></img>
+          </div>
+          <p class="tour-description">Ao receber seu protocolo e senha na rede Delboni, você poderá associar seus <br />laudos a sua conta do site Delboni e manter o seu histórico atualizado.</p>
+        </li>
+        <li>
+          <p class="tour-title">E tudo isso com total segurança as suas informações.</p>
+          <div class="tour-image">
+            <img src="/temas/da/img/tour/tour-bg-5.png"></img>
+          </div>
+          <p class="tour-description">Suas informações são mantidas em absoluto sigilo conforme as nossas regras de privacidade e segurança.</p>
+        </li>
+      </ul>
+    </div>
+    <div class="previous">
+      <a class="bt-previous" ng-click="previousItem()"></a>
+    </div>
+    <div class="next">
+      <a class="bt-next" ng-click="nextItem()"></a>
+    </div>
+    <div class="tour-pagination">
+      <div class="line"></div>
+      <ul>
+        <li><a class="pager" ng-click="setItem(0)"></a></li>
+        <li><a class="pager" ng-click="setItem(1)"></a></li>
+        <li><a class="pager" ng-click="setItem(2)"></a></li>
+        <li><a class="pager" ng-click="setItem(3)"></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</script>
+
+<script type="text/ng-template" id="tour_close.html">
+  <div class="modal-content" id="tour-close">
+  <button type="button" class="modal-close" data-dismiss="modal" aria-label="Fechar" title="Fechar"></button>
+  <div class="modal-header">
+    <div class="modal-title">
+      <span class="delboni">Delboni</span>
+      <span>Social-ID</span>
+    </div>
+    <span class="logo-delboni" alt="Delboni Auriemo Medicina Diagnóstica" title="Delboni Auriemo Medicina Diagnóstica"></span>
+  </div>
+  <div class="modal-body">
+    <div class="instruction">
+      <div class="tour">Delboni Social-ID</div>
+      <button class="bt-tour-close" ng-click="close()"></button>
+    </div>
+  </div>
+</div>
+</script>
+        <div id="content">
+            <div id="content">
+    <div class="wrapper">
+        <div class="wrapper-content">
+            <p class="migalha">
+                <a href="/">Home</a><span class="divider"> &gt; </span><a href="/exame/menu-de-exames">Exames</a><span class="divider"> &gt; </span>Pré-agendamento de Exames            </p>
+
+            <p class="ajuste-font">
+                <a href="#" class="a-minus">A-</a>
+                <a href="#" class="a-reset">Reset</a>
+                <a href="#" class="a-plus">A+</a>
+            </p>
+
+            <div class="main-title"><span>Pré-agendamento de Exames</span></div>
+
+            <div class="menu-lateral">
+                
+                    <div class="menu-title">Clientes</div>
+                    <ul>
+                        <li>
+                            <a href="/paginas/clientes/atendimento-domiciliar">Atendimento Domiciliar</a>
+                        </li>
+                        <li>
+                            <a href="http://blog.delboniauriemo.com.br" target="_blank">Blog</a>
+                        </li>
+                        <li>
+                            <a href="/paginas/clientes/club-da">Club DA</a>
+                        </li>
+                        <li>
+                            <a href="/paginas/clientes/clube-nove-meses">Clube 9 meses</a>
+                        </li>
+                        <li>
+                            <a href="/paginas/clientes/convenios-delboni-auriemo">Convênios</a>
+                        </li>
+                        <li>
+                            <a href="/medicos/corpo-clinico">Corpo Clínico</a>
+                        </li>
+                        <li>
+                            <a href="/exame/menu-de-exames">Exames</a>
+                        </li>
+                        <li>
+                            <a href="/fale-conosco">Fale Conosco</a>
+                        </li>
+                        <li>
+                            <a href="/unidades/localizar-unidade">Localize uma unidade</a>
+                        </li>
+                        <li>
+                            <a href="/login-social">Login social</a>
+                        </li>
+                        <li>
+                            <a href="/nota-fiscal">Notas fiscais</a>
+                        </li>
+                        <li>
+                            <a href="/pre-agendamento">Pré-agendamento</a>
+                        </li> 
+                        <li>
+                            <a href="/paginas/clientes/resultados-de-exames">Resultados dos exames</a>
+                        </li>
+                        <li>
+                            <a href="/revista/revista-do-paciente">Revista Delboni</a>
+                        </li>
+                        <li>
+                            <a href="/paginas/clientes/testes-rapidos-delboni">Testes rápidos</a>
+                        </li>
+                        <li>
+                            <a href="/paginas/clientes/unidade-da-mulher">Unidade da mulher</a>
+                        </li>
+                        <li>
+                            <a href="/paginas/clientes/vacinas-delboni">Vacinas</a>
+                        </li>
+                        <li>
+                            <a href="/paginas/clientes/tabela-particular-delboni">Tabela Particular</a>
+                        </li>
+
+                        <!--                        <li>
+                                                    <a href="/paginas/clientes/atendimento-em-feriados-delboni">Atendimento em Feriados</a>
+                                                </li>-->
+                    </ul>
+                                <span class="bottom"></span>
+            </div>
+
+            <div class="contentudo-central">
+                <div id="main-content">
+                    
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="pt-br"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang="pt-br"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang="pt-br"> <![endif]-->
+<!--[if gt IE 8]><!-->
+
+<!--[if IE]>
+<link href="/temas/da/pre-agendamento/ie.css" rel="stylesheet" type="text/css">
+<![endif]-->
+
+
+
+<p>Por favor, preencha os dados solicitados nos campos abaixo para pré-agendar seus exames&sup1; em uma das unidades Delboni Auriemo. Depois de concluído o pré-agendamento, você receberá o contato&sup2; da nossa Central de Atendimento.</p>
+<h2>Aviso Importante</h2>
+<p>
+    Seu Pré-agendamento será efetivado após o contato da nossa Central de Atendimento.<br/><br/><strong> &sup1; Para a maioria dos exames de análises clínicas, como sangue e urina, não é necessário agendamento prévio.<br/>
+    Informe-se com o nosso Atendimento ao Cliente.</strong>
+	<br/>
+	<br/>
+</p>
+
+<form id="pre-agendamento-form" action="/pre-agendamento/enviar" method="post" enctype="multipart/form-data" onsubmit="javascript:return false">
+    <fieldset>
+        <legend>01 - Dados pessoais</legend>
+        <div class="row-form">
+            <div class="column-form name-input">
+                <label for="nome">(*) Nome Completo</label>
+                <input type="text" name="nome" size="60" maxlength="120" class="nome form-control name-input" tabindex="1" />
+            </div>
+            <div class="column-form medium-input">
+                <label for="sexo">(*) Sexo</label>
+                <select id="sexo" name="sexo" class="sexo form-control medium-input" data-placeholder="Selecione" tabindex="2">
+                    <option value="-1" selected="selected" disabled="disabled">Selecione</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Feminino">Feminino</option>
+                </select>
+            </div>
+            <div class="column-form">
+                <div class="data-nascimento">
+
+                    <label for="data_nascimento">(*) Data de Nascimento</label>
+
+
+                    <select id="data_nascimento_dia" name="data_nascimento_dia" class="data_nascimento form-control date-day-input" data-placeholder="Selecione" tabindex="3">
+                        <option value="-1" selected="selected" disabled="disabled">Dia</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                    </select>
+
+                    <select id="data_nascimento_mes" name="data_nascimento_mes" class="data_nascimento form-control date-month-input" data-placeholder="Selecione" tabindex="4">
+                        <option value="-1" selected="selected" disabled="disabled">Mês</option>
+                        <option value="1">Janeiro</option>
+                        <option value="2">Fevereiro</option>
+                        <option value="3">Março</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Maio</option>
+                        <option value="6">Junho</option>
+                        <option value="7">Julho</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Setembro</option>
+                        <option value="10">Outubro</option>
+                        <option value="11">Novembro</option>
+                        <option value="12">Dezembro</option>
+                    </select>
+
+                    <select id="data_nascimento_ano" name="data_nascimento_ano" class="data_nascimento form-control date-year-input" data-placeholder="Selecione" tabindex="5">
+
+                        <option value="-1" selected="selected" disabled="disabled">Ano</option>
+
+                        <option value="2017">2017</option><option value="2016">2016</option><option value="2015">2015</option><option value="2014">2014</option><option value="2013">2013</option><option value="2012">2012</option><option value="2011">2011</option><option value="2010">2010</option><option value="2009">2009</option><option value="2008">2008</option><option value="2007">2007</option><option value="2006">2006</option><option value="2005">2005</option><option value="2004">2004</option><option value="2003">2003</option><option value="2002">2002</option><option value="2001">2001</option><option value="2000">2000</option><option value="1999">1999</option><option value="1998">1998</option><option value="1997">1997</option><option value="1996">1996</option><option value="1995">1995</option><option value="1994">1994</option><option value="1993">1993</option><option value="1992">1992</option><option value="1991">1991</option><option value="1990">1990</option><option value="1989">1989</option><option value="1988">1988</option><option value="1987">1987</option><option value="1986">1986</option><option value="1985">1985</option><option value="1984">1984</option><option value="1983">1983</option><option value="1982">1982</option><option value="1981">1981</option><option value="1980">1980</option><option value="1979">1979</option><option value="1978">1978</option><option value="1977">1977</option><option value="1976">1976</option><option value="1975">1975</option><option value="1974">1974</option><option value="1973">1973</option><option value="1972">1972</option><option value="1971">1971</option><option value="1970" selected="selected">1970</option><option value="1969">1969</option><option value="1968">1968</option><option value="1967">1967</option><option value="1966">1966</option><option value="1965">1965</option><option value="1964">1964</option><option value="1963">1963</option><option value="1962">1962</option><option value="1961">1961</option><option value="1960">1960</option><option value="1959">1959</option><option value="1958">1958</option><option value="1957">1957</option><option value="1956">1956</option><option value="1955">1955</option><option value="1954">1954</option><option value="1953">1953</option><option value="1952">1952</option><option value="1951">1951</option><option value="1950">1950</option><option value="1949">1949</option><option value="1948">1948</option><option value="1947">1947</option><option value="1946">1946</option><option value="1945">1945</option><option value="1944">1944</option><option value="1943">1943</option><option value="1942">1942</option><option value="1941">1941</option><option value="1940">1940</option><option value="1939">1939</option><option value="1938">1938</option><option value="1937">1937</option><option value="1936">1936</option><option value="1935">1935</option><option value="1934">1934</option><option value="1933">1933</option><option value="1932">1932</option><option value="1931">1931</option><option value="1930">1930</option><option value="1929">1929</option><option value="1928">1928</option><option value="1927">1927</option><option value="1926">1926</option><option value="1925">1925</option><option value="1924">1924</option><option value="1923">1923</option><option value="1922">1922</option><option value="1921">1921</option><option value="1920">1920</option><option value="1919">1919</option><option value="1918">1918</option><option value="1917">1917</option><option value="1916">1916</option><option value="1915">1915</option><option value="1914">1914</option><option value="1913">1913</option><option value="1912">1912</option><option value="1911">1911</option><option value="1910">1910</option><option value="1909">1909</option><option value="1908">1908</option><option value="1907">1907</option><option value="1906">1906</option><option value="1905">1905</option><option value="1904">1904</option><option value="1903">1903</option><option value="1902">1902</option><option value="1901">1901</option><option value="1900">1900</option>                    </select>
+
+                </div>
+            </div>                                     
+        </div>
+
+        <div class="row-form" >
+
+            <div class="column-form medium-input">
+                <label for="telefone">Telefone</label>
+                <input type="text" name="telefone" size="60" maxlength="120" class="telefone-fixo form-control medium-input" tabindex="6" />
+            </div>
+
+            <div class="column-form medium-input">
+                <label for="celular">(*)&nbsp;Celular</label>
+                <input type="text" name="celular" size="60" maxlength="120" class="telefone-celular form-control medium-input" tabindex="7" />
+            </div>
+            <div class="column-form email-input">
+                <label for="email">(*) E-mail</label>
+                <input type="text" name="email" size="60" maxlength="120" class="email form-control email-input" tabindex="8" />
+            </div>
+        </div>
+
+        <label for="documento">(*) Documento:</label>
+        <div class="row-form" id="documentos-row">
+            <div class="column-form" style="width:300px;">
+                <label for="tipo_agendamento" style="width:16%;"><input type="radio" name="documentos" tabindex="9" value="rg" />
+                    RG</label>
+
+                <label for="tipo_agendamento" style="width:18%;" >
+                    <input type="radio" name="documentos" value="cpf" tabindex="10" />CPF</label>
+                <label for="tipo_agendamento" style="width:19%;"><input type="radio" name="documentos" value="cnh" tabindex="11" />CNH</label>
+                <label for="tipo_agendamento" style="width:32%;"><input type="radio" name="documentos" value="passaporte" tabindex="12" />Passaporte</label>
+                <br/>
+
+
+                <input type="text" name="documento-valor" class="big-input" tabindex="13" /><br/>
+                <small>Digite o número do documento</small>
+            </div>
+            <div class="column-form">
+                <label for="anexo">Anexar documento</label>
+                <div class="hidefile-doc"><p></p></div>
+                <input type="file" name="anexo-doc" class="anexo input-file left" tabindex="14" />
+                <button type="button" class="btn btn-primary attachmentbtn">Anexar</button><br/>
+                <small style="margin-top:8px;">(tipos de arquivos: ".jpg", "png" ou ".gif" apenas e com, no máximo, 2 Megabytes)</small>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>02 - (*) Tipo de plano</legend>
+        <div class="row-form">
+            <div class="column-form">
+                <label for="tipo_agendamento"><input type="radio" name="tipo_agendamento" value="convenio_medico" tabindex="15" />Convênio Médico</label>
+                <label for="tipo_agendamento"><input type="radio" name="tipo_agendamento" value="particular" tabindex="16" />Particular</label>
+            </div>
+        </div>
+
+        <div class="row-form tipoplano">
+            <div class="column-form">
+                <label for="assistencia">(*) Nome do Convênio</label>
+                <input id="assistencia" type="text" name="assistencia" class="assistencia form-control big-input" size="60" maxlength="120" tabindex="17" />
+            </div>
+            <div class="column-form">
+                <label for="plano">(*) Plano</label>
+                <input id="plano" type="text" name="plano" class="plano form-control big-input hidefile-size" size="60" maxlength="120" tabindex="18" />
+            </div>
+        </div>
+
+        <div class="row-form tipoplano">
+            <div class="column-form">
+                <label for="assistencia">Numero da Carteirinha</label>
+                <input id="assistencia" type="text" name="assistencia-numb" class="assistencia form-control big-input" size="60" maxlength="120" tabindex="19" />
+            </div>
+            <div class="column-form">
+                <label for="anexo">Anexar cópia da carteirinha</label>
+                <div class="hidefile-doc"><p></p></div>
+                <input type="file" name="anexo-cart" class="anexo input-file left" tabindex="20" />
+                <button type="button" class="btn btn-primary attachmentbtn" tabindex="21">Anexar</button>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>03 - Período Preferencial / Unidade Preferencial</legend>
+        <div class="row-form">
+            <div class="column-form">
+                <select id="retorno" name="retorno" tabindex="22" class="exames form-control big-input" >
+                    <option value="" selected="selected" disabled="disabled">Selecione</option>
+                    <option value="indiferente">Indiferente</option>
+                    <option value="Manhã">Manhã</option>
+                    <option value="Tarde">Tarde</option>
+                    <option value="Noite">Noite</option>
+                </select>
+            </div>
+            <div class="column-form">
+                <select id="unidaderencia" name="unidaderencia" tabindex="22" class="exames form-control big-input hidefile-size" >
+                    <option value="" selected="selected" disabled="disabled">Selecione</option>
+                                                                        <option>Alphaville</option>
+                                                    <option>Alto de Pinheiros</option>
+                                                    <option>Alto de Santana</option>
+                                                    <option>Augusta</option>
+                                                    <option>Braz Leme</option>
+                                                    <option>Brooklin</option>
+                                                    <option>Cerqueira Cesar/Peixoto Gomide</option>
+                                                    <option>Chácara Flora</option>
+                                                    <option>Granja Viana</option>
+                                                    <option>Grupo Atende</option>
+                                                    <option>Guarulhos</option>
+                                                    <option>Hospital Santa Paula</option>
+                                                    <option>Itaim Bibi</option>
+                                                    <option>Lapa</option>
+                                                    <option>MegaUnidade Jardim Sul</option>
+                                                    <option>MegaUnidade Luiz Dumont Villares</option>
+                                                    <option>MegaUnidade Ricardo Jafet</option>
+                                                    <option>MegaUnidade Sumaré</option>
+                                                    <option>MegaUnidade Tatuapé</option>
+                                                    <option>Mooca</option>
+                                                    <option>Osasco</option>
+                                                    <option>Santo André</option>
+                                                    <option>Santo André II</option>
+                                                    <option>Santos</option>
+                                                    <option>São Bernardo do Campo</option>
+                                                    <option>Shopping Eldorado</option>
+                                                    <option>Viaduto do Chá</option>
+                                                    <option>Vila Clementino/23 de Maio</option>
+                                                            </select>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset id='area4'>
+        <legend>04 - Identificação dos Exames</legend>
+        <div class="row-form">
+            <div class="column-form">
+                <label for="tipo_exames"><input type="radio" name="tipo_exames" value="digitar_exames" tabindex="" />(*) Digitar os nomes dos meus exames</label>
+                <label for="tipo_exames"><input type="radio" name="tipo_exames" value="anexar_exames" tabindex="" />Anexar meus exames</label>
+            </div>
+        </div>
+        <div class="row-form">
+            <div class="column-form">
+                <label for="exames">Nome do Exame</label>
+                <textarea name="exames" id="exames" value="" class="exames form-control extra-big-input" tabindex="23"></textarea>
+            </div>
+            <div class="column-form">
+                <label for="anexo">(*) Anexar pedido médico</label>
+                <div class="hidefile"><p></p></div>
+                <input type="file" name="anexo" class="anexo input-file left" tabindex="24" />
+            </div>
+            <div class="column-form">
+                <label>&nbsp;</label>
+                <button type="button" class="btn btn-primary attachmentbtn">Anexar</button>
+            </div>
+        </div>
+
+        <div id="new-file-wrapper" class="row-form"></div>
+
+        <div class="row-form">
+            <div class="column-form big-column">
+                <input  type="hidden" name="MAX_FILE_SIZE" value="2097152" id="MAX_FILE_SIZE">
+            </div>
+        </div>
+        <div class="column-form text-right">
+            <button type="button" class="btn btn-primary margin-btn lessattachmentbtn">Remover arquivo</button>
+            <button type="button" class="btn btn-primary moreattachmentbtn">Anexar novo arquivo</button>
+        </div>
+        <div class="row-form" id="mensagem-tamanho-arquivo">
+            <div class="column-form big-column">
+            </div>
+            <div class="column-form big-column text-right">
+                <small style="margin-left: -110px;"><br />* Atenção: É permitido o envio de até 5 arquivos.<br />* Tipos de arquivos: ".jpg", "png" ou ".gif" apenas e com, no máximo, 2 Megabytes. </small>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>05 - Necessidades especiais</legend>
+        <div class="row-form">
+            <div class="column-form">
+                <p>Você possui alguma necessidade especial?</p>
+                <label for="necessidade" class="first"><input type="radio" name="necessidade" value="Sim" tabindex="25" />Sim</label>
+                <label for="necessidade"><input type="radio" name="necessidade" value="Não" tabindex="26" />Não</label>
+            </div>
+        </div>
+        <div id="qualnecessidade-wrapper" class="row-form">
+            <label>(*) Por gentileza, nos informe
+                <input type="text" name="qualnecessidade" id="qualnecessidade" value="" class="form-control" tabindex="27"/></label>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>06 - Suas observações</legend>
+        <div class="row-form">
+            <div class="column-form">
+                <textarea name="observacoes" class="" style="width: 674px;" tabindex="28"></textarea>
+            </div>
+        </div>
+    </fieldset>
+    <div style="float: right;">
+        <div class="g-recaptcha" data-sitekey="6LeD-SMTAAAAAP_mhncfRGpjWYq6IRSO-wrNYFgP"></div>
+    </div>
+    <div id="captcha-error" class="clear" style="text-align:right;"></div>
+    <div class="clear" style="text-align:right;"><br /><br /><p>Digite as letras e número acima, para validar o preenchimento do formulário, <br/>e em seguida clique em "Concluir pré-agendamento".</p></div>
+
+    <input type="submit" value="Concluir pré-agendamento" tabindex="29" class="btn btn-primary right"/>
+    <input type="hidden" name="pre_agendamento_token_id" id="pre_agendamento_token_id" value="" />
+</form>                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>        </div>
+        <footer>
+            <div class="footer-content">
+                <ul>
+                    <li>
+                        <h3>Clientes</h3>
+                    </li>
+                    <li>
+                        <a href="/paginas/clientes/atendimento-domiciliar">Atendimento Domiciliar</a>
+                    </li>
+                    <li>
+                        <a href="http://blog.delboniauriemo.com.br" target="_blank">Blog</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/clientes/club-da">Club DA</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/clientes/clube-nove-meses">Clube 9 meses</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/clientes/convenios-delboni-auriemo">Convênios</a>
+                    </li>
+                    <li>
+                        <a href="/medicos/corpo-clinico">Corpo Clínico</a>
+                    </li>
+                    <li>
+                        <a href="/exame/menu-de-exames">Exames</a>
+                    </li>
+                    <li>
+                        <a href="/fale-conosco">Fale Conosco</a>
+                    </li>
+                    <li>
+                        <a href="/unidades/localizar-unidade">Localize uma unidade</a>
+                    </li>
+                    <li>
+                        <a href="/login-social">Login social</a>
+                    </li>
+                    <li>
+                        <a href="/nota-fiscal">Notas fiscais</a>
+                    </li>
+                    <li>
+                        <a href="/pre-agendamento">Pré-agendamento</a>
+                    </li> 
+                    <li>
+                        <a href="/paginas/clientes/resultados-de-exames">Resultados dos exames</a>
+                    </li>
+                    <li>
+                        <a href="/revista/revista-do-paciente">Revista Delboni</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/clientes/testes-rapidos-delboni">Testes rápidos</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/clientes/unidade-da-mulher">Unidade da mulher</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/clientes/vacinas-delboni">Vacinas</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/clientes/tabela-particular-delboni">Tabela Particular</a>
+                    </li>
+
+                </ul>
+
+                <ul>
+                    <li>
+                        <h3>Médicos</h3>
+                    </li>
+                    <li>
+                        <a href="/paginas/medicos/atendimento-a-clinicas">Atendimento à Clínicas</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/medicos/conteudo-medico">Conteúdo Médico</a>
+                    </li>
+                    <li>
+                        <a href="/medicos/corpo-clinico">Corpo Clínico</a>
+                    </li>
+                    <li>
+                        <a href="/medicos/eventos">Eventos</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/medicos/exames-geneticos">Exames Genéticos</a>
+                    </li>
+                    <li>
+                        <a href="/fale-conosco">Fale Conosco</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/medicos/inovacao-delboni">Inovação</a>
+                    </li>
+                    <li>
+                        <a href="/medicos/cadastro-nucleo-de-assessoria-medica">Núcleo de Assessoria Médica</a>
+                    </li>
+                    <li>
+                        <a href="/medicos/resultados-de-exames">Resultados de exames</a>
+                    </li>
+                    <li>
+                        <a href="/revista/inovar">Revista Inovar Saúde</a>
+                    </li>
+                </ul>
+
+                <ul>
+                    <li>
+                        <h3>Empresas</h3>
+                    </li>
+                    <li>
+                        <a href="/paginas/empresas/servico-atendimento-a-hospitais">Atendimento a Hospitais</a>
+                    </li>
+                    <li>
+                        <a href="/contato/fale-conosco-empresa">Contato Empresas</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/empresas/medicina-ocupacional">Medicina Ocupacional</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/empresas/pesquisa-clinica-da">Pesquisa Clínica</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/empresas/saude-in-company">Saúde in Company</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/empresas/servico-vacinas">Vacinas</a>
+                    </li>
+                </ul>
+
+                <ul>
+                    <li>
+                        <h3>Institucional</h3>
+                    </li>
+                    <li>
+                        <a href="/paginas/institucional/conheca-o-delboni">Conheça o Delboni</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/institucional/grupo-dasa">Grupo DASA</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/institucional/imprensa-delboni">Imprensa</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/institucional/politica-de-qualidade">Qualidade</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/institucional/sonho-valores">Sonho e Valores</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/institucional/sustentabilidade-delboni">Sustentabilidade</a>
+                    </li>
+                    <li>
+                        <a href="/paginas/institucional/trabalhe-conosco">Trabalhe Conosco</a>
+                    </li>
+
+                </ul>
+
+                <div class="clear"></div>
+
+                <div class="barra-footer">
+                    <form action="/buscar" method="get" class="form-inline search">
+                        <div class="input-append">
+                            <input class="input-medium" type="text" placeholder="O que você procura?" name="q">
+                            <button type="submit" name="buscar" class="btn"><i class="icon-search"></i></button>
+                        </div>
+                    </form>
+                    <ul class="rede-social">
+                        <li>
+                            <a href="https://www.facebook.com/laboratoriodelboniauriemo" class="facebook" target="_blank">Facebook</a>
+                        </li>
+                        <li>
+                            <a href="https://twitter.com/delboniauriemo" class="twitter" target="_blank">Twitter</a>
+                        </li>
+                        <li>
+                            <a href="http://blog.delboniauriemo.com.br/" class="blogger" target="_blank">Blog</a>
+                        </li>
+                    </ul>
+
+                    <ul class="menu-footer">
+                        <!--                        <li>
+                                                    <a href="#">
+                                                        Mapa do site
+                                                    </a>
+                                                </li>-->
+                        <li>
+                            <a href="/paginas/institucional/politica-de-privacidade-delboni">
+                                Política de Privacidade
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/fale-conosco">
+                                Fale Conosco
+                            </a>
+                        </li>
+                    </ul>
+
+                    <p class="direitos">
+                        &copy; 2013 Delboni Medicina Diagnóstica. Todos os direitos reservados.
+                    </p>
+                </div>
+            </div>
+        </footer>
+		
+        
+<div class="hide">
+	<div id="div_captura_email" class="topoCapturaEmail topoEnq text_align_left">
+		<h1 class="titulo site_color pda10">Fique Atualizado</h1>
+		<form action="" method="post" id="form_captura_email" class="pdr10 pdl10 pdt10">
+			<p>Gostaria de receber informações e novidades sobre o <b>Delboni Auriemo</b>?</p>
+			<p class="captura_email_bloco_sim"><input type="checkbox" id="captura_email_sim" name="captura_email_sim" class="captura_email_select" /><span> Autorizo o recebimento de informações via e-mail.</span></p>
+			<p class="captura_email_bloco_nao"><input type="checkbox" id="captura_email_nao" name="captura_email_nao" class="captura_email_select" /><span> Não tenho interesse em receber informações via e-mail.</span></p>
+			<div class="div_email_captura_email hide">
+				<label for="captura_email_nome" class="site_color captura_email_label">*Nome: </label>
+				<input type="text" id="captura_email_nome" class="input_nome" maxlength="120" />
+				<br />
+				<label for="captura_email_email" class="site_color captura_email_label">*E-mail: </label>
+				<input type="text" id="captura_email_email" class="input_email" maxlength="120" />
+				<br />
+				<label class="site_color captura_email_label" for="captura_email_sexo">*Sexo:</label>
+				<span><input type="radio" name="captura_email_sexo" value="M" /> Masculino</span>&nbsp;&nbsp;
+				<span><input type="radio" name="captura_email_sexo" value="F" /> Feminino</span>
+				<br /><br />
+				<label for="captura_email_celular" class="site_color captura_email_label">Celular:  </label>
+				<input type="text" id="captura_email_celular" class="input_cel mask_fone" maxlength="10" />
+				<br />
+				<span class="fs070 aviso_nono_digito hide"><b>Atenção: O nono digito (9) será adicionado automaticamente nos celulares de SP.</b></span>
+                                <br /><br />
+                                <input type="button" class="btn btn-primary captura_email_label_enviar" id="captura_email_enviar" value="Enviar" />
+				<div class="captura_email_erros float_left pdl20"></div>
+				<div class="aguarde_enviando_form hide pdt8">
+					<img src="/img/wait-a.gif" title="Enviando" alt="Enviando" class="float_left pdr8" />
+					<div>Aguarde. Estamos redirecionando para a página de <br />Resultados de Exames.</div>
+				</div>
+			</div>
+			<br />
+                        <input type="button" class="btn btn-primary captura_email_label_fechar" value="Fechar" id="captura_email_fechar" />
+		</form>
+	</div>
+</div>
+        <script type="text/javascript" src="/js/vendor/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="/js/vendor/jquery-migrate-1.1.1.min.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery-ui/js/jquery-ui-1.9.2.custom.min.js"></script>
+<script type="text/javascript" src="/js/vendor/datepicker-pt-BR.js"></script>
+<script type="text/javascript" src="/js/vendor/modernizr.custom.js"></script>
+<script type="text/javascript" src="/js/vendor/js-webshim/minified/polyfiller.js"></script>
+<script type="text/javascript" src="/temas/da/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.tools.min.js"></script>
+<script type="text/javascript" src="/js/jquery/colorbox/jquery.colorbox-min.js"></script>
+<script type="text/javascript" src="/js/angular/angular/angular.min.js"></script>
+<script type="text/javascript" src="/js/angular/angular-cookies/angular-cookies.min.js"></script>
+<script type="text/javascript" src="/js/angular/angular-route/angular-route.min.js"></script>
+<script type="text/javascript" src="/js/angular/angular-resource/angular-resource.min.js"></script>
+<script type="text/javascript" src="/js/angular/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js"></script>
+<script type="text/javascript" src="/js/angular/angular-i18n/angular-locale_pt-br.min.js"></script>
+<script type="text/javascript" src="/js/angular/angulartics/dist/angulartics.min.js"></script>
+<script type="text/javascript" src="/js/angular/angulartics-google-analytics/dist/angulartics-google-analytics.min.js"></script>
+<script type="text/javascript" src="/temas/da/js/socialid-1444930603584.js"></script>
+<script type="text/javascript" src="https://app.socialidnow.com/assets/api/socialid.js"></script>
+<script type="text/javascript" src="/temas/da/pre-agendamento/chosen.js"></script>
+<script type="text/javascript" src="/temas/da/pre-agendamento/jquery.mask.js"></script>
+<script type="text/javascript" src="/temas/da/pre-agendamento/assets/bootstrap.js"></script>
+<script type="text/javascript" src="/temas/da/pre-agendamento/formvalidation.js"></script>
+<script type="text/javascript" src="/temas/da/pre-agendamento/jquery.form.js"></script>
+<script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
+<script type="text/javascript" src="/temas/da/pre-agendamento/pre.js?v=11"></script>
+<script type="text/javascript" src="/js/jquery/jquery.makedinput/jquery.maskedinput.min.js"></script>
+<script type="text/javascript" src="/js/captura-email.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery.makedinput/mascaras.js"></script>
+        <script src="/temas/da/js/rules.js" type="text/javascript"></script> 
+
+        <script type="text/javascript">
+    //<!--
+                if(typeof $.mask == "undefined") {
+                var s = document.createElement('script');
+                s.type = 'text/javascript';
+                s.src = '/js/jquery/jquery.makedinput/jquery.maskedinput.min.js';
+                document.getElementsByTagName('head')[0].appendChild(s);
+            }    //-->
+</script>
+<script type="text/javascript">
+    //<!--
+                var enviarFormLaudos = false;
+            var formRetiradaLaudos = $("#envia-resultado-exame");
+            var imgModal = $("<div id='modalSislu' style='width:687px; height:630px'><button style='top:0' id='cboxClose' onClick='$.colorbox.close();'>close</button><div style='margin-top:28px;'></div><img style='width:686px; height:629px' src='/assets/floater/floater-sislu-3.png'></div>");
+
+            formRetiradaLaudos.find("button[name=enviar]").click(function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var form = $("#envia-resultado-exame");
+
+                $.colorbox({
+                    html: imgModal,
+                    onCleanup: function() {
+                        formRetiradaLaudos.submit();
+                    }
+                });
+                ga('send', 'event', 'Formularios', 'Consultar Laudo', 'Clientes');
+                
+                return false;
+            });
+            $(function() { 
+                $(window).scroll(function() { 
+                    if($(this).scrollTop() != 0) { 
+                        $('#toTop').fadeIn();   
+                    } else { 
+                        $('#toTop').fadeOut(); 
+                    } 
+                }); 
+                $('#toTop').click(function() { 
+                    $('body,html').animate({scrollTop:0},800); 
+                });
+            });    //-->
+</script>
+<script type="text/javascript">
+    //<!--
+    $.webshims.polyfill();    //-->
+</script>
+<script type="text/javascript">
+    //<!--
+    $(function(){ openCurriMedicos(); openRelacaoVacinas(); sizeText() });    //-->
+</script>        <div id="toTop" style="display: none;"></div>
+    </body>
+</html>

@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="pingback" href="https://blogs.msdn.microsoft.com/nickpinheiro/xmlrpc.php">
+		<!--[if lt IE 9]>
+	<script src="https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/themes/microsoft/js/html5.js"></script>
+	<![endif]-->
+	<title>Facebook Login with ASP.NET Web Forms &#8211; Nick Pinheiro</title>
+<link rel='dns-prefetch' href='//ajax.aspnetcdn.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Nick Pinheiro &raquo; Facebook Login with ASP.NET Web Forms Comments Feed" href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.msdn.microsoft.com\/nickpinheiro\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.7.5"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),!(j.toDataURL().length<3e3)&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,65039,8205,55356,57096),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,55356,57096),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55357,56425,55356,57341,8205,55357,56507),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55357,56425,55356,57341,55357,56507),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='wds-ratings-css'  href='https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/plugins/wds-ratings/wds-ratings.css?ver=20161014' type='text/css' media='all' />
+<link rel='stylesheet' id='microsoft-parent-style-css'  href='https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/themes/microsoft/style.css?ver=02092017' type='text/css' media='all' />
+<link rel='stylesheet' id='microsoft-child-style-css'  href='https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/themes/microsoft-msdn/style.css?ver=04152016' type='text/css' media='all' />
+<script type='text/javascript' src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.5/bootstrap.min.js'></script>
+<script type='text/javascript' src='https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/themes/microsoft/js/single.js?ver=02092017'></script>
+<link rel='https://api.w.org/' href='https://blogs.msdn.microsoft.com/nickpinheiro/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.msdn.microsoft.com/nickpinheiro/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.msdn.microsoft.com/nickpinheiro/wp-includes/wlwmanifest.xml" /> 
+
+<link rel="canonical" href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/" />
+<link rel='shortlink' href='https://blogs.msdn.microsoft.com/nickpinheiro/?p=63' />
+<link rel="alternate" type="application/json+oembed" href="https://blogs.msdn.microsoft.com/nickpinheiro/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fblogs.msdn.microsoft.com%2Fnickpinheiro%2F2015%2F02%2F28%2Ffacebook-login-with-asp-net-web-forms%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://blogs.msdn.microsoft.com/nickpinheiro/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fblogs.msdn.microsoft.com%2Fnickpinheiro%2F2015%2F02%2F28%2Ffacebook-login-with-asp-net-web-forms%2F&#038;format=xml" />
+	<script>
+		if(window.document.referrer.indexOf('login.live.com') !== -1) {
+			// redefine ga function to prevent referrer data collected by google analytics
+			window.ga = function(){};
+		}
+	</script>
+	<script type="text/javascript">
+jQuery( window ).load( function() {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('require', 'linkid');
+        ga('create', 'UA-65691138-1', 'auto');
+        ga('send', 'pageview');
+        ga('create', 'UA-84591325-1', 'auto', 'b');
+        ga('b.send', 'pageview');
+    } );
+</script>
+			<!-- Begin Custom CSS --><style type="text/css" id="wds-custom-css">
+						</style><!-- End Custom CSS -->
+			    <link rel="shortcut icon" href="https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/themes/microsoft-msdn/images/favicon-msdn.png">
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Facebook Login with ASP.NET Web Forms" />
+<meta property="og:url" content="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/" />
+<meta property="og:site_name" content="Nick Pinheiro" />
+<meta property="og:description" content="One of the core functions of any modern app is the ability to leverage Social Authentication (also known as Social Login).  Social login is a form of single sign-on using existing login information from an identity provider such as Facebook, Twitter, Google or Microsoft to sign into a third party website or app in lieu..." />
+<meta property="og:image" content="https://msdnshared.blob.core.windows.net/media/2015/02/nick-join.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Facebook Login with ASP.NET Web Forms" />
+<meta name="twitter:url" content="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/" />
+<meta name="twitter:description" content="One of the core functions of any modern app is the ability to leverage Social Authentication (also known as Social Login).  Social login is a form of single sign-on using existing login information from an identity provider such as Facebook, Twitter, Google or Microsoft to sign into a third party website or app in lieu..." />
+<meta name="twitter:image" content="https://msdnshared.blob.core.windows.net/media/2015/02/nick-join.png" />
+</head>
+
+<body class="post-template-default single single-post postid-63 single-format-standard">
+<div id="page" class="site container-fluid">
+
+	<header id="site-header" class="site-header row" role="banner">
+		<div id="site-header-global-wrapper" class="site-header-global-wrapper">
+			<div id="site-header-global" class="site-header-global">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#site-profile-menu" aria-label="toggle menu" tabindex="0" aria-expanded="false">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<div id="site-logo" class="col-sm-5 row navbar-header">
+					<div id="header-microsoft-logo">
+						<a id="home-link" href="https://www.microsoft.com/" tabindex="1" aria-label="Microsoft logo">
+							<img id="header-microsoft-logo-svg" src="https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/themes/microsoft/images/ms-logo-gray.svg" alt="Microsoft logo">
+							<span id="brand">
+								<span id="brand-separator">|</span>
+								<span id="brand-name"></span>
+							</span>
+						</a>
+					</div>
+				</div>
+				<div id="site-header-global-right" class="col-sm-7">
+					<div id="site-profile-menu" class="navbar-collapse collapse">
+						<div id="search-form-wrapper">
+														<form id="search-form" role="search" action="https://social.msdn.microsoft.com/search/en-US" home-url="https://blogs.msdn.microsoft.com/nickpinheiro" autocomplete="off">
+								<div class="input-group">
+																			<input name="rq" value="site:blogs.msdn.microsoft.com/nickpinheiro" type="hidden">
+										<input name="rn" value="nickpinheiro" type="hidden">
+																		<input type="hidden" name="ral" value="1">
+									<input type="text" class="form-control" placeholder="Search" name="query" id="srch-term" tabindex="0" aria-label="Search box with search options">
+									<div class="input-group-btn">
+										<button aria-label="Search" class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+									</div>
+								</div>
+							</form>
+							<div id="search-option">
+								<div class="search-filter" id="search-filter-site" tabindex="0" aria-label="Search MSDN">
+									<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+									<span class="search-text">Search MSDN</span>
+								</div>
+								<div class="search-filter" tabindex="0" aria-label="Search all blogs" id="search-filter-all-blogs">
+									<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+									<span class="search-text">Search all blogs</span>
+								</div>
+																	<div class="search-filter selected" tabindex="0" aria-label="Search this blog" id="search-filter-this-blog">
+										<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+										<span class="search-text">Search this blog</span>
+									</div>
+															</div>
+						</div>
+						<div id="me-control">
+															<a href="https://blogs.msdn.microsoft.com/wp-login.php?aadsso_action=login">Sign in</a>
+													</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+		<div id="site-header-blog-wrapper" class="site-header-blog-wrapper ms-blog-header clear-both">
+			<div id="site-header-blog" class="site-header-blog">
+				<nav class="navbar navbar-inverse">
+					<div id="blog-logo-area" class="navbar-header">
+						<div id="blog-logo" data-toggle="collapse" data-target="#blog-menu" tabindex="0" aria-label="blog logo">
+														<div id="blog-logo-text">
+				<h1 class="site-title ms-blog-title">
+					<a href="https://blogs.msdn.microsoft.com/nickpinheiro" class="for-desktop">
+						Nick Pinheiro					</a>
+					<a href="https://blogs.msdn.microsoft.com/nickpinheiro" class="for-mobile">
+						Nick Pinheiro					</a>
+				</h1>
+				<p class="site-description ms-blog-description">Microsoft Azure, Facebook Development, Office 365, SharePoint Online / 2016, ASP.net, .NET, Mobile Apps &amp; Social</p>
+			</div>
+									</div>
+					</div>
+									</nav>
+			</div>
+		</div>
+		<div id="site-header-image-wrapper" class="ms-blog-banner">
+			<div id="site-header-image">
+											</div>
+		</div>
+	</header>
+
+	<div id="site-content" class="site-content row">
+
+	<div id="primary" class="content-area col-sm-9">
+		<div id="single-content" class="div-content">
+
+			
+				
+<article id="post-63" class="post-63 post type-post status-publish format-standard hentry category-uncategorized tag-apps tag-asp-net tag-facebook tag-modern-apps tag-social">
+
+	<header class="entry-header single">
+		<h1 class="entry-title">Facebook Login with ASP.NET Web Forms</h1>		<div class="rating-wrap">
+		<div id="star-rating-63" class="wds-ratings" data-rating="4" data-userrating="0" data-postid="63" data-container="body" data-toggle="tooltip" title="4 user(s) rated">
+			<div class="wds-ratings-inner-wrap">
+				<div>
+					<div aria-label="Select 5 star, this article is 5 star rated" tabindex="0" class="wds-ratings-stars wds-ratings-stars-enable-editing" data-stars="5"><span aria-hidden="true" class="star-1"><span>&#x2605;</span></span><span aria-hidden="true" class="star-2"><span>&#x2605;</span></span><span aria-hidden="true" class="star-3"><span>&#x2605;</span></span><span aria-hidden="true" class="star-4"><span>&#x2605;</span></span><span aria-hidden="true" class="star-5"><span>&#x2605;</span></span></div><div aria-label="Select 4 star, this article is 5 star rated" tabindex="0" class="wds-ratings-stars wds-ratings-stars-enable-editing" data-stars="4"><span aria-hidden="true" class="star-1"><span>&#x2605;</span></span><span aria-hidden="true" class="star-2"><span>&#x2605;</span></span><span aria-hidden="true" class="star-3"><span>&#x2605;</span></span><span aria-hidden="true" class="star-4"><span>&#x2605;</span></span></div><div aria-label="Select 3 star, this article is 5 star rated" tabindex="0" class="wds-ratings-stars wds-ratings-stars-enable-editing" data-stars="3"><span aria-hidden="true" class="star-1"><span>&#x2605;</span></span><span aria-hidden="true" class="star-2"><span>&#x2605;</span></span><span aria-hidden="true" class="star-3"><span>&#x2605;</span></span></div><div aria-label="Select 2 star, this article is 5 star rated" tabindex="0" class="wds-ratings-stars wds-ratings-stars-enable-editing" data-stars="2"><span aria-hidden="true" class="star-1"><span>&#x2605;</span></span><span aria-hidden="true" class="star-2"><span>&#x2605;</span></span></div><div aria-label="Select 1 star, this article is 5 star rated" tabindex="0" class="wds-ratings-stars wds-ratings-stars-enable-editing" data-stars="1"><span aria-hidden="true" class="star-1"><span>&#x2605;</span></span></div>
+				</div>
+			</div>
+		</div>
+		</div>		<div class="clear-both"></div>
+		<div class="entry-meta">
+			<img alt='avatar of nickpinheirohotmail-com' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-22 photo' height='22' width='22' /><span class="byline"><span class="author vcard"><a class="url fn n profile-usercard-hover" data-profile-userid="e6d1a678dc29454f9081ea816a011206" href="https://social.msdn.microsoft.com/profile/Nick+Pinheiro">Nick Pinheiro</a></span></span><span class="posted-on posted-on-margin"><span class="screen-reader-text"></span><time class="entry-date published updated" datetime="2015-02-28T10:12:00+00:00">February 28, 2015</time></span><span class="comments-link"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comments">56</a></span>				<span class="social-icons-wrap">
+		<ul class="social-icons">
+			<li><div class="fb-share-button" data-href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/" data-layout="button_count" data-size="large" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/&amp;src=sdkpreparse">Share</a></div></li>
+			<div id="fb-root" style="display:none"></div>
+
+			<li class="social-icon twitter"><a data-social='{"type":"twitter", "url":"https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/", "text": "Facebook Login with ASP.NET Web Forms"}' href="#" id="post_tweet_count">0</a></li>
+			<li class="social-icon linkedin"><a data-social='{"type":"linkedin", "url":"https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/", "text": "Facebook Login with ASP.NET Web Forms"}' href="#" id="get_post_linkedin_count">0</a></li>
+		</ul>
+	</span><!-- .social-icons-wrap -->
+	<script type="text/javascript">
+		// Get social counts
+		jQuery( window ).load(function () {
+			jQuery.getScript('https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/themes/microsoft/js/social-counts.js?ver=02092017')
+				.done(function(script,textStatus) {
+					window.msdnsocial.ajax('https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/');
+				});
+		});
+	</script>
+		</div>
+		<hr>
+	</header><!-- .entry-header -->
+
+	<div class="entry-content single">
+		<p><a target="_blank" href="http://www.nick-pinheiro.com"><img width="855" height="100" class="alignnone size-full wp-image-123" alt="Join my mailing list!" src="https://msdnshared.blob.core.windows.net/media/2015/02/nick-join.png" /></a></p>
+<p>One of the core functions of any modern app is the ability to leverage Social Authentication (also known as Social Login).  <a target="_blank" href="http://en.wikipedia.org/wiki/Social_login">Social login</a> is a form of single sign-on using existing login information from an identity provider such as Facebook, Twitter, Google or Microsoft to sign into a third party website or app in lieu of creating a new login account specifically for that app.  The mechanism is designed to simplify logins for end users as well as provide more reliable demographic information to developers.</p>
+<p>Under the covers, Social login is actually powered by <a target="_blank" href="http://en.wikipedia.org/wiki/OAuth">OAuth</a>.  OAuth is an open standard for authorization.  OAuth provides client applications &#8216;secure delegated access’ to server resources on behalf of a resource owner. It specifies a process for resource owners to authorize third-party access to their server resources without sharing their credentials. Designed specifically to work with Hypertext Transfer Protocol (HTTP), OAuth essentially allows access tokens to be issued to third-party clients by an authorization server, with the approval of the resource owner, or end-user. The client then uses the access token to access the protected resources hosted by the resource server.  OAuth is commonly used as a way for web surfers to log into third party web sites using their Facebook, Twitter, Google or Microsoft accounts, without worrying about their access credentials being compromised.</p>
+<p>Years ago, when I first began working with Social Login and OAuth, I found the concept to be somewhat complicated and difficult to implement from scratch.  I attempted using third party libraries such as the <a target="_blank" href="http://facebooksdk.net/">Facebook SDK for .NET</a> however it did not assist me in truly understanding the underlying concept.  After much research on the topic I discovered the following graphic which I found to be quite helpful:</p>
+<p><a href="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/7701.facebook-login-1.png"><img alt="" src="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/7701.facebook-login-1.png" border="0" /></a></p>
+<p>The more I worked to understand it, the more I realized that it is simply just a series of calls to various endpoints (URIs) which in sequence gets me to the expected result.</p>
+<p>As I went about deciding which identity provider to use it was initially obvious that the one with the largest number of users would make the most sense.  If I’m building an app for the masses, then I want to make sure that I provide users with the easiest way for them to login to my app.  Therefore the obvious choice was Facebook which currently has approximately 1.3 billion active users.</p>
+<p>According to identity management platform <a target="_blank" href="http://blog.gigya.com/the-landscape-of-customer-identity-facebook-dominates-mobile/">Gigya</a>, for the first time since 2011, Facebook has surpassed the 60 percent mark and powered 61 percent of all social logins on Gigya’s network in the last quarter of 2014 (up from 58 percent in the previous quarter and up 10 percent from a year ago).</p>
+<p><a href="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/3704.facebook-login-2.png"><img width="300" alt="" src="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/3704.facebook-login-2.png" border="0" /></a></p>
+<p><a href="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/4130.facebook-login-3.png"><img alt="" src="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/4130.facebook-login-3.png" border="0" /></a></p>
+<p>This made the decision to implement Social Login with Facebook a no-brainer.  Once this decision was made I set out to find any code samples online that used ASP.net and even more specifically Web Forms.  I quickly discovered that a simple, straight forward example simply did not exist.  As of Visual Studio 2013 the option to create a new ASP.net Web Application project using ‘individual user accounts’ from social identity providers became available however, again, this did not lend to the level of control I was looking for.</p>
+<p>Without searching much further I took on the task of doing this myself and have now also created a sample project which you can download and incorporate into your app.</p>
+<p>The sample project does the following:</p>
+<ol>
+<li>Authenticates the user via Facebook</li>
+<li>Makes a requests to Facebook for the user’s public profile information</li>
+<li>Display the user’s information</li>
+</ol>
+<p>Before you use the following sample you must create a Facebook application. To do so navigate to <a target="_blank" href="https://developers.facebook.com/apps">https://developers.facebook.com/apps</a> and click the &#8216;+ Add a New App&#8217; button. Follow the steps to create an app and record your AppId and AppSecret.</p>
+<p>Once you have your AppId and AppSecret all you need to do is following:</p>
+<ol>
+<li>Download the project from GitHub</li>
+<li>Open the project in Visual Studio</li>
+<li>Open the Web.config and add your AppId and AppSecret in the &lt;appSettings&gt; section</li>
+<li>Run the project.</li>
+</ol>
+<p>This is the result you should get:</p>
+<p><a href="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/4263.facebook-login-4.png"><img alt="" src="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/4263.facebook-login-4.png" border="0" /></a></p>
+<p><a href="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/4606.facebook-login-4-1.png"><img alt="" src="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/4606.facebook-login-4-1.png" border="0" /></a></p>
+<p><a href="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/6874.facebook-login-5.png"><img alt="" src="https://msdnshared.blob.core.windows.net/media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/51/59/6874.facebook-login-5.png" border="0" /></a></p>
+<p>The following is the core logic:</p>
+<script src="https://gist.github.com/nickpinheiro/dd1e55fe46b25afa9d70.js" type="text/javascript"></script>
+<p>And there you have it.  Please let me know in the comments if you have any issue with concept or with the sample project… would be happy to help.</p>
+<p>In upcoming blog posts I will discuss how to:</p>
+<ul>
+<li>Request additional information from facebook that requires user permissions such as ‘email address’ and ‘location’.</li>
+<li>Submit posts back to facebook on behalf of the user</li>
+</ul>
+<p>Download the full source code on GitHub:<br />
+<a target="_blank" href="https://github.com/nickpinheiro/FacebookLoginASPnetWebForms">https://github.com/nickpinheiro/FacebookLoginASPnetWebForms</a></p>
+<p>Additional Resources:</p>
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Social_login">http://en.wikipedia.org/wiki/Social_login</a></li>
+<li><a target="_blank" href="http://en.wikipedia.org/wiki/OAuth">http://en.wikipedia.org/wiki/OAuth</a></li>
+<li><a target="_blank" href="http://www.facebooksdk.net">http://www.facebooksdk.net</a></li>
+<li><a target="_blank" href="http://www.asp.net/visual-studio/overview/2013/creating-web-projects-in-visual-studio#auth">http://www.asp.net/visual-studio/overview/2013/creating-web-projects-in-visual-studio#auth</a></li>
+<li><a target="_blank" href="http://blog.gigya.com/the-landscape-of-customer-identity-facebook-dominates-mobile/">http://blog.gigya.com/the-landscape-of-customer-identity-facebook-dominates-mobile/</a></li>
+</ul>
+<p>Other posts in the Facebook Development series:</p>
+<ul>
+<li><a target="_blank" href="https://blogs.msdn.microsoft.com/nickpinheiro/2017/02/25/7-steps-to-getting-started-with-facebook-app-development/">7 Steps to Getting Started with Facebook App Development</a></li>
+<li><a target="_blank" href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/07/07/get-users-email-address-from-facebook-with-asp-net-web-forms/">Get User’s Email Address from Facebook with ASP.NET Web Forms</a></li>
+<li><a target="_blank" href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/10/28/publish-to-facebook-with-asp-net-web-forms/">Publish to Facebook with ASP.NET Web Forms</a></li>
+<li><a target="_blank" href="https://blogs.msdn.microsoft.com/nickpinheiro/2016/02/29/automate-posts-to-facebook-fan-page-with-net-and-microsoft-azure/">Automate Posts to Facebook Fan Page with .NET and Microsoft Azure</a></li>
+</ul>
+<p>Don’t miss a thing…</p>
+<ul>
+<li><a target="_blank" href="http://blogs.msdn.com/b/nickpinheiro/rss.aspx">Subscribe to my blog</a></li>
+<li><a target="_blank" href="https://www.twitter.com/nickpinheir">Follow me on Twitter </a>for daily posts related to Modern Apps, Microsoft Azure &amp; Entrepreneurship</li>
+<li><a target="_blank" href="https://www.linkedin.com/in/nickpinheiro">Connect with me on LinkedIn</a></li>
+<li><a href="http://blogs.msdn.com/b/nickpinheiro/archive/2012/09/06/about-nick-pinheiro.aspx">About Me</a></li>
+</ul>
+<p><a target="_blank" href="http://www.nick-pinheiro.com"><img width="855" height="100" class="alignnone size-full wp-image-123" alt="Join my mailing list!" src="https://msdnshared.blob.core.windows.net/media/2015/02/nick-join.png" /></a></p>
+	</div><!-- .entry-content -->
+
+
+	<footer class="entry-footer single">
+					<div class="tags">
+				<span>Tags </span>
+				<span>
+					<a href="https://blogs.msdn.microsoft.com/nickpinheiro/tag/apps/" rel="tag">Apps</a> <a href="https://blogs.msdn.microsoft.com/nickpinheiro/tag/asp-net/" rel="tag">ASP.net</a> <a href="https://blogs.msdn.microsoft.com/nickpinheiro/tag/facebook/" rel="tag">Facebook</a> <a href="https://blogs.msdn.microsoft.com/nickpinheiro/tag/modern-apps/" rel="tag">Modern Apps</a> <a href="https://blogs.msdn.microsoft.com/nickpinheiro/tag/social/" rel="tag">Social</a>				</span>
+			</div>
+				<hr>
+	</footer><!-- .entry-footer -->
+
+</article><!-- #post-## -->
+
+			
+		</div><!-- #single-content -->
+
+		
+<div id="comments" class="comments-area">
+	<div class="comments-title">
+		Comments (56)	</div>
+
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title"> <small><a rel="nofollow" id="cancel-comment-reply-link" href="/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#respond" style="display:none;">Cancel reply</a></small></h3>			<form action="https://blogs.msdn.microsoft.com/nickpinheiro/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+				<p class="comment-form-comment"><textarea id="comment" name="comment" cols="45" rows="4" aria-required="true"></textarea></p><p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" aria-required='true' required='required' /></p>
+<p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input id="email" name="email" type="text" value="" size="30" maxlength="100" aria-describedby="email-notes" aria-required='true' required='required' /></p>
+<p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url" type="text" value="" size="30" maxlength="200" /></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit btn btn-default" value="Post Comment" /> <input type='hidden' name='comment_post_ID' value='63' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="760817d73c" /></p><p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="192"/></p>			</form>
+			</div><!-- #respond -->
+	
+			<div class="navigation pagination clear-both">
+					</div>
+
+		<ol class="comment-list">
+					<li class="comment even thread-even depth-1" id="comment-33">
+				<div id="div-comment-33" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">drilldriversq.com</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-33">
+			April 1, 2015 at 8:38 pm</a>		</div>
+
+		<p>Thank you very much</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=33#respond' onclick='return addComment.moveForm( "div-comment-33", "33", "respond", "63" )' aria-label='Reply to drilldriversq.com'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-43">
+				<div id="div-comment-43" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">developerchick</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-43">
+			April 9, 2015 at 11:53 am</a>		</div>
+
+		<p>Thank you very much, this worked for me. &nbsp;I was wondering though, how do you go about logging someone out?</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=43#respond' onclick='return addComment.moveForm( "div-comment-43", "43", "respond", "63" )' aria-label='Reply to developerchick'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-53">
+				<div id="div-comment-53" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Nick Pinheiro</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-53">
+			April 9, 2015 at 12:12 pm</a>		</div>
+
+		<p>@developerchick &#8211; Glad it worked for you 🙂 &nbsp;In terms of logging out&#8230; are you referring to logging the user out of your application or Facebook?</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=53#respond' onclick='return addComment.moveForm( "div-comment-53", "53", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-63">
+				<div id="div-comment-63" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">developerchick</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-63">
+			April 9, 2015 at 12:20 pm</a>		</div>
+
+		<p>@Nick &#8211; I have the code setup already for logging the user out of my application already so it would just be facebook. &nbsp;I didn&#39;t know if you could do a Response.Redirect and then change the attributes to something that indicates the state is now logged out? &nbsp;I am not sure how it works.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=63#respond' onclick='return addComment.moveForm( "div-comment-63", "63", "respond", "63" )' aria-label='Reply to developerchick'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-73">
+				<div id="div-comment-73" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Nick Pinheiro</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-73">
+			April 9, 2015 at 12:29 pm</a>		</div>
+
+		<p>@developerchick &#8211; Ok, then all you would need to do is use the Facebook JavaScript SDK &#39;Logout&#39; function: <a rel="nofollow" target="_new" href="https://developers.facebook.com/docs/facebook-login/login-flow-for-web/v2.3#logout">developers.facebook.com/&#8230;/v2.3</a> &nbsp;Let me know if you need any assistance implementing this.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=73#respond' onclick='return addComment.moveForm( "div-comment-73", "73", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-83">
+				<div id="div-comment-83" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">developerchick</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-83">
+			April 9, 2015 at 12:39 pm</a>		</div>
+
+		<p>@Nick &#8211; yeah I am not sure how to implement that exactly after utilizing your code above. &nbsp;I would think there was some sort of way to continue with what you were doing with using Response.Redirect to send attributes. &nbsp;I am new to facebook integration and your solution what the ONLY one that made sense to me AND worked. &nbsp;Thank you again for that. &nbsp;</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=83#respond' onclick='return addComment.moveForm( "div-comment-83", "83", "respond", "63" )' aria-label='Reply to developerchick'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-93">
+				<div id="div-comment-93" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Nick Pinheiro</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-93">
+			April 9, 2015 at 1:05 pm</a>		</div>
+
+		<p>@developerchick &#8211; Ok, I actually think adding logout functionality to this solution would be a nice addition. &nbsp;Give me a day or two and I will add it in. &nbsp;I will notify you here once included.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=93#respond' onclick='return addComment.moveForm( "div-comment-93", "93", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-103">
+				<div id="div-comment-103" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">developerchick</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-103">
+			April 9, 2015 at 1:12 pm</a>		</div>
+
+		<p>@Nick &#8211; thanks, I appreciate it. Also, I had one other question. &nbsp;For every page I have in my application, do I need to link to each page using that Response.Redirect with the facebook path and credentials?</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=103#respond' onclick='return addComment.moveForm( "div-comment-103", "103", "respond", "63" )' aria-label='Reply to developerchick'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-113">
+				<div id="div-comment-113" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Nick Pinheiro</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-113">
+			April 9, 2015 at 1:22 pm</a>		</div>
+
+		<p>@developerchick &#8211; No, the idea is that you only link to that once when the user initially logs in. &nbsp;Once they&#39;ve logged in and you have their user information from Facebook, you should store their information in your application database. &nbsp;You would then reference your database for their user information from subsequent pages in your application. &nbsp;The second time they login (and all additional times) you can simply update your database with their latest user information from Facebook.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=113#respond' onclick='return addComment.moveForm( "div-comment-113", "113", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-123">
+				<div id="div-comment-123" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">developerchick</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-123">
+			April 9, 2015 at 1:33 pm</a>		</div>
+
+		<p>@Nick &#8211; Okay, that is what I thought. &nbsp;I was just wondering because now I see my code for my share button on my main landing page (which comes after the user is logged in) isn&#39;t working and facebook states &quot;there&#39;s an error in the application&quot;. &nbsp;It is strange though as I haven&#39;t touched this page and it worked before I implemented the login code. &nbsp;I am wondering, to get my share button working (which it is a dynamic share button as there are multiple share buttons on this landing page depending upon how many user posts are on the page) I have the text and attributes being displayed using jQuery and my function to connect to facebook with my appid, etc&#8230; is in my master page. &nbsp;Is it possible that having your connection code redirecting the user to the landing page AND having another facebook connection within the master page is causing a conflict?</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=123#respond' onclick='return addComment.moveForm( "div-comment-123", "123", "respond", "63" )' aria-label='Reply to developerchick'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-133">
+				<div id="div-comment-133" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">developerchick</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-133">
+			April 9, 2015 at 2:11 pm</a>		</div>
+
+		<p>@Nick &#8211; forget it, found some old code I had forgotten to un-comment. &nbsp;My fault! 🙂 &nbsp;Let me know about the logout. &nbsp;Thanks again!</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=133#respond' onclick='return addComment.moveForm( "div-comment-133", "133", "respond", "63" )' aria-label='Reply to developerchick'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-134">
+				<div id="div-comment-134" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Tu</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-134">
+			May 5, 2015 at 3:57 am</a>		</div>
+
+		<p>I got this error: </p>
+<p>&quot;Given URL is not allowed by the Application configuration: One or more of the given URLs is not allowed by the App&#39;s settings. It must match the Website URL or Canvas URL, or the domain must be a subdomain of one of the App&#39;s domains.&quot;</p>
+<p>Please help me to fix it.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=134#respond' onclick='return addComment.moveForm( "div-comment-134", "134", "respond", "63" )' aria-label='Reply to Tu'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-144">
+				<div id="div-comment-144" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Nick Pinheiro</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-144">
+			May 5, 2015 at 7:54 am</a>		</div>
+
+		<p>@Tu &#8211; Simply go to &#39;developers.facebook.com&#39;, navigate to your appropriate app under &#39;My Apps&#39; and on the left hand navigation click on &#39;Settings&#39;. &nbsp;In the center of the page click on &#39;Add Platform&#39;, select &#39;Website&#39; from the popup dialog. &nbsp;In the new &#39;Website&#39; section, in the &#39;Site Url&#39; field enter &#39;<a href="http://localhost/&#038;#39" rel="nofollow">http://localhost/&#038;#39</a>;. &nbsp;Lastly, in the section above websites enter &#39;localhost&#39; in the &#39;App Domains&#39; field. &nbsp;Click &#39;Save Changes&#39; and retry your web application again. &nbsp;Let me know how you make out. &nbsp;I will add this to the blog post as well as all others will need to follow the same process.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=144#respond' onclick='return addComment.moveForm( "div-comment-144", "144", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-154">
+				<div id="div-comment-154" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Tu</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-154">
+			May 5, 2015 at 8:58 am</a>		</div>
+
+		<p>@Nick &#8211; I followed your instructions, but there&#39;s still that error @@</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=154#respond' onclick='return addComment.moveForm( "div-comment-154", "154", "respond", "63" )' aria-label='Reply to Tu'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-164">
+				<div id="div-comment-164" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Nick Pinheiro</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-164">
+			May 5, 2015 at 11:18 am</a>		</div>
+
+		<p>@Tu &#8211; Please email me screenshots of your app settings in the Facebook Developer Portal as well as your browser when you received the message. &nbsp;Send to: <a href="mailto:nickpinheiro@outlook.com">nickpinheiro@outlook.com</a></p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=164#respond' onclick='return addComment.moveForm( "div-comment-164", "164", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-174">
+				<div id="div-comment-174" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Tu</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-174">
+			May 6, 2015 at 2:03 am</a>		</div>
+
+		<p>@Nick &#8211; I sent an email to you. Thank you.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=174#respond' onclick='return addComment.moveForm( "div-comment-174", "174", "respond", "63" )' aria-label='Reply to Tu'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-184">
+				<div id="div-comment-184" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Xchange</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-184">
+			May 10, 2015 at 1:39 am</a>		</div>
+
+		<p>Hello i get an error in return process The remote server returned an error: (400) Bad Request. please help 🙂 <a rel="nofollow" target="_new" href="http://satmythuatviet.com/Untitled-ee1.jpg">satmythuatviet.com/Untitled-ee1.jpg</a></p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=184#respond' onclick='return addComment.moveForm( "div-comment-184", "184", "respond", "63" )' aria-label='Reply to Xchange'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-194">
+				<div id="div-comment-194" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/600398df988e71e9aaf436fac9ee7978?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Nick Pinheiro</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-194">
+			May 11, 2015 at 8:37 pm</a>		</div>
+
+		<p>@Xchange &#8211; Please ensure that your &#39;FacebookAppId&#39; and &#39;FacebookAppSecret&#39; are entered properly in the web.config.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=194#respond' onclick='return addComment.moveForm( "div-comment-194", "194", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-311">
+				<div id="div-comment-311" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Raahul</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-311">
+			May 17, 2015 at 8:07 am</a>		</div>
+
+		<p>Thanks bro..nice and simple </p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=311#respond' onclick='return addComment.moveForm( "div-comment-311", "311", "respond", "63" )' aria-label='Reply to Raahul'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-301">
+				<div id="div-comment-301" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Robin</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-301">
+			June 3, 2015 at 2:41 am</a>		</div>
+
+		<p>Hey Nick, thanks for the description. I am running it from IIS and get the following errors. When using the actual URL from IIS i get the error: &quot;Given URL is not allowed by the Application configuration&#8230;&quot;</p>
+<p>When using Localhost i get the error: &quot;Could not connect to localhost&quot;.</p>
+<p>What am I missing? I appreciate your help 🙂</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=301#respond' onclick='return addComment.moveForm( "div-comment-301", "301", "respond", "63" )' aria-label='Reply to Robin'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor even thread-even depth-1" id="comment-291">
+				<div id="div-comment-291" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-291">
+			June 3, 2015 at 7:27 am</a>		</div>
+
+		<p>@Robin &#8211; Have you first been able to get the solution to work within Visual Studio?</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=291#respond' onclick='return addComment.moveForm( "div-comment-291", "291", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-281">
+				<div id="div-comment-281" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Robin</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-281">
+			June 8, 2015 at 1:19 am</a>		</div>
+
+		<p>@Nick: The Problem seems to happen with the redirect_uri. Its probably related to me trying to run it from a local server via IIS. Is that possible at all, because Facebook cannot access it from outside? </p>
+<p>I tried the official Javascript SDK first, which worked. But runnig it via asp so far is a mess&#8230; 🙁</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=281#respond' onclick='return addComment.moveForm( "div-comment-281", "281", "respond", "63" )' aria-label='Reply to Robin'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-271">
+				<div id="div-comment-271" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Robin</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-271">
+			June 9, 2015 at 3:05 am</a>		</div>
+
+		<p>Okay, I solved it. I had to change redirect_uri in user.aspc.cs to the actual URL, then it worked.</p>
+<p>You mentiones an upcoming Blogpost about including Email to the fetched data. Is that difficult to add to this solution here?</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=271#respond' onclick='return addComment.moveForm( "div-comment-271", "271", "respond", "63" )' aria-label='Reply to Robin'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-261">
+				<div id="div-comment-261" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Salman</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-261">
+			June 16, 2015 at 2:26 pm</a>		</div>
+
+		<p>Hi Nick, Thank you very much for the post. I will be looking forward for post in which you will mention how to fetch email id also.</p>
+<p>and most desirable are the video lectures from you.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=261#respond' onclick='return addComment.moveForm( "div-comment-261", "261", "respond", "63" )' aria-label='Reply to Salman'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-251">
+				<div id="div-comment-251" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">developerchick</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-251">
+			June 22, 2015 at 11:44 am</a>		</div>
+
+		<p>Hey Nick, did you ever get a chance to figure out the logout yet?</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=251#respond' onclick='return addComment.moveForm( "div-comment-251", "251", "respond", "63" )' aria-label='Reply to developerchick'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor odd alt thread-odd thread-alt depth-1" id="comment-241">
+				<div id="div-comment-241" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-241">
+			July 7, 2015 at 12:41 pm</a>		</div>
+
+		<p>@All &#8211; I just published a new post:</p>
+<p>&#39;Get User&#39;s Email Address from Facebook with ASP.net Web Forms&#39;</p>
+<p><a rel="nofollow" target="_new" href="http://blogs.msdn.com/b/nickpinheiro/archive/2015/07/07/get-user-s-email-address-from-facebook-with-asp-net-web-forms.aspx">blogs.msdn.com/&#8230;/get-user-s-email-address-from-facebook-with-asp-net-web-forms.aspx</a></p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=241#respond' onclick='return addComment.moveForm( "div-comment-241", "241", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-231">
+				<div id="div-comment-231" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Amit Pachahara</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-231">
+			July 9, 2015 at 10:35 pm</a>		</div>
+
+		<p>When i ran your sample only Id property is populated with data and rest other are emtpy. When i debugged the local host code i found that Response from facebook contains only value for Id and rest other values are not showing in response object . Although I have created App on facebook and updated the AppId and SecretId in the config file .</p>
+<p>Is there anything I need to verify which is causing issue. </p>
+<p>Thanks,</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=231#respond' onclick='return addComment.moveForm( "div-comment-231", "231", "respond", "63" )' aria-label='Reply to Amit Pachahara'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor odd alt thread-odd thread-alt depth-1" id="comment-221">
+				<div id="div-comment-221" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-221">
+			July 13, 2015 at 1:26 pm</a>		</div>
+
+		<p>@Amit &#8211; I would recommend first trying another Facebook account or creating a test account via the Facebook Developer Portal. &nbsp;If that doesn&#39;t provide you with full profile information in the response then you may also want to try creating a new Facebook App within the portal and trying again. &nbsp;Let me know how you make out.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=221#respond' onclick='return addComment.moveForm( "div-comment-221", "221", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-211">
+				<div id="div-comment-211" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Johann Steyn</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-211">
+			July 13, 2015 at 1:37 pm</a>		</div>
+
+		<p>Hi Nick</p>
+<p>Excellent article and example. </p>
+<p>I&#39;m however facing the exact same issue as Amit, whereby only the &quot;ID&quot; property is populated from Facebook.</p>
+<p>Do you perhaps know what could be causing this behavior? </p>
+<p>Regards</p>
+<p>JohannS</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=211#respond' onclick='return addComment.moveForm( "div-comment-211", "211", "respond", "63" )' aria-label='Reply to Johann Steyn'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor odd alt thread-odd thread-alt depth-1" id="comment-771">
+				<div id="div-comment-771" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-771">
+			July 13, 2015 at 2:31 pm</a>		</div>
+
+		<p>@Johann &#8211; Thank you! &nbsp;I just ran a test with my Facebook account as well as a new Test account from the Facebook Developer Portal and all ran successfully. &nbsp;Can you try creating a new Facebook App in the Developer Portal, updating the App Id and App Secret in the web.config and trying again. &nbsp;Please let me know how you make out.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=771#respond' onclick='return addComment.moveForm( "div-comment-771", "771", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-761">
+				<div id="div-comment-761" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Jos&#233; Dalri</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-761">
+			August 11, 2015 at 10:47 am</a>		</div>
+
+		<p>Hi, nice work in this post!</p>
+<p>I&#39;m having the same problems as Johan&#8230;</p>
+<p>My JSON result only has my name and id, and when it deserializes,</p>
+<p>the only information that is left is the id&#8230;</p>
+<p>I&#39;ve tryed with a different account, but the same happens.</p>
+<p>Do you have any ideia of why this is happening?</p>
+<p>Thanks in advance.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=761#respond' onclick='return addComment.moveForm( "div-comment-761", "761", "respond", "63" )' aria-label='Reply to Jos&#233; Dalri'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor odd alt thread-odd thread-alt depth-1" id="comment-751">
+				<div id="div-comment-751" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-751">
+			August 13, 2015 at 5:15 pm</a>		</div>
+
+		<p>@Amit, @Johann, @José &#8211; I had a chance to research your issue and have resolved it. &nbsp;Simply re-download the project from GitHub, add your App Id and App Secret and run the project.</p>
+<p>On July 8th Facebook introduced v2.4 of the Graph API. &nbsp;With this new version they reduced the number of fields that the API returns by default. &nbsp;This was done in the effort to improve performance on mobile network connections. &nbsp;Therefore you must now declare all the fields you want the API to return. &nbsp;This can be found in user.aspx.cs of the project: &nbsp;graph.facebook.com/me?fields=first_name,last_name,gender,locale,link . &nbsp;Thank you for notifying me of the issue 🙂</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=751#respond' onclick='return addComment.moveForm( "div-comment-751", "751", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-741">
+				<div id="div-comment-741" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Lokesh Paliwal</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-741">
+			August 28, 2015 at 2:00 am</a>		</div>
+
+		<p>Nick, its very nice article. And its really helpful.</p>
+<p>Thanks 🙂</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=741#respond' onclick='return addComment.moveForm( "div-comment-741", "741", "respond", "63" )' aria-label='Reply to Lokesh Paliwal'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-731">
+				<div id="div-comment-731" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Ken Nelson</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-731">
+			September 4, 2015 at 11:09 pm</a>		</div>
+
+		<p>Thanks a lot. Worked great and is very clear and simple.</p>
+<p>I presume something very similar could be used to login with Google?</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=731#respond' onclick='return addComment.moveForm( "div-comment-731", "731", "respond", "63" )' aria-label='Reply to Ken Nelson'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor even thread-even depth-1" id="comment-701">
+				<div id="div-comment-701" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-701">
+			October 23, 2015 at 8:28 am</a>		</div>
+
+		<p>@Ken &#8211; Correct, the same process would be used to login with Google. &nbsp;They both use the OAUTH 2.0 standard.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=701#respond' onclick='return addComment.moveForm( "div-comment-701", "701", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor odd alt thread-odd thread-alt depth-1" id="comment-661">
+				<div id="div-comment-661" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-661">
+			October 28, 2015 at 1:52 pm</a>		</div>
+
+		<p>@All &#8211; I just published a new post:</p>
+<p>&#39;Publish to Facebook with ASP.net Web Forms&#39;</p>
+<p><a rel="nofollow" target="_new" href="http://blogs.msdn.com/b/nickpinheiro/archive/2015/10/28/publish-to-facebook-with-asp-net-web-forms.aspx">blogs.msdn.com/&#8230;/publish-to-facebook-with-asp-net-web-forms.aspx</a></p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=661#respond' onclick='return addComment.moveForm( "div-comment-661", "661", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-581">
+				<div id="div-comment-581" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/5a46b0692baebc9f5e1da670374690f5?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/5a46b0692baebc9f5e1da670374690f5?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">SimorC</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-581">
+			October 31, 2015 at 1:15 pm</a>		</div>
+
+		<p>Thanks, this is going to be useful for my college projects.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=581#respond' onclick='return addComment.moveForm( "div-comment-581", "581", "respond", "63" )' aria-label='Reply to SimorC'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-521">
+				<div id="div-comment-521" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Jubbs</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-521">
+			November 21, 2015 at 9:23 pm</a>		</div>
+
+		<p>Hi Nick, thanks for this tutorial. Please forgive my ignorance but I&#39;m struggling with this concept. I have this running fine in my webapp &#8211; it tells me that I&#39;m logged in with FB and shows my FB details in listview1. &nbsp;The problem is that my site does not recognise that a user is logged in, i.e. HttpContext.Current.User.Identity.IsAuthenticated returns a false value. How do I tell my app that the user is logged in, with User Name &quot;Facebook_User_Primary_Email_Address&quot;?</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=521#respond' onclick='return addComment.moveForm( "div-comment-521", "521", "respond", "63" )' aria-label='Reply to Jubbs'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor even thread-even depth-1" id="comment-511">
+				<div id="div-comment-511" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-511">
+			November 23, 2015 at 9:51 am</a>		</div>
+
+		<p>@Jubbs &#8211; You&#39;re very welcome. &nbsp;That&#39;s a great question. &nbsp;This tutorial solely covers the process of Facebook Login and not subsequent authentication into your web app. &nbsp;I will however be covering this topic in a chapter of an eBook / Book I am releasing at the beginning of 2016 entitled &#39;Facebook Development with ASP.NET and Microsoft Azure&#39;. &nbsp;There I cover how to programmatically create a session using Forms Based Authentication once a user has passed Facebook Login. &nbsp;This will then place your user in the context of a current user in ASP.NET. &nbsp;In the meantime you can follow me on Twitter to be notified once the eBook is available. &nbsp;I will also be releasing an email subscription list in the next few days that you can subscribe to as well.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=511#respond' onclick='return addComment.moveForm( "div-comment-511", "511", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-501">
+				<div id="div-comment-501" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Madhu</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-501">
+			November 30, 2015 at 2:41 am</a>		</div>
+
+		<p>Hi Its working fine in my local system, but when i host in server it display 404 error bad request what to do</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=501#respond' onclick='return addComment.moveForm( "div-comment-501", "501", "respond", "63" )' aria-label='Reply to Madhu'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor even thread-even depth-1" id="comment-481">
+				<div id="div-comment-481" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-481">
+			November 30, 2015 at 7:50 am</a>		</div>
+
+		<p>@Madhu &#8211; Once you publish the code to your server you will need to go to developers.facebook.com and change your &#39;Site URL&#39; to the URL of your web app on the server. &nbsp;</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=481#respond' onclick='return addComment.moveForm( "div-comment-481", "481", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor odd alt thread-odd thread-alt depth-1" id="comment-471">
+				<div id="div-comment-471" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-471">
+			November 30, 2015 at 8:13 am</a>		</div>
+
+		<p>@developerchick &#8211; I have a working sample for Logout. &nbsp;Let me know if you still need assistance with this.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=471#respond' onclick='return addComment.moveForm( "div-comment-471", "471", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-461">
+				<div id="div-comment-461" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Madhu</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-461">
+			November 30, 2015 at 8:12 pm</a>		</div>
+
+		<p>Hi Nick I have already Updated SiteURL(www.goresults.net/fb) but still i am getting same issue &#8211; runtime error bad request Please check <a href="http://www.goresults.net/fb" rel="nofollow">http://www.goresults.net/fb</a> -( Fb virtuval direcory) there register button is on top of the website &#8211; Please suggest me thankyou for your quick response</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=461#respond' onclick='return addComment.moveForm( "div-comment-461", "461", "respond", "63" )' aria-label='Reply to Madhu'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-441">
+				<div id="div-comment-441" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Madhu</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-441">
+			January 6, 2016 at 3:04 am</a>		</div>
+
+		<p>Still Not Working Nick Please Help Me</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=441#respond' onclick='return addComment.moveForm( "div-comment-441", "441", "respond", "63" )' aria-label='Reply to Madhu'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-431">
+				<div id="div-comment-431" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">kubera</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-431">
+			January 10, 2016 at 3:40 am</a>		</div>
+
+		<p>@madhu you will have that problem if page is refreshed.. i got the error when i refreshed user.aspx</p>
+<p>Line 37: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; System.IO.StreamReader str = new System.IO.StreamReader(at.GetResponse().GetResponseStream());</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=431#respond' onclick='return addComment.moveForm( "div-comment-431", "431", "respond", "63" )' aria-label='Reply to kubera'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-odd thread-alt depth-1" id="comment-421">
+				<div id="div-comment-421" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">BonDev</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-421">
+			January 10, 2016 at 12:23 pm</a>		</div>
+
+		<p>Hello how can i save that user&#39;s information to sql server 2008, im a newbie so i dont know</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=421#respond' onclick='return addComment.moveForm( "div-comment-421", "421", "respond", "63" )' aria-label='Reply to BonDev'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor even thread-even depth-1" id="comment-401">
+				<div id="div-comment-401" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-401">
+			January 20, 2016 at 9:11 am</a>		</div>
+
+		<p>@Madhu &#8211; I&#39;m not seeing your implementation at <a href="http://www.goresults.net/fb" rel="nofollow">http://www.goresults.net/fb</a>. &nbsp;Please advise.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=401#respond' onclick='return addComment.moveForm( "div-comment-401", "401", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor odd alt thread-odd thread-alt depth-1" id="comment-391">
+				<div id="div-comment-391" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-391">
+			January 20, 2016 at 11:14 am</a>		</div>
+
+		<p>@BonDev &#8211; The easiest way to store that information in SQL Server would be to use ADO.NET. &nbsp;The following is a link with sample code for ADO.NET: &nbsp;<a rel="nofollow" target="_new" href="https://msdn.microsoft.com/en-us/library/dw70f090(v=vs.110).aspx">msdn.microsoft.com/&#8230;/dw70f090(v=vs.110).aspx</a></p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=391#respond' onclick='return addComment.moveForm( "div-comment-391", "391", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-even depth-1" id="comment-371">
+				<div id="div-comment-371" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/3651e719491c63d4424134d66fe53db9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">itzzz</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-371">
+			February 27, 2016 at 3:09 am</a>		</div>
+
+		<p>thanks&#8230;..it is very helpfull</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=371#respond' onclick='return addComment.moveForm( "div-comment-371", "371", "respond", "63" )' aria-label='Reply to itzzz'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment byuser comment-author-nickpinheirohotmail-com bypostauthor odd alt thread-odd thread-alt depth-1 parent" id="comment-361">
+				<div id="div-comment-361" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://i1.social.s-msft.com/profile/u/avatar.jpg?displayname=Nick+Pinheiro&size=extralarge&version=e6832ff1-111a-434a-9e79-6ef7735d265e'  class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='https://social.msdn.microsoft.com/profile/Nick+Pinheiro' rel='external nofollow' class='url'>Nick Pinheiro</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-361">
+			March 7, 2016 at 4:38 pm</a>		</div>
+
+		<p>Hello All! Join my just released mailing list for free content, videos, blog posts, webinars, eBooks and more! <a rel="nofollow" target="_new" href="http://www.nick-pinheiro.com">http://www.nick-pinheiro.com</a></p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=361#respond' onclick='return addComment.moveForm( "div-comment-361", "361", "respond", "63" )' aria-label='Reply to Nick Pinheiro'>Reply</a></div>
+				</div>
+		<ol class="children">
+		<li class="comment even depth-2" id="comment-885">
+				<div id="div-comment-885" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/1a96ece6850142624bedd2dc945a5a7d?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/1a96ece6850142624bedd2dc945a5a7d?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn"><a href='http://www.tam.com' rel='external nofollow' class='url'>tam</a></cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-885">
+			June 13, 2016 at 9:07 am</a>		</div>
+
+		<p>hi,i like all the above</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=885#respond' onclick='return addComment.moveForm( "div-comment-885", "885", "respond", "63" )' aria-label='Reply to tam'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+</ol><!-- .children -->
+</li><!-- #comment-## -->
+		<li class="comment odd alt thread-even depth-1" id="comment-795">
+				<div id="div-comment-795" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/5190d8eb1bff2c5f291e318c66201356?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/5190d8eb1bff2c5f291e318c66201356?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Romeo A.</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-795">
+			April 20, 2016 at 4:30 pm</a>		</div>
+
+		<p>Thank you.<br />
+Clear and simple.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=795#respond' onclick='return addComment.moveForm( "div-comment-795", "795", "respond", "63" )' aria-label='Reply to Romeo A.'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-odd thread-alt depth-1" id="comment-805">
+				<div id="div-comment-805" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/f182e42e93dd355289c581d5694f3f62?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/f182e42e93dd355289c581d5694f3f62?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Ben</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-805">
+			April 27, 2016 at 2:05 pm</a>		</div>
+
+		<p>Thank you for this write up. Sent several days trying to create an OAuth plugin, this helped me get over my final issues.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=805#respond' onclick='return addComment.moveForm( "div-comment-805", "805", "respond", "63" )' aria-label='Reply to Ben'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-even depth-1" id="comment-806">
+				<div id="div-comment-806" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/6b40e7180f95b21387a3b647515fe8c9?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/6b40e7180f95b21387a3b647515fe8c9?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">umara</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-806">
+			May 2, 2016 at 4:44 pm</a>		</div>
+
+		<p>you are a life saver :p thanks a ton very simple explanation (y) now gonna try it&#8230;</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=806#respond' onclick='return addComment.moveForm( "div-comment-806", "806", "respond", "63" )' aria-label='Reply to umara'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment even thread-odd thread-alt depth-1" id="comment-1056">
+				<div id="div-comment-1056" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/94a26eca8139a30ab326f6c07295e3c0?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/94a26eca8139a30ab326f6c07295e3c0?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Kishor Khatri</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-1056">
+			July 14, 2016 at 4:58 am</a>		</div>
+
+		<p>Thank You so much, it worked for me, i was facing problem since 7 days.</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=1056#respond' onclick='return addComment.moveForm( "div-comment-1056", "1056", "respond", "63" )' aria-label='Reply to Kishor Khatri'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		<li class="comment odd alt thread-even depth-1" id="comment-1185">
+				<div id="div-comment-1185" class="comment-body">
+				<div class="comment-author vcard">
+			<img alt='' src='https://secure.gravatar.com/avatar/db3c4b3d0bcad82a551de4fb78b2942b?s=56&#038;d=mm&#038;r=g' srcset='https://secure.gravatar.com/avatar/db3c4b3d0bcad82a551de4fb78b2942b?s=112&amp;d=mm&amp;r=g 2x' class='avatar avatar-56 photo' height='56' width='56' />			<cite class="fn">Harshal</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata"><a href="https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/#comment-1185">
+			August 21, 2016 at 4:08 am</a>		</div>
+
+		<p>thank you so much sir,<br />
+i found it the best.<br />
+awesome and simple explanation</p>
+
+		<div class="reply"><a rel='nofollow' class='comment-reply-link' href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/?replytocom=1185#respond' onclick='return addComment.moveForm( "div-comment-1185", "1185", "respond", "63" )' aria-label='Reply to Harshal'>Reply</a></div>
+				</div>
+		</li><!-- #comment-## -->
+		</ol><!-- .comment-list -->
+
+		<div class="navigation pagination">
+					</div>
+
+	
+	
+</div><!-- .comments-area -->
+	</div><!-- #primary -->
+	<a class="screen-reader-shortcut" href="#primary" tabindex="1">Skip to main content</a>
+
+<div id="secondary" class="sidebar col-sm-3">
+	<div id="sidebar-widget-area" class="sidebar-widget-area" role="complementary">
+		<div class="widget sfmsb_widget"><div class="sfmsb-follow-social-buttons sfmsb-under sfmsb-circle 40 sfmsb-horizontal"><h2 class="widget-title">Follow Us</h2><a title="RSS Feed" aria-label="RSS Feed" target="_blank" href="https://blogs.msdn.microsoft.com/nickpinheiro/feed/"><span class="sfmsb-icon-feed sfmsb-circle" style="color:#ffa500;font-size:40px;" data-color="#ffa500"></span></a><div class="sfmsb-clearfix"></div></div></div><aside id="tag_cloud-2" class="widget widget_tag_cloud"><h2 class="widget-title">Popular Tags</h2><div class="tagcloud"><a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/modern-apps/' class='tag-link-13 tag-link-position-1' title='7 topics' style='font-size: 14px;'>Modern Apps</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/apps/' class='tag-link-83 tag-link-position-2' title='6 topics' style='font-size: 14px;'>Apps</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/social/' class='tag-link-33 tag-link-position-3' title='6 topics' style='font-size: 14px;'>Social</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/microsoft/' class='tag-link-23 tag-link-position-4' title='6 topics' style='font-size: 14px;'>Microsoft</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/facebook/' class='tag-link-93 tag-link-position-5' title='5 topics' style='font-size: 14px;'>Facebook</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/asp-net/' class='tag-link-103 tag-link-position-6' title='4 topics' style='font-size: 14px;'>ASP.net</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/azure/' class='tag-link-3 tag-link-position-7' title='3 topics' style='font-size: 14px;'>Azure</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/sharepoint/' class='tag-link-73 tag-link-position-8' title='2 topics' style='font-size: 14px;'>SharePoint</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/net/' class='tag-link-131 tag-link-position-9' title='2 topics' style='font-size: 14px;'>.NET</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/microsoft-azure/' class='tag-link-121 tag-link-position-10' title='2 topics' style='font-size: 14px;'>Microsoft Azure</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/office-365/' class='tag-link-113 tag-link-position-11' title='1 topic' style='font-size: 14px;'>Office 365</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/lync/' class='tag-link-53 tag-link-position-12' title='1 topic' style='font-size: 14px;'>Lync</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/pla/' class='tag-link-63 tag-link-position-13' title='1 topic' style='font-size: 14px;'>PLA</a>
+<a href='https://blogs.msdn.microsoft.com/nickpinheiro/tag/exchange/' class='tag-link-43 tag-link-position-14' title='1 topic' style='font-size: 14px;'>Exchange</a></div>
+</aside><aside id="msdn-archive-widget-2" class="widget msdn-archive-widget"><h2 class="widget-title">Archives</h2>	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2017/02/'>February 2017</a>&nbsp;(1)</li>
+	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2016/02/'>February 2016</a>&nbsp;(1)</li>
+	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/10/'>October 2015</a>&nbsp;(1)</li>
+	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/07/'>July 2015</a>&nbsp;(1)</li>
+	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/'>February 2015</a>&nbsp;(1)</li>
+	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/01/'>January 2015</a>&nbsp;(2)</li>
+	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2013/04/'>April 2013</a>&nbsp;(1)</li>
+	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2017/'>All of 2017</a>&nbsp;(1)</li>
+	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2016/'>All of 2016</a>&nbsp;(1)</li>
+	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2015/'>All of 2015</a>&nbsp;(5)</li>
+	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2013/'>All of 2013</a>&nbsp;(1)</li>
+	<li><a href='https://blogs.msdn.microsoft.com/nickpinheiro/2012/'>All of 2012</a>&nbsp;(2)</li>
+</aside>	</div>
+</div><!-- #secondary -->
+</div><!-- .site-content -->
+
+<footer id="site-footer" class="site-footer row" role="contentinfo">
+	<div id="site-info" class="site-info">
+		<div id="footer-text" class="col-sm-4 col-sm-offset-6">
+			<span>
+				<a href="https://msdn.microsoft.com/dn529288">Privacy & Cookies</a>
+			</span>
+			<span>
+				<a href="https://msdn.microsoft.com/cc300389">Terms of Use</a>
+			</span>
+			<span>
+				<a href="https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/EN-US.aspx">Trademarks</a>
+			</span>
+		</div>
+		<div id="footer-far" class="col-sm-2">
+			<div id="footer-microsoft-logo">
+				<a href="https://www.microsoft.com" aria-label="Microsoft Logo">
+					<svg id="footer-microsoft-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 347 70.5" enable-background="new 0 0 347 70.5"><g fill="#fff"><path d="M39.5 44.6l-2.8 7.9h-.2c-.5-1.8-1.3-4.5-2.7-7.8l-15-37.7h-14.7v60h9.7v-37c0-2.3 0-5-.1-8.2-.1-1.6-.2-2.9-.3-3.8h.2c.5 2.3 1 4 1.4 5.1l18 43.8h6.8l17.9-44.2c.4-1 .8-3 1.2-4.7h.2c-.2 4.4-.4 8.4-.5 10.8v38.1h10.4v-60h-14.1l-15.4 37.7zM78.8 23.9h10.1v43h-10.1zM83.9 5.7c-1.7 0-3.1.6-4.3 1.7-1.2 1.1-1.8 2.5-1.8 4.2 0 1.6.6 3 1.8 4.1 1.2 1.1 2.6 1.6 4.3 1.6 1.7 0 3.2-.6 4.3-1.6 1.2-1.1 1.8-2.5 1.8-4.1 0-1.6-.6-3-1.8-4.2-1-1.2-2.5-1.7-4.3-1.7M124.7 23.5c-1.9-.4-3.8-.6-5.7-.6-4.6 0-8.8 1-12.3 3s-6.3 4.8-8.1 8.3c-1.9 3.6-2.8 7.7-2.8 12.4 0 4.1.9 7.8 2.7 11.1 1.8 3.3 4.3 5.9 7.6 7.7 3.2 1.8 6.9 2.7 11.1 2.7 4.8 0 8.9-1 12.2-2.9l.1-.1v-9.3l-.4.3c-1.5 1.1-3.2 2-4.9 2.6-1.8.6-3.4.9-4.8.9-4 0-7.2-1.2-9.5-3.7s-3.5-5.9-3.5-10.2c0-4.4 1.2-7.9 3.6-10.5 2.4-2.6 5.6-3.9 9.5-3.9 3.3 0 6.6 1.1 9.6 3.3l.4.3v-9.8l-.1-.1c-1.2-.6-2.8-1.1-4.7-1.5M158 23.2c-2.5 0-4.8.8-6.8 2.4-1.7 1.4-2.9 3.4-3.9 5.8h-.1v-7.4h-10.1v43h10.1v-22c0-3.7.8-6.8 2.5-9.1s3.9-3.5 6.5-3.5c.9 0 1.9.2 3 .4 1.1.3 1.9.6 2.4 1l.4.3v-10.2l-.2-.1c-.8-.4-2.1-.6-3.8-.6M185.5 22.9c-7.1 0-12.7 2.1-16.7 6.2s-6 9.8-6 16.9c0 6.7 2 12.1 5.9 16.1 3.9 3.9 9.2 5.9 15.8 5.9 6.9 0 12.4-2.1 16.4-6.3 4-4.2 6-9.8 6-16.7 0-6.8-1.9-12.3-5.7-16.2-3.7-3.9-9-5.9-15.7-5.9m8 33.1c-1.9 2.4-4.8 3.6-8.5 3.6s-6.6-1.2-8.7-3.7c-2.1-2.4-3.1-5.9-3.1-10.3 0-4.6 1.1-8.1 3.1-10.6 2.1-2.5 5-3.7 8.6-3.7 3.6 0 6.4 1.2 8.4 3.6 2 2.4 3.1 5.9 3.1 10.5s-1 8.2-2.9 10.6M229.3 41.7c-3.2-1.3-5.2-2.3-6.1-3.2-.8-.8-1.2-1.9-1.2-3.3 0-1.2.5-2.3 1.6-3.1 1.1-.8 2.5-1.2 4.4-1.2 1.7 0 3.5.3 5.2.8 1.7.5 3.3 1.2 4.5 2.1l.4.3v-9.4l-.2-.1c-1.2-.5-2.7-.9-4.6-1.3-1.9-.3-3.6-.5-5-.5-4.8 0-8.8 1.2-11.9 3.7-3.1 2.4-4.6 5.7-4.6 9.5 0 2 .3 3.8 1 5.3s1.7 2.9 3.1 4c1.4 1.1 3.4 2.3 6.2 3.5 2.3 1 4.1 1.8 5.2 2.4 1.1.6 1.8 1.3 2.3 1.9.4.6.6 1.4.6 2.4 0 2.9-2.2 4.3-6.6 4.3-1.7 0-3.5-.3-5.6-1-2.1-.7-4-1.7-5.7-2.9l-.4-.3v9.9l.2.1c1.5.7 3.3 1.2 5.4 1.7 2.2.4 4.1.7 5.8.7 5.2 0 9.5-1.2 12.5-3.7 3.1-2.5 4.7-5.7 4.7-9.8 0-2.9-.8-5.4-2.5-7.4-1.8-2-4.7-3.8-8.7-5.4M267.6 22.9c-7.1 0-12.7 2.1-16.7 6.2s-6 9.8-6 16.9c0 6.7 2 12.1 5.9 16.1 3.9 3.9 9.2 5.9 15.8 5.9 6.9 0 12.4-2.1 16.4-6.3 4-4.2 6-9.8 6-16.7 0-6.8-1.9-12.3-5.7-16.2-3.8-3.9-9.1-5.9-15.7-5.9m8 33.1c-1.9 2.4-4.8 3.6-8.5 3.6s-6.6-1.2-8.7-3.7c-2.1-2.4-3.1-5.9-3.1-10.3 0-4.6 1.1-8.1 3.1-10.6 2.1-2.5 5-3.7 8.6-3.7 3.5 0 6.4 1.2 8.4 3.6 2 2.4 3.1 5.9 3.1 10.5s-1 8.2-2.9 10.6"/><path d="M342.9 32.2v-8.2h-10.2v-12.9l-.3.1-9.6 2.9-.2.1v9.7h-15.2v-5.4c0-2.5.6-4.4 1.7-5.7 1.1-1.3 2.7-1.9 4.7-1.9 1.4 0 2.9.3 4.5 1l.4.2v-8.7l-.2-.1c-1.4-.5-3.3-.8-5.7-.8-3 0-5.7.7-8.1 1.9-2.4 1.3-4.2 3.1-5.5 5.5-1.3 2.3-2 5-2 8v6h-7.2v8.2h7.1v34.8h10.2v-34.7h15.2v22.1c0 9.1 4.3 13.7 12.8 13.7 1.4 0 2.9-.2 4.3-.5 1.5-.3 2.6-.7 3.2-1l.1-.1v-8.3l-.4.3c-.6.4-1.2.7-2.1.9-.8.2-1.5.3-2 .3-2 0-3.4-.5-4.4-1.6-.9-1.1-1.4-2.9-1.4-5.5v-20.3h10.3z"/></g></svg>
+				</a>
+			</div>
+			<div id="copyright">
+				© 2017 Microsoft
+			</div>
+		</div>
+	</div><!-- .site-info -->
+</footer><!-- .site-footer -->
+
+</div><!-- .site -->
+
+	<script type="text/javascript">
+	jQuery(document).ready(function($){
+		$login_link = $( 'a[href*="wp-login.php?"]' );
+				$login_link.on( 'click', function( evt ) {
+			// evt.preventDefault();
+						// console.log( 'cookie-set', '/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/' );
+			$.cookie( 'aadsso-redirect', '/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/', { expires: 1, path: '/' });
+		});
+	});
+	</script>
+		<script>
+		jQuery(window).load(function () {
+			// Fix Bug #644092:MAS36: Page number
+			jQuery('div.nav-links>a.page-numbers').each(function(){
+				jQuery(this).attr('aria-label', 'Page ' + jQuery(this).html());
+			});
+
+			// Fix Bug #633981:MAS20B:  Talkback: Talkback announces link for Number of Comments as 'Number link'
+			jQuery('span.comments-link>a').each(function () {
+				var num = parseInt(jQuery(this).html());
+				if (isNaN(num)) {
+					return false;
+				}
+				var content = num + (num === 1 ? ' comment' : ' comments');
+				jQuery(this).attr({
+					'aria-label': content,
+					'title': content
+				});
+			});
+
+
+			jQuery('#search-option>div').each(function () {
+				jQuery(this).attr('aria-label',jQuery('span.search-text',this).html());
+			});
+
+			// Fix Bug #671896:MAS40B :Inspect: Header: "Name" property is not descriptive for  "Microsoft | TechNet" link (logo).
+			var currentHost = location.hostname;
+			if (currentHost.indexOf('msdn') !== -1) {
+				jQuery('#home-link').attr('aria-label','Microsoft Developer');
+			} else if (currentHost.indexOf('technet') !== -1) {
+				jQuery('#home-link').attr('aria-label','Microsoft Technet');
+			}
+
+			// Detect High Contrast Mode in non IE/Edge Browsers
+			jQuery('html').css('background-image', 'url("data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==")');
+			if (jQuery('html').css('background-image') === 'none') {
+				jQuery('html').attr('data-high-contrast', 'true');
+			}
+
+			// Fix Bug #670327:MAS40B: Inspect: Header: "Localized control type" property is incorrect for the header elements.
+			// Fix Bug #683788:MAS40B: TalkBack: Header: For menu items in technet link menu bar, expand/collapse pattern available, is not announced by TalkBack 
+			jQuery('#site-navigation>div>ul>li>a').attr('role', 'button').attr('aria-expanded', 'false').click(function () {
+				if (jQuery(this).attr('aria-expanded') === 'true') {
+					jQuery(this).attr('aria-expanded', 'false');
+				} else {
+					jQuery(this).attr('aria-expanded', 'true');
+				}
+			});
+
+		});
+	</script>
+		<!--ADD WEDCS SCRIPT-->
+	<div id="_WEDCSInsertedData" style="display: none;"></div>
+	<script type="text/javascript">
+		jQuery( window ).load(
+			function() {
+				window.varSegmentation = 0;
+				window.varClickTracking = 1;
+				window.varCustomerTracking = 1;
+				window.varAutoFirePV = 1;
+				window.Route = ""; // was 23470 in the windows theme framework
+				window.Ctrl = "";
+
+								var blogPost = {};
+
+								blogPost.permalink = 'https://blogs.msdn.microsoft.com/nickpinheiro/2015/02/28/facebook-login-with-asp-net-web-forms/';
+				blogPost.title = 'Facebook Login with ASP.NET Web Forms';
+				blogPost.author = 'Nick Pinheiro';
+				blogPost.post_date = '2015-02-28 10:12:00';
+				blogPost.category = 'Uncategorized';
+				blogPost.tag = 'Apps,ASP.net,Facebook,Modern Apps,Social';
+				blogPost.comment_number = '56';
+								window.blogPost = blogPost;
+
+				var wedcs_script = document.createElement('script');
+				wedcs_script.type = 'text/javascript';
+				wedcs_script.async = true;
+				wedcs_script.src = 'https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/mu-plugins/wedcs-script/ms2_blogs.js';
+				document.getElementsByTagName('body')[0].appendChild(wedcs_script);
+			});
+	</script>
+	<!--
+	<script src="//c.microsoft.com/ms.js" type="text/javascript"></script>
+	<noscript><img alt="" width="1" height="1" src="http://c.microsoft.com/trans_pixel.aspx"/></noscript>
+	-->
+		<script type="text/javascript">
+			jQuery( window ).load(
+				function () {
+					var stylesheet = document.createElement('link');
+					stylesheet.href = 'https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/plugins/simple-follow-me-social-buttons-widget/assets/css/style.css?ver=3.3.3';
+					stylesheet.rel = 'stylesheet';
+					stylesheet.type = 'text/css';
+					document.getElementsByTagName('head')[0].appendChild(stylesheet);
+				});
+		</script>
+				<script type="text/javascript">
+			jQuery( window ).load(
+				function () {
+					var stylesheet = document.createElement('link');
+					stylesheet.href = 'https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/plugins/simple-follow-me-social-buttons-widget/assets/css/icons.css?ver=3.3.3';
+					stylesheet.rel = 'stylesheet';
+					stylesheet.type = 'text/css';
+					document.getElementsByTagName('head')[0].appendChild(stylesheet);
+				});
+		</script>
+				<script type="text/javascript">
+			jQuery( window ).load(
+				function () {
+					var script = document.createElement('script');
+					script.src = 'https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/plugins/simple-follow-me-social-buttons-widget/assets/js/front-widget.js?ver=3.3.3';
+					script.type = 'text/javascript';
+					script.async = true;
+					document.getElementsByTagName('body')[0].appendChild(script);
+				});
+		</script>
+		
+		<span id='page-view-tracking-info' blog-id='32323' post-id='63'></span>
+		<script type="text/javascript">
+			// Check for compatibility before IE8
+			if (!Date.now) {
+ 				 Date.now = function() { return new Date().getTime(); };
+			}
+			jQuery( window ).load( function() {
+				jQuery.ajax({
+					url: 'https://blogs.msdn.microsoft.com/nickpinheiro/wp-admin/admin-ajax.php',
+					type: 'get',
+					data: {
+						action: 'track_page_view',
+						track_page_view_post_id: jQuery('#page-view-tracking-info').attr('post-id'),
+						track_page_view_blog_id: jQuery('#page-view-tracking-info').attr('blog-id'),
+						track_page_view_post_url: window.location.href.split('?')[0],
+						timestamp: Date.now()
+						}
+				});
+			});
+		</script>
+<script>
+dataLayer = [[]];
+</script>
+<!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-PLR87W" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>jQuery(window).load(function(){(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PLR87W')});
+</script>
+<!-- End Google Tag Manager -->
+	<script type="text/javascript">
+		jQuery( window ).load(
+			function(i) {
+				var n = window,
+					t = document,
+					e = n.console,
+					f, u, r, o;
+				typeof e == "undefined" && (f = function() {}, e = {
+					log: f,
+					warn: f,
+					assert: f,
+					clear: f,
+					dir: f,
+					error: f,
+					info: f,
+					profile: f,
+					profileEnd: f
+				}), u = {
+					appendToHead: function(n) {
+						if (t.getElementsByTagName("head").length > 0) t.getElementsByTagName("head")[0].appendChild(n);
+						else throw "bootstrapper: no head element found.";
+					},
+					appendToBody: function(n) {
+						if (t.getElementsByTagName("body").length > 0) t.getElementsByTagName("body")[0].appendChild(n);
+						else throw "bootstrapper: no body element found.";
+					},
+					addStyleElement: function(n) {
+						var i = t.createElement("link");
+						i.setAttribute("href", n), i.setAttribute("rel", "stylesheet"), i.setAttribute("type", "text/css"), u.appendToHead(i)
+					},
+					loadFiles: function(n, t) {
+						if (t !== i && u.recursiveScriptLoad(0, t), n !== i)
+							for (var r = 0, r = 0; r < n.length; r++) u.addStyleElement(n[r])
+					},
+					recursiveScriptLoad: function(n, t) {
+						t[n] && u.addScriptElement(t[n], function() {
+							u.recursiveScriptLoad(n + 1, t)
+						})
+					},
+					isCompatible: function(n, t) {
+						var r, u, i;
+						return (r = n.split("."), u = t.split("."), i = function(n) {
+							return isNaN(n) ? 0 : n
+						}, i(r[0]) > i(u[0]) || i(r[0]) === i(u[0]) && i(r[1]) > i(u[1]) || i(r[0]) === i(u[0]) && i(r[1]) === i(u[1]) && i(r[2]) >= i(u[2])) ? !0 : !1
+					},
+					addScriptElement: function(i, r) {
+						var f, e;
+						f = t.createElement("script"), f.setAttribute("type", "text/javascript"), f.async = true, f.setAttribute("src", i), f.attachEvent ? (e = function() {
+							setTimeout(function() {
+								typeof n.jQuery != "undefined" && r ? r() : e()
+							}, 10)
+						}, e()) : f.onload = r, u.appendToBody(f)
+					},
+					load: function(n, t) {
+						setTimeout(function() {
+							if (typeof n == "undefined") try {
+								u.addScriptElement(t.defaultPath, function() {
+									u.loadFiles(t.cssFiles, t.jsFiles)
+								});
+								return
+							} catch (i) {
+								e.warn("bootstrapper: failed to load default jQuery")
+							} else if (!u.isCompatible(n.fn.jquery, t.minimumVersion)) {
+								e.warn("bootstrapper: jQuery version is too old to load UserCard. Use v1.4.2 or later.");
+								return
+							}
+							u.loadFiles(t.cssFiles, t.jsFiles)
+						}, 0)
+					}
+				}, r = {
+					host: n.location.host,
+					search: "",
+					protocol: "https"
+				}, r.host = "widgets.services.microsoft.com", r.search = "?brand=msdn&lang=en&ver=4.9.0.0", r.protocol = "https:", o = {
+					minimumVersion: "1.1.2",
+					defaultPath: "https://code.jquery.com/jquery-1.4.2.min.js",
+					cssFiles: [r.protocol + "//" + r.host + "/v1/UnifiedBaseballCard.css" + r.search, r.protocol + "//" + r.host + "/v1/usercard.css" + r.search],
+					jsFiles: ["https://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js", r.protocol + "//" + r.host + "/v1/jquery.timeago.js" + r.search, r.protocol + "//" + r.host + "/v1/jquery.textfill.js" + r.search, r.protocol + "//" + r.host + "/v1/widgets.js" + r.search]
+				}, typeof n.jQuery == "undefined" ? u.load(i, o) : u.load(n.jQuery, o)
+			}
+		);
+	</script>
+<script type='text/javascript' src='https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/plugins/akismet/_inc/form.js?ver=3.1.11'></script>
+<link rel='stylesheet' id='msdn-comment-notification-comment-form-css'  href='https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/plugins/msdn-comment-notification/msdn-comment-notification-comment-form.css?ver=20161219' type='text/css' media='all' />
+<script type='text/javascript'>
+/* <![CDATA[ */
+var wds_ratings_config = {"ajaxurl":"https:\/\/blogs.msdn.microsoft.com\/nickpinheiro\/wp-admin\/admin-ajax.php","user_id":"0","nonce":"9d0e86cb9a","debug":"","no_auth_alert":"You must be logged in to rate this article.","repeatedly_vote_alert":"You can not vote repeatedly in a short time","allow_anonymous_rating":"","blog_id":"32323","rating_limit_login_user":"1","rating_limit_anonymous":"1","hide_rating_post_ids":""};
+var wds_ratings_config = {"ajaxurl":"https:\/\/blogs.msdn.microsoft.com\/nickpinheiro\/wp-admin\/admin-ajax.php","user_id":"0","nonce":"9d0e86cb9a","debug":"","no_auth_alert":"You must be logged in to rate this article.","repeatedly_vote_alert":"You can not vote repeatedly in a short time","allow_anonymous_rating":"","blog_id":"32323","rating_limit_login_user":"1","rating_limit_anonymous":"1","hide_rating_post_ids":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/plugins/wds-ratings/wds-ratings.js?ver=20161014'></script>
+<script type='text/javascript' src='https://blogs.msdn.microsoft.com/nickpinheiro/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript' src='https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/themes/microsoft/js/theme-merged.js?ver=02092017'></script>
+<script type='text/javascript' src='https://blogs.msdn.microsoft.com/nickpinheiro/wp-includes/js/wp-embed.min.js?ver=4.7.5'></script>
+<script type='text/javascript' src='https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/plugins/msdn-comment-notification/msdn-comment-notification-comment-form.js?ver=20161219'></script>
+<script type='text/javascript' src='https://blogs.msdn.microsoft.com/nickpinheiro/wp-content/themes/microsoft/js/vendor/jquery.cookie.js?ver=11092015'></script>
+
+</body>
+</html>

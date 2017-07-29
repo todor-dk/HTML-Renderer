@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script  type="text/javascript">
+		 <!-- -----The following Coding is for the Advertising.com Web Beacon ---- -->
+		 <!-- ----------------- DO NOT REMOVE THIS CODING ------------------------ -->
+		 var pingUrl ="http://ace-tag.advertising.com/action/type=220989408/bins=1/rich=0/mnum=1516/logs=0";
+         <!-- -----The preceding Coding is for the Advertising.com Web Beacon ---- -->
+         <!-- ----------------- DO NOT REMOVE THIS CODING ------------------------ -->
+		
+		//define the array for toolbar we want to ping
+		var validInvocationTypeArray=new Array("adcom");
+		
+		function getParam( name )
+		{
+		    var cUrl= window.location.href;
+			cUrl=cUrl.toLowerCase();
+			name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+			var regexS = "[\\?&]"+name+"=([^&#]*)";
+			var regex = new RegExp( regexS );
+			var results = regex.exec( cUrl );
+			if( results == null )
+			return "";
+			else
+			return results[1];
+		}
+		
+		//get value from param passed in 
+		try{
+			var tbid =getParam( 'tbid' );
+			var partner = getParam( 'partner' );
+			var invocationtype =getParam('invocationtype');
+	 
+		}catch(e){
+		//alert(e);
+		}
+		
+		function isValidToolbar(){
+			var bflag = -1;
+			var leng = validInvocationTypeArray.length;
+			for (var i=0;i<leng && bflag==-1 ;i++){
+				bflag = invocationtype.indexOf(validInvocationTypeArray[i]);
+			}
+			return bflag;
+		}
+
+		 function launch(){
+		    var browser ;
+		    var flag;
+			
+			flag = isValidToolbar();
+			if(flag == -1){
+				return ;
+			}
+			
+			if (navigator.userAgent.indexOf("MSIE") != -1){
+			      browser = "ie";
+			}
+			else if (navigator.userAgent.indexOf("Firefox") != -1){
+					browser = "ff";
+			}
+			if (browser =="ff"){ // this url only being called if it is firsttime in firefox
+				document.getElementById("pingimg").src =pingUrl;
+			}
+			else if (browser == "ie" && window.external){
+				flag = window.external.appPropertyValue("ping", "active");
+				//active is set to 1 by firstUse flag
+				if ( flag == "1"){
+				  window.external.updateAppPropertyStr("ping", "active", "0");
+				  document.getElementById("pingimg").src =pingUrl;
+                }
+			}
+		 }
+		
+		</script>
+
+    </head>
+    <body onload="launch();">
+       <img id="pingimg" height=1 width=1 border=0>
+    </body>
+</html>

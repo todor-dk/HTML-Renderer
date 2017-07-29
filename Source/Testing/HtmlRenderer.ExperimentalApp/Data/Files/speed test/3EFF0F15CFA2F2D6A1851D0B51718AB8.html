@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Reliable Servers - Looking Glass</title>
+    <link rel="icon" type="image/ico" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LookingGlass - Open source PHP looking glass">
+    <meta name="author" content="Telephone">
+
+    <!-- Styles -->
+    <link href="assets/css/reliableServers.css?v=3" rel="stylesheet">
+    <script src="assets/js/jquery-1.11.2.min.js"></script>
+  </head>
+  <body>
+    <!-- Container -->
+    <div class="container">
+
+      <!-- Header -->
+      <header class="header nohighlight" id="overview">
+       <a id="title" href="http://www.reliableservers.com">
+         <img width="50%" src="assets/img/logo.png?v=2"/>
+       </a>
+      </header>
+
+      <!-- Network Information -->
+      <div class="ip_header">
+        <span class="ip_header_text" style="color:white;">
+          Your IP Address:
+        </span>
+        <a class="ip_header_text" style="color:#037199;" href="#tests" id="userip">
+         <span class="your_ip">91.64.20.229</span>
+        </a>
+      </div>
+
+      <div class="app-container">
+      <section id="information">
+        <div class="row">
+          <div class="span12">
+            <div class="well">
+              <span id="legend">Network information</span><!-- IE/Safari dislike <legend> out of context -->
+              <p>Server Location: <b>New York / New Jersey</b></p>
+              <div style="margin-left: 10px;">
+                <p>Test IPv4: <a href="#tests" id="useripv4">108.61.5.91</a></p>
+                <p>Test IPv6: <a href="#tests" id="useripv6">2001:19f0:1595:1403::1091</a></p>
+                <!-- <p>Your IP Address: <a href="#tests" id="userip">91.64.20.229</a></p> -->
+                <p>Test files:
+                <a href="http://speedtest.reliableservers.com/100MBtest.bin" id="testfile">100MB</a>                 <a href="http://speedtest.reliableservers.com/1GBtest.bin" id="testfile">1GB</a>                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Network Tests -->
+      <section id="tests">
+        <div class="row">
+          <div class="span12">
+            <form class="well well-rs form-inline" id="networktest" action="#results" method="post">
+              <fieldset>
+                <div id="hosterror" class="control-group">
+                  <div class="controls">
+                    <input id="host" name="host" type="text" class="input-large" placeholder="Host or IP address">
+                  </div>
+                </div>
+                <select name="cmd" id="selector" class="input-medium" style="margin-left: 5px;">
+                  <option value="mtr">mtr</option>
+                  <option value="mtr6">mtr6</option>
+                  <option value="ping" selected="selected">ping</option>
+                  <option value="ping6">ping6</option>
+                  <option value="traceroute">traceroute</option>
+                  <option value="traceroute6">traceroute6</option>
+                </select>
+                <button type="submit" id="submit" name="submit" class="btn btn-primary" style="margin-left: 10px;">Run Test</button>
+              </fieldset>
+            </form>
+            <center><span id="viewLink"></span></center>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results -->
+      <section id="results" style="display:none">
+        <div class="row">
+          <div class="span12">
+            <div class="well">
+              <span id="legend">Results</span>
+              <pre id="response" style="display:none"></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      </div><!-- /app-container -->
+
+      <!-- Footer -->
+      <!-- <footer class="footer nohighlight">
+        <p>Powered by <a href="http://github.com/telephone/LookingGlass">LookingGlass</a></p>
+      </footer> -->
+
+    </div><!-- /container -->
+
+    <!-- Javascript -->
+    <script>
+    if ((window.location.hostname) == "speedtest.reliableservers.com")
+    {
+      document.getElementById('viewLink').innerHTML = "View <a href='http://v6.speedtest.reliableservers.com'>IPv6 Speedtest</a>"
+      $(window).on('load resize', function(){
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+        {
+          $(".ip_header_text").css('font-size', '20px');
+        }
+        else
+        {
+          $(".ip_header_text").css('font-size', '30px');
+        }
+      })
+    }
+    else if ((window.location.hostname) == "v6.speedtest.reliableservers.com")
+    {
+      document.getElementById('viewLink').innerHTML = "View <a href='http://speedtest.reliableservers.com'>IPv4 Speedtest</a>"
+      $(window).on('load resize', function(){
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+        {
+          $(".ip_header_text").css('font-size', '12px');
+        }
+        else
+        {
+          $(".ip_header_text").css('font-size', '25px');
+        }
+      })
+    }
+    </script>
+
+    
+    <script src="assets/js/LookingGlass.js?v=2"></script>
+    <script src="assets/js/XMLHttpRequest.min.js"></script>
+  </body>
+</html>

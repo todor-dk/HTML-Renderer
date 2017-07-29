@@ -25,8 +25,6 @@ namespace Scientia.HtmlRenderer.Dom
 {
     internal abstract class DomFactory
     {
-        public abstract Document CreateDocument(string baseUri, string characterSet);
-
         public abstract void SetQuirksMode(Document document, QuirksMode mode);
 
         /// <summary>
@@ -80,6 +78,23 @@ namespace Scientia.HtmlRenderer.Dom
                 location.ParentElement.InsertBefore(textNode, location.BeforeSibling);
             else
                 location.ParentElement.AppendChild(textNode);
+        }
+
+        public Comment CreateAndAppendComment(Document parent, string data)
+        {
+            Comment comment = parent.CreateComment(data);
+            parent.AppendChild(comment);
+            return comment;
+        }
+
+        public Comment CreateAndAppendComment(Element parent, Element beforeSibling, string data)
+        {
+            Comment comment = parent.OwnerDocument.CreateComment(data);
+            if (beforeSibling == null)
+                parent.AppendChild(comment);
+            else
+                parent.InsertBefore(comment, beforeSibling);
+            return comment;
         }
 
         public void AssociateWithForm(Element element, Element form)

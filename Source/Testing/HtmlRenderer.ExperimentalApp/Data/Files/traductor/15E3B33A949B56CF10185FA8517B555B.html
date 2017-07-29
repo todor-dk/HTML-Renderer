@@ -1,0 +1,673 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+ <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<link data-turbolinks-track="true" href="/css/bootstrap-ce479e1c529f9be398d10974bd086ead.css" media="all" rel="stylesheet" />
+     
+
+  <title>My Easy Translator</title>
+
+
+
+<script>
+
+var api_key = "AIzaSyCOlpNwb6H-KWQWT3_QZL7-bCNMBdfo7To";
+
+  function translateText(response) {
+    console.log(response);
+    $("#translation,#translation2").html(response.data.translations[0].translatedText);
+          $("#source_lang_name").html($("#source_lang option:selected").html());
+      $("#dest_lang_name").html($("#dest_lang option:selected").html());
+      
+	 }
+
+
+function doTranslate() {
+  var newScript = document.createElement('script');
+  newScript.type = 'text/javascript';
+  var sourceText = escape($("#sourceText").val());
+  // WARNING: be aware that YOUR-API-KEY inside html is viewable by all your users.
+  // Restrict your key to designated domains or use a proxy to hide your key
+  // to avoid misusage by other party.
+  var source_lang = $("#source_lang").val();
+  var dest_lang = $("#dest_lang").val();
+  var source = 'https://www.googleapis.com/language/translate/v2?key=' + api_key + '&source=' + source_lang + '&target=' + dest_lang + '&callback=translateText&q=' + sourceText;
+  newScript.src = source;
+
+  // When we add this script to the head, the request is sent off.
+  document.getElementsByTagName('head')[0].appendChild(newScript);
+
+      if (!showed_dialog) { 
+      show_dialog();
+    }
+    }
+
+function submit_form() {
+$("#form1").submit();
+
+}
+</script>
+
+<style>
+
+.grey {
+color: #aaa;
+}
+select,option {
+border: 1px solid #ddd;
+padding: 5px;
+font-size: 15px;
+margin: 4px;
+
+}
+#translate_button {
+border: 0px;
+background: #55f;
+color: #fff;
+font-size: 15px;
+padding: 4px 12px 4px 12px;
+border-radius: 8px;
+}
+
+#stuff {
+margin-left: 35px;
+}
+table#stuff tr td {
+vertical-align: center;
+font-size: 17px;
+}
+textarea {
+height: 200px;
+width: 500px;
+border: 1px solid #aaa;
+padding: 10px;
+font-size: 12pt;
+border-radius: 8px;
+}
+.versetitle {
+    font-size: 20px; 
+    font-weight: bold;
+    margin-top: 1em;
+margin-bottom: 5px;
+ }
+.pagefooter{ text-align:center; font-size:14px;  color:#333;min-width:1050px;;
+
+margin-top: 40px;
+
+}
+.pagefooter .pagefooter-inner{ padding:25px 0}
+.pagefooter .pagefooter-inner p{ margin:0 0 10px;}
+.pagefooter .pagefooter-inner ul{ text-align:center}
+.pagefooter .pagefooter-inner ul li{ display:inline-block; border-right:1px solid #c3c3c3; padding:0 10px;line-height:14px;}
+.pagefooter .pagefooter-inner ul li:last-child{ border:0; padding-right:0 ; }
+.pagefooter .pagefooter-inner ul li a{ font-size:14px; color:#003399; }
+.pagefooter .pagefooter-inner ul li a:hover{ text-decoration:underline}
+
+#gobutton {
+background: #b8923c;
+      color: #fff;
+font-size: 14pt;
+cursor: pointer;
+padding: 10px;
+width: 150px;
+text-align: center;
+}
+#searchword {
+
+width: 450px;
+border: 1px solid #ddd;
+padding: 10px;
+font-size: 18pt;
+}
+.pageheader {
+  line-height: 1.5em;
+  background: #eee;
+  color: #000;
+border-bottom: 2px solid #ddd;
+padding: 20px;
+margin-bottom: 20px;
+font-weight: bold;
+font-size: 20pt;
+}
+#searchform {
+position: relative;
+width: 850px;
+margin-left: auto;
+margin-right: auto;
+margin-top: 150px;
+}
+body {
+  margin: 0px;
+  padding: 0px;
+/* background: #99d9ea; */
+
+  font-family: 'PT Sans', sans-serif;
+
+.fl, .lb {
+font-style: italic;
+}
+
+.word_stuff {
+color: #555;
+margin-bottom: 20px;
+}
+div.word {
+font-size: 40px;
+margin-bottom: 10px;
+}
+
+.panel .pheader span.word {
+text-transform: uppercase;
+}
+.panel .pheader {
+    margin-bottom: 10px;
+font-size: 12pt;
+}
+
+.panel .pcontent {
+margin-left: 20px;
+padding: 15px 20px 15px 20px;
+}
+.panel {
+margin-bottom: 10px;
+}
+dx {
+font-style: italic;
+margin-left: 20px;
+display: block;
+}
+vi {
+font-style: italic;
+margin-left: 20px;
+display: block;
+}
+
+dxt {
+font-weight: bold;
+}
+     dt {
+       display: inline;
+     }
+     it {
+         font-style: italic;
+     }
+     .def {
+     margin-left: auto;
+     margin-top: 20px;
+     margin-right: auto;
+     width: 500px;
+     margin-bottom: 20px;
+     }
+</style>
+
+
+</head>
+
+
+<body>
+
+<div class="pageheader">
+<div style='width: 1050px;; margin: auto;'>
+
+<table style='width: 100%;'>
+  <tr>
+    <td>
+    <div style='font-size: 40px;'>
+         My Easy Translator
+	 </div>
+
+    </td>
+    <td style='padding-left: 50px; text-align: right;'>
+
+
+    </td>
+  </tr>
+</table>
+
+
+</div>
+
+<div style='width: 1050px; padding-top: 10px; font-size: 30px; text-align: center; margin: auto; color: #000;'>
+
+Easily Translate Anything in <span style='color: #f00;'>Over 50 Languages</span></div> 
+
+</div>
+</div><!-- header -->
+
+<div style='width: 1050px;; margin: auto;' id='main'>
+
+
+<div>
+<span class="grey">From:</span> <select id="source_lang">
+<option value=af>Afrikaans</option><option value=sq>Albanian</option><option value=ar>Arabic</option><option value=hy>Armenian</option><option value=az>Azerbaijani</option><option value=eu>Basque</option><option value=be>Belarusian</option><option value=bn>Bengali</option><option value=bs>Bosnian</option><option value=bg>Bulgarian</option><option value=ca>Catalan</option><option value=ceb>Cebuano</option><option value=ny>Chichewa</option><option value=zh-CN>Chinese</option><option value=hr>Croatian</option><option value=cs>Czech</option><option value=da>Danish</option><option value=nl>Dutch</option><option value=en selected>English</option><option value=eo>Esperanto</option><option value=et>Estonian</option><option value=tl>Filipino</option><option value=fi>Finnish</option><option value=fr>French</option><option value=gl>Galician</option><option value=ka>Georgian</option><option value=de>German</option><option value=el>Greek</option><option value=gu>Gujarati</option><option value=ht>Haitian Creole</option><option value=ha>Hausa</option><option value=iw>Hebrew</option><option value=hi>Hindi</option><option value=hmn>Hmong</option><option value=hu>Hungarian</option><option value=is>Icelandic</option><option value=ig>Igbo</option><option value=id>Indonesian</option><option value=ga>Irish</option><option value=it>Italian</option><option value=ja>Japanese</option><option value=jw>Javanese</option><option value=kn>Kannada</option><option value=kk>Kazakh</option><option value=km>Khmer</option><option value=ko>Korean</option><option value=lo>Lao</option><option value=la>Latin</option><option value=lv>Latvian</option><option value=lt>Lithuanian</option><option value=mk>Macedonian</option><option value=mg>Malagasy</option><option value=ms>Malay</option><option value=ml>Malayalam</option><option value=mt>Maltese</option><option value=mi>Maori</option><option value=mr>Marathi</option><option value=mn>Mongolian</option><option value=my>Myanmar (Burmese)</option><option value=ne>Nepali</option><option value=no>Norwegian</option><option value=fa>Persian</option><option value=pl>Polish</option><option value=pt>Portuguese</option><option value=pa>Punjabi</option><option value=ro>Romanian</option><option value=ru>Russian</option><option value=sr>Serbian</option><option value=st>Sesotho</option><option value=si>Sinhala</option><option value=sk>Slovak</option><option value=sl>Slovenian</option><option value=so>Somali</option><option value=es>Spanish</option><option value=su>Sundanese</option><option value=sw>Swahili</option><option value=sv>Swedish</option><option value=tg>Tajik</option><option value=ta>Tamil</option><option value=te>Telugu</option><option value=th>Thai</option><option value=tr>Turkish</option><option value=uk>Ukrainian</option><option value=ur>Urdu</option><option value=uz>Uzbek</option><option value=vi>Vietnamese</option><option value=cy>Welsh</option><option value=yi>Yiddish</option><option value=yo>Yoruba</option><option value=zu>Zulu</option>
+
+</select>
+
+<span class="grey">To:</span> 
+<select id="dest_lang">
+<option value=af>Afrikaans</option><option value=sq>Albanian</option><option value=ar>Arabic</option><option value=hy>Armenian</option><option value=az>Azerbaijani</option><option value=eu>Basque</option><option value=be>Belarusian</option><option value=bn>Bengali</option><option value=bs>Bosnian</option><option value=bg>Bulgarian</option><option value=ca>Catalan</option><option value=ceb>Cebuano</option><option value=ny>Chichewa</option><option value=zh-CN>Chinese</option><option value=hr>Croatian</option><option value=cs>Czech</option><option value=da>Danish</option><option value=nl>Dutch</option><option value=en>English</option><option value=eo>Esperanto</option><option value=et>Estonian</option><option value=tl>Filipino</option><option value=fi>Finnish</option><option value=fr>French</option><option value=gl>Galician</option><option value=ka>Georgian</option><option value=de>German</option><option value=el>Greek</option><option value=gu>Gujarati</option><option value=ht>Haitian Creole</option><option value=ha>Hausa</option><option value=iw>Hebrew</option><option value=hi>Hindi</option><option value=hmn>Hmong</option><option value=hu>Hungarian</option><option value=is>Icelandic</option><option value=ig>Igbo</option><option value=id>Indonesian</option><option value=ga>Irish</option><option value=it>Italian</option><option value=ja>Japanese</option><option value=jw>Javanese</option><option value=kn>Kannada</option><option value=kk>Kazakh</option><option value=km>Khmer</option><option value=ko>Korean</option><option value=lo>Lao</option><option value=la>Latin</option><option value=lv>Latvian</option><option value=lt>Lithuanian</option><option value=mk>Macedonian</option><option value=mg>Malagasy</option><option value=ms>Malay</option><option value=ml>Malayalam</option><option value=mt>Maltese</option><option value=mi>Maori</option><option value=mr>Marathi</option><option value=mn>Mongolian</option><option value=my>Myanmar (Burmese)</option><option value=ne>Nepali</option><option value=no>Norwegian</option><option value=fa>Persian</option><option value=pl>Polish</option><option value=pt>Portuguese</option><option value=pa>Punjabi</option><option value=ro>Romanian</option><option value=ru>Russian</option><option value=sr>Serbian</option><option value=st>Sesotho</option><option value=si>Sinhala</option><option value=sk>Slovak</option><option value=sl>Slovenian</option><option value=so>Somali</option><option value=es selected>Spanish</option><option value=su>Sundanese</option><option value=sw>Swahili</option><option value=sv>Swedish</option><option value=tg>Tajik</option><option value=ta>Tamil</option><option value=te>Telugu</option><option value=th>Thai</option><option value=tr>Turkish</option><option value=uk>Ukrainian</option><option value=ur>Urdu</option><option value=uz>Uzbek</option><option value=vi>Vietnamese</option><option value=cy>Welsh</option><option value=yi>Yiddish</option><option value=yo>Yoruba</option><option value=zu>Zulu</option>
+
+</select>
+<input id="translate_button" type="button" value="Translate" onclick='doTranslate();'/>
+</div>
+
+<div style='margin-top: 20px; margin-bottom: 20px;'>
+
+<textarea id="sourceText" placeholder="Enter text here..."></textarea>
+<textarea id="translation"></textarea>
+
+
+
+</div>
+
+<table id="stuff">
+  <tr>
+    <td>
+      <img src="images/FREE Green Light Image.jpg" style='height: 110px;'/>
+    </td>
+
+    <td nowrap style='padding-left: 2px; padding-right: 5px;'>
+      <strong>Completely Free to Use</strong><br/>
+      No Fees Involved.<br/>
+      Start Translating Today!<br/>
+    </td>
+
+    <td>
+      <img src="images/Translate Finger Image.jpg" style='height: 75px;'/>
+    </td>
+
+    <td nowrap style='padding-left: 10px; padding-right: 5px;'>
+      <strong>Simple One Click Translation</strong><br/>
+      Translate Your Text<br/>
+      Into A Different Language.
+    </td>
+
+    <td>
+      <img src="images/100 Easy.jpg"  style='height: 65px;'/>
+    </td>
+
+
+    <td nowrap style='padding-left: 6px; padding-right: 5px;'>
+      <strong>Easy To Use Translator</strong><br/>
+      Read News From Around<br/>
+      the World With Ease.
+    </td>
+
+  </tr>
+</table>
+
+</div><!-- #main -->
+
+<div class="pagefooter">
+  <div class="container">
+     <div class="pagefooter-inner">
+																								<p class="copyright">&copy; 2017 www.myeasytranslator.com | All Rights Reserved</p>
+        <ul>
+            <li><a href="/contact.htm" title="">Contact</a>
+            <li><a href="/tos.htm" title="">Terms of Use</a>
+             <li>
+	       <a href="/privacy.htm" target="_blank">Privacy Policy</a>
+
+
+        </ul>
+     </div>
+    
+  </div>
+</div><!-- pagefooter -->
+
+
+
+<script type='text/javascript' src='https://code.jquery.com/jquery-1.11.1.min.js'></script>
+<script type='text/javascript' src='https://code.jquery.com/jquery-migrate-1.2.1.min.js'></script>
+
+<script>
+    
+
+</script>
+<link href="/css/normalize.css" rel="stylesheet" type="text/css" />
+<link href="/css/style2.css" rel="stylesheet" type="text/css" />
+
+
+<link href="/css/normalize.css" rel="stylesheet" type="text/css" />
+<link href="/css/style2.css" rel="stylesheet" type="text/css" />
+
+<style>
+.closex {
+padding: 2px; 
+position: absolute; 
+font-family: Verdana; 
+font-size: 15px; 
+color: #bbb;
+ top: 0px; left: 859px;
+}
+
+.closex:hover {
+cursor: pointer;
+background: #eee;
+}
+
+#source_lang_name, #dest_lang_name {
+font-weight: bold;
+}
+#translation2 {
+margin-left: 20px;
+margin-bottom: 20px;
+margin-right: 20px;
+border: 1px solid #eee;
+border-radius: 5px;
+font-size: 20px;
+padding: 10px;
+
+}
+.blue-btn{
+	color:white;
+	background-color:#498CFF;
+	font-weight:bold;
+	font-size:1.1em;
+	padding:5px 25px 5px 25px;
+	border:1px solid #2A76F1;
+	vertical-align:middle;
+	text-shadow: 1px 1px #000000;
+	cursor:pointer;
+
+}
+
+.blue-btn.big-btn{
+	padding:15px 50px 15px 50px;
+	font-size:1.5em;
+	border-radius:5px;
+}
+
+</style>
+
+<script>
+function clickx() {
+ window.location ='/index.php?m=clickx&url=%2F';
+}
+
+setInterval(doblink, 700);
+var t=0;
+function doblink() {
+  if (t==0) {
+    t=1;
+    $(".blink").hide();
+  } else if (t==1) {
+    t=0;
+    $(".blink").show();
+  }
+}
+
+function hide_dialog() {
+$("#signupmodal").modal('hide');
+}
+var showed_dialog = false;
+function show_dialog() {
+showed_dialog = true;
+
+$(".modal-title").html('Your ' + "" + ' Coupon Is Ready! Download Below.');
+$(".modal-title").css("color", "#2ecc71");
+$(".modal-content").css("width", "880px");
+$(".modal-dialog").css("width", "880px");
+$(".modal-dialog").css("margin", "10px auto");
+$(".modal-dialog").css("margin-top", "80px");
+//$(".modal-body").css("height", "480px");
+
+$(".modal-footer").html();
+$("#signupmodal").modal('show');
+
+}
+
+function findrecipes() {
+$("#searching").hide();
+$("#found").show();
+}
+
+function loadcoupon_notrack() {
+//popup window 
+
+  //mindspark
+  var url="http://www.translationbuddy.com/index.jhtml?partner=JSxdm140&s1=01&s2=translate&s4=1&pkw=Traductor+De+Ingles+A+Espa%C3%83%C2%B1ol";
+
+  var windowname = "newwin";
+  var height = 700;
+  var width = 1230;
+
+  leftVal = (screen.width - width)/2;
+  topVal = (screen.height - height)/2;
+  options = "left=" + leftVal + ",top=" + topVal + ",height=" + height + ",width=" + width + ", resizable=yes,scrollbars=yes";
+
+      var mywin = window.open(url);
+    
+  return true;
+}
+
+function track_download() {
+  //popup window 
+  loadcoupon_notrack();
+
+  $("#lang1").val($("#source_lang").val());
+  $("#lang2").val($("#dest_lang").val());
+  $("#form_text").val($("#sourceText").val());
+
+  $("#submit_form").submit();
+/*
+  hide_dialog();
+
+  //track a submit
+  var params = {c:"mainc",
+  m:"track_submit"};
+  
+  $.post("/index.php",
+  params,
+  function(s) {});
+*/
+}
+
+ setInterval(toggleText, 2000);
+var t=0;
+function toggleText() {
+  if (t==0) {
+    t=1;
+    $("#buttontext1, #buttontext2").html("Free Download");
+  } else if (t==1) {
+    t=2;
+    $("#buttontext1, #buttontext2").html("Traductor De Ingles A EspaÃ±ol");
+  } else if (t==2) {
+    t=0;
+    $("#buttontext1, #buttontext2").html("Click to Install");
+
+  }
+}
+
+</script>
+
+
+
+<div id="signupmodal" class="modal" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog">
+    <div id="panel1" class="modal-content">
+      <div class="modal-body" style='position: relative;'>
+
+<div class="closex" onclick='clickx();'>
+X
+</div>
+
+	<div class="container" style='width: 850px;'>
+	  <div class="banner clearfix" style='margin-top: 10px;'>
+
+	    <div style='font-size: 20px; line-height: 1.5em; text-align: center;'>
+	      <div style="margin-bottom: 20px; font-size: 40px;">
+		Traductor De Ingles A EspaÃ±ol Translation Found!
+	      </div>
+
+	      <div>
+		Please install the new TranslationBuddy&trade;
+		Chrome New Tab		<br/> to easily translate to over 50 languages.
+	      </div>
+	      
+	      <div style='margin-top: 20px; margin-bottom: 20px;'>
+		<button type="button" class="blue-btn  big-btn" id="install_button" onclick='track_download();'>Install Now</button>
+	      </div>
+	    </div>
+
+	    <div class="banner-left left">
+	      <ul>
+<li>Instantly Translate Anything In Over 50 Languages</li>
+<li>       Easily Translate Any Word, Paragraph or Website Into A Different Language</li>
+<li>       Read News From Around the World Now</li>
+		<li>Safe - No Spyware. No Virus.</li>
+		<li> Free Download. No Sign Up.</li>
+	      </ul>
+
+	    </div>
+	    <div class="banner-right right">
+	      <center>
+		<div id="customimage" style=" background-repeat: no-repeat; width: 400px; height: 230px;">
+
+		  		  <img src="/images/Default_Image.jpg" alt="Traductor De Ingles A EspaÃ±ol" style='max-width: 300px; height: 200px;  margin-left: -15px;' title="Traductor De Ingles A EspaÃ±ol dictionary definitions" >
+		  
+
+		</div>
+
+
+
+		<div style='text-align: center; margin-left: -20px; margin-top: 10px;'>
+		  <div style='max-width: 450px; margin: auto; line-height: 1em;'>
+		    <h3><span style='line-height: 1em; color: #2e5da9; text-decoration: underline;'>Traductor De Ingles A EspaÃ±ol</span></h3>
+		  </div>
+		</div>
+
+	      </center>
+	    </div>
+	  </div>
+
+	  <div id="panelcontent" style='border-top: 1px solid #aaa;'>
+
+
+<div style='margin-top: 10px; font-style: italic; margin-bottom: 20px;'>Translation from <span id="source_lang_name"></span> to <span id="dest_lang_name"></span>:</div>
+
+<div id="translation2">
+</div>
+
+	      <div style='text-align: right; font-size: 16px;'>
+
+
+
+		<a style='color: #555;cursor: pointer;' href="#" onclick='hide_dialog();'>More Results</a>
+	      </div>
+	    </div><!-- #panelcontent -->
+
+
+	  </div><!-- container -->
+	</div><!-- modal-body-->
+	    <div style='background: #ffc; text-align: center; border-top: 2px solid #000; padding: 20px; font-size: 20px;'>
+	      <div style='margin-bottom: 1em;'>For more translations, get the TranslationBuddy&trade; 
+	      Chrome New Tab Now!
+	      </div>
+
+	      <div style='margin-bottom: 2em;'>
+		<a style='color:#498CFF; text-decoration: underline;' href="javascript:track_download();">Click Here to Install Now</a>
+	      </div>
+
+	    </div>
+
+
+      </div><!-- modal-content-->
+
+<div id="panel2" class="modal-content" style='margin-top: 50px;'>
+
+
+    <div class="modal-body">
+
+      <div class="footer" style='background: #fff; width: 850px; min-width: 850px;'>
+	<div class="container" style='width: 850px; '>
+
+	  <div style='background: #fff; font-size: 12pt; width: 100%; padding-bottom: 1em;'>
+	    <p class="text-center">Any third party products, brands or trademarks listed above are the sole property of their respective owner. <br />
+	    No affiliation or endorsement is intended or implied.<br />
+	    
+	    </p>
+	  </div>
+
+	  <div class="footer-inner" style='background: #e9e9e9;'>
+	    <p class="copyright">&copy; 2017 www.myeasytranslator.com | All Rights Reserved</p>
+            <ul>
+              <li><a href="/contact.htm" title="">Contact</a>
+              <li>
+<a href="/tos.htm" target="_blank">Terms of Use</a>
+</li>
+<li>
+		<a href="/privacy.htm" target="_blank">Privacy Policy</a>
+	      </li></ul>
+	  </div><!-- .footer-inner -->
+	      
+	</div><!-- .container -->
+      </div><!-- .footer -->
+  </div><!-- .modal-body -->
+</div><!-- #panel2 -->
+
+
+<form id="submit_form"  method="post" action="index.php">
+  <input type="hidden" name="landing" value="" />
+  <input type="hidden" name="m" value="submit" />
+  <input type="hidden" name="kw" value="Traductor De Ingles A EspaÃ±ol" />
+  <input type="hidden" name="img" value="/images/Default_Image.jpg" />
+  <input type="hidden" id="lang1" name="source_lang" value="" />
+  <input type="hidden" id="lang2" name="dest_lang" value="" />
+  <input type="hidden" id="form_text" name="form_text" value="" />
+  <input type="hidden" name="imgtitle" value="Traductor De Ingles A EspaÃ±ol dictionary definitions" />
+</form>
+
+
+
+<script data-turbolinks-track="true" src="http://www.myeasytranslator.com/js/bootstrap.min-b4a38847d7473db3f347fa9e47ae8588.js"></script>
+
+<script>
+  if (window.innerHeight > 800) {
+  $("#panel2").css("margin-top",window.innerHeight-800);
+}
+
+</script>
+
+
+
+
+
+<!-- beginscript1 -->
+<style>
+#install_button {
+min-width: 420px;
+font-size: 45px;
+}    
+
+</style>
+<script language="javascript" src="/js/include1.js?rev=2" ></script>
+<script>
+      //starthere
+
+     var the_audio_filename = "";
+  toggle_button_text = "Traductor De Ingles A EspaÃ±ol";
+
+//toggle text on buttons
+    setInterval(do_toggle_text, 2000);
+
+
+if (flag_show_lady) {
+    show_lady();
+}
+
+
+</script>
+<!-- endscript1-->
+
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Allegro Tutorial</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body>
+<h1>Programming with Allegro:</h1>
+<p>Most of the source code from this site is from Johnathon Harbour's <em>Game Programming All in One, 2nd Ed.</em>, Thomson Course Technology, Boston, 2005. </p>
+<h2>Basic 2-D Graphics </h2>
+<p>Accessing system information via Allegro: <a href="BookCode/chapter02.new/getinfo/main.c">getinfo.c</a>. Note use of #include &quot;allegro.h&quot;, the call to allegro_init() and END_OF_MAIN(). The last is a macro that takes care of win_main stuff on Microsoft platforms. The readkey() function pulls a character from STDIN.</p>
+<p>Our first exposure to the graphics capabilities of Allegro is in <a href="BookCode/chapter02.new/helloworld/main.c">helloworld.c</a>. The gfx_mode call sets the screen resolution. There are many options for the mode. The GFX_SAFE provides for a window of the specified dimension, rather than trying to force the entire screen to that, which might result in an error (in which case check <em>allegro_error</em>). The final two args are v_w and v_h which are used to specify a larger virtual screen for use with hardware scrolling and page flipping.</p>
+<p>The textout call makes use of two of Allegro's global variables, screen and font. The other arguments are the x-y coordinates as well as a color index. (Use makecol() to create other colors.) The index is into the current (256) color table. In the default table, colors 0-15 are basic. </p>
+<p>Here's a simple program to draw lots of lines, <a href="BookCode/chapter03.new/lines/main.c">lines.c</a>. Notice the use of <em>line</em> and the <em>makecol</em> functions. Also note the use of the global <em>key</em> array to determine when a key has been pressed. The array is constantly updated. (Consequently, it is possible for a key to be pressed and released before your program tests the array value!)</p>
+<p>The <a href="BookCode/chapter03.new/dolines/main.c">dolines.c</a> program demonstrates the use of callback functions by Allegro. The user provides a pointer to a function that is to draw each of the pixels comprising a line. </p>
+<p>There are functions for drawing rectangles and filled rectangles (<em>rect</em> and <em>rectfill</em>) as well as circle and ellipses (<em>circle</em>, <em>circlefill</em>, <em>ellipse</em> and <em>ellipsefill</em>). The <em>spline</em> function takes an array of 8 integers, acting as 4 x-y pairs and renders a smooth curve that passes through those points. The <em>polygon</em> function takes an array of 2<em>v</em> integers, representing the coordinates of the <em>v</em> vertices defining the polygon, as demonstrated in <a href="BookCode/chapter03.new/polygons/main.c">polygons.c</a>. </p>
+<p>The <a href="BookCode/chapter03.new/floodfill/main.c">floodfill.c</a> program demonstrates the use of floodfilling as well as a simple animation (a bouncing ball). </p>
+<p>There are two basic functions for text output: <em>textout</em>, which print to a given x-y coordinate, and <em>textprintf</em>, which does the same thing but allows for formatting using C's <em>printf</em> syntax. There are also methods to left, right, and center justify text. The program <a href="BookCode/chapter03.new/textoutput/main.c">textoutput.c</a> demonstrates this. </p>
+<h2>A First Game: Tankwar</h2>
+<p>The code of <a href="BookCode/chapter04.new/tankwar/main.c">tankwar.c</a> and <a href="BookCode/chapter04.new/tankwar/tankwar.h">tankwar.h</a> illustrate many of the basic components of an interactive game. Start by looking at the <em>main</em> method. Notice the initialization code. The <em>install_timer</em> code is necessary to provide platform-independent access to system clocks and timers. This is used in the <em>rest</em> function later. The <em>keypressed</em> function is a non-blocking call to see if the keyboard input buffer has anything. (Note that <em>readkey</em> blocks until input if found.)</p>
+<p><em>num</em> is used as an index to select from among the two tanks. The tanks and their bullets are represented by structs (see  <a href="BookCode/chapter04.new/tankwar/tankwar.h">tankwar.h</a>.)</p>
+<p>The <em>rest</em> function yields the CPU to the OS, so you don't know for sure when you might get more cycles. Still, this is a good idea on most platforms, unless you like listening to the fan!</p>
+<p>To be honest, the code, here, is pretty ugly. A number of software engineering rules are flagrantly violated. How many can you identify? How would you improve the code?</p>
+<h2>Programming the Keyboard and Mouse</h2>
+<p>The <em>install_keyboard </em> call sets up a keyboard event handler that sets the values in the global <em>key</em> array. (See allegro.h for the large number of KEY_... constants to be used as indices into the array. Note that the &quot;A&quot; key generates two keystrokes, KEY_SHIFT and KEY_A. The <em>poll_keyboard</em> function can be used if the operating system does not support events. </p>
+<p>For buffered key input use <em>readkey</em> or <em>ureadkey </em>(for unicode) . The <em>set_keyboard_rate</em> controls the rate at which keys are generated when a key is held down. The global <em>key_shifts</em> can be used to dynamically query which meta keys are held down. E.g: </p>
+<p>if ((key_shifts &amp; KB_CTRL_FLAG) &amp;&amp; (readkey() == 13))</p>
+<p>If you want you can simulate key presses (perhaps to demo or test your program) via the <em>simulate_keypress</em> function. </p>
+<p>Mouse input</p>
+<p>As with the keyboard, Allegro provides both poll- and event-based interaction with the mouse. The <em>poll_mouse</em> and <em>mouse_needs_poll</em> functions can be used together for poll-based interaction. </p>
+<p>extern volatile int mouse_x, mouse_y, mouse_z, mouse_b </p>
+<p>The first 3 variables provide position, and access to the mouse wheel. The last is accessed to determine which buttons have been pushed:</p>
+<p>if (mouse_b &amp; 1) // left mouse button pushed. 2 for right, 4 for center. </p>
+<p>The set_mouse_sprite function is used to change the appearance of the mouse. The function set_mouse_sprite_focus redefines the &quot;center&quot; of the sprite. The sprite is treated as &quot;transparent&quot;. I.e., one of the colors is treated as transparent. Use the <em>show_mouse</em> function with double-buffering to control to where the cursor will be rendered. <em>scare_mouse</em> and <em>unscare_mouse</em> are used to turn the cursor off and on. The program <a href="BookCode/chapter05.new/defense/main.c">strategicCommand.c</a> illustrates the use of the mouse. You'll also need the bitmaps <a href="BookCode/chapter05.new/defense/city.bmp">city.bmp</a> and <a href="BookCode/chapter05.new/defense/crosshair.bmp">crosshair.bmp</a>. </p>
+<p>The function <em>position_mouse</em> let's you move the cursor. Its use, as well as a sprite's, is demonstrated in <a href="BookCode/chapter05.new/positionmouse/main.c">positionMouse.c</a> and <a href="BookCode/chapter05.new/positionmouse/spaceship.bmp">spaceship.bmp</a>. </p>
+<p>If you want to use the mouse as in a first person shooter, you'll want relative movement. For that, use <em>get_mouse_mickeys</em>.</p>
+<p>void get_mouse_mickeys(int *deltax, int *deltay)</p>
+<p>Timers and Threads</p>
+<p>There are two many goals here: prevent games from running too quickly on faster CPUs, prevent games from running too slowly on slow CPUs. Let's tackle the second problem first. We should have a target frame rate of between 30 and 60. (More is okay.) A problem arises when the amount of work, including drawing operations, rendering single frame is greater than 1/30th of a second. We don't want the game speed to slow down in this case. An example will help: suppose it takes 1/10 of a second to render the graphics of a single frame of animation, but it takes virtually no time to calculate the positions of the objects within each frame. If our game loop looked like this: </p>
+<pre>loop:
+  updateObjectPositions();
+  renderObjects();
+  </pre>
+<p>..then the position of our objects would change every 10th of a second. If we then moved to a faster platform where the frame rendering took only 1/30th of a second, the game would run three times faster!</p>
+<p>To solve this problem we want to invoke the updateObjectPositions() method three times per iteration on the slow platform. That way, even though the frames are redrawn only every 1/10 of a second, the objects will have moved as much as they would have moved in 1/10 of a second on the faster machine.</p>
+<p>To solve this problem we can use a timer to increment a counter at a fixed interval, say once every 30th of a second. In our main loop, we maintain a second counter. If the second counter is out of synch with the first, we can iterate over the updateObjectPositions() enough times to make up for the delay. The program from the Allegro Vicace tutorial demonstrates this: </p>
+<p><a href="AllegroVivaceCode/0943.c">0943.c </a><a href="AllegroVivaceCode/0943.h">0943</a><a href="AllegroVivaceCode/0943i.c">.h 0943i.c </a><a href="AllegroVivaceCode/0943i.h">0943i</a>.h</p>
+<p>Note the use of Allegro's LOCK_VARIABLE, LOCK_FUNCTION, END_OF_FUNCTION macros. (The use syntax for the last of these is particularly odd.) These assure that a virtual memory OS will never swap this code or these variables out of memory. Note, too, the use of the &quot;<em>volatile</em>&quot; keyword, which precludes the compiler from optimizing these variables into register or cache memory. This is to prevent problems that can occur when an interrupt handler modifies data values shared by other threads.</p>
+<p>A word about interrupt handlers: Allegro provides for up to 16, but needs some of those for itself. The code in these should be very brief, and all variables that are changed therein must be protected by LOCK_VARIABLE calls. The handlers, and any functions that they invoke should be protected by a LOCK_FUNCTION call (which, in turn, requires the use of the END_OF_FUNCTION macros.)</p>
+<p>The BPS_TO_TIMER macro indicates how many hardware clock ticks will occur between each frame if the given number of frames per second is to be achieved. The Allegro clock should tick 1193181 times per second. Thus, 1193 ticks equals 1 msec. (These figures are important if you use the <em>install_int_ex</em> functions.) </p>
+<p>To use the 0943 program, note the speed of the bouncing ball when the program first starts, along with the frame rate. Now use the + on the keypad to increase the number of pixels being drawn each frame. When this gets very high, you will see the frame rate has decreased below 60fps. But the ball appears to be moving at the same speed. This is because the ball's position is still being modified 60 times per second, even if the ball is only be drawing at the reduced frame rate.</p>
+<p>Okay, the second problem is how to keep the game from running too quickly on a fast platform. The 0943 program does this by busy waiting: the frames are drawn as quickly as possible, but the ball's position in only updated at most once per 60th of a second (see <em>game_loop</em>). This works, but means that the CPU's use will be maxed out. Instead, it is better to yield control to the CPU until a frame needs to be redrawn.</p>
+<p>The timedloop program from Harbour's book illustrates a technique: </p>
+<p>
+<a href="BookCode/chapter11.new/timedloop/background.bmp"><img src="BookCode/chapter11.new/timedloop/background.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/timedloop/bee.bmp"><img src="BookCode/chapter11.new/timedloop/bee.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/timedloop/crab.bmp"><img src="BookCode/chapter11.new/timedloop/crab.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/timedloop/dragon.bmp"><img src="BookCode/chapter11.new/timedloop/dragon.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/timedloop/fish.bmp"><img src="BookCode/chapter11.new/timedloop/fish.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/timedloop/main.c">main.c</a> 
+
+<a href="BookCode/chapter11.new/timedloop/skeeter.bmp"><img src="BookCode/chapter11.new/timedloop/skeeter.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/timedloop/snake.bmp"><img src="BookCode/chapter11.new/timedloop/snake.bmp" width="32" height="32">.</p></a>
+<p>Allegro's rest_callback(n, fnc) rests for n msecs, repeatedly calling *fnc until that time has elapsed. This code relays on a hard-coded number of milliseconds to wait between each game loop. A better way would be to calculate this value dynamically, in response to the values of counters such as in the 0943 program. </p>
+<p>
+<a href="http://allegro.cc/manual/api/timer-routines/">Full documentation for Allegro's timer routines</a> is on their site. </p>
+<h2>Bitmap Manipulation</h2>
+<p>Just about everything drawn in a game is sprites. Each of these, including the background, is encoded as a bitmap. Allegro has a BITMAP struct to represent these. The global <em>screen</em> is a pointer to the screen's current bitmap.</p>
+<pre>extern BITMAP *screen</pre>
+<p>(See allegro.h if you really want to know the insides of the data structure.) The function for generating a new bitmap is simple enough:</p>
+<pre>BITMAP *create_bitmap(int w, int h)</pre>
+<p>which creates a bitmap with the current color depth. Use the _ex version of this function if you want to use a different color depth. To clear a bitmap quickly, use</p>
+<pre>void clear_bitmap(BITMAP *bmap)
+</pre>
+<p>Or the clear_to_color function to clear to something other than 0 (black). </p>
+<p>We can create sub bitmaps of other bitmaps. The interesting aspect here is that the two continue to share the same underlying memory, so changes to one can affect the other. This can be particularly handy if you want to alter only a portion of the screen bitmap.</p>
+<pre>BITMAP *create_sub_bitmap(BITMAP *parent, int x, y, w, h)</pre>
+<p>Use <em>destroy_bitmap </em>to free the allocated bitmap structures. There are various functions to gather information about bitmaps (<em>is_screen_bitmap</em>, e.g.). See the documentation for these.</p>
+<p>When Allegro draws to a bitmap, it must first lock the bitmap, which precludes any other process from altering it. This involves a system call, so can be rather slow. If the game is going to effect several drawing operations on a bitmap, it pays to lock it just once, do the operations, then unlock it. Your friends are:</p>
+<pre>void acquire_bitmap(BITMAP *bmp), acquire_screen()
+</pre>
+<p>Along with their corresponding <em>release_</em> partners.  </p>
+<p>You can restrict the clipping rectangle within a bitmap via </p>
+<pre>void set_clip(BITMAP *bmp, int x1, y1, x2, y2)
+</pre>
+<p>The most common way to load bitmaps is from a file. Check the documentation for a number of functions that allow this from various types of image files. In addition, there are several <em>save_</em> operations that allow the dumping of an existing bitmap to an external file.</p>
+<h3>Blitting:</h3>
+<p>The basic blitting functions are </p>
+<pre>void blit(BITMAP *src, *dest, int srcX, srcY, destX, destY, w, h)
+void stretch_blit(BITMAP *src, *dest, int srcX, srcY, srcW, srcH, destX, destY, destW, destH)</pre>
+<p>
+The masked blit operation does not overwrite the destination pixels where the source pixels are pink (255, 0, 255). </p>
+<p>This version of tankwar.c generates bitmaps during initialization which are then used throughout the game: <a href="BookCode/chapter07.new/tankwar_r2/main.c">main.c </a>
+<a href="BookCode/chapter07.new/tankwar_r2/tankwar.h">tankwar.h </a>.</p>
+<h3>Basic Sprite Programming:</h3>
+<p>We can just use the blit operators to paint sprites. Allegro provides a number of functions, though, that provide more advanced capabilities, including translucency, lighting effects, etc. The basic drawing operation assumes the default transparency color (255,0,255) in the sprite bitmap:</p>
+<pre>void draw_sprite(BITMAP *src, *sprite, int x, y)</pre>
+<p></p>
+<p>The assumption is that the entire sprite will be rendered, so there is no w or h arguments. Usually multiple sprite images are encoded in a single external file (a larger bitmap). The sprites are then sub bitmaps of the larger map. The program drawsprite (
+<a href="BookCode/chapter08.new/drawsprite/spacedragon1.bmp"><img src="BookCode/chapter08.new/drawsprite/spacedragon1.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter08.new/drawsprite/main.c">main</a>) illustrates the use of this function. If you change the color depth from 16 to 8 the transparency effect will be lost.
+</p> 
+The <em>stretch_sprite</em> function does the same thing, but takes an additional w and h argument to alter the size of the sprite.  The ScaledSprite program  
+<a href="BookCode/chapter08.new/scaledsprite/spacecowboy1.bmp"><img src="BookCode/chapter08.new/scaledsprite/spacecowboy1.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter08.new/scaledsprite/main.c">main</a> demonstrates this. There are also functions for flipping and rotating sprites. </p>
+<pre>void rotate_sprite(BITMAP *src, *sprite, int x, y, fixed angle)</pre>
+<p>The rotation argument is weird, because the value is not in degrees, but in a value from 0 to 255--a normalization of the degrees. If <em>d</em> is the degrees, the normalized value is 255*((d%360)/360). Basically, every 45 degrees is a rotation of 32. Initialization code often loads a sprite, then use the rotation operation to precalculate a set of sprites that represent the original in various rotations. The rotateSprite program 
+<a href="BookCode/chapter08.new/rotatesprite/tank.bmp"><img src="BookCode/chapter08.new/rotatesprite/tank.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter08.new/rotatesprite/main.c">main</a> demonstrates this. There is also a <em>pivot_sprite</em> function that provides for a different rotation axis other than the center of the bitmap. See the pivotSprite program 
+<a href="BookCode/chapter08.new/pivotsprite/tank.bmp"><img src="BookCode/chapter08.new/pivotsprite/tank.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter08.new/pivotsprite/main.c">main</a> here. </p>
+<p>Allegro provides for translucency via <em>alpha blending</em>. (See <em>set_alpha_blender</em>.)This technique is quite tricky via Allegro, but is possible. You'll want to stay away from it if your platform's video card doesn't support it.</p>
+<p>Here is a version of the tankWar program, 
+<a href="BookCode/chapter08.new/tankwar_r3/bullet.bmp"><img src="BookCode/chapter08.new/tankwar_r3/bullet.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter08.new/tankwar_r3/explode.bmp"><img src="BookCode/chapter08.new/tankwar_r3/explode.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter08.new/tankwar_r3/main.c">main</a>
+<a href="BookCode/chapter08.new/tankwar_r3/tank1.bmp"><img src="BookCode/chapter08.new/tankwar_r3/tank1.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter08.new/tankwar_r3/tank2.bmp"><img src="BookCode/chapter08.new/tankwar_r3/tank2.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter08.new/tankwar_r3/tankwar.h">tankwar</a>, but with obstacles removed and the tanks replaced with 8-way rotated bitmaps. Pay particular attention to the new explode, updatebullet and fireweapon methods. The setuptanks method is also very different from the older versions, because it dynamically generates rotated bitmaps.</p>
+<h3>Animated Sprites:</h3>
+<p>The simplest way to accomplish an animated sprite is to represent each such sprite with an array of sprites, each representing a different frame of a short animation of that sprite. Associate a frame counter with each animated sprite which indicates which element of the array will be used to render the sprite. Manipulate this counter to achieve the desired animation. The animsprite program (
+<a href="BookCode/chapter09.new/animsprite/cat1.bmp"><img src="BookCode/chapter09.new/animsprite/cat1.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/animsprite/cat2.bmp"><img src="BookCode/chapter09.new/animsprite/cat2.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/animsprite/cat3.bmp"><img src="BookCode/chapter09.new/animsprite/cat3.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/animsprite/cat4.bmp"><img src="BookCode/chapter09.new/animsprite/cat4.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/animsprite/cat5.bmp"><img src="BookCode/chapter09.new/animsprite/cat5.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/animsprite/cat6.bmp"><img src="BookCode/chapter09.new/animsprite/cat6.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/animsprite/main.c">main</a> ) demonstrates this. </p>
+<p>Usually, the animation cells are stored in a single bitmap, and the various sprites comprising the animation are sub bitmaps. The SpriteGrabber program 
+<a href="BookCode/chapter09.new/spritegrabber/sphere.bmp"><img src="BookCode/chapter09.new/spritegrabber/sphere.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/spritegrabber/main.c">main</a>(again, from Harbour) demonstrates the use of this technique, plus the use of a SPRITE struct to encapsulate the information of the animated sprite. </p>
+<p>From here it is relatively straight-forward to animate several sprites simultaneously. In this example, each sprite is a separate animation consisting of the same set of animation frames. Each sprite's current frame position can differ from other sprites' (see the <em>curframe</em> field of the SPRITE struct. Note that each sprite has its own <em>framedelay</em> variable.) Each sprite also has its own velocity and frame delay. Each sprite is effectively a copy of the same movie, but each is being shown at a different rate. Here is the code for multiplesprites (
+<a href="BookCode/chapter09.new/multiplesprites/ngc604.bmp"><img src="BookCode/chapter09.new/multiplesprites/ngc604.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/multiplesprites/asteroid.bmp"><img src="BookCode/chapter09.new/multiplesprites/asteroid.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/multiplesprites/main.c">main</a>). </p>
+<p>So far we've looked at the simplest kind of sprite, a raw bit image. If memory is a problem, we may be able to represent the animation cells as run-length encode sprites. Allegro has a number of RLE_ operations to support this data structure. Note that no image manipulation operations (flipping, stretching, etc.) are possible on RLE_SPRITES. Rendering can sometimes be faster if the bitmaps contain lots of &quot;transparent&quot; pixels that can be skipped during the decompression process. </p>
+<p>Allegro also supports compiled sprites. These require quite a bit more memory, as each sprite is represented not as an array of pixels values, but as machine code, which, when executed, renders the image. See Allegro's COMPILED_SPRITE data strucutre and related <em>_compiled_sprite</em> functions. Here is the code for compiledSprite (
+<a href="BookCode/chapter09.new/compiledsprites/block1.bmp"><img src="BookCode/chapter09.new/compiledsprites/block1.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/compiledsprites/block2.bmp"><img src="BookCode/chapter09.new/compiledsprites/block2.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/compiledsprites/dragon.bmp"><img src="BookCode/chapter09.new/compiledsprites/dragon.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/compiledsprites/main.c">main</a>).</p>
+<h3>Simple Collision Detection:</h3>
+<p>Harbour's collisionTest program (
+<a href="BookCode/chapter09.new/collisiontest/sphere.bmp"><img src="BookCode/chapter09.new/collisiontest/sphere.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter09.new/collisiontest/main.c">main</a>)generates a number of animated billiard balls that bounce off of each other and the sides of the window. Each collision changes the sign of the velocity of the ball, but may also change its magnitude, so &quot;virtual momentum&quot; is not necessarily conserved. This is easy to observe if you concentrate on following just one of the balls. The collision algorithm uses a square bounding box around each ball that is 10 pixels smaller than a &quot;true&quot; bounding box. The smaller box decreases the likelihood of false positives with the collision test, though it does mean that the ball images sometimes overlap slightly, if only briefly. The test itself merely checks to see if any of the vertices of one bounding box are inside the other. (See the <em>collided</em> function.) </p>
+<p>Here's another version of the tankwar program(). It makes use of sprites for animation. I've also added code to detect when the tanks collide. </p>
+<h2>Scrolling Tile-Based Terrains :</h2>
+<p>The basic idea behind scrolling is simple. We display only a part of a larger image that falls within a virtual window, called a <em>viewport</em>. Scrolling simply moves the virtual window across the larger image. In scrollTest (<a href="BookCode/chapter10.new/scrollscreen/main.c">main)</a>, the program first generates a large bitmap, and initializes two variables (x,y) to keep track of the current &quot;position&quot; within the map. The screen bitmap is init'd to show the upper-left hand portion of the larger bitmap. The arrow keys are used to change x and y and thus change that portion of the larger bitmap that is displayed. </p>
+<p>As virtual terrains become large, it becomes infeasible, or at least unwieldly, to store the terrain as a single, very large bitmap. Instead, terrains are constructed as a mosaic of tiles. We might several tiles to represent forest, several to represent roads, etc. The terrain becomes a grid, each cell of which is a reference/pointer to one of the underlying tile types. The tileScroll program (
+<a href="BookCode/chapter10.new/tilescroll/tiles.bmp"><img src="BookCode/chapter10.new/tilescroll/tiles.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter10.new/tilescroll/main.c">main</a>)generates the underlying terrain map dynamically: randomly blitting terrain tiles onto a large bitmap. (See &quot;draw tiles randomly.) </p>
+<p>Well, random terrain isn't very interesting. What is needed is a way to assign particular tiles to particul locations on the terrain grid. The GameWorld program (
+<a href="BookCode/chapter10.new/gameworld/tiles.bmp"><img src="BookCode/chapter10.new/gameworld/tiles.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter10.new/gameworld/main.c">main</a>) does this via the <em>map</em> variable, a one-d array masquarading as a 2-d grid, whose elements are indices (0-39) to an array of terrain cells. If you look at the terrain cells 
+<a href="BookCode/chapter10.new/gameworld/tiles.bmp"><img src="BookCode/chapter10.new/gameworld/tiles.bmp" width="32" height="32"> you can see that the last cell is all black. This can be used to render a border, if desired. </p></a>
+<p>Putting all this together, we get a version of TankWar (
+<a href="BookCode/chapter10.new/tankwar_r5/tiles.bmp"><img src="BookCode/chapter10.new/tankwar_r5/tiles.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter10.new/tankwar_r5/background.bmp"><img src="BookCode/chapter10.new/tankwar_r5/background.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter10.new/tankwar_r5/bullet.bmp"><img src="BookCode/chapter10.new/tankwar_r5/bullet.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter10.new/tankwar_r5/bullet.c">bullet, </a>
+<a href="BookCode/chapter10.new/tankwar_r5/explode.bmp"><img src="BookCode/chapter10.new/tankwar_r5/explode.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter10.new/tankwar_r5/input.c">input.c</a>, <a href="BookCode/chapter10.new/tankwar_r5/main.c">main.c</a>, <a href="BookCode/chapter10.new/tankwar_r5/map.h">map.h</a>, <a href="BookCode/chapter10.new/tankwar_r5/setup.c">setup, </a>
+<a href="BookCode/chapter10.new/tankwar_r5/tank1.bmp"><img src="BookCode/chapter10.new/tankwar_r5/tank1.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter10.new/tankwar_r5/tank2.bmp"><img src="BookCode/chapter10.new/tankwar_r5/tank2.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter10.new/tankwar_r5/tank.c">tank, </a>
+<a href="BookCode/chapter10.new/tankwar_r5/tankwar.h">tankwar, </a>) that features terrain tiles and two scrolling windows, one for each player, as well as a zoomed out &quot;radar&quot; view that shows the entire map. Again, a <em>map</em> array is used to define the terrain in terms of tiles. Note the use of border tiles ('B') to define the terrain edge. The program has finally been decomposed into several smaller files. bullet.c, for example, contains all the code for rendering and manipulating the bullets. Note that when a bullet is drawn (<em>drawbullet</em>), it is actually rendered in both scrolling windows. Note, too, that there is no longer an erase function. This is because the scrolling windows redraw their entire content with each frame. </p>
+<p>A drawback to this way of handling scrollable terrain is that we are still memory-restricted for the size of the underlying bitmap. A better solution in such a case is to form the underlying bitmap dynamically--just make sure that the portion of the terrain map that has been formed from tiles is bigger than the viewport.</p>
+<h3>Adding Timer Animation to Tankwar:</h3>
+<p>There are several changes in this version of Tankwar(
+<a href="BookCode/chapter11.new/tankwar_r6/tiles.bmp"><img src="BookCode/chapter11.new/tankwar_r6/tiles.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/tankwar_r6/background.bmp"><img src="BookCode/chapter11.new/tankwar_r6/background.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/tankwar_r6/bullet.bmp"><img src="BookCode/chapter11.new/tankwar_r6/bullet.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/tankwar_r6/bullet.c">bullet</a>
+<a href="BookCode/chapter11.new/tankwar_r6/explode.bmp"><img src="BookCode/chapter11.new/tankwar_r6/explode.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/tankwar_r6/input.c">input</a>
+<a href="BookCode/chapter11.new/tankwar_r6/main.c">main</a>
+<a href="BookCode/chapter11.new/tankwar_r6/map.h">map</a>
+<a href="BookCode/chapter11.new/tankwar_r6/setup.c">setup</a>
+<a href="BookCode/chapter11.new/tankwar_r6/tank1.bmp"><img src="BookCode/chapter11.new/tankwar_r6/tank1.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/tankwar_r6/tank2.bmp"><img src="BookCode/chapter11.new/tankwar_r6/tank2.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/tankwar_r6/tank.c">tank</a>
+<a href="BookCode/chapter11.new/tankwar_r6/tankwar.h">tankwar</a>). First, the explosion code no longer suspends the game while the explosion is being animated. Note the changes in <a href="BookCode/chapter11.new/tankwar_r6/tankwar.h">tankwar.h</a> involving the new <em>explosions</em>array, as well as the <em>tank_bmp</em> array (we've added another dimension). Also note the introduction of three functions: animatetank, updateexplosion and loadsprites. The main changes to setup.c revolve around loading the animation frames for the tank movement. The main changes to bullet.c are that explosions are drawing a single-frame at a time in updateexplosion. This function, in turn, is invoked once per game loop. </p>
+<h2>Threads:</h2>
+<p>There are several implementations of posix threads on most platforms, including Windows, MacOS and Unix/Linux. Their use is not as simple as threads in Java, but is sufficient. Here's a quick overview. For a more in depth treatment, see on of the many tutorials on-line.</p>
+<p>To create a new thread: </p>
+<pre>int pthread_create(pthread_t *threadID, // a return param
+   const pthread_attr_t *attr, // usually, put NULL here
+   void *(*start) (void *), // The callback function the thread will invoke
+   void *arg);  // An array containing any parameters to that function</pre>
+<p>&nbsp;Here's an example </p>
+<pre>int id; pthread_t pthread0; int threadID0=0;
+id = pthread_create(&pthread0, NULL, thread0, (void*)&threadid0);
+
+void* thread0(void* data) {
+  int my_thread_id = *((int*)data;
+  while (!done) {
+    // do something marvelous!
+  }
+  pthread_exit(NULL);
+  return NULL;
+}</pre>
+<p>Now comes the tricky part of threads: protecting against simultaneous access to data. For example, we don't want one thread writing to a buffer while another thread is blitting it to the screen. Posix provides a data structure called a <em>mutex</em> to avoid this situation. These act much like binary semaphores, if you are familiar with that concept. A thread attempting to lock a mutex that has already been locked by another thread will block until the lock is released (unlocked). Here's some code demonstrating this:</p>
+<pre>pthread_mutex_t mySemaphore = PTHREAD_MUTEX_INITIALIZER; // creates a mutex struct
+...
+ pthread_mutex_lock(&mySemaphore);  // Try to obtain a lock
+...
+ pthread_mutex_unlock(&mySemaphore);  // Relase the lock.
+...
+pthread_mutex_destroy(&mySemaphore);  // Must destroy before exiting!!
+</pre>
+<p>Okay, with that done, here is a demo program, MultiThread (
+<a href="BookCode/chapter11.new/multithread/sphere.bmp"><img src="BookCode/chapter11.new/multithread/sphere.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter11.new/multithread/main.c">main</a>). In the code, thread0 is moving one ball, while thread1 moves the other. The threads share a single mutex to control access to their shared buffer. Because each thread is loop containing a rest() call outside the use of the mutex, there is ample opportunity for each thread to work. There should be no threat of starvation, or deadlock. The demo uses two different functions, one for each thread, but this wasn't really necessary. Each thread could have used the same callback function and made use of the argument to tell which thread was executing the code.</p>
+<h3>Terrain Editing: Mappy</h3>
+<p>You can download mappy at <a href="http://www.tilemap.co.uk">www.tilemap.co.uk</a>. Start Mappy, create a new map. Then import a bitmap defining a bunch of tiles, such as <a href="BookCode/chapter12.new/testmappy/maptiles.bmp">maptiles.bmp</a>. From the Custom menu you can use the Solid Rectangle script to fill the entire map with one &quot;default&quot; tile. Mappy can create grid, hexagonal and isometric maps. It is also capable of some dynamic terrain elements. Once you've made a map, you can save the map in .fmp format. This file encapsulates both the map file and the tile images. Do that first, then we'll use mappy to generate code that will load the tile images to create a map. Use File:Export... From the resulting dialog box, select &quot;Graphics Blocks as picture .BMP&quot; and &quot;Map array as comma values only .CSV&quot;. This will generate two files, a .BMP and .CSV file. Change the .csv extension to .txt and edit it to see what you've got. Take a look!</p>
+<p>Okay, once you've generated your map and pasted the .csv text into your .c or .h file in the appropriate places, you're ready to go. See ArrayMapTest program (
+<a href="BookCode/chapter12.new/arraymaptest/maptiles.bmp"><img src="BookCode/chapter12.new/arraymaptest/maptiles.bmp" width="32" height="32"></a>
+<a href="BookCode/chapter12.new/arraymaptest/main.c">main</a>)for an example. </p>
+<p>You can also make use of the MappyAL library to access the .fmp file directly, and avoid a lot of this rigamarole. I leave it to you to work this out from the documentation at the Mappy web site. (Basically you download the Mappy .zip file and extract the mappyal.c and .h file and integrate them into your program. While the mappyAL API makes it a lot easier to load the maps, it is restricted to only work with 256-color bitmaps.) </p>
+<h3>A Vertical Scroller</h3>
+<p>The Harbour book comes with a <a href="BookCode/chapter13.new/verticalscroller.zip">nice vertical scroller demo</a>. This demo allows the player to scroll up and down across a very large map. The map has been created with Mappy, and is the maximum size allowable by Mappy: 640 x 48,000 pixels. I.e., about 32K  tiles. Each tile, in this case, is 32x32 pixels. <a href="BookCode/chapter13.new/verticalscroller/main.c">The code</a> is quite small because most of the scrolling work is done by Mappy's API (see, especially, MapDrawBG and MapLoad). The map provided with the demo was generated with Mappy. The &quot;islands&quot; were generated by a Lua script run inside Mappy. </p>
+<p><a href="BookCode/chapter13.new/warbirds.zip">The code</a> (here's just the driver, <a href="BookCode/chapter13.new/verticalscroller/main.c">main.c</a>.) illustrates the major components of implementing a full vertical-scroller game. This game also uses a Mappy .fmp file to store the map. </p>
+<h3>A Horizontal Scroller</h3>
+<p>Harbour provides <a href="BookCode/chapter14.new/platformscroller.zip">another nice demo</a>, this one of a horizontal scroller, in the mold of <em>Super Mario...</em>. The  major topic introduced by the coding of demo is a more advanced use of Mappy to provide collision detection and  background maps. When you run the demo you will see a single character controlled by the left &amp; right arrow keys as well as the space bar (for jumping). The character falls when walking off of blocks and can jump onto higher blocks. There is a background pattern that scrolls by as the character moves to the left or right. The background does not scroll vertically when the character jumps or falls, however.</p>
+<p>First, obtain or generate a bitmap image 640x480 pixels, X. This will represent the background of the scroller. You should try to engineer the bitmap so that its left and right edges appear to flow into each other. Here's <a href="BookCode/chapter14.new/platformscroller/background.bmp"><img src="BookCode/chapter14.new/platformscroller/background.bmp" width="32" height="32">an example of such an image</a>. Now, using your bitmap editor, create a new bitmap, Y, combining X with the <a href="BookCode/chapter14.new/platformscroller/blocks1.bmp"><img src="BookCode/chapter14.new/platformscroller/blocks1.bmp" width="32" height="32">bitmap of  the terrain blocks</a>. The combined bitmap should have X at the top and the image of the terrain blocks below. Leave some empty space at the bottom of the image if you want to be able to add new terrain tiles later. If you want, you can use <a href="BookCode/chapter14.new/platformscroller/blocks2.bmp"><img src="BookCode/chapter14.new/platformscroller/blocks2.bmp" width="32" height="32">this sample</a>. </p>
+<p>Now start Mappy to set up the background and terrain tiles. First, run Mappy and create an empty 640x480 pixel map, with each tile being 32x32, and 16 bit color. Now, back in Mappy, use the MapTools-&gt;Useful Functions-&gt;Create Map from Big Picture menu item and select Y. The result will be a bunch of tiles, which, when laid out as a mosaic will form the original background image. </p>
+<p>Now, because we want the map to be quite a lot larger, use the MapTools-&gt;Resize Map command to change the size of the map to be quite a bit larger horizontally (and vertically insofar as you want to accomodate vertical scrolling.) I chose 1000 tiles by 15, but you could choose anything so long as the total number of tiles is &lt; 30,000.</p>
+<p>This leaves quite a lot of black (empty) space to the right of our original background. Rather than painstakingly painting each of those, we'll replicate the background repeatedly to the right until filling the entire map. To do that, use the Brush menu to create a &quot;brush&quot; that consists of the entire background map. Note that the resulting map structure uses very little memory, since the entire map is formed from only several dozen 32x32 tiles. </p>
+<h3>Terrain Blocks</h3>
+<p>Next, to enable collision detection via Mappy we need to label the terrain tiles as &quot;foreground&quot; rather than &quot;background&quot; tiles. We also want to makr each of the terrain tiles as being involved in collision detection. This is somewhat difficult to explain, so just look at <a href="mappyForegroundTiles.htm">this Flash movie I've made</a>. We can actually perform this manuever on all the tiles we want simultaneously by using the MapEdit-&gt;Range Edit Blocks command. Here's <a href="mappyRangeEdit.htm">a movie demonstrating how to do that</a>. </p>
+<p>The program handles collision detection by checking the where the character is currently located via the mappyal API. Mappy encodes a simple struct, BLKSTR, with each tile. Of particular interest to us are the four unsigned char fields named tl, tr, bl and br. Their value will be 0 or 1, indicating whether we checked the corresponding collision box in Mappy. These represent the top-left, top-right, bottom-left and bottom-right corners of the cell. Given the (x,y) pixel coordinates of the character, it is easy to check if the character is over a tile for which collision is enabled:</p>
+<pre>int collided(int x, int y)
+{
+    BLKSTR *blockdata;
+	blockdata = MapGetBlock(x/mapblockwidth, y/mapblockheight);
+	return blockdata->tl;
+}</pre>
+<p>Harbour's mechanism for handling jumps and drops is somewhat cryptic. I leave you to examine <a href="BookCode/chapter14.new/platformscroller/main.c">the code</a> to determine how this works. Pay particular attention to the variable <em>jump</em> and the constant <em>JUMPIT</em>. </p>
+<h2>Sound</h2>
+<p>Allegro's sounds capabilities are somewhat limited, but certainly up to the task of handling the sound for most traditional game genres. Allegro works well with .wav and .voc (from Creative Labs, manufacturers of lots of sound card drivers) files, so you'll probably want to use those. The mechanism for handling these is fairly easy. First, install a digital sound driver. All modern sound cards have their own already, so you probably just want to allow Allegro to use the card's default:</p>
+<pre>    //install a digital sound driver
+    if (install_sound(DIGI_AUTODETECT, MIDI_NONE, "") != 0) 
+    {
+        allegro_message("Error initializing sound system");
+        return;
+    }
+ </pre>
+<p>If you wanted to provide MIDI music or something like that, then you'd need to vary the arguments to <em>install_sound</em>. </p>
+<p>Next, load the .wav file into a SAMPLE object. When that is done, it can be played via the <em>play_sample</em> function. Here's some code that does this:</p>
+<pre>    //load the wave file
+
+    int panning = 128;<br>    int pitch = 1000;<br>    int volume = 128;<br>
+    SAMPLE *sample;
+    sample = load_sample("clapping.wav");
+    if (!sample) 
+    {
+        allegro_message("Error reading wave file");
+        return;
+    }
+
+    //play the sample with looping
+    play_sample(sample, volume, panning, pitch, TRUE);
+</pre>
+<p>The pitch refers to the number of samples per second used to create the .wav file. The volume and panning arguments vary from 0 to 255. Panning provides a stereo effect: 0 is all left, and 255 is all right. Volume is silent at 0 and maximum at 255. You want to be careful with the volumes if you'll be playing more than one sounds at a time. Try to keep the sum below 256 to avoid distortion, though I think most sound cards handle that on their own these days. The fifth argument indicates that the sound should loop. The <em>adjust_sample</em> function that alters the sound parameters has affect only while the sound is playing.</p>
+<p>The <a href="BookCode/chapter15.new/playwave/main.c">playWave program</a> (along with <a href="BookCode/chapter15.new/playwave/clapping.wav">clapping.wav</a>) demonstrates the result of manipulating the panning, pitch and volume during playback.</p>
+<p>The <a href="BookCode/chapter15.new/samplemixer.zip">sampleMixer program</a> demonstrates the result of overdubbing several voices. </p>
+<p>Allegro has lots of low-level sample playback routines, which allow much tighter control. These might be useful if you want to blend lots of sounds simultaneously. In that case you'll need to reserve an appropriate number of <em>voices</em>, assign samples to each voice, perhaps fiddling with their pitch, volume, etc. You can also provide for volume <em>ramping, </em><em>frequency sweeps</em> (&quot;glissando&quot;, for you piano buffs out there) and <em>sweeping pans</em> (a la Pink Floyd's &quot;<a href="pinkFloyd_OnTheRun.mp3">On the Run</a>&quot;). </p>
+<h3>Tank War c'est Fini!</h3>
+<p>Here's the <a href="BookCode/chapter15.new/tankwar_r8.zip">last installment of Tank War</a>. This one has sound files added. Perhaps more interestingly, Harbour has removed the <em>rest() </em> that formerly provided the delays to slow the game down to a manageable level. This has been replaced with a <em>key_count</em> and <em>key_delay</em> variables that combine to limit how fast the key strokes can be input, thus avoiding unintentionally doubled keystrokes. Please examine the code to see the many changes. (There's also a certain amount of code added to handle joysticks, but you don't see those around much anymore these days...) </p>
+<p>&nbsp; </p>
+</body>
+</html>

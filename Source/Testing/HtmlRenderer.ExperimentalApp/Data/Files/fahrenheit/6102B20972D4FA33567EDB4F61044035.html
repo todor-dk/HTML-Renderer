@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Temperature Converter - Fahrenheit and Celsius (Centigrade)</title>
+        <meta charset="UTF-8">
+        <meta name="Description" content="A Temperature Converter for Celsius and Fahrenheit">
+        <meta name="Keywords" content="temperature, converter, conversion, Fahrenheit, Celsius, Centigrade">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico">
+        <!----stylesheets--->
+        <link href="../css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="../css/albireo.css" rel="stylesheet" type="text/css"/>
+        <link href="../css/bootstrap.vertical-tabs.css" rel="stylesheet" type="text/css"/>
+
+        <!----jS--->
+        <script src="../js/jquery-1.11.2.js" type="text/javascript"></script>
+        <script src="../js/bootstrap.min.js" type="text/javascript"></script>
+        <style>
+            .right-shadow .active{
+                /*                background: url("../images/body_pattern.png") repeat scroll center top rgba(0, 0, 0, 0);*/
+                background: #e5e5e4;
+                border-radius: 18px;
+                color: #fff !important;
+                width: 90%;
+            }
+            .nav-tabs > li > a:hover{
+                background: url("../images/body_pattern.png") repeat scroll center top rgba(0, 0, 0, 0);
+            }
+        </style>
+    </head>
+    <body>
+
+
+        <div id="fb-root"></div>
+        <script>(function (d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id))
+                    return;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+        <script>
+            function isNumber(evt) {
+                var charCode = (evt.which) ? evt.which : event.keyCode
+                console.log(charCode);
+                if ((charCode >= 48 && charCode <= 57) || charCode == 45 || charCode == 8 || charCode == 46)
+                    return true;
+                return false;
+            }
+            function clear_form() {
+                //console.log('hi');
+                $(".frn-text-box").val('');
+                $(".frn-smal-text-box").val('');
+            }
+        </script>
+
+        <!--Header Part Starts Here */-->
+
+        <nav class="navbar navbar-inverse">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-5 col-sm-6">
+                        <a href="../index.html" >
+                            <img src="../images/logo.png" alt="albireo" class="img-responsive"/>
+                        </a>
+                    </div>
+                    <div class="col-md-2 col-md-offset-3 col-sm-6">
+                        <div class="pull-right top-space languageSelecter">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default country_dropdown dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <img src="../images/us_flag.png" alt="us_flag"/> English
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="../cn/temperatureconverter/index.html"><img src="../images/ch_flag.png" alt="ch_flag"/> 中文(简体) </a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="../es/conversortemperatura/index.html"><img src="../images/spanish_flag.png" alt="spanish_flag"/> español</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1">    
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!--Header Part Ends Here */-->
+
+        <div class="container">
+            <!--Normal Menu View Starts Here */-->
+            <div class="row desktop-menu-view">
+                <div class="col-md-12">
+                    <div class="col-md-offset-1 col-md-2 adv_blocks">
+                        <script type="text/javascript"><!--
+                        google_ad_client = "pub-6359527086240865";
+                            /* 160x600, Erstellt 10.02.09 */
+                            google_ad_slot = "1751564095";
+                            google_ad_width = 160;
+                            google_ad_height = 600;
+                            //-->
+                        </script>
+                        <script type="text/javascript"
+                                src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+                        </script>
+                    </div>
+
+                    <div class="col-md-6 col-sm-12 col-xs-12">
+                        <!-- Nav tabs -->
+
+                        <div>
+                            <!-- Tablet ADV -->
+                            <div class="tabAdv">
+                                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                                <!-- MyResponsive -->
+                                <ins class="adsbygoogle"
+                                  style="display:block"
+                                  data-ad-client="ca-pub-6359527086240865"
+                                  data-ad-slot="5881925422"
+                                  data-ad-format="auto"></ins>
+                                <script>
+                                  (adsbygoogle = window.adsbygoogle || []).push({});
+                                </script>
+                            </div>
+
+                            <!-- Mobile ADV -->
+                            <div class="mobileAdvBanner">
+                                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                                <!-- MyLargeMobile -->
+                                <ins class="adsbygoogle"
+                                  style="display:inline-block;width:320px;height:100px"
+                                  data-ad-client="ca-pub-6359527086240865"
+                                  data-ad-slot="8835391829"></ins>
+                                <script>
+                                  (adsbygoogle = window.adsbygoogle || []).push({});
+                                </script>
+                            </div>
+
+
+                            <form action="">
+                                <input value="(Math.round((C.value * 9/5 + 32)*100))/100" name="F_expr" type="hidden">
+                                <input value="(Math.round(((F.value - 32) * 5/9)*100))/100" name="C_expr" type="hidden">
+                                <input value="(Math.round(C.value * 9/5 + 32))" name="F_exprrnd" type="hidden">
+                                <input value="(Math.round((F.value - 32) * 5/9))" name="C_exprrnd" type="hidden">
+                                <h1>Temperature Converter</h1>
+                                <p class="mobileSubtitle">Fahrenheit to Celsius Conversion, Celsius to Fahrenheit Conversion</p><br>
+                                <div class="fahrenheit-shadow">
+                                    <div class="col-md-6 col-sm-6 col-xs-6 converter_bg">
+                                        <h3>Fahrenheit </h3>
+                                        <input type="text" maxLength=12  placeholder="" name="F" id="FahrenheitValue" class="frn-text-box" onkeypress="return isNumber(event)">
+                                        <button class="btn convert-btn" name="Taste" type="button" onclick="if (rounded.checked == true) {
+                                                    if (this.form.F.value == '') {
+                                                        return false;
+                                                    } else {
+                                                        eval('C.value = ' + this.form.C_exprrnd.value)
+                                                    }
+                                                }
+                                                else {
+                                                    if (this.form.F.value == '') {
+                                                        return false;
+                                                    } else {
+                                                        eval('C.value = ' + this.form.C_expr.value)
+                                                    }
+                                                }">Convert</button>
+                                    </div> 
+
+                                    <div class="col-md-6 col-sm-6 col-xs-6 converter_bg">
+                                        <h3>Celsius</h3>
+                                        <input type="text" maxLength=12  placeholder="" name="C" id="CelsiusValue" class="frn-text-box" onkeypress="return isNumber(event)">
+                                        <button class="btn convert-btn" name="Taste1" type="button" onclick="if (rounded.checked == true) {
+                                                    if (this.form.C.value == '') {
+                                                        return false;
+                                                    } else {
+                                                        eval('F.value = ' + this.form.F_exprrnd.value)
+                                                    }
+                                                }
+                                                else {
+                                                    if (this.form.C.value == '') {
+                                                        return false;
+                                                    } else {
+                                                        eval('F.value = ' + this.form.F_expr.value)
+                                                    }
+                                                }">Convert</button>
+                                    </div> 
+                                </div>
+
+                                <div class="botton-container" style="position: relative; text-align: -moz-center;"><br>
+                                    <p><input type="checkbox" name="rounded"  checked="checked"> rounded results</p><br>
+                                    <p><a href="../temperatureconverter/formula.html" class="formula_btn">Formula</a> <a href="../temperatureconverter/table.html" class="formula_btn">Conversion Table</a> <a href="../index.html">More Converters</a> </p><br>
+                                    <p> <div class="tab-align" align="center">
+                                        <a href="https://twitter.com/share" class="twitter-share-button" data-text="Temperature Converter">Tweet</a>
+                                        <script>!function (d, s, id) {
+                                                var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+                                                if (!d.getElementById(id)) {
+                                                    js = d.createElement(s);
+                                                    js.id = id;
+                                                    js.src = p + '://platform.twitter.com/widgets.js';
+                                                    fjs.parentNode.insertBefore(js, fjs);
+                                                }
+                                            }(document, 'script', 'twitter-wjs');</script>
+
+                                        <div class="g-plusone" data-size="medium"></div>
+
+                                        <div style="position: relative;right: 30px;bottom: 5px;" class="fb-like" data-href="http://www.albireo.ch/temperatureconverter/" data-width="100" data-layout="button_count" data-show-faces="false" data-send="false"></div>
+
+                                    </div> </p><br>                                  
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <script type="text/javascript">
+                        (function () {
+                            var po = document.createElement('script');
+                            po.type = 'text/javascript';
+                            po.async = true;
+                            po.src = 'https://apis.google.com/js/plusone.js';
+                            var s = document.getElementsByTagName('script')[0];
+                            s.parentNode.insertBefore(po, s);
+                        })();
+                    </script>
+                    <div class="col-md-2 adv_blocks">
+                        <script type="text/javascript"><!--
+                        google_ad_client = "pub-6359527086240865";
+                            /* 160x600, Erstellt 10.02.09 */
+                            google_ad_slot = "1751564095";
+                            google_ad_width = 160;
+                            google_ad_height = 600;
+                            //-->
+                        </script>
+                        <script type="text/javascript"
+                                src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+                        </script>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+            <!--Normal Menu View Ends Here -->
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="text-muted"> © Copyright 1998 - 2016 Ch. Schlup / info@albireo.ch </p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="top-space mobileAdvBanner">
+                            <div class="btn-group dropup" role="group">
+                                <button type="button" class="btn btn-default country_dropdown dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    <img src="../images/us_flag.png" alt="us_flag"/> English
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="../cn/temperatureconverter/index.html"><img src="../images/ch_flag.png" alt="ch_flag"/> 中文(简体) </a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="../es/conversortemperatura/index.html"><img src="../images/spanish_flag.png" alt="spanish_flag"/> español</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+    </body>
+</html>

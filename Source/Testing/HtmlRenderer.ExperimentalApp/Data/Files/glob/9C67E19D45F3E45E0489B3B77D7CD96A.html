@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+
+
+<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head><link rel="canonical" href="https://technet.microsoft.com/en-us/library/bb490656.aspx" />
+    <title>Ftp: glob</title>
+
+
+
+
+
+
+
+<meta name="DCS.dcsuri" content="/en-us/library/bb490656(d=default,l=en-us,v=technet.10).aspx" />
+
+<meta name="NormalizedUrl" content="https://technet.microsoft.com/en-us/library/bb490656(d=default,l=en-us,v=technet.10).aspx" />
+
+<meta name="ms.normalizedurl" content="https://technet.microsoft.com/en-us/library/bb490656(d=default,l=en-us,v=technet.10).aspx" />
+
+<meta name="DCSext.WCversion" content="_XP_" />
+
+<meta name="DCSext.WCtask" content="_learn_" />
+
+<meta name="DCSext.WCarea" content="_library_" />
+
+<meta name="DCSext.WClocale" content="_en-us_" />
+
+<meta name="AmbientContext" content="{&quot;layout.limit_max_width&quot;:true,&quot;AmbientContextId&quot;:&quot;B18F5120-B9F7-4F49-AB13-DDC98E012A9E&quot;,&quot;display.use_large_font&quot;:true,&quot;insight.perf_timing&quot;:true,&quot;AmbientContextDownstream&quot;:{&quot;LogTrace&quot;:false},&quot;display.high_contrast&quot;:false,&quot;insight.use_wedcs_vnext&quot;:true}" />
+
+<meta name="VotingContextUrl" content="https://technet.microsoft.com/en-us/library/bb490656(d=default,l=en-us,v=technet.10).aspx" />
+
+<meta name="MN" content="61C41DD1-9:49:47 AM" />
+
+<meta name="Search.ShortId" content="bb490656" />
+
+<meta name="ms.shortidmsdn" content="bb490656" />
+
+<meta name="ms.locale" content="en-us" />
+
+<meta name="ms.prodver" content="TechNet.10" />
+
+<meta name="ms.contentlang" content="EN" />
+
+<meta name="ms.lang" content="EN" />
+
+<meta name="ms.loc" content="US" />
+
+<meta name="ms.sitever" content="2017.07.03.3" />
+
+<meta name="ms.assetid" content="ee0b6d14-55ed-41ff-b016-444563432bfa" />
+
+<meta name="ms.auth" content="0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    
+        
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript" data-do-not-move="true">
+        //<![CDATA[
+        var AmbientContext = null;
+
+        (function(){
+            var root = (function(){return this;}).call(null);
+
+            var GetCookie = function(name){
+                var cookies = root.document.cookie ? root.document.cookie.split('; ') : [];
+                for (var i = 0; i < cookies.length; i++) {
+                    var pos = cookies[i].indexOf('=');
+                    if (name === root.decodeURIComponent(cookies[i].slice(0, pos)))
+                    {
+                        var cookie = cookies[i].slice(pos + 1).replace(/\+/g, ' ');
+                        cookie = root.decodeURIComponent(cookie);
+                        return cookie;
+                    }
+                }
+            };
+
+            var JsonDeserialize = function(content) {
+                return root.JSON && root.JSON.parse ? root.JSON.parse(content) : (new Function('return (' + content + ')'))();
+            };
+
+            try {
+                AmbientContext = GetCookie('AmbientContext');
+                AmbientContext = AmbientContext && JsonDeserialize(AmbientContext);
+            } catch(ex) {
+            } finally {
+                AmbientContext = AmbientContext || null;
+            }
+        })();
+        //]]>
+    </script>
+
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js" data-do-not-move="true" data-provides="jQuery"></script>
+    
+<link rel="stylesheet" type="text/css" href="https://i-technet.sec.s-msft.com/Combined.css?resources=0:ImageSprite,0:TopicResponsive,0:TopicResponsive.MediaQueries,1:CodeSnippet,1:ProgrammingSelector,1:ExpandableCollapsibleArea,0:CommunityContent,1:TopicNotInScope,1:FeedViewerBasic,1:ImageSprite,2:Header.2,2:HeaderFooterSprite,2:Header.MediaQueries,2:Banner.MediaQueries,3:megabladeMenu.1,3:MegabladeMenu.MediaQueries,3:MegabladeMenuSpriteCluster,0:Breadcrumbs,0:Breadcrumbs.MediaQueries,0:ResponsiveToc,0:ResponsiveToc.MediaQueries,0:LibraryMemberFilter,4:StandardRating,2:Footer.2,5:LinkList,2:Footer.MediaQueries,1:SiteFeedbackLink,0:BaseResponsive,6:MsdnResponsive,0:Tables.MediaQueries,7:SkinnyRatingResponsive,7:SkinnyRatingV2;/Areas/Library/Content:0,/Areas/Epx/Content/Css:1,/Areas/Epx/Themes/TechNet/Content:2,/Areas/Epx/Themes/Shared/Content:3,/Areas/Global/Content:4,/Areas/Epx/Themes/Base/Content:5,/Areas/Library/Themes/Msdn/Content:6,/Areas/Library/Themes/TechNet/Content:7&amp;amp;v=0874711AC2DACE4D4087F7B38F3A8977" /></head>
+<body class="library Chrome">
+    <div id="page">
+
+        
+
+        
+    
+        
+        
+    <div id="ux-header" dir="ltr" class="ltr " ms.pgarea="header">
+        
+        
+
+        <div class="upperBand">
+            <div class="row1">
+                <div class="msLogoAndMegablade">
+                    <a class="msdnLogoImg" href="https://technet.microsoft.com/en-us" title="Technet home" ms.cmpgrp="mslogo">
+                        <div id="msft-logo" class="msft-logo"></div>
+                    </a><div class="GrayPipe"></div><div class="megabladeMenu" ms.cmpgrp="megablade">
+    
+        
+    
+    <div id="megabladeContainer" class="ltr">
+        <div id="megabladeContainerCenter">
+            <div id="megabladeMainMenu" tabindex="0" role="button" aria-label="technet" aria-expanded="false">TechNet</div>
+            <ul id="megabladeItems">
+                        <li data-value="hh326172" class="bladeItem bladeItemWithMenu">
+                            <a href="" onclick="return false;" role="button" aria-expanded="false">Products</a><span class="caret"></span>
+                            <div class="navpage"><div class="menuContainerLayout">
+  <h5>Products</h5>
+  <ul>
+    <li>
+      <a href="https://technet.microsoft.com/windows">Windows</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/library/bb625087.aspx">Windows Server</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/library/cc507089.aspx">System Center</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/microsoft-edge">Microsoft Edge</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayout">
+  <h5> </h5>
+  <ul>
+    <li>
+      <a href="https://technet.microsoft.com/office">Office</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/en-us/office/dn788774">Office 365</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/en-us/office/dn788775">Exchange Server</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayout">
+  <h5> </h5>
+  <ul>
+    <li>
+      <a href="https://msdn.microsoft.com/library/mt590198(v=sql.1)">SQL Server</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/office/dn788776">SharePoint Products</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/office/dn788773">Skype for Business</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/bb421517.aspx?wt.svl=more_centers_link">See all products »</a>
+    </li>
+  </ul>
+</div></div>
+                        </li>
+                        <li data-value="hh880860" class="bladeItem bladeItemWithMenu">
+                            <a href="" onclick="return false;" role="button" aria-expanded="false">IT Resources</a><span class="caret"></span>
+                            <div class="navpage"><div class="menuContainerLayout">
+  <h5>Resources</h5>
+  <ul>
+    <li>
+      <a href="https://channel9.msdn.com/">Channel 9 Video</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/evalcenter/">Evaluation Center</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/bb291022">Learning Resources</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/dn440144">Microsoft Tech Companion App</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/dn550853" title="Microsoft Technical Communities">Microsoft Technical Communities</a>
+    </li>
+    <li>
+      <a href="https://mva.microsoft.com/?CR_CC=200157774">Microsoft Virtual Academy</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/scriptcenter">Script Center</a>
+    </li>
+    <li>
+      <a href="https://blogs.technet.microsoft.com/serverandtools/">Server and Tools Blogs</a>
+    </li>
+    <li>
+      <a href="https://blogs.technet.microsoft.com/">TechNet Blogs</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayout">
+  <h5> </h5>
+  <ul>
+    <li>
+      <a href="https://technet.microsoft.com/cc543196">TechNet Flash Newsletter</a>
+    </li>
+    <li>
+      <a href="https://gallery.technet.microsoft.com/">TechNet Gallery</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/library/default.aspx">TechNet Library</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/magazine/default.aspx">TechNet Magazine</a>
+    </li>
+    <li>
+      <a href="https://social.technet.microsoft.com/wiki">TechNet Wiki</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/sysinternals">Windows Sysinternals</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/virtuallabs">Virtual Labs</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Solutions</h5>
+  <ul>
+    <li>
+      <a href="https://technet.microsoft.com/network">Networking</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/cloud/private-cloud">Cloud and Datacenter</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/security">Security</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/server-cloud/solutions/virtualization.aspx">Virtualization</a>
+    </li>
+  </ul>
+</div></div>
+                        </li>
+                        <li data-value="hh371326" class="bladeItem bladeItemWithMenu">
+                            <a href="" onclick="return false;" role="button" aria-expanded="false">Downloads</a><span class="caret"></span>
+                            <div class="navpage"><div class="menuContainerLayout">
+  <h5>Updates</h5>
+  <ul>
+    <li>
+      <a href="https://support.microsoft.com/en-us">Service Packs</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/security/bulletin">Security Bulletins</a>
+    </li>
+    <li>
+      <a href="https://support.microsoft.com/en-us/help/12373/windows-update-faq">Windows Update</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Trials</h5>
+  <ul>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/evaluate-windows-server-technical-preview">Windows Server 2016</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/evaluate-system-center-technical-preview">System Center 2016</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise">Windows 10 Enterprise</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/evaluate-sql-server-2016">SQL Server 2016</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/" title="See all trials">See all trials »</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Related Sites</h5>
+  <ul>
+    <li>
+      <a href="https://www.microsoft.com/en-us/download">Microsoft Download Center</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/evalcenter/">TechNet Evaluation Center</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/download/driver.aspx?q=driver">Drivers</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/sysinternals">Windows Sysinternals</a>
+    </li>
+    <li>
+      <a href="https://gallery.technet.microsoft.com/">TechNet Gallery</a>
+    </li>
+  </ul>
+</div></div>
+                        </li>
+                        <li data-value="jj837158" class="bladeItem bladeItemWithMenu">
+                            <a href="" onclick="return false;" role="button" aria-expanded="false">Training</a><span class="caret"></span>
+                            <div class="navpage"><div class="menuContainerLayout">
+  <h5>Training</h5>
+  <ul>
+    <li>
+      <a href="https://www.microsoft.com/handsonlabs">Expert-led, virtual classes</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/training.aspx">Training Catalog</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/find-partner.aspx">Class Locator</a>
+    </li>
+    <li>
+      <a href="https://mva.microsoft.com/">Microsoft Virtual Academy</a>
+    </li>
+    <li>
+      <a href="https://mva.microsoft.com/en-US/training-courses/windows-server-2012-training-technical-overview-8564?l=BpPnn410_6504984382">Free Windows Server 2012 courses</a>
+    </li>
+    <li>
+      <a href="https://mva.microsoft.com/product-training/windows?CR_CC=200155697#!lang=1033" title="Free Windows 8 courses">Free Windows 8 courses</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/sql-training.aspx">SQL Server training</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/on-demand-online-courses.aspx">Microsoft Official Courses On-Demand</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Certifications</h5>
+  <ul>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/certification-overview.aspx">Certification overview</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/mcsa-windows-10-certifications.aspx" title="MCSA: Windows 10">MCSA: Windows 10</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/mcsa-windows-server-certification.aspx">Windows Server Certification (MCSE)</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/private-cloud-certification.aspx">Private Cloud Certification (MCSE)</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/mcsa-sql-certification.aspx">SQL Server Certification (MCSE)</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Other resources</h5>
+  <ul>
+    <li>
+      <a href="https://events.microsoft.com/">Microsoft Events</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/learning/second-shot.aspx">Second shot for certification</a>
+    </li>
+    <li>
+      <a href="https://borntolearn.mslearn.net/b/?Redirected=true">Born To Learn blog</a>
+    </li>
+    <li>
+      <a href="https://www.technicalcommunity.com/default.aspx" title="Microsoft Technical Communities">Find technical communities in your area</a>
+    </li>
+  </ul>
+</div></div>
+                        </li>
+                        <li data-value="hh371327" class="bladeItem bladeItemWithMenu">
+                            <a href="" onclick="return false;" role="button" aria-expanded="false">Support</a><span class="caret"></span>
+                            <div class="navpage"><div class="menuContainerLayout">
+  <h5>Support options</h5>
+  <ul>
+    <li>
+      <a href="https://support.microsoft.com/gp/contactus81?Audience=Commercial">For business</a>
+    </li>
+    <li>
+      <a href="https://msdn.microsoft.com/hh361695">For developers</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/ms772425">For IT professionals</a>
+    </li>
+    <li>
+      <a href="https://support.microsoft.com/en-us/assistedsupportproducts">For technical support</a>
+    </li>
+    <li>
+      <a href="https://www.microsoft.com/en-us/microsoftservices/support.aspx">Support offerings</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>More support</h5>
+  <ul>
+    <li>
+      <a href="https://premier.microsoft.com/">Microsoft Premier Online</a>
+    </li>
+    <li>
+      <a href="https://social.technet.microsoft.com/forums/">TechNet Forums</a>
+    </li>
+    <li>
+      <a href="https://social.msdn.microsoft.com/forums/">MSDN Forums</a>
+    </li>
+    <li>
+      <a href="https://technet.microsoft.com/security/bulletin">Security Bulletins &amp; Advisories</a>
+    </li>
+  </ul>
+</div><div class="menuContainerLayoutSplashGuard"></div><div class="menuContainerLayout">
+  <h5>Not an IT pro?</h5>
+  <ul>
+    <li>
+      <a href="https://support.microsoft.com/">Microsoft Customer Support</a>
+    </li>
+    <li>
+      <a href="https://answers.microsoft.com/en-us">Microsoft Community Forums</a>
+    </li>
+  </ul>
+</div></div>
+                        </li>
+            </ul>
+        </div>
+    </div>
+    
+
+</div>
+                </div>
+
+                <div class="controls" ms.cmpgrp="aux nav">
+                    <div id="setting-menu">
+                        <div class="mobile-setting-icon"></div>
+                    </div>
+                    <div class="controlsInternal">
+                        
+    <form class="selectLocale" id="selectLocaleForm" action="https://technet.microsoft.com/en-us/SelectLocale">
+        <input type="hidden" name="fromPage" value="https%3a%2f%2ftechnet.microsoft.com%2fen-us%2flibrary%2fbb490656.aspx" />
+        <a href="#" onclick="$('#selectLocaleForm').submit();return false;" title="Change your language">United States (English)</a>
+    </form>
+
+
+                        <a class="scarabLink" href="https://login.live.com/login.srf?wa=wsignin1.0&amp;rpsnv=13&amp;ct=1499878187&amp;rver=6.7.6640.0&amp;wp=mcmbi&amp;wlcxt=technet%24technet%24technet&amp;wreply=https%3a%2f%2ftechnet.microsoft.com%2fen-us%2flibrary%2fbb490656.aspx&amp;lc=1033&amp;id=254354&amp;mkt=en-us">Sign in</a>
+                    </div>
+                </div>
+
+                <div class="clear"></div>
+            </div>
+
+            <div class="row2">
+                <div id="gripAndBrandLogo">
+                    <div id="grip-menu">
+                        <div id="grip" class="menu-icon"></div>
+                    </div>
+                    <div class="brandLogo" ms.cmpgrp="brandlogo">
+                        <a href="https://technet.microsoft.com/" title="Microsoft TechNet"><img alt="Microsoft TechNet" src="https://i-technet.sec.s-msft.com/Areas/Epx/Themes/TechNet/Content/Images/BrandLogoTechNetNew.png?v=636347038889993248"></img></a>
+                    </div>
+                </div>
+                <div id="drawer">
+
+                </div>
+                <div id="search-menu">
+                    <div class="mobile-search-icon"></div>
+                </div>
+                
+
+    <div class="SearchBox" ms.cmpgrp="aux nav" role="search">
+        <form id="HeaderSearchForm" name="HeaderSearchForm" method="get" onsubmit="return Epx.Controls.SearchBox.searchBoxOnSubmit(this);">
+            <input id="HeaderSearchTextBox" name="query" type="text" maxlength="200" onfocus="Epx.Controls.SearchBox.watermarkFocus(event, this.title)" onblur="Epx.Controls.SearchBox.watermarkBlur(event, this.title)" aria-labelledby="HeaderSearchButton" />
+            <button id="HeaderSearchButton" value="" type="submit" class="header-search-button" ms.title="search"></button>
+        </form>
+
+        
+        
+
+    </div>
+
+                <div class="clear"></div>
+             </div>
+
+            <div class="row3">
+
+            </div>
+        </div>
+        <div class="lowerBand">
+            <div class="ux-nav" role="navigation" aria-label="header toc" ms.cmpgrp="main nav">
+                <div class="TocNavigation">
+   
+   <div class="toclevel1">
+          <a class="normal" href="https://technet.microsoft.com/" title="Home">Home</a>
+          <a class="active" href="https://technet.microsoft.com/library/" title="Library">Library</a>
+          <a class="normal" href="https://social.technet.microsoft.com/wiki" title="Wiki">Wiki</a>
+          <a class="normal" href="https://technet.microsoft.com/bb291022" title="Learn">Learn</a>
+          <a class="normal" href="https://gallery.technet.microsoft.com/" title="Gallery">Gallery</a>
+          <a class="normal" href="https://technet.microsoft.com/bb403698" title="Downloads">Downloads</a>
+          <a class="normal" href="https://technet.microsoft.com/ms772425" title="Support">Support</a>
+          <a class="normal" href="https://social.technet.microsoft.com/forums/en-us/home" title="Forums">Forums</a>
+          <a class="normal" href="https://blogs.technet.microsoft.com/" title="Blogs">Blogs</a>
+
+    </div>
+  
+</div>
+            </div>
+        </div>
+    </div>
+
+<div id="jumpInfo" style="display: none">We’re sorry. The content you requested has been removed. You’ll be auto redirected in 1 second.</div>
+
+
+
+
+<link type="text/css" rel="stylesheet" />
+<link type="text/css" rel="stylesheet" />
+
+
+    <div id="breadcrumbs" ms.pgarea="body" ms.cmpgrp="breadcrumbs">
+        <div id="breadcrumbDesktop" class="breadCrumb">
+                        <span class="breadcrumbEllipsis"><a href="https://technet.microsoft.com/en-us/library/aa991542.aspx" title="TechNet Library"></a></span>
+                        <span><a href="https://technet.microsoft.com/en-us/library/archive.aspx" title="TechNet Archive"><span>TechNet Archive</span></a></span>
+                        <span><a href="https://technet.microsoft.com/en-us/library/bb491054.aspx" title="Windows XP"><span>Windows XP</span></a></span>
+                        <span class="breadcrumbDropSmall">
+                            <a id="breadcrumbDropDownButton" href="#" targethref="https://technet.microsoft.com/en-us/library/bb491054.aspx" title="Product Documentation Pages"><span>Product Documentation Pages</span></a>
+                        </span>
+        </div>
+        <div id="breadcrumbDropDownMenu"></div>
+
+        <div id="breadcrumbTablet" class="breadCrumb">
+                        <span class="breadcrumbEllipsis"><a href="https://technet.microsoft.com/en-us/library/bb491054.aspx" title="Windows XP"></a></span>
+                    <span><a href="https://technet.microsoft.com/en-us/library/bb491070.aspx" title="Product Documentation Pages"><span>Product Documentation Pages</span></a></span>
+                <span class="breadcrumbDropSmall"><a id="tocDropDownButton" href="#" title="Ftp: glob"><span>Ftp: glob</span></a></span>
+        </div>
+        <div id="tocDropDownMenu"></div>
+        <div id="breadcrumbMobile" class="breadCrumb">
+                <span class="breadcrumbEllipsis"><a href="https://technet.microsoft.com/en-us/library/bb491070.aspx" title="Product Documentation Pages"></a></span>
+            <span class="breadcrumbDropSmall"><a id="tocPopupButton" href="#" title="Ftp: glob"><span>Ftp: glob</span></a></span>
+        </div>
+    </div>
+    <div id="tocPopupMenu">
+        <div id="tocPopMenuClose" class="tocCloseLarge"></div>
+        <div id="tocTitle">Ftp: glob</div>        
+    </div>
+
+    
+
+
+        <div id="body" ms.pgarea="body" class="">
+            <span id="tabletView_large"></span>
+            <span id="tabletView_small"></span>
+            <span id="mobileView"></span>
+            
+
+
+
+
+    <div id="leftNav" ms.cmpgrp="left toc" role="navigation" aria-label="left toc">
+
+    
+
+
+<div id="tocnav" class="ArchiveV2">
+    <div class="tocunselected">
+        <div id="tocExpandArea">
+            <span class="toc_empty"></span>
+            <span id="tocExpandButton"><a href="javascript:void(0)" aria-label="expand sibling toc" role="button"></a></span>
+        </div>
+        <div id="tocExpand"></div>
+    </div>
+    <div class="tocselected"></div>
+    <div class="tocunselected">
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491050.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Resource Kits">Windows Resource Kits</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491049.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Append">Append</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490876.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Chkdsk">Chkdsk</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491052.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Buffers">Buffers</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491036.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Driver Signing for Windows">Driver Signing for Windows</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491037.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To configure the command prompt">To configure the command prompt</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491038.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Copyright">Copyright</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491039.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Country">Country</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491040.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Debug">Debug</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491041.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Debug subcommands">Debug subcommands</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491042.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Device">Device</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491043.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Devicehigh">Devicehigh</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491044.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Dos">Dos</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491045.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Dosonly">Dosonly</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491046.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Driveparm">Driveparm</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491047.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Echoconfig">Echoconfig</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb491048.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Edit">Edit</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490632.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Edlin">Edlin</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490633.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Edlin subcommands">Edlin subcommands</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490635.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Exe2bin">Exe2bin</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490636.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Fastopen">Fastopen</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490637.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Fcbs">Fcbs</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490638.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Files">Files</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490639.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Using wildcard characters">Using wildcard characters</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490640.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Forcedos">Forcedos</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490641.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Fsutil: dirty">Fsutil: dirty</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490642.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Fsutil: file">Fsutil: file</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490643.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: append">Ftp: append</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490644.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: ascii">Ftp: ascii</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490645.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: !">Ftp: !</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490646.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: bell">Ftp: bell</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490647.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: binary">Ftp: binary</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490648.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: bye">Ftp: bye</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490649.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: cd">Ftp: cd</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490650.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: close">Ftp: close</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490651.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: debug">Ftp: debug</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490652.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: delete">Ftp: delete</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490653.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: dir">Ftp: dir</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490654.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: disconnect">Ftp: disconnect</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490655.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: get">Ftp: get</a>                </div>
+                <div class="toclevel current" data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490656.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: glob">Ftp: glob</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490657.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: hash">Ftp: hash</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490658.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: help">Ftp: help</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490659.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: lcd">Ftp: lcd</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490660.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: literal">Ftp: literal</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490661.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: ls">Ftp: ls</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490662.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: mdelete">Ftp: mdelete</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490663.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: mdir">Ftp: mdir</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490664.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: mget">Ftp: mget</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490665.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: mkdir">Ftp: mkdir</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490667.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: mls">Ftp: mls</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490668.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: mput">Ftp: mput</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490669.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: open">Ftp: open</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490670.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: prompt">Ftp: prompt</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490671.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: put">Ftp: put</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490672.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: pwd">Ftp: pwd</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490673.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: quit">Ftp: quit</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490674.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: quote">Ftp: quote</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490675.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: recv">Ftp: recv</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490676.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: remotehelp">Ftp: remotehelp</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490677.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: rename">Ftp: rename</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490678.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: rmdir">Ftp: rmdir</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490679.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: send">Ftp: send</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490680.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: status">Ftp: status</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490681.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp subcommands">Ftp subcommands</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490682.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: trace">Ftp: trace</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490683.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: type">Ftp: type</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490684.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: user">Ftp: user</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490685.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Ftp: verbose">Ftp: verbose</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490686.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Graphics">Graphics</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490687.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Install">Install</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490688.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Telnet Client overview">Telnet Client overview</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490689.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To start the IP Security Policies snap-in">To start the IP Security Policies snap-in</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490690.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Lastdrive">Lastdrive</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490691.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Loadfix">Loadfix</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490692.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Loadhigh">Loadhigh</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490693.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Authentication">Authentication</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490694.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Mem">Mem</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490698.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net accounts">Net accounts</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490699.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net computer">Net computer</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490700.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net config">Net config</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490701.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net continue">Net continue</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490702.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net file">Net file</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490703.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net group">Net group</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490704.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net help">Net help</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490705.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net helpmsg">Net helpmsg</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490706.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net localgroup">Net localgroup</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490707.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net name">Net name</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490708.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net pause">Net pause</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490709.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net print">Net print</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490710.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net send">Net send</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490711.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net session">Net session</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490712.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net share">Net share</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490713.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net start">Net start</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490714.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net statistics">Net statistics</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490715.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net stop">Net stop</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490716.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net time">Net time</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490717.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net use">Net use</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490718.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net user">Net user</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490719.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Net view">Net view</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490696.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Netsh DHCP example">Netsh DHCP example</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490697.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Netsh WINS example">Netsh WINS example</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490720.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nlsfunc">Nlsfunc</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490721.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup">Nslookup</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490722.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: exit">Nslookup: exit</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490723.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: finger">Nslookup: finger</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490724.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: help">Nslookup: help</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490725.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: ls">Nslookup: ls</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490726.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: lserver">Nslookup: lserver</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490727.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: root">Nslookup: root</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490728.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: server">Nslookup: server</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490729.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set">Nslookup: set</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490730.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set all">Nslookup: set all</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490731.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set class">Nslookup: set class</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490732.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set d2">Nslookup: set d2</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490733.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set debug">Nslookup: set debug</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490734.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set defname">Nslookup: set defname</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490735.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set domain">Nslookup: set domain</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490736.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set ignore">Nslookup: set ignore</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490737.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set port">Nslookup: set port</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490738.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set querytype">Nslookup: set querytype</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490739.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set recurse">Nslookup: set recurse</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490740.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set retry">Nslookup: set retry</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490741.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set root">Nslookup: set root</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490742.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set search">Nslookup: set search</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490743.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set srchlist">Nslookup: set srchlist</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490744.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set timeout">Nslookup: set timeout</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490745.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set type">Nslookup: set type</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490746.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: set vc">Nslookup: set vc</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490747.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Nslookup: view">Nslookup: view</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490750.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To define start or stop parameters for a log or alert">To define start or stop parameters for a log or alert</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490751.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To start or stop a counter log, trace log, or alert manually">To start or stop a counter log, trace log, or alert manually</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490752.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To add counters to System Monitor">To add counters to System Monitor</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490748.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Volume shadow copy overview">Volume shadow copy overview</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490749.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Command-line reference">Command-line reference</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490754.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Disk Management overview">Disk Management overview</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490758.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="IPv6 applications">IPv6 applications</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490757.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="IP version 6">IP version 6</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490756.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Troubleshooting tools">Troubleshooting tools</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490755.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Internet Protocol security overview">Internet Protocol security overview</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490759.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Performance Logs and Alerts overview">Performance Logs and Alerts overview</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490761.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Understanding Performance">Understanding Performance</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490762.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Troubleshooting">Troubleshooting</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490763.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="New ways to do familiar tasks">New ways to do familiar tasks</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490764.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Print processors and data types">Print processors and data types</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490765.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To install and advertise a product using a transform with the command line">To install and advertise a product using a transform with the command line</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490766.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To install a transform using the command line">To install a transform using the command line</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490767.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To create an administrative installation package from the command line">To create an administrative installation package from the command line</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490768.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To advertise a package using the command line">To advertise a package using the command line</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490769.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To install a package using the command line">To install a package using the command line</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490770.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To create an installation log file using the command line">To create an installation log file using the command line</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490771.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To remove a package using the command line">To remove a package using the command line</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490772.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To repair a package using the command line">To repair a package using the command line</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490773.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Removable Storage overview">Removable Storage overview</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490774.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Understanding Removable Storage">Understanding Removable Storage</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490775.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Using Removable Storage">Using Removable Storage</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490776.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Automating security configuration tasks">Automating security configuration tasks</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490778.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Defining communities">Defining communities</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490779.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Group Policy">Group Policy</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490780.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Script Host">Windows Script Host</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490812.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="This information is not available">This information is not available</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490782.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Setver">Setver</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490783.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Share">Share</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490784.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Shell">Shell</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490785.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Using File Signature Verification">Using File Signature Verification</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490786.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Stacks">Stacks</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490787.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Switches">Switches</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490788.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows File Protection">Windows File Protection</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490789.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To specify telephony servers on a client computer">To specify telephony servers on a client computer</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/c.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Telnet commands">Telnet commands</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490790.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Session mode and command mode">Session mode and command mode</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490792.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Change logon">Change logon</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490793.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Change port">Change port</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490794.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Change user">Change user</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490795.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Logoff">Logoff</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490796.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Msg">Msg</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490797.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Mstsc">Mstsc</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490798.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Query process">Query process</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490799.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Query termserver">Query termserver</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490800.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Query session">Query session</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490801.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Query user">Query user</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490802.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Register">Register</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490803.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Shadow">Shadow</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490804.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Tscon">Tscon</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490805.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Tsdiscon">Tsdiscon</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490806.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Tskill">Tskill</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490807.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Tsprof">Tsprof</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490808.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Tsshutdn">Tsshutdn</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490810.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Backup overview">Backup overview</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490813.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To create a shortcut using the runas command">To create a shortcut using the runas command</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490815.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Management Instrumentation overview">Windows Management Instrumentation overview</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490816.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To run scripts using the command-line-based script host (Cscript.exe)">To run scripts using the command-line-based script host (Cscript.exe)</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490634.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To establish an infrared link">To establish an infrared link</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490695.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="System Information">System Information</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490753.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To use Windows NT 4.0 version of Performance Monitor settings files">To use Windows NT 4.0 version of Performance Monitor settings files</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490760.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Performance monitoring in Windows NT 4.0">Performance monitoring in Windows NT 4.0</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490781.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To send files using the command line">To send files using the command line</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490809.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To verify infrared support on a computer">To verify infrared support on a computer</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490811.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="To specify your computer and workgroup names">To specify your computer and workgroup names</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://technet.microsoft.com/en-us/library/bb490814.aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Windows Management Instrumentation overview">Windows Management Instrumentation overview</a>                </div>
+    </div>
+    <a id="tocMenuToggler" href="javascript:void(0)" role="button">
+        <span id="tocMenuTogglerIcon" class="tocMenuCollapse" role="button" aria-expanded="true" aria-label="Table of contents menu"></span>
+        <div id="tocMenuTogglerLabel">TOC</div>
+    </a>
+</div>            <div style="display:none">
+                <div id="CollapseLocalizeString">Collapse the table of content</div>
+                <div id="ExpandLocalizeString">Expand the table of content</div>
+            </div>
+        <div>
+            <a id="isd_archiveControlResponsive" style="display:none;" href="javascript:void(0)" role="button" aria-label="Hide Archived Versions" data-include-archive="Show Archived Versions" data-exclude-archive="Hide Archived Versions">
+            </a>
+            <div id="isd_archiveInstrument" style="display:none">This documentation is archived and is not being maintained.</div>
+        </div>
+    </div>
+     <div id="content" class="content" ms.cmpgrp="content body" role="main">
+
+
+
+
+
+
+
+
+    <div id="archiveDisclaimerText" style="display:none">This documentation is archived and is not being maintained.</div>
+
+
+
+
+<div class="topic" xmlns="http://www.w3.org/1999/xhtml">
+  <h1 class="title">
+            Ftp: glob
+          </h1>
+  
+  <div id="mainSection">
+      <div id="mainBody">
+        <p>Toggles wildcard expansion of local file names.</p>
+        <h3 id="EDAA">Syntax</h3>
+        <p>
+          <strong>glob</strong>
+        </p>
+        <div>
+          <a href="#mainSection">
+            
+          </a>
+          <a href="#mainSection">Top of page</a>
+          <br />
+        </div>
+        <h3 id="ECAA">Parameters</h3>
+        <p>
+          <strong>? glob</strong>
+          <strong> </strong>
+          <strong>: </strong>Displays help for the <strong>glob</strong> command. </p>
+        <div>
+          <a href="#mainSection">
+            
+          </a>
+          <a href="#mainSection">Top of page</a>
+          <br />
+        </div>
+        <h3 id="EBAA">Remarks</h3>
+        <ul>
+          <li>
+            <p>By default, globbing is on. </p>
+          </li>
+          <li>
+            <p>Globbing permits the use of the asterisk (*) and question mark (?) as wildcard characters in local file or path names. </p>
+          </li>
+        </ul>
+        <div>
+          <a href="#mainSection">
+            
+          </a>
+          <a href="#mainSection">Top of page</a>
+          <br />
+        </div>
+        <h3 id="EAAA">Formatting legend</h3>
+        <table Responsive="true" summary="table">
+          <tr Responsive="true"><th scope="col">
+              <p>Format</p>
+            </th><th scope="col">
+              <p>Meaning</p>
+            </th></tr>
+          <tr><td data-th="&#xA;              Format&#xA;            ">
+              <p>
+                <em>Italic</em>
+              </p>
+            </td><td data-th="&#xA;              Meaning&#xA;            ">
+              <p>Information that the user must supply</p>
+            </td></tr>
+          <tr><td data-th="&#xA;              Format&#xA;            ">
+              <p>
+                <strong>Bold</strong>
+              </p>
+            </td><td data-th="&#xA;              Meaning&#xA;            ">
+              <p>Elements that the user must type exactly as shown</p>
+            </td></tr>
+          <tr><td data-th="&#xA;              Format&#xA;            ">
+              <p>Ellipsis (...)</p>
+            </td><td data-th="&#xA;              Meaning&#xA;            ">
+              <p>Parameter that can be repeated several times in a command line</p>
+            </td></tr>
+          <tr><td data-th="&#xA;              Format&#xA;            ">
+              <p>Between brackets ([])</p>
+            </td><td data-th="&#xA;              Meaning&#xA;            ">
+              <p>Optional items</p>
+            </td></tr>
+          <tr><td data-th="&#xA;              Format&#xA;            ">
+              <p>Between braces ({}); choices separated by pipe (|). Example: {even|odd}</p>
+            </td><td data-th="&#xA;              Meaning&#xA;            ">
+              <p>Set of choices from which the user must choose only one</p>
+            </td></tr>
+          <tr><td data-th="&#xA;              Format&#xA;            ">
+              <p>Courier font</p>
+            </td><td data-th="&#xA;              Meaning&#xA;            ">
+              <p>Code or program output</p>
+            </td></tr>
+        </table>
+        <p>
+          <a href="https://technet.microsoft.com/en-us/library/bb490910.aspx">Ftp</a>
+        </p>
+        <p>
+          <a href="https://technet.microsoft.com/en-us/library/bb490890.aspx">Command-line reference A-Z</a>
+        </p>
+        <div>
+          <a href="#mainSection">
+            
+          </a>
+          <a href="#mainSection">Top of page</a>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="libraryMemberFilter">
+    <div class="filterContainer">
+        <span>Show:</span>
+        <label>
+            <input type="checkbox" class="libraryFilterInherited" checked="checked" value="Inherit" />Inherited
+        </label>
+        <label>
+            <input type="checkbox" class="libraryFilterProtected" checked="checked" value="Protected" />Protected
+        </label>
+    </div>
+</div>
+    
+<input type="hidden" id="libraryMemberFilterEmptyWarning" value="There are no members available with your current filter settings." />
+
+
+
+    </div>
+<div id="rightNavigationMenu" ms.cmpgrp="right nav">
+    <div id="mobileButtons">
+        <div id="navigationButtons">
+            <a id="isd_print" href="https://technet.microsoft.com/en-us/library/bb490656(d=printer).aspx" rel="nofollow"><ins class="print"></ins>Print </a>
+            <a id="isd_printABook" href="/en-us/library/export/help/?returnurl=%2fen-us%2flibrary%2fbb490656.aspx">
+                <ins class="export"></ins>Export (<span class="count">0</span>)
+            </a>
+        </div>
+    </div>
+    <div id="navMain">
+        <div id="closeNavigation">
+            <a class="tocCloseSmall" id="closeButton"></a>
+        </div>
+        <div id="navigationButtons">
+            <a id="isd_print" href="https://technet.microsoft.com/en-us/library/bb490656(d=printer).aspx" rel="nofollow"><ins class="print"></ins>Print </a>
+            <a id="isdShare" href="#" role="button" aria-expanded="false">
+                <ins class="share"></ins>Share
+            </a>
+            <div id="socials" style="display: none">
+                <a class="isdFacebook" href="#" aria-label="Share on Facebook">
+                    <ins class="facebook"></ins>
+                </a>
+                <a class="isdTwitter" href="#" aria-label="Share on Twitter">
+                    <ins class="twitter"></ins>
+                </a>
+                <a class="isdGooglePlus" href="#" aria-label="Share on Google+">
+                    <ins class="googlePlus"></ins>
+                </a>
+            </div>
+        </div>
+        <div id="indoc_toc" style="display: none" ms.cmpgrp="indoc toc">
+            <div id="indoc_title">IN THIS ARTICLE</div>
+            <ul id="indoc_toclist"></ul>
+        </div>
+    </div>
+</div>
+<div id="rightNavigationMenuThumbnail" class="rightNavigationMenuThumbnail">
+</div>
+
+
+
+
+        </div>
+        <div class="clear"></div>
+
+        
+    
+
+<input name="__RequestVerificationToken" type="hidden" value="8QY_peRRZa15VIzD_fOlRlpGCYaBjeVJXMljh4MEghKhx4sIoUA2y6H2e-NiiPn0nguKsMGvGG8lMSpv0YNaHJ0ARPM1" />
+<input id="ratingValueSubmitUrl" type="hidden" value="https://technet.microsoft.com/en-us/library/feedback/rate/bb490656.aspx" />
+<input id="ratingAdditionalSubmitUrl" type="hidden" value="https://technet.microsoft.com/en-us/library/feedback/additional/bb490656.aspx" />
+<input id="isTopicRated" type="hidden" value="false" />
+
+
+
+      <div id="lib-footer">
+
+
+    <div id="standardRatingBefore" class="clear stdr-container-before"></div>
+    <div id="standardRating" class="stdr-container" ms.pgarea="body">
+        <div class="stdr-close"></div>
+        <div class="stdr-vote stdr-content">
+            <div class="stdr-content">
+                <span class="stdr-votetitle">Is this page helpful?</span>
+                <button class="stdr-yes" aria-label="Yes, this page was helpful">Yes</button>
+                <button class="stdr-no" aria-label="No, this page was not helpful">No</button>
+                <input id="s_ratingValue" type="hidden" value="" />
+            </div>
+        </div>
+        <div class="stdr-feedback" style="display: none">
+            <div class="stdr-form">
+                <div class="stdr-fieldtitle">Additional feedback?</div>
+                <textarea class="stdr-detail" rows="6" maxlength="1500"></textarea>
+                <div>
+                    <span class="stdr-count"><span class="stdr-charcnt">1500</span> characters remaining</span>
+                    <div class="stdr-buttons">
+                        <button class="stdr-provide" aria-label="Submit my additional feedback">Submit</button>
+                        <button class="stdr-skip" aria-label="Skip additional feedback">Skip this</button>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="stdr-thanks" style="display: none">
+            <div class="stdr-content">
+                <span class="stdr-thankyou">Thank you!</span>
+                <span class="stdr-appreciate">We appreciate your feedback.</span>
+            </div>
+        </div>
+
+        
+        <div id="contentFeedbackQAContainer" style="display: none;"></div>
+    </div>
+    <div id="standardRatingPlaceholder" style="display: none"></div>
+    
+        
+        
+    <div id="ux-footer" dir="ltr" class="ltr" role="contentinfo" ms.pgarea="footer">
+        <div class="ux-footer-clear"></div>
+        <div id="footerWrapper">
+            <div id="footerLeft">
+                <div id="footerProfileFeedback">
+                    <div id="footerProfileLink">
+                        <div data-fragmentName="ManageProfileLink" id="Fragment_ManageProfileLink" xmlns="http://www.w3.org/1999/xhtml">
+  <a href="https://social.technet.microsoft.com/profile" xmlns="http://www.w3.org/1999/xhtml">Manage Your Profile</a>
+</div>
+                    </div>
+                    <div id="Feedback">
+                        <div class="feedbackListItem">
+                            <div class="divider">|</div>
+                            
+
+
+
+
+
+<div class="FooterSiteFeedBack">
+    <a id="SiteFeedbackLinkOpener" href="javascript:void(0)">
+        <span class="FeedbackButton clip20x21" id="FeedbackButton">
+            <img id="feedBackImg" class="cl_footer_feedback_icon" src="https://i-technet.sec.s-msft.com/Areas/Epx/Content/Images/ImageSprite.png?v=636347038791710855" alt="Site Feedback" />
+        </span>
+        Site Feedback
+    </a>
+    
+    <div id="SiteFeedbackLinkContainer" class="SiteFeedbackLinkContainer" style="display: none;">
+    <form id="siteFeedbackForm" method="post" action="https://technet.microsoft.com/en-us/library/feedback/add/bb490656(v=msdn.10).aspx">
+        <div class="SiteFeedbackLinkTitleContainer">
+            <div class="SiteFeedbackLinkTitle">
+                Site Feedback
+            </div>
+            <div class="SiteFeedbackLinkCancel">
+                <a id="SiteFeedbackLinkCloser" role="button" aria-label="Close Site Feedback" href="javascript:void(0)">x</a>
+            </div>
+        </div>
+        <div class="SiteFeedbackLinkData">
+            <div class="SiteFeedbackLinkInfoText">
+                Tell us about your experience...
+            </div>
+            <div class="QuestionText">
+                Did the page load quickly?
+            </div>
+            <div class="AnswerText">
+                
+                <span>
+                    Yes<span>
+                        <input aria-label="Yes" id="searchBox" name="searchBox" type="radio" value="1" /></span></span>
+                
+                <span>
+                    No<span>
+                        <input aria-label="No" id="searchBox" name="searchBox" type="radio" value="0" /></span></span>
+                
+            </div>
+            <div class="QuestionText">
+                Do you like the page design?
+            </div>
+            <div class="AnswerText">
+                
+                <span>
+                    Yes<span>
+                        <input aria-label="Yes" id="tabbedCode" name="tabbedCode" type="radio" value="1" /></span></span>
+                
+                <span>
+                    No<span>
+                        <input aria-label="No" id="tabbedCode" name="tabbedCode" type="radio" value="0" /></span></span>
+                
+            </div>
+            <div class="QuestionText">
+                Tell us more
+            </div>
+            <div class="SiteFeedbackLinkTextAreaContainer">
+                <textarea id="feedbackText" data-maxlength="4000" name="feedbackText" cols="25" rows="5" class="SiteFeedbackLinkTextArea" aria-label="Feedback Text"></textarea>
+                
+                <input type="hidden" id="feedbackSiteName" name="feedbackSiteName" value="" />
+                <input type="hidden" id="feedbackPriority" name="feedbackPriority" value="" />
+                <input type="hidden" id="feedbackSourceUrl" name="feedbackSourceUrl" value="" />
+                <input type="hidden" id="ClientIP" name="ClientIP" value="" />
+                <input type="hidden" id="ClientOS" name="ClientOS" value="" />
+                <input type="hidden" id="ClientBrowser" name="ClientBrowser" value="" />
+                <input type="hidden" id="ClientTime" name="ClientTime" value="" />
+                <input type="hidden" id="ClientDate" name="ClientDate" value="" />
+                
+            </div>
+            <div>
+                <input id="siteFeedbackSubmit" type="submit" value="Send" class="SiteFeedbackLinkSubmit" aria-label="Send" />
+            </div>
+        </div>
+        <input type="hidden" id="returnUrl" name="returnUrl" value="https://technet.microsoft.com/en-us/library/bb490656.aspx" />
+    </form>
+</div>
+    
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+                <div id="footerGroup">
+                    <div id="LinkGroup">
+                        <div id="Links1"><div data-fragmentName="FooterLinks" id="Fragment_FooterLinks" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <ul class="links horizontal">
+      <li>
+        <a href="https://technet.microsoft.com/cc543196.aspx" xmlns="http://www.w3.org/1999/xhtml">Flash Newsletter</a>
+      </li>
+      <li class="divider">|</li>
+      <li>
+        <a href="https://technet.microsoft.com/cc512759.aspx" xmlns="http://www.w3.org/1999/xhtml">Contact Us</a>
+      </li>
+      <li class="divider">|</li>
+      <li>
+        <a href="https://privacy.microsoft.com/privacystatement" xmlns="http://www.w3.org/1999/xhtml">Privacy Statement</a>
+      </li>
+      <li class="divider">|</li>
+      <li>
+        <a href="https://technet.microsoft.com/cc300389.aspx" xmlns="http://www.w3.org/1999/xhtml">Terms of Use</a>
+      </li>
+      <li class="divider">|</li>
+      <li>
+        <a href="https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/" xmlns="http://www.w3.org/1999/xhtml">Trademarks</a>
+      </li>
+      <li class="divider">|</li>
+    </ul>
+  </div>
+</div></div>
+                    </div>
+                </div>
+                <div style="clear:both"></div>
+                <div id="Links2"></div>
+            </div>
+            <div id="footerRight">
+                <div id="FooterLogoContainer"><div id="FooterLogo"></div></div>
+                <div id="FooterCopyright">© 2017 Microsoft</div>
+            </div>
+        </div>
+    </div>
+
+      </div>
+
+        <div class="footerPrintView">
+            <div class="footerCopyrightPrintView">© 2017 Microsoft</div>
+        </div>
+
+        
+        
+        
+        
+        
+        
+
+        
+            
+
+
+
+    <input id="tocPaddingPerLevel" type="hidden" value="17" />
+
+
+
+        <input id="MtpsDevice" type="hidden" value="Default" />
+
+
+<![CDATA[ Third party scripts and code linked to or referenced from this website are licensed to you by the parties that own such code, not by Microsoft.  See ASP.NET Ajax CDN Terms of Use – http://www.asp.net/ajaxlibrary/CDN.ashx. ]]>
+
+        
+        
+        
+            
+        
+
+<![CDATA[ WebTrends view model not available or IncludeLegacyWebTrendsScriptInGlobal feature flag is off]]>
+
+
+
+
+<div id="globalRequestVerification">
+    <input name="__RequestVerificationToken" type="hidden" value="toWqsOM0AWzyn_fc7EbaOMGrNReKZUtl9ReG-T73v305g2E-Hhscxo06UvEuhlaF52sEtY1ePEEtIYP_2B5bcyl56mY1" />
+</div>
+
+
+    </div>
+
+    
+    
+
+    
+
+    
+<script type="text/javascript" class="mtps-injected">
+/*<![CDATA[*/
+(function(window,document){"use strict";function preload(scripts){for(var result=[],script,e,i=0;i<scripts.length;i++)script=scripts[i],script.hasOwnProperty("url")&&(e=document.createElement("script"),e.src=script.url,script.throwaway=e),result.push(script);return result}function inject(scripts,index){var script,elem;if(index>=scripts.length){delete mtps.injectScripts;return}script=scripts[index];elem=document.createElement("script");elem.className="mtps-injected";elem.async=!1;var isLoaded=!1,timeoutId=0,injectNextFnName="",injectNext=elem.onerror=function(){isLoaded||(isLoaded=!0,inject(scripts,index+1),window.clearTimeout(timeoutId),elem.onload=elem.onerror=elem.onreadystatechange=null,injectNextFnName&&delete mtps[injectNextFnName],elem.removeEventListener&&elem.removeEventListener("load",injectNext,!1))};elem.addEventListener?elem.addEventListener("load",injectNext,!1):elem.readyState==="uninitialized"?elem.onreadystatechange=function(){(this.readyState==="loaded"||this.readyState==="complete")&&injectNext()}:elem.onload=injectNext;script.hasOwnProperty("url")?(timeoutId=window.setTimeout(injectNext,12e4),elem.src=script.url):(injectNextFnName="_injectNextScript_"+index,mtps[injectNextFnName]=injectNext,timeoutId=window.setTimeout(injectNext,2e3),elem.text="try {\n"+script.txt+"\n} finally { MTPS."+injectNextFnName+" && MTPS."+injectNextFnName+"(); }");parent.appendChild(elem)}var mtps=window.MTPS||(window.MTPS={}),parent=document.getElementsByTagName("head")[0];mtps.injectScripts=function(scripts){inject(preload(scripts),0)}})(window,document);
+MTPS.injectScripts([
+	{ txt: "/**/\r\n(window.MTPS || (window.MTPS = {})).cdnDomains || (window.MTPS.cdnDomains = { \r\n\t\"image\": \"https://i-technet.sec.s-msft.com\", \r\n\t\"js\": \"https://i2-technet.sec.s-msft.com\", \r\n\t\"css\": \"https://i-technet.sec.s-msft.com\", \r\n\t\"ttf\": \"https://i-technet.sec.s-msft.com\"\r\n});\r\n/**/" },
+	{ txt: "//\n\n        window.appInsightsId = \u0027c48d7639-e2ae-45e0-b536-c9b172c95e44\u0027;\n        //" },
+	{ url: "https://i2-technet.sec.s-msft.com/Combined.js?resources=0:Utilities,1:Breadcrumbs,2:LibraryRightNavigationMenu,2:PrintExportButton,3:StandardRating,0:Topic,1:ResponsiveSupport,0:AppInsightsPerf,1:ResponsiveToc,0:ABTestControl,2:WEDCS;/Areas/Epx/Content/Scripts:0,/Areas/Library/Content:1,/Areas/Library/Themes/Base/Content:2,/Areas/Global/Content:3\u0026amp;hashKey=BE4DE1626D9A02F40208057AC4C82646\u0026amp;v=B9A6B908A0B4FFBBA6298C0AA37DE91C" },
+	{ txt: "var omnitureTracking = \"false\";" },
+	{ url: "https://i2-technet.sec.s-msft.com/Combined.js?resources=0:megabladeMenu.1,1:SearchBox;/Areas/Epx/Themes/Shared/Content:0,/Areas/Epx/Themes/Base/Content:1\u0026amp;hashKey=F6DE63F37E6BFBE8E78C84CFE28A5B67\u0026amp;v=B9A6B908A0B4FFBBA6298C0AA37DE91C" },
+	{ url: "https://i2.services.social.microsoft.com/search/Widgets/SearchBox.jss?boxid=HeaderSearchTextBox\u0026btnid=HeaderSearchButton\u0026brand=TechNet\u0026loc=en-us\u0026watermark=TechNet\u0026focusOnInit=false" },
+	{ url: "https://i2-technet.sec.s-msft.com/Combined.js?resources=0:JumpRedirect,1:Header.2,2:LibraryMemberFilter,3:SiteFeedbackLink,3:Toc_Fixed,3:CodeSnippet,3:TopicNotInScope,3:VersionSelector,3:SurveyBroker;/Areas/Epx/Themes/Base/Content:0,/Areas/Epx/Themes/TechNet/Content:1,/Areas/Library/Content:2,/Areas/Epx/Content/Scripts:3\u0026amp;hashKey=FA4FA5E5253BDE6AE2B65D7E10951505\u0026amp;v=B9A6B908A0B4FFBBA6298C0AA37DE91C" },
+	{ txt: "$(document).ready(function() {\n        try {\n            var token = $(\"#globalRequestVerification input[name=\u0027__RequestVerificationToken\u0027]\").clone();\n            $(\"#siteFeedbackForm\").append(token);\n        } catch(err) {\n            \n        }\n    });" }
+]);
+
+/*]]>*/
+</script></body>
+</html>

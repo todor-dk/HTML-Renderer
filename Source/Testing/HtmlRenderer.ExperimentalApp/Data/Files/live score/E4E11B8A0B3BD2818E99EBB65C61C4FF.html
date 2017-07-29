@@ -1,0 +1,997 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Live Football Scores - LiveScore from eurorivals.net</title>
+<meta name="description" content="Real-time football live scores, commentary, match stats and latest results for all football competitions." />
+<meta name="robots" content="index, follow" /><link href="/css/eurorivals11.css" rel="stylesheet" type="text/css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> 
+<script type="text/javascript" src="http://eurorivals.net/js/eurorivals-c-20120724B.js"></script>
+<script>$(function(){itemsPerPage=1;paginatorStyle=1;separator='';enablePageOfOption=true;$("#videoindex").pagination()});</script>
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-263883-3']);
+  _gaq.push(['_setDomainName', 'eurorivals.net']);
+  _gaq.push(['_setAllowHash', 'false']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<script type="text/javascript">
+function displayscores(data) {
+if(data.length>10){
+      $("#scores").html(data);
+} else {
+}
+} 
+var auto_refresh = setInterval(
+function ()
+{
+$.get('/i_scores_ajax_change.asp', displayscores);
+}, 45000);
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() { 
+        $("div.goalscorers").click(function () { 
+if($.cookie('hidescorers')=="false" ) {$.cookie("hidescorers", "true", { path: '/' });$("div.goalscorers").html("<img src='/images/spacer.gif' height=20 width=20>  Show Goalscorers");} else {$.cookie("hidescorers", "false", { path: '/' });$("div.goalscorers").html("<img src='/images/tick.png' height=20 width=20>  Show Goalscorers");}
+xmlhttpPost2('/i_scores_ajax_change.asp', 'MyFormCM2', 'scores', '<img src=\'http://eurorivals.net/images/ajax-loader.gif\'>'); return false;
+        }); 
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() { 
+        $("div.minormatches").click(function () { 
+if($.cookie('hideminormatches')=="true" ) {$.cookie("hideminormatches", "false", { path: '/' });$("div.minormatches").html("<img src='/images/tick.png' height=20 width=20>  Include Minor Matches");} else {$.cookie("hideminormatches", "true", { path: '/' });$("div.minormatches").html("<img src='/images/spacer.gif' height=20 width=20>  Include Minor Matches");}
+xmlhttpPost2('/i_scores_ajax_change.asp', 'MyFormCM2', 'scores', '<img src=\'http://eurorivals.net/images/ajax-loader.gif\'>'); return false;
+        }); 
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() { 
+        $("div.autoupdate").click(function () { 
+if($.cookie('autoupdate')=="true" ) {$.cookie("autoupdate", "false", { path: '/' });$("div.autoupdate").html("<img src='/images/spacer.gif' height=20 width=20>  Auto Update");} else {$.cookie("autoupdate", "true", { path: '/' });$("div.autoupdate").html("<img src='/images/tick.png' height=20 width=20>  Auto Update");}
+        }); 
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() { 
+        $("div.setall").click(function () { 
+$.cookie("showscores", "all", { path: '/' });
+$("div.setall").html("<img src='/images/tick.png' height=20 width=20> All Matches");
+$("div.setlive").html("<img src='/images/spacer.gif' height=20 width=20> All In-Play");
+$("div.setfinished").html("<img src='/images/spacer.gif' height=20 width=20> All Finished");
+$("div.setscheduled").html("<img src='/images/spacer.gif' height=20 width=20> All Scheduled");
+xmlhttpPost2('/i_scores_ajax_change.asp', 'MyFormCM2', 'scores', '<img src=\'http://eurorivals.net/images/ajax-loader.gif\'>'); return false;
+        }); 
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() { 
+        $("div.setlive").click(function () { 
+$.cookie("showscores", "inplay", { path: '/' });
+$("div.setall").html("<img src='/images/spacer.gif' height=20 width=20> All Matches");
+$("div.setlive").html("<img src='/images/tick.png' height=20 width=20> All In-Play");
+$("div.setfinished").html("<img src='/images/spacer.gif' height=20 width=20> All Finished");
+$("div.setscheduled").html("<img src='/images/spacer.gif' height=20 width=20> All Scheduled");
+xmlhttpPost2('/i_scores_ajax_change.asp', 'MyFormCM2', 'scores', '<img src=\'http://eurorivals.net/images/ajax-loader.gif\'>'); return false;
+        }); 
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() { 
+        $("div.setfinished").click(function () { 
+$.cookie("showscores", "finished", { path: '/' });
+$("div.setall").html("<img src='/images/spacer.gif' height=20 width=20> All Matches");
+$("div.setlive").html("<img src='/images/spacer.gif' height=20 width=20> All In-Play");
+$("div.setfinished").html("<img src='/images/tick.png' height=20 width=20> All Finished");
+$("div.setscheduled").html("<img src='/images/spacer.gif' height=20 width=20> All Scheduled");
+xmlhttpPost2('/i_scores_ajax_change.asp', 'MyFormCM2', 'scores', '<img src=\'http://eurorivals.net/images/ajax-loader.gif\'>'); return false;
+        }); 
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function() { 
+        $("div.setscheduled").click(function () { 
+$.cookie("showscores", "notstarted", { path: '/' });
+$("div.setall").html("<img src='/images/spacer.gif' height=20 width=20> All Matches");
+$("div.setlive").html("<img src='/images/spacer.gif' height=20 width=20> All In-Play");
+$("div.setfinished").html("<img src='/images/spacer.gif' height=20 width=20> All Finished");
+$("div.setscheduled").html("<img src='/images/tick.png' height=20 width=20> All Scheduled");
+xmlhttpPost2('/i_scores_ajax_change.asp', 'MyFormCM2', 'scores', '<img src=\'http://eurorivals.net/images/ajax-loader.gif\'>'); return false;
+        }); 
+});
+</script>
+
+<link rel="shortcut icon" href="/images/favicon.ico" />
+</head>
+
+<body onload="">
+
+<div id="topbar" >
+<div id="topbarbox1">
+
+<a href="http://twitter.com/eurorivals" rel="nofollow"><img src="/images/twitter.png" height="18" width="18" alt=""/> </a>  
+</div>
+<div id="topbarbox2">
+
+&nbsp;
+</div>
+<div id="topbarbox3"><form action="">
+<div id="txtHint"></div>
+<img src="/images/magnifying-glass.gif" width="16" height="16" alt="" />
+<input type="text" id="finderinput" onkeyup="showHint(this.value,'club')" value="" onfocus="if (this.value == '') { this.value=''; }" onblur="setTimeout('hideHint(this.value)',150)" onkeypress="return event.keyCode!=13" />
+</form></div>
+</div>
+<div class="clr"></div>
+
+<div id="template" class="wrapper">
+
+<div id="header" style="background-color:#606060;height:"><div class="rk-1"><div class="rk-2" style="position:relative;"><div style="position:absolute;top:-15px;left:355px;height:120px;overflow:hidden;"></div>
+<a href="/" class="nounder"><img src="/images/style3/logo.gif" id="logo" alt="eurorivals.net: European Football" title="eurorivals.net: European Football"/></a>
+
+<div id="topads" style="">
+<iframe src="/ad480.asp" width="480" height="80" FRAMEBORDER="0" style="width:480px; border:0; background-color:000000; height:80px;; overflow:hidden;" scrolling="no" seamless="seamless"  ></iframe>
+
+</div>
+
+
+</div></div></div>
+<div style="clear:both;"></div>
+
+<div id="menubar"><div id="horiz-menu" class="suckerfish">
+<ul><li><a href="/"><img src="/images/football-videos-home.png" alt="European Football" width="14" height="14"/></a></li>
+
+<li><a href="/scores">Live Scores</a></li>
+<li><a href="/football-highlights.html">Football Highlights</a></li>
+<li><a href="/news">News</a></li>
+<li><a href="/european-football-players.html">Players</a><ul>
+<li><a href="/best-football-players.html">Most Popular Players</a></li>
+<li><a href="/football-squads.html">Football Squads</a></li>
+<li><a href="/transfer-rumours.html">Transfer Rumours</a></li></ul></li>
+<li><a href="/european-football-clubs.html">Clubs</a><ul>
+<li><a href="/top-football-clubs.html">Most Popular Clubs</a></li>
+<li><a href="/football-stadiums.html">Football Stadiums</a></li>
+<li><form style="margin:0;padding:0" name="MyFormCM2" action="" method="post" onsubmit="xmlhttpPost('/i_menubar_inc2.asp', 'MyFormCM2', 'matchbox', '<img src=\'http://eurorivals.net/images/ajax-loader.gif\'>'); return false;">
+<div id="moremenu2"  onmouseover="xmlhttpPost('/i_menubar_inc2.asp', 'MyFormCM2', 'moremenu2', '<img src=\'http://eurorivals.net/images/ajax-loader.gif\'>'); return false;">
+<a href="#">&#x25BC; &nbsp; Top Clubs</a></div></form></li></ul></li>
+<li><a href="/competitions">Competitions</a><ul>
+<li><form style="margin:0;padding:0" name="MyFormCM" action="" method="post" onsubmit="xmlhttpPost('/i_menubar_inc.asp', 'MyFormCM', 'matchbox', '<img src=\'http://eurorivals.net/images/ajax-loader.gif\'>'); return false;">
+<div id="moremenu"  onmouseover="xmlhttpPost('/i_menubar_inc.asp', 'MyFormCM', 'moremenu', '<img src=\'http://eurorivals.net/images/ajax-loader.gif\'>'); return false;">
+<a href="#"> &nbsp; &#x25BC; &nbsp; Top Leagues</a></div></form></li></ul></li>
+<li><a>Stats</a><ul>
+<li><a href="/tables.html">European League Tables</a></li>
+<li><a href="/top-scorers.html">Top Scorers</a></li>
+<li><a href="/club-rankings.html">UEFA Club Rankings</a></li>
+<li><a href="/top-highlight-videos.html">Most Popular Football Highlights</a></li>
+<li><a href="/best-football-videos.html">Most Popular Football Videos</a></li></ul></li>
+<li><a>Live Streams</a><ul>
+<li><a href="/live-streams.html">Live Football Streams</a></li>
+
+<li><a href="/live-sports-streams.html">Live Sports Streams</a></li>
+<li><a href="/live-speedway-streams.html">Live Speedway Streams</a></li>
+<li><a href="/live-tennis-streams.html">Live Tennis Streams</a></li></ul></li>
+
+<li><a href="/betting-odds-comparison.html">Betting</a></li>
+<li><a href="/contact.html">Contact</a><ul>
+<li><a href="/football-directory.html">Football Site Directory</a></li>
+<li><a href="/tickets">2013 Football Tickets</a></li>
+<li><a href="/webmasters.html">Football Highlights Widget</a></li>
+
+</ul></li>
+
+</ul></div>
+
+</div>
+
+<div class="clr"></div>
+
+<div id="mainbody">
+
+
+
+
+
+<table cellpadding="0" cellspacing="0" >
+
+
+<tr><td colspan=6 style="border-top:2px solid #a3a3a3;border-bottom:2px solid #585858;height:50px;background-color:#888;background-image:url(/images/style3/header-bg.png);">
+<div style="padding:20px 0px 0px 10px;float:left;"><h1 style="margin:0;color:white;font-size:22px;">Live Football Scores</h1></div>
+<img src="/images/new.png" style="float:right;margin:0px 0px 0px 0px;" height="48" width="48"/><div style="padding:15px 10px 0px 10px;float:right;"><div style="margin:0;color:white;">Live Score Centre<br>Today's latest football scores in real time</div></div>
+</td></tr>
+
+
+<tr valign="top">
+
+
+<td width="100%">
+
+<div style="height:100%;padding:0px 15px 30px 10px;">
+<!-- *************** start of main content cell ***************-->
+
+ 			<ul id="sharebar">  
+
+<li>
+      <a href="http://www.facebook.com/sharer.php?u=http://eurorivals.net/scores" rel="nofollow"><img src="/images/facebook.png" width="48" height="48" title="Share on Facebook" class="tiptip"/></a>
+</li>
+
+<li>
+
+<iframe src="http://www.facebook.com/plugins/like.php?href=http://eurorivals.net/scores&amp;send=false&amp;layout=box_count&amp;width=52&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=62" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:52px; height:62px;" allowTransparency="true"></iframe>
+</li>
+
+<li>  
+      <a href="https://twitter.com/share" rel="nofollow" target="_blank"><img src="/images/twitter.png" width="48" height="48" title="Tweet this!" class="tiptip" /></a>
+</li>
+
+
+<li> 
+      <a href="http://www.addthis.com/bookmark.php" rel="nofollow"><img src="/images/share.png" width="48" height="48" title="Share this page" class="tiptip" /></a>
+</li>
+
+
+</ul> 
+<div style="min-height:400px;position:relative;width:961px;overflow:hidden;">
+<div style="position:absolute;top:170px;right:10px;width:120px;height:1100px;">
+
+<h3 class="betting" style="margin-top:0px;">Live Football at bet365!</h3>
+
+<p style="font-size:11px;line-height:13px;" >Customers at bet365 can <b>watch live streams</b> of thousands of matches from the world's top football leagues including <b>La Liga, Bundesliga, Serie A, MLS and Ligue 1</b> and many more.</p>
+<p style="font-size:11px;line-height:13px;" >A funded account is required, so open a free account today, fund your account and <b>start watching!</b></p>
+<div class="greenboxarrow" style="font-size:12px;margin-top:0px;width:100px;"><a href="http://www.bet365.com/?affiliate=365_312090" rel="nofollow" target="_blank">
+<img src="/images/orangearrowsmall.png" style="float:right;"/>Join Now!</a></div><div style="clear:both"></div>
+<div style="height:30px;"></div>
+
+
+<iframe src="http://imstore.bet365affiliates.com/365_078537-507-32-6-149-1-22616.aspx" width="120" height="600" frameborder="0" scrolling="no">
+</iframe>
+</div><div>  <div class="spiffyfg" style="padding:0px;">
+<div style="font-weight: bold;padding:;font-size:10px;margin:0px 0px 5px 7px;padding-top:5px;color:#777;">Filter live scores:</div>
+
+<div style="font-weight: bold;padding-left:7px;padding-bottom:3px;">
+<a href="/scores">All Countries</a> >>
+
+<a href="/scores/albanian-superliga" title="Albanian SuperLiga Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-al" width="16" height="11" alt="Albania" title="Albania " /></a>
+
+<a href="/scores/argentinian-primera-division" title="Argentinian Primera Division Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-ar" width="16" height="11" alt="Argentina" title="Argentina " /></a>
+
+<a href="/scores/australian-a_league" title="Australian A-League Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-au" width="16" height="11" alt="Australia" title="Australia " /></a>
+
+<a href="/scores/austrian-bundesliga" title="Austrian Bundesliga Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-at" width="16" height="11" alt="Austria" title="Austria " /></a>
+
+<a href="/scores/belgian-jupiler-pro-league" title="Belgian Jupiler Pro League Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-be" width="16" height="11" alt="Belgium" title="Belgium " /></a>
+
+<a href="/scores/brazilian-brasileirao-serie-a" title="Brazilian Brasileirao Serie A Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-br" width="16" height="11" alt="Brazil" title="Brazil " /></a>
+
+<a href="/scores/bulgarian-a-pfg" title="Bulgarian A PFG Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-bg" width="16" height="11" alt="Bulgaria" title="Bulgaria " /></a>
+
+<a href="/scores/chilean-primera-division" title="Chilean Primera Division Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-cl" width="16" height="11" alt="Chile" title="Chile " /></a>
+
+<a href="/scores/chinese-super-league" title="Chinese Super League Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-cn" width="16" height="11" alt="China" title="China " /></a>
+
+<a href="/scores/colombian-primera-a" title="Colombian Primera A Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-co" width="16" height="11" alt="Colombia" title="Colombia " /></a>
+
+<a href="/scores/croatian-prva-hnl" title="Croatian Prva HNL Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-hr" width="16" height="11" alt="Croatia" title="Croatia " /></a>
+
+<a href="/scores/cyprus-first-division" title="Cyprus First Division Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-cy" width="16" height="11" alt="Cyprus" title="Cyprus " /></a>
+
+<a href="/scores/czech-gambrinus-liga" title="Czech Gambrinus Liga Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-cz" width="16" height="11" alt="Czech Republic" title="Czech Republic " /></a>
+
+<a href="/scores/danish-superliga" title="Danish Superliga Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-dk" width="16" height="11" alt="Denmark" title="Denmark " /></a>
+
+<a href="/scores/ecuadorian-serie-a" title="Ecuadorian Serie A Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-ec" width="16" height="11" alt="Ecuador" title="Ecuador " /></a>
+
+<a href="/scores/english-premier-league" title="English Premier League Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-england" width="16" height="11" alt="England" title="England " /></a>
+
+<a href="/scores/finnish-veikkausliiga" title="Finnish Veikkausliiga Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-fi" width="16" height="11" alt="Finland" title="Finland " /></a>
+
+<a href="/scores/french-ligue-1" title="French Ligue 1 Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-fr" width="16" height="11" alt="France" title="France " /></a>
+
+<a href="/scores/german-bundesliga" title="German Bundesliga Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-de" width="16" height="11" alt="Germany" title="Germany " /></a>
+
+<a href="/scores/greek-superleague" title="Greek Superleague Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-gr" width="16" height="11" alt="Greece" title="Greece " /></a>
+
+<a href="/scores/hungarian-nbi" title="Hungarian NBI Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-hu" width="16" height="11" alt="Hungary" title="Hungary " /></a>
+
+<a href="/scores/israeli-premier-league" title="Israeli Premier League Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-il" width="16" height="11" alt="Israel" title="Israel " /></a>
+
+<a href="/scores/italian-serie-a" title="Italian Serie A Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-it" width="16" height="11" alt="Italy" title="Italy " /></a>
+
+<a href="/scores/japanese-j-league" title="Japanese J League Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-jp" width="16" height="11" alt="Japan" title="Japan " /></a>
+
+<a href="/scores/lithuanian-a-lyga" title="Lithuanian A Lyga Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-lt" width="16" height="11" alt="Lithuania" title="Lithuania " /></a>
+
+<a href="/scores/mexican-primera-división" title="Mexican Primera División Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-mx" width="16" height="11" alt="Mexico" title="Mexico " /></a>
+
+<a href="/scores/dutch-eredivisie" title="Dutch Eredivisie Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-nl" width="16" height="11" alt="Netherlands" title="Netherlands " /></a>
+
+<a href="/scores/norwegian-tippeligaen" title="Norwegian Tippeligaen Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-no" width="16" height="11" alt="Norway" title="Norway " /></a>
+
+<a href="/scores/paraguayan-division-profesional" title="Paraguayan Division Profesional Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-py" width="16" height="11" alt="Paraguay" title="Paraguay " /></a>
+
+<a href="/scores/polish-ekstraklasa" title="Polish Ekstraklasa Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-pl" width="16" height="11" alt="Poland" title="Poland " /></a>
+
+<a href="/scores/portuguese-liga-zon-sagres" title="Portuguese Liga ZON Sagres Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-pt" width="16" height="11" alt="Portugal" title="Portugal " /></a>
+
+<a href="/scores/romanian-liga-i" title="Romanian Liga I Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-ro" width="16" height="11" alt="Romania" title="Romania " /></a>
+
+<a href="/scores/russian-premier-league" title="Russian Premier League Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-ru" width="16" height="11" alt="Russia" title="Russia " /></a>
+
+<a href="/scores/scottish-premiership" title="Scottish Premiership Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-scotland" width="16" height="11" alt="Scotland" title="Scotland " /></a>
+
+<a href="/scores/serbian-superliga" title="Serbian SuperLiga Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-rs" width="16" height="11" alt="Serbia" title="Serbia " /></a>
+
+<a href="/scores/slovenian-1.-snl" title="Slovenian 1. SNL Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-si" width="16" height="11" alt="Slovenia" title="Slovenia " /></a>
+
+<a href="/scores/south-korean-k_league" title="South Korean K-League Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-kr" width="16" height="11" alt="South Korea" title="South Korea " /></a>
+
+<a href="/scores/spanish-la-liga" title="Spanish La Liga Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-es" width="16" height="11" alt="Spain" title="Spain " /></a>
+
+<a href="/scores/swedish-allsvenskan" title="Swedish Allsvenskan Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-se" width="16" height="11" alt="Sweden" title="Sweden " /></a>
+
+<a href="/scores/swiss-super-league" title="Swiss Super League Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-ch" width="16" height="11" alt="Switzerland" title="Switzerland " /></a>
+
+<a href="/scores/turkish-super-lig" title="Turkish Super Lig Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-tr" width="16" height="11" alt="Turkey" title="Turkey " /></a>
+
+<a href="/scores/ukrainian-premier-league" title="Ukrainian Premier League Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-ua" width="16" height="11" alt="Ukraine" title="Ukraine " /></a>
+
+<a href="/scores/american-mls" title="American MLS Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-us" width="16" height="11" alt="USA" title="USA " /></a>
+
+<a href="/scores/uruguayan-primera-division" title="Uruguayan Primera Division Scores" class="tiptip"><img src="/images/spacer.gif" class="flag flag-uy" width="16" height="11" alt="Uruguay" title="Uruguay " /></a>
+</div>
+</div><b class="spiffy"><b class="spiffy5"></b>  <b class="spiffy4"></b>  <b class="spiffy3"></b>  <b class="spiffy2"><b></b></b>  <b class="spiffy1"><b></b></b></b></div>
+
+<div style="height:20px;"></div>
+
+<div class="scbutton allmatches setall"><img src="/images/tick.png" height=20 width=20/> All Matches</div>
+<div class="scbutton inp setlive"><img src="/images/spacer.gif" height=20 width=20/> All In-Play</div>
+<div class="scbutton sch setscheduled"><img src="/images/spacer.gif" height=20 width=20/> All Scheduled</div>
+<div class="scbutton fin setfinished"><img src="/images/spacer.gif" height=20 width=20/> All Finished</div>
+<div style="float:right;width:160px;">
+<div class="scoption autoupdate"><img src="/images/tick.png" height=20 width=20/> Auto Update</div>
+<div class="scoption goalscorers"><img src="/images/spacer.gif" height=20 width=20/> Show Goalscorers</div>
+<div class="scoption minormatches"><img src="/images/tick.png" height=20 width=20/> Include Minor Matches</div>
+</div>
+
+<iframe src="http://www.facebook.com/plugins/like.php?href=http://eurorivals.net/scores&amp;send=false&amp;layout=box_count&amp;width=62&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=62" scrolling="no" frameborder="0" style="margin-left:124px;border:none; overflow:hidden; width:62px; height:62px;" allowTransparency="true"></iframe>
+
+
+<div id="scores" style="width:790px;margin-top:-20px;float:left;margin-right:50px;">
+
+
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/world.png" width="16" height="11" alt="World" title="World Live Scores" /></div> World - Club Friendly <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">FC Ashdod</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/fc-ashdod-v-hapoel-ashkelon-livescore-odds-commentary/2127166')" >0 - 1</div><div class="scpen blank"></div><div class="scaway">Hapoel Ashkelon</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">FK Senica</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/fk-senica-v-zvolen-livescore-odds-commentary/2127169')" >2 - 2</div><div class="scpen blank"></div><div class="scaway">Zvolen</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Graffin Vlasim</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/graffin-vlasim-v-viktoria-zizkov-livescore-odds-commentary/2127120')" >5 - 2</div><div class="scpen blank"></div><div class="scaway">Viktoria Zizkov</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Inter Leipzig</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/inter-leipzig-v-dukla-prague-livescore-odds-commentary/2111699')" >1 - 3</div><div class="scpen blank"></div><div class="scaway">Dukla Prague</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Lublin</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/lublin-v-gornik-leczna-livescore-odds-commentary/2127168')" >4 - 2</div><div class="scpen blank"></div><div class="scaway">Gornik Leczna</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">ROW Rybnik</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/row-rybnik-v-bks-bielsko-livescore-odds-commentary/2127167')" >1 - 1</div><div class="scpen blank"></div><div class="scaway">BKS Bielsko</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Braga B</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/braga-b-v-gil-vicente-livescore-odds-commentary/2127170')" >1 - 1</div><div class="scpen blank"></div><div class="scaway">Gil Vicente</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Maritimo</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/maritimo-v-portimonense-livescore-odds-commentary/2111727')" >4 - 1</div><div class="scpen blank"></div><div class="scaway">Portimonense</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Garbarnia</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/garbarnia-v-s.-rzeszow-livescore-odds-commentary/2127215')" >1 - 1</div><div class="scpen blank"></div><div class="scaway">S. Rzeszow</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Jonava</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/jonava-v-suwalki-livescore-odds-commentary/2127216')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Suwalki</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">11:00</div><div class="inplayicon"></div><div class="schome">Real SC</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/real-sc-v-vitoria-setubal-livescore-odds-commentary/2111702')" >-</div><div class="scpen blank"></div><div class="scaway">Vitoria Setubal</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.25</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">3.25</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">Cancl.</div><div class="inplayicon"></div><div class="schome">1.FC Brno</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/1.fc-brno-v-banik-ostrava-livescore-odds-commentary/2111707')" >-</div><div class="scpen blank"></div><div class="scaway">Banik Ostrava</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">SFC Opava</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/sfc-opava-v-zilina-b-livescore-odds-commentary/2127171')" >6 - 3</div><div class="scpen blank"></div><div class="scaway">Zilina B</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">Cancl.</div><div class="inplayicon"></div><div class="schome">Sparta Prague</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/sparta-prague-v-kaiserslautern-livescore-odds-commentary/2111709')" >-</div><div class="scpen blank"></div><div class="scaway">Kaiserslautern</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Freiburg II</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/freiburg-ii-v-sonnenhof-grossaspach-livescore-odds-commentary/2127415')" >2 - 1</div><div class="scpen blank"></div><div class="scaway">Sonnenhof Grossaspach</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">Cancl.</div><div class="inplayicon"></div><div class="schome">Fulham</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/fulham-v-qpr-livescore-odds-commentary/2111712')" >-</div><div class="scpen blank"></div><div class="scaway">QPR</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Mseno</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/mseno-v-jablonec-livescore-odds-commentary/2111714')" >0 - 7</div><div class="scpen blank"></div><div class="scaway">Jablonec</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Pogon Siedlce</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/pogon-siedlce-v-legionowo-livescore-odds-commentary/2127416')" >2 - 1</div><div class="scpen blank"></div><div class="scaway">Legionowo</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Zlate Moravce</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/zlate-moravce-v-karvina-livescore-odds-commentary/2111711')" >3 - 2</div><div class="scpen blank"></div><div class="scaway">Karvina</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Komarno</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/komarno-v-vac-livescore-odds-commentary/2127172')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">VAC</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">15:30</div><div class="inplayicon"></div><div class="schome">Slovan Varnsdorf</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/slovan-varnsdorf-v-liberec-u21-livescore-odds-commentary/2127189')" >-</div><div class="scpen blank"></div><div class="scaway">Liberec U21</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Akhmat Grozny</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/akhmat-grozny-v-angust-nazran-livescore-odds-commentary/2127201')" >5 - 0</div><div class="scpen blank"></div><div class="scaway">Angust Nazran</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Chrobry Glogow</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/chrobry-glogow-v-odra-opole-livescore-odds-commentary/2127210')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Odra Opole</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">FK Pardubice</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/fk-pardubice-v-podbrezova-livescore-odds-commentary/2111715')" >0 - 1</div><div class="scpen blank"></div><div class="scaway">Podbrezova</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Frydek-Mistek</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/frydek_mistek-v-odra-petrkovice-livescore-odds-commentary/2127173')" >2 - 3</div><div class="scpen blank"></div><div class="scaway">Odra Petrkovice</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">GKS Katowice</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/gks-katowice-v-tescoma-zlin-livescore-odds-commentary/2111713')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Tescoma Zlin</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Kromeriz</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/kromeriz-v-sigma-olomouc-livescore-odds-commentary/2127174')" >1 - 6</div><div class="scpen blank"></div><div class="scaway">Sigma Olomouc</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">LKS Lodz</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/lks-lodz-v-kks-kalisz-livescore-odds-commentary/2127176')" >2 - 0</div><div class="scpen blank"></div><div class="scaway">KKS Kalisz</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Skalica</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/skalica-v-podbeskidzie-livescore-odds-commentary/2127175')" >1 - 3</div><div class="scpen blank"></div><div class="scaway">Podbeskidzie</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Slavia Prague</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/slavia-prague-v-west-brom-livescore-odds-commentary/2111717')" >2 - 1</div><div class="scpen blank"></div><div class="scaway">West Brom</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Sokol Usti</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/sokol-usti-v-kozlovice-livescore-odds-commentary/2127177')" >4 - 1</div><div class="scpen blank"></div><div class="scaway">Kozlovice</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Szeged</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/szeged-v-mk-dons-livescore-odds-commentary/2127178')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">MK Dons</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Trnava B</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/trnava-b-v-i.-bratislava-livescore-odds-commentary/2127181')" >1 - 4</div><div class="scpen blank"></div><div class="scaway">I. Bratislava</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">VVV</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/vvv-v-paok-livescore-odds-commentary/2127200')" >0 - 1</div><div class="scpen blank"></div><div class="scaway">PAOK</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">67'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Cegledi</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/cegledi-v-hatvan-livescore-odds-commentary/2127180')" >3 - 0</div><div class="scpen blank"></div><div class="scaway">Hatvan</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">Cancl.</div><div class="inplayicon"></div><div class="schome">FC Wil 1900</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/fc-wil-1900-v-fc-st-gallen-livescore-odds-commentary/2111718')" >-</div><div class="scpen blank"></div><div class="scaway">FC St Gallen</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">64'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Pinzgau Saalfelden</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/pinzgau-saalfelden-v-st-pauli-livescore-odds-commentary/2127179')" >1 - 1</div><div class="scpen blank"></div><div class="scaway">St Pauli</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">1.36</div><div class="scodds inp scclick tiptip" title="Odds: Draw">3.60</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">11.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">64'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Sparta Prague</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/sparta-prague-v-ingolstadt-livescore-odds-commentary/2111709')" >1 - 2</div><div class="scpen blank"></div><div class="scaway">Ingolstadt</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">15.00</div><div class="scodds inp scclick tiptip" title="Odds: Draw">5.50</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">1.17</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">Ajka</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/ajka-v-mosonmagyarovari-te-livescore-odds-commentary/2127203')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Mosonmagyarovari TE</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">Arminia Bielefeld</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/arminia-bielefeld-v-fk-pribram-livescore-odds-commentary/2127182')" >4 - 0</div><div class="scpen blank"></div><div class="scaway">FK Pribram</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">1.00</div><div class="scodds inp scclick tiptip" title="Odds: Draw">51.00</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">51.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">Augsburg</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/augsburg-v-kaiserslautern-livescore-odds-commentary/2111709')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Kaiserslautern</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">2.25</div><div class="scodds inp scclick tiptip" title="Odds: Draw">2.50</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">4.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">Feirense</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/feirense-v-sporting-covilha-livescore-odds-commentary/2111701')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Sporting Covilha</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">1.25</div><div class="scodds inp scclick tiptip" title="Odds: Draw">5.00</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">10.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">17:00</div><div class="inplayicon"></div><div class="schome">Genk</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/genk-v-willem-ii-livescore-odds-commentary/2127183')" >-</div><div class="scpen blank"></div><div class="scaway">Willem II</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.30</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.60</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">2.50</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">17:00</div><div class="inplayicon"></div><div class="schome">GKS Belchatow</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/gks-belchatow-v-skra-livescore-odds-commentary/2127187')" >-</div><div class="scpen blank"></div><div class="scaway">Skra</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.40</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.75</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">5.25</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">Hodonin</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/hodonin-v-mutenice-livescore-odds-commentary/2127184')" >3 - 0</div><div class="scpen blank"></div><div class="scaway">Mutenice</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">1.01</div><div class="scodds inp scclick tiptip" title="Odds: Draw">26.00</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">34.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">Lok. Kosice</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/lok.-kosice-v-trebisov-livescore-odds-commentary/2127211')" >2 - 1</div><div class="scpen blank"></div><div class="scaway">Trebisov</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">43'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Napoli</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/napoli-v-anaunia-livescore-odds-commentary/2127212')" >5 - 0</div><div class="scpen blank"></div><div class="scaway">Anaunia</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">45'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">ND Triglav Kranj</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/nd-triglav-kranj-v-basaksehir-livescore-odds-commentary/2111704')" >1 - 1</div><div class="scpen blank"></div><div class="scaway">Basaksehir</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">Int.</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Slovan Liberec</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/slovan-liberec-v-erzgebirge-aue-livescore-odds-commentary/2123731')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Erzgebirge Aue</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">3.75</div><div class="scodds inp scclick tiptip" title="Odds: Draw">2.63</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">2.25</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">45'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Troyes</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/troyes-v-lens-livescore-odds-commentary/2111705')" >1 - 1</div><div class="scpen blank"></div><div class="scaway">Lens</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">VfB Stuttgart</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/vfb-stuttgart-v-dynamo-dresden-livescore-odds-commentary/2111720')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Dynamo Dresden</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">1.40</div><div class="scodds inp scclick tiptip" title="Odds: Draw">4.33</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">7.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">Werder Bremen</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/werder-bremen-v-wolves-livescore-odds-commentary/2111719')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Wolves</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">2.25</div><div class="scodds inp scclick tiptip" title="Odds: Draw">2.40</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">4.33</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">Znojmo</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/znojmo-v-valašské-mezirící-livescore-odds-commentary/2127185')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Valašské Mezirící</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">1.13</div><div class="scodds inp scclick tiptip" title="Odds: Draw">7.00</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">15.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">16'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Crvena Zvezda</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/crvena-zvezda-v-chambly-livescore-odds-commentary/2127202')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Chambly</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">15'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Hallescher FC</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/hallescher-fc-v-bohemians-1905-livescore-odds-commentary/2127190')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Bohemians 1905</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">2.60</div><div class="scodds inp scclick tiptip" title="Odds: Draw">3.10</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">2.63</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">21'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Nantes</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/nantes-v-servette-livescore-odds-commentary/2111724')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Servette</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">1.17</div><div class="scodds inp scclick tiptip" title="Odds: Draw">6.50</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">11.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">3'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Pacos Ferreira</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/pacos-ferreira-v-tondela-livescore-odds-commentary/2111721')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Tondela</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">2.38</div><div class="scodds inp scclick tiptip" title="Odds: Draw">3.40</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">2.60</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">14'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Ramlingen-Ehlershausen</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/ramlingen_ehlershausen-v-hannover-96-livescore-odds-commentary/2111722')" >0 - 2</div><div class="scpen blank"></div><div class="scaway">Hannover 96</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">14'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Sochaux</div><div class="scpen blank"></div><div class="scscore inpgoal" onClick="lightbox('/sochaux-v-dijon-livescore-odds-commentary/2111723')" >0 - 1</div><div class="scpen blank"></div><div class="scaway">Dijon</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">5.50</div><div class="scodds inp scclick tiptip" title="Odds: Draw">4.33</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">1.50</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">20'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Wattenscheid</div><div class="scpen blank"></div><div class="scscore inpgoal" onClick="lightbox('/wattenscheid-v-vfl-bochum-livescore-odds-commentary/2127205')" >0 - 1</div><div class="scpen blank"></div><div class="scaway">VfL Bochum</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">1.17</div><div class="scodds inp scclick tiptip" title="Odds: Draw">6.50</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">10.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">13'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Zwickau</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/zwickau-v-dukla-prague-livescore-odds-commentary/2111699')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Dukla Prague</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Angers</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/angers-v-orleans-livescore-odds-commentary/2127206')" >-</div><div class="scpen blank"></div><div class="scaway">Orleans</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.62</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.75</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">4.75</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Anorthosis</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/anorthosis-v-olympiakos-nicosia-livescore-odds-commentary/2127192')" >-</div><div class="scpen blank"></div><div class="scaway">Olympiakos Nicosia</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.40</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.33</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">5.75</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">Cancl.</div><div class="inplayicon"></div><div class="schome">Athletic Bilbao</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/athletic-bilbao-v-servette-livescore-odds-commentary/2111724')" >-</div><div class="scpen blank"></div><div class="scaway">Servette</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Cercle Brugge</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/cercle-brugge-v-lokeren-livescore-odds-commentary/2111726')" >-</div><div class="scpen blank"></div><div class="scaway">Lokeren</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">4.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.62</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Chaves</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/chaves-v-moreirense-livescore-odds-commentary/2127191')" >-</div><div class="scpen blank"></div><div class="scaway">Moreirense</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.30</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.60</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">2.50</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">FC Basel</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/fc-basel-v-athletic-bilbao-livescore-odds-commentary/2111725')" >-</div><div class="scpen blank"></div><div class="scaway">Athletic Bilbao</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.38</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.60</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">2.55</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">Cancl.</div><div class="inplayicon"></div><div class="schome">FC Basel</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/fc-basel-v-marseille-livescore-odds-commentary/2111725')" >-</div><div class="scpen blank"></div><div class="scaway">Marseille</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">FC Monheim</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/fc-monheim-v-fc-koln-livescore-odds-commentary/2111714')" >-</div><div class="scpen blank"></div><div class="scaway">FC Koln</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">FC Sion</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/fc-sion-v-psv-eindhoven-livescore-odds-commentary/2111728')" >-</div><div class="scpen blank"></div><div class="scaway">PSV Eindhoven</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.70</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.75</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">2.20</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">FK DAC</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/fk-dac-v-gabcikovo-livescore-odds-commentary/2127186')" >-</div><div class="scpen blank"></div><div class="scaway">Gabcikovo</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.17</div><div class="scodds sch scclick tiptip" title="Odds: Draw">7.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">9.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Groene Ster</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/groene-ster-v-roda-livescore-odds-commentary/2127207')" >-</div><div class="scpen blank"></div><div class="scaway">Roda</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.08</div><div class="scodds sch scclick tiptip" title="Odds: Draw">9.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">13.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Marseille</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/marseille-v-milsami_ursidos-livescore-odds-commentary/2127217')" >-</div><div class="scpen blank"></div><div class="scaway">Milsami-Ursidos</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.53</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.80</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">5.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Pau</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/pau-v-rodez-livescore-odds-commentary/2127204')" >-</div><div class="scpen blank"></div><div class="scaway">Rodez</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.40</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.40</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">2.50</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:15</div><div class="inplayicon"></div><div class="schome">Borussia Monchengladbach</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/borussia-monchengladbach-v-eupen-livescore-odds-commentary/2092453')" >-</div><div class="scpen blank"></div><div class="scaway">Eupen</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.45</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.33</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">5.75</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:15</div><div class="inplayicon"></div><div class="schome">FC Chiasso</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/fc-chiasso-v-bellinzona-livescore-odds-commentary/2127213')" >-</div><div class="scpen blank"></div><div class="scaway">Bellinzona</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:30</div><div class="inplayicon"></div><div class="schome">Academico Viseu</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/academico-viseu-v-aves-livescore-odds-commentary/2127208')" >-</div><div class="scpen blank"></div><div class="scaway">Aves</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">3.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.30</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">2.10</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:30</div><div class="inplayicon"></div><div class="schome">Bruse Boys</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/bruse-boys-v-ado-den-haag-livescore-odds-commentary/2111729')" >-</div><div class="scpen blank"></div><div class="scaway">ADO Den Haag</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:30</div><div class="inplayicon"></div><div class="schome">Houtvenne</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/houtvenne-v-westerlo-livescore-odds-commentary/2127218')" >-</div><div class="scpen blank"></div><div class="scaway">Westerlo</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.01</div><div class="scodds sch scclick tiptip" title="Odds: Draw">26.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">34.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:30</div><div class="inplayicon"></div><div class="schome">Middlesbrough</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/middlesbrough-v-oxford-united-livescore-odds-commentary/2111731')" >-</div><div class="scpen blank"></div><div class="scaway">Oxford United</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.50</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">5.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">Accrington Stanley</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/accrington-stanley-v-huddersfield-town-livescore-odds-commentary/2111730')" >-</div><div class="scpen blank"></div><div class="scaway">Huddersfield Town</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">5.50</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.50</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.44</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">Benfica B</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/benfica-b-v-lincoln-city-livescore-odds-commentary/2127188')" >-</div><div class="scpen blank"></div><div class="scaway">Lincoln City</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.25</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.50</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">2.60</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">Estoril Praia</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/estoril-praia-v-fus-rabat-livescore-odds-commentary/2111700')" >-</div><div class="scpen blank"></div><div class="scaway">FUS Rabat</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">York City</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/york-city-v-scunthorpe-united-livescore-odds-commentary/2127122')" >-</div><div class="scpen blank"></div><div class="scaway">Scunthorpe United</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">5.75</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.44</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:30</div><div class="inplayicon"></div><div class="schome">Kidsgrove Athletic</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/kidsgrove-athletic-v-burton-albion-livescore-odds-commentary/2090996')" >-</div><div class="scpen blank"></div><div class="scaway">Burton Albion</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.13</div><div class="scodds sch scclick tiptip" title="Odds: Draw">7.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">12.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:30</div><div class="inplayicon"></div><div class="schome">North Ferriby</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/north-ferriby-v-leeds-united-livescore-odds-commentary/2127221')" >-</div><div class="scpen blank"></div><div class="scaway">Leeds United</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:30</div><div class="inplayicon"></div><div class="schome">Sporting CP</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/sporting-cp-v-fenerbahce-livescore-odds-commentary/2111703')" >-</div><div class="scpen blank"></div><div class="scaway">Fenerbahce</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.45</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.60</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">2.45</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:30</div><div class="inplayicon"></div><div class="schome">Torquay United</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/torquay-united-v-bristol-city-livescore-odds-commentary/2111732')" >-</div><div class="scpen blank"></div><div class="scaway">Bristol City</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">4.50</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.20</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.57</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:30</div><div class="inplayicon"></div><div class="schome">Workington</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/workington-v-carlisle-united-livescore-odds-commentary/2127123')" >-</div><div class="scpen blank"></div><div class="scaway">Carlisle United</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">5.25</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.50</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.44</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:45</div><div class="inplayicon"></div><div class="schome">AFC Telford United</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/afc-telford-united-v-aston-villa-livescore-odds-commentary/2090997')" >-</div><div class="scpen blank"></div><div class="scaway">Aston Villa</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:45</div><div class="inplayicon"></div><div class="schome">Barnet</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/barnet-v-swansea-city-livescore-odds-commentary/2111733')" >-</div><div class="scpen blank"></div><div class="scaway">Swansea City</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">6.50</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.75</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.33</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:45</div><div class="inplayicon"></div><div class="schome">Kidderminster Harriers</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/kidderminster-harriers-v-aston-villa-livescore-odds-commentary/2090997')" >-</div><div class="scpen blank"></div><div class="scaway">Aston Villa</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:45</div><div class="inplayicon"></div><div class="schome">Livingston</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/livingston-v-sunderland-livescore-odds-commentary/2111734')" >-</div><div class="scpen blank"></div><div class="scaway">Sunderland</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">7.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">5.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.30</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:45</div><div class="inplayicon"></div><div class="schome">Mangotsfield</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/mangotsfield-v-bristol-rovers-livescore-odds-commentary/2127220')" >-</div><div class="scpen blank"></div><div class="scaway">Bristol Rovers</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:45</div><div class="inplayicon"></div><div class="schome">Tranmere Rovers</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/tranmere-rovers-v-liverpool-livescore-odds-commentary/2111735')" >-</div><div class="scpen blank"></div><div class="scaway">Liverpool</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">13.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">7.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.14</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:45</div><div class="inplayicon"></div><div class="schome">UCD</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/ucd-v-charlton-athletic-livescore-odds-commentary/2127209')" >-</div><div class="scpen blank"></div><div class="scaway">Charlton Athletic</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">8.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">6.50</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.20</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">00:00</div><div class="inplayicon"></div><div class="schome">Ottawa Fury</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/ottawa-fury-v-montreal-impact-livescore-odds-commentary/2127219')" >-</div><div class="scpen blank"></div><div class="scaway">Montreal Impact</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/world.png" width="16" height="11" alt="World" title="World Live Scores" /></div> Europe - Uhren Cup <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">BSC Young Boys</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/bsc-young-boys-v-stoke-city-livescore-odds-commentary/2122744')" >-</div><div class="scpen blank"></div><div class="scaway">Stoke City</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.38</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.40</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">2.63</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/europe.gif" width="16" height="11" alt="Europe" title="Europe Live Scores" /></div> Europe - Champions League - Qualification <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">Spartaks Jurmala</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/spartaks-jurmala-v-fc-astana-livescore-odds-commentary/2099006')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">FC Astana</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">11.00</div><div class="scodds inp scclick tiptip" title="Odds: Draw">3.00</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">1.50</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Apoel</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/apoel-v-f91-dudelange-livescore-odds-commentary/2098998')" >-</div><div class="scpen blank"></div><div class="scaway">F91 Dudelange</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.17</div><div class="scodds sch scclick tiptip" title="Odds: Draw">7.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">15.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Hapoel Beer Sheva</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/hapoel-beer-sheva-v-budapest-honved-livescore-odds-commentary/2099010')" >-</div><div class="scpen blank"></div><div class="scaway">Budapest Honved</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.33</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.75</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">10.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Malmo</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/malmo-v-vardar-skopje-livescore-odds-commentary/2099018')" >-</div><div class="scpen blank"></div><div class="scaway">Vardar Skopje</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.29</div><div class="scodds sch scclick tiptip" title="Odds: Draw">5.50</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">10.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Sheriff Tiraspol</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/sheriff-tiraspol-v-perparimi-kukes-livescore-odds-commentary/2099004')" >-</div><div class="scpen blank"></div><div class="scaway">Perparimi Kukes</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.30</div><div class="scodds sch scclick tiptip" title="Odds: Draw">5.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">10.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:00</div><div class="inplayicon"></div><div class="schome">Zrinjski Mostar</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/zrinjski-mostar-v-nk-maribor-livescore-odds-commentary/2099012')" >-</div><div class="scpen blank"></div><div class="scaway">NK Maribor</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.90</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">2.60</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">18:30</div><div class="inplayicon"></div><div class="schome">BATE Borisov</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/bate-borisov-v-alashkert-fc-livescore-odds-commentary/2113060')" >-</div><div class="scpen blank"></div><div class="scaway">Alashkert FC</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.17</div><div class="scodds sch scclick tiptip" title="Odds: Draw">7.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">15.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">IFK Mariehamn</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/ifk-mariehamn-v-legia-warsawa-livescore-odds-commentary/2099016')" >-</div><div class="scpen blank"></div><div class="scaway">Legia Warsawa</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">9.50</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.33</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.36</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">Zalgiris Vilnius</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/zalgiris-vilnius-v-ludogorets-razgrad-livescore-odds-commentary/2099000')" >-</div><div class="scpen blank"></div><div class="scaway">Ludogorets Razgrad</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">7.50</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.80</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.50</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:15</div><div class="inplayicon"></div><div class="schome">Zilina</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/zilina-v-fc-copenhagen-livescore-odds-commentary/2099008')" >-</div><div class="scpen blank"></div><div class="scaway">FC Copenhagen</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">4.33</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.60</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.80</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:45</div><div class="inplayicon"></div><div class="schome">Dundalk</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/dundalk-v-rosenborg-livescore-odds-commentary/2099014')" >-</div><div class="scpen blank"></div><div class="scaway">Rosenborg</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">4.20</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.50</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.85</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">20:15</div><div class="inplayicon"></div><div class="schome">FH</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/fh-v-vikingur-gota-livescore-odds-commentary/2113062')" >-</div><div class="scpen blank"></div><div class="scaway">Vikingur Gota</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">13.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">7.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.18</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/champions-league-tiny.gif" width="16" height="11" title="UEFA Champions League" alt=""/></div> Europe - Europa League - Qualification <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">Inter Baku</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/inter-baku-v-fola-esch-livescore-odds-commentary/2121120')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Fola Esch</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">2.60</div><div class="scodds inp scclick tiptip" title="Odds: Draw">2.30</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">4.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/europa-league-tiny.gif" width="16" height="11" title="UEFA Europa League" alt=""/></div> South Korea - K-League Classic <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Gwangju FC</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/gwangju-fc-v-sangju-sangmu-phoenix-livescore-odds-commentary/2055835')" >1 - 2</div><div class="scpen blank"></div><div class="scaway">Sangju Sangmu Phoenix</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Daegu</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/daegu-v-ulsan-hyundai-horang_i-livescore-odds-commentary/2055839')" >1 - 3</div><div class="scpen blank"></div><div class="scaway">Ulsan Hyundai Horang-i</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">FC Seoul</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/fc-seoul-v-pohang-steelers-livescore-odds-commentary/2055838')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Pohang Steelers</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Gangwon</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/gangwon-v-jeonnam-livescore-odds-commentary/2055837')" >2 - 2</div><div class="scpen blank"></div><div class="scaway">Jeonnam</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Suwon Bluewings</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/suwon-bluewings-v-incheon-united-livescore-odds-commentary/2055836')" >3 - 0</div><div class="scpen blank"></div><div class="scaway">Incheon United</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Jeju United</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/jeju-united-v-jeonbuk-hyundai-motors-livescore-odds-commentary/2055840')" >2 - 1</div><div class="scpen blank"></div><div class="scaway">Jeonbuk Hyundai Motors</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/usa.gif" width="16" height="11" alt="Usa" title="Usa Live Scores" /></div> Usa - Us Open Cup <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">AET</div><div class="inplayicon"></div><div class="schome">Sporting Kansas City</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/sporting-kansas-city-v-fc-dallas-livescore-odds-commentary/2110227')" >3 - 0</div><div class="scpen blank"></div><div class="scaway">FC Dallas</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">00:30</div><div class="inplayicon"></div><div class="schome">Miami FC</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/miami-fc-v-cincinnati-livescore-odds-commentary/2110228')" >-</div><div class="scpen blank"></div><div class="scaway">Cincinnati</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/colombia.gif" width="16" height="11" alt="Colombia" title="Colombia Live Scores" /></div> Colombia - Copa Aguila - Play Offs <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime sch">21:30</div><div class="inplayicon"></div><div class="schome">U. Magdalena</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/u.-magdalena-v-patriotas-livescore-odds-commentary/2109634')" >-</div><div class="scpen blank"></div><div class="scaway">Patriotas</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.25</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.20</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">3.20</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:30</div><div class="inplayicon"></div><div class="schome">Club Santa Fe</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/club-santa-fe-v-la-equidad-livescore-odds-commentary/2110029')" >-</div><div class="scpen blank"></div><div class="scaway">La Equidad</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">7.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.80</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.50</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:30</div><div class="inplayicon"></div><div class="schome">Independiente Medellin</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/independiente-medellin-v-deportivo-pasto-livescore-odds-commentary/2110031')" >-</div><div class="scpen blank"></div><div class="scaway">Deportivo Pasto</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.62</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.75</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">5.50</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:45</div><div class="inplayicon"></div><div class="schome">America de Cali</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/america-de-cali-v-aguilas-livescore-odds-commentary/2110030')" >-</div><div class="scpen blank"></div><div class="scaway">Aguilas</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.80</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.40</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">4.60</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/colombia.gif" width="16" height="11" alt="Colombia" title="Colombia Live Scores" /></div> Colombia - Torneo Aguila - Clausura <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Atletico Madrid</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/atletico-madrid-v-deportivo-pereira-livescore-odds-commentary/2106102')" >0 - 4</div><div class="scpen blank"></div><div class="scaway">Deportivo Pereira</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/egypt.gif" width="16" height="11" alt="Egypt" title="Egypt Live Scores" /></div> Egypt - Egypt Cup <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">Al-Ahly</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/al_ahly-v-wadi-degla-livescore-odds-commentary/2110604')" >-</div><div class="scpen blank"></div><div class="scaway">Wadi Degla</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.40</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.33</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">6.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/south-america.gif" width="16" height="11" alt="South America" title="South America Live Scores" /></div> South America - Copa Sudamericana <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Cerro Porteno</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/cerro-porteno-v-boston-river-livescore-odds-commentary/2098341')" >2 - 1</div><div class="scpen blank"></div><div class="scaway">Boston River</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Oriente Petrolero</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/oriente-petrolero-v-atletico-tucuman-livescore-odds-commentary/2098335')" >2 - 3</div><div class="scpen blank"></div><div class="scaway">Atletico Tucuman</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">23:15</div><div class="inplayicon"></div><div class="schome">Bolivar</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/bolivar-v-ldu-quito-livescore-odds-commentary/2098323')" >-</div><div class="scpen blank"></div><div class="scaway">LDU Quito</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.40</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.50</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">7.50</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:45</div><div class="inplayicon"></div><div class="schome">Club Nacional</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/club-nacional-v-olimpia-ascuncion-livescore-odds-commentary/2098337')" >-</div><div class="scpen blank"></div><div class="scaway">Olimpia Ascuncion</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">4.20</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.20</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.95</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:45</div><div class="inplayicon"></div><div class="schome">Independiente</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/independiente-v-deportes-iquique-livescore-odds-commentary/2098321')" >-</div><div class="scpen blank"></div><div class="scaway">Deportes Iquique</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.50</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.80</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">7.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/copa-sudamericana.png" width="16" height="11" title="Copa Sudamericana" alt=""/></div> Brazil - Série A <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime sch">23:30</div><div class="inplayicon"></div><div class="schome">Atletico Mineiro</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/atletico-mineiro-v-santos-fc-livescore-odds-commentary/2069125')" >-</div><div class="scpen blank"></div><div class="scaway">Santos FC</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.70</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.60</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">5.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">23:30</div><div class="inplayicon"></div><div class="schome">Ponte Preta</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/ponte-preta-v-bahia-livescore-odds-commentary/2069129')" >-</div><div class="scpen blank"></div><div class="scaway">Bahia</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.91</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.40</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">4.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:00</div><div class="inplayicon"></div><div class="schome">Fluminense</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/fluminense-v-botafogo-livescore-odds-commentary/2069121')" >-</div><div class="scpen blank"></div><div class="scaway">Botafogo</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.10</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.30</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">3.60</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:45</div><div class="inplayicon"></div><div class="schome">Atletico Paranaense</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/atletico-paranaense-v-cruzeiro-livescore-odds-commentary/2069126')" >-</div><div class="scpen blank"></div><div class="scaway">Cruzeiro</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.50</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">3.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:45</div><div class="inplayicon"></div><div class="schome">EC Vitoria</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/ec-vitoria-v-vasco-da-gama-livescore-odds-commentary/2069128')" >-</div><div class="scpen blank"></div><div class="scaway">Vasco da Gama</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.85</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.40</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">4.33</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:45</div><div class="inplayicon"></div><div class="schome">Palmeiras</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/palmeiras-v-corinthians-livescore-odds-commentary/2069123')" >-</div><div class="scpen blank"></div><div class="scaway">Corinthians</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.91</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.40</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">4.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/japan.gif" width="16" height="11" alt="Japan" title="Japan Live Scores" /></div> Japan - Emperors Cup <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">AET</div><div class="inplayicon"></div><div class="schome">Albirex Niigata</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/albirex-niigata-v-cerezo-osaka-livescore-odds-commentary/2099429')" >2 - 3</div><div class="scpen blank"></div><div class="scaway">Cerezo Osaka</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Gamba Osaka</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/gamba-osaka-v-jef-united-ichihara-livescore-odds-commentary/2099424')" >2 - 0</div><div class="scpen blank"></div><div class="scaway">JEF United Ichihara</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Iwaki</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/iwaki-v-shimizu-s-pulse-livescore-odds-commentary/2099421')" >0 - 2</div><div class="scpen blank"></div><div class="scaway">Shimizu S Pulse</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Jubilo Iwata</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/jubilo-iwata-v-shonan-bellmare-livescore-odds-commentary/2099425')" >4 - 1</div><div class="scpen blank"></div><div class="scaway">Shonan Bellmare</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Kashima Antlers</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/kashima-antlers-v-montedio-yamagata-livescore-odds-commentary/2099420')" >5 - 0</div><div class="scpen blank"></div><div class="scaway">Montedio Yamagata</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Kashiwa Reysol</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/kashiwa-reysol-v-oita-trinita-livescore-odds-commentary/2099422')" >2 - 0</div><div class="scpen blank"></div><div class="scaway">Oita Trinita</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Kawasaki Frontale</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/kawasaki-frontale-v-thespa-kusatsu-livescore-odds-commentary/2099432')" >4 - 0</div><div class="scpen blank"></div><div class="scaway">Thespa Kusatsu</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Nagano</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/nagano-v-fagiano-okayama-livescore-odds-commentary/2099423')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Fagiano Okayama</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">AET</div><div class="inplayicon"></div><div class="schome">Omiya Ardija</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/omiya-ardija-v-ehime-fc-livescore-odds-commentary/2099426')" >3 - 2</div><div class="scpen blank"></div><div class="scaway">Ehime FC</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Sagan Tosu</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/sagan-tosu-v-yamaga-livescore-odds-commentary/2099435')" >1 - 2</div><div class="scpen blank"></div><div class="scaway">Yamaga</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Sanfrecce Hiroshima</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/sanfrecce-hiroshima-v-fc-gifu-livescore-odds-commentary/2099434')" >2 - 1</div><div class="scpen blank"></div><div class="scaway">FC Gifu</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Urawa Red Diamonds</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/urawa-red-diamonds-v-roasso-kumamoto-livescore-odds-commentary/2099428')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Roasso Kumamoto</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">Aban.</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Vanraure</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/vanraure-v-nagoya-grampus-eight-livescore-odds-commentary/2099433')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Nagoya Grampus Eight</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">51.00</div><div class="scodds inp scclick tiptip" title="Odds: Draw">7.00</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">1.11</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Vissel Kobe</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/vissel-kobe-v-kanazawa-livescore-odds-commentary/2099430')" >3 - 1</div><div class="scpen blank"></div><div class="scaway">Kanazawa</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Yokohama F Marinos</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/yokohama-f-marinos-v-azul-claro-numazu-livescore-odds-commentary/2099431')" >4 - 2</div><div class="scpen blank"></div><div class="scaway">Azul Claro Numazu</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Tsukuba Univ.</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/tsukuba-univ.-v-avispa-fukuoka-livescore-odds-commentary/2099427')" >2 - 1</div><div class="scpen blank"></div><div class="scaway">Avispa Fukuoka</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/syria.gif" width="16" height="11" alt="Syria" title="Syria Live Scores" /></div> Syria - Syria Cup <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">Awarded</div><div class="inplayicon"></div><div class="schome">Al-Jazira Club</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/al_jazira-club-v-al-mohafaza-livescore-odds-commentary/2123729')" >0 - 3</div><div class="scpen blank"></div><div class="scaway">Al Mohafaza</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Jableh</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/jableh-v-al-taliya-livescore-odds-commentary/2123730')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Al Taliya</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/north-&-central-america.gif" width="16" height="11" alt="North & Central America" title="North & Central America Live Scores" /></div> North & Central America - Gold Cup <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Costa Rica</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/costa-rica-v-canada-livescore-odds-commentary/2118542')" >1 - 1</div><div class="scpen blank"></div><div class="scaway">Canada</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Honduras</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/honduras-v-french-guiana-livescore-odds-commentary/2118543')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">French Guiana</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">23:30</div><div class="inplayicon"></div><div class="schome">Panama</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/panama-v-nicaragua-livescore-odds-commentary/2118544')" >-</div><div class="scpen blank"></div><div class="scaway">Nicaragua</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.22</div><div class="scodds sch scclick tiptip" title="Odds: Draw">5.50</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">15.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/north-&-central-america.gif" width="16" height="11" alt="North & Central America" title="North & Central America Live Scores" /></div> World - Friendly International <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">FK Teplice</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/fk-teplice-v-bahrain-sc-livescore-odds-commentary/2094670')" >3 - 0</div><div class="scpen blank"></div><div class="scaway">Bahrain SC</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/fifa-flag.gif" width="16" height="11" title="International" alt=""/></div> Europe - Euro U19 - Play Offs <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Portugal U19</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/portugal-u19-v-netherlands-u19-livescore-odds-commentary/2122263')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Netherlands U19</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">HT</div><div class="inplayicon"></div><div class="schome">England U19</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/england-u19-v-czech-republic-u19-livescore-odds-commentary/2122262')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Czech Republic U19</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">1.80</div><div class="scodds inp scclick tiptip" title="Odds: Draw">2.75</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">6.50</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/europe.gif" width="16" height="11" alt="Europe" title="Europe Live Scores" /></div> Cameroon - Elite One <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Bafang</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/bafang-v-ums-de-loum-livescore-odds-commentary/2125245')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">UMS de Loum</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Dragon de Yaounde</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/dragon-de-yaounde-v-canon-yaounde-livescore-odds-commentary/2125246')" >2 - 1</div><div class="scpen blank"></div><div class="scaway">Canon Yaounde</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">15:30</div><div class="inplayicon"></div><div class="schome">Aigle Royal</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/aigle-royal-v-colombe-lobo-livescore-odds-commentary/2125247')" >-</div><div class="scpen blank"></div><div class="scaway">Colombe Lobo</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">15:30</div><div class="inplayicon"></div><div class="schome">APEJES Academy</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/apejes-academy-v-bafoussam-livescore-odds-commentary/2125248')" >-</div><div class="scpen blank"></div><div class="scaway">Bafoussam</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">15:30</div><div class="inplayicon"></div><div class="schome">Lion Blesse</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/lion-blesse-v-young-sports-livescore-odds-commentary/2125249')" >-</div><div class="scpen blank"></div><div class="scaway">Young Sports</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">15:30</div><div class="inplayicon"></div><div class="schome">Stade Renard</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/stade-renard-v-eding-sport-livescore-odds-commentary/2125250')" >-</div><div class="scpen blank"></div><div class="scaway">Eding Sport</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">15:30</div><div class="inplayicon"></div><div class="schome">Union Douala</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/union-douala-v-les-astres-livescore-odds-commentary/2125251')" >-</div><div class="scpen blank"></div><div class="scaway">Les Astres</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/malawi.gif" width="16" height="11" alt="Malawi" title="Malawi Live Scores" /></div> Malawi - Super League <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Blue Eagles</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/blue-eagles-v-mafco-livescore-odds-commentary/2103824')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Mafco</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/ghana.gif" width="16" height="11" alt="Ghana" title="Ghana Live Scores" /></div> Ghana - Premier League <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime inp">90'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Bolga AllStars</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/bolga-allstars-v-ashanti-livescore-odds-commentary/2093671')" >0 - 2</div><div class="scpen blank"></div><div class="scaway">Ashanti</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">84'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Ebusua</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/ebusua-v-great-olympics-livescore-odds-commentary/2093669')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Great Olympics</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">59'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Hearts of Oak</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/hearts-of-oak-v-berekum-chelsea-livescore-odds-commentary/2093664')" >2 - 0</div><div class="scpen blank"></div><div class="scaway">Berekum Chelsea</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">83'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Inter Allies</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/inter-allies-v-asante-kotoko-livescore-odds-commentary/2093665')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Asante Kotoko</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">90'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Liberty</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/liberty-v-elmina-sharks-livescore-odds-commentary/2093666')" >0 - 1</div><div class="scpen blank"></div><div class="scaway">Elmina Sharks</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">77'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Medeama</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/medeama-v-tema-youth-livescore-odds-commentary/2093667')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Tema Youth</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">87'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">WA All Stars</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/wa-all-stars-v-aduana-stars-livescore-odds-commentary/2093668')" >3 - 1</div><div class="scpen blank"></div><div class="scaway">Aduana Stars</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime inp">78'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">WAFA</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/wafa-v-bechem-united-livescore-odds-commentary/2093670')" >2 - 0</div><div class="scpen blank"></div><div class="scaway">Bechem United</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/argentina.gif" width="16" height="11" alt="Argentina" title="Argentina Live Scores" /></div> Argentina - Primera B Nacional <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">Flandria</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/flandria-v-crucero-del-norte-livescore-odds-commentary/2016019')" >-</div><div class="scpen blank"></div><div class="scaway">Crucero del Norte</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">5.50</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.25</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.75</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:35</div><div class="inplayicon"></div><div class="schome">Nueva Chicago</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/nueva-chicago-v-argentinos-juniors-livescore-odds-commentary/2016023')" >-</div><div class="scpen blank"></div><div class="scaway">Argentinos Juniors</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.38</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">3.30</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">00:05</div><div class="inplayicon"></div><div class="schome">Ferro Carril Oeste</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/ferro-carril-oeste-v-guillermo-brown-livescore-odds-commentary/2016013')" >-</div><div class="scpen blank"></div><div class="scaway">Guillermo Brown</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">00:05</div><div class="inplayicon"></div><div class="schome">Independiente Rivadavia</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/independiente-rivadavia-v-douglas-haig-livescore-odds-commentary/2016017')" >-</div><div class="scpen blank"></div><div class="scaway">Douglas Haig</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">00:30</div><div class="inplayicon"></div><div class="schome">Santamarina</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/santamarina-v-sportivo-estudiantes-livescore-odds-commentary/2016018')" >-</div><div class="scpen blank"></div><div class="scaway">Sportivo Estudiantes</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:00</div><div class="inplayicon"></div><div class="schome">Boca Unidos</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/boca-unidos-v-villa-dalmine-livescore-odds-commentary/2016016')" >-</div><div class="scpen blank"></div><div class="scaway">Villa Dalmine</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.30</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">3.40</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:00</div><div class="inplayicon"></div><div class="schome">Central Cordoba</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/central-cordoba-v-atletico-parana-livescore-odds-commentary/2016015')" >-</div><div class="scpen blank"></div><div class="scaway">Atletico Parana</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">1.44</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.80</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">9.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">01:30</div><div class="inplayicon"></div><div class="schome">Gimnasia y Esgrima de Jujuy</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/gimnasia-y-esgrima-de-jujuy-v-instituto-livescore-odds-commentary/2016022')" >-</div><div class="scpen blank"></div><div class="scaway">Instituto</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.30</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">3.40</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/brazil.gif" width="16" height="11" alt="Brazil" title="Brazil Live Scores" /></div> Brazil - Brasileiro U20 - First Stage <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">Chapecoense-SC U20</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/chapecoense_sc-u20-v-botafogo-u20-livescore-odds-commentary/2127121')" >-</div><div class="scpen blank"></div><div class="scaway">Botafogo U20</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">Flamengo RJ U20</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/flamengo-rj-u20-v-goias-u20-livescore-odds-commentary/2127121')" >-</div><div class="scpen blank"></div><div class="scaway">Goias U20</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">4.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">4.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">1.62</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">19:00</div><div class="inplayicon"></div><div class="schome">Vasco U20</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/vasco-u20-v-atletico_pr-u20-livescore-odds-commentary/2127121')" >-</div><div class="scpen blank"></div><div class="scaway">Atletico-PR U20</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/noflag.png" width="16" height="11" alt="" /></div> Dr Congo - Super Ligue - Final Stage <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">Awarded</div><div class="inplayicon"></div><div class="schome">FC Renaissance</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/fc-renaissance-v-motema-pembe-livescore-odds-commentary/2109644')" >0 - 3</div><div class="scpen blank"></div><div class="scaway">Motema Pembe</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/latvia.gif" width="16" height="11" alt="Latvia" title="Latvia Live Scores" /></div> Latvia - Latvian Cup <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">Awarded</div><div class="inplayicon"></div><div class="schome">Grobina</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/grobina-v-bebri-livescore-odds-commentary/2106457')" >-</div><div class="scpen blank"></div><div class="scaway">Bebri</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/usa.gif" width="16" height="11" alt="Usa" title="Usa Live Scores" /></div> Usa - Usl <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime sch">20:00</div><div class="inplayicon"></div><div class="schome">Vancouver Whitecaps 2</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/vancouver-whitecaps-2-v-swope-park-livescore-odds-commentary/2110138')" >-</div><div class="scpen blank"></div><div class="scaway">Swope Park</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">00:00</div><div class="inplayicon"></div><div class="schome">Harrisburg City Islanders</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/harrisburg-city-islanders-v-new-york-red-bulls-2-livescore-odds-commentary/2110139')" >-</div><div class="scpen blank"></div><div class="scaway">New York Red Bulls 2</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/iceland.gif" width="16" height="11" alt="Iceland" title="Iceland Live Scores" /></div> Iceland - Division 2 <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime sch">21:00</div><div class="inplayicon"></div><div class="schome">Hottur</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/hottur-v-vestri-livescore-odds-commentary/2063704')" >-</div><div class="scpen blank"></div><div class="scaway">Vestri</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">2.60</div><div class="scodds sch scclick tiptip" title="Odds: Draw">3.80</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">2.15</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/noflag.png" width="16" height="11" alt="" /></div> Republic Of The Congo - Ligue 1 <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime sch">13:00</div><div class="inplayicon"></div><div class="schome">Patronage Sainte-Anne</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/patronage-sainte_anne-v-nathalys-livescore-odds-commentary/2127222')" >-</div><div class="scpen blank"></div><div class="scaway">Nathalys</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">16:00</div><div class="inplayicon"></div><div class="schome">Inter Club</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/inter-club-v-kondzo-livescore-odds-commentary/2127223')" >-</div><div class="scpen blank"></div><div class="scaway">Kondzo</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime sch">16:00</div><div class="inplayicon"></div><div class="schome">Kondzo</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/kondzo-v-inter-club-livescore-odds-commentary/2127224')" >-</div><div class="scpen blank"></div><div class="scaway">Inter Club</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/usa.gif" width="16" height="11" alt="Usa" title="Usa Live Scores" /></div> Usa - Nasl - Spring Season <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime sch">01:00</div><div class="inplayicon"></div><div class="schome">Jacksonville A.</div><div class="scpen blank"></div><div class="scscore sch" onClick="lightbox('/jacksonville-a.-v-puerto-rico-livescore-odds-commentary/2107288')" >-</div><div class="scpen blank"></div><div class="scaway">Puerto Rico</div>
+<div class="scodds sch scclick tiptip" title="Odds: Home Win">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Draw">0.00</div><div class="scodds sch scclick tiptip" title="Odds: Away Win">0.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet Now</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/nigeria.gif" width="16" height="11" alt="Nigeria" title="Nigeria Live Scores" /></div> Nigeria - Premier League <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Rivers United FC</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/rivers-united-fc-v-mfm-fc-livescore-odds-commentary/2127784')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">MFM FC</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/angola.gif" width="16" height="11" alt="Angola" title="Angola Live Scores" /></div> Angola - Girabola <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Santa Rita</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/santa-rita-v-interclube-livescore-odds-commentary/2115980')" >1 - 1</div><div class="scpen blank"></div><div class="scaway">Interclube</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/brazil.gif" width="16" height="11" alt="Brazil" title="Brazil Live Scores" /></div> Brazil - Série B <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">America Mineiro</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/america-mineiro-v-boa-livescore-odds-commentary/2069600')" >2 - 0</div><div class="scpen blank"></div><div class="scaway">Boa</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Ceara</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/ceara-v-sc-internacional-livescore-odds-commentary/2069593')" >0 - 2</div><div class="scpen blank"></div><div class="scaway">SC Internacional</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Club Guarani</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/club-guarani-v-goias-livescore-odds-commentary/2069597')" >1 - 0</div><div class="scpen blank"></div><div class="scaway">Goias</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Vila Nova</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/vila-nova-v-parana-livescore-odds-commentary/2069596')" >3 - 2</div><div class="scpen blank"></div><div class="scaway">Parana</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">CRB</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/crb-v-figueirense-livescore-odds-commentary/2069602')" >2 - 1</div><div class="scpen blank"></div><div class="scaway">Figueirense</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Luverdense</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/luverdense-v-santa-cruz-livescore-odds-commentary/2069601')" >2 - 2</div><div class="scpen blank"></div><div class="scaway">Santa Cruz</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Nautico</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/nautico-v-juventude-livescore-odds-commentary/2069594')" >1 - 1</div><div class="scpen blank"></div><div class="scaway">Juventude</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/china.gif" width="16" height="11" alt="China" title="China Live Scores" /></div> China - Yi League <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Qingdao Jonoon</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/qingdao-jonoon-v-dalian-boyang-livescore-odds-commentary/2109924')" >1 - 1</div><div class="scpen blank"></div><div class="scaway">Dalian Boyang</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/tt.gif" width="16" height="11" alt="Trinidad And Tobago" title="Trinidad And Tobago Live Scores" /></div> Trinidad And Tobago - Pro League <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime fin">FT</div><div class="inplayicon"></div><div class="schome">Morvant Caledonia United</div><div class="scpen blank"></div><div class="scscore fin" onClick="lightbox('/morvant-caledonia-united-v-central-espanol-livescore-odds-commentary/2092883')" >0 - 0</div><div class="scpen blank"></div><div class="scaway">Central Espanol</div>
+<div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div><div class="scodds blank">&nbsp;</div>
+<div class="scbetnowb blank"></div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div class="header1verywidesmall"><div style="float:left;">
+<img src="/images/flags/name/finland.gif" width="16" height="11" alt="Finland" title="Finland Live Scores" /></div> Finland - Kakkonen Group B <span style="color:#b8e9fc;">Live Scores</span></div><div style="clear:both;"></div>
+<div class="scrow"><div class="sctime inp">64'</div><div class="inplayicon"><img src="/images/inplay2.gif"/></div><div class="schome">Jazz Pori</div><div class="scpen blank"></div><div class="scscore inp" onClick="lightbox('/jazz-pori-v-fc-viikingit-livescore-odds-commentary/2065440')" >0 - 2</div><div class="scpen blank"></div><div class="scaway">FC Viikingit</div>
+<div class="scodds inp scclick tiptip" title="Odds: Home Win">1.04</div><div class="scodds inp scclick tiptip" title="Odds: Draw">13.00</div><div class="scodds inp scclick tiptip" title="Odds: Away Win">26.00</div>
+<div class="scbetnow inp scclick tiptip" title="Free Bets!">Bet In-Play</div><div class="scnovideo blank">&nbsp;</div></div><div class="clr"></div><div class="clr"></div>
+<div style="height:30px;clear:both;"></div>
+<script type="text/javascript">
+$(document).ready(function() { 
+        $("div.scclick").click(function () { 
+                window.open('http://www.bet365.com/home/?affiliate=365_078537'); 
+        }); 
+
+});
+</script>
+
+<script>
+function lightbox(hurl){    
+  $.fn.colorbox({width:"950", height:"580", iframe:true, href:"" + hurl + ""});
+}
+$(document).ready(function() {
+    $('.tiptip').tipTip({fadeIn: 50, delay: 50});
+});
+</script>
+
+
+<div class="clr"></div>
+</div>
+
+
+
+</div>
+</div>
+
+
+<div class="clr"></div>
+
+<div style="height:30px;"></div>
+<div style="margin:0px 10px 15px 10px;">
+<div>  <b class="spiffy">  <b class="spiffy1"><b></b></b>  <b class="spiffy2"><b></b></b>  <b class="spiffy3"></b>  <b class="spiffy4"></b>  <b class="spiffy5"></b></b>  <div class="spiffyfg" style="padding:8px;">
+<div style="font-size:11px;color:#666;">
+
+<div style="float:right;">Live football scores provided by <b>goalserve.com</b></div><div class="clr"></div>
+</div>
+</div><b class="spiffy"><b class="spiffy5"></b>  <b class="spiffy4"></b>  <b class="spiffy3"></b>  <b class="spiffy2"><b></b></b>  <b class="spiffy1"><b></b></b></b></div>
+</div></div>
+
+
+
+
+<!-- *************** end of main content cell *************** -->
+
+
+</div>
+</td>
+
+</tr></table>
+
+<div style="background-image: url(http://eurorivals.net/images/bet365bannerbg2.png); background-color:#000000;;text-align:center;height:120px" id="bottomads">
+
+<iframe src="http://imstore.bet365affiliates.com/365_036226-509-87-6-149-1-22616.aspx" width="980" height="120" frameborder="0" scrolling="no"></iframe>
+</div>
+
+
+<div id="section3">
+
+<div id="section2box1" style="margin-left:-20px;"><div class="padtopleft">
+<div class="moduletable" >
+<h3>Latest <a href="/football-highlights.html">Football Highlights <img src="http://eurorivals.net/images/orangearrowsmall.png"/></a></h3>
+<ul class="newsfeed">
+<li><img src="/images/flags/champions-league-tiny.gif" width="16" height="11" title="UEFA Champions League" alt=""/>&nbsp;<a href="/wydad~zanaco-highlights-video-08-07-2017"><strong>Wydad 1-0 Zanaco</strong> <span style="color:#93a073;font-weight:normal;">Highlights</span></a></li><li><img src="/images/flags/name/usa.gif" width="16" height="11" alt="USA" title="USA " />&nbsp;<a href="/usa~panama-highlights-video-08-07-2017"><strong>USA 1-1 Panama</strong> <span style="color:#93a073;font-weight:normal;">Highlights</span></a></li><li><img src="/images/flags/name/martinique.gif" width="16" height="11" alt="Martinique" title="Martinique " />&nbsp;<a href="/martinique~nicaragua-highlights-video-09-07-2017"><strong>Martinique 1-0 Nicaragua</strong> <span style="color:#93a073;font-weight:normal;">Highlights</span></a></li><li><img src="/images/flags/cw.gif" width="16" height="11" alt="Curacao" title="Curacao " />&nbsp;<a href="/curacao~jamaica-highlights-video-10-07-2017"><strong>Curacao 0-0 Jamaica</strong> <span style="color:#93a073;font-weight:normal;">Highlights</span></a></li><li><img src="/images/flags/name/switzerland.gif" width="16" height="11" alt="Switzerland" title="Switzerland " />&nbsp;<a href="/fc-lausanne_sport~valencia-highlights-video-11-07-2017"><strong>FC Lausanne-Sport 0-1 Valencia</strong> <span style="color:#93a073;font-weight:normal;">Highlights</span></a></li><li><img src="/images/flags/name/mexico.gif" width="16" height="11" alt="Mexico" title="Mexico " />&nbsp;<a href="/mexico~el-salvador-highlights-video-11-07-2017"><strong>Mexico - El Salvador</strong> <span style="color:#93a073;font-weight:normal;">Highlights</span></a></li>
+
+</ul></div>
+</div></div>
+
+<div id="section2box2"><div class="padtopleft"><div class="moduletable">
+<h3>Today's <a href="/live-streams.html">Live Football <img src="http://eurorivals.net/images/orangearrowsmall.png"/></a></h3>
+<ul class="newsfeed">
+
+</ul>
+</div></div></div>
+
+<div id="section2box3"><div class="padtopleft">
+<div><a href="/players/alex-oxlade_chamberlain:arsenal.html"><img src="/images/players/arsenal/arsenal-alex-oxlade_chamberlain-0.jpg" alt="Alex Oxlade-Chamberlain"  width=60 height=60 title="Alex Oxlade-Chamberlain of Arsenal<br/>&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;<br/>Arsenal would suffer ‘big damage’ if Alex Oxlade-Chamberlain left" class="tiptip"></a><a href="/players/mesut-ozil:arsenal.html"><img src="/images/players/arsenal/arsenal-mesut-ozil-0.jpg" alt="Mesut Ozil"  width=60 height=60 title="Mesut Ozil of Arsenal<br/>&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;<br/>Arsenal boss Arsene Wenger desperate for star to sign new deal: It's not Sanchez or Ozil" class="tiptip"></a><a href="/players/diego-costa:chelsea.html"><img src="/images/players/chelsea/chelsea-diego-costa-0.jpg" alt="Diego Costa"  width=60 height=60 title="Diego Costa of Chelsea<br/>&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;<br/>Chelsea star Diego Costa: I’m unhappy in London" class="tiptip"></a><a href="/players/luis-suarez:barcelona.html"><img src="/images/players/barcelona/barcelona-luis-suarez-0.jpg" alt="Luis Suarez"  width=60 height=60 title="Luis Suarez of Barcelona<br/>&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;<br/>Cuadrado prefers Juventus' attack to Messi, Neymar &amp; Suarez" class="tiptip"></a><a href="/players/andres-iniesta:barcelona.html"><img src="/images/players/barcelona/barcelona-andres-iniesta-0.jpg" alt="Andres Iniesta"  width=60 height=60 title="Andres Iniesta of Barcelona<br/>&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;<br/>Barcelona legends Xavi and Iniesta have no edge on Man City star David Silva" class="tiptip"></a><a href="/players/simon-mignolet:liverpool.html"><img src="/images/players/liverpool/liverpool-simon-mignolet-0.jpg" alt="Simon Mignolet"  width=60 height=60 title="Simon Mignolet of Liverpool<br/>&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;<br/>Simon Mignolet reveals what Jurgen Klopp said to him after Liverpool wonder saves" class="tiptip"></a><a href="/players/arjen-robben:bayern-munich.html"><img src="/images/players/bayern-munich/bayern-munich-arjen-robben-0.jpg" alt="Arjen Robben"  width=60 height=60 title="Arjen Robben of Bayern Munich<br/>&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;<br/>Bayern Munich’s Arjen Robben: "Everyone is important!"" class="tiptip"></a><a href="/players/xabi-alonso:bayern-munich.html"><img src="/images/players/bayern-munich/bayern-munich-xabi-alonso-0.jpg" alt="Xabi Alonso"  width=60 height=60 title="Xabi Alonso of Bayern Munich<br/>&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;<br/>Xabi Alonso's past and present collide as Bayern Munich will host Real Madrid" class="tiptip"></a><a href="/players/david-de-gea:man-utd.html"><img src="/images/players/man-utd/man-utd-david-de-gea-0.jpg" alt="David de Gea"  width=60 height=60 title="David de Gea of Man Utd<br/>&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;<br/>Ex-Man Utd fullback Neville: Did Mourinho DROP De Gea?" class="tiptip"></a><a href="/players/antoine-griezmann:atletico-madrid.html"><img src="/images/players/atletico-madrid/atletico-madrid-antoine-griezmann-0.jpg" alt="Antoine Griezmann"  width=60 height=60 title="Antoine Griezmann of Atletico Madrid<br/>&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;&#65507;<br/>Sergio Ramos insists Real Madrid would embrace the arrival of Antoine Griezmann: 'The club always opens its doors to great players'" class="tiptip"></a>
+</div>
+</div></div>
+
+
+<div class="clr"></div>
+<div class="gap30"></div>
+<a href="/guardian/fiver.html" style="text-decoration:none;"><div style="float:left; width:140px; margin:0px 19px 15px 0px; color:#FFF;" class="tiptip" title="<strong>In today’s Fiver:</strong> Man Utd’s doorframe, and heartwarming revenue news"><div class="hoverlight:"><div style="width:140px; height:84px; background-image:url(https://media.guim.co.uk/9a96d01321d7fd3d394834ac2732c0cb35fbf3cf/0_134_3348_2009/500.jpg); background-repeat:no-repeat; background-position:top"> <div style="padding-top:41px;"><div  class="alpha60">The Fiver</div> </div></div></div></div></a><a href="/guardian/dani-alves-signs-for-paris-saint-germain-after-turning-down-manchester-city.html" style="text-decoration:none;"><div style="float:left; width:140px; margin:0px 19px 15px 0px; color:#FFF;" class="tiptip" title="The Brazil full-back Dani Alves has joined Paris Saint-Germain on a two-year deal"><div class="hoverlight:"><div style="width:140px; height:84px; background-image:url(https://media.guim.co.uk/55d63aba1e3cc58bab445cc0923f5eed73d8da9c/0_81_3878_2326/500.jpg); background-repeat:no-repeat; background-position:top"> <div style="padding-top:41px;"><div  class="alpha60">Dani Alves signs for Paris Saint-Germain after turning down Manchester City</div> </div></div></div></div></a><a href="/guardian/mesut-zil-arsenal-future-it-is-definitely-my-preference-to-stay.html" style="text-decoration:none;"><div style="float:left; width:140px; margin:0px 19px 15px 0px; color:#FFF;" class="tiptip" title="Mesut Özil has said he will hold talks over his future at Arsenal once the team return to London from a pre-season tour"><div class="hoverlight:"><div style="width:140px; height:84px; background-image:url(https://media.guim.co.uk/2ddb2f938d576c848876750b892803942d87132d/0_174_3000_1801/500.jpg); background-repeat:no-repeat; background-position:top"> <div style="padding-top:41px;"><div  class="alpha60">Mesut Özil on his Arsenal future: ‘It is definitely my preference to stay’</div> </div></div></div></div></a><a href="/guardian/leicester-s-owner-king-power-accused-327m-corruption-thailand.html" style="text-decoration:none;"><div style="float:left; width:140px; margin:0px 19px 15px 0px; color:#FFF;" class="tiptip" title="The company that owns Leicester City has been accused of multimillion-pound corruption in the operation of its duty-free franchise at Bangkok’s Suvarnabhumi airport"><div class="hoverlight:"><div style="width:140px; height:84px; background-image:url(https://media.guim.co.uk/1689c39904dfa20e842f35a3874a52d80bde37a8/146_433_5038_3023/500.jpg); background-repeat:no-repeat; background-position:top"> <div style="padding-top:41px;"><div  class="alpha60">Leicester’s owner, King Power, accused of £327m corruption in Thailand</div> </div></div></div></div></a><a href="/guardian/arsenal-alexis-s-nchez-question-who-will-blink-first.html" style="text-decoration:none;"><div style="float:left; width:140px; margin:0px 19px 15px 0px; color:#FFF;" class="tiptip" title="The Chilean wants to join Manchester City but Arsenal are not selling to a domestic rival. Can the club really justify missing out on a £50m transfer fee and hold him to his final year?"><div class="hoverlight:"><div style="width:140px; height:84px; background-image:url(https://media.guim.co.uk/8a94d7790813dc4c1efc0208453d1c3e49f84c65/192_137_2415_1450/500.jpg); background-repeat:no-repeat; background-position:top"> <div style="padding-top:41px;"><div  class="alpha60">Arsenal, Alexis Sánchez and the question of who will blink first</div> </div></div></div></div></a><a href="/guardian/crystal-palace-set-to-complete-75m-deal-for-ajax-defender-ja-ro-riedewald.html" style="text-decoration:none;"><div style="float:left; width:140px; margin:0px 19px 15px 0px; color:#FFF;" class="tiptip" title="The Dutch defender Jaïro Riedewald is set to be reunited with his former manager at Ajax, Frank de Boer, after reaching an agreement in principle to move to Crystal Palace"><div class="hoverlight:"><div style="width:140px; height:84px; background-image:url(https://media.guim.co.uk/a371b5e98f5cdb7b5a55cac5f271cfa57eede1aa/0_146_4188_2513/500.jpg); background-repeat:no-repeat; background-position:top"> <div style="padding-top:41px;"><div  class="alpha60">Crystal Palace set to complete £7.5m deal for Ajax defender Jaïro Riedewald</div> </div></div></div></div></a>
+
+
+<div class="clr"></div><div style="height:20px;"></div>
+
+</div>
+
+<div id="footer" class="clr"><div class="rk-1"><div class="rk-2"><div id="the-footer"><img src="/images/eurorivals_small.png" height="23" width="142" alt="eurorivals" /></div></div></div></div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.tiptip').tipTip({fadeIn: 50, delay: 50});
+});
+</script>
+
+<!-- Start of StatCounter Code -->
+<script type="text/javascript">
+var sc_project=5274756; 
+var sc_invisible=1; 
+var sc_partition=59; 
+var sc_click_stat=1; 
+var sc_security="a473b662"; 
+</script>
+<script type="text/javascript" src="http://www.statcounter.com/counter/counter.js"></script>
+<!-- End of StatCounter Code -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+</body></html><!-- endcache -->

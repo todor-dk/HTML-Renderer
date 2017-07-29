@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script type='text/javascript'>var _sf_startpt=(new Date()).getTime()</script>
+<meta charset="utf-8"><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"VwcFV1RSGwACVVlVAQU="};window.NREUM||(NREUM={}),__nr_require=function(t,e,n){function r(n){if(!e[n]){var o=e[n]={exports:{}};t[n][0].call(o.exports,function(e){var o=t[n][1][e];return r(o||e)},o,o.exports)}return e[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({1:[function(t,e,n){function r(t){try{c.console&&console.log(t)}catch(e){}}var o,i=t("ee"),a=t(12),c={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(c.console=!0,o.indexOf("dev")!==-1&&(c.dev=!0),o.indexOf("nr_dev")!==-1&&(c.nrDev=!0))}catch(s){}c.nrDev&&i.on("internal-error",function(t){r(t.stack)}),c.dev&&i.on("fn-err",function(t,e,n){r(n.stack)}),c.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(c,function(t,e){return t}).join(", ")))},{}],2:[function(t,e,n){function r(t,e,n,r,o){try{d?d-=1:i("err",[o||new UncaughtException(t,e,n)])}catch(c){try{i("ierr",[c,s.now(),!0])}catch(u){}}return"function"==typeof f&&f.apply(this,a(arguments))}function UncaughtException(t,e,n){this.message=t||"Uncaught error with no additional information",this.sourceURL=e,this.line=n}function o(t){i("err",[t,s.now()])}var i=t("handle"),a=t(13),c=t("ee"),s=t("loader"),f=window.onerror,u=!1,d=0;s.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(l){"stack"in l&&(t(5),t(4),"addEventListener"in window&&t(3),s.xhrWrappable&&t(6),u=!0)}c.on("fn-start",function(t,e,n){u&&(d+=1)}),c.on("fn-err",function(t,e,n){u&&(this.thrown=!0,o(n))}),c.on("fn-end",function(){u&&!this.thrown&&d>0&&(d-=1)}),c.on("internal-error",function(t){i("ierr",[t,s.now(),!0])})},{}],3:[function(t,e,n){function r(t){for(var e=t;e&&!e.hasOwnProperty(u);)e=Object.getPrototypeOf(e);e&&o(e)}function o(t){c.inPlace(t,[u,d],"-",i)}function i(t,e){return t[1]}var a=t("ee").get("events"),c=t(15)(a,!0),s=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";e.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,e){var n=t[1],r=s(n,"nr@wrapped",function(){function t(){if("function"==typeof n.handleEvent)return n.handleEvent.apply(n,arguments)}var e={object:t,"function":n}[typeof n];return e?c(e,"fn-",null,e.name||"anonymous"):n});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],4:[function(t,e,n){var r=t("ee").get("raf"),o=t(15)(r),i="equestAnimationFrame";e.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],5:[function(t,e,n){function r(t,e,n){t[0]=a(t[0],"fn-",null,n)}function o(t,e,n){this.method=n,this.timerDuration=isNaN(t[1])?0:+t[1],t[0]=a(t[0],"fn-",this,n)}var i=t("ee").get("timer"),a=t(15)(i),c="setTimeout",s="setInterval",f="clearTimeout",u="-start",d="-";e.exports=i,a.inPlace(window,[c,"setImmediate"],c+d),a.inPlace(window,[s],s+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(s+u,r),i.on(c+u,o)},{}],6:[function(t,e,n){function r(t,e){d.inPlace(e,["onreadystatechange"],"fn-",c)}function o(){var t=this,e=u.context(t);t.readyState>3&&!e.resolved&&(e.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,w,"fn-",c)}function i(t){g.push(t),h&&(b?b.then(a):v?v(a):(E=-E,O.data=E))}function a(){for(var t=0;t<g.length;t++)r([],g[t]);g.length&&(g=[])}function c(t,e){return e}function s(t,e){for(var n in t)e[n]=t[n];return e}t(3);var f=t("ee"),u=f.get("xhr"),d=t(15)(u),l=NREUM.o,p=l.XHR,h=l.MO,m=l.PR,v=l.SI,y="readystatechange",w=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],g=[];e.exports=u;var x=window.XMLHttpRequest=function(t){var e=new p(t);try{u.emit("new-xhr",[e],e),e.addEventListener(y,o,!1)}catch(n){try{u.emit("internal-error",[n])}catch(r){}}return e};if(s(p,x),x.prototype=p.prototype,d.inPlace(x.prototype,["open","send"],"-xhr-",c),u.on("send-xhr-start",function(t,e){r(t,e),i(e)}),u.on("open-xhr-start",r),h){var b=m&&m.resolve();if(!v&&!m){var E=1,O=document.createTextNode(E);new h(a).observe(O,{characterData:!0})}}else f.on("fn-end",function(t){t[0]&&t[0].type===y||a()})},{}],7:[function(t,e,n){function r(t){var e=this.params,n=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<d;r++)t.removeEventListener(u[r],this.listener,!1);if(!e.aborted){if(n.duration=a.now()-this.startTime,4===t.readyState){e.status=t.status;var i=o(t,this.lastSize);if(i&&(n.rxSize=i),this.sameOrigin){var s=t.getResponseHeader("X-NewRelic-App-Data");s&&(e.cat=s.split(", ").pop())}}else e.status=0;n.cbTime=this.cbTime,f.emit("xhr-done",[t],t),c("xhr",[e,n,this.startTime])}}}function o(t,e){var n=t.responseType;if("json"===n&&null!==e)return e;var r="arraybuffer"===n||"blob"===n||"json"===n?t.response:t.responseText;return h(r)}function i(t,e){var n=s(e),r=t.params;r.host=n.hostname+":"+n.port,r.pathname=n.pathname,t.sameOrigin=n.sameOrigin}var a=t("loader");if(a.xhrWrappable){var c=t("handle"),s=t(8),f=t("ee"),u=["load","error","abort","timeout"],d=u.length,l=t("id"),p=t(11),h=t(10),m=window.XMLHttpRequest;a.features.xhr=!0,t(6),f.on("new-xhr",function(t){var e=this;e.totalCbs=0,e.called=0,e.cbTime=0,e.end=r,e.ended=!1,e.xhrGuids={},e.lastSize=null,p&&(p>34||p<10)||window.opera||t.addEventListener("progress",function(t){e.lastSize=t.loaded},!1)}),f.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),f.on("open-xhr-end",function(t,e){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&e.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),f.on("send-xhr-start",function(t,e){var n=this.metrics,r=t[0],o=this;if(n&&r){var i=h(r);i&&(n.txSize=i)}this.startTime=a.now(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof e.onload))&&o.end(e)}catch(n){try{f.emit("internal-error",[n])}catch(r){}}};for(var c=0;c<d;c++)e.addEventListener(u[c],this.listener,!1)}),f.on("xhr-cb-time",function(t,e,n){this.cbTime+=t,e?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof n.onload||this.end(n)}),f.on("xhr-load-added",function(t,e){var n=""+l(t)+!!e;this.xhrGuids&&!this.xhrGuids[n]&&(this.xhrGuids[n]=!0,this.totalCbs+=1)}),f.on("xhr-load-removed",function(t,e){var n=""+l(t)+!!e;this.xhrGuids&&this.xhrGuids[n]&&(delete this.xhrGuids[n],this.totalCbs-=1)}),f.on("addEventListener-end",function(t,e){e instanceof m&&"load"===t[0]&&f.emit("xhr-load-added",[t[1],t[2]],e)}),f.on("removeEventListener-end",function(t,e){e instanceof m&&"load"===t[0]&&f.emit("xhr-load-removed",[t[1],t[2]],e)}),f.on("fn-start",function(t,e,n){e instanceof m&&("onload"===n&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=a.now()))}),f.on("fn-end",function(t,e){this.xhrCbStart&&f.emit("xhr-cb-time",[a.now()-this.xhrCbStart,this.onload,e],e)})}},{}],8:[function(t,e,n){e.exports=function(t){var e=document.createElement("a"),n=window.location,r={};e.href=t,r.port=e.port;var o=e.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=e.hostname||n.hostname,r.pathname=e.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!e.protocol||":"===e.protocol||e.protocol===n.protocol,a=e.hostname===document.domain&&e.port===n.port;return r.sameOrigin=i&&(!e.hostname||a),r}},{}],9:[function(t,e,n){function r(){}function o(t,e,n){return function(){return i(t,[f.now()].concat(c(arguments)),e?null:this,n),e?void 0:this}}var i=t("handle"),a=t(12),c=t(13),s=t("ee").get("tracer"),f=t("loader"),u=NREUM;"undefined"==typeof window.newrelic&&(newrelic=u);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],l="api-",p=l+"ixn-";a(d,function(t,e){u[e]=o(l+e,!0,"api")}),u.addPageAction=o(l+"addPageAction",!0),u.setCurrentRouteName=o(l+"routeName",!0),e.exports=newrelic,u.interaction=function(){return(new r).get()};var h=r.prototype={createTracer:function(t,e){var n={},r=this,o="function"==typeof e;return i(p+"tracer",[f.now(),t,n],r),function(){if(s.emit((o?"":"no-")+"fn-start",[f.now(),r,o],n),o)try{return e.apply(this,arguments)}finally{s.emit("fn-end",[f.now()],n)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,e){h[e]=o(p+e)}),newrelic.noticeError=function(t){"string"==typeof t&&(t=new Error(t)),i("err",[t,f.now()])}},{}],10:[function(t,e,n){e.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(e){return}}}},{}],11:[function(t,e,n){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),e.exports=r},{}],12:[function(t,e,n){function r(t,e){var n=[],r="",i=0;for(r in t)o.call(t,r)&&(n[i]=e(r,t[r]),i+=1);return n}var o=Object.prototype.hasOwnProperty;e.exports=r},{}],13:[function(t,e,n){function r(t,e,n){e||(e=0),"undefined"==typeof n&&(n=t?t.length:0);for(var r=-1,o=n-e||0,i=Array(o<0?0:o);++r<o;)i[r]=t[e+r];return i}e.exports=r},{}],14:[function(t,e,n){e.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],15:[function(t,e,n){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(13),a="nr@original",c=Object.prototype.hasOwnProperty,s=!1;e.exports=function(t,e){function n(t,e,n,o){function nrWrapper(){var r,a,c,s;try{a=this,r=i(arguments),c="function"==typeof n?n(r,a):n||{}}catch(f){l([f,"",[r,a,o],c])}u(e+"start",[r,a,o],c);try{return s=t.apply(a,r)}catch(d){throw u(e+"err",[r,a,d],c),d}finally{u(e+"end",[r,a,s],c)}}return r(t)?t:(e||(e=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,e,o,i){o||(o="");var a,c,s,f="-"===o.charAt(0);for(s=0;s<e.length;s++)c=e[s],a=t[c],r(a)||(t[c]=n(a,f?c+o:o,i,c))}function u(n,r,o){if(!s||e){var i=s;s=!0;try{t.emit(n,r,o,e)}catch(a){l([a,n,r,o])}s=i}}function d(t,e){if(Object.defineProperty&&Object.keys)try{var n=Object.keys(t);return n.forEach(function(n){Object.defineProperty(e,n,{get:function(){return t[n]},set:function(e){return t[n]=e,e}})}),e}catch(r){l([r])}for(var o in t)c.call(t,o)&&(e[o]=t[o]);return e}function l(e){try{t.emit("internal-error",e)}catch(n){}}return t||(t=o),n.inPlace=f,n.flag=a,n}},{}],ee:[function(t,e,n){function r(){}function o(t){function e(t){return t&&t instanceof r?t:t?s(t,c,i):i()}function n(n,r,o,i){if(!l.aborted||i){t&&t(n,r,o);for(var a=e(o),c=h(n),s=c.length,f=0;f<s;f++)c[f].apply(a,r);var d=u[w[n]];return d&&d.push([g,n,r,a]),a}}function p(t,e){y[t]=h(t).concat(e)}function h(t){return y[t]||[]}function m(t){return d[t]=d[t]||o(n)}function v(t,e){f(t,function(t,n){e=e||"feature",w[n]=e,e in u||(u[e]=[])})}var y={},w={},g={on:p,emit:n,get:m,listeners:h,context:e,buffer:v,abort:a,aborted:!1};return g}function i(){return new r}function a(){(u.api||u.feature)&&(l.aborted=!0,u=l.backlog={})}var c="nr@context",s=t("gos"),f=t(12),u={},d={},l=e.exports=o();l.backlog=u},{}],gos:[function(t,e,n){function r(t,e,n){if(o.call(t,e))return t[e];var r=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,e,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[e]=r,r}var o=Object.prototype.hasOwnProperty;e.exports=r},{}],handle:[function(t,e,n){function r(t,e,n,r){o.buffer([t],r),o.emit(t,e,n)}var o=t("ee").get("handle");e.exports=r,r.ee=o},{}],id:[function(t,e,n){function r(t){var e=typeof t;return!t||"object"!==e&&"function"!==e?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");e.exports=r},{}],loader:[function(t,e,n){function r(){if(!b++){var t=x.info=NREUM.info,e=l.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&e))return u.abort();f(w,function(e,n){t[e]||(t[e]=n)}),s("mark",["onload",a()+x.offset],null,"api");var n=l.createElement("script");n.src="https://"+t.agent,e.parentNode.insertBefore(n,e)}}function o(){"complete"===l.readyState&&i()}function i(){s("mark",["domContent",a()+x.offset],null,"api")}function a(){return E.exists&&performance.now?Math.round(performance.now()):(c=Math.max((new Date).getTime(),c))-x.offset}var c=(new Date).getTime(),s=t("handle"),f=t(12),u=t("ee"),d=window,l=d.document,p="addEventListener",h="attachEvent",m=d.XMLHttpRequest,v=m&&m.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:m,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var y=""+location,w={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1044.min.js"},g=m&&v&&v[p]&&!/CriOS/.test(navigator.userAgent),x=e.exports={offset:c,now:a,origin:y,features:{},xhrWrappable:g};t(9),l[p]?(l[p]("DOMContentLoaded",i,!1),d[p]("load",r,!1)):(l[h]("onreadystatechange",o),d[h]("onload",r)),s("mark",["firstbyte",c],null,"api");var b=0,E=t(14)},{}]},{},["loader",2,7]);</script>
+<title>Melania Trump Sues Over Daily Mail Story Suggesting She Was an Escort | Hollywood Reporter</title>
+<meta name="viewport" content="width=device-width"/>
+<meta name="description" content="Donald Trump&#039;s wife fires a shot at a &quot;false&quot; article about her journey to America."/>
+<meta name="twitter:site" content="@THR"/>
+<meta name="twitter:creator" content="@THR"/>
+<meta name="twitter:url" content="http://www.hollywoodreporter.com/thr-esq/melania-trump-sues-daily-mail-925127"/>
+<meta name="twitter:domain" content="http://www.hollywoodreporter.com/"/>
+<meta name="twitter:title" content="Melania Trump Sues Over Daily Mail Story Suggesting She Was an Escort"/>
+<meta name="twitter:description" content="Donald Trump&#039;s wife fires a shot at a &quot;false&quot; article about her journey to America."/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="http://cdn2.thr.com/sites/default/files/imagecache/NFE_Landscape/2016/07/melania_trump_rnc_speech_3.jpg"/>
+<meta property="og:site_name" content="The Hollywood Reporter"/>
+<meta property="og:title" content="Melania Trump Sues Over Daily Mail Story Suggesting She Was an Escort"/>
+<meta property="og:description" content="Donald Trump&#039;s wife fires a shot at a &quot;false&quot; article about her journey to America."/>
+<meta property="og:url" content="http://www.hollywoodreporter.com/thr-esq/melania-trump-sues-daily-mail-925127"/>
+<meta property="og:image" content="http://cdn2.thr.com/sites/default/files/2016/07/melania_trump_rnc_speech_3.jpg"/>
+<meta property="og:image:width" content="1296"/>
+<meta property="og:image:height" content="730"/>
+<meta property="og:image:type" content="image/jpeg"/>
+<meta property="og:type" content="article"/>
+<link rel="author" href="https://plus.google.com/+hollywoodreporter">
+<link rel="canonical" href="http://www.hollywoodreporter.com/thr-esq/melania-trump-sues-daily-mail-925127"/>
+<link rel="shortcut icon" href="/static/frontend/2017_06_08_1558/assets/images/brand/favicon.ico" type="image/x-icon"/>
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/frontend/2017_06_08_1558/assets/images/brand/apple-touch-icon.png">
+<script type="text/javascript">
+    
+    var PGM = window.PGM || {};
+    PGM.config = PGM.config || {
+        contentHost: "//www.hollywoodreporter.com",
+    };
+    (function(PGM) {
+        var debug_queue = [];
+        PGM.debug = function() {debug_queue.push(arguments);};
+        PGM.debug.dump = function() {return debug_queue;}
+        PGM.debug.initialCategories = {
+                    };
+    })(PGM);
+
+    PGM.events = (function() {
+        var events_queue = [];
+        return {
+            trigger: function() {events_queue.push(arguments); },
+            get: function() { return events_queue; }
+        };
+    })();
+
+    PGM.createScript = (function() {
+        var q = [], cs = function createScript() { q.push(arguments) };
+        cs.dump = function() {return q;};
+        return cs;
+    })();
+
+    PGM.createScriptTag = (function() {
+        var q = [], cs = function createScriptTag() { q.push(arguments) };
+        cs.dump = function() {return q;};
+        return cs;
+    })();
+
+        PGM.tests = [];
+    PGM.ads = PGM.ads || {};
+    PGM.ads.adUnit = '/';
+    PGM.ads.slots = PGM.ads.slots || {};
+</script>
+<script src="http://ads.blbrd.co/advertisement.js"></script>
+<script type="text/javascript">
+    
+    var PGM = window.PGM || {};
+    PGM.mediaQueries = {
+        medium: "only screen and (min-width: 768px)",
+        large: "only screen and (min-width: 1024px)"
+    };
+    PGM.ads = PGM.ads || {};
+    PGM.ads.allAdsDeferred = false;
+</script>
+<script>
+var THR = THR || {};
+THR.config = THR.config || {
+    contentHost: "//www.hollywoodreporter.com",
+    debug: "",
+    getMediaHost: function(path) {
+        var mediaHosts=["//cdn1.thr.com","//cdn2.thr.com","//cdn3.thr.com","//cdn4.thr.com","//cdn5.thr.com"],s=0,i=0;
+        for(; i<path.length; i++){s+=path.charCodeAt(i);}return (mediaHosts.length>0?mediaHosts[s%mediaHosts.length]:'')+path;
+    }
+};
+</script>
+ 
+<script type='text/javascript'>
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+
+var PGM = PGM || {};
+PGM.ads = PGM.ads || {};
+PGM.ads.adUnit = '/6419/thr.com/esq.article';
+PGM.ads.data = {"ad_zone":"esq.article","targeting":{"tags":["thr esq","the business","business"],"page":["925127"],"env":["prod"]},"slots":{"m1":{"adUnit":null,"slotName":"m1","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,250],[300,251],[300,600]],"767":[[300,250],[300,251]],"0":[]},"targetingParameters":{"pos":["m1"],"page":["925127"],"tags":[]}},"m2":{"adUnit":null,"slotName":"m2","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,250],[300,252]],"767":[[300,250],[300,252]],"0":[[300,250],[300,252],[300,50],[300,52],[320,50],[320,52]]},"targetingParameters":{"pos":["m2"],"page":["925127"],"tags":[]}},"t":{"adUnit":null,"slotName":"t","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[728,90],[980,50],[970,90],[728,91],[980,250],[970,250],[970,66],[970,51],[970,251]],"767":[[728,90],[728,91]],"0":[[300,50],[300,51],[320,50],[320,51],[320,170]]},"targetingParameters":{"pos":["t"],"page":["925127"],"tags":[]}},"a":{"adUnit":null,"slotName":"a","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[728,90],[728,92]],"767":[[728,90],[728,92]],"0":[[300,50],[300,52],[320,50],[320,52]]},"targetingParameters":{"pos":["a"],"page":["925127"],"tags":[]}},"m3":{"adUnit":null,"slotName":"m3","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,250],[300,253]],"767":[[300,250],[300,253]],"0":[[300,250],[300,252],[300,50],[300,52],[320,50],[320,52]]},"targetingParameters":{"pos":["m3"],"page":["925127"],"tags":[]}},"spons1":{"adUnit":null,"slotName":"spons1","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,100],[88,31],[120,60]],"767":[[300,100],[88,31],[120,60]],"0":[[88,31],[120,60]]},"targetingParameters":{"pos":["spons1"],"page":["925127"],"tags":[]}},"lightbox":{"adUnit":null,"slotName":"lightbox","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,250],[300,600]],"767":[[728,90]],"0":[[320,50],[300,50]]},"targetingParameters":{"pos":["lightbox"],"page":["925127"],"tags":[]}}}};
+PGM.ads.slots = PGM.ads.slots || {};
+PGM.autoplayers = ["VkzEx53Fg","rJIWUc7eW","4kXvKxBFg","r1La1160g"];
+</script>
+<script type='text/javascript'>
+
+googletag.cmd.push(function() {
+
+            googletag.pubads().setTargeting('template', 'n');
+        PGM.debug('dfpauto', 'PAGE', 'template', 'n' );
+        
+    googletag.pubads().setTargeting('zone', 'esq.article');
+    PGM.debug('dfpauto', 'PAGE', 'zone', 'esq.article');
+            googletag.pubads().setTargeting('tags', ["thr esq","the business","business"]);
+        PGM.debug('dfpauto', 'PAGE', 'tags', ["thr esq","the business","business"]);
+            googletag.pubads().setTargeting('page', ["925127"]);
+        PGM.debug('dfpauto', 'PAGE', 'page', ["925127"]);
+            googletag.pubads().setTargeting('env', ["prod"]);
+        PGM.debug('dfpauto', 'PAGE', 'env', ["prod"]);
+    
+    $('video').each(function () {
+        let $vid = $(this),
+            player = $vid.data('player'),
+            account = $vid.data('account');
+
+        if (PGM.autoplayers.indexOf(player) >= 0) {
+            // If there are any auto-play vids stop
+            googletag.pubads().setTargeting('video', 'autoplay');
+            PGM.debug('dfpauto', 'PAGE', 'video', 'autoplay');
+            return false;
+        } else if (account) {
+            googletag.pubads().setTargeting('video', 'click-to-play');
+            PGM.debug('dfpauto', 'PAGE', 'video', 'click-to-play');
+            // if there are click-to-plays there could still be an auto-play somewhere, continue
+        }
+    });
+
+    if( typeof Krux !== 'undefined' ) {
+        googletag.pubads().setTargeting('ksg', Krux.segments);
+        PGM.debug('dfpauto', 'PAGE', 'ksg', Krux.segments);
+        googletag.pubads().setTargeting('kuid', Krux.user);
+        PGM.debug('dfpauto', 'PAGE', 'kuid', Krux.user);
+    }
+
+    });
+</script>
+ 
+ 
+<script>
+    var _comscore = _comscore || [];
+    var comscoreVars = {
+        c1: "2"
+        ,c2: "7395269"
+        ,c3: ""
+        };
+    _comscore.push(comscoreVars);
+    </script>
+<script type="text/javascript" data-src="http://b.scorecardresearch.com/beacon.js"></script>
+<noscript>
+<img src="http://b.scorecardresearch.com/p?c1=2&c2=7395269&cv=2.0&cj=1"/>
+</noscript>
+ 
+ 
+<script type="text/javascript">
+        var dataLayer = dataLayer || [];
+        dataLayer.push({
+            'fireGTM': 'on'
+                        , 'contentId': '925127'
+
+                    , 'contentType': 'blog'
+
+                    , 'author': 'Eriq Gardner '
+
+                    , 'category': 'Esq.'
+
+                    , 'tags': 'THR, Esq., Television, Business'
+
+                    , 'publishDate': '2016090114'
+
+            
+        });
+        dataLayer.push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+        PGM.createScript('//www.googletagmanager.com/gtm.js?id=GTM-WLF8ZZ');
+    </script>
+ 
+<script type="text/javascript">
+        window._taboola = window._taboola || [];
+        _taboola.push({ article :'auto'});
+        PGM.createScript('//cdn.taboola.com/libtrc/thr/loader.js');
+    </script>
+<link rel="stylesheet" type="text/css" href="/static/frontend/2017_06_08_1558/assets/css/blogs.css">
+</head>
+<body class="blog-post-page" data-template="Story" data-adsitesection="Esq." data-twitter-handle="thr">
+<header id="site-header" class="site-header" role="banner">
+<div class="site-header__background">
+<div class="site-header__contents">
+<div class="site-header__bar">
+<button class="site-header__nav-toggle"><i class="fa fa-bars"></i></button>
+<h1 class="site-header__brand">
+<a class="site-header__brand-link" href="/">
+<img class="site-header__brand-logo" src="/static/frontend/2017_06_08_1558/assets//images/brand/thr-logo-white.svg" alt="The&#x20;Hollywood&#x20;Reporter">
+<span class="site-header__brand-name">The Hollywood Reporter</span>
+</a>
+</h1>
+<button class="site-header__search-toggle"><i class="fa fa-search"></i></button>
+</div>
+<nav class="site-header__nav">
+<div class="site-header__nav-inner">
+<ul class="site-header__nav-items">
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;movies class=site-header__nav-link>
+Movies
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;node&#x2F;895551 class=site-header__nav-link>
+TV
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;business class=site-header__nav-link>
+Business
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;style class=site-header__nav-link>
+Style
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;node&#x2F;859190 class=site-header__nav-link>
+Politics
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;tech class=site-header__nav-link>
+Tech
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;culture class=site-header__nav-link>
+Culture
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;awards class=site-header__nav-link>
+Awards
+</a>
+</li>
+<li class="site-header__nav-item ">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;video class=site-header__nav-link>
+Video
+</a>
+</li>
+</ul>
+<a href="https://subscribe.hollywoodreporter.com/sub/?p=THR&amp;f=saleb&amp;s=IH1402HR12" class="site-header__nav-link site-header__nav-link--subscribe">Subscribe</a>
+<a href="/newsletters/subscribe" class="site-header__nav-link site-header__nav-link--newsletter">Newsletters</a>
+</div>
+</nav>
+<form class="site-header__search-form" method="post" accept-charset="UTF-8" action="/search/">
+<input class="site-header__search-input" placeholder="Search..." name="keys" maxlength="255">
+<button id="site-header__search-submit" class="site-header__search-submit"><i class="fa fa-times"></i></button>
+</form>
+</div>
+</div>
+</header>
+<div class="site-header__placeholder"></div>
+<nav class="site-header-links">
+<div class="site-header-links__contents">
+<a href=http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;executive-suite class=site-header-links__link>
+Exec Suite
+</a>
+</div>
+</nav>
+<div class="breaking-news-bar"></div>
+<div class="leaderboard leaderboard--top">
+<div class="dfp-ad dfp-ad-t   " data-trackaction="" data-tracklabel="Ad Click">
+<script type="application/json">
+            { "slot": {"adUnit":null,"slotName":"t","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[728,90],[980,50],[970,90],[728,91],[980,250],[970,250],[970,66],[970,51],[970,251]],"767":[[728,90],[728,91]],"0":[[300,50],[300,51],[320,50],[320,51],[320,170]]},"targetingParameters":{"pos":["t"],"page":["925127"],"tags":[]}}, "extraTargeting": null }
+        </script>
+</div>
+</div>
+<div id="dfp-ad-o1" class="dfp-ad dfp-ad-o1 is-dfp-defined"></div>
+<main id="page-content" class="page-content">
+<div class="container blog-post url-breadcrumb is-unprocessed is-active  blog-post-media-orientation-landscape blog-post-media-type-image" data-page-title="Melania&#x20;Trump&#x20;Sues&#x20;Over&#x20;Daily&#x20;Mail&#x20;Story&#x20;Suggesting&#x20;She&#x20;Was&#x20;an&#x20;Escort" data-url-breadcrumb="/thr-esq/melania-trump-sues-daily-mail-925127" data-content-type="blogPost" data-id="925127" data-canonical="http://www.hollywoodreporter.com/thr-esq/melania-trump-sues-daily-mail-925127" data-chartbeatSection="esq." data-analytics-category="Esq." data-analytics-tags="THR, Esq., Television, Business" data-refresh-ads=".dfp-ad-t">
+<script>
+        window.ima_tags = "thr esq,the business,business";
+    </script>
+<aside class="blog-post__sidebar js__blog-post__sidebar">
+<div class="logo-wrap">
+<img src="//cdn4.thr.com/sites/default/files/blogicon_hollywoodesq.png" class="logo" alt=""/>
+</div>
+<div class="fix-container">
+<div id="js__stories-wrapper" class="stories-wrapper">
+<div class="social-container">
+<a href="javascript:void(0);" class="fb-square js-pgm-social-share fa-facebook" data-pgm-share="facebook" data-pgm-title="Melania&#x20;Trump&#x20;Sues&#x20;Over&#x20;Daily&#x20;Mail&#x20;Story&#x20;Suggesting&#x20;She&#x20;Was&#x20;an&#x20;Escort" data-pgm-url="http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;thr-esq&#x2F;melania-trump-sues-daily-mail-925127" data-tracklabel="Left Rail - Sharing Facebook"></a>
+<a href="javascript:void(0);" class="twitter-square js-pgm-social-share fa-twitter" data-pgm-share="twitter" data-pgm-share="facebook" data-pgm-title="Melania&#x20;Trump&#x20;Sues&#x20;Over&#x20;Daily&#x20;Mail&#x20;Story&#x20;Suggesting&#x20;She&#x20;Was&#x20;an&#x20;Escort" data-pgm-url="http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;thr-esq&#x2F;melania-trump-sues-daily-mail-925127" data-tracklabel="Left Rail - Sharing Twitter"></a>
+<a href="//www.hollywoodreporter.com/print/925127" target="_blank" class="sharetools-link print print-square fa-print" data-tracklabel="Left Rail - Sharing Print"></a>
+<a href="javascript:void(0);" class="js-scroll-to-comments comments-square post-has-comments fa-comment" data-tracklabel="Left Rail - Sharing Comments"></a>
+</div>
+</div>
+</div>
+</aside>
+<p class="blog-post__byline">
+<time datetime="2016-09-01T14:08:37" data-pubdate-value="2016090114" class="publish-date js-publish-date">September 01, 2016</time>
+<span class="authors">
+2:08pm PT
+by
+<span class="js-authors-list">
+Eriq Gardner </span>
+</span>
+</p>
+<h1 class="blog-post-headline">Melania Trump Sues Over Daily Mail Story Suggesting She Was an Escort</h1>
+<figure class="blog-post__media main-media" data-media-type="image" data-media-id="912376">
+<img src="http://cdn3.thr.com/sites/default/files/imagecache/scale_crop_768_433/2016/07/melania_trump_rnc_speech_3.jpg" alt="Donald Trump&#039;s wife fires a shot at a &quot;false&quot; article about her journey to America." class="blog-post-main-image media__image main-media__image"/>
+<figcaption class="media__details-text">
+<div class="media__credit">Getty Images</div>
+<div class="media__caption">Melania Trump</div>
+</figcaption>
+</figure>
+<aside class="blog-post-features">
+<div id="blog-post-features-ad" class="ad">
+<div class="dfp-ad dfp-ad-m1   " data-trackaction="" data-tracklabel="Ad Click" data-prepend="Advertisement">
+<script type="application/json">
+            { "slot": {"adUnit":null,"slotName":"m1","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,250],[300,251],[300,600]],"767":[[300,250],[300,251]],"0":[]},"targetingParameters":{"pos":["m1"],"page":["925127"],"tags":[]}}, "extraTargeting": null }
+        </script>
+</div>
+</div>
+</aside>
+<aside class="blog-post-deck">
+<div class="social-container">
+<a href="javascript:void(0);" class="fb-square js-pgm-social-share fa-facebook" data-pgm-share="facebook" data-pgm-title="Melania&#x20;Trump&#x20;Sues&#x20;Over&#x20;Daily&#x20;Mail&#x20;Story&#x20;Suggesting&#x20;She&#x20;Was&#x20;an&#x20;Escort" data-pgm-url="http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;thr-esq&#x2F;melania-trump-sues-daily-mail-925127" data-tracklabel="Story Well - Sharing Facebook"></a>
+<a href="javascript:void(0);" class="twitter-square js-pgm-social-share fa-twitter" data-pgm-share="twitter" data-pgm-share="facebook" data-pgm-title="Melania&#x20;Trump&#x20;Sues&#x20;Over&#x20;Daily&#x20;Mail&#x20;Story&#x20;Suggesting&#x20;She&#x20;Was&#x20;an&#x20;Escort" data-pgm-url="http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;thr-esq&#x2F;melania-trump-sues-daily-mail-925127" data-tracklabel="Story Well - Sharing Twitter"></a>
+<a href="//www.hollywoodreporter.com/print/925127" target="_blank" class="sharetools-link print print-square fa-print" data-tracklabel="Story Well - Sharing Print"></a>
+<a href="javascript:void(0);" class="js-scroll-to-comments comments-square post-has-comments fa-comment" data-tracklabel="Story Well - Sharing Comments"></a>
+</div>
+<div class="blog-post-summary">
+Donald Trump&#039;s wife fires a shot at a &quot;false&quot; article about her journey to America.
+</div>
+</aside>
+<div id="blog-post-body-ad" class="ad">
+</div>
+<article class="blog-post-body js-fitvids-content">
+<p>Melania Trump, wife of the Republican nominee for U.S. president, filed a defamation lawsuit on Thursday against Mail Media, parent company of the U.K. publication<em> The Daily Mail</em>, as well as a blogger named Webster Griffin Tarpley.</p>
+<p>In a complaint lodged in Maryland Circuit Court, Trump is taking issue with an Aug. 19 article titled, &quot;Naked photoshoots, and troubling questions about visas that won&#39;t go away: The VERY racy past of Donald Trump&#39;s Slovenian wife.&quot;</p>
+<p>She is represented by Charles Harder, the same attorney who handled Hulk Hogan&#39;s privacy suit in a victory for the former professional wrestler that bankrupted&nbsp;Gawker Media with a $140 million verdict.</p>
+<p>The story in <em>The Daily Mail</em> covered Trump&#39;s journey to New York in the mid-1990s and raised questions about her past based on &quot;highly-charged, lesbian-themed, nude photographs,&quot; the exact timing of when she traveled to the U.S. on a visa, and her stint working for a modeling agency. The article relied on the work of a Slovenian journalist who had co-authored an unauthorized biography of Trump as well as a report early last month in a Slovenian magazine to make the claim that her modeling agency was run by a New York entrepreneur, who allegedly also operated an escort agency for wealthy clients.</p>
+<p>The article stated, &quot;What Melania&#39;s&nbsp;[composite card] looked like only the people involved know, but it is no coincidence she got a rich husband.&quot;</p>
+<p>According to Trump&#39;s lawsuit, &quot;The statements of fact in the Daily Mail Article are false. Plaintiff did legitimate and legal modeling work for legitimate business entities and did not work for any &#39;gentleman&#39;s club&#39; or &#39;escort&#39; agencies. Plaintiff was not a sex worker, escort or prostitute in any way, shape or form, nor did she ever have a composite or presentation card for the sex business. Plaintiff did not come to the United States until 1996. Thus, Plaintiff did not, and could not have participated in a photo shoot in the United States or met her current husband in the United States prior to that time.&quot;</p>
+<p><a href="https://www.documentcloud.org/documents/3038385-MelaniaTrump.html" target="_blank">Read the full complaint</a>.</p>
+<p>The lawsuit follows legal threats sent out by Trump&#39;s lawyer to a number of publications including <em>Politico</em>.&nbsp;</p>
+<p>Trump asserts that the&nbsp;<em>The Daily Mail&nbsp;</em>consciously doubted the truth of the claims in the article, but decided to publish it anyway, and that reporters there can&#39;t simply rely on &quot;unsubstantiated&quot; claims and &quot;an unauthorized book written by malicious and bitter &#39;reporters&#39; who have never met or spoken to Ms. Trump.&quot;</p>
+<p>&quot;The conduct of Daily Mail was despicable, abhorrent, intentional, malicious and oppressive, and thus justifies an award of punitive damages,&quot; states the complaint.</p>
+<p>Besides defamation, Trump also is suing for tortious interference, contending that the published statements have gotten in the way of her &quot;numerous&quot; licensing and endorsement deals.</p>
+<p>As for Tarpley, there&#39;s not much background on who this person is besides that he&#39;s an individual residing in Gaithersburg, Md., and runs a blog on his own website.</p>
+<p>In early April, Tarpley is said to have published a post titled, &quot;Where Is Melania Trump.&quot;</p>
+<p>According to the complaint, the post talked about &quot;rumors&quot; that she was having an &quot;apoplectic fit&quot; after the &quot;plagiarism incident&quot; at the GOP convention. Tarpley&#39;s&nbsp;blog also mentioned she was &quot;reportedly obsessed by fear of salacious revelations by wealthy clients from her time as a high-end escort.&quot;</p>
+<p>Among the many other statements in the blog post, Tarpley also allegedly wrote, &quot;It is speculated that Trump will attempt to hide Melania&#39;s breakdown and rejection of campaigning from the media and the public for as long as possible.&quot;</p>
+<p>Tarpley is said to have removed the blog post on Aug. 22 and published an apology and retraction. Nevertheless, he&#39;s being sued in what could be a message to all others out there on the internet who might gossip about Donald Trump&#39;s wife.</p>
+<p>Later on Thursday, the Daily Mail issued a retraction on their website, titled &quot;Melania Trump: A retraction,&quot; which can be read below in full:</p>
+<p><em>On August 20, 2016, an article was published in the Daily Mail newspaper titled &#39;Racy photos, and troubling questions about his wife&#39;s past that could derail Trump.&#39;<br/>
+The article discussed whether allegations being made about Melania Trump could negatively affect her husband Donald Trump&#39;s presidential bid. Among other things, the article noted that allegations have been made in a book available on Amazon about a modeling agency where Mrs. Trump worked in Milan being &#39;something like a gentleman&#39;s club,&#39; and an article published by Suzy, a Slovenian magazine, alleged that Mrs. Trump&#39;s modeling agency in New York, run by Paolo Zampolli, &#39;operated as an escort agency for wealthy clients.&#39;<br/>
+The article, which was also published online by the Mailonline/DailyMail.com website under the headline &#39;Naked photoshoots, and troubling questions about visas that won&#39;t go away: The VERY racy past of Donald Trump&#39;s Slovenian wife&#39; did not intend to state or suggest that these allegations are true, nor did it intend to state or suggest that Mrs. Trump ever worked as an &#39;escort&#39; or in the &#39;sex business.&#39;<br/>
+To the contrary, The Daily Mail newspaper article stated that there was no support for the allegations, and it provided adamant denials from Mrs. Trump&#39;s spokesperson and from Mr. Zampolli.<br/>
+The point of the article was that these allegations could impact the U.S. presidential election even if they are untrue.<br/>
+Mrs. Trump&#39;s counsel in the U.S. and the U.K., have stated unequivocally that the allegations about the modeling agencies are false.<br/>
+To the extent that anything in the Daily Mail&#39;s article was interpreted as stating or suggesting that Mrs. Trump worked as an &#39;escort&#39; or in the &#39;sex business,&#39; that she had a &#39;composite or presentation card for the sex business,&#39; or that either of the modeling agencies referenced in the article were engaged in these businesses, it is hereby retracted, and the Daily Mail newspaper regrets any such misinterpretation.<br/>
+The Daily Mail newspaper and MailOnline/DailyMail.com have entirely separate editors and journalistic teams.<br/>
+In so far as MailOnline/DailyMail.com published the same article it wholeheartedly also retracts the above and also regrets any such misinterpretation.</em></p>
+<p><strong>Sept. 1, 4:10 p.m. PT:</strong> Updated with Daily Mail retraction post.</p>
+<footer class="blog-post-tags">
+</footer>
+</article>
+<div class="blog-post-footer-ad">
+<div class="dfp-ad dfp-ad-m2   " data-trackaction="" data-tracklabel="Ad Click" data-prepend="Advertisement">
+<script type="application/json">
+            { "slot": {"adUnit":null,"slotName":"m2","outOfBody":false,"responsive":true,"sizeMapping":{"980":[[300,250],[300,252]],"767":[[300,250],[300,252]],"0":[[300,250],[300,252],[300,50],[300,52],[320,50],[320,52]]},"targetingParameters":{"pos":["m2"],"page":["925127"],"tags":[]}}, "extraTargeting": null }
+        </script>
+</div>
+</div>
+<section class="blog-post-author-section">
+<div class="social-container">
+<a href="javascript:void(0);" class="fb-square js-pgm-social-share fa-facebook" data-pgm-share="facebook" data-pgm-title="Melania&#x20;Trump&#x20;Sues&#x20;Over&#x20;Daily&#x20;Mail&#x20;Story&#x20;Suggesting&#x20;She&#x20;Was&#x20;an&#x20;Escort" data-pgm-url="http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;thr-esq&#x2F;melania-trump-sues-daily-mail-925127" data-tracklabel="Story Well - Sharing Facebook"></a>
+<a href="javascript:void(0);" class="twitter-square js-pgm-social-share fa-twitter" data-pgm-share="twitter" data-pgm-share="facebook" data-pgm-title="Melania&#x20;Trump&#x20;Sues&#x20;Over&#x20;Daily&#x20;Mail&#x20;Story&#x20;Suggesting&#x20;She&#x20;Was&#x20;an&#x20;Escort" data-pgm-url="http&#x3A;&#x2F;&#x2F;www.hollywoodreporter.com&#x2F;thr-esq&#x2F;melania-trump-sues-daily-mail-925127" data-tracklabel="Story Well - Sharing Twitter"></a>
+<a href="//www.hollywoodreporter.com/print/925127" target="_blank" class="sharetools-link print print-square fa-print" data-tracklabel="Story Well - Sharing Print"></a>
+<a href="javascript:void(0);" class="js-scroll-to-comments comments-square post-has-comments fa-comment" data-tracklabel="Story Well - Sharing Comments"></a>
+</div>
+<div class="blog-post-author">
+<img src="http://cdn3.thr.com/sites/default/files/imagecache/nfe_square_383x383/2015/04/eriq096-1_0.jpg" alt="Eriq Gardner " class="blog-post-author-image"/>
+<div class="blog-post-author-details">
+<p class="blog-post-author-name">
+Eriq Gardner </p>
+<a href="/cdn-cgi/l/email-protection#3356415a421d545241575d564173475b411d505c5e" class="blog-post-author-email fa-envelope" data-tracklabel="Story Well - Author Email"><span class="__cf_email__" data-cfemail="ceabbca7bfe0a9afbcaaa0abbc8ebaa6bce0ada1a3">[email&#160;protected]</span><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script></a>
+<a href="http://twitter.com/eriqgardner" class="blog-post-author-twitter fa-twitter" data-tracklabel="Story Well - Author Twitter">eriqgardner</a>
+</div>
+</div>
+</section>
+<section class="blog-post-syndication-section">
+<div class="taboola-wrapper"></div>
+<div class="zergnet-wrapper">
+<div class="zergnet-widget"></div> 
+</div>
+</section>
+<div>
+<button class="js-show-disqus-comments show-disqus-comments" data-tracklabel="Show Comments - Melania Trump Sues Over Daily Mail Story Suggesting She Was an Escort">Comments</button>
+<div id="disqus-comments" class="disqus">
+<div id="disqus_thread" class="disqus-comments-wrapper"></div>
+<script type="text/javascript">
+        var disqus_shortname = 'hollywoodreporter';
+        var disqus_identifier = 'node/925127';
+        var disqus_title = 'Melania Trump Sues Over Daily Mail Story Suggesting She Was an Escort';
+        var disqus_url = 'http://www.hollywoodreporter.com/thr-esq/melania-trump-sues-daily-mail-925127';
+    </script>
+<script data-src="//hollywoodreporter.disqus.com/embed.js"></script>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</div>
+<div class="blog-post__topic-block-container">
+<section class="blog-post__topic-block-wrap" data-id="925127">
+</section>
+<div class="taboola-left-rail-wrapper" data-id="925127"></div>
+</div>
+</div>
+<div class="autoload-direct-render" data-url-prefix="/fe_data" data-url="/thr-esq/beyonce-slays-lemonade-lawsuit-925024" data-content-type="blogPost"></div>
+<script language="javascript" type="text/javascript">
+        PGM.createScript('//www.zergnet.com/zerg-inf.js?id=33843');
+    </script>
+</main>
+ 
+<footer id="site-footer" class="site-footer">
+<div class="container">
+<div class="branding column">
+<div class="brand">
+<a href="/" title="The Hollywood Reporter" rel="home" class="logo" data-tracklabel="Drip Pan Footer - THR Logo">The Hollywood Reporter</a>
+</div>
+<p class="copyright date">
+&copy; 2017 The Hollywood Reporter
+<br>
+All rights reserved.
+</p>
+<p class="copyright terms">
+<a href="/legal/terms">Terms of Use</a> |
+<a href="/legal/privacy">Privacy</a> |
+<a href="/sitemap">Sitemap</a> |
+<a href="/legal/about-our-ads">About Our Ads</a>
+</p>
+</div>
+<div class="affiliate column">
+<ul>
+<li>
+<a href="/about/about" data-tracklabel="Drip Pan Footer - About Us">About Us</a>
+</li>
+<li>
+<a href="/user/login" data-tracklabel="Drip Pan Footer - Login">Login</a>
+</li>
+<li>
+<a href="/daily/archive" data-tracklabel="Drip Pan Footer - Daily Edition">Daily Edition</a>
+</li>
+<li>
+<a href="//www.hollywoodreporter.com/subscribe3" data-tracklabel="Drip Pan Footer - Subscribe">Subscribe</a>
+</li>
+<li>
+<a href="/services" data-tracklabel="Drip Pan Footer - Subscriber Services">Subscriber Services</a>
+</li>
+<li>
+<a href="//shop.hollywoodreporter.com" data-tracklabel="Drip Pan Footer - Back Issues">Back Issues</a>
+</li>
+<li>
+<a href="/ad/contacts" data-tracklabel="Drip Pan Footer - Advertising">Advertising</a>
+</li>
+<li>
+<a href="/contact" data-tracklabel="Drip Pan Footer - Contact Us">Contact Us</a>
+</li>
+<li>
+<a href="http://prometheusglobalmedia.applytojob.com/" target="_blank" data-tracklabel="Drip Pan Footer - Careers">Careers</a>
+</li>
+<li>
+<a href="/industry-jobs" data-tracklabel="Drip Pan Footer - Industry Jobs">Industry Jobs</a>
+</li>
+</ul>
+</div>
+<div class="follow column">
+<ul>
+<li>
+Follow Us On
+<a href="http://twitter.com/thr" target="_blank" data-tracklabel="Drip Pan Footer - Twitter">Twitter</a>
+</li>
+<li>
+Find Us On
+<a href="http://www.facebook.com/HollywoodReporter" target="_blank" data-tracklabel="Drip Pan Footer - Facebook">Facebook</a>
+</li>
+<li>
+Watch Us On
+<a href="http://www.youtube.com/thrnetwork" target="_blank" data-tracklabel="Drip Pan Footer - YouTube">Youtube</a>
+</li>
+</ul>
+</div>
+<div class="partner column">
+<div class="publications">
+<p>Our affiliate publications</p>
+<ul>
+<li>
+<a href="http://www.billboard.com/" target="_blank" class="footer logo billboard" data-tracklabel="Drip Pan Footer - Billboard">Billboard</a>
+</li>
+<li>
+<a href="http://www.vibe.com/" target="_blank" class="foot logo vibe" data-tracklabel="Drip Pan Footer - Vibe">Vibe</a>
+</li>
+<li>
+<a href="http://www.spin.com/" target="_blank" class="foot logo spin" data-tracklabel="Drip Pan Footer - Spin">Spin</a>
+</li>
+<li>
+<a href="http://www.stereogum.com/" target="_blank" class="foot logo stereogum" data-tracklabel="Drip Pan Footer - Stereogum">Stereogum</a>
+</li>
+<li>
+<a href="http://www.deathandtaxesmag.com/" target="_blank" class="foot logo deathandtaxesmag" data-tracklabel="Drip Pan Footer - Death and Taxes">Death and Taxes</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</footer>
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Organization",
+    "name": "The Hollywood Reporter",
+    "url": "http://www.hollywoodreporter.com",
+    "logo": "http://www.hollywoodreporter.com/assets/images/brand/thr-logo.gif",
+    "sameAs" : [
+        "https://www.youtube.com/user/thrnetwork",
+        "https://twitter.com/thr",
+        "https://www.facebook.com/HollywoodReporter",
+        "https://instagram.com/hollywoodreporter/"
+    ]
+}
+</script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/commons.bundle.js"></script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/transition.bundle.js"></script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/templates.js"></script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/home.bundle.js"></script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/vendor.js"></script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/thr.js"></script>
+<script type="text/javascript" src="/static/frontend/2017_06_08_1558/assets/js/thr-blog.js"></script>
+<div id="fb-root"></div>
+<script type="text/javascript">
+    PGM.createScriptTag("//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6&appId=303838389949803");
+</script>
+<script type="text/javascript">var __st_loadLate=true;</script>
+<meta name="sailthru.title" content="Melania Trump Sues Over Daily Mail Story Suggesting She Was an Escort">
+<meta name="sailthru.description" content="Donald Trump&#039;s wife fires a shot at a &quot;false&quot; article about her journey to America.">
+<meta name="sailthru.author" content="Eriq Gardner ">
+<meta name="sailthru.channel" content="THR, Esq.">
+<meta name="sailthru.vertical" content="Esq.">
+<meta name="sailthru.date" content="2016-09-01 14:08:37">
+<meta name="sailthru.tags" content="THR, Esq., Television, Business">
+<script type="text/javascript">
+    PGM.createScript("//ak.sail-horizon.com/horizon/v1.js", function() {
+        if (window.Sailthru) {
+            PGM.debug('sailthru', 'Running Sailthru.track for', 'http://www.hollywoodreporter.com/thr-esq/melania-trump-sues-daily-mail-925127');
+            Sailthru.track({
+                domain: 'horizon.hollywoodreporter.com',
+                spider: true,
+                track_url: true,
+                url: 'http://www.hollywoodreporter.com/thr-esq/melania-trump-sues-daily-mail-925127'
+            });
+        }
+        else {
+            PGM.debug('sailthru', 'No window.Sailthru');
+        }
+    });
+    </script>
+<script type="text/javascript">
+    PGM.createScript("//dnn506yrbagrg.cloudfront.net/pages/scripts/0021/6696.js?"+Math.floor(new Date().getTime()/3600000));
+</script>
+ 
+<script type='text/javascript'>
+    var _sf_async_config={};
+    /** CONFIGURATION START **/
+    _sf_async_config.uid = 3388;
+    _sf_async_config.domain = 'hollywoodreporter.com';
+    _sf_async_config.useCanonical = true;
+    _sf_async_config.authors = "Eriq Gardner ";
+    _sf_async_config.sections = "esq.";
+    /** CONFIGURATION END **/
+    PGM.createScript('//static.chartbeat.com/js/chartbeat.js');
+</script>
+ 
+ 
+<script class="kxct" data-id="JtjzpxpZ" data-timing="async" data-version="1.9" type="text/javascript">
+    window.Krux||((Krux=function(){Krux.q.push(arguments)}).q=[]);
+    PGM.createScript("//cdn.krxd.net/controltag?confid=JtjzpxpZ");
+</script>
+ 
+<script type="text/javascript">
+  window._taboola = window._taboola || [];
+  _taboola.push({flush: true});
+</script>
+<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","licenseKey":"645958bbf2","applicationID":"3218764","transactionName":"YAZRbEJXC0VUURFZV1lMZkpZGQxYUVcdHkhfEw==","queueTime":0,"applicationTime":589,"atts":"TEFSGgpNGEs=","errorBeacon":"bam.nr-data.net","agent":""}</script><script>/* <![CDATA[ */(function(d,s,a,i,j,r,l,m,t){try{l=d.getElementsByTagName('a');t=d.createElement('textarea');for(i=0;l.length-i;i++){try{a=l[i].href;s=a.indexOf('/cdn-cgi/l/email-protection');m=a.length;if(a&&s>-1&&m>28){j=28+s;s='';if(j<m){r='0x'+a.substr(j,2)|0;for(j+=2;j<m&&a.charAt(j)!='X';j+=2)s+='%'+('0'+('0x'+a.substr(j,2)^r).toString(16)).slice(-2);j++;s=decodeURIComponent(s)+a.substr(j,m-j)}t.innerHTML=s.replace(/</g,'&lt;').replace(/\>/g,'&gt;');l[i].href='mailto:'+t.value}}catch(e){}}}catch(e){}})(document);/* ]]> */</script></body>
+</html>

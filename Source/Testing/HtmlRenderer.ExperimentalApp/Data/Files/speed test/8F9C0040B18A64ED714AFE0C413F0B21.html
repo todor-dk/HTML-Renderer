@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>speedometer</title>
+
+<script src="https://code.createjs.com/easeljs-0.6.0.min.js"></script>
+<script src="https://code.createjs.com/tweenjs-0.4.0.min.js"></script>
+<script src="https://code.createjs.com/movieclip-0.6.0.min.js"></script>
+<script src="https://code.createjs.com/preloadjs-0.3.0.min.js"></script>
+<script src="speedometer.js"></script>
+
+<script>
+var canvas, stage, exportRoot;
+
+function init() {
+	canvas = document.getElementById("canvas");
+	images = images||{};
+
+	var manifest = [
+		{src:"bg.png", id:"bg"},
+		{src:"needle.png", id:"needle"},
+		{src:"needleGlow.png", id:"needleGlow"}
+	];
+
+	var loader = new createjs.LoadQueue(false);
+	loader.addEventListener("fileload", handleFileLoad);
+	loader.addEventListener("complete", handleComplete);
+	loader.loadManifest(manifest);
+}
+
+function handleFileLoad(evt) {
+	if (evt.item.type == "image") { images[evt.item.id] = evt.result; }
+}
+
+function handleComplete() {
+	exportRoot = new lib.speedometer();
+
+	stage = new createjs.Stage(canvas);
+	stage.addChild(exportRoot);
+	stage.update();
+
+	createjs.Ticker.setFPS(24);
+	createjs.Ticker.addEventListener("tick", stage);
+}
+</script>
+</head>
+
+<body onload="init();" style= "background-color:transparent; padding:0; margin:0;">
+	<canvas id="canvas" width="350" height="223" style= "background-color:transparent;"></canvas>
+</body>
+</html>

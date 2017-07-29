@@ -1,0 +1,569 @@
+<html>
+<head>
+<!--
+Pig Latin -- An English to Pig Latin Translator in JavaScript
+Copyright (c) 1997 by William H. Donnelly -- All Rights Reserved
+
+donnelly@snowcrest.net
+Chico, CA
+-->
+
+<title>Pig Latin -- An English to Pig Latin Translator</title>
+
+<script language="JavaScript1.1">
+<!-- hide script from old browsers
+
+// All global variables and constants are declared here
+
+gcsVOWELS = "AEIOUaeiou";     // Standard English vowels
+gcsVOWELSY = "AEIOUaeiouYy";  // Sometimes "Y" and "W", but only "Y" here
+gcsWAY = "way";               // Vowel word suffix
+gcsAY = "ay";                 // Consonant word suffix
+gciMAXLINE = 65;              // Maximum line length of translated text (default)
+
+
+function fVerifyEntry (piValue) {
+
+   if (isNaN (parseInt (piValue))) {  // If value is Not A Number
+      document.frmTranslator.txtMaxLength.value = gciMAXLINE;  // Set to default/optimal
+      piValue = gciMAXLINE;  //  ...line length (your mileage may vary) & fix parameter
+   }
+
+   if (piValue < 30)  // If value is less than 30
+      document.frmTranslator.txtMaxLength.value = 30;  // 30 is minimum length
+
+   if (piValue > 75)  // If value is greater than 75
+      document.frmTranslator.txtMaxLength.value = 75;  // 75 is maximum length
+
+   return;
+
+}  // fVerifyEntry
+
+
+function fClearText () {
+
+   document.frmTranslator.taEnglish.value = "";  // Clear English text area
+   document.frmTranslator.taEnglish.focus();  // Make English TextArea active
+
+   return;
+
+}  // fClearText
+
+
+function fSelectText (pTA)
+{
+   eval ("document.frmTranslator." + pTA + ".focus()");  // Make TextArea active
+   eval ("document.frmTranslator." + pTA + ".select();");  // Make TextArea text selected/highlighted
+
+   return;
+}  // fSelectText
+
+
+function fTranslate () {
+
+// Translate text from English to Pig Latin, line by line, word by word
+
+   var sText;        // Text loaded from Text Area Form item
+   var sPigLatin;    // Pig Latin translation result
+   var sLine;        // Line by line translation for multiple lines (text area)
+   var sWord;        // Current word being built & xlated (or separator)
+   var bWord;        // Word/Separator mode flag
+   var sChar;        // Current character from text being xlated
+   var sNewline;     // New line character based on system requirements
+   var iMaxLength;   // Maximum Line Length
+   var bLearnMode;   // Learning Mode flag
+
+
+   if (navigator.appVersion.lastIndexOf ("Win") != -1)  // System type?
+      sNewline = "\r\n";  // Windows uses this for New Line
+
+   else
+      sNewline = "\n";  // Other systems use this for New Line (Mac, etc.)
+
+   sText = document.frmTranslator.taEnglish.value;  // Get text to xlate
+   iMaxLength = document.frmTranslator.txtMaxLength.value;
+   bLearnMode = document.frmTranslator.learnmode.checked;
+
+   sPigLatin = "";  // End result stored here
+   sLine = "";      // Clear line text
+   sWord = "";      // Clear word text
+   bWord = true;    // We start off working on a real word
+
+   for (var iChar = 0; iChar <= sText.length; ++iChar) {
+
+      // The null at the end of the text signals final end of text/word
+
+      sChar = sText.charAt (iChar);  // Get the next character
+
+      if ((sChar >= "A" && sChar <= "Z") ||
+            (sChar >= "a" && sChar <= "z") ||
+            (sChar == "'" && bWord && sWord != "")) {  // If alphabetic character
+
+         if (!bWord) {  // If last not a word, then must be non-word/separator
+            if (sLine.length + sWord.length >= iMaxLength) {  // Check line length
+               sPigLatin += sLine + sNewline;  // Line too long, end of line
+               sLine = "";  // Clear line text
+            }
+
+            sLine += sWord;  // Append punctuation & whitespace to line
+            sWord = "";  // Clear word text
+            bWord = true;  // We're working on a real word
+         }
+
+         sWord += sChar;  // Append alpha character to word
+
+      } else {  // A non-alpha character
+         if (bWord && sWord != "") {  // If word mode and a word was found
+            sWord = fPigLatin (sWord, bLearnMode);  // Translate word to Pig Latin
+
+            if (sLine.length + sWord.length >= iMaxLength) {  // Check line length
+               sPigLatin += sLine + sNewline;  // Line too long, end of line
+               sLine = "";  // Clear line text
+            }
+
+            sLine += sWord;  // Append translated word to line
+            sWord = "";  // Clear word text
+         }
+
+         sWord += sChar;  // Build punctuation, symbol & whitespace "word"
+         bWord = false;  // Switch to non-word/separator mode
+
+         if (sChar == "\r" || sChar == "\n") {  // If end of line
+            sPigLatin += sLine + sWord;  // Append line and word to result
+            sLine = "";  // Clear line text
+            sWord = "";  // Clear word text
+         }
+      }
+
+   }  // for
+
+   sPigLatin += sLine + sWord;  // Append final line and word to result
+
+   document.frmTranslator.taPigLatin.value = sPigLatin;  // Store result
+
+   fSelectText ("taEnglish");
+
+}  // fTranslate
+
+
+function fPigLatin (psWord, pbLearnMode) {
+
+// Translate a word from English to Pig Latin -- word is in parameter #1
+
+   var sWord;        // Word to translate from parameter #1
+   var sFirst;       // First character of word
+   var sSuffix;      // Pig Latin suffix text
+   var sLast;        // Last character of word (used differently below)
+   var bCapitalize;  // Word capitalization flag
+   var bCapsFlag;    // Suffix capitalization flag
+
+
+   sWord = psWord;  // Move to local storage
+   sFirst = sWord.charAt (0);  // First character of word
+   bCapitalize = (sFirst == sFirst.toUpperCase()) ? true : false;  // Capitalization flag
+   sSuffix = "";
+
+   if (gcsVOWELS.indexOf (sFirst) >= 0) {  // Word starts with a vowel?
+      sSuffix = gcsWAY;  // Suffix is "way"
+      sLast = sWord.charAt (sWord.length - 1);  // Get last char of word
+
+      if (sLast == sLast.toUpperCase() && sWord.length > 1)  // If last char of word is uppercase (except "I")
+         sSuffix = gcsWAY.toUpperCase();  // Make suffix uppercase to match
+
+      // At this point, the word is translated correctly
+
+   } else {  // Word starts with consonant(s) -- more complex processing required
+
+      // Move all consonants at front of word to the end and add "ay"
+
+      if (sWord != sWord.toUpperCase())  // If not all caps
+         sFirst = sFirst.toLowerCase();  // Format for display
+
+      iChars = sWord.length;  // Only process n characters
+
+      while (iChars--) {  // For typos and any possible all-consonant "words"
+
+        sSuffix += sFirst;  // Build suffix with leading consonants
+        sLast = sFirst;  // Save last character (for "qu" testing)
+
+        bCapsFlag = (sFirst == sFirst.toUpperCase()) ? true : false;  // Capitalize flag
+
+        sWord = sWord.substring (1, sWord.length);  // Remove first/next char of word
+        sFirst = sWord.charAt (0);  // Get next/first char of new word
+
+        if (gcsVOWELSY.indexOf (sFirst) >= 0) {  // Vowel signals end
+           if (!((sLast == "q" || sLast == "Q") &&
+                 (sFirst == "u" || sFirst == "U")))  // Check for "qu"
+              break;  // Quit loop if we hit a vowel or "y" (unless "qu")
+        }
+
+      }  // while
+
+      if (bCapsFlag)  // If the first char of the new word is capitalized
+         sSuffix += gcsAY.toUpperCase();  // Append "AY"
+
+      else
+         sSuffix += gcsAY;  // Append "ay"
+   }
+
+   sWord += (pbLearnMode ? "-" : "") + sSuffix;  // Put final translated word together
+
+   if (bCapitalize) {  // If original word was capitalized...
+      sFirst = sWord.charAt (0);  // ...ensure translated word is too
+      sWord = sFirst.toUpperCase() + sWord.substring (1, sWord.length);
+   }
+
+   return sWord;  // Return Pig Latin word
+
+}  // fPigLatin
+
+// end hiding from old browsers -->
+</script>
+
+</head>
+
+<body background="piglatin/piggy.gif" bgcolor="#ffffff"
+   link="#00aa00" text="maroon" vlink="#006600"
+   onload="fSelectText('taEnglish')">
+
+<div style="width: 650">
+
+<center>
+
+<noscript>
+<font face="Times New Roman,Times New,Times,Serif">
+
+   <h3 align = "center">
+   Sorry, either you do not have a JavaScript1.1-enabled browser,<br>
+   </h3><h4 align = "center">
+   or you have disabled JavaScript in the Preferences menu!
+   </h4>
+   We suggest that you use the latest version of<br>
+   Netscape Navigator (3.x+) or Microsoft Internet Explorer!<br><br>
+
+</font>
+</noscript>
+
+<a name="top"></a>
+<h1>
+<font face="Times New Roman,Times New,Times,Serif">
+<b>English to
+<font color="#ff0000">Pig Latin</font>
+Translator
+</b></font>
+</h1>
+
+</center>
+
+<font face="Times New Roman,Times New,Times,Serif">
+<b>
+
+<font face="Courier New,Courier,Arial,Helvetica">
+
+<form name="frmTranslator">
+
+Enter English Text to Translate:<br>
+
+&nbsp;&nbsp;<textarea name="taEnglish" rows="6" cols="60">Enter the English text here that you want translated into
+Pig Latin. This is accomplished via this HTML document and
+accompanying JavaScript program. Note that hyphenated words
+are treated as two words. Words may consist of alphabetic
+characters only (A-Z and a-z). All punctuation, numerals,
+symbols and whitespace are not modified.</textarea>
+<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<input value="Translate" onclick="fTranslate()" type="button">
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<input value="Select All Text" onclick="fSelectText('taEnglish')" type="button">
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<input value="Clear Text" onclick="fClearText()" type="button">
+
+<br>
+&nbsp;<br>
+
+Igpay Atinlay Anslationtray:<br>
+
+&nbsp;&nbsp;<textarea name="taPigLatin" rows="10" cols="70">The Pig Latin translation of the text entered above will
+display here when you press the Translate button.
+
+Note:  If the translated text overflows the right margin
+of this text box, you may select an alternate Maximum Line
+Length below (between 30 and 75 inclusive).
+</textarea>
+
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<input value="Select All Text" onclick="fSelectText('taPigLatin')" type="button">
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   <small>Maximum Line Length:</small> <input name="txtMaxLength" value="65" size="3" maxlength="2" onchange="fVerifyEntry (this.value)" type="text">
+<br>
+
+<input name="learnmode" value="1" type="checkbox">
+</b><small><small>
+Check this box to see the Pig Latin output in 'Learning Mode'<br>
+with dashes between the modified word proper and its new suffix for<br>
+better understanding and ease of pronunciation (must reTranslate)
+</small></small><b>
+
+</form>
+
+</font>
+
+&nbsp;<br>
+
+</b>
+</font>
+
+<font face="Times New Roman,Times New,Times,Serif">
+
+<b>
+
+<p>
+This English to Pig Latin translation program performs a <small><small>(near-)</small></small>
+perfect translation of any English text to Pig Latin. Words, phrases, sentences, paragraphs and more.
+</p>
+
+<p>There are many dialects and forms of Pig Latin which vary from region to region,
+country to country, and language to language, as well as other similar, and dissimilar,
+Pig Latin-like 'languages'.
+The dialect shown here tends to hail from California/West Coast of the United States.
+</p>
+
+<p>
+Basically, the Pig Latin system used here works as follows:
+</p>
+
+<ul>
+<li> Words that start with a vowel (A, E, I, O, U) simply have "WAY" appended to the end of the word.</li>
+<li> Words that start with a consonant have all consonant letters up to the first vowel moved
+to the end of the word (as opposed to just the first consonant letter), and "AY" is appended.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;('Y' is counted as a vowel in this context)</li>
+</ul>
+
+<p>
+The algorithm incorporates the following features and special case functionality:
+</p>
+
+<ul>
+<li> Ensures proper capitalization
+</li>
+<li> Correct upper case and lower case formatting
+</li>
+<li> Correctly translates "qu" (e.g., ietquay instead of uietqay)
+</li>
+<li> Differentiates between "Y" as vowel and "Y" as consonant<br>
+(e.g. yellow = elloyay and style = ylestay) &mdash;
+</b><small><small>(except for a very few exceptions)</small></small><b>
+</li>
+<li> Correctly translates contractions
+</li>
+<li> Hyphenated words are treated as two words
+</li>
+<li> Words may consist of alphabetic characters only (A-Z and a-z)
+</li>
+<li> All punctuation, numerals, symbols and whitespace are not modified
+</li>
+</ul>
+
+<p></p>
+
+<p>The routines are written in JavaScript version 1.1 (+) for NetScape 3.x (or higher) and
+Internet Explorer 4.x+, and uses HTML Form objects
+<small>(Text Areas, Text fields, Buttons and Check Boxes)</small>.
+The algorithms were developed and programmed by
+<a href="mailto:donnelly@snowcrest.net?Subject=Pig%20Latin:">Bill Donnelly</a>.
+</p>
+
+<p>
+<a href="#top">Back to top</a>.
+</p>
+
+<hr width="50%">
+
+<p>
+<font color="purple" size="+2">Links:</font> &nbsp;&nbsp; More Pig Latin information than you ever wanted to know about.
+</p>
+
+<p>
+<i><font color="red">The Internet</font></i> <small>(World Wide Web, et al.)</small>
+is becoming and/or has effectively become an <i><font color="red">Encyclopaedia Galactica</font></i>.
+</p>
+
+<p>To visit the pages, Click the little framed Piggy <small>(gently)</small>.....<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<small>(all pages opened in a new window)</small>
+</p>
+
+<center>
+First and foremost,
+<i><font size="+3"><font color="blue">G</font><font color="red">o</font><font color="yellow">o</font><font color="blue">g</font><font color="green">l</font><font color="red">e</font></font></i>
+me this!<br>
+</center>
+
+&nbsp;<br>
+
+<a href="http://directory.google.com/Top/Science/Social_Sciences/Linguistics/Languages/Constructed/Play/Pig_Latin/" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+The
+<i><font size="+1"><font color="blue">G</font><font color="red">o</font><font color="yellow">o</font><font color="blue">g</font><font color="green">l</font><font color="red">e</font></font></i>
+Web Directory listing for<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<small><u>Science &gt; Social Sciences &gt; Linguistics &gt; Languages &gt; Constructed &gt; Play &gt; Pig Latin</u>.</small><br>
+
+<a href="http://www.google.com/search?q=piglatin+OR+%22pig+latin%22&amp;filter=0" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+Perform an <i><u>extensive</u></i>
+<i><font size="+1"><font color="blue">G</font><font color="red">o</font><font color="yellow">o</font><font color="blue">g</font><font color="green">l</font><font color="red">e</font></font></i>
+search for even <u>more</u> Encyclopaedia Galactica references to "Pig Latin".<br>
+
+<a href="http://www.google.com/intl/xx-piglatin/" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+Are you brave enough to search with
+<i><font size="+1"><font color="blue">G</font><font color="red">o</font><font color="yellow">o</font><font color="blue">g</font><font color="green">l</font><font color="red">e</font></font></i>
+<i>using</i> Pig Latin??<br>
+
+<p></p>
+
+Or, perform a
+<i><font size="+1"><font color="blue">G</font><font color="red">o</font><font color="yellow">o</font><font color="blue">g</font><font color="green">l</font><font color="red">e</font></font></i>
+search of your choice:<br>
+
+<!-- Google SafeSearch  -->
+<center>
+<form method="get" action="http://www.google.com/search">
+<table bgcolor="#ffffff" border="2" cellpadding="5"><tbody><tr><td>
+<a href="http://www.google.com/">
+<img area="5175" src="piglatin/Google_Safe.gif" alt="Google" align="middle" border="0" height="45" width="115"></a>
+<input name="q" size="25" maxlength="255" value="" type="text">
+<input name="safe" value="vss" type="hidden">
+<input name="vss" value="1" type="hidden">
+<input name="sa" value="Google Search" type="submit">
+</td></tr></tbody></table>
+</form>
+</center>
+<!-- Google SafeSearch -->
+
+<hr width="75%">
+
+<p>
+
+These web pages link back to this page:<br>
+&nbsp;&nbsp;&nbsp;
+<small>(listed in no particular order; not all rated 'G'; some PG-13 +/-)</small><br>
+
+&nbsp;<br>
+
+<a href="http://www.applelinks.com/articles/2001/03/20010313125557.shtml" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+Applelinks Article: Igpay Atinlay (Pig Latin) Encoding May Defeat Napster Filters<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<small>http://www.applelinks.com/articles/2001/03/20010313125557.shtml</small><br>
+
+<a href="http://www.applelinks.com/articles/2001/03/20010315125516.shtml" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+Applelinks Article: More And Less Pig Latin On The Web<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<small>http://www.applelinks.com/articles/2001/03/20010315125516.shtml</small><br>
+
+<a href="http://www2.sls.lib.il.us/RDS/youth/" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+Riverdale Library Youth Services<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<small>http://www2.sls.lib.il.us/RDS/youth/</small><br>
+
+<a href="http://www0.mercurycenter.com/svtech/news/indepth/docs/webcal040599.htm" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+Get a Web-Organized Life<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<small>http://www0.mercurycenter.com/svtech/news/indepth/docs/webcal040599.htm</small><br>
+
+<a href="http://www.wolinskyweb.net/word.htm" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+Word Play<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<small>http://www.wolinskyweb.net/word.htm</small><br>
+
+<a href="http://www.allthebestcentral.com/humor.html" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+All THE BEST CENTRAL-Your Humor Page. Laughter is your best medicine.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<small>http://www.allthebestcentral.com/humor.html</small><br>
+
+<a href="http://www.readyed.com.au/urls/MIBooks/Book1.htm" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+Ready-Ed Publications:Farm Fun<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<small>http://www.readyed.com.au/urls/MIBooks/Book1.htm</small><br>
+
+<a href="http://members.tripod.com/%7EK32SGTV/booger.html" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+Daddy G Page Snazzy List of Links<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<small>http://members.tripod.com/~K32SGTV/booger.html</small><br>
+
+<a href="http://www.suite101.com/linkcategory.cfm/8218/13821" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+America Circa '60s - Links (History and geography &gt; History of North America &gt; United States)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<small>http://www.suite101.com/linkcategory.cfm/8218/13821<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Also: <a href="http://www.suite101.com/links.cfm/america_circa_60s" target="_blank">http://www.suite101.com/links.cfm/america_circa_60s</a></small><br>
+
+<a href="http://www.brainlock.org/fun02.htm" target="_blank">
+<img area="1024" src="piglatin/piggysm.gif" border="1" height="32" width="32"></a>
+Brainlock.org Webertainment: the fun, the weird, and the just strange!!<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<small>http://www.brainlock.org/fun02.htm</small><br>
+
+</p>
+
+<a href="#top">Back to top</a>.<br>
+
+&nbsp;<br>
+
+<center>
+<img area="16303" src="piglatin/booksleft.gif" alt="A House without Books is not a Home" border="0" height="137" hspace="10" width="119">
+<a href="http://www.snowcrest.net/donnelly/">
+<img area="10625" src="piglatin/castle.jpg" alt="The Donnelly House Homepage" border="0" height="85" hspace="10" width="125"></a>
+<a href="mailto:donnelly@snowcrest.net?Subject=Pig%20Latin:">
+<img area="11135" src="piglatin/porkystamp.gif" alt="E-mail Bill" border="0" height="131" hspace="10" width="85"></a>
+<img area="16303" src="piglatin/booksright.gif" alt="A House without Books is not a Home" border="0" height="137" hspace="10" width="119">
+<br>
+<small>The Donnelly House Homepage &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; E-mail Bill</small>
+</center>
+
+<p>
+This translator has been accessed
+<img src="http://www.snowcrest.net/cgi-bin/Count.cgi?df=donnelly/piglatin.count" height="32" width="102">
+times.
+</p>
+
+<center>
+<small><small>
+Copyright &copy; 1997-2002-2004 by
+<a href="mailto:donnelly@snowcrest.net?Subject=Pig%20Latin:">
+William H. Donnelly</a> at
+<a href="http://www.snowcrest.net/donnelly/">Donnelly House</a><br>
+</small></small>
+</center>
+
+<small>
+<br>Last updated: December 16, 2004; &nbsp; before that: January 5, 2002<br>
+</small>
+
+</b>
+
+</font>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,918 @@
+<!doctype HTML PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN">
+
+<!-- --------------------------------------------------------------------------
+DEVELOPED BY: CanDo.com
+AUTHORS: Brian Hoffer, Eric Stein, Rob Ratterman
+--------------------------------------------------------------------------- -->
+
+<html>
+<head>
+	<title>PayPal Multi Order Shipping</title>
+
+	<!-- BEGIN UNCONSOLIDATED STYLESHEETS
+	<link type="text/css" href="shipping/css/common.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/quickmenu.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/floatmenu.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/powership.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/mainmenu.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/orders.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/history.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/print.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/sidebar.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/infobar.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/tabs.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/tabmenu.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/table.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/expander.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/dialogs/common/css/dialog.css?version=1_0_4" rel="stylesheet"/>
+	END UNCONSOLIDATED STYLESHEETS -->
+	
+	<!-- BEGIN CONSOLIDATED STYLESHEETS -->
+	<link type="text/css" href="shipping/css/common.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/css/mos.css?version=1_0_4" rel="stylesheet"/>
+	<link type="text/css" href="shipping/dialogs/common/css/dialog.css?version=1_0_4" rel="stylesheet"/>
+	<!-- END CONSOLIDATED STYLESHEETS -->
+
+</head>
+
+<!-- BODY -->
+<body class="psBody">
+
+<script>
+	var gImageDir = "shipping/images/";
+</script>
+
+
+<!-- 
+*******************************************************************************
+PAGE CONTENTS
+*******************************************************************************
+-->
+
+<!-- MODAL LAYER -->
+<div id="psModal" class="psModal" style="display: none"></div>
+
+<!-- WAITING LAYER -->
+<div id="psWaitingFrame" style="display: none">
+	<div id="psWaitingFrameText">Please wait...</div>
+	<div id="psWaitingFrameIcon"><img width="240" src="shipping/images/progress.gif"></div>
+</div>
+
+<!-- CONTEXT HELP LAYER -->
+<div id="psContextHelpFrameDiv" style="visibility: hidden">
+</div>
+
+<!-- LOGOUT -->
+<div id="psLogoutFrame" style="display: none">
+	<div id="psLogoutFrameText"><strong>You are now logged out.</strong>  To log back in, go to www.paypal.com</div>
+	<div class="psPopupButton"><input type=button id="psLogoutFrameButton" onclick="window.close();" value="Close Window"></div>
+</div>
+
+<!-- TIMEOUT -->
+<div id="psTimeoutFrame" style="display: none">
+	<div id="psTimeoutFrameText"><strong>Your session has timed out.</strong></div>
+	<div class="psPopupButton"><input type=button id="psTimeoutFrameButton" onclick="psDoTimeoutLogin();" value="Log In"></div>
+</div>
+
+<!-- Info Frame -->
+<div id="psInfoAlertFrame" style="display: none">
+	<div id="psInfoAlertIcon"><img src='shipping/images/info.gif'></div>
+	<div id="psInfoAlertFrameText"><strong>Note:</strong> As of May 14, the United States Postal Service instituted several enhancements to its domestic services, including rate increases for some shipping options. These changes are currently reflected in PayPal Shipping.</div>	
+	<div id="psInfoAlertFrameInput"><input type=checkbox id="ChkInfoAlertFrameDisplay" name="ChkInfoAlertFrameDisplay" onclick="psHideInfoAlertFrame();"></div><div class="checkboxLabel"><label for="ChkInfoAlertFrameDisplay">Do not display this message again.</label></div>
+	<div class="psPopupButton"><input type=button id="psInfoAlertFrameButton" onclick="psHide('psInfoAlertFrame');" value="Close"></div>
+</div>
+
+<!-- APP LOADING -->
+<div id="psAppLoadingDiv" style="text-align: center">
+	<div style="margin-bottom: 20px;">Loading PayPal MultiOrder Shipping Tool...</div>
+	<div><img width='320' src="shipping/images/progress.gif"></div>
+</div>
+
+<!-- BEGIN UNCONSOLIDATED CODE
+
+<script>
+   document.write('<script src="', "shipping/js/config.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/events.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/utils.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/commands.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/options.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/querystring.js?version=1_0_4", '" type="text/javascript"><\/script>');
+	
+   document.write('<script src="', "shipping/js/ui/ui.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/radiogroups.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/menus.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/pushbutton.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/menubutton.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/checkbutton.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/radiobutton.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/historyselect.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/separator.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/floatmenu.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/sideframe.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/infoframe.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/tab.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/tabpage.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/tabarea.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/table.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/tablerow.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/sidebar.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/infobar.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/frame.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/listmenu.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/expander.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/expandersection.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/progressbar.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/sort.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/waiting.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/contexthelp.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/ui/drag.js?version=1_0_4", '" type="text/javascript"><\/script>');
+
+   document.write('<script src="', "shipping/js/commandset.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/optionset.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/radiogroupset.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/menuset.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/sideframeset.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/infoframeset.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/orderpage.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/orderrow.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/historypage.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/historyrow.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/printpage.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/printlabels.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/printpkglist.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/pkglistrow.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/printslips.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/printrow.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/orderfilter.js?version=1_0_4", '" type="text/javascript"><\/script>');
+
+   document.write('<script src="', "shipping/js/data/xmlrequest.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/datarequest.js?version=1_0_4", '" type="text/javascript"><\/script>');
+	
+   document.write('<script src="', "shipping/js/requests/get-application-settings.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-user-info.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/set-user-info.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-shipping-presets.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/add-shipping-preset.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/remove-shipping-preset.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-service-package-list.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-weights.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-user-preferences.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/set-user-preferences.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-from-addresses.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-printers.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-carriers.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/create-shipment.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/import-shipments.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-shipment-details.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/update-shipment-options.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/change-shipment-status.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/uncombine-shipment.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-removed-shipments.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-rate.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/purchase-labels.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/retrieve-shipping-labels.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/refund-label.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/reprint-label.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/reprint-batch-labels.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-scheduled-carrier-pickups.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/check-carrier-pickup-status.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/cancel-carrier-pickup.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/mark-batch-as-printed.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/combine-shipments.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/requests/get-history.js?version=1_0_4", '" type="text/javascript"><\/script>');
+
+   document.write('<script src="', "shipping/js/data/appsettings.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/servicetype.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/usersettings.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/address.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/userprefs.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/preset.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/printer.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/carrier.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/order.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/history.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/printbatch.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/reprintbatch.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/pickup.js?version=1_0_4", '" type="text/javascript"><\/script>');
+   document.write('<script src="', "shipping/js/data/appdata.js?version=1_0_4", '" type="text/javascript"><\/script>');
+</script>
+
+END UNCONSOLIDATED CODE -->
+
+
+<!-- BEGIN CONSOLIDATED CODE -->
+
+<script>
+	document.write('<script src="', "shipping/js/mos_appcore.js?version=1_0_4", '" type="text/javascript"><\/script>');
+	document.write('<script src="', "shipping/js/mos_app.js?version=1_0_4", '" type="text/javascript"><\/script>');
+	document.write('<script src="', "shipping/js/mos_appdata.js?version=1_0_4", '" type="text/javascript"><\/script>');
+</script>
+
+<!-- END CONSOLIDATED CODE -->
+
+<!-- APP CONTENT -->
+<div id="psMainDiv" style="display: none">
+
+	<!-- LOGO -->
+	<div id="psLogoArea" style="width: 100%; line-height: 65px;">
+		<script>
+
+		</script>
+		<img src='shipping/images/pppship.png'>
+	</div>
+
+	<!-- TOP MENU -->
+	<div id="psMainMenu" class="psMainMenu">
+		<table width="100%">
+			<tr>
+				<td id="psMainMenu_General">
+					<script>
+						var gFileBtn = psCreateMenuButton("psMainMenu_General","FileBtn","psMainMenuButton","FileMenu","File","","");
+						var gEditBtn = psCreateMenuButton("psMainMenu_General","EditBtn","psMainMenuButton","EditMenu","Edit","","");
+						var gViewBtn = psCreateMenuButton("psMainMenu_General","ViewBtn","psMainMenuButton","ViewMenu","View","","");
+						var gHelpBtn = psCreateMenuButton("psMainMenu_General","HelpBtn","psMainMenuButton","HelpMenu","Help","","");
+						gUI.addControl(gFileBtn);
+						gUI.addControl(gEditBtn);
+						gUI.addControl(gViewBtn);
+						gUI.addControl(gHelpBtn);
+					</script>
+				</td>
+				<td id="psMainMenu_Logout" align="right">
+					<script>
+						var gLogoutBtn = psCreatePushButton("psMainMenu_Logout","LogoutBtn","psLogoutButton","Logout","Log Out");
+					</script>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<!-- QUICK MENU -->
+	<div id="psQuickMenu">
+		<script>
+			var gPrintBtn = psCreatePushButton("psQuickMenu","PrintBtn","psQuickMenuButton","PrintLabels","Print","shipping/images/psbtn_print.gif","Print labels, packing lists and packing slips");
+			var gImportBtn = psCreateMenuButton("psQuickMenu","ImportBtn","psQuickMenuButton","ImportMenu","Import","shipping/images/psbtn_import.gif","shipping/images/psbtn_menu_down.gif");
+			var gScheduleBtn = psCreatePushButton("psQuickMenu","ScheduleBtn","psQuickMenuButton","SchedulePickup","Schedule Pickup...","shipping/images/psbtn_schedule.gif","Schedule a shipment pickup");
+			var gClearRemovedBtn = psCreatePushButton("psQuickMenu","ClearRemovedBtn","psQuickMenuButton","ClearRemoved","View Deleted...","shipping/images/psbtn_trash.gif","View deleted orders");
+			gUI.addControl(gPrintBtn);
+			gUI.addControl(gImportBtn);
+			gUI.addControl(gScheduleBtn);
+			gUI.addControl(gClearRemovedBtn);
+		</script>
+	</div>
+
+
+	<!-- MAIN CONTENT -->
+	<div id="psContent">
+		<div id="psTabArea">
+			<div id="psTabBar">
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<!-- 
+*******************************************************************************
+ORDERS PAGE 
+*******************************************************************************
+-->
+<div id="OrdersPage" class="psTabPage" style="display: none">
+	
+	<!-- ORDERS PAGE MENU -->
+	<div id="OrdersMenu" class="psTabMenu">
+		Current View: USPS United States<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator_view.gif">
+		
+		<script>
+			var gOrdersEditBtn = psCreateMenuButton("OrdersMenu","EditOrdersBtn","psTabMenuButton","EditOrdersMenu","Edit","","shipping/images/psbtn_menu_down.gif");
+		</script>
+		
+		<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator.gif">
+		Apply Preset:
+		<select class="psSelect" id="OrdersSelectPreset" onchange="gTabPageOrders.onApplyPreset(this);"></select>
+		&nbsp;<img class='psContextHelpIcon' src='shipping/images/icon_help.gif' title='Click for context help' onclick='psContextHelpShow(event,"CreateApplyPreset");'>
+		<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator.gif">
+		
+		<script>
+			var gOrdersRemovedBtn = psCreatePushButton("OrdersMenu","RemoveOrdersBtn","psTabMenuButton","RemoveOrders","Delete");
+		</script>
+
+	</div>
+
+	<!-- SIDE BARS (RIGHT) -->
+	<script>
+		var gOrdersDetails = new psSideBar("OrdersPage","OrdersDetails","Details");
+		var gOrdersGetStart = new psSideBar("OrdersPage","OrdersGetStart","Get Started");
+		var gOrdersOverview = new psSideBar("OrdersPage","OrdersOverview","Overview");
+
+		gOrdersDetails.hide();
+		gOrdersGetStart.hide();
+		gOrdersOverview.hide();
+	</script>
+
+	<!-- MAIN LIST (LEFT) AREA -->
+	<div id="OrdersListArea">
+		
+		<script>
+			var gOrdersInfoBar = new psInfoBar("OrdersListArea","OrdersInfoBar");
+		</script>
+
+		<div id="OrdersList"></div>
+		<div id="OrdersStatus">x orders to process.  x orders are ready to print labels.</div>
+	</div>
+
+</div>
+
+<!-- ORDER PAGE INFO BAR SECTIONS -->
+<div id="InfoOrdersImported" style="display: none">
+	<table>
+		<tr>
+			<td width='1*'><img src='shipping/images/info.gif' align=left style='margin-right: 10px; vertical-align: middle'></td>
+			<td>
+				<span id="InfoOrdersImportedQty">X</span> Order(s) imported from <span id="InfoOrdersImportedSrc">PayPal</span><br style="clear: none">
+				<span id="InfoOrdersImportedTip"><strong>Tip:</strong> To select multiple rows hold the <strong>Shift or CTRL key</strong> and click.<br style="clear: none"></span>
+				<span id="InfoOrdersNote"></span>
+			</td>
+		</tr>
+	</table>
+</div>
+
+
+
+<!-- ORDER PAGE SIDE BAR SECTIONS -->
+<div id="SideOverviewTips_content" style="display: none">
+	<div style="margin-left: 10px">Click on a row to select and process<br><br></div>
+	<div style="margin-left: 10px">To select multiple rows hold the Shift or CTRL Key and click.</div>
+</div>
+
+<div id="SideOverviewFeatures_content" style="display: none">
+	<h4><em>Presets</em></h4><div style="margin-left: 10px">Use presets located in the toolbar to create and apply shipping details to similar items.</div>
+	<h4><em>Package List</em></h4><div style="margin-left: 10px">Print a package list by going to the File menu.  The Package List will allow you to match printed labels to their corresponding packages.</div>
+	<h4><em>Carrier Pickup&#0153;</em></h4><div style="margin-left: 10px">Schedule a Carrier Pickup&#0153; to have a USPS carrier pick up packages from your location.<br><br></div>
+</div>
+
+<div id="SideOrdersItem_content" style="display: none">
+	ITEM INFO HERE
+</div>
+
+<div id="SideOrdersShipTo_content" style="display: none">
+	SHIP TO INFO HERE
+</div>
+
+<div id="SideOrdersShipDetails_content" style="display: none">
+	SHIPPING DETAILS HERE
+</div>
+
+<div id="SideOrdersShipDetailsMulti_content" style="display: none">
+	SHIPPING DETAILS HERE
+</div>
+
+<div id="SideOrdersPaid_content" style="display: none">
+	PAYMENT DETAILS HERE
+</div>
+
+<div id="SideOrdersMessage_content" style="display: none">
+	MESSAGE HERE
+</div>
+
+
+
+<!-- 
+*******************************************************************************
+HISTORY PAGE 
+*******************************************************************************
+-->
+<div id="HistoryPage" class="psTabPage" style="display: none">
+	
+	<!-- HISTORY PAGE MENU -->
+	<div id="HistoryMenu" class="psTabMenu">
+		
+		Search:&nbsp;
+		<script>
+			var gHistSearchSel = psCreateHistorySelect("HistoryMenu","HistorySearchSelect","psSelect");
+		</script>
+
+		<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator_view.gif">
+		
+		<script>
+			var gHistoryDetailsBtn = psCreatePushButton("HistoryMenu","HistoryDetailsBtn","psTabMenuButton","HistoryViewDetails","View Details...");
+		</script>
+		
+		<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator.gif">
+		
+		<script>
+			var gHistoryReprintBtn = psCreatePushButton("HistoryMenu","HistoryReprintBtn","psTabMenuButton","HistoryReprint","Reprint...");
+		</script>
+		
+		<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator.gif">
+		
+		<script>
+			var gHistoryVoidBtn = psCreatePushButton("HistoryMenu","HistoryVoidBtn","psTabMenuButton","HistoryVoid","Void");
+		</script>
+
+	</div>
+
+	<!-- SIDE BARS (RIGHT) -->
+	<script>
+		var gHistoryDetails = new psSideBar("HistoryPage","HistoryDetails","Details",psSIDEBAR_STATE_FULL);
+	</script>
+
+	<!-- MAIN LIST (LEFT) AREA -->
+	<div id="HistoryListArea">	
+
+		<!-- TITLES -->
+		<div id="HistorySelectTitle">Search Results</div>
+		<div id="HistoryEventTitle">Transactions/Activity</div>
+
+		<!-- SELECTOR COLUMN -->
+		<div id="HistorySelectArea"></div>
+
+		<!-- EVENT COLUMN -->
+		<div id="HistoryEventArea"></div>
+		
+		<!-- LIST -->
+		<div id="HistoryList"></div>
+
+	</div>
+</div>
+
+<!-- HISTORY PAGE SIDE BAR SECTIONS -->
+<div id="SideHistoryCarrier_content" style="display: none">
+	<div id="SideHistNoPickups">No Carrier Pickups&#0153; scheduled.</div>
+	<div id="SideHistPickupList" style="display: none"></div>
+</div>
+
+<div id="SideHistoryBatch_content" style="display: none">
+	BATCH INFO HERE
+</div>
+
+<div id="SideHistoryPrintedLabel_content" style="display: none">
+	PRINTED LABEL INFO HERE
+</div>
+
+<div id="SideHistoryManual_content" style="display: none">
+	MANUAL ORDER INFO HERE
+</div>
+
+<div id="SideHistoryMulti_content" style="display: none">
+	MULTI ORDER INFO HERE
+</div>
+
+<div id="SideHistoryCarrierDetails_content" style="display: none">
+	<table cellspacing=5 align=left>
+		<tr>
+			<td nowrap align=right>Confirmation Number:</td>
+			<td id="HistSideCarrierConfirmNo"></td>
+		</tr>
+		<tr>
+			<td nowrap align=right>Pickup Date:</td>
+			<td id="HistSideCarrierPickupDate"></td>
+		</tr>
+		<tr>
+			<td nowrap align=right>Number of Packages:</td>
+			<td><span id="HistSideCarrierNoPriority"></span>&nbsp;Via Priority Mail</td>
+		</tr>
+		<tr>
+			<td nowrap align=right>&nbsp;</td>
+			<td><span id="HistSideCarrierNoExpress"></span>&nbsp;Via Priority Mail Express</td>
+		</tr>
+		<tr>
+			<td nowrap align=right>&nbsp;</td>
+			<td><span id="HistSideCarrierNoOther"></span>&nbsp;Via all others</td>
+		</tr>
+		<tr>
+			<td nowrap align=right>Estimated Total Weight:</td>
+			<td><span id="HistSideCarrierTotalWeight"></span>&nbsp;lbs.</td>
+		</tr>
+		<tr>
+			<td nowrap align=right>Location:</td>
+			<td id="HistSideCarrierLocation"></td>
+		</tr>
+		<tr>
+			<td colspan=2 nowrap valign=top align=left>Special Instructions:</td>
+		</tr>
+		<tr>
+			<td colspan=2><textarea id="HistSideCarrierInstruct" rows=5 cols=51 class="psTextarea" readonly></textarea></td>
+		</tr>
+		<tr>
+			<td nowrap valign=top align=right>Pickup Address:</td>
+			<td id="HistSideCarrierPickupAddress"></td>
+		</tr>
+
+	</table>
+</div>
+
+
+<!-- 
+*******************************************************************************
+PRINT PREVIEW PAGE 
+*******************************************************************************
+-->
+<div id="PrintPage" class="psTabPage" style="display: none">
+	
+	<!-- PRINT VIEW SELECTION -->
+	<div class="psTabMenu">
+
+		<span class="psInnerTabMenu">
+			Current View: 		
+			<select class="psSelect" id="PrintSelectView" onchange="gTabPagePrint_onSelectView();">
+				<option value=0>Labels To Print (0)</option>
+				<option value=1>Package List</option>
+				<option value=2>Packing Slips</option>
+			</select>
+
+			<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator_view.gif">
+		
+		</span>
+
+		<!-- PRINT LABELS PAGE MENU -->
+		<span id="PrintLabelsMenu" class="psInnerTabMenu">
+
+			<script>
+				var gPrintPayBtn = psCreateMenuButton("PrintLabelsMenu","PrintPayBtn","psTabMenuButton","PayPrintMenu","Pay & Print","shipping/images/psbtn_print.gif","shipping/images/psbtn_menu_down.gif");
+			</script>
+			
+			<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator.gif">
+			
+			<nobr>Printer:&nbsp;<select class="psSelect" id="PrintLabelsPrinter"></select>
+			<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator.gif"></nobr>
+			
+			<nobr>Mailing Date:&nbsp;<select class="psSelect" id="PrintLabelsMailDate"></select>
+			<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator.gif"></nobr>
+
+			<script>
+				var gPrintRemoveBtn = psCreatePushButton("PrintLabelsMenu","PrintRemoveBtn","psTabMenuButton","RemoveToPrint","Remove","","Remove selected labels from list");
+			</script>
+
+		</span>
+
+		<!-- PRINT PACKAGE LIST PAGE MENU -->
+		<span id="PrintPkgListMenu" class="psInnerTabMenu" style="display: none">
+		
+			<script>
+				var gPrintPkgListBtn = psCreatePushButton("PrintPkgListMenu","PrintPkgListBtn","psTabMenuButton","PkgListDoPrint","Print List...","shipping/images/psbtn_print.gif");
+			</script>
+		
+			<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator.gif">
+
+			Show for Labels Printed on:&nbsp;
+			<script>
+				var gPkgListSearchSel = psCreateHistorySelect("PrintPkgListMenu","PkgListSearchSelect","psSelect");
+			</script>
+
+		</span>
+
+		<!-- PRINT PACKING SLIPS PAGE MENU -->
+		<span id="PrintPackSlipMenu" class="psInnerTabMenu" style="display: none">
+			
+			<script>
+				var gPrintSlipsBtn = psCreateMenuButton("PrintPackSlipMenu","PrintSlipsBtn","psTabMenuButton","PrintSlipsMenu","Print","shipping/images/psbtn_print.gif","shipping/images/psbtn_menu_down.gif");
+			</script>
+
+			<img style="vertical-align: middle; margin: 0px 10px;" src="shipping/images/ps_separator.gif">
+
+			Show for:
+			<select class="psSelect" id="PrintPackSlipSelectFor" name="PrintPackSlipSelectFor" onchange="gFramePrintPackSlips_OnSourceSelect();">
+				<option value="OrdersToShip">Orders to ship</option>
+				<option value="LabelsPrinted">Labels printed</option>
+			</select>
+
+			<span id="PrintPackSlipExtraControls" style="visibility: hidden">
+				&nbsp;on:&nbsp;
+				<script>
+					var gPackSlipSearchSel = psCreateHistorySelect("PrintPackSlipExtraControls","PrintSlipSearchSelect","psSelect");
+				</script>
+			</span>
+
+		</span>
+
+	</div>
+
+	<!-- PRINT LABELS VIEW -->
+	<div id="PrintLabelsView">
+
+		<!-- SIDE BARS (RIGHT) -->
+		<script>
+			var gPrintLabelsDetails = new psSideBar("PrintLabelsView","PrintLabelsDetails","Details",psSIDEBAR_STATE_FULL);
+		</script>
+
+		<!-- MAIN LIST (LEFT) AREA -->
+		<div id="PrintLabelsListArea">	
+
+			<script>
+				var gPrintLabelsInfoBar = new psInfoBar("PrintLabelsListArea","PrintLabelsInfoBar");
+			</script>
+
+			<div id="PrintLabelsList"></div>
+			<div id="PrintLabelsTotal">Grand Total: $X.XX</div>
+
+		</div>
+
+	</div>
+
+	<!-- PRINT PACKAGE LIST VIEW -->
+	<div id="PrintPkgListView" style="display: none">
+		
+		<!-- SIDE BARS (RIGHT) -->
+		<script>
+			var gPrintPkgListDetails = new psSideBar("PrintPkgListView","PrintPkgListDetails","Details",psSIDEBAR_STATE_FULL);
+		</script>
+
+		<!-- LIST AREA -->
+		<div id="PrintPkgListExpander">
+		</div>
+
+	</div>
+	
+	<!-- PRINT PACKING SLIP VIEW -->
+	<div id="PrintPackSlipView" style="display: none">
+		
+		<!-- SIDE BARS (RIGHT) -->
+		<script>
+			var gPrintSlipsDetails = new psSideBar("PrintPackSlipView","PrintPackSlipsDetails","Details",psSIDEBAR_STATE_FULL);
+		</script>
+					
+		<!-- SELECTOR COLUMN -->
+		<div id="PrintPackSlipSelectColumn">
+			<div id="PrintPackSlipSelectTitle">&nbsp;</div>
+			<div id="PrintPackSlipSelectArea"></div>
+		</div>
+
+		<!-- EVENT COLUMN -->
+		<div id="PrintPackSlipShowColumn">
+			<div id="PrintPackSlipShowTitle">&nbsp;Packing Slip</div>
+			<div id="PrintPackSlipShowArea"></div>
+		</div>
+
+	</div>
+
+</div>
+
+<!-- PRINT PAGE INFO BAR SECTIONS -->
+<div id="InfoPrintMaxExceeded" style="display: none">
+	<table border=0><tr>
+		<td width='1*'><img src='shipping/images/info.gif' style='margin-right: 10px'></td>
+		<td>Maximum number of labels that can be selected for printing is <span id="InfoPrintMaxQty">X</span></td>
+	</tr></table>
+</div>
+
+<div id="InfoPrintPurchaseProgress" style="display: none">
+	<div style="margin-left: 10px">
+		Please wait, obtaining tracking numbers...
+	</div>
+	<script>
+		var gPrintLabelsProg = psCreateProgressBar("InfoPrintPurchaseProgress","PrintLabelsProgressBar","PrintProgressBar","85%","12px");
+	</script>
+	<span id="InfoPrintPurchaseETA">0:00</span>
+</div>
+
+<div id="InfoPrintNoFunds" style="display: none">
+	<table border=0><tr>
+		<td width='1*'><img src='shipping/images/error.gif' style='margin-right: 10px'></td>
+		<td>
+			You need to add a credit card or bank account to your PayPal account to pay and print labels.<br>
+			<a id="InfoPrintNoFundsLink" href="javascript:0;" target="_blank">Click here to add funds</a>.
+		</td>
+	</tr></table>
+</div>
+
+<div id="InfoPrintPurchaseErrors" style="display: none">
+	<table border=0><tr>
+		<td width='1*'><img src='shipping/images/error.gif' style='margin-right: 10px'></td>
+		<td>One or more of the labels could not be printed.  Please correct before proceeding.</td>
+	</tr></table>
+</div>
+
+<div id="InfoPrintOrdersPrinted" style="display: none">
+	<table border=0><tr>
+		<td width='1*'><img src='shipping/images/info.gif' style='margin-right: 10px'></td>
+		<td>
+			<span id="InfoPrintOrdersPrintedQty">X</span> orders printed. <span id="InfoPrintOrdersConfirmEmails">Confirmation emails have been sent to the recipients.</span><br>
+			Click <strong>History</strong> tab to view label details or to reprint (within 24 hours), void (within 48 hours) these labels.
+		</td>
+	</tr></table>
+</div>
+
+<!-- PRINT PAGE SIDE BAR SECTIONS -->
+<div id="SidePrintLabelsGetStart_content" style="display: none">
+	<h4><em>Labels</em></h4>
+	<div style="margin-left: 10px">Your shipping label contains all your necessary postage information and allows you to send your package. The label is affixed to your package once you have selected your service type, weight and options such as insurance and Signature Confirmation&trade; service.</div>
+	<h4><em>Package List</em></h4>
+	<div style="margin-left: 10px">A package list is a reference sheet that you can print after your labels have been printed. Each label contains a Package ID number that is listed on the package list. This reference allows you to quickly associate printed labels with packages to ship.</div>
+	<h4><em>Packing Slips</em></h4>
+	<div style="margin-left: 10px">A packing slip is a printable shipping receipt for the purchase of physical goods. It contains details of the items being shipped and can be placed in the package containing the purchase items.</div>
+	
+	<br>
+	<input class="psCheckbox" style="margin-left: 10px" type=checkbox id="PrintGetStartHideChk" onclick="gFramePrintLabels.onHideGetStart(this);">&nbsp;Do not show this message again
+</div>
+
+<div id="SidePrintLabelsPayDetails_content" style="display: none">
+	Debit PayPal account
+</div>
+
+<div id="SidePrintLabelsPrintOther_content" style="display: none">
+	Print corresponding documents by selecting and clicking Print.  Go to Edit menu and Settings to turn auto print on or off.
+	<div style="margin-left: 10px; margin-top: 10px;">
+		<input class="psCheckbox" type="checkbox" id="PrintOtherPackageList" name="PrintOtherPackageList" value="PackageList" onclick="gUI.refreshState();">
+		<span id="PrintOtherPackageListText">Package List </span>
+		<img class='psContextHelpIcon' src='shipping/images/icon_help.gif' title='Click for context help' onclick='psContextHelpShow(event,"AutoPrintPkgList");'><br> 
+		<input class="psCheckbox" type="checkbox" id="PrintOtherPackingSlips" name="PrintOtherPackingSlips" value="PackingSlip" onclick="gUI.refreshState();">
+		<span id="PrintOtherPackingSlipsText">Packing Slips </span>
+		<img class='psContextHelpIcon' src='shipping/images/icon_help.gif' title='Click for context help' onclick='psContextHelpShow(event,"AutoPrintPackSlips");'><br> 
+		<input class="psCheckbox" type="checkbox" id="PrintOtherReceipt" name="PrintOtherReceipt" value="Receipt" onclick="gUI.refreshState();">
+		<span id="PrintOtherReceiptText">Receipt </span>
+		<img class='psContextHelpIcon' src='shipping/images/icon_help.gif' title='Click for context help' onclick='psContextHelpShow(event,"AutoPrintReceipt");'><br><br>
+	</div>
+</div>
+
+<div id="SidePrintPkgList_content" style="display: none">
+	Package List enables you to match your inventory with the printed labels.  Simply refer to the Package ID number printed on both.<br><br>
+	<div id="PackageListPreview"></div>
+</div>
+
+<div id="SidePrintPackSlips_content" style="display: none">
+A Packing Slip is a printable shipping receipt for the purchase of physical goods. It contains a summary of the transaction details for the buyer and seller. The receipt lists the goods being shipped and any optional information you provide.  You can create a Packing Slip for any item you have sold and include it in the package for shipping.
+</div>
+
+<script type="text/javascript">
+	
+	//********************************************************
+	//DO NOT MESS WITH, AUTO INCREMENTED BY CANDO BUILD SCRIPT
+	var gMOS_VERSION = '1.0.4';
+	//********************************************************
+
+	var gDebugWin = null;
+	var gDebugFrame = null;
+	var gDebugVis = "hidden";
+	
+	//needed for dragging
+	var gDragObject = new Object;
+	gDragObject.oWin = window;
+	gDragObject.oDoc = document;
+
+	//-------------------------------------------------------------------------
+	window.onload = function() 
+	{
+		//detect browser version and disable tool completely if an incompatible version is detected.
+		var sComp = psIsCompatibleBrowserAndVersion();
+
+		if(sComp)
+		{
+			var oEl = document.getElementById("psAppLoadingDiv");
+			oEl.innerHTML = "<table width=300 cellpadding=10 style='border-top: 1px solid #336699; border-left: 1px solid #336699; border-right: 2px solid #336699; border-bottom: 2px solid #336699; margin: 20px;' align=center border=0><tr><td align=left><img src='shipping/images/pppship.png'></td></tr><tr><td align=left><strong><em>Browser Compatability Warning:</em></strong><br><br>" + sComp + "</td></tr><tr><td height=20></td><tr><tr><td colspan=2 align=right><input type=button value='Close window' onclick='window.close();'>&nbsp;<input type=button value='Continue' onclick='window.doLoad();'>&nbsp;</td></tr></table>";
+			return;
+		}
+		else
+		{
+			window.doLoad();
+		}
+	}
+
+	//-------------------------------------------------------------------------
+	window.doLoad = function()
+	{
+
+		//set main window
+		gAppData.oMainWindow = window;
+
+		//account no
+        var oReqQueryStr = new psQueryString();
+        gAppData.sAccountNumber = oReqQueryStr.get("account_number");
+
+		//ebay account no
+        gAppData.sEbayUserName = oReqQueryStr.get("ebay_id");
+		
+		//disable text selection for browsers that support it
+		document.onselectstart = function() {return false;} // ie
+		
+		//DRAG CODE
+		document.onmousemove = psDrag_MouseMove;
+
+		//initilaize main systems
+		gUI.initialize("psContent");
+		gTabArea.initialize("psContent","psTabArea","psTabBar");
+		gMenus.initialize();
+
+		//add pages into tab area
+		gTabArea.addPage(gTabPageOrders, gTabOrders);
+		gTabArea.addPage(gTabPageHistory, gTabHistory);
+		gTabArea.addPage(gTabPagePrint, gTabPrint);
+		gTabArea.hidePage("PrintPage");
+
+		//set first page as default active page
+		gTabArea.activatePage("OrdersPage");
+
+		//show the content
+		var oElLoad = document.getElementById("psAppLoadingDiv");
+		oElLoad.style.display = "none";
+		
+		var oElMain = document.getElementById("psMainDiv");
+		oElMain.style.display = "";
+
+		//refresh and resize to make sure eveything is ready to go
+		gUI.refreshState();
+		gUI.onResize();
+		
+		gAppData.initializeData();
+
+		///position waiting frame
+		gEvents.attachEvent("OnResize",psWaitingFrame_OnResize);		
+		gEvents.attachEvent("OnResize",psLogoutFrame_OnResize);		
+		gEvents.attachEvent("OnResize",psTimeoutFrame_OnResize);
+		gEvents.attachEvent("OnResize",psContextHelp_OnResize);
+
+		//load context help IFRAME with version querystring to enforce reload on new versions
+		var oHlpDiv = document.getElementById("psContextHelpFrameDiv");
+		if(oHlpDiv)
+		{
+			var oHlpFrm = document.createElement("IFRAME")
+			oHlpFrm.id = "psContextHelpFrame";
+			oHlpFrm.name = "psContextHelpFrame";
+			oHlpFrm.width = "100%";
+			oHlpFrm.height = "100%";
+			oHlpFrm.scrolling = "no";
+			oHlpFrm.marginWidth = 0;
+			oHlpFrm.marginHeight = 0;
+			oHlpFrm.frameBorder = 0;
+			oHlpFrm.src = "contexthelp.html?version=" + escape(gMOS_VERSION.replace(/\./g,"_"));
+
+			oHlpDiv.appendChild(oHlpFrm);
+		}
+	}
+
+	//-------------------------------------------------------------------------
+	window.onunload = function()
+	{
+		gUI.onUnload();
+		if(gDebugWin) gDebugWin.close();
+	}
+
+	//-------------------------------------------------------------------------
+	window.onresize = function() 
+	{
+		try
+		{
+			gUI.onResize();
+		}
+		catch (err)
+		{
+			//nada
+		}
+	}
+
+	//-------------------------------------------------------------------------
+	function psDoLogout()
+	{
+		try
+		{
+			if(window.opener)
+			{
+				window.opener.location = psLOGOUT_URL;
+			}
+			else
+			{
+				window.open(psLOGOUT_URL);
+			}
+		}
+		catch (err)
+		{
+			window.open(psLOGOUT_URL);
+		}
+
+		window.focus();
+	}
+
+	//-------------------------------------------------------------------------
+	function psDoTimeoutLogin()
+	{
+		try
+		{
+			if(window.opener)
+			{
+				window.opener.location = psTIMEOUT_URL;
+			}
+			else
+			{
+				window.open(psTIMEOUT_URL);
+			}
+		}
+		catch (err)
+		{
+			window.open(psTIMEOUT_URL);
+		}
+
+		window.close();
+	}
+
+	//-------------------------------------------------------------------------
+	function psToggleDebugWindow()
+	{
+		if(gDebugVis == "hidden") gDebugVis = "visible";
+		else gDebugVis = "hidden";
+		
+		gDebugFrame.parentNode.style.visibility = gDebugVis;
+	}
+
+</script>
+
+</body>
+</html>

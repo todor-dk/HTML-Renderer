@@ -1,0 +1,306 @@
+<html>
+<!-- no doctype found, outputting delayed lines -->
+<!-- Start of login.htm --><!-- delayed after doctype-->
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+<link id="the_css" rel="stylesheet" type="text/css" href="/surgeweb/5502682008/login.css"/>
+
+<script>
+
+function stopEvent(e) {
+	if(!e) alert('invalid stopEvent call');
+
+	//e.cancelBubble is supported by IE - this will kill the bubbling process.
+	e.cancelBubble = true;
+	e.returnValue = false;
+
+	//e.stopPropagation works only in Firefox.
+	if (e.stopPropagation) {
+		e.stopPropagation();
+		e.preventDefault();
+	}
+}
+function report_string()
+{
+	return 	'\n\nIf you were expecting your browser to be supported please report this string to your support staff:\n'+
+			'>> '+navigator.userAgent;
+}
+
+function check_mode(e)
+{
+	var unsup = 'allow';
+
+	if (document.main.interface_ex.value=='ajax' && !valid_browser){
+		if(unsup=='allow'){
+			alert('You are using surgeweb with an untested or unsupported browser. Server policy allows this and it may work or more likely, it may result in very broken behaviour. ( allow / disallow forced login with surgeweb admin setting "unsupported_browser" )'+report_string());
+		}else{
+			var action = 'unknown unsupported_browser value.';
+			var url;
+			var stop_evt;
+			switch(unsup){
+				case 'webmail':
+					action = 'switching interface to older webmail.';
+					url = '/scripts/webmail.exe?cmd=login&frames=true&user='+document.main.username_ex.value+'&pass='+document.main.password.value;
+					stop_evt = true;
+					break;
+				case 'basic':
+					action = 'switching interface to surgeweb basic.';
+					document.main.interface_ex.value = 'html';
+					break;
+				case 'deny':
+					action = 'login denied.';
+					stop_evt = true;
+					break;
+			}
+
+			alert('Sorry server policy only allows explicitly supported browsers, '+action+report_string());
+
+			if (url) window.location.href=url;
+			if (stop_evt){
+				stopEvent(e);
+				return false;
+			}
+		}
+	}
+	if(e.altKey){
+		document.main.devt_mode.value="true";
+	}
+	if(e.shiftKey && e.ctrlKey){
+		document.main.update_cache.value="true";
+	}
+	if (e.ctrlKey&&(e.altKey||e.metaKey)){
+		document.main.disable_markread_fld.value="true";
+	}
+
+	var node_id;
+	if (document.main.interface_ex.value=="ajax") node_id="loading_ajax";
+	if (document.main.interface_ex.value=="html") node_id="loading_html";
+	var node = document.getElementById(node_id);
+	if (node) {
+		node.className="";
+		document.body.className="";
+	}
+//	var atIndex = document.main.username_ex.value.indexOf("@");
+//	if(atIndex != -1) {
+//		var domain = document.main.username_ex.value.substring(atIndex + 1);
+//		document.main.action = location.protocol + "//mail." + domain + "/surgeweb";
+//		//document.main.action = "http://mail." + domain + "/surgeweb";
+//	}
+}
+function fsubmit(cmd) {
+	document.main.cmd.value = cmd;
+	document.main.submit();
+	document.main.cmd.value = "";
+}
+function switch_look(input)
+{
+  var el=document.getElementById("the_css");
+  el.parentNode.removeChild(el);
+
+  var html_doc = document.getElementsByTagName('head').item(0);
+  el = document.createElement('link');
+  el.setAttribute('rel','stylesheet');
+  el.setAttribute('type','text/css');
+  el.setAttribute('href',input.value);
+  el.id='the_css';
+  html_doc.appendChild(el);
+}
+function select_interface(input)
+{
+	document.getElementById("bad_browser").style.display="none";
+	if(input.value=='ajax')
+		browser_check();
+}
+function select_lang(input)
+{
+	if(input.value=='more...'){
+		input.value=document.main.lang_last.value;
+		document.main.lang_showall.value='true';
+		alert('Adding all SurgeWeb\'s included languages with demonstration "partial translations" to the language selection dropdown.');
+	}
+	fsubmit('logout')
+}
+
+var valid_browser = false;
+function browser_check()
+{
+	what_browser();
+	// Only hide browser warning for positively identified 
+	if (isIEok || isFFok || isSAFok || isGCok){
+		document.getElementById("bad_browser").style.display="none";
+		valid_browser = true;
+	}else{
+		document.getElementById("bad_browser").style.display="";
+		valid_browser = false;
+	}
+}
+var isFFok, isIEok, isSAFok, isGCok;
+function what_browser()
+{
+	var UA = navigator.userAgent.toLowerCase();
+
+	isFFok = UA.indexOf('firefox/') != -1 && parseInt(UA.substring(UA.indexOf('firefox/')+8))>=3;
+	isIEok = UA.indexOf('msie ') != -1 &&  parseInt(UA.substring(UA.indexOf('msie ')+5))>=7;
+	isGCok = UA.indexOf('chrome') != -1;
+	if(UA.indexOf('safari/') != -1 && !isGCok){
+		var ver=parseInt(UA.substring(UA.indexOf('safari/')+7));
+		isSAFok = (ver>525 || parseInt(UA.substring(UA.indexOf('version/')+8))>=3);
+	}
+}
+
+function do_init()
+{
+	window.focus();
+	document.main.username_ex.focus();
+	document.body.className='body_bg2';
+
+	check_cookies();
+
+	if(window.login_init) login_init();
+}
+function check_cookies(){
+	var x=document.location.href;
+	if(x.indexOf('?')>0)
+		x=x.substring(0,x.indexOf('?'));
+	if(x.indexOf('.')==-1){
+		document.getElementById("cookie_warning").className="";
+		document.getElementById("the_url").innerHTML=x;
+		document.main.cmd_login.disabled="true";
+	}
+}
+function surgeweb_login(user,pass,opt)
+{
+	var f=document.forms.main;
+	if(!f||!f.username_ex) return;
+	f.username_ex.value=user;
+	f.password.value=pass;
+	if(opt){
+		if(opt.folder) f.fld_id.value=opt.folder;
+	}
+	f.cmd.value='login';
+	f.submit();
+}
+function action_login(e)
+{
+	var f=document.forms.main;
+	f.submit();
+	stopEvent(e);
+}
+</script>
+
+<style type="text/css">
+	 #loading_ajax,#loading_html{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1000;background-color:#fff;}
+	 .msg1{position:absolute;left:20px;top:30px;font-size:14px;font-weight:bold;color:#000}
+	 .msg2{position:absolute;right:20px;bottom:30px;font-size:12px;font-weight:normal;color:#000}
+</style>
+  <title>WebMail Login</title>
+</head>
+
+<body onload="do_init();" class="body_bg">
+
+<div id="loading_ajax" class="hidden">
+  <div class="msg1">Loading SurgeWeb email, logging in ...</div>
+  <div class="msg2">Loading standard (Web 2.0) interface | Load basic HTML interface (for slow computers)</div>
+</div>
+<div id="loading_html" class="hidden">
+  <div class="msg1">Loading SurgeWeb email,</div>
+  <div class="msg2">Loading basic interface</div>
+</div>
+
+<div id="cookie_warning" class="hidden" style='background:white;border:1px solid black;width:550px;padding:3px;margin:auto;'>
+  <div style="color:red;"><b>WARNING: SurgeWeb requires the use of cookies!</b></div>
+  <div>Browsers do not send these cookies for hostnames that do not contain a dot.</div>
+  <div style="margin:5px"><b>This means SurgeWeb will not work this url: <span id="the_url"></span></b></div>
+  <div>Valid urls would be: http://mydomain.com/surgeweb or http://my.server.ip.address/surgeweb or even http://127.0.0.1/surgeweb</div>
+</div>
+<form action="/surgeweb" method="POST" name="main">
+<input type=hidden name="cmd" value="">
+<input type=hidden name="devt_mode" value="">
+<input type=hidden name="live_id" value="">
+<input type=hidden name="domain_ex" value="">
+<input type=hidden name="update_cache" value="">
+
+<div id="container" style="border-width:0px">
+<div id="content" style="border-width:0px;margin:auto;width:450px;background-color:#ffffff;align:center">
+<h3><img src="/scripts/image.pl" alt="WebMail"></h3>
+<fieldset>
+        <legend>Welcome to WebMail</legend>
+
+        <div class="formrow">
+<span class="prompt"><label for="user">Email Address</label></span>
+                <div class="element"><input type="text" name="username_ex" value="" tabindex="1">
+</div>
+        </div>
+
+        <div class="formrow">
+                <span class="prompt"><label for="user">Password</label></span>
+                <div class="element"><input type="password" name="password" tabindex="2">
+</div>
+        </div>
+                <div class="formrow">
+                        <span class="prompt"><label for="user">Template Set</label></span>
+                        <div class="element">
+<select name="interface_ex" onchange="select_interface(this)">
+	<option value="ajax">Standard </option>
+	<option value="html">Basic</option>
+	<option value="mobile">Mobile</option>
+ </select>
+</div>
+        </div>
+
+        <div class="formrow">
+                <span class="prompt"><label for="_tpl_lang">Language</label></span>
+                <div class="element">
+ <select name="language" onchange="select_lang(this);">
+		<option value="English US">English
+				<option value="French" >French
+				<option value="Portuguese" >Portuguese
+				<option value="Danish" >Danish
+				<option value="Dutch" >Dutch
+				<option value="German" >German
+				<option value="Spanish" >Spanish
+				</select>
+ </div>
+        </div>
+
+        <div class="formrow">
+                <span class="prompt"><label for="user">Remember Me</label></span>
+                <div class="element"><input name="remember" id="remember" type="checkbox">
+</div>
+        </div>
+	        <div class="formrow">
+                <span class="prompt">&nbsp;</span>
+                <div class="element">
+			<input name="cmd_login" class="loginbutton" id="cmd_login" value="Log in" onclick="check_mode(event); checkaddress();" tabindex="3" type="submit">
+                        <!-- <input type="image" src="/getmail.gif" value="Login" alt="Login" name="cmd_login" id="cmd_login" tabindex="3" style="border-width: 0px;" onClick="check_mode(event); checkaddress();" /> -->
+                </div>
+        </div>
+</fieldset>
+<div id="bad_browser" style="text-align:left;">
+ 	<div style="padding-top:5px; padding-bottom:5px;">
+ 	Browser: <span style="color:red;font-weight:bold;font-style:italic;">FAILED TEST</span>
+ 	</div>
+ 	<div style="font-size:0.9em;">
+ 	Note: <font style="color:red;">A modern browser is needed to use the standard (Ajax/Web 2.0) interface.</font> <br>
+ 	&nbsp;&nbsp;- Tested to work: IE7+, Safari 3.1+, Firefox 3.0+, Google Chrome 1+<br>
+
+ 	&nbsp;&nbsp;- Mostly works in : Opera 9.51, Firefox 2.0, Camino 1.69<br>
+ 	&nbsp;&nbsp;- Will NOT work in : various other older browsers including IE6<br>
+	</div>
+ 	<div style="padding-top:5px; padding-bottom:5px;">
+ 	Note: Other modern browsers such as recent Opera etc will probably work but need further compatibility testing & development
+ 	</div>
+ 	</div>
+</div>
+<script>
+	browser_check();
+	document.write('<input type="hidden" name="tz" value="'+(-((new Date()).getTimezoneOffset())/60*100)+'" />');
+</script>
+
+</form>
+</div>
+</body>
+</html>
+
+
+<!-- End of login.htm -->

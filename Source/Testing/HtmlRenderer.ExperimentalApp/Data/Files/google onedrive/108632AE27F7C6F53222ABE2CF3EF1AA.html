@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>OneDrive Dev Center - Connect to files in OneDrive and SharePoint</title>
+  <meta name="description" content="Getting started programming with the OneDrive REST API">
+  <meta name="keywords" content="getting started onedrive rest api programming C# ios android rest http">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="stylesheet.nav.css" />
+  <link rel="icon" href="https://d.sfx-df.ms/images/favicon.ico" type="image/x-icon">
+  <link rel="mask-icon" href="https://d.sfx-df.ms/images/mask_icon.svg" color="#094AB2">
+  <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.2.1/anchor.min.js"></script>
+  
+</head>
+
+<body>
+
+    <div id="holder">
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.htm">
+                <img src="images/onedrive_api_blue.png" height="24" alt="OneDrive API" align="absmiddle">
+            </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="index.htm">Home</a></li>
+                <li  class="active" ><a href="#">Documentation</a></li>
+                <li ><a href="sdks.htm">SDKs</a></li>
+                <li ><a href="sample-code.htm">Samples</a></li>
+                <li ><a href="app-registration.htm">App Registration</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right hidden-sm visible-md visible-lg">
+                <li><a href="https://github.com/OneDrive/onedrive-api-docs/blob/master/README.md">Edit on GitHub</a></li>
+            </ul>
+        </div>
+        <!--/.nav-collapse -->
+    </div>
+</nav>
+
+<!-- HTML Page Content Start -->
+<div class="container wrapper" id="body">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-9"><h1 id="connect-to-files-in-onedrive-and-sharepoint">Connect to files in OneDrive and SharePoint</h1>
+<p><a href="#continuous-documentation-validation"><img src="https://ci.appveyor.com/api/projects/status/jummmj5gb9q28lfr?svg=true" alt="Documentation validation and build status" /></a></p>
+<p>The OneDrive developer platform provides services and tools to connect your application to files across Office 365, including:</p>
+<ul>
+<li><strong>OneDrive personal</strong></li>
+<li><strong>OneDrive for Business</strong></li>
+<li><strong>SharePoint Online</strong></li>
+<li><strong>SharePoint Server 2016</strong></li>
+</ul>
+<p>The OneDrive developer platform allows your solution to work with files across the Office 365 ecosystem and write the same code to enable solutions for consumers to enterprise customers.
+OneDrive APIs are a part of the <a href="https://graph.microsoft.com" target="_blank">Microsoft Graph</a>, a common API for Microsoft services.</p>
+<p>Our platform consists of several components, designed to build on one another to making building apps and solutions easy.</p>
+<ul>
+<li><a href="sdks.htm">OneDrive file pickers</a>, which enable your app to open and save from OneDrive using the native OneDrive user experience and minimal code.</li>
+<li><a href="https://graph.microsoft.io/code-samples-and-sdks" target="_blank">Microsoft Graph SDKs</a>, a set of client libraries which make accessing files from the Microsoft Graph straightforward.</li>
+<li><a href="https://graph.microsoft.io/docs" target="_blank">Microsoft Graph APIs</a>, a collection of REST APIs your app can call directly instead of using an SDK.</li>
+</ul>
+<p>For existing solutions using OneDrive API outside of Microsoft Graph, or solutions targeting SharePoint Server 2016, see <a href="direct-endpoint-differences.htm">direct endpoint differences</a> for more context on reading this documentation.</p>
+<h2 id="getting-started">Getting started</h2>
+<p>To quickly experiment with Microsoft Graph and accessing files, check out the <a href="https://graph.microsoft.io/en-us/graph-explorer?request=me%2Fdrive%2Froot%2Fchildren&amp;method=GET&amp;version=v1.0" target="_blank">Graph Explorer</a> and the <a href="https://graph.microsoft.io/getting-started" target="_blank">Microsoft Graph Quick Start</a>.</p>
+<p>OneDrive provides two top-level types that represent addressible resources in the API:</p>
+<ul>
+<li><a href="resources/drive.htm">drive</a> <em>(top-level object)</em></li>
+<li><a href="resources/item.htm">driveItem</a> <em>(files and folders)</em></li>
+</ul>
+<p>The following is an example of a <strong>driveItem</strong> resource.</p>
+<!-- {"blockType": "example", "@odata.type": "oneDrive.item", "truncated": true, "name": "item-example"} -->
+<pre><code class="json">{
+  &quot;@microsoft.graph.downloadUrl&quot;:&quot;http://public-sn3302.files.1drv.com/y2pcT7OaUEExF7EHOl&quot;,
+  &quot;createdDateTime&quot;: &quot;2014-10-31T03:37:04.72Z&quot;,
+  &quot;eTag&quot;: &quot;aRDQ2NDhGMDZDOTFEOUQzRCE1NDkyNy4w&quot;,
+  &quot;id&quot;:&quot;D4648F06C91D9D3D!54927&quot;,
+  &quot;lastModifiedBy&quot;: {
+    &quot;user&quot;: {
+      &quot;displayName&quot;: &quot;daron spektor&quot;,
+      &quot;id&quot;: &quot;d4648f06c91d9d3d&quot;
+    }
+  },
+  &quot;name&quot;:&quot;BritishShorthair.docx&quot;,
+  &quot;size&quot;:35212,
+  &quot;file&quot;: {
+    &quot;hashes&quot;:{
+      &quot;sha1Hash&quot;:&quot;cf23df2207d99a74fbe169e3eba035e633b65d94&quot;
+    }
+  }
+}
+</code></pre>
+
+<p>Data about a resource is provided in three ways:</p>
+<ul>
+<li><em>Properties</em> (like <strong>id</strong> and <strong>name</strong>) expose simple values.</li>
+<li><em>Facets</em> (like <strong>file</strong> and <strong>photo</strong>) expose complex values. 
+  The presence of facets on an item generally indicate behaviors or capabilities of an item and related properties.</li>
+<li><em>References</em> (like <strong>children</strong>) point to collections of other resources.</li>
+</ul>
+<p>Many requests can be tailored to include additional data or remove unused properties from the responses.
+OneDrive uses <a href="odata/optional-query-parameters.htm">optional query parameters</a> to enable this functionality.
+Throughout the documentation, each request provides more context about which parameters are supported.</p>
+<p>By default, most properties and facets are returned while all references are hidden.
+For efficiency, we recommend that you specify <em>select</em> and <em>expand</em> for the data you care about.</p>
+<p>For details about resources and facets, see <a href="resources/resources.htm">Resources</a> and <a href="facets/facets.htm">Facets</a>.</p>
+<h3 id="microsoft-graph-root-resources">Microsoft Graph root resources</h3>
+<p>Within the Microsoft Graph, the OneDrive functionality is available from several root resources.
+These resources correspond to where OneDrive and SharePoint document libraries are available within Office 365.
+The follow entities in Microsoft Graph may contain one or more drives:</p>
+<table>
+<thead>
+<tr>
+	<th>Entity</th>
+	<th>Example Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td><a href="https://graph.microsoft.io/en-us/docs/api-reference/v1.0/resources/users" target="_blank">User</a></td>
+	<td><code>/v1.0/users/{id}</code> or <code>/v1.0/me</code></td>
+</tr>
+<tr>
+	<td><a href="https://graph.microsoft.io/en-us/docs/api-reference/v1.0/resources/group" target="_blank">Group</a></td>
+	<td><code>/v1.0/groups/{id}</code></td>
+</tr>
+<tr>
+	<td><a href="https://graph.microsoft.io/en-us/docs/api-reference/v1.0/resources/site" target="_blank">Site</a></td>
+	<td><code>/v1.0/sites/{id}</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="onedrive-root-resources">OneDrive root resources</h3>
+<p>When addressing a Microsoft Graph root resource, your app can address OneDrive resources using the following paths:</p>
+<table>
+<thead>
+<tr>
+	<th>Path</th>
+	<th>Resource</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td><a href="drives/default.htm"><code>/drive</code></a></td>
+	<td>User's default <a href="resources/drive.htm">drive</a>.</td>
+</tr>
+<tr>
+	<td><a href="drives/list-drives.htm"><code>/drives</code></a></td>
+	<td>List <a href="resources/drive.htm">drive</a> resources available to the authenticated user.</td>
+</tr>
+<tr>
+	<td><a href="drives/get.htm"><code>/drives/{drive-id}</code></a></td>
+	<td>Access a specific <a href="resources/drive.htm">drive</a> by its ID.</td>
+</tr>
+<tr>
+	<td><a href="items/list.htm"><code>/drives/{drive-id}/root/children</code></a></td>
+	<td>List items in the root of a specific <a href="resources/drive.htm">drive</a>.</td>
+</tr>
+<tr>
+	<td><a href="items/get.htm"><code>/drive/items/{item-id}</code></a></td>
+	<td>Access a <a href="resources/item.htm">driveItem</a> by its ID.</td>
+</tr>
+<tr>
+	<td><a href="items/special_folders.htm"><code>/drive/special/{special-id}</code></a></td>
+	<td>Access a <a href="items/special_folders.htm">known folder</a> by its known name.</td>
+</tr>
+<tr>
+	<td><a href="shares/shares.htm"><code>/shares/{share-id}</code></a></td>
+	<td>Access a <a href="resources/item.htm">driveItem</a> by its <strong>shareId</strong> or a sharing URL.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="path-based-addressing-within-a-drive">Path-based addressing within a drive</h3>
+<p>A <strong>driveItem</strong> can be addressed by either a unique identifier or where that item exists in the drive's hierarchy (i.e. user path).
+Within an API request, a colon can be used to shift between <em>API path space</em> and <em>user path space</em>.
+This syntax is valid for any <a href="resources/item.htm">driveItem</a> addressed via the API space.</p>
+<p>You can also transition back to <em>API path space</em> by using a colon at the end of the <em>file system path space</em>.
+Ensure user data within the URL follows the <a href="misc/addressing.htm">addressing and path encoding</a> requirements.</p>
+<table>
+<thead>
+<tr>
+	<th>Path</th>
+	<th>Resource</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td><code>/drive/root:/path/to/file</code></td>
+	<td>Access a <a href="resources/item.htm">driveItem</a> by path under the root.</td>
+</tr>
+<tr>
+	<td><code>/drive/items/{item-id}:/path/to/file</code></td>
+	<td>Access a <a href="resources/item.htm">driveItem</a> by its path relative to another item.</td>
+</tr>
+<tr>
+	<td><code>/drive/root:/path/to/folder:/children</code></td>
+	<td>List children when accessing by path relative to the drive root.</td>
+</tr>
+<tr>
+	<td><code>/drive/items/{item-id}:/path/to/folder:/children</code></td>
+	<td>List children when accessing by path relative to another item.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="shared-folders-and-remote-items">Shared folders and remote items</h3>
+<p>OneDrive personal allows a user to add one or more shared items from another drive to their OneDrive.
+These shared items appear as a <strong>driveItem</strong> in the <code>children</code> collection with a <a href="facets/remoteitem_facet.htm">remoteItem facet</a>.</p>
+<p>In addition, scenarios where items are returned from outside the target drive will also include a <strong>remoteItem</strong> facet.
+These items may also be returned from <a href="items/search.htm">search</a>, <a href="drives/recent_files.htm">recent files</a>, <a href="drives/shared_with_me.htm">shared with me</a>.</p>
+<p>For more information on working with shared folders and remote items, see <a href="misc/working-with-links.htm">Remote items and shared folders</a>.</p>
+<h3 id="sharing-and-permissions">Sharing and permissions</h3>
+<p>One of the most common actions for OneDrive and SharePoint is sharing items with other people.
+OneDrive allows your app to create <a href="items/sharing_createLink.htm">sharing links</a>, <a href="items/invite.htm">add permissions, and send invitations</a> to items stored in a drive.</p>
+<p>OneDrive also provides a way for your app to <a href="shares/shares.htm">access shared content</a> directly from the sharing link.</p>
+<p>For more details on how to share and consume shared content, see <a href="items/sharing.htm">Sharing items in OneDrive</a>.</p>
+<h2 id="webhooks-and-notifications">Webhooks and notifications</h2>
+<p><a href="webhooks/webhooks.htm">OneDrive supports sending webhook-style push notifications</a> when the contents of a OneDrive is changed.
+Your app can use these notifications to track changes in near real-time instead of polling the server for changes.</p>
+<h2 id="programming-notes">Programming notes</h2>
+<h3 id="api-compatibility">API Compatibility</h3>
+<p>OneDrive will continue to evolve and gain additional functionality.
+The API path includes a version number to protect your app against breaking changes.
+When a breaking change is required, the API version number will be incremented.
+Existing apps calling the original version number will remain unaffected by the change.
+See the <a href="https://graph.microsoft.io" target="_blank">Microsoft Graph support policy</a> for information about how long a version of the API is supported.</p>
+<p>A breaking change is a change in the format of a request or response that removes or alters an existing <em>documented</em> behavior or removes an element of a resource's definition.
+It is not a breaking change to add additional actions, properties, facets, or references to a resource.</p>
+<p>It is possible that the API will expose additional undocumented features from time to time.
+These features should not be utilized until they are documented.
+Do not assume that current behavior that deviates from the documentation will persist.</p>
+<p>We will continue to make non-breaking changes to the existing version of the API, including adding facets, properties, and resources to the API.
+As such, any code calling the API needs to:</p>
+<ul>
+<li>Be resilient to additional properties being added to JSON responses.
+  Ignoring them is OK.</li>
+<li>Have no dependency on the order of properties returned in JSON responses.</li>
+<li>Use documented API paths, resources, properties, and enumerated values only.
+  Non-documented values are not guaranteed to remain consistent.</li>
+<li>All URLs returned by OneDrive API should be treated as opaque URLs. 
+  Your app should not make any assumptions about format or parameters in these URLs.
+  They are subject to change without notice.</li>
+</ul>
+<h3 id="throttling">Throttling</h3>
+<p>OneDrive has limits in place to make sure that individuals and apps do not adversely affect the experience of other users.
+When an activity exceeds OneDrive's limits, API requests will be rejected for a period of time.
+OneDrive may also return a <em>Retry-After</em> header with the number of seconds your app should wait before sending more requests.</p>
+<pre><code>HTTP/1.1 429 Too Many Requests  
+Retry-After: 3600
+</code></pre>
+
+<h3 id="working-with-onenote-notebooks">Working with OneNote Notebooks</h3>
+<p><strong>Note:</strong> Although OneDrive stores OneNote notebooks, you shouldn't use the OneDrive API to work with OneNote notebooks.
+Instead, use the <a href="http://dev.onenote.com" target="_blank">OneNote API</a>.</p>
+<h2 id="continuous-documentation-validation">Continuous documentation validation</h2>
+<p>As part of our commitment to high quality documentation, we've developed a process through which the samples and examples in our documentation are tested for validity as part of every check-in.
+We call this continuous documentation validation.</p>
+<p>Each time a change to our documentation is made, we validate that everything works as documented in the service.
+When we create a new build of the service, we validate that the examples in our documentation also continue to work.
+This helps us ensure that everything we document works and works as expected even as new updates are made available.</p>
+<p>For the latest build details, check out the <a href="https://ci.appveyor.com/project/OneDrive/onedrive-api-docs" target="_blank">AppVeyor build status page for our documentation repository</a>.</p>
+<h2 id="related-topics">Related topics</h2>
+<p>The following topics contain high level overviews of other concepts that apply to the OneDrive API.</p>
+<ul>
+<li><a href="auth/readme.htm">Authentication and sign in</a></li>
+<li><a href="misc/addressing.htm">Addressing resources</a></li>
+<li><a href="misc/case-sensitivity.htm">Case sensitivity</a></li>
+<li><a href="misc/errors.htm">Error responses</a></li>
+<li><a href="misc/verb-tunneling.htm">HTTP verb tunneling</a></li>
+<li><a href="terms-of-use.htm">Terms of use</a></li>
+</ul>
+<!-- {
+  "type": "#page.annotation",
+  "description": "Getting started programming with the OneDrive REST API",
+  "keywords": "getting started onedrive rest api programming C# ios android rest http",
+  "section": "documentation",
+  "tocPath": "Overview",
+  "tocIndex": -100
+} -->
+</div>
+        <div id="tocbar" class="col-md-3 visible-md visible-lg" style="display: none" data-section="documentation"></div>
+    </div>
+</div>
+<!-- HTML Page Content End -->
+
+<div class="custom-footer">
+    <div class="container footer">
+        <div class="row">
+            <div class="col-md-4" style="z-index:50;">
+                <div class="heading">Community Resources</div>
+                <ul class="links">
+                    <li><a href="https://onedrive.live.com/?action=feedback" target="_blank">Support</a></li>
+                    <li><a href="http://onedrive.uservoice.com/" target="_blank">UserVoice</a></li>
+                    <li><a href="http://stackoverflow.com/questions/tagged/onedrive" target="_blank">Stack Overflow</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-12 bottom-footer-zone">
+            <div class="row">
+                <div class="col-xs-6 hidden-md hidden-lg">
+                    <ul class="contact-us">
+                        <li>
+                            <a href="http://www.microsoft.com/info/privacy.mspx" target="_blank">Privacy</a>
+                        </li>
+                        <li>
+                            <a href="http://msdn.microsoft.com/en-US/cc300389" target="_blank">Terms of use</a>
+                        </li>
+                        <li>
+                            <a href="http://www.microsoft.com/library/toolbar/3.0/trademarks/en-us.mspx" target="_blank">Trademarks</a>
+                        </li>
+                        <li>&copy; 2015 Microsoft</li>
+                    </ul>
+                </div>
+                <div>
+                    <img class="microsoft-logo" src="https://dev.office.com/Themes/DevOffice/Content/Images/microsoftLogo.png" alt="Microsoft logo" />
+                </div>
+                <div class="col-xs-6 col-md-12 col-lg-12 visible-md visible-lg privacy-links">
+                    <ul class="contact-us contact-us-inline">
+                        <li>&copy; 2015 Microsoft</li>
+                        <li>
+                            <a href="http://www.microsoft.com/info/privacy.mspx" target="_blank">Privacy Statement</a>
+                        </li>
+                        <li>
+                            <a href="http://www.microsoft.com/library/toolbar/3.0/trademarks/en-us.mspx" target="_blank">Trademarks</a>
+                        </li>
+                        <li>
+                            <a href="http://msdn.microsoft.com/en-US/cc300389" target="_blank">Terms of Use</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div>&nbsp;</div>
+    </div>
+</div>
+
+</div>
+
+
+
+<!--
+<script src="get-token.js"></script>
+<script src="api_runner.js"></script>
+-->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<!-- IE10 viewport workaround for Surface/desktop Windows 8 bug -->
+<script src="js/ie10-viewport-bug-workaround.js"></script>
+<script src="js/toc.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60403510-1', 'auto');
+  ga('require', 'displayfeatures');
+  ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+
+<script type="text/JavaScript">
+var varSegmentation = 0;
+var varClickTracking = 1;
+var varCustomerTracking = 0;
+var varAutoFirePV = 1;
+var Route = "";
+var Ctrl = "";
+var script = document.createElement("script");
+script.type = "text/javascript";
+script.src = window.location.protocol + "//c.microsoft.com/ms.js";
+document.getElementsByTagName("head")[0].appendChild(script);
+</script>
+
+</body>
+</html>

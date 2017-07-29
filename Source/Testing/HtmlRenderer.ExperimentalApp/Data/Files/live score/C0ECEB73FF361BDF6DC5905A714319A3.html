@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	    <title>Livescore | Fodbold livescores | Fodbold resultater</title>
+        	<meta name="description" content="Fodbold livescore fra Superligaen og de største ligaer i verden. Brug livescore.dk til at følge fodboldresultaterne mens kampene spilles." />
+        <meta http-equiv="Content-Language" content="da" />
+            <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/assets/images/logo/site/apple-touch-icon-180x180-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="/assets/images/logo/site/apple-touch-icon-152x152-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/images/logo/site/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="/assets/images/logo/site/apple-touch-icon-120x120-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/images/logo/site/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="/assets/images/logo/site/apple-touch-icon-76x76-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/images/logo/site/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/assets/images/logo/site/apple-touch-icon-57x57-precomposed.png">
+    <link rel="shortcut icon" href="/assets/images/logo/site/apple-touch-icon.png">    
+    <link rel="icon" sizes="192x192" href="/assets/images/logo/site/touch-icon-192x192.png">
+    <link rel="icon" sizes="128x128" href="/assets/images/logo/site/touch-icon-128x128.png">
+    <meta name="msapplication-TileImage" content="/assets/images/logo/site/apple-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#65c178">
+		<link rel="shortcut icon" href="/assets/ico/favicon.ico" type="image/x-icon" />
+	<link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/css/desktop.css?v=17" rel="stylesheet">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+    
+    <script src="/assets/js/jquery.countdown.package-2.0.1/jquery.plugin.countdown.js"></script>
+    
+    <link rel="stylesheet" href="/assets/js/pickadate.js-3.5.4/themes/classic.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/assets/js/pickadate.js-3.5.4/themes/classic.date.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="/assets/js/pickadate.js-3.5.4/picker.js"></script>
+    <script type="text/javascript" src="/assets/js/pickadate.js-3.5.4/picker.date.js"></script>
+    
+        <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    
+      ga('create', 'UA-43814558-1', 'livescore.dk');
+      ga('send', 'pageview');
+    
+    </script>
+	<script type="text/javascript">
+    $(document).ready(function() {
+		
+		$('.datepicker').pickadate({
+			monthsFull: [ 'januar', 'februar', 'marts', 'april', 'maj', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'december' ],
+			monthsShort: [ 'jan', 'feb', 'mar', 'apr', 'maj', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec' ],
+			weekdaysFull: [ 'søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag' ],
+			weekdaysShort: [ 'søn', 'man', 'tir', 'ons', 'tor', 'fre', 'lør' ],
+			today: 'i dag',
+			clear: 'slet',
+			close: 'luk',
+			firstDay: 1,
+			format: 'dd-mm-yyyy',
+			formatSubmit: 'dd-mm-yyyy',
+			onSet: function(context) {
+                if(context.select){
+				    window.location = 'http://www.livescore.dk/?date=' + this.get();
+                }				
+			}
+		});
+		
+		// Click tracking
+		$('body').on('click', '.click_tracking', function() {
+			
+			// Get details
+			var get_object = $(this).data('object');
+			var get_eventfk = $(this).data('event');
+			var get_dealfk = $(this).data('deal');
+			var get_url = "/";
+			
+			// Insert to db
+			jQuery.ajax({
+				type: "GET",
+				timeout: 8000,
+				url: "/ajax/track.php?request=1",
+				data: { object: get_object, eventfk: get_eventfk, dealfk: get_dealfk, url: get_url },
+				dataType:"html"
+            });
+			
+		});
+       
+	   	var show_facebook_popup = 1;
+	   
+	            // Tooltip
+        //$("[data-toggle=tooltip]").tooltip();
+        $('body').tooltip({
+			selector: '[data-toggle=tooltip]'
+		});
+		
+				
+		        // Blink
+        function js_blink(selector){
+            $(selector).fadeOut(1000, function(){
+                $(this).fadeIn(1000, function(){
+                    js_blink(this);
+                });
+            });
+        }    
+        //js_blink('.blink');
+        
+        var livescore_filter_match_status = "all";
+        
+        // Count the number of livescore visible rows.
+        function show_show_livescore_no_results(){
+        
+            var number_of_rows = $('.livescore_table_row:visible').size();
+            
+            if(number_of_rows===0){
+                $('#livescore_no_results').show();
+            } else {
+                $('#livescore_no_results').hide();
+            }
+            
+        }
+        
+        // Show / hide rows 
+        function set_livescore_filter_match_status(input_type){
+        
+            // All
+            if(input_type=="all"){
+    
+                $("#livescore_filter a").removeClass("active");
+                $("#match_status_all").addClass("active");
+                
+                $(".notstarted").show();
+                $(".inprogress").show();
+                $(".finished").show();
+                $(".cancelled").show();
+                $(".interrupted").show();
+                $(".livescore_table_row_header").show();	
+            }
+            
+            // Notstarted
+            if(input_type=="notstarted"){
+    
+                $("#livescore_filter a").removeClass("active");
+                $("#match_status_notstarted").addClass("active");
+                
+                $(".notstarted").show();
+                $(".inprogress").hide();
+                $(".finished").hide();
+                $(".cancelled").hide();
+                $(".interrupted").hide();
+                
+                // Get alle tournament-id's
+                var allAttributes = $('.livescore_table_row').filter(':visible').map(function(){
+                    return $(this).data('reftournament');
+                }).get();
+                
+                // Remove duplicates
+                allAttributes = jQuery.unique(allAttributes);
+                
+                // Hide headers
+                $(".livescore_table_row_header").hide();
+                
+                // Show headers
+                for (i=0; i<allAttributes.length; i++) {
+                  $(".livescore_table_row_header_"+allAttributes[i]).show();
+                }
+            }
+            
+            // Inprogress
+            if(input_type=="inprogress"){
+            
+                $("#livescore_filter a").removeClass("active");
+                $("#match_status_inprogress").addClass("active");
+            
+                $(".notstarted").hide();
+                $(".inprogress").show();
+                $(".finished").hide();
+                $(".cancelled").hide();
+                $(".interrupted").show();
+                
+                // Get alle tournament-id's
+                var allAttributes = $('.livescore_table_row').filter(':visible').map(function(){
+                    return $(this).data('reftournament');
+                }).get();
+                
+                // Remove duplicates
+                allAttributes = jQuery.unique(allAttributes);
+                
+                // Hide headers
+                $(".livescore_table_row_header").hide();
+                
+                // Show headers
+                for (i=0; i<allAttributes.length; i++) {
+                  $(".livescore_table_row_header_"+allAttributes[i]).show();
+                }			
+            }
+            
+            // Finished
+            if(input_type=="finished"){
+                
+                $("#livescore_filter a").removeClass("active");
+                $("#match_status_finished").addClass("active");
+                
+                $(".notstarted").hide();
+                $(".inprogress").hide();
+                $(".finished").show();
+                $(".cancelled").hide();
+                $(".interrupted").hide();
+                
+                // Get alle tournament-id's
+                var allAttributes = $('.livescore_table_row').filter(':visible').map(function(){
+                    return $(this).data('reftournament');
+                }).get();
+                
+                // Remove duplicates
+                allAttributes = jQuery.unique(allAttributes);
+                
+                // Hide headers
+                $(".livescore_table_row_header").hide();
+                
+                // Show headers
+                for (i=0; i<allAttributes.length; i++) {
+                  $(".livescore_table_row_header_"+allAttributes[i]).show();
+                }			
+            }
+            
+            show_show_livescore_no_results();
+            
+        }
+        
+        
+        // Livescore filter - match status
+        $("#match_status_all").click(function(){
+            livescore_filter_match_status = "all";
+            set_livescore_filter_match_status(livescore_filter_match_status);
+            return false;
+        });
+        
+        $("#match_status_notstarted").click(function(){
+            livescore_filter_match_status = "notstarted";
+            set_livescore_filter_match_status(livescore_filter_match_status);
+            return false;
+        });
+        
+        $("#match_status_inprogress").click(function(){
+            livescore_filter_match_status = "inprogress";
+            set_livescore_filter_match_status(livescore_filter_match_status);
+            return false;
+        });
+        
+        $("#match_status_finished").click(function(){
+            livescore_filter_match_status = "finished";
+            set_livescore_filter_match_status(livescore_filter_match_status);
+            return false;
+        });
+        
+        // Update the match status bar
+        function update_match_status_count(){
+            
+            var count_notstarted = $('.notstarted').length;
+            var count_inprogress = $('.inprogress').length;
+            var count_finished = $('.finished').length;
+            var count_cancelled = $('.cancelled').length;
+            var count_interrupted = $('.interrupted').length;
+            var count_all = count_finished + count_inprogress + count_notstarted + count_cancelled + count_interrupted;
+            var count_inprogress_total = count_inprogress + count_interrupted;
+    
+            $('#count_notstarted').text("("+count_notstarted+")");
+            $('#count_inprogress').text("("+count_inprogress_total+")");
+            $('#count_finished').text("("+count_finished+")");
+            $('#count_all').text("("+count_all+")");	
+    
+        }
+    
+        // Update livescore
+        function UpdateLivescore() {
+			console.log("Ajax: Fire!");
+           jQuery.ajax({
+            type: "GET",
+            timeout: 8000,
+            url: "/ajax/soccer_get_livescore.php?request=1&country=",
+            dataType:"html",
+			cache: false,
+            complete: function() {
+                setTimeout(UpdateLivescore, 15000);
+				console.log("Ajax: Complete!");
+            },
+            success:function(response){
+                if (response) {					
+                    $("#livescore_container").empty();
+					$("#livescore_container").append(response);
+                    set_livescore_filter_match_status(livescore_filter_match_status);
+                    update_match_status_count();
+                    //js_blink('.blink');
+                }
+               }
+            });
+        }
+                window.setTimeout(UpdateLivescore, 15000);
+        update_match_status_count();
+        		    });
+    </script>
+    
+    <script type='text/javascript'>
+	var googletag = googletag || {};
+	googletag.cmd = googletag.cmd || [];
+	(function() {
+	var gads = document.createElement('script');
+	gads.async = true;
+	gads.type = 'text/javascript';
+	var useSSL = 'https:' == document.location.protocol;
+	gads.src = (useSSL ? 'https:' : 'http:') + 
+	'//www.googletagservices.com/tag/js/gpt.js';
+	var node = document.getElementsByTagName('script')[0];
+	node.parentNode.insertBefore(gads, node);
+	})();
+	</script>
+	
+	<script type='text/javascript'>
+	googletag.cmd.push(function() {
+	googletag.defineSlot('/47917044/livescore_dk_140x200', [140, 200], 'div-gpt-ad-1409853242714-0').addService(googletag.pubads());
+	googletag.defineSlot('/47917044/livescore_dk_930x180', [930, 180], 'div-gpt-ad-1409853242714-1').addService(googletag.pubads());
+	googletag.pubads().enableSingleRequest();
+	googletag.enableServices();
+	});
+	</script>
+    
+<script language="javascript" type="text/javascript">
+<!--
+function popitup(url) {
+	newwindow=window.open(url,'name','height=500,width=650,scrollbars=1');
+	if (window.focus) {newwindow.focus()}
+	return false;
+}
+
+// -->
+</script>
+<style>
+.picker__button--clear { display:none; }
+.picker__holder {
+	margin-left: -150px;
+	margin-top: 30px;
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+
+<header id="header">
+    <div class="wrapper">   
+        <div class="left"><a href="/"><img src="/assets/images/logo/logo_livescoredk_188_34px.png" alt="" width="188" height="34" border="0" /></a></div>
+        <div class="right">Onsdag 12/07-2017 18:51</div>
+        <br clear="all" />
+    </div>
+</header>
+
+<nav id="main_menu">
+	<div class="wrapper">  
+    	<ul>
+            <li><a href="/" title="Fodbold livescore">LIVESCORE</a></li>
+            <li><a href="/sport-i-tv/" title="Sport i TV">SPORT I TV</a></li>
+            <li><a href="/livestream/" title="Livesream">LIVESTREAM</a></li>
+            <li><a href="/blog/">BLOG</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div style="background-repeat:no-repeat; background-image:url(/assets/images/u/header_default.jpg); background-position:top center; height:193px; padding-top:12px; margin-bottom: 12px;"><div id="banner_top_930x180_outer" style="height:auto;"><div id="banner_top_930x180"><!-- livescore_dk_930x180 -->
+<div id='div-gpt-ad-1409853242714-1'>
+<iframe id="partners1761197" name="partners1761197" 
+ src="https://mediaserver.bwinpartypartners.com/renderBanner.do?zoneId=1761197&t=f&v=1&securedDomain=y"
+ frameborder="0" marginheight="0" marginwidth="0" scrolling="no" width="930" height="180">
+</iframe>
+</div></div></div></div><style>
+.picker__holder { min-width:420px; }
+</style>
+<div class="wrapper">
+	<div id="sidebar_left" style="width:140px; float:left;">
+    <div class="widget_left"> 
+    <div class="widget_left_header">Ligaer</div>
+    <div>
+        <ul>
+            <li><a href="/champions-league/" class="flag_cl">Champions League</a></li>
+            <li><a href="/europa-league/" class="flag_el">Europa League</a></li>
+            <li><a href="/vm-kvalifikation/" class="flag_vm">VM Kvalifikation</a></li>
+            <li><a href="/superligaen/" class="flag_dk">Superliga</a></li>
+            <li><a href="/1-division/" class="flag_dk">1. Division</a></li>
+            <li><a href="/premier-League/" class="flag_en">Premier League</a></li>
+            <li><a href="/primera-division/" class="flag_es">Primera Division</a></li>
+            <li><a href="/bundesliga/" class="flag_de">Bundesliga</a></li>
+            <li><a href="/ligue-1/" class="flag_fr">Ligue 1</a></li>
+            <li><a href="/serie-a/" class="flag_it">Serie A</a></li>
+            <li><a href="/aeresdivisionen/" class="flag_nl">Æresdivisionen</a></li>
+            <li><a href="/jupiler-league/" class="flag_be">Jupiler Ligaen</a></li>
+            <li><a href="/allsvenskan/" class="flag_se">Allsvenskan</a></li>
+            <li><a href="/tippeligaen/" class="flag_no">Tippeligaen</a></li>
+            <li style="display:none;"><a href="/fodbold/ligaer/" class="view_more">Vis flere ligaer</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="banner_sidebar_140x200" id="banner_sidebar_140x200" style="height:auto; text-align:center;"><!-- livescore_dk_140x200 -->
+<iframe id="partners1771368" name="partners1771368" 
+ src="https://mediaserver.bwinpartypartners.com/renderBanner.do?zoneId=1771368&t=f&v=1&securedDomain=y"
+ frameborder="0" marginheight="0" marginwidth="0" scrolling="no" width="120" height="600">
+</iframe>
+</div>
+
+<div class="widget_left"> 
+    <div class="widget_left_header">Lande</div>
+    <div>
+        <ul class="list-unstyled ls-list">
+            <li><a href="/" class="no_icon">Alle lande</a></li>
+            <li><a href="#" class="ls-list-country no_icon" data-countryid="1">Danmark</a></li>
+            <li class="ls-list-li_1 ls-list-country-leagues" style="display:none;"></li>
+            <li><a href="#" class="ls-list-country no_icon" data-countryid="2">England</a></li>
+            <li class="ls-list-li_2 ls-list-country-leagues" style="display:none;"></li>
+            <li><a href="#" class="ls-list-country no_icon" data-countryid="5">Frankrig</a></li>
+            <li class="ls-list-li_5 ls-list-country-leagues" style="display:none;"></li>
+            <li><a href="#" class="ls-list-country no_icon" data-countryid="9">Holland</a></li>
+            <li class="ls-list-li_9 ls-list-country-leagues" style="display:none;"></li>
+            <li><a href="#" class="ls-list-country no_icon" data-countryid="11">International</a></li>
+            <li class="ls-list-li_11 ls-list-country-leagues" style="display:none;"></li>
+            <li><a href="#" class="ls-list-country no_icon" data-countryid="4">Italien</a></li>
+            <li class="ls-list-li_4 ls-list-country-leagues" style="display:none;"></li>
+            <li><a href="#" class="ls-list-country no_icon" data-countryid="8">Spanien</a></li>
+            <li class="ls-list-li_8 ls-list-country-leagues" style="display:none;"></li>
+            <li><a href="#" class="ls-list-country no_icon" data-countryid="3">Tyskland</a></li>
+            <li class="ls-list-li_3 ls-list-country-leagues" style="display:none;"></li>
+            <li id="country_list_view_more_container"><a href="/" id="country_list_view_more" class="view_more">Vis flere lande</a></li>
+            <li id="country_list_view_more_loading" style="display:none;  text-align:center;">Indlæser..</li>
+        </ul>
+        <div id="country_list_more" style="display:none;"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#country_list_view_more").click(function(){
+
+		$("#country_list_view_more_container").hide();
+		$("#country_list_view_more_loading").show();
+
+		jQuery.ajax({
+		type: "GET",
+		timeout: 5000,
+		url: "/ajax/get_country_list.php",
+		dataType:"html",
+		success:function(response){
+			if (response) {
+				$("#country_list_view_more_loading").hide();
+				$("#country_list_more").html(response);
+				$("#country_list_more").show();
+			}
+		   }
+		});
+		return false;
+	});
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	$('body').on('click', '.ls-list-country', function() {
+		var countryid = $(this).data("countryid");
+		$('.ls-list-country').removeClass("ls-list-country-leagues-active");
+		$(this).addClass("ls-list-country-leagues-active");
+		$('.ls-list-country-leagues').slideUp(200);
+		$('.ls-list-li_'+countryid).slideDown(200);
+		$('.ls-list-li_'+countryid).empty();
+		$('.ls-list-li_'+countryid).append("Indlæser..");
+		var info = 'cid=' + countryid;
+		$.ajax({
+			type: "GET",
+			timeout: 5000,
+			url: "/ajax/get_tournament_list.php",
+			data: info,
+			success: function(txt){ 
+				$('.ls-list-li_'+countryid).empty();
+				$('.ls-list-li_'+countryid).append(txt);
+			}
+		});
+		
+		return false;
+	});
+});
+</script>    </div>
+    <main id="main">    
+        
+    <div style="background-color:#FFFFFF; border:1px #e5e5e5 solid; padding-top:6px; padding-bottom:6px; border-bottom:none;">
+        <div style="width:530px; float:left;"><div id="livescore_filter"><ul><li><a href="#" id="match_status_all" class="active">Alle kampe <span id="count_all"></span></a></li><li><a href="#" id="match_status_inprogress">Live <span id="count_inprogress"></span></a></li><li><a href="#" id="match_status_finished">Afsluttede <span id="count_finished"></span></a></li><li><a href="#" id="match_status_notstarted">Kommende <span id="count_notstarted"></span></a></li></ul></div></div>
+        <div style="width:150px; float:left;">
+        <div id="livescore_datepicker">
+            <div class="left_arrow"><a href="/?date=11-07-2017" style="display:block; height:26px; text-decoration:none;" data-toggle="tooltip" data-placement="top" title="Forrige dag">&nbsp;</a></div>
+            <div class="date"><div style="position: relative;"><a href="javascript:void(0)" style="display:block; padding-top:4px; height:22px; text-decoration:none; color:#999999; cursor:pointer;"  data-value="12-07-2017" class="datepicker">I dag</a></div></div>
+            <div class="right_arrow"><a href="/?date=13-07-2017" style="display:block; height:26px; text-decoration:none;" data-toggle="tooltip" data-placement="top" title="Næste dag">&nbsp;</a></div>
+            <br clear="all">
+        </div></div><br clear="all">
+    </div>
+    
+
+	<div id="livescore_container" style="background-color:#FFFFFF;">
+    <div id="livescore_no_results" style="text-align:center; border:1px solid #e5e5e5; padding:100px 0px 100px 0px; display:none;">
+    	<div style="font-weight:bold; font-size:18px;">Ingen resultater</div><div>Der er ingen resultater som matcher dine præferencer.</div>
+    </div>
+    
+	    <table width="100%" border="0" cellspacing="0" cellpadding="0" id="livescore_table">
+    				<tr data-tournament="850150" class="livescore_table_row_header livescore_table_row_header_850150">
+			<td height="36" colspan="5" class="td_header"><div style="width:30px; float:left; margin-top:2px; margin-left:7px;"><img src="/assets/images/flags/shiny/24/cl.png" width="24" height="24" alt="International" style="display:block;" /></div><div style="float:left; padding-top:5px; padding-bottom:4px; font-weight:bold; font-size:14px;"><a href="/champions-league/stilling/" style="color:rgb(51, 51, 51);">International: Champions League Kvalifikation</a></div><br clear="all" /></td></tr>
+				<tr data-reftournament="850150" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528024" data-eventid="2528024" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:00</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>Pause</span>			</div></td><td>
+			<a href="/fodbold/fk-spartaks-fc-astana-18-07-2017/" class="event_item" onclick="return popitup('/fodbold/fk-spartaks-fc-astana-18-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">FK Spartaks</div>
+			<div class="score">
+						0 - 0						</div><div class="awayteam">FC Astana</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			<a href="http://www.livescore.dk/visit/unibet/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2528024" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Unibet">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="850150" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528025" data-eventid="2528025" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/apoel-nicosia-f91-dudelange-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/apoel-nicosia-f91-dudelange-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">APOEL Nicosia</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">F91 Dudelange</div>
+			</section></a></td><td width="120">			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2528025" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="850150" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528033" data-eventid="2528033" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/fc-sheriff-kukesi-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/fc-sheriff-kukesi-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">FC Sheriff</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Kukesi</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="850150" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528037" data-eventid="2528037" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/hapoel-beer-sheva-budapest-honved-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/hapoel-beer-sheva-budapest-honved-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Hapoel Beer Sheva</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Budapest Honved</div>
+			</section></a></td><td width="120">			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2528037" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="850150" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528039" data-eventid="2528039" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/malmo-ff-fk-vardar-skopje-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/malmo-ff-fk-vardar-skopje-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Malmö FF</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">FK Vardar Skopje</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="850150" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528041" data-eventid="2528041" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/zrinjski-mostar-maribor-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/zrinjski-mostar-maribor-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Zrinjski Mostar</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Maribor</div>
+			</section></a></td><td width="120">			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2528041" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="850150" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528047" data-eventid="2528047" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/bate-borisov-alashkert-fcfc-santa-coloma-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/bate-borisov-alashkert-fcfc-santa-coloma-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">BATE Borisov</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Alashkert FC</div>
+			</section></a></td><td width="120">			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2528047" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="850150" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528027" data-eventid="2528027" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/zalgiris-wilna-ludogorets-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/zalgiris-wilna-ludogorets-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Zalgiris Wilna</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Ludogorets</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="850150" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528045" data-eventid="2528045" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/ifk-mariehamn-legia-warszawa-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/ifk-mariehamn-legia-warszawa-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">IFK Mariehamn</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Legia Warszawa</div>
+			</section></a></td><td width="120">			
+			            			<a href="http://www.livescore.dk/visit/unibet/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2528045" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Unibet">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="850150" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528035" data-eventid="2528035" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:15</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/zilina-fc-koebenhavn-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/zilina-fc-koebenhavn-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Zilina</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">FC København</div>
+			</section></a></td><td width="120">			
+						<a href="#" class="tv_icon_16" data-toggle="tooltip" data-placement="top" title="Kampen vises på TV3+">&nbsp;</a>
+			            			</td></tr>
+						<tr data-reftournament="850150" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528043" data-eventid="2528043" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:45</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/dundalk-rosenborg-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/dundalk-rosenborg-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Dundalk</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Rosenborg</div>
+			</section></a></td><td width="120">			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2528043" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="850150" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528050" data-eventid="2528050" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">21:15</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/fh-hafnarfjordur-vikingurtrepca-89-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/fh-hafnarfjordur-vikingurtrepca-89-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">FH Hafnarfjordur</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Vikingur</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-tournament="850151" class="livescore_table_row_header livescore_table_row_header_850151">
+			<td height="36" colspan="5" class="td_header"><div style="width:30px; float:left; margin-top:2px; margin-left:7px;"><img src="/assets/images/flags/shiny/24/el.png" width="24" height="24" alt="International" style="display:block;" /></div><div style="float:left; padding-top:5px; padding-bottom:4px; font-weight:bold; font-size:14px;"><a href="/europa-league/stilling/" style="color:rgb(51, 51, 51);">International: Europa League Kvalifikation</a></div><br clear="all" /></td></tr>
+				<tr data-reftournament="850151" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528240" data-eventid="2528240" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:00</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>Pause</span>			</div></td><td>
+			<a href="/fodbold/mladost-lucaniinter-baku-cs-fola-eschfc-milsami-orhei-13-07-2017/" class="event_item" onclick="return popitup('/fodbold/mladost-lucaniinter-baku-cs-fola-eschfc-milsami-orhei-13-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Inter Baku</div>
+			<div class="score">
+						0 - 0						</div><div class="awayteam">CS Fola Esch</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			</td></tr>
+						<tr data-tournament="844439" class="livescore_table_row_header livescore_table_row_header_844439">
+			<td height="36" colspan="5" class="td_header"><div style="width:30px; float:left; margin-top:2px; margin-left:7px;"><img src="/assets/images/flags/shiny/24/World.png" width="24" height="24" alt="International" style="display:block;" /></div><div style="float:left; padding-top:5px; padding-bottom:4px; font-weight:bold; font-size:14px;"><a href="/venskabskamp-international/stilling/" style="color:rgb(51, 51, 51);">International: Venskabskampe for klubhold</a></div><br clear="all" /></td></tr>
+				<tr data-reftournament="844439" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2549077" data-eventid="2549077" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">11:35</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/maritimo-portimonense-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/maritimo-portimonense-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Maritimo</div>
+			<div class="score">
+						4 - 1						</div><div class="awayteam">Portimonense</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="cancelled livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2547370" data-eventid="2547370" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">16:00</div></td><td width="60"><div style="text-align:center;">
+				<span style="color:red;">Udsat</span>			</div></td><td>
+			<a href="/fodbold/fulham-queens-pr-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/fulham-queens-pr-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Fulham</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Queens P.R.</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2532535" data-eventid="2532535" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">17:00</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/sl-prag-west-bromwich-albion-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/sl-prag-west-bromwich-albion-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Sl. Prag</div>
+			<div class="score">
+						2 - 1						</div><div class="awayteam">West Bromwich Albion</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="cancelled livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2559007" data-eventid="2559007" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">17:00</div></td><td width="60"><div style="text-align:center;">
+				<span style="color:red;">Udsat</span>			</div></td><td>
+			<a href="/fodbold/paok-kaiserslautern-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/paok-kaiserslautern-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">PAOK</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Kaiserslautern</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2559008" data-eventid="2559008" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">17:00</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/paok-vvv-venlo-15-07-2017/" class="event_item" onclick="return popitup('/fodbold/paok-vvv-venlo-15-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">PAOK</div>
+			<div class="score">
+						1 - 0						</div><div class="awayteam">VVV-Venlo</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2563249" data-eventid="2563249" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">17:00</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/fk-akhmat-angusht-nazran-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/fk-akhmat-angusht-nazran-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">FK Akhmat</div>
+			<div class="score">
+						5 - 0						</div><div class="awayteam">Angusht Nazran</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="cancelled livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2532496" data-eventid="2532496" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">17:30</div></td><td width="60"><div style="text-align:center;">
+				<span style="color:red;">Udsat</span>			</div></td><td>
+			<a href="/fodbold/wil-st-gallen-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/wil-st-gallen-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Wil</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">St. Gallen</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2540655" data-eventid="2540655" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">17:30</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>66<span class='blink'>'</span></span>			</div></td><td>
+			<a href="/fodbold/fiorentina-val-di-fassa-team-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/fiorentina-val-di-fassa-team-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Fiorentina</div>
+			<div class="score">
+						4 - 0						</div><div class="awayteam">Val di Fassa Team</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2507890" data-eventid="2507890" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:00</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>Pause</span>			</div></td><td>
+			<a href="/fodbold/werder-bremen-wolverhampton-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/werder-bremen-wolverhampton-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Werder Bremen</div>
+			<div class="score">
+						0 - 0						</div><div class="awayteam">Wolverhampton</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2507890" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2507894" data-eventid="2507894" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:00</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>Pause</span>			</div></td><td>
+			<a href="/fodbold/vfb-stuttgart-dynamo-dresden-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/vfb-stuttgart-dynamo-dresden-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">VfB Stuttgart</div>
+			<div class="score">
+						1 - 0						</div><div class="awayteam">Dynamo Dresden</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2507894" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2528480" data-eventid="2528480" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:00</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>Pause</span>			</div></td><td>
+			<a href="/fodbold/troyes-lens-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/troyes-lens-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Troyes</div>
+			<div class="score">
+						1 - 1						</div><div class="awayteam">Lens</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2559006" data-eventid="2559006" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:00</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>Pause</span>			</div></td><td>
+			<a href="/fodbold/augsburg-kaiserslautern-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/augsburg-kaiserslautern-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Augsburg</div>
+			<div class="score">
+						0 - 0						</div><div class="awayteam">Kaiserslautern</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2559006" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2525957" data-eventid="2525957" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:05</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>45+<span class='blink'>'</span></span>			</div></td><td>
+			<a href="/fodbold/nd-triglav-istanbul-basaksehir-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/nd-triglav-istanbul-basaksehir-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">ND Triglav</div>
+			<div class="score">
+						1 - 1						</div><div class="awayteam">Istanbul Basaksehir</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2540576" data-eventid="2540576" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:05</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>Pause</span>			</div></td><td>
+			<a href="/fodbold/feirense-sporting-covilha-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/feirense-sporting-covilha-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Feirense</div>
+			<div class="score">
+						1 - 0						</div><div class="awayteam">Sporting Covilha</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2554487" data-eventid="2554487" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:05</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>45<span class='blink'>'</span></span>			</div></td><td>
+			<a href="/fodbold/napoli-anaunia-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/napoli-anaunia-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Napoli</div>
+			<div class="score">
+						6 - 0						</div><div class="awayteam">Anaunia</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2547939" data-eventid="2547939" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:30</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>21<span class='blink'>'</span></span>			</div></td><td>
+			<a href="/fodbold/nantes-servette-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/nantes-servette-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Nantes</div>
+			<div class="score">
+						1 - 0						</div><div class="awayteam">Servette</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2547939" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2523929" data-eventid="2523929" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:35</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>14<span class='blink'>'</span></span>			</div></td><td>
+			<a href="/fodbold/sv-ramlingen-ehlershausen-hannover-96-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/sv-ramlingen-ehlershausen-hannover-96-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">SV Ramlingen-Ehlershausen</div>
+			<div class="score">
+						0 - 2						</div><div class="awayteam">Hannover 96</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2526013" data-eventid="2526013" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:35</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>14<span class='blink'>'</span></span>			</div></td><td>
+			<a href="/fodbold/sochaux-dijon-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/sochaux-dijon-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Sochaux</div>
+			<div class="score">
+						0 - 1						</div><div class="awayteam">Dijon</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2549079" data-eventid="2549079" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:45</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>3<span class='blink'>'</span></span>			</div></td><td>
+			<a href="/fodbold/pacos-de-ferreira-tondela-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/pacos-de-ferreira-tondela-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Pacos de Ferreira</div>
+			<div class="score">
+						0 - 0						</div><div class="awayteam">Tondela</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2506391" data-eventid="2506391" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/cercle-brugge-lokeren-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/cercle-brugge-lokeren-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Cercle Brugge</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Lokeren</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2522487" data-eventid="2522487" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/real-sc-vitoria-de-setubal-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/real-sc-vitoria-de-setubal-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Real SC</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Vitoria de Setubal</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="cancelled livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2534811" data-eventid="2534811" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				<span style="color:red;">Udsat</span>			</div></td><td>
+			<a href="/fodbold/basel-marseille-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/basel-marseille-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Basel</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Marseille</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2534931" data-eventid="2534931" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/sion-psv-eindhoven-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/sion-psv-eindhoven-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Sion</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">PSV Eindhoven</div>
+			</section></a></td><td width="120">			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2534931" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="844439" class="cancelled livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2535171" data-eventid="2535171" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				<span style="color:red;">Udsat</span>			</div></td><td>
+			<a href="/fodbold/athletic-bilbao-servette-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/athletic-bilbao-servette-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Athletic Bilbao</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Servette</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2543184" data-eventid="2543184" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/basel-athletic-bilbao-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/basel-athletic-bilbao-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Basel</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Athletic Bilbao</div>
+			</section></a></td><td width="120">			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2543184" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="844439" class="cancelled livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2549071" data-eventid="2549071" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				<span style="color:red;">Udsat</span>			</div></td><td>
+			<a href="/fodbold/estoril-fus-rabat-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/estoril-fus-rabat-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Estoril</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">FUS Rabat</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2552426" data-eventid="2552426" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/chaves-moreirense-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/chaves-moreirense-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Chaves</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Moreirense</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2558669" data-eventid="2558669" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/angers-orleans-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/angers-orleans-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Angers</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Orléans</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2560953" data-eventid="2560953" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/groene-ster-roda-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/groene-ster-roda-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Groene Ster</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Roda</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2563248" data-eventid="2563248" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/marseille-fc-viitorul-constanta-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/marseille-fc-viitorul-constanta-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Marseille</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">FC Viitorul Constanta</div>
+			</section></a></td><td width="120">			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2563248" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2564079" data-eventid="2564079" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:15</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/eupen-b-monchengladbach-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/eupen-b-monchengladbach-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Eupen</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">B. Mönchengladbach</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2527909" data-eventid="2527909" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/bruse-boys-ado-den-haag-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/bruse-boys-ado-den-haag-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Bruse Boys</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">ADO Den Haag</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2547575" data-eventid="2547575" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">19:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/middlesbrough-oxford-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/middlesbrough-oxford-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Middlesbrough</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Oxford</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2514677" data-eventid="2514677" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/accrington-huddersfield-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/accrington-huddersfield-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Accrington</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Huddersfield</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="cancelled livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2499227" data-eventid="2499227" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:30</div></td><td width="60"><div style="text-align:center;">
+				<span style="color:red;">Udsat</span>			</div></td><td>
+			<a href="/fodbold/stourbridge-birmingham-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/stourbridge-birmingham-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Stourbridge</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Birmingham</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2500943" data-eventid="2500943" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/kidsgrove-athletic-burton-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/kidsgrove-athletic-burton-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Kidsgrove Athletic</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Burton</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2508739" data-eventid="2508739" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/torquay-bristol-city-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/torquay-bristol-city-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Torquay</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Bristol City</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2535170" data-eventid="2535170" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/sporting-cp-fenerbahce-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/sporting-cp-fenerbahce-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Sporting CP</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Fenerbahce Ülker</div>
+			</section></a></td><td width="120">			
+			            			<a href="http://www.livescore.dk/visit/bet365/" rel="nofollow" target="_blank" class="stream_icon_16 click_tracking" data-object="livescore_livestream" data-deal="1" data-event="2535170" data-toggle="tooltip" data-placement="top" title="Livestream gratis på Bet365">&nbsp;</a>
+						</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2547570" data-eventid="2547570" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/north-ferriby-united-leeds-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/north-ferriby-united-leeds-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">North Ferriby United</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Leeds</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2498191" data-eventid="2498191" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:45</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/telford-aston-villa-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/telford-aston-villa-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Telford</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Aston Villa</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="cancelled livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2498192" data-eventid="2498192" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:45</div></td><td width="60"><div style="text-align:center;">
+				<span style="color:red;">Udsat</span>			</div></td><td>
+			<a href="/fodbold/kidderminster-aston-villa-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/kidderminster-aston-villa-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Kidderminster</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Aston Villa</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2504309" data-eventid="2504309" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:45</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/barnet-swansea-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/barnet-swansea-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Barnet</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Swansea</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2520617" data-eventid="2520617" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:45</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/livingston-sunderland-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/livingston-sunderland-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Livingston</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Sunderland</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="844439" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2526161" data-eventid="2526161" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:45</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/tranmere-liverpool-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/tranmere-liverpool-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Tranmere</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Liverpool</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-tournament="848707" class="livescore_table_row_header livescore_table_row_header_848707">
+			<td height="36" colspan="5" class="td_header"><div style="width:30px; float:left; margin-top:2px; margin-left:7px;"><img src="/assets/images/flags/shiny/24/World.png" width="24" height="24" alt="International" style="display:block;" /></div><div style="float:left; padding-top:5px; padding-bottom:4px; font-weight:bold; font-size:14px;"><a href="/concacaf-gold-cup/stilling/" style="color:rgb(51, 51, 51);">International: CONCACAF Gold Cup Grp. A</a></div><br clear="all" /></td></tr>
+				<tr data-reftournament="848707" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2472254" data-eventid="2472254" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">01:35</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/costa-rica-canada-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/costa-rica-canada-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Costa Rica</div>
+			<div class="score">
+						1 - 1						</div><div class="awayteam">Canada</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848707" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2480463" data-eventid="2480463" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">04:05</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/honduras-fransk-guyana-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/honduras-fransk-guyana-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Honduras</div>
+			<div class="score">
+						0 - 0						</div><div class="awayteam">Fransk Guiana</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-tournament="848708" class="livescore_table_row_header livescore_table_row_header_848708">
+			<td height="36" colspan="5" class="td_header"><div style="width:30px; float:left; margin-top:2px; margin-left:7px;"><img src="/assets/images/flags/shiny/24/World.png" width="24" height="24" alt="International" style="display:block;" /></div><div style="float:left; padding-top:5px; padding-bottom:4px; font-weight:bold; font-size:14px;"><a href="/concacaf-gold-cup/stilling/" style="color:rgb(51, 51, 51);">International: CONCACAF Gold Cup Grp. B</a></div><br clear="all" /></td></tr>
+				<tr data-reftournament="848708" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2472338" data-eventid="2472338" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">00:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/panama-haitinicaragua-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/panama-haitinicaragua-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Panama</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Nicaragua</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848708" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2472275" data-eventid="2472275" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">03:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/usa-martinique-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/usa-martinique-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">USA</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Martinique</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-tournament="850412" class="livescore_table_row_header livescore_table_row_header_850412">
+			<td height="36" colspan="5" class="td_header"><div style="width:30px; float:left; margin-top:2px; margin-left:7px;"><img src="/assets/images/flags/shiny/24/World.png" width="24" height="24" alt="International" style="display:block;" /></div><div style="float:left; padding-top:5px; padding-bottom:4px; font-weight:bold; font-size:14px;"><a href="/em-u-19/stilling/" style="color:rgb(51, 51, 51);">International: EM U19 Semi finals</a></div><br clear="all" /></td></tr>
+				<tr data-reftournament="850412" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2561029" data-eventid="2561029" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">15:00</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/portugal-u19-holland-u19-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/portugal-u19-holland-u19-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Portugal U19</div>
+			<div class="score">
+						1 - 0						</div><div class="awayteam">Holland U19</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="850412" class="inprogress livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2561028" data-eventid="2561028" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">18:00</div></td><td width="60"><div style="text-align:center;">
+				<span style='color:#339933;'>Pause</span>			</div></td><td>
+			<a href="/fodbold/england-u19-tjekkiet-u19-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/england-u19-tjekkiet-u19-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">England U19</div>
+			<div class="score">
+						0 - 0						</div><div class="awayteam">Tjekkiet U19</div>
+			</section></a></td><td width="120"><div style="width:30px; text-align:center; padding:3px; background-color:#b3efd3; color:#0b4f30; font-size:10px; float:right; margin-right:10px;" class="blink">LIVE</div>			
+			            			</td></tr>
+						<tr data-tournament="848593" class="livescore_table_row_header livescore_table_row_header_848593">
+			<td height="36" colspan="5" class="td_header"><div style="width:30px; float:left; margin-top:2px; margin-left:7px;"><img src="/assets/images/flags/shiny/24/Brazil.png" width="24" height="24" alt="Brasilien" style="display:block;" /></div><div style="float:left; padding-top:5px; padding-bottom:4px; font-weight:bold; font-size:14px;"><a href="/serie-a-brasilien/stilling/" style="color:rgb(51, 51, 51);">Brasilien: Serie A</a></div><br clear="all" /></td></tr>
+				<tr data-reftournament="848593" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465163" data-eventid="2465163" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">00:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/atletico-mg-santos-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/atletico-mg-santos-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Atletico MG</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Santos</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848593" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465167" data-eventid="2465167" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">00:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/ponte-preta-bahia-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/ponte-preta-bahia-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Ponte Preta</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Bahia</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848593" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465159" data-eventid="2465159" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/fluminense-botafogo-rj-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/fluminense-botafogo-rj-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Fluminense</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Botafogo RJ</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848593" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465161" data-eventid="2465161" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:45</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/palmeiras-corinthians-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/palmeiras-corinthians-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Palmeiras</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Corinthians</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848593" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465164" data-eventid="2465164" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:45</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/atletico-pr-cruzeiro-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/atletico-pr-cruzeiro-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Atletico PR</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Cruzeiro</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848593" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465166" data-eventid="2465166" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:45</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/vitoria-vasco-da-gama-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/vitoria-vasco-da-gama-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Vitoria</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Vasco da Gama</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-tournament="848366" class="livescore_table_row_header livescore_table_row_header_848366">
+			<td height="36" colspan="5" class="td_header"><div style="width:30px; float:left; margin-top:2px; margin-left:7px;"><img src="/assets/images/flags/shiny/24/World.png" width="24" height="24" alt="International" style="display:block;" /></div><div style="float:left; padding-top:5px; padding-bottom:4px; font-weight:bold; font-size:14px;"><a href="/copa-sudamericana/stilling/" style="color:rgb(51, 51, 51);">International: Copa Sudamericana</a></div><br clear="all" /></td></tr>
+				<tr data-reftournament="848366" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2547918" data-eventid="2547918" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">00:15</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/huracan-libertad-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/huracan-libertad-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Huracan</div>
+			<div class="score">
+						1 - 5						</div><div class="awayteam">Libertad</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848366" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2547908" data-eventid="2547908" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:45</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/cerro-porteno-boston-river-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/cerro-porteno-boston-river-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Cerro Porteno</div>
+			<div class="score">
+						2 - 1						</div><div class="awayteam">Boston River</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848366" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2547921" data-eventid="2547921" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:45</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/oriente-petrolero-atletico-tucuman-12-07-2017/" class="event_item" onclick="return popitup('/fodbold/oriente-petrolero-atletico-tucuman-12-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Oriente Petrolero</div>
+			<div class="score">
+						2 - 3						</div><div class="awayteam">Atletico Tucuman</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848366" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2547916" data-eventid="2547916" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">00:15</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/bolivar-ldu-de-quito-13-07-2017/" class="event_item" onclick="return popitup('/fodbold/bolivar-ldu-de-quito-13-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Bolivar</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">LDU de Quito</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848366" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2547915" data-eventid="2547915" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:45</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/independiente-deportes-iquique-13-07-2017/" class="event_item" onclick="return popitup('/fodbold/independiente-deportes-iquique-13-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Independiente</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Deportes Iquique</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848366" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2547922" data-eventid="2547922" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:45</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/nacional-olimpia-13-07-2017/" class="event_item" onclick="return popitup('/fodbold/nacional-olimpia-13-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Nacional</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Olimpia</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-tournament="846026" class="livescore_table_row_header livescore_table_row_header_846026">
+			<td height="36" colspan="5" class="td_header"><div style="width:30px; float:left; margin-top:2px; margin-left:7px;"><img src="/assets/images/flags/shiny/24/Argentina.png" width="24" height="24" alt="Argentina" style="display:block;" /></div><div style="float:left; padding-top:5px; padding-bottom:4px; font-weight:bold; font-size:14px;"><a href="/primera-b-nacional/stilling/" style="color:rgb(51, 51, 51);">Argentina: Primera B Nacional</a></div><br clear="all" /></td></tr>
+				<tr data-reftournament="846026" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2365312" data-eventid="2365312" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/flandria-crucero-del-norte-17-06-2017/" class="event_item" onclick="return popitup('/fodbold/flandria-crucero-del-norte-17-06-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Flandria</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Crucero del Norte</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="846026" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2365318" data-eventid="2365318" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">20:35</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/nueva-chicago-argentinos-juniors-17-06-2017/" class="event_item" onclick="return popitup('/fodbold/nueva-chicago-argentinos-juniors-17-06-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Nueva Chicago</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Argentinos Juniors</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="846026" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2365308" data-eventid="2365308" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">01:05</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/ferro-carril-oeste-guillermo-brown-17-06-2017/" class="event_item" onclick="return popitup('/fodbold/ferro-carril-oeste-guillermo-brown-17-06-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Ferro Carril Oeste</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Guillermo Brown</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="846026" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2365314" data-eventid="2365314" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">01:05</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/independiente-rivadavia-douglas-haig-17-06-2017/" class="event_item" onclick="return popitup('/fodbold/independiente-rivadavia-douglas-haig-17-06-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Independiente Rivadavia</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Douglas Haig</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="846026" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2365313" data-eventid="2365313" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">01:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/santamarina-sportivo-estudiantes-17-06-2017/" class="event_item" onclick="return popitup('/fodbold/santamarina-sportivo-estudiantes-17-06-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Santamarina</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Sportivo Estudiantes</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="846026" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2365315" data-eventid="2365315" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/boca-unidos-villa-dalmine-17-06-2017/" class="event_item" onclick="return popitup('/fodbold/boca-unidos-villa-dalmine-17-06-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Boca Unidos</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Villa Dalmine</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="846026" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2365316" data-eventid="2365316" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:00</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/central-cordoba-de-santiago-atletico-parana-17-06-2017/" class="event_item" onclick="return popitup('/fodbold/central-cordoba-de-santiago-atletico-parana-17-06-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Central Cordoba d.S</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Atletico Parana</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="846026" class="notstarted livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2365309" data-eventid="2365309" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:30</div></td><td width="60"><div style="text-align:center;">
+				-			</div></td><td>
+			<a href="/fodbold/gimnasia-jujuy-instituto-17-06-2017/" class="event_item" onclick="return popitup('/fodbold/gimnasia-jujuy-instituto-17-06-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Gimnasia Jujuy</div>
+			<div class="score">
+						-
+						</div><div class="awayteam">Instituto</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-tournament="848594" class="livescore_table_row_header livescore_table_row_header_848594">
+			<td height="36" colspan="5" class="td_header"><div style="width:30px; float:left; margin-top:2px; margin-left:7px;"><img src="/assets/images/flags/shiny/24/Brazil.png" width="24" height="24" alt="Brasilien" style="display:block;" /></div><div style="float:left; padding-top:5px; padding-bottom:4px; font-weight:bold; font-size:14px;"><a href="/serie-b-brasilien/stilling/" style="color:rgb(51, 51, 51);">Brasilien: Serie B</a></div><br clear="all" /></td></tr>
+				<tr data-reftournament="848594" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465765" data-eventid="2465765" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">00:15</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/criciuma-paysandu-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/criciuma-paysandu-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Criciuma</div>
+			<div class="score">
+						1 - 1						</div><div class="awayteam">Paysandu</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848594" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465768" data-eventid="2465768" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">00:15</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/brasil-de-pelotas-oeste-fc-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/brasil-de-pelotas-oeste-fc-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Brasil de Pelotas</div>
+			<div class="score">
+						3 - 1						</div><div class="awayteam">Oeste FC</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848594" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465769" data-eventid="2465769" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">00:15</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/londrina-ec-abc-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/londrina-ec-abc-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Londrina EC</div>
+			<div class="score">
+						3 - 1						</div><div class="awayteam">ABC</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848594" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465763" data-eventid="2465763" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">01:30</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/ceara-internacional-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/ceara-internacional-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Ceara</div>
+			<div class="score">
+						0 - 2						</div><div class="awayteam">Internacional</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848594" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465766" data-eventid="2465766" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">01:30</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/vila-nova-parana-clube-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/vila-nova-parana-clube-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Vila Nova</div>
+			<div class="score">
+						3 - 2						</div><div class="awayteam">Parana Clube</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848594" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465767" data-eventid="2465767" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">01:30</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/guarani-goias-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/guarani-goias-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Guarani</div>
+			<div class="score">
+						1 - 0						</div><div class="awayteam">Goias</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848594" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465770" data-eventid="2465770" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">01:30</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/america-mg-boa-esporte-clube-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/america-mg-boa-esporte-clube-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">America MG</div>
+			<div class="score">
+						2 - 0						</div><div class="awayteam">Boa Esporte Clube</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848594" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465764" data-eventid="2465764" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:30</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/nautico-juventude-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/nautico-juventude-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Nautico</div>
+			<div class="score">
+						1 - 1						</div><div class="awayteam">Juventude</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848594" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465771" data-eventid="2465771" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:30</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/luverdense-santa-cruz-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/luverdense-santa-cruz-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">Luverdense</div>
+			<div class="score">
+						2 - 2						</div><div class="awayteam">Santa Cruz</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+						<tr data-reftournament="848594" class="finished livescore_table_row"><td width="36" height="36"><div style="text-align:center;"><a href="#" class="event_favorite_off star_icon_16 hidefocus event_favorite_2465772" data-eventid="2465772" title="Klik for at tilføje til favoritter">&nbsp;</a></div></td><td width="50"><div style="text-align:center;">02:30</div></td><td width="60"><div style="text-align:center;">
+				Slut			</div></td><td>
+			<a href="/fodbold/crb-figueirense-11-07-2017/" class="event_item" onclick="return popitup('/fodbold/crb-figueirense-11-07-2017/?popup')">
+			<section class="game_info"><div class="hometeam">CRB</div>
+			<div class="score">
+						2 - 1						</div><div class="awayteam">Figueirense</div>
+			</section></a></td><td width="120">			
+			            			</td></tr>
+		    </table>
+        </div>
+    </main>
+    
+    <div id="sidebar_right" style="width:250px; float:left; margin-left:10px;">
+    <script type="text/javascript">
+$(document).ready(function() {
+	
+	function UpdateWidgetTopevents() {
+		jQuery.ajax({
+			type: "GET",
+			timeout: 5000,
+			url: "/ajax/get_widget_topevents_json.php?request=1",
+			dataType:"json",
+			complete: function() {
+				setTimeout(UpdateWidgetTopevents, 20000);
+			},
+			success:function(response){
+				if (response) {
+	
+					// Loop events
+					for (i in response)
+					{
+						var wte_event_id = response[i].event_id;
+						var wte_status_type = response[i].status_type;
+						var wte_date_is_today = response[i].date_is_today;
+						var wte_home_team = response[i].home_team;
+						var wte_home_team_id = response[i].home_team_id;
+						var wte_away_team = response[i].away_team;
+						var wte_away_team_id = response[i].away_team_id;
+						var wte_date_timestamp_diff = response[i].date_timestamp_diff;
+						var wte_starttime = response[i].starttime;
+						var wte_home_score = response[i].home_score;
+						var wte_away_score = response[i].away_score;
+						var wte_gameclock = response[i].gameclock;
+						var wte_has_stream = response[i].has_stream;
+						var wte_stream_url = response[i].stream_url;
+						
+						var wte_has_odds = response[i].has_odds;
+						var wte_odds_0 = response[i].odds_0;
+						var wte_odds_1 = response[i].odds_1;
+						var wte_odds_2 = response[i].odds_2;
+						
+						if(wte_event_id>0){
+						
+							// Set values
+							$(".wte_name").empty().append(wte_home_team + " - " + wte_away_team);
+							$(".wte_p1_img").attr("src", "/assets/images/logo/participants/70x70/" + wte_home_team_id + ".png")
+							$(".wte_p2_img").attr("src", "/assets/images/logo/participants/70x70/" + wte_away_team_id + ".png")
+							
+							// Check event status
+							if(wte_status_type=="notstarted"){
+								$(".wte_center_box").empty().append(wte_starttime);
+								$(".wte_center_r1").empty().append("Starter om");
+								$('.wte_center_r2').countdown({compact: true, until: +wte_date_timestamp_diff});
+							} else {
+								$(".wte_center_box").empty().append(wte_home_score + " - " + wte_away_score);
+								$(".wte_center_r1").empty().append("LIVE");
+								$(".wte_center_r2").empty().append(wte_gameclock);
+							}
+							
+							// Odds
+							if(wte_has_odds==true){
+								$(".wte_odds").show();
+								$(".wte_odds_odds").show();
+								$(".wte_odds_1_value").empty().append(wte_odds_0);
+								$(".wte_odds_2_value").empty().append(wte_odds_1);
+								$(".wte_odds_3_value").empty().append(wte_odds_2);
+								
+								$(".wte_odds_1_a").attr("title", "Spil 100 kr. og vind " + wte_odds_0*100 + " kr.");
+								$(".wte_odds_2_a").attr("title", "Spil 100 kr. og vind " + wte_odds_1*100 + " kr.");
+								$(".wte_odds_3_a").attr("title", "Spil 100 kr. og vind " + wte_odds_2*100 + " kr.");
+								
+								$(".wte_odds_1_a").attr("data-event", wte_event_id);
+								$(".wte_odds_2_a").attr("data-event", wte_event_id);
+								$(".wte_odds_3_a").attr("data-event", wte_event_id);
+								
+							} else {
+								$(".wte_odds").hide();
+								$(".wte_odds_odds").hide();
+							}
+							
+							// Live stream
+							if(wte_has_stream==true){
+								$(".wte_livestream").show();							
+							} else {
+								$(".wte_livestream").hide();
+							}
+							
+							// Set Header
+							if(wte_date_is_today==true){
+								$(".wte_title").empty().append("Spil på dagens store kampe");							
+							} else {
+								$(".wte_title").empty().append("Kommende store kampe");
+							}
+						
+						} else {
+							$("#container_widget_topevents").hide();	
+						}
+					}
+				}
+			}
+		});
+	}
+	
+	UpdateWidgetTopevents();
+	
+});
+</script>
+<div id="container_widget_topevents"></div>
+
+<style>
+#container_widget_topevents .wte_livestream { display:none; }
+#container_widget_topevents .wte_name { background-color:#222222; color:#FFFFFF; font-weight:bold; font-size:12px; text-align:center; padding:5px 0px 5px 0px; }
+#container_widget_topevents .wte_field { background-image:url(/assets/images/widget_field_background_2.png); background-repeat:no-repeat; height:75px; }
+#container_widget_topevents .wte_p1 { width:68px; float:left; padding:12px 0px 0px 25px; }
+#container_widget_topevents .wte_p2 { width:68px; float:left; padding:12px 0px 0px 25px; }
+#container_widget_topevents .wte_center { width:62px; float:left; }
+#container_widget_topevents .wte_center_box { margin-top:16px; font-size: 15px; background-color:rgba(0,0,0,0.65); text-align:center; color:#FFF; font-weight:bold; padding:1px; }
+#container_widget_topevents .wte_center_r1 { font-size:11px; color:#000000; text-align:center; text-shadow:0px 0px 3px #FFF; margin-top:2px; }
+#container_widget_topevents .wte_center_r2 { font-size:11px; color:#000000; text-align:center; line-height: 100%; font-weight:bold; text-shadow:0px 0px 3px #FFF; }
+#container_widget_topevents .wte_odds { font-weight:bold; padding:5px; border-bottom:1px #f2f2f2 solid; background-image: url('/assets/images/icons.png');
+background-position: -145px -75px; }
+#container_widget_topevents .wte_odds_c1 { width:120px; float:left; }
+#container_widget_topevents .wte_odds_c2 { width:40px; float:left; text-align:center; border-left:1px #f2f2f2 solid; }
+#container_widget_topevents .wte_odds_c3 { width:40px; float:left; text-align:center; border-right:1px #f2f2f2 solid; border-left:1px #f2f2f2 solid; }
+#container_widget_topevents .wte_odds_c4 { width:40px; float:left; text-align:center; }
+#container_widget_topevents .wte_odds_c1_bet365 { font-weight:bold; background-image:url(/assets/images/icons.png?v=4); background-repeat:no-repeat; background-position:0px -445px; padding:5px; padding-left:20px; display: block; margin-left:6px; }
+#container_widget_topevents .wte_odds_c1_bwin { font-weight:bold; background-image:url(/assets/images/icons.png?v=4); background-repeat:no-repeat; background-position:-581px -445px; padding:5px; padding-left:20px; display: block; margin-left:6px; }
+#container_widget_topevents .wte_odds_a { font-weight:bold; padding:5px; display:block; }
+#container_widget_topevents .wte_cta_row { border-top:1px #f2f2f2 solid; text-align: center; padding: 8px 0px; }
+#container_widget_topevents .wte_cta_row a { border-radius: 2px; border: 1px #0a0102 solid; background-color: #424242; transition: background-color 0.2s linear 0s; text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.25); color: #FFF; font-weight: bold; text-transform: uppercase; display: inline-block; padding: 6px 6px; margin-bottom: 0; font-size: 10px; text-decoration: none;}
+#container_widget_topevents .wte_cta_row a:hover { border:1px #6b0211 solid; background-color:#ab0016; transition: background-color 0.2s linear 0s; }
+</style>
+<div id="container_widget_topevents">
+<div class="widget_right"> 
+    <div class="widget_right_header wte_title">Spil på dagens store kampe</div>
+
+    <div class="wte_name">&nbsp;</div>
+    <div class="wte_field">
+        <div class="wte_p1"><img class="wte_p1_img" src="/assets/images/logo/participants/70x70/nologo.png" width="50" height="50" border="0" alt="" title="" /></div>
+        <div class="wte_center">
+            <div class="wte_center_box"><span style="font-size:10px;">Indlæser..</span></div>
+            <div class="wte_center_r1"></div>
+            <div class="wte_center_r2"></div>
+        </div>
+        <div class="wte_p2"><img class="wte_p2_img" src="/assets/images/logo/participants/70x70/nologo.png" width="50" height="50" border="0" alt="" title="" /></div>
+		<br clear="all" />
+    </div>
+
+    <div class="wte_odds">Spil på kampen</div>
+    <div class="wte_odds_odds">
+        <div class="wte_odds_c1"><a href="/out/145/" target="_blank" class="wte_odds_c1_bwin click_tracking" data-object="top_events_odds" data-deal="1" data-event="0">Bwin</a></div>
+        <div class="wte_odds_c2"><a href="/out/145/" target="_blank" class="wte_odds_1_a wte_odds_a click_tracking" data-object="top_events_odds" data-deal="1" data-event="0" data-toggle="tooltip" data-placement="top" title="Spil 100 kr. og vind x kr."><span class="wte_odds_1_value"></span></a></div>
+        <div class="wte_odds_c3"><a href="/out/145/" target="_blank" class="wte_odds_2_a wte_odds_a click_tracking" data-object="top_events_odds" data-deal="1" data-event="0" data-toggle="tooltip" data-placement="top" title="Spil 100 kr. og vind x kr."><span class="wte_odds_2_value"></span></a></div>
+        <div class="wte_odds_c4"><a href="/out/145/" target="_blank" class="wte_odds_3_a wte_odds_a click_tracking" data-object="top_events_odds" data-deal="1" data-event="0" data-toggle="tooltip" data-placement="top" title="Spil 100 kr. og vind x kr."><span class="wte_odds_3_value"></span></a></div>
+        <br clear="all" />
+    </div>
+    <div class="wte_cta_row">
+    	<a href="/out/145/" target="_blank">Spil på kampen og få 1000 kr i bonus »</a>
+    </div>
+</div>
+</div>
+
+
+<style>
+#right_sidebar_news a { text-decoration:none; color:#3F91CB; font-size:12px; font-weight:bold; }
+</style>
+<div class="widget_right" id="right_sidebar_news"> 
+    <div class="widget_right_header">Spilnyheder fra odds.dk</div>
+    <div style="padding:8px;">
+        <div style="width:70px; float:left;"><a href="http://www.odds.dk/ferencvaros-vs-fc-midtjylland-odds/" target="_blank" rel="nofollow"><img src="http://www.odds.dk/wp-content/uploads/2014/07/FCM_Logo_250x250-150x150.png" width="60" height="60" border="0" style="border:#eeeeee 1px solid; padding:3px;" alt="Ferencvaros vs FC Midtjylland odds: – Svær kamp i vente for FCM i Ungarn" /></a></div>
+    <div style="width:157px; float:left; padding-left:5px; padding-top:2px;">
+        <a href="http://www.odds.dk/ferencvaros-vs-fc-midtjylland-odds/" target="_blank" rel="nofollow">Ferencvaros vs FC Midtjylland odds: – Svær kamp i vente for FCM i Ungarn</a>
+        <br />
+        <span style="color:#999999;">10-07-2017 14:09</span>
+    </div>
+    <br clear="all" />
+        <div style="height:1px; background-color:#eeeeee; margin-top:10px; margin-bottom:10px;"><!-- --></div>
+            <div style="width:70px; float:left;"><a href="http://www.odds.dk/slovan-bratislava-vs-lyngby-odds/" target="_blank" rel="nofollow"><img src="http://www.odds.dk/wp-content/uploads/2015/09/Lyngby_logo-150x150.png" width="60" height="60" border="0" style="border:#eeeeee 1px solid; padding:3px;" alt="Slovan Bratislava vs Lyngby odds: – Kan Lyngby overraske bookmakerne i Slovakiet?" /></a></div>
+    <div style="width:157px; float:left; padding-left:5px; padding-top:2px;">
+        <a href="http://www.odds.dk/slovan-bratislava-vs-lyngby-odds/" target="_blank" rel="nofollow">Slovan Bratislava vs Lyngby odds: – Kan Lyngby overraske bookmakerne i Slovakiet?</a>
+        <br />
+        <span style="color:#999999;">10-07-2017 11:45</span>
+    </div>
+    <br clear="all" />
+        <div style="height:1px; background-color:#eeeeee; margin-top:10px; margin-bottom:10px;"><!-- --></div>
+            <div style="width:70px; float:left;"><a href="http://www.odds.dk/broendby-vs-vps-odds/" target="_blank" rel="nofollow"><img src="http://www.odds.dk/wp-content/uploads/2015/08/Broendby_BIF_logo-150x150.png" width="60" height="60" border="0" style="border:#eeeeee 1px solid; padding:3px;" alt="Brøndby vs VPS: Læs optakt og se odds på Europa League-kvalkampen" /></a></div>
+    <div style="width:157px; float:left; padding-left:5px; padding-top:2px;">
+        <a href="http://www.odds.dk/broendby-vs-vps-odds/" target="_blank" rel="nofollow">Brøndby vs VPS: Læs optakt og se odds på Europa League-kvalkampen</a>
+        <br />
+        <span style="color:#999999;">10-07-2017 09:28</span>
+    </div>
+    <br clear="all" />
+            
+    </div>
+</div>
+
+<div><iframe src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2Flivescoredotdk&amp;width=250&amp;height=270&amp;colorscheme=light&amp;show_faces=true&amp;header=true&amp;stream=false&amp;show_border=true" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:250px; height:270px;" allowTransparency="true"></iframe></div>    </div><br clear="all" />
+</div>
+
+
+<script>
+$(document).ready(function() {
+	
+	/* SOUND CONTROLS */
+	var sound_status = 1;
+	$("#sound_controller").click(function(){
+		if(sound_status==1){
+			// Change from on to off
+			$("#sound_controller").removeClass("sound_controller_on");
+			$("#sound_controller").addClass("sound_controller_off");
+			sound_status = 0;
+		} else {
+			// Change from off to on
+			$("#sound_controller").removeClass("sound_controller_off");
+			$("#sound_controller").addClass("sound_controller_on");
+			sound_status = 1;
+		}
+		return false;
+	});
+	
+	/* FAVORITES HANDLER */
+	var myFavoriteEvents = new Array();
+	var blockFavoriteClick = 2;
+	
+	// Update events every 15 sec
+	setInterval(function() {
+		favUpdateAllEvents();
+	}, 15000);
+	//window.setTimeout(favUpdateAllEvents, 15000);
+	
+	/* Check if we want to hide or show the favbar */
+	function hide_show_favbar(){
+		if(myFavoriteEvents.length>0){
+			$("#favbar").show();
+		} else {
+			$("#favbar").hide();
+		}		
+	}
+	
+	/* Remove event from fav */
+	function favAddEvent(input_event_id){
+		
+		blockFavoriteClick = 1;
+		
+		console.log("Adding: "+input_event_id);
+		
+		// Check stars
+		$(".event_favorite_"+input_event_id).removeClass("star_icon_16");
+		$(".event_favorite_"+input_event_id).addClass("star_icon_16_on");
+		$(".event_favorite_"+input_event_id).removeClass("event_favorite_off");
+		$(".event_favorite_"+input_event_id).addClass("event_favorite_on");
+		
+		// Add event-id to array
+		myFavoriteEvents.push(input_event_id);
+		
+		// Remove duplicates
+        myFavoriteEvents = jQuery.unique(myFavoriteEvents);
+		
+		// Create HTML element
+		$("#favbar_events").append("<div class='event' id='fav_event_"+input_event_id+"' data-homescore=\"0\" data-awayscore=\"0\"><div class='loading'>&nbsp;</div></div>");
+		
+		hide_show_favbar();
+
+		jQuery.ajax({
+            type: "GET",
+            timeout: 5000,
+            url: "/ajax/get_favorite_events.php",
+			data: {'event': input_event_id},
+            dataType:"json",
+            complete: function() {
+                //setTimeout(UpdateLivescore, 15000);
+				blockFavoriteClick = 2
+            },
+            success:function(response){
+                if (response) {
+					
+					// Loop events
+					for (i in response)
+					{
+						var get_event_id = response[i].id;
+						var get_home_team_name = response[i].home_team_name;
+						var get_away_team_name = response[i].away_team_name;
+						var get_event_name = get_home_team_name + " - " + get_away_team_name;
+						var home_score = response[i].home_score;
+						var away_score = response[i].away_score;
+						var home_team_id = response[i].home_team_id;
+						var away_team_id = response[i].away_team_id;
+						var gameclock = response[i].gameclock;
+					 	var score_output = response[i].score_output;
+					  
+					    // Add html
+					    $("#fav_event_"+get_event_id).html("<div class=\"event_close_outer\"><a href=\"#\" class=\"event_close_inner\" data-eventid=\""+get_event_id+"\">&nbsp;</a></div><div class=\"title\">"+get_event_name+"</div><div class=\"logo_home\"><img src=\"/assets/images/logo/participants/70x70/"+home_team_id+".png\" width=\"38\" height=\"38\" border=\"0\" alt=\"\" /></div><div class=\"middle\"><div class=\"score event_score_"+get_event_id+"\">"+score_output+"</div><div class=\"clock  event_clock_"+get_event_id+"\">"+gameclock+"</div></div><div class=\"logo_away\"><img src=\"/assets/images/logo/participants/70x70/"+away_team_id+".png\" width=\"40\" height=\"40\" border=\"0\" alt=\"\" /></div><br clear=\"all\" />");
+					  
+					  	// Update data attributes
+						$("#fav_event_"+get_event_id).attr('data-homescore', home_score);
+						$("#fav_event_"+get_event_id).attr('data-awayscore', away_score);
+					}
+               	}
+            }
+        });
+	}
+	
+	/* Remove event from fav */
+	function favUpdateAllEvents(){
+		
+		if(myFavoriteEvents.length>0){
+			blockFavoriteClick = 1;
+			
+			console.log("Update events: "+myFavoriteEvents);
+							
+			var ajaxData = myFavoriteEvents.toString();
+	
+			jQuery.ajax({
+				type: "GET",
+				timeout: 5000,
+				url: "/ajax/get_favorite_events.php",
+				data: {'event': ajaxData},
+				dataType:"json",
+				complete: function() {
+					//setTimeout(UpdateLivescore, 15000);
+					blockFavoriteClick = 2
+				},
+				success:function(response){
+					if (response) {
+	
+						// Loop events
+						for (i in response)
+						{
+							var get_event_id = response[i].id;
+							var get_home_team_name = response[i].home_team_name;
+							var get_away_team_name = response[i].away_team_name;
+							var get_event_name = get_home_team_name + " - " + get_away_team_name;
+							var home_score = response[i].home_score;
+							var away_score = response[i].away_score;
+							var home_team_id = response[i].home_team_id;
+							var away_team_id = response[i].away_team_id;
+							var gameclock = response[i].gameclock;
+							var score_output = response[i].score_output;
+							
+							// Update game clock
+							$(".event_clock_"+get_event_id).html(gameclock);
+							
+							// Get old scores
+							var old_home_score = $("#fav_event_"+get_event_id).attr("data-homescore");
+							var old_away_score = $("#fav_event_"+get_event_id).attr("data-awayscore");
+							console.log("Old score: "+old_home_score+" - " + old_away_score);
+							
+							// Check if the score has changes
+							if(old_home_score!= home_score || old_away_score!= away_score){
+								
+								// Update score 
+								$(".event_score_"+get_event_id).html(score_output);
+							  
+								// Update data attributes
+								$("#fav_event_"+get_event_id).attr('data-homescore', home_score);
+								$("#fav_event_"+get_event_id).attr('data-awayscore', away_score);
+								
+								
+								$("#fav_event_"+get_event_id).fadeTo('fast',0).fadeTo('fast',1).fadeTo('fast',0).fadeTo('fast',1).fadeTo('fast',0).fadeTo('fast',1);
+								//setTimeout(function () {
+								//$("#fav_event_"+get_event_id).delay(2000).css("background-color", "#222");
+								//	}, 1500);
+								
+							}
+						}
+					}
+				}
+			});
+		}
+	}
+	
+	
+	
+	
+	
+	/* Remove add event to fav */
+	function favRemoveEven(input_event_id){
+		
+		console.log("Removing: "+input_event_id);
+			
+		// Remove event-id from array
+		myFavoriteEvents.splice(myFavoriteEvents.indexOf(input_event_id), 1);
+		
+		// Remove HTML element
+		$("#fav_event_"+input_event_id).remove();
+		
+		// Uncheck stars
+		$(".event_favorite_"+input_event_id).removeClass("star_icon_16_on");
+		$(".event_favorite_"+input_event_id).addClass("star_icon_16");
+		$(".event_favorite_"+input_event_id).removeClass("event_favorite_on");
+		$(".event_favorite_"+input_event_id).addClass("event_favorite_off");
+		
+		// Check if we should hide the favbar
+		hide_show_favbar();
+	}
+	
+	// Fav - Click star icon: Remove event
+	$('body').on('click', '.event_favorite_on', function() {
+		if(blockFavoriteClick==2){
+			blockFavoriteClick = 1;
+			get_event_id = $(this).data("eventid");
+			favRemoveEven(get_event_id);
+			blockFavoriteClick = 2;
+		}
+		return false;
+	});
+	
+	// Fav - Click remove event icon
+	$('body').on('click', '.event_close_inner', function() {
+		if(blockFavoriteClick==2){
+			blockFavoriteClick = 1;
+			get_event_id = $(this).data("eventid");
+			favRemoveEven(get_event_id);
+			blockFavoriteClick = 2;
+		}
+		return false;
+	});
+	
+	// Fav - click star icon: Add event
+	$('body').on('click', '.event_favorite_off', function() {
+		if(blockFavoriteClick==2){
+			get_event_id = $(this).data("eventid");
+			favAddEvent(get_event_id);
+		}
+		return false;
+	});
+	
+	// Fav - show hide icon when moveover even
+	$('body').on('mouseover', '.event', function() { 
+		 $(this).children('.event_close_outer').show();
+	});
+	$('body').on('mouseout', '.event', function() {
+		$(this).children('.event_close_outer').hide(); 
+	});
+	
+});
+</script>
+<div id="favbar" style="display:none;">
+	
+    <div id="favbar_events"></div>
+    
+    <div id="sound_controller_container"><a id="sound_controller" class="sound_controller_on hidefocus" href="#">&nbsp;</a></div>
+</div><div class="text_section">
+    <div class="wrapper">
+    <h1>Livescore</h1>
+<p>Livescore.dk er en gratis livescore service, hvor du altid kan finde de seneste resultater fra fodboldens verden.</p>
+<p>Vi opdaterer livestillinger fra kampene, mens de er i gang, og her kan du ogs&aring; finde resultater og ligastillinger fra stort set alle fodboldligaer i verden. I Livescore.dk menuen finder du links til Superliga-, Premier League-, Bundesliga-, Serie A- samt La Liga-livescores samt en lang r&aelig;kke ligaer fra lande i hele verden.</p>
+<p>P&aring; Livescore.dk prioriterer vi fodbold livescore og resultater fra Superligaen, samt at v&aelig;re f&oslash;rst med f.eks. Premier League resultater. Via vores internationale leverand&oslash;r af livescore-data er vi i stand til at d&aelig;kke stort set hele fodboldkloden, hvilket g&oslash;r Livescore.dk til det perfekte sted at finde de nyeste fodboldresultater og stillinger. Se f.eks. gruppestillingerne i Champions League og Europa League eller stillingen i grupperne ved store slutrunder som EM- og VM i fodbold, som automatisk opdateres efter hver eneste spillede kamp.</p>
+<p>&nbsp;</p>
+<h2>Se holdopstillinger, kampdata og odds</h2>
+<p>Uanset om du bes&oslash;ger Livescore.dk fra din mobil, tablet eller PC, kan du finde uddybende information om de fleste kampe p&aring; selve kampsiden. Klik blot p&aring; den kamp du &oslash;nsker at f&oslash;lge, og v&aelig;lg mellem "Kamp", "Opstilling", "Stats" eller "Odds" i menuen.</p>
+<p>Her kan du f&oslash;lge udviklingen i kampen n&oslash;je, og se minut for minut om der foretages udskiftninger, br&aelig;ndes straffespark eller om dommeren deler ud af b&aring;de gule og r&oslash;de kort. Du kan ogs&aring; se holdenes forventede opstilling f&oslash;r kick off, s&aring; snart disse foreligger, og mens kampen er i gang. Her kan du ogs&aring; se uddybende livescore-statistik fra kampene, og f&aring; indblik i hvilket af de to hold som har mest boldbesiddelse, hj&oslash;rnespark og afslutninger p&aring; m&aring;l.</p>
+<p>Sidst, men ikke mindst, finder du selvf&oslash;lgelig ogs&aring; odds p&aring; kampene b&aring;de f&oslash;r og mens de er i gang, s&aring; du kan se hvad du kan vinde, hvis du beslutter dig for at spille p&aring; kampen.</p>
+<p>Vores m&aring;ls&aelig;tning er, at levere Danmarks bedste livescore- og resultat-service til dig, hvor der er s&aelig;rlig fokus p&aring; fodbold. Servicen er gratis men bes&oslash;gende er underlagt vores standard betingelser for brug af hjemmesiden.</p>
+<p>&nbsp;</p>
+<h2>F&oslash;lg os p&aring; Facebook</h2>
+<p>Hvis du savner lidt morsomme og altid aktuelle fodbold-opdateringer i dit Facebook nyhedsfeed, til at bryde den evindelige str&oslash;m af mad- og babybilleder du ellers f&aring;r smidt i hovedet, s&aring; overvej at give os "et like" p&aring; Facebook.</p>
+<p>Vi spammer ikke din Facebook med intetsigende "dong-opdateringer", n&aring;r Liverpool eller Manchester United scorer til 2-0 en tilf&aelig;ldig l&oslash;rdag eftermiddag, for den slags spam er n&aelig;sten v&aelig;rre end f&oslash;rn&aelig;vnte madbilleder. Men ogs&aring; kun n&aelig;sten. Til geng&aelig;ld kan vi ikke love, at vi ikke opdaterer lidt, hvis Danmark spiller og det g&aring;r godt.</p>
+<p>Hvis du vil tjekke livescores, s&aring; bes&oslash;g vores hjemmeside, hvor der er masser af den slags p&aring; lager. Vil du derimod have n&oslash;je udvalgte, morsomme historier med sk&aelig;ve vinkler fra sportens verden og af og til et godt spilforslag, s&aring; f&oslash;lg os p&aring; Facebook!</p>    </div>
+</div>
+<footer class="footer footer_no_margin">
+    <div class="wrapper">
+        
+        <div style="float:left; width:20%;">
+        	<h3>Om Livescore.dk</h3>
+            <ul>
+                <li><a href="/kontakt/">Kontakt os</a></li>
+                <li><a href="/cookies/">Cookies</a></li>
+                <li><a href="/fortrolighedspolitik/">Fortrolighedspolitik</a></li>
+            </ul>
+        </div>
+        
+        <div style="float:left; width:5%;">
+            &nbsp;
+        </div>
+        
+        <div style="float:left; width:20%;">
+        	            <h3>Vi anbefaler</h3>
+            <ul>
+                <li><a href="http://www.odds.dk" target="_blank">Odds.dk</a></li>
+                <li><a href="http://www.pokernet.dk" target="_blank">PokerNet.dk</a></li>
+                <li><a href="http://www.casinoguide.dk" target="_blank">CasinoGuide.dk</a></li>
+            </ul>
+                    </div>
+        
+        <div style="float:left; width:5%;">
+            &nbsp;
+        </div>
+        
+        <div style="float:left; width:20%;">
+            <h3>Følg Livescore.dk</h3>
+            <ul>
+                <li><a href="https://www.facebook.com/livescoredotdk/" target="_blank" rel="nofollow" class="facebook">Facebook</a></li>
+                <li><a href="https://twitter.com/livescoredk" target="_blank" rel="nofollow" class="twitter">Twitter</a></li>
+            </ul>
+        </div>
+        
+        <br clear="all" />
+        
+    </div>
+    
+    <div class="copyright">
+        <div class="inner">© 2017 ZAW Media Ltd. All rights reserved.</div>
+    </div>
+</footer><!-- .footer -->
+</body>
+</html>
+
+

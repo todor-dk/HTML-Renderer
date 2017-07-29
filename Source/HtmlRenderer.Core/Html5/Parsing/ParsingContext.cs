@@ -25,31 +25,40 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 {
     public abstract class ParsingContext
     {
-        public ParsingContext(string url)
+        public ParsingContext(string url, string characterSet)
         {
             Contract.RequiresNotEmptyOrWhiteSpace(url, nameof(url));
+            Contract.RequiresNotEmptyOrWhiteSpace(characterSet, nameof(characterSet));
+
             this.Url = url;
+            this.CharacterSet = characterSet;
         }
 
         public string Url { get; private set; }
 
+        public string CharacterSet { get; private set; }
+
         // http://www.w3.org/TR/html51/semantics-embedded-content.html#iframe-iframe-srcdoc-document
-        public bool IsIFrameSource
-        {
-            get { return false; }
-        }
+        public abstract bool IsIFrameSource { get; }
 
         // http://www.w3.org/TR/html51/syntax.html#parsing-html-fragments
-        public bool IsFragmentParsing
+        public abstract bool IsFragmentParsing { get; }
+
+        public abstract Element FragmentContextElement { get; }
+
+        /// <summary>
+        /// Raised when a parse error occurs during tokanization or parsing of the HTML stream.
+        /// </summary>
+        public event EventHandler<ParseErrorEventArgs> ParseError;
+
+        internal void OnParseError(ParseErrorEventArgs args)
         {
-            get { return false; }
+            this.ParseError?.Invoke(this, args);
         }
 
-        public Element FragmentContextElement
+        internal void OnParseError(ParseError error)
         {
-            get { return null; }
+            this.ParseError?.Invoke(this, new ParseErrorEventArgs(error));
         }
-
-        internal abstract DomFactory GetDomFactory();
     }
 }

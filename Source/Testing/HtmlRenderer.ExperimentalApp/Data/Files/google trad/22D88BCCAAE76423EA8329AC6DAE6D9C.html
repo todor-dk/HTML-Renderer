@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en-US" prefix="og: http://ogp.me/ns#" >
+<head>
+	<script type="text/javascript">window.NREUM||(NREUM={}),__nr_require=function(t,e,n){function r(n){if(!e[n]){var o=e[n]={exports:{}};t[n][0].call(o.exports,function(e){var o=t[n][1][e];return r(o||e)},o,o.exports)}return e[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({1:[function(t,e,n){function r(t){try{s.console&&console.log(t)}catch(e){}}var o,i=t("ee"),a=t(14),s={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(s.console=!0,-1!==o.indexOf("dev")&&(s.dev=!0),-1!==o.indexOf("nr_dev")&&(s.nrDev=!0))}catch(c){}s.nrDev&&i.on("internal-error",function(t){r(t.stack)}),s.dev&&i.on("fn-err",function(t,e,n){r(n.stack)}),s.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(s,function(t,e){return t}).join(", ")))},{}],2:[function(t,e,n){function r(t,e,n,r,o){try{d?d-=1:i("err",[o||new UncaughtException(t,e,n)])}catch(s){try{i("ierr",[s,(new Date).getTime(),!0])}catch(c){}}return"function"==typeof f?f.apply(this,a(arguments)):!1}function UncaughtException(t,e,n){this.message=t||"Uncaught error with no additional information",this.sourceURL=e,this.line=n}function o(t){i("err",[t,(new Date).getTime()])}var i=t("handle"),a=t(15),s=t("ee"),c=t("loader"),f=window.onerror,u=!1,d=0;c.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(l){"stack"in l&&(t(8),t(7),"addEventListener"in window&&t(5),c.xhrWrappable&&t(9),u=!0)}s.on("fn-start",function(t,e,n){u&&(d+=1)}),s.on("fn-err",function(t,e,n){u&&(this.thrown=!0,o(n))}),s.on("fn-end",function(){u&&!this.thrown&&d>0&&(d-=1)}),s.on("internal-error",function(t){i("ierr",[t,(new Date).getTime(),!0])})},{}],3:[function(t,e,n){t("loader").features.ins=!0},{}],4:[function(t,e,n){function r(t){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var o=t("ee"),i=t("handle"),a=t(8),s=t(7);t("loader").features.stn=!0,t(6);var c=NREUM.o.EV;o.on("fn-start",function(t,e){var n=t[0];n instanceof c&&(this.bstStart=Date.now())}),o.on("fn-end",function(t,e){var n=t[0];n instanceof c&&i("bst",[n,e,this.bstStart,Date.now()])}),a.on("fn-start",function(t,e,n){this.bstStart=Date.now(),this.bstType=n}),a.on("fn-end",function(t,e){i("bstTimer",[e,this.bstStart,Date.now(),this.bstType])}),s.on("fn-start",function(){this.bstStart=Date.now()}),s.on("fn-end",function(t,e){i("bstTimer",[e,this.bstStart,Date.now(),"requestAnimationFrame"])}),o.on("pushState-start",function(t){this.time=Date.now(),this.startPath=location.pathname+location.hash}),o.on("pushState-end",function(t){i("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),"addEventListener"in window.performance&&(window.performance.clearResourceTimings?window.performance.addEventListener("resourcetimingbufferfull",function(t){i("bstResource",[window.performance.getEntriesByType("resource")]),window.performance.clearResourceTimings()},!1):window.performance.addEventListener("webkitresourcetimingbufferfull",function(t){i("bstResource",[window.performance.getEntriesByType("resource")]),window.performance.webkitClearResourceTimings()},!1)),document.addEventListener("scroll",r,!1),document.addEventListener("keypress",r,!1),document.addEventListener("click",r,!1)}},{}],5:[function(t,e,n){function r(t){for(var e=t;e&&!e.hasOwnProperty(u);)e=Object.getPrototypeOf(e);e&&o(e)}function o(t){s.inPlace(t,[u,d],"-",i)}function i(t,e){return t[1]}var a=t("ee").get("events"),s=t(16)(a),c=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";e.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,e){if(t[1]){var n=t[1];if("function"==typeof n){var r=c(n,"nr@wrapped",function(){return s(n,"fn-",null,n.name||"anonymous")});this.wrapped=t[1]=r}else"function"==typeof n.handleEvent&&s.inPlace(n,["handleEvent"],"fn-")}}),a.on(d+"-start",function(t){var e=this.wrapped;e&&(t[1]=e)})},{}],6:[function(t,e,n){var r=t("ee").get("history"),o=t(16)(r);e.exports=r,o.inPlace(window.history,["pushState","replaceState"],"-")},{}],7:[function(t,e,n){var r=t("ee").get("raf"),o=t(16)(r);e.exports=r,o.inPlace(window,["requestAnimationFrame","mozRequestAnimationFrame","webkitRequestAnimationFrame","msRequestAnimationFrame"],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],8:[function(t,e,n){function r(t,e,n){t[0]=a(t[0],"fn-",null,n)}function o(t,e,n){this.method=n,this.timerDuration="number"==typeof t[1]?t[1]:0,t[0]=a(t[0],"fn-",this,n)}var i=t("ee").get("timer"),a=t(16)(i);e.exports=i,a.inPlace(window,["setTimeout","setImmediate"],"setTimer-"),a.inPlace(window,["setInterval"],"setInterval-"),a.inPlace(window,["clearTimeout","clearImmediate"],"clearTimeout-"),i.on("setInterval-start",r),i.on("setTimer-start",o)},{}],9:[function(t,e,n){function r(t,e){d.inPlace(e,["onreadystatechange"],"fn-",s)}function o(){var t=this,e=u.context(t);t.readyState>3&&!e.resolved&&(e.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,v,"fn-",s)}function i(t){w.push(t),h&&(g=-g,b.data=g)}function a(){for(var t=0;t<w.length;t++)r([],w[t]);w.length&&(w=[])}function s(t,e){return e}function c(t,e){for(var n in t)e[n]=t[n];return e}t(5);var f=t("ee"),u=f.get("xhr"),d=t(16)(u),l=NREUM.o,p=l.XHR,h=l.MO,m="readystatechange",v=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],w=[];e.exports=u;var y=window.XMLHttpRequest=function(t){var e=new p(t);try{u.emit("new-xhr",[e],e),e.addEventListener(m,o,!1)}catch(n){try{u.emit("internal-error",[n])}catch(r){}}return e};if(c(p,y),y.prototype=p.prototype,d.inPlace(y.prototype,["open","send"],"-xhr-",s),u.on("send-xhr-start",function(t,e){r(t,e),i(e)}),u.on("open-xhr-start",r),h){var g=1,b=document.createTextNode(g);new h(a).observe(b,{characterData:!0})}else f.on("fn-end",function(t){t[0]&&t[0].type===m||a()})},{}],10:[function(t,e,n){function r(t){var e=this.params,n=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;l>r;r++)t.removeEventListener(d[r],this.listener,!1);if(!e.aborted){if(n.duration=(new Date).getTime()-this.startTime,4===t.readyState){e.status=t.status;var i=o(t,this.lastSize);if(i&&(n.rxSize=i),this.sameOrigin){var a=t.getResponseHeader("X-NewRelic-App-Data");a&&(e.cat=a.split(", ").pop())}}else e.status=0;n.cbTime=this.cbTime,u.emit("xhr-done",[t],t),c("xhr",[e,n,this.startTime])}}}function o(t,e){var n=t.responseType;if("json"===n&&null!==e)return e;var r="arraybuffer"===n||"blob"===n||"json"===n?t.response:t.responseText;return i(r)}function i(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(e){return}}}function a(t,e){var n=f(e),r=t.params;r.host=n.hostname+":"+n.port,r.pathname=n.pathname,t.sameOrigin=n.sameOrigin}var s=t("loader");if(s.xhrWrappable){var c=t("handle"),f=t(11),u=t("ee"),d=["load","error","abort","timeout"],l=d.length,p=t("id"),h=t(13),m=window.XMLHttpRequest;s.features.xhr=!0,t(9),u.on("new-xhr",function(t){var e=this;e.totalCbs=0,e.called=0,e.cbTime=0,e.end=r,e.ended=!1,e.xhrGuids={},e.lastSize=null,h&&(h>34||10>h)||window.opera||t.addEventListener("progress",function(t){e.lastSize=t.loaded},!1)}),u.on("open-xhr-start",function(t){this.params={method:t[0]},a(this,t[1]),this.metrics={}}),u.on("open-xhr-end",function(t,e){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&e.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),u.on("send-xhr-start",function(t,e){var n=this.metrics,r=t[0],o=this;if(n&&r){var a=i(r);a&&(n.txSize=a)}this.startTime=(new Date).getTime(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof e.onload))&&o.end(e)}catch(n){try{u.emit("internal-error",[n])}catch(r){}}};for(var s=0;l>s;s++)e.addEventListener(d[s],this.listener,!1)}),u.on("xhr-cb-time",function(t,e,n){this.cbTime+=t,e?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof n.onload||this.end(n)}),u.on("xhr-load-added",function(t,e){var n=""+p(t)+!!e;this.xhrGuids&&!this.xhrGuids[n]&&(this.xhrGuids[n]=!0,this.totalCbs+=1)}),u.on("xhr-load-removed",function(t,e){var n=""+p(t)+!!e;this.xhrGuids&&this.xhrGuids[n]&&(delete this.xhrGuids[n],this.totalCbs-=1)}),u.on("addEventListener-end",function(t,e){e instanceof m&&"load"===t[0]&&u.emit("xhr-load-added",[t[1],t[2]],e)}),u.on("removeEventListener-end",function(t,e){e instanceof m&&"load"===t[0]&&u.emit("xhr-load-removed",[t[1],t[2]],e)}),u.on("fn-start",function(t,e,n){e instanceof m&&("onload"===n&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=(new Date).getTime()))}),u.on("fn-end",function(t,e){this.xhrCbStart&&u.emit("xhr-cb-time",[(new Date).getTime()-this.xhrCbStart,this.onload,e],e)})}},{}],11:[function(t,e,n){e.exports=function(t){var e=document.createElement("a"),n=window.location,r={};e.href=t,r.port=e.port;var o=e.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=e.hostname||n.hostname,r.pathname=e.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!e.protocol||":"===e.protocol||e.protocol===n.protocol,a=e.hostname===document.domain&&e.port===n.port;return r.sameOrigin=i&&(!e.hostname||a),r}},{}],12:[function(t,e,n){function r(t,e){return function(){o(t,[(new Date).getTime()].concat(a(arguments)),null,e)}}var o=t("handle"),i=t(14),a=t(15);"undefined"==typeof window.newrelic&&(newrelic=NREUM);var s=["setPageViewName","addPageAction","setCustomAttribute","finished","addToTrace","inlineHit"],c=["addPageAction"],f="api-";i(s,function(t,e){newrelic[e]=r(f+e,"api")}),i(c,function(t,e){newrelic[e]=r(f+e)}),e.exports=newrelic,newrelic.noticeError=function(t){"string"==typeof t&&(t=new Error(t)),o("err",[t,(new Date).getTime()])}},{}],13:[function(t,e,n){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),e.exports=r},{}],14:[function(t,e,n){function r(t,e){var n=[],r="",i=0;for(r in t)o.call(t,r)&&(n[i]=e(r,t[r]),i+=1);return n}var o=Object.prototype.hasOwnProperty;e.exports=r},{}],15:[function(t,e,n){function r(t,e,n){e||(e=0),"undefined"==typeof n&&(n=t?t.length:0);for(var r=-1,o=n-e||0,i=Array(0>o?0:o);++r<o;)i[r]=t[e+r];return i}e.exports=r},{}],16:[function(t,e,n){function r(t){return!(t&&"function"==typeof t&&t.apply&&!t[a])}var o=t("ee"),i=t(15),a="nr@original",s=Object.prototype.hasOwnProperty,c=!1;e.exports=function(t){function e(t,e,n,o){function nrWrapper(){var r,a,s,c;try{a=this,r=i(arguments),s="function"==typeof n?n(r,a):n||{}}catch(u){d([u,"",[r,a,o],s])}f(e+"start",[r,a,o],s);try{return c=t.apply(a,r)}catch(l){throw f(e+"err",[r,a,l],s),l}finally{f(e+"end",[r,a,c],s)}}return r(t)?t:(e||(e=""),nrWrapper[a]=t,u(t,nrWrapper),nrWrapper)}function n(t,n,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<n.length;c++)s=n[c],a=t[s],r(a)||(t[s]=e(a,f?s+o:o,i,s))}function f(e,n,r){if(!c){c=!0;try{t.emit(e,n,r)}catch(o){d([o,e,n,r])}c=!1}}function u(t,e){if(Object.defineProperty&&Object.keys)try{var n=Object.keys(t);return n.forEach(function(n){Object.defineProperty(e,n,{get:function(){return t[n]},set:function(e){return t[n]=e,e}})}),e}catch(r){d([r])}for(var o in t)s.call(t,o)&&(e[o]=t[o]);return e}function d(e){try{t.emit("internal-error",e)}catch(n){}}return t||(t=o),e.inPlace=n,e.flag=a,e}},{}],ee:[function(t,e,n){function r(){}function o(t){function e(t){return t&&t instanceof r?t:t?s(t,a,i):i()}function n(n,r,o){t&&t(n,r,o);for(var i=e(o),a=l(n),s=a.length,c=0;s>c;c++)a[c].apply(i,r);var u=f[v[n]];return u&&u.push([w,n,r,i]),i}function d(t,e){m[t]=l(t).concat(e)}function l(t){return m[t]||[]}function p(t){return u[t]=u[t]||o(n)}function h(t,e){c(t,function(t,n){e=e||"feature",v[n]=e,e in f||(f[e]=[])})}var m={},v={},w={on:d,emit:n,get:p,listeners:l,context:e,buffer:h};return w}function i(){return new r}var a="nr@context",s=t("gos"),c=t(14),f={},u={},d=e.exports=o();d.backlog=f},{}],gos:[function(t,e,n){function r(t,e,n){if(o.call(t,e))return t[e];var r=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,e,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[e]=r,r}var o=Object.prototype.hasOwnProperty;e.exports=r},{}],handle:[function(t,e,n){function r(t,e,n,r){o.buffer([t],r),o.emit(t,e,n)}var o=t("ee").get("handle");e.exports=r,r.ee=o},{}],id:[function(t,e,n){function r(t){var e=typeof t;return!t||"object"!==e&&"function"!==e?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");e.exports=r},{}],loader:[function(t,e,n){function r(){if(!m++){var t=h.info=NREUM.info,e=u.getElementsByTagName("script")[0];if(t&&t.licenseKey&&t.applicationID&&e){c(l,function(e,n){t[e]||(t[e]=n)});var n="https"===d.split(":")[0]||t.sslForHttp;h.proto=n?"https://":"http://",s("mark",["onload",a()],null,"api");var r=u.createElement("script");r.src=h.proto+t.agent,e.parentNode.insertBefore(r,e)}}}function o(){"complete"===u.readyState&&i()}function i(){s("mark",["domContent",a()],null,"api")}function a(){return(new Date).getTime()}var s=t("handle"),c=t(14),f=window,u=f.document;NREUM.o={ST:setTimeout,CT:clearTimeout,XHR:f.XMLHttpRequest,REQ:f.Request,EV:f.Event,PR:f.Promise,MO:f.MutationObserver},t(12);var d=""+location,l={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-918.min.js"},p=window.XMLHttpRequest&&XMLHttpRequest.prototype&&XMLHttpRequest.prototype.addEventListener&&!/CriOS/.test(navigator.userAgent),h=e.exports={offset:a(),origin:d,features:{},xhrWrappable:p};u.addEventListener?(u.addEventListener("DOMContentLoaded",i,!1),f.addEventListener("load",r,!1)):(u.attachEvent("onreadystatechange",o),f.attachEvent("onload",r)),s("mark",["firstbyte",a()],null,"api");var m=0},{}]},{},["loader",2,10,4,3]);;NREUM.info={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",licenseKey:"af237bcf2c",applicationID:"18470056",sa:1,agent:"js-agent.newrelic.com/nr-918.min.js"}</script><script src="//cdn.optimizely.com/js/992423734.js"></script>
+	<meta charset="UTF-8" />
+	<link rel="profile" href="http://gmpg.org/xfn/11">
+	<link rel="pingback" href="https://www.optionshouse.com/xmlrpc.php">
+	<title>OptionsHouse | Get ready for the move to E*TRADE - OptionsHouse</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="Total WordPress Theme 3.3.1" />
+
+<!-- This site is optimized with the Yoast SEO plugin v4.9 - https://yoast.com/wordpress/plugins/seo/ -->
+<meta name="description" content="OptionsHouse | Get ready for the move to E*TRADE"/>
+<link rel="canonical" href="https://www.optionshouse.com/" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="OptionsHouse | Get ready for the move to E*TRADE - OptionsHouse" />
+<meta property="og:description" content="OptionsHouse | Get ready for the move to E*TRADE" />
+<meta property="og:url" content="https://www.optionshouse.com/" />
+<meta property="og:site_name" content="OptionsHouse" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="OptionsHouse | Get ready for the move to E*TRADE" />
+<meta name="twitter:title" content="OptionsHouse | Get ready for the move to E*TRADE - OptionsHouse" />
+<script type='application/ld+json'>{"@context":"http:\/\/schema.org","@type":"WebSite","@id":"#website","url":"https:\/\/www.optionshouse.com\/","name":"OptionsHouse","potentialAction":{"@type":"SearchAction","target":"https:\/\/www.optionshouse.com\/?s={search_term_string}","query-input":"required name=search_term_string"}}</script>
+<!-- / Yoast SEO plugin. -->
+
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="OptionsHouse &raquo; Feed" href="https://www.optionshouse.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="OptionsHouse &raquo; Comments Feed" href="https://www.optionshouse.com/comments/feed/" />
+<link rel='stylesheet' id='footnotes-style-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/OH-footnotes/footnotes.css?ver=4.8' type='text/css' media='all' />
+<link rel='stylesheet' id='dashicons-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/css/dashicons.min.css?ver=4.8' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-jquery-ui-dialog-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/css/jquery-ui-dialog.min.css?ver=4.8' type='text/css' media='all' />
+<link rel='stylesheet' id='js_composer_front-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/js_composer/assets/css/js_composer.min.css?ver=4.11.2' type='text/css' media='all' />
+<link rel='stylesheet' id='contact-form-7-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=4.8' type='text/css' media='all' />
+<link rel='stylesheet' id='rs-plugin-settings-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/revslider/public/assets/css/settings.css?ver=5.1.5' type='text/css' media='all' />
+<style id='rs-plugin-settings-inline-css' type='text/css'>
+.tp-caption a{color:#ff7302;text-shadow:none;-webkit-transition:all 0.2s ease-out;-moz-transition:all 0.2s ease-out;-o-transition:all 0.2s ease-out;-ms-transition:all 0.2s ease-out}.tp-caption a:hover{color:#ffa902}
+</style>
+<link rel='stylesheet' id='wpProQuiz_front_style-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/wp-pro-quiz/css/wpProQuiz_front.min.css?ver=0.37' type='text/css' media='all' />
+<link rel='stylesheet' id='parent-style-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/Total/style.css?ver=4.8' type='text/css' media='all' />
+<link rel='stylesheet' id='wpex-font-awesome-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/Total/css/lib/font-awesome.min.css?ver=4.3.0' type='text/css' media='all' />
+<link rel='stylesheet' id='wpex-style-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/total-optionshouse/style.css?ver=3.4' type='text/css' media='all' />
+<link rel='stylesheet' id='wpex-visual-composer-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/Total/css/wpex-visual-composer.css?ver=3.3.1' type='text/css' media='all' />
+<link rel='stylesheet' id='wpex-visual-composer-extend-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/Total/css/wpex-visual-composer-extend.css?ver=3.3.1' type='text/css' media='all' />
+<link rel='stylesheet' id='wpex-responsive-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/Total/css/wpex-responsive.css?ver=3.3.1' type='text/css' media='all' />
+<link rel='stylesheet' id='lightboxStyle-css'  href='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/lightbox-plus/css/shadowed/colorbox.min.css?ver=2.7.2' type='text/css' media='screen' />
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/total-optionshouse/js/freshair.js?ver=1.0.0'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/total-optionshouse/js/custom.js?ver=1.0.0'></script>
+<link rel='https://api.w.org/' href='https://www.optionshouse.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.optionshouse.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://www.optionshouse.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='shortlink' href='https://www.optionshouse.com/' />
+<link rel="alternate" type="application/json+oembed" href="https://www.optionshouse.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.optionshouse.com%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://www.optionshouse.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.optionshouse.com%2F&#038;format=xml" />
+<!--[if IE 8]><link rel="stylesheet" type="text/css" href="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/Total/css/ie8.css" media="screen"><![endif]--><!--[if IE 9]><link rel="stylesheet" type="text/css" href="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/Total/css/ie9.css" media="screen"><![endif]--><!--[if lt IE 9]><script src="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/Total/js/html5.js"></script><![endif]--><!-- Retina Logo -->
+		<script type="text/javascript">
+			var $wpexRetinaLogo = "https://www.optionshouse.com/wp-content/uploads/OptionsHouse-by-ETRADE_full.svg",
+				$wpexRetinaLogoHeight = "45";
+			jQuery(function($){
+				if ( window.devicePixelRatio >= 2 ) {
+					$("#site-logo img").attr("src", "https://www.optionshouse.com/wp-content/uploads/OptionsHouse-by-ETRADE_full.svg");
+					$("#site-logo img").css("max-height", "45px");
+				}
+			});
+		</script>
+<link rel="shortcut icon" href="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/uploads/favicon-32x32.png">
+<link rel="apple-touch-icon-precomposed" href="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/uploads/apple-touch-icon-57x57.png">
+<link rel="apple-touch-icon-precomposed" sizes="76x76" href="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/uploads/apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon-precomposed" sizes="120x120" href="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/uploads/apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/uploads/apple-touch-icon-152x152.png"><meta name="generator" content="Powered by Visual Composer - drag and drop page builder for WordPress."/>
+<!--[if lte IE 9]><link rel="stylesheet" type="text/css" href="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/js_composer/assets/css/vc_lte_ie9.min.css" media="screen"><![endif]--><!--[if IE  8]><link rel="stylesheet" type="text/css" href="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/js_composer/assets/css/vc-ie8.min.css" media="screen"><![endif]--><meta name="generator" content="Powered by Slider Revolution 5.1.5 - responsive, Mobile-Friendly Slider Plugin for WordPress with comfortable drag and drop interface." />
+<style type="text/css" data-type="vc_custom-css">body {background-color: #124252; background: url(https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/uploads/splashpage-bg.jpg?id=17682) no-repeat top center/cover !important;}
+#oh-mobile-top-menu{display: none;}
+.oh-background-cover {background-size: 100%;}
+.header {padding-top: 30px;color: #fff;clear: both;}
+.logo img {max-width: 200px; margin-right: 20px;padding-right: 20px; border-right: 1px solid #fff;float: left;}
+.header-text {line-height: 36px; vertical-align: middle;font-size:1.2em;}
+.left-oh, .right-etrade {min-height: 450px; background: rgba(0,0,0,.7);color: #fff;border-top: 20px solid #000; padding: 20px;}
+.left-oh {margin-right: 20px;}
+.right-etrade img {max-width: 61%;}
+.vc_btn3.vc_btn3-color-purple, .vc_btn3.vc_btn3-color-purple.vc_btn3-style-flat {background-color: #63c;}
+.vc_btn3.vc_btn3-color-purple:hover, .vc_btn3.vc_btn3-color-purple.vc_btn3-style-flat:hover {background-color: #7A4ED8;}
+.vc_col-sm-4 {width: 32%;}
+.vc_col-sm-8 {width: 64%;}
+.wpb_wrapper, .wpb_wrapper a {color: #fff;}
+.vc_btn3.vc_btn3-size-lg {padding: 10px 25px;}
+.left-oh .vc_btn3-container, .right-etrade .vc_btn3-container {position: relative; bottom: 0px;}
+.vc_btn3.vc_btn3-color-purple, .vc_btn3.vc_btn3-color-purple.vc_btn3-style-flat {width: auto !important;}
+
+
+/************/
+/*Eric edits*/
+/************/
+A {
+    font-weight:normal !important;
+}
+A:hover {
+    color:inherit !important;
+}
+.logo {
+    display: inline-block;
+    height: 46px;
+}
+.logo img {
+    max-width: 240px;
+}
+.header {
+    padding-top: 22px;
+}
+.header-text {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 14px;
+    line-height: 16px;
+    padding-top: 14px;
+    width: 57%;
+}
+/*Layout blocks*/
+.masthead-left {
+    width: 64%;
+    margin-right: 1.66%;
+}
+.masthead-right {
+    text-align: center;
+    width: 33.33%;
+}
+.left-oh {
+    padding: 20px 30px;
+    margin-right:1.66%;
+}
+
+.right-etrade {
+    padding: 19px 45px;
+    width:33.33%;
+}
+
+.right-etrade img {
+    max-width: inherit;
+}
+.left-oh P, .right-etrade p {
+    font-size:16px !important;
+    line-height:21px !important;
+    max-width:600px;
+}
+/* Body Headers */
+.left-oh H1 {
+    font-size: 36px !important;
+    line-height: 36px;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+}
+.right-etrade H1 {
+    font-size: 30px !important;
+    line-height: 30px;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+    margin-top: 6px;
+}
+/* CTA buttons */
+a.vc_general {
+    height: 40px;
+    font-size: 16px !important;
+    line-height: 40px !important;
+    padding: 0px 40px !important;
+    border-radius: 4px !important;
+    white-space: nowrap;
+}
+a.vc_btn3-color-purple {
+    width: 100%;
+}
+.disclosures P {
+    font-size:11px !important;
+    line-height:17px !important;
+    margin:0 45px 10px 30px !important;
+}
+/*.disclosures P A {
+    font-weight:normal !important;
+}*/
+
+@media only screen and (max-width: 1070px){
+    .header-text { width:50%; }
+}
+
+@media only screen and (max-width: 1020px){
+    .left-oh H1 { line-height:40px; }
+    .right-etrade H1 { line-height:37px; }
+}
+
+@media only screen and (max-width: 992px){
+	.left-oh, .right-etrade, .masthead-left, .masthead-right {width: 100%;}
+	.right-etrade {margin-top: 30px;}
+	.left-oh, .right-etrade {padding: 20px 30px !important;}
+}
+
+@media only screen and (max-width: 768px){
+	.logo img {border: none; float: none; }
+	.logo , .header-text {display:block; width: auto; text-align: center;}
+	.logo {margin-bottom: 20px;}
+	.header-text {border-top: 1px solid #fff; padding-top: 10px;}
+}
+
+@media only screen and (max-width: 420px){
+	.vc_btn3.vc_btn3-color-green, .vc_btn3.vc_btn3-color-green.vc_btn3-style-flat, .vc_btn3.vc_btn3-color-purple, .vc_btn3.vc_btn3-color-purple.vc_btn3-style-flat, .vc_btn3.vc_btn3-color-orange, .vc_btn3.vc_btn3-color-orange.vc_btn3-style-flat {width: 100% !important;}
+	.vc_btn3-container.vc_btn3-inline {width: 87% !important;}
+}
+
+</style><style type="text/css" data-type="vc_shortcodes-custom-css">.vc_custom_1498137136724{padding-top: 20px !important;padding-bottom: 15px !important;background-position: 0 0 !important;background-repeat: no-repeat !important;}.vc_custom_1498065957483{padding-top: 26px !important;padding-bottom: 5px !important;}.vc_custom_1498139925296{margin-right: 10px !important;}.vc_custom_1499277259256{padding-bottom: 60px !important;}.vc_custom_1499270829075{padding-top: 20px !important;padding-bottom: 20px !important;}.vc_custom_1499277175174{padding-top: 30px !important;padding-bottom: 60px !important;}</style><noscript><style type="text/css"> .wpb_animate_when_almost_visible { opacity: 1; }</style></noscript><!-- TOTAL CSS -->
+<style type="text/css">
+/*ACCENT COLOR*/.wpex-carousel-woocommerce .wpex-carousel-entry-details,a,.wpex-accent-color,#site-navigation .dropdown-menu a:hover,#site-navigation .dropdown-menu >.current-menu-item >a,#site-navigation .dropdown-menu >.current-menu-parent >a,h1 a:hover,h2 a:hover,a:hover h2,h3 a:hover,h4 a:hover,h5 a:hover,h6 a:hover,.entry-title a:hover,.modern-menu-widget a:hover,.theme-button.outline,.theme-button.clean{color:#36856b}.vcex-skillbar-bar,.vcex-icon-box.style-five.link-wrap:hover,.vcex-icon-box.style-four.link-wrap:hover,.vcex-recent-news-date span.month,.vcex-pricing.featured .vcex-pricing-header,.vcex-testimonials-fullslider .sp-button:hover,.vcex-testimonials-fullslider .sp-selected-button,.vcex-social-links a:hover,.vcex-testimonials-fullslider.light-skin .sp-button:hover,.vcex-testimonials-fullslider.light-skin .sp-selected-button,.wpex-accent-bg,.background-highlight,input[type="submit"],.theme-button,button,.theme-button.outline:hover,.active .theme-button,.theme-button.active,#main .tagcloud a:hover,.post-tags a:hover,.wpex-carousel .owl-dot.active,.navbar-style-one .menu-button >a >span.link-inner,.wpex-carousel .owl-prev,.wpex-carousel .owl-next,body #header-two-search #header-two-search-submit,.theme-button:hover,.modern-menu-widget li.current-menu-item a,#wp-calendar caption,#site-scroll-top:hover,input[type="submit"]:hover,button:hover,.wpex-carousel .owl-prev:hover,.wpex-carousel .owl-next:hover,#site-navigation .menu-button >a >span.link-inner,#site-navigation .menu-button >a >span.link-inner:hover,.navbar-style-six .dropdown-menu >.current-menu-item >a,.navbar-style-six .dropdown-menu >.current-menu-parent >a{background-color:#36856b}.vcex-heading-bottom-border-w-color{border-bottom-color:#36856b}.wpb_tabs.tab-style-alternative-two .wpb_tabs_nav li.ui-tabs-active a{border-bottom-color:#36856b}.theme-button.outline{border-color:#36856b}#searchform-dropdown{border-color:#36856b}.toggle-bar-btn:hover{border-top-color:#36856b;border-right-color:#36856b}body #site-navigation-wrap.nav-dropdown-top-border .dropdown-menu >li >ul{border-top-color:#36856b}/*VC META CSS*/.vc_custom_1456950764988{padding-top:30px !important}/*TYPOGRAPHY*/body{font-family:proxima;font-weight:400;font-size:14px;color:#363636;line-height:1.5}#site-navigation .dropdown-menu a{font-weight:600;font-size:15px;letter-spacing:-0.1px}#site-navigation .dropdown-menu ul a{font-weight:600}.single-post-title{font-size:32px}h1,h2,h3,h4,h5,h6,.theme-heading,.heading-typography,.widget-title,.wpex-widget-recent-posts-title,.comment-reply-title{letter-spacing:-0.1px}.sidebar-box .widget-title{color:#7f7f7f}{font-family:proxima}/*CUSTOMIZER STYLING*/@media only screen and (min-width:960px){#site-logo img{max-width:230}}@media only screen and (min-width:768px) and (max-width:959px){#site-logo img{max-width:230}}@media only screen and (max-width:767px){#site-logo img{max-width:230}}a,h1 a:hover,h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover,h6 a:hover,.entry-title a:hover{color:#35856b}a:hover{color:#d87544}.theme-button,input[type="submit"],button{border-radius:2px;color:#ffffff;background:#d87544}.navbar-style-one .menu-button >a >span.link-inner:hover{color:#ffffff;background:#d87544;background:#f2b34b}.theme-button:hover,input[type="submit"]:hover,button:hover{background:#f2b34b}.full-width-main-layout .container,.full-width-main-layout .vc_row-fluid.container,.boxed-main-layout #wrap{width:1200px}#site-logo{padding-top:10px;padding-bottom:10px}#site-logo img{}#site-navigation .dropdown-menu >li >a:hover{color:#36856b}#site-navigation .dropdown-menu >.current-menu-item >a,#site-navigation .dropdown-menu >.current-menu-parent >a,#site-navigation .dropdown-menu >.current-menu-item >a:hover,#site-navigation .dropdown-menu >.current-menu-parent >a:hover{color:#40bd58}#wpex-mobile-menu-fixed-top,#wpex-mobile-menu-navbar{background:#25414a}#sidr-main{background-color:#25414a}.sidr a,.sidr-class-dropdown-toggle{color:#ffffff}.sidr-class-mobile-menu-searchform input{color:#0a0a0a;background:#e5e5e5}.sidr-class-mobile-menu-searchform input:focus{color:#0a0a0a}.sidr-class-mobile-menu-searchform button{color:#0a0a0a}.wpex-vc-column-wrapper{margin-bottom:40px}
+</style>	<!--<meta name="apple-itunes-app" content="app-id=1111881020">-->
+	<script language="javascript">
+		//Write-in iOS App download meta tag, but not for iPads:
+		jQuery(document).ready(function() {
+			if(!RegExp(/iPad/i).test(navigator.userAgent)) {
+				var meta = jQuery("<meta>");
+				meta.attr('name', 'apple-itunes-app');
+				meta.attr('content', 'app-id=1111881020');
+				jQuery('head').append(meta);
+			}
+		});
+	</script>
+</head>
+<body class="home page-template-default page page-id-17504 wp-custom-logo wpex-theme wpex-responsive full-width-main-layout skin-base has-composer wpex-live-site content-full-width page-header-disabled wpex-site-header-disabled smooth-fonts wpex-mobile-toggle-menu-icon_buttons has-mobile-menu comment-avatars-disabled wpb-js-composer js-comp-ver-4.11.2 vc_responsive" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+			<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-9QWZ"
+		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','GTM-9QWZ');</script>
+			<div id="outer-wrap" class="clr">
+				<div id="wrap" class="clr">
+			<div id="oh-mobile-top-menu" class="clr wpex-top-bar-sticky">
+							</div>
+									<div id="oh-mobile-menu" class="clr">
+				<div class="menu"><ul>
+<li class="page_item page-item-663"><a href="https://www.optionshouse.com/awards/">Awards</a></li>
+<li class="page_item page-item-190 page_item_has_children"><a href="https://www.optionshouse.com/company-info/">Company Info</a>
+<ul class='children'>
+	<li class="page_item page-item-4"><a href="https://www.optionshouse.com/company-info/about-us/">About Us</a></li>
+	<li class="page_item page-item-200"><a href="https://www.optionshouse.com/company-info/affiliate-program/">Affiliate Program</a></li>
+	<li class="page_item page-item-12156"><a href="https://www.optionshouse.com/company-info/press-releases/">Press Releases</a></li>
+</ul>
+</li>
+<li class="page_item page-item-433"><a href="https://www.optionshouse.com/contact/">Contact Us</a></li>
+<li class="page_item page-item-554"><a href="https://www.optionshouse.com/forms/">Customer Forms</a></li>
+<li class="page_item page-item-552"><a href="https://www.optionshouse.com/disclaimers/">Disclaimers</a></li>
+<li class="page_item page-item-16233"><a href="https://www.optionshouse.com/exclusive-client-appreciation-event/">Exclusive Client Appreciation Event</a></li>
+<li class="page_item page-item-7873"><a href="https://www.optionshouse.com/faq/">Frequently Asked Questions &#8211; FAQs</a></li>
+<li class="page_item page-item-15061"><a href="https://www.optionshouse.com/futures-product-indexes/">Futures Product Indexes</a></li>
+<li class="page_item page-item-15054"><a href="https://www.optionshouse.com/futures-trading-insights/">Futures Trading Insights</a></li>
+<li class="page_item page-item-13574 page_item_has_children"><a href="https://www.optionshouse.com/get-started/">Get Started</a>
+<ul class='children'>
+	<li class="page_item page-item-13845"><a href="https://www.optionshouse.com/get-started/1000offer/">1000 free offer</a></li>
+	<li class="page_item page-item-13835"><a href="https://www.optionshouse.com/get-started/60free/">60 free offer</a></li>
+	<li class="page_item page-item-13576"><a href="https://www.optionshouse.com/get-started/1000free/">Get $1,000 in commission-free trades</a></li>
+	<li class="page_item page-item-13853"><a href="https://www.optionshouse.com/get-started/nerdwallet/">nerdwallet offer</a></li>
+</ul>
+</li>
+<li class="page_item page-item-17022"><a href="https://www.optionshouse.com/guess-strategy-jan17/">Guess the strategy</a></li>
+<li class="page_item page-item-17115"><a href="https://www.optionshouse.com/guess-the-strategy-feb17/">Guess the strategy</a></li>
+<li class="page_item page-item-15486"><a href="https://www.optionshouse.com/guess-the-strategy/">Guess the Strategy 1</a></li>
+<li class="page_item page-item-16351"><a href="https://www.optionshouse.com/guess-strategy-2/">Guess the Strategy 2</a></li>
+<li class="page_item page-item-16684"><a href="https://www.optionshouse.com/guess-strategy-3/">Guess the Strategy 3</a></li>
+<li class="page_item page-item-15659"><a href="https://www.optionshouse.com/home-optionshouse/">Home (OptionsHouse)</a></li>
+<li class="page_item page-item-1216"><a href="https://www.optionshouse.com/login/">Login</a></li>
+<li class="page_item page-item-9623"><a href="https://www.optionshouse.com/login-page-links/">Login Page Links</a></li>
+<li class="page_item page-item-16356"><a href="https://www.optionshouse.com/maintenance-mode/">Maintenance Mode</a></li>
+<li class="page_item page-item-601 page_item_has_children"><a href="https://www.optionshouse.com/margins-buying-power/">Margins &#038; Buying Power</a>
+<ul class='children'>
+	<li class="page_item page-item-5168"><a href="https://www.optionshouse.com/margins-buying-power/about-cash-accounts/">About Cash Accounts</a></li>
+	<li class="page_item page-item-5154"><a href="https://www.optionshouse.com/margins-buying-power/buying-power/">Buying Power</a></li>
+	<li class="page_item page-item-3099 page_item_has_children"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/">Day Trading Rules &#038; Requirements</a>
+	<ul class='children'>
+		<li class="page_item page-item-3539"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/about-day-trading-margin-calls/">About Day Trading Margin Calls</a></li>
+		<li class="page_item page-item-3592"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/aggregation-2/">Aggregation</a></li>
+		<li class="page_item page-item-3556"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/aggregation/">Aggregation</a></li>
+		<li class="page_item page-item-3493"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/calculating-day-trading-buying-power/">Calculating Day Trading Buying Power</a></li>
+		<li class="page_item page-item-3542"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/day-trade-call-dt/">Day Trade Call (DT)</a></li>
+		<li class="page_item page-item-3544"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/day-trade-multiple-call-dtm/">Day Trade Multiple Call (DTM)</a></li>
+		<li class="page_item page-item-3548"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/day-trade-restricted-call-dtr/">Day Trade Restricted Call (DTR)</a></li>
+		<li class="page_item page-item-3499"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/day-trading-margin-calls/">Day Trading Margin Calls</a></li>
+		<li class="page_item page-item-3398"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/definition-of-a-day-trade/">Definition of a Day Trade</a></li>
+		<li class="page_item page-item-3436"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/explanation-of-a-pattern-day-trader-pdt-account/">Explanation of a Pattern Day Trader (PDT) Account</a></li>
+		<li class="page_item page-item-3554"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/failure-to-meet-a-day-trading-call/">Failure to Meet a Day Trading Call</a></li>
+		<li class="page_item page-item-3594"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/money-market-funds-pdt-accounts/">FDIC (PDT Accounts)</a></li>
+		<li class="page_item page-item-3558"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/high-water-mark-hwm/">High Water Mark (HWM)</a></li>
+		<li class="page_item page-item-3484"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/how-day-trades-are-counted/">How Day Trades Are Counted</a></li>
+		<li class="page_item page-item-3529"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/long-stock-requirements/">Long Stock</a></li>
+		<li class="page_item page-item-3480"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/margin-requirements-for-pattern-day-trader/">Margin Requirements for Pattern Day Trader</a></li>
+		<li class="page_item page-item-3550"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/meeting-a-day-trading-margin-call/">Meeting a Day Trading Margin Call</a></li>
+		<li class="page_item page-item-3593"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/naked-options-2/">Naked Options</a></li>
+		<li class="page_item page-item-3536"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/naked-option-requirements/">Naked Options</a></li>
+		<li class="page_item page-item-3489"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/option-buying-power-vs-day-trading-buying-power/">Option Buying Power vs Day Trading Buying Power</a></li>
+		<li class="page_item page-item-3533"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/spread-requirements/">Spreads</a></li>
+		<li class="page_item page-item-3503"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/strategy-guide/">Strategy Guide</a></li>
+		<li class="page_item page-item-3587"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/using-proceeds-from-the-sale-of-overnight-position-the-classic-way/">Using Proceeds from the Sale of Overnight Position (The Classic Way)</a></li>
+		<li class="page_item page-item-3590"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/using-profits/">Using Profits</a></li>
+		<li class="page_item page-item-3591"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/using-same-day-deposits/">Using Same Day Deposits</a></li>
+		<li class="page_item page-item-3581"><a href="https://www.optionshouse.com/margins-buying-power/day-trading-rules-requirements/ways-to-avoid-getting-day-trade-calls/">Ways to Avoid Getting Day Trade Calls</a></li>
+	</ul>
+</li>
+	<li class="page_item page-item-5140"><a href="https://www.optionshouse.com/margins-buying-power/good-faith-freeride-violations/">Good Faith &#038; Freeride Violations</a></li>
+	<li class="page_item page-item-3095"><a href="https://www.optionshouse.com/margins-buying-power/margin-accounts/">Margin Accounts</a></li>
+	<li class="page_item page-item-3097 page_item_has_children"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/">Margin Calls</a>
+	<ul class='children'>
+		<li class="page_item page-item-3132"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/assignmentexercise-reg-t-call/">Assignment/Exercise Reg T Call</a></li>
+		<li class="page_item page-item-5131"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/assignmentexercise-reg-t-restricted-call-artr/">Assignment/Exercise Reg T Restricted Call (A/RTR)</a></li>
+		<li class="page_item page-item-9069"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/cash-call/">Cash Call</a></li>
+		<li class="page_item page-item-9078"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/cash-substitution-call-good-faith-violation/">Cash Substitution Call (Good Faith Violation)</a></li>
+		<li class="page_item page-item-3117"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/concentrated-maintenance-call/">Concentrated Maintenance Call</a></li>
+		<li class="page_item page-item-3126"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/day-trade-call/">Day Trade Call</a></li>
+		<li class="page_item page-item-3128"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/day-trade-multiple-call/">Day Trade Multiple Call</a></li>
+		<li class="page_item page-item-3130"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/day-trade-restricted-call/">Day Trade Restricted Call</a></li>
+		<li class="page_item page-item-9049"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/dt-minimum-equity-call/">DT Minimum Equity Call</a></li>
+		<li class="page_item page-item-9064"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/fed-call/">Fed Call</a></li>
+		<li class="page_item page-item-3142"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/good-faith-violation/">Good Faith Violation</a></li>
+		<li class="page_item page-item-9044"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/maintenance-call/">Maintenance Call</a></li>
+		<li class="page_item page-item-3138"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/money-due-call/">Money Due Call</a></li>
+		<li class="page_item page-item-3140"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/money-due-restricted-call/">Money Due Restricted Call</a></li>
+		<li class="page_item page-item-3134"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/reg-t-call/">Reg T Call</a></li>
+		<li class="page_item page-item-3136"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/reg-t-restricted-call/">Reg T Restricted Call</a></li>
+		<li class="page_item page-item-3114"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/required-maintenance-call/">Required Maintenance Call</a></li>
+		<li class="page_item page-item-9083"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/short-stock-in-account/">Short Stock In Account</a></li>
+		<li class="page_item page-item-3144"><a href="https://www.optionshouse.com/margins-buying-power/margin-calls/short-stock-in-cash-account/">Short Stock in Cash Account</a></li>
+	</ul>
+</li>
+	<li class="page_item page-item-3101 page_item_has_children"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/">Margin Requirements</a>
+	<ul class='children'>
+		<li class="page_item page-item-3358"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/box-spreads/">Box Spreads</a></li>
+		<li class="page_item page-item-3338"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/cash-secured-put/">Cash Secured Put</a></li>
+		<li class="page_item page-item-3322"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/collar/">Collar</a></li>
+		<li class="page_item page-item-3360"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/corporate-bonds/">Corporate Bonds</a></li>
+		<li class="page_item page-item-3230"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/covered-call/">Covered Call</a></li>
+		<li class="page_item page-item-3236"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/covered-put/">Covered Put</a></li>
+		<li class="page_item page-item-3285"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/forward-conversion/">Forward Conversion</a></li>
+		<li class="page_item page-item-3339"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/long-debit-call-spread/">Long (Debit) Call Spread</a></li>
+		<li class="page_item page-item-3340"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/long-debit-put-spread/">Long (Debit) Put Spread</a></li>
+		<li class="page_item page-item-3333"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/long-call/">Long Call</a></li>
+		<li class="page_item page-item-3348"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/long-call-butterfly/">Long Call Butterfly</a></li>
+		<li class="page_item page-item-3176"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/long-closed-end-funds/">Long Closed End Funds</a></li>
+		<li class="page_item page-item-3172"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/long-etfs/">Long ETFs</a></li>
+		<li class="page_item page-item-3336"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/long-put/">Long Put</a></li>
+		<li class="page_item page-item-3349"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/long-put-butterfly/">Long Put Butterfly</a></li>
+		<li class="page_item page-item-3166"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/long-stock/">Long Stock</a></li>
+		<li class="page_item page-item-3345"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/long-time-spread-equity-options/">Long Time Spread: Equity Options</a></li>
+		<li class="page_item page-item-3180"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/open-end-mutual-funds/">Open End Mutual Funds</a></li>
+		<li class="page_item page-item-3327"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/protective-call/">Protective Call</a></li>
+		<li class="page_item page-item-3329"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/3329-2/">Protective Put</a></li>
+		<li class="page_item page-item-3430"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/reverse-conversion/">Reverse Conversion</a></li>
+		<li class="page_item page-item-3341"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-credit-call-spread/">Short (Credit) Call Spread</a></li>
+		<li class="page_item page-item-3342"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-credit-put-spread/">Short (Credit) Put Spread</a></li>
+		<li class="page_item page-item-3344"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-broken-iron-condor/">Short Broken Iron Condor</a></li>
+		<li class="page_item page-item-3350"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-call-butterfly/">Short Call Butterfly</a></li>
+		<li class="page_item page-item-3178"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-closed-end-funds/">Short Closed End Funds</a></li>
+		<li class="page_item page-item-3174"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-etfs/">Short ETFs</a></li>
+		<li class="page_item page-item-3343"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-iron-condor/">Short Iron Condor</a></li>
+		<li class="page_item page-item-3351"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-put-butterfly/">Short Put Butterfly</a></li>
+		<li class="page_item page-item-3170"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-stock/">Short Stock</a></li>
+		<li class="page_item page-item-3356"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-straddle/">Short Straddle</a></li>
+		<li class="page_item page-item-3357"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-strangle/">Short Strangle</a></li>
+		<li class="page_item page-item-3427"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-time-spread-equity-options/">Short Time Spread: Equity Options</a></li>
+		<li class="page_item page-item-3352"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-uncovered-call-equity-options/">Short Uncovered Call: Equity Options</a></li>
+		<li class="page_item page-item-3354"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-uncovered-call-index-options/">Short Uncovered Call: Index Options</a></li>
+		<li class="page_item page-item-3353"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-uncovered-put-equity-options/">Short Uncovered Put: Equity Options</a></li>
+		<li class="page_item page-item-3355"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/short-uncovered-put-index-options/">Short Uncovered Put: Index Options</a></li>
+		<li class="page_item page-item-3361"><a href="https://www.optionshouse.com/margins-buying-power/margin-requirements/united-states-treasuries/">United States Bonds</a></li>
+	</ul>
+</li>
+</ul>
+</li>
+<li class="page_item page-item-5872 page_item_has_children"><a href="https://www.optionshouse.com/new-customers/">New Customers</a>
+<ul class='children'>
+	<li class="page_item page-item-5889"><a href="https://www.optionshouse.com/new-customers/account-opening-process/">Account Opening Process</a></li>
+	<li class="page_item page-item-5948"><a href="https://www.optionshouse.com/new-customers/account-statements-and-documents/">Account Statements and Documents</a></li>
+	<li class="page_item page-item-5937"><a href="https://www.optionshouse.com/new-customers/changing-your-rate/">Changing Your Rate</a></li>
+	<li class="page_item page-item-5981"><a href="https://www.optionshouse.com/new-customers/configuring-your-layout/">Configuring Your Layout</a></li>
+	<li class="page_item page-item-5990"><a href="https://www.optionshouse.com/new-customers/customizing-windows/">Customizing Windows</a></li>
+	<li class="page_item page-item-7916"><a href="https://www.optionshouse.com/new-customers/getting-to-know-tradecycle/">Getting to Know tradeCYCLE</a></li>
+	<li class="page_item page-item-5882"><a href="https://www.optionshouse.com/new-customers/helpful-links/">Helpful Links</a></li>
+	<li class="page_item page-item-5905"><a href="https://www.optionshouse.com/new-customers/launching-optionshouse/">Launching OptionsHouse</a></li>
+	<li class="page_item page-item-7499"><a href="https://www.optionshouse.com/new-customers/setting-alerts/">Setting Alerts</a></li>
+	<li class="page_item page-item-6072"><a href="https://www.optionshouse.com/new-customers/setting-preferences/">Setting Preferences</a></li>
+	<li class="page_item page-item-6059"><a href="https://www.optionshouse.com/new-customers/setting-up-a-watchlist/">Setting up a Watchlist</a></li>
+	<li class="page_item page-item-6009"><a href="https://www.optionshouse.com/new-customers/tools/">Tools</a></li>
+	<li class="page_item page-item-6006"><a href="https://www.optionshouse.com/new-customers/tour-of-navigation-buttons/">Tour of Navigation &#038; Buttons</a></li>
+	<li class="page_item page-item-5876 page_item_has_children"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/">Trading on the OptionsHouse Platform</a>
+	<ul class='children'>
+		<li class="page_item page-item-8124"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/strategy-walkthrough/">Access Trading Tools – strategySEEK</a></li>
+		<li class="page_item page-item-7939"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/chart-walkthrough/">Charting</a></li>
+		<li class="page_item page-item-7976"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/how-to-edit-your-cost-basis/">Cost Basis Adjustments</a></li>
+		<li class="page_item page-item-7959"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/how-to-create-spreads/">How to Create Option Spreads</a></li>
+		<li class="page_item page-item-8147"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/how-to-fund-your-account/">How to Fund Your OptionsHouse Account</a></li>
+		<li class="page_item page-item-8027"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/orders-walkthrough/">How to Manage Trade Orders</a></li>
+		<li class="page_item page-item-8805"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/how-to-place-a-3-leg-bracket-stop-order-otoco/">How to Place a 3 Leg Bracket Stop Order</a></li>
+		<li class="page_item page-item-8803"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/how-to-place-a-bracketed-order-oco/">How to Place a Bracketed Order (OCO)</a></li>
+		<li class="page_item page-item-7988"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/how-to-place-an-order/">How to Place an Order</a></li>
+		<li class="page_item page-item-8156"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/how-to-place-an-order-on-the-app/">How to Place an Order — Mobile</a></li>
+		<li class="page_item page-item-7996"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/how-to-use-liveaction/">How to Use liveACTION</a></li>
+		<li class="page_item page-item-8159"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/mobile-overview/">How to Use the OptionsHouse Mobile App</a></li>
+		<li class="page_item page-item-8059"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/orientation-walkthrough/">How to use the OptionsHouse Platform</a></li>
+		<li class="page_item page-item-8069"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/positions-walkthrough/">Monitor Your Positions</a></li>
+		<li class="page_item page-item-8165"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/platform-performance-walkthrough/">Platform Performance</a></li>
+		<li class="page_item page-item-8110"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/quote-walkthrough/">Quotes &#038; Research</a></li>
+		<li class="page_item page-item-8167"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/tradecycle-step-1/">TradeCYCLE: Step 1 &#8211; Do Your Homework with Research Tools</a></li>
+		<li class="page_item page-item-8169"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/tradecycle-step-2/">TradeCYCLE: Step 2 &#8211; Discover New Trading Strategies</a></li>
+		<li class="page_item page-item-8171"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/tradecycle-step-3/">TradeCYCLE: Step 3 &#8211; Test Trading Strategies</a></li>
+		<li class="page_item page-item-8173"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/tradecycle-step-4/">TradeCYCLE: Step 4 &#8211; Execute the Trade</a></li>
+		<li class="page_item page-item-8175"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/tradecycle-step-5/">TradeCYCLE: Step 5 &#8211; Plan Your Exit Strategy</a></li>
+		<li class="page_item page-item-8177"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/tradecycle-step-6-adjust-as-needed/">TradeCYCLE: Step 6 &#8211; Adjust and Refine Your Trading Strategy as Needed</a></li>
+		<li class="page_item page-item-8024"><a href="https://www.optionshouse.com/new-customers/trading-on-the-optionshouse-platform/options-walkthrough/">Trading Options on the OptionsHouse Platform</a></li>
+	</ul>
+</li>
+</ul>
+</li>
+<li class="page_item page-item-16855"><a href="https://www.optionshouse.com/options-strategy-stock-replacement-call/">Options Strategy Snapshot &#8211; Stock Replacement Call</a></li>
+<li class="page_item page-item-16382"><a href="https://www.optionshouse.com/options-strategy-cash-secured/">Options Strategy Snapshot &#8211; The Cash-Secured Put</a></li>
+<li class="page_item page-item-15705"><a href="https://www.optionshouse.com/options-strategy-snapshot/">Options Strategy Snapshot &#8211; The Covered Call</a></li>
+<li class="page_item page-item-17033"><a href="https://www.optionshouse.com/options-strategy-protective-put/">Options Strategy Snapshot &#8211; The Protective Put</a></li>
+<li class="page_item page-item-11804"><a href="https://www.optionshouse.com/optionshouse/">OptionsHouse</a></li>
+<li class="page_item page-item-17504 current_page_item"><a href="https://www.optionshouse.com/">OptionsHouse | Get ready for the move to E*TRADE</a></li>
+<li class="page_item page-item-452"><a href="https://www.optionshouse.com/blog/">OptionsHouse Blog</a></li>
+<li class="page_item page-item-11805"><a href="https://www.optionshouse.com/footer/">OptionsHouse Disclosures and Copyright</a></li>
+<li class="page_item page-item-17111"><a href="https://www.optionshouse.com/advisors/">OptionsHouse for Advisors</a></li>
+<li class="page_item page-item-11683"><a href="https://www.optionshouse.com/platform-announcements/">Platform Announcements</a></li>
+<li class="page_item page-item-364"><a href="https://www.optionshouse.com/privacy/">Privacy Statement</a></li>
+<li class="page_item page-item-205 page_item_has_children"><a href="https://www.optionshouse.com/rates/">Rates</a>
+<ul class='children'>
+	<li class="page_item page-item-875"><a href="https://www.optionshouse.com/rates/compare/">Compare Our Rates</a></li>
+	<li class="page_item page-item-12503"><a href="https://www.optionshouse.com/rates/margin-interest-rates/">Margin &#038; Interest Rates</a></li>
+	<li class="page_item page-item-212"><a href="https://www.optionshouse.com/rates/fees/">Standard Fees and Trading Rates</a></li>
+</ul>
+</li>
+<li class="page_item page-item-11605 page_item_has_children"><a href="https://www.optionshouse.com/risk-statements/">Risk Statements &#038; Disclosures</a>
+<ul class='children'>
+	<li class="page_item page-item-13452"><a href="https://www.optionshouse.com/risk-statements/futures-financial-reporting/">Futures Financial Reporting</a></li>
+</ul>
+</li>
+<li class="page_item page-item-12133"><a href="https://www.optionshouse.com/rsvp/">RSVP</a></li>
+<li class="page_item page-item-401 page_item_has_children"><a href="https://www.optionshouse.com/security/">Security Practices</a>
+<ul class='children'>
+	<li class="page_item page-item-4884"><a href="https://www.optionshouse.com/security/how-to-protect-yourself/">How to Protect Yourself</a></li>
+	<li class="page_item page-item-4881 page_item_has_children"><a href="https://www.optionshouse.com/security/how-to-report-suspected-fraud/">How to Report Suspected Fraud</a>
+	<ul class='children'>
+		<li class="page_item page-item-5013"><a href="https://www.optionshouse.com/security/how-to-report-suspected-fraud/online-threats/">Online Threats</a></li>
+	</ul>
+</li>
+	<li class="page_item page-item-4890"><a href="https://www.optionshouse.com/security/how-we-protect-you/">How We Protect You</a></li>
+</ul>
+</li>
+<li class="page_item page-item-12012"><a href="https://www.optionshouse.com/special-offer/">Special Offers</a></li>
+<li class="page_item page-item-14835"><a href="https://www.optionshouse.com/special-policies-margin-accounts/">Special Policies for Margin Accounts</a></li>
+<li class="page_item page-item-384 page_item_has_children"><a href="https://www.optionshouse.com/taxcenter/">Tax Center</a>
+<ul class='children'>
+	<li class="page_item page-item-9765"><a href="https://www.optionshouse.com/taxcenter/what-is-a-wash-sale/">What is a wash sale?</a></li>
+</ul>
+</li>
+<li class="page_item page-item-366"><a href="https://www.optionshouse.com/termsandconditions/">Terms &#038; Conditions</a></li>
+<li class="page_item page-item-12123"><a href="https://www.optionshouse.com/thank-you/">Thank You</a></li>
+<li class="page_item page-item-13782"><a href="https://www.optionshouse.com/thank-you-for-applying/">Thank you for applying</a></li>
+<li class="page_item page-item-12912"><a href="https://www.optionshouse.com/thank-you-for-your-feedback/">Thank you for your feedback</a></li>
+<li class="page_item page-item-7168 page_item_has_children"><a href="https://www.optionshouse.com/application-help/">Top Questions &#038; Answers</a>
+<ul class='children'>
+	<li class="page_item page-item-14548"><a href="https://www.optionshouse.com/application-help/exit-plan/">Exit Plan</a></li>
+	<li class="page_item page-item-7095"><a href="https://www.optionshouse.com/application-help/new-account-faqs/">New Account FAQs</a></li>
+	<li class="page_item page-item-14551"><a href="https://www.optionshouse.com/application-help/snapshot-analysis/">Snapshot Analysis</a></li>
+	<li class="page_item page-item-14561"><a href="https://www.optionshouse.com/application-help/strategy-manager/">Strategy Manager</a></li>
+	<li class="page_item page-item-7093"><a href="https://www.optionshouse.com/application-help/top-tips/">Top Tips</a></li>
+</ul>
+</li>
+<li class="page_item page-item-14520"><a href="https://www.optionshouse.com/trading-idea-generation-tool/">Trade Ideas</a></li>
+<li class="page_item page-item-16371"><a href="https://www.optionshouse.com/traders-expo/">Traders Expo</a></li>
+<li class="page_item page-item-12230 page_item_has_children"><a href="https://www.optionshouse.com/tradeschool/">TradeSchool</a>
+<ul class='children'>
+	<li class="page_item page-item-13035 page_item_has_children"><a href="https://www.optionshouse.com/tradeschool/chicago/">TradeSchool Chicago</a>
+	<ul class='children'>
+		<li class="page_item page-item-13117"><a href="https://www.optionshouse.com/tradeschool/chicago/event-photos/">Event Photos</a></li>
+	</ul>
+</li>
+	<li class="page_item page-item-13112"><a href="https://www.optionshouse.com/tradeschool/miami/">TradeSchool Miami</a></li>
+	<li class="page_item page-item-13386"><a href="https://www.optionshouse.com/tradeschool/palo-alto/">TradeSchool Palo Alto</a></li>
+</ul>
+</li>
+<li class="page_item page-item-14744"><a href="https://www.optionshouse.com/trading-idea-generation-tool-exclusive-webinar/">Trading Idea Generation Tool &#8211; Exclusive Webinar</a></li>
+<li class="page_item page-item-13658 page_item_has_children"><a href="https://www.optionshouse.com/trading-products/">Trading Products</a>
+<ul class='children'>
+	<li class="page_item page-item-14926"><a href="https://www.optionshouse.com/trading-products/6-reasons-start-trading-futures-today/">6 Reasons to Start Trading Futures Today</a></li>
+	<li class="page_item page-item-15351"><a href="https://www.optionshouse.com/trading-products/options-etrade/">Options</a></li>
+	<li class="page_item page-item-13728"><a href="https://www.optionshouse.com/trading-products/product-development/">Product Development</a></li>
+	<li class="page_item page-item-14736"><a href="https://www.optionshouse.com/trading-products/equities/">Trading Equities</a></li>
+	<li class="page_item page-item-16062"><a href="https://www.optionshouse.com/trading-products/trading-futures/">Trading Futures</a></li>
+	<li class="page_item page-item-13508 page_item_has_children"><a href="https://www.optionshouse.com/trading-products/futures/">Trading Futures</a>
+	<ul class='children'>
+		<li class="page_item page-item-13786"><a href="https://www.optionshouse.com/trading-products/futures/contract-specifications/">Contract Specifications</a></li>
+		<li class="page_item page-item-13635"><a href="https://www.optionshouse.com/trading-products/futures/futures-questions/">Frequently Asked Questions</a></li>
+	</ul>
+</li>
+	<li class="page_item page-item-15741"><a href="https://www.optionshouse.com/trading-products/options-oh/">Trading Options</a></li>
+	<li class="page_item page-item-14738"><a href="https://www.optionshouse.com/trading-products/options/">Trading Options</a></li>
+</ul>
+</li>
+<li class="page_item page-item-97 page_item_has_children"><a href="https://www.optionshouse.com/technology/">Trading Technology</a>
+<ul class='children'>
+	<li class="page_item page-item-16762"><a href="https://www.optionshouse.com/technology/mobile/">New Mobile Apps &#8211; Trade Anywhere, Anytime</a></li>
+	<li class="page_item page-item-17226"><a href="https://www.optionshouse.com/technology/new_platform/">The New Platform is Here</a></li>
+	<li class="page_item page-item-12393"><a href="https://www.optionshouse.com/technology/tradelab/">tradeLAB</a></li>
+	<li class="page_item page-item-881"><a href="https://www.optionshouse.com/technology/platform/">Trading Platform</a></li>
+	<li class="page_item page-item-14788"><a href="https://www.optionshouse.com/technology/visualize-success-tradelab/">Visualize Success with tradeLAB™</a></li>
+	<li class="page_item page-item-17041"><a href="https://www.optionshouse.com/technology/whats-next/">Whats Next</a></li>
+</ul>
+</li>
+<li class="page_item page-item-490"><a href="https://www.optionshouse.com/webinars/">Webinars</a></li>
+<li class="page_item page-item-14538"><a href="https://www.optionshouse.com/why-optionshouse/">Why OptionsHouse</a></li>
+<li class="page_item page-item-15059"><a href="https://www.optionshouse.com/why-trade-futures/">Why Trade Futures</a></li>
+<li class="page_item page-item-569"><a href="https://www.optionshouse.com/technology/mobile__trashed/android-phone/">Android Phone</a></li>
+<li class="page_item page-item-571"><a href="https://www.optionshouse.com/technology/mobile__trashed/android-tablet/">Android Tablet</a></li>
+<li class="page_item page-item-567"><a href="https://www.optionshouse.com/technology/mobile__trashed/ipad/">iPad</a></li>
+<li class="page_item page-item-575"><a href="https://www.optionshouse.com/technology/mobile__trashed/kindle-fire/">Kindle Fire</a></li>
+</ul></div>
+			</div>
+			<main id="main" class="site-main clr" itemprop="mainContentOfPage" itemscope="itemscope" itemtype="http://schema.org/WebPageElement">
+				
+    <div id="content-wrap" class="container clr">
+
+        
+        <div id="primary" class="content-area clr">
+
+            
+            <div id="content" class="clr site-content">
+
+                
+                
+                    <article class="clr">
+
+                        
+                        <div class="entry-content entry clr">
+
+                            
+<div class="wpex-vc-row-wrap clr wpex-vc-row-stretch_row wpex-vc-has-custom-column-spacing wpex-vc-column-spacing-5">
+
+	<div data-vc-full-width="true" data-vc-full-width-init="false" class="vc_row wpb_row vc_row-fluid oh-background-cover vc_custom_1498137136724">
+
+		
+			<div class="wpex-vc-columns-wrap clr">				<div class="wpb_column vc_column_container vc_col-sm-12"><div class="vc_column-inner wpex-clr"><div class="wpb_wrapper wpex-vc-column-wrapper wpex-clr"><div class="vc_row wpb_row vc_inner vc_row-fluid home-core-cta-wrap"><div class="masthead-left wpb_column vc_column_container vc_col-sm-9"><div class="vc_column-inner wpex-clr"><div class="wpb_wrapper wpex-vc-column-wrapper">
+	<div class="wpb_raw_code wpb_content_element wpb_raw_html">
+		<div class="wpb_wrapper">
+			<div class="header">
+<div class="logo"><img src="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/uploads/OptionsHouse-by-ETRADE_half_reversed.png"></img></div>
+<div class="header-text">OptionsHouse and E*TRADE are joining forces! <a href="/blog/announcements/etrade-financial-acquiring-optionshouse/" style="text-decoration:underline;" alt="Click to read the press release">Read the press release</a></div>
+</div>
+
+		</div>
+	</div>
+</div></div></div><div class="masthead-right wpb_column vc_column_container vc_col-sm-3"><div class="vc_column-inner wpex-clr"><div class="wpb_wrapper wpex-vc-column-wrapper"><div class="vc_btn3-container  core-cta-btn vc_btn3-inline vc_custom_1498065957483"><a class="vc_general vc_btn3 vc_btn3-size-lg vc_btn3-shape-rounded vc_btn3-style-flat vc_btn3-color-orange" href="https://www.trademonster.com/login.jsp" title="">Log in to OptionsHouse</a></div>
+</div></div></div></div><div class="vc_row wpb_row vc_inner vc_row-fluid"><div class="left-oh wpb_column vc_column_container vc_col-sm-8"><div class="vc_column-inner wpex-clr"><div class="wpb_wrapper wpex-vc-column-wrapper vc_custom_1498139925296">
+	<div class="wpb_text_column wpb_content_element  vc_custom_1499277259256">
+		<div class="wpb_wrapper">
+			<h1 style="color: #fff;">Get ready for the move to E*TRADE</h1>
+<p>OptionsHouse accounts and trading platforms are soon moving to a new home at E*TRADE. Beginning at 5 p.m. ET on Sunday, August 6, 2017, you’ll be able to access your accounts <span style="white-space: nowrap;">at etrade.com.</span></p>
+<p>&nbsp;</p>
+<p><strong>Learn More</strong><br />
+Learn more about the move including key dates, FAQs, videos, and tutorials in the E*TRADE <span style="white-space: nowrap;">Info Center.</span></p>
+
+		</div>
+	</div>
+<div class="vc_btn3-container vc_btn3-center"><a class="vc_general vc_btn3 vc_btn3-size-md vc_btn3-shape-rounded vc_btn3-style-flat vc_btn3-color-green" href="https://us.etrade.com/l/welcome-to-etrade" title="">Visit the E*TRADE Info Center</a></div>
+</div></div></div><div class="right-etrade wpb_column vc_column_container vc_col-sm-4"><div class="vc_column-inner wpex-clr"><div class="wpb_wrapper wpex-vc-column-wrapper">
+	<div class="wpb_text_column wpb_content_element">
+		<div class="wpb_wrapper">
+			<h1 style="color: #fff;">Not yet a customer?</h1>
+<p>Apply now, and soon you’ll have the best of both OptionsHouse <span style="white-space: nowrap;">and E*TRADE.</span></p>
+
+		</div>
+	</div>
+
+	<div class="wpb_single_image wpb_content_element vc_align_center  vc_custom_1499270829075">
+		<div class="wpb_wrapper">
+			
+			<div class="vc_single_image-wrapper"><img class="vc_single_image-img" src="https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/uploads/laptop_platform1-234x175.png" width="234" height="175" alt="laptop_platform1-234x175" title="laptop_platform1-234x175" /></div>
+		</div>
+	</div>
+<div class="vc_btn3-container vc_btn3-center"><a class="vc_general vc_btn3 vc_btn3-size-md vc_btn3-shape-rounded vc_btn3-style-flat vc_btn3-color-purple" href="https://us.etrade.com/home" title="">Open an E*TRADE account</a></div>
+</div></div></div></div><div class="vc_row wpb_row vc_inner vc_row-fluid"><div class="wpb_column vc_column_container vc_col-sm-12"><div class="vc_column-inner wpex-clr"><div class="wpb_wrapper wpex-vc-column-wrapper">
+	<div class="wpb_text_column wpb_content_element  vc_custom_1499277175174">
+		<div class="wpb_wrapper">
+			<div class="wpb_wrapper disclosures">
+<p>FINRA BrokerCheck reports for OptionsHouse and its investment professionals are available at <a href="http://www.finra.org/brokercheck" target="_blank" rel="noopener noreferrer">www.finra.org/brokercheck</a></p>
+<p>OptionsHouse does not provide investment, tax or legal advice. Options and futures transactions involve risk and are not suitable for all investors. Electronic trading poses unique risk to investors. System response and access times may vary due to market conditions, system performance and other factors. Refer to <a href="http://www.optionsclearing.com/components/docs/riskstoc.pdf" target="_blank" rel="noopener noreferrer">Characteristics and Risks of Standardized Options</a> | <a href="/risk-statements/" target="_blank" rel="noopener noreferrer">Futures Agreement and Risk Disclosure Statements</a> | <a href="/risk-statements/">Risk Statements and Disclosures</a> | <a href="/privacy/">Privacy Statement</a> | <a href="/termsandconditions/">Terms &amp; Conditions</a>, copies of which can also be obtained by contacting our Customer Service Department at 1-877-598-3190 or <a href="/cdn-cgi/l/email-protection#80e3f5f3f4efede5f2f3e5f2f6e9e3e5c0eff0f4e9efeef3e8eff5f3e5aee3efed"><span class="__cf_email__" data-cfemail="f3908680879c9e9681809681859a9096b39c83879a9c9d809b9c868096dd909c9e">[email&#160;protected]</span><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script></a>. An investor should understand these and additional risks <span style="white-space: nowrap;">before trading.</span></p>
+<p>© 2017 E*TRADE Financial Corporation. All rights reserved. Securities and futures products and services offered by OptionsHouse. Member <a href="http://www.finra.org" target="_blank" rel="noopener noreferrer">FINRA</a> | <a href="http://www.sipc.org" target="_blank" rel="noopener noreferrer">SIPC</a> | <a href="http://www.nfa.org" target="_blank" rel="noopener noreferrer">NFA</a>. OptionsHouse is a subsidiary of E*TRADE Financial Corporation. <a style="white-space: nowrap;" href="/contact/">Contact us</a></p>
+</div>
+
+		</div>
+	</div>
+</div></div></div></div></div></div></div>			</div><!-- .wpex-vc-columns-wrap -->
+
+		
+		
+		
+	</div>
+
+	<div class="vc_row-full-width"></div>
+</div><!-- .wpex-vc-row-wrap -->
+
+                            
+                        </div><!-- .entry-content -->
+
+                        
+                    </article><!-- #post -->
+
+                    
+                
+                
+            </div><!-- #content -->
+
+            
+        </div><!-- #primary -->
+
+        
+    </div><!-- #content-wrap -->
+
+
+                    </main>                    </div>    </div>
+<div id="mobile-menu-search" class="clr wpex-hidden">
+	<form method="get" action="https://www.optionshouse.com/" class="mobile-menu-searchform">
+		<input type="search" name="s" autocomplete="off" placeholder="Search" />
+				<button type="submit" class="searchform-submit">
+			<span class="fa fa-search"></span>
+		</button>
+	</form>
+</div><!-- .mobile-menu-search -->			<div id="sidr-close"><a href="#sidr-close" class="toggle-sidr-close"></a></div>
+			<script type='text/javascript' defer="defer" src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/revslider/public/assets/js/jquery.themepunch.tools.min.js?rev=5.1.5'></script>
+		<script type='text/javascript' defer="defer" src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/revslider/public/assets/js/jquery.themepunch.revolution.min.js?rev=5.1.5'></script>
+		<!-- Lightbox Plus Colorbox v2.7.2/1.5.9 - 2013.01.24 - Message: 1-->
+<script type="text/javascript">
+jQuery(document).ready(function($){
+  $("a[rel*=lightbox]").colorbox({initialWidth:"30%",initialHeight:"30%",maxWidth:"90%",maxHeight:"90%",opacity:0.8});
+  $(".lbp_secondary").colorbox({speed:300,width:"60%",innerWidth:"50%",innerHeight:"50%",initialWidth:"60%",initialHeight:"40%",maxWidth:"90%",maxHeight:"90%",opacity:0.8,iframe:true});
+});
+</script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/jquery/ui/core.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/jquery/ui/widget.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/jquery/ui/mouse.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/jquery/ui/resizable.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/jquery/ui/draggable.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/jquery/ui/button.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/jquery/ui/position.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/jquery/ui/dialog.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/wpdialog.min.js?ver=4.8'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var wpcf7 = {"apiSettings":{"root":"https:\/\/www.optionshouse.com\/wp-json\/","namespace":"contact-form-7\/v1"},"recaptcha":{"messages":{"empty":"Please verify that you are not a robot."}},"cached":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/contact-form-7/includes/js/scripts.js?ver=4.8'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var wpexLocalize = {"isRTL":"","mainLayout":"full-width","menuSearchStyle":"disabled","hasStickyHeader":"1","siteHeaderStyle":"one","superfishDelay":"600","superfishSpeed":"fast","superfishSpeedOut":"fast","mobileMenuStyle":"sidr","localScrollUpdateHash":"1","localScrollSpeed":"800","windowScrollTopSpeed":"800","carouselSpeed":"150","customSelects":".woocommerce-ordering .orderby, #dropdown_product_cat, .widget_categories select, .widget_archive select, #bbp_stick_topic_select, #bbp_topic_status_select, #bbp_destination_topic, .single-product .variations_form .variations select","milestoneDecimalFormat":",","sidrSource":"#sidr-close, #site-navigation, #mobile-menu-search","sidrDisplace":"","sidrSide":"right","sidrSpeed":"300","sidrDropdownTarget":"arrow","stickyShrinkOffset":"0","hasStickyMobileHeader":"1","overlayHeaderStickyTop":"0","stickyHeaderBreakPoint":"960","stickyTopBarBreakPoint":"960","hasStickyTopBarMobile":"1","iLightbox":{"auto":false,"skin":"minimal","path":"horizontal","controls":{"arrows":true,"thumbnail":true,"fullscreen":true,"mousewheel":false},"effects":{"loadedFadeSpeed":50,"fadeSpeed":500},"show":{"title":true,"speed":200},"hide":{"speed":200},"overlay":{"blur":true,"opacity":0.9},"social":{"start":true,"show":"mouseenter","hide":"mouseleave","buttons":false}}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/themes/Total/js/total-min.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/lightbox-plus/js/jquery.colorbox.1.5.9-min.js?ver=1.5.9'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-includes/js/wp-embed.min.js?ver=4.8'></script>
+<script type='text/javascript' src='https://21cmsx1r3ihdnahht14c8lcu-wpengine.netdna-ssl.com/wp-content/plugins/js_composer/assets/js/dist/js_composer_front.min.js?ver=4.11.2'></script>
+    <script>
+        (function($) {
+        'use strict';
+            // Auto add lightbox to entry images
+            $( '.single-blog-article .entry a:has(img)' ).each( function() {
+                var $this   = $(this),
+                    $img    = $this.find( 'img' ),
+                    $src    = $img.attr( 'src' ),
+                    $ref    = $this.attr( 'href' );
+                if ( $src == $ref ) {
+                    $this.iLightBox( {
+                        skin        : wpexLocalize.lightboxSkin,
+                    } );
+                }
+            } );
+        } ) ( jQuery );
+    </script>
+
+<script type="text/javascript" src="https://tags.crwdcntrl.net/c/6655/cc.js?ns=_cc6655" id="LOTCC_6655"></script>
+<script type="text/javascript">_cc6655.bcp();</script>
+
+<script>(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:"4017781"};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");</script><noscript><img src="//bat.bing.com/action/0?ti=4017781&Ver=2" height="0" width="0" style="display:none; visibility: hidden;" alt="" /></noscript>
+
+<script type='text/javascript' src='https://c.la4-c2-was.salesforceliveagent.com/content/g/js/35.0/deployment.js'></script> <script type='text/javascript'> liveagent.init('https://d.la4-c2-was.salesforceliveagent.com/chat', '5721a000000Cff8', '00D1a000000ZDYn'); </script>
+
+<script type="text/javascript"> 
+
+	etradeDisclaimer = function(){
+
+			jQuery('<p style="display: inline">Aperture Group, LLC and OptionsHouse are separate but affiliated companies and subsidiaries of E*TRADE Financial Corporation.</p>').appendTo('#broker-check');
+
+	};
+
+	etradeDisclaimer();
+
+
+ </script>
+
+<script>/* <![CDATA[ */(function(d,s,a,i,j,r,l,m,t){try{l=d.getElementsByTagName('a');t=d.createElement('textarea');for(i=0;l.length-i;i++){try{a=l[i].href;s=a.indexOf('/cdn-cgi/l/email-protection');m=a.length;if(a&&s>-1&&m>28){j=28+s;s='';if(j<m){r='0x'+a.substr(j,2)|0;for(j+=2;j<m&&a.charAt(j)!='X';j+=2)s+='%'+('0'+('0x'+a.substr(j,2)^r).toString(16)).slice(-2);j++;s=decodeURIComponent(s)+a.substr(j,m-j)}t.innerHTML=s.replace(/</g,'&lt;').replace(/\>/g,'&gt;');l[i].href='mailto:'+t.value}}catch(e){}}}catch(e){}})(document);/* ]]> */</script></body>
+</html>

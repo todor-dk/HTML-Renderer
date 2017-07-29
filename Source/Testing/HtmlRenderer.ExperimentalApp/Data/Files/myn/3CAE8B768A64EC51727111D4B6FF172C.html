@@ -1,0 +1,1265 @@
+
+<!DOCTYPE html>
+
+
+
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>myTCC - Tarrant County College</title>
+<link href="/_layouts/images/pg/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+<link href="/_layouts/images/pg/css/style.css?r=20160527" type="text/css" rel="stylesheet">
+<!-- 1078 -->
+<!-- Commented out by Stephen Fornal -->
+<!-- Let's just skip these "theme" files completely... -->
+<!--
+<link href="/_layouts/images/pg/css/gradient-vine.css" type="text/css" rel="stylesheet">
+-->
+
+<!-- Commented out by Stephen Fornal -->
+<!--
+<link href='https://fonts.googleapis.com/css?family=Ubuntu:400,500,300' rel='stylesheet' type='text/css'>
+-->
+
+<!-- TCC Stephen: Use TCC Fonts instead -->
+<!-- TCC Stephen: As of December 2016, remove the following line -->
+<!--
+<link rel="stylesheet" type="text/css" href="https://cloud.typography.com/6195332/7639952/css/fonts.css" />
+-->
+
+<script src="/_layouts/images/pg/js/pg.js?r=20160527" type="text/javascript"></script>
+<script src="/_layouts/images/pg/js/pg_custom.js?r=20160527" type="text/javascript"></script>
+<script src="/_layouts/images/pg/js/pg_util.js?r=20160527" type="text/javascript"></script>
+
+<!--<script src="/_layouts/images/pg/js/pwdmeter.js?r=20141230" type="text/javascript"></script>-->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+<!-- Uncomment line below if CAPTCHA is to be used -->
+<!--<script src="https://www.google.com/recaptcha/api/js/recaptcha_ajax.js" type="text/javascript" ></script>-->
+
+<script type="text/javascript">
+<!--
+
+// Default field names on the login form displayed
+var FLD_DSP_USER 	= DEF_FLD_USERNAME;
+var FLD_DSP_PASS 	= DEF_FLD_PASSWORD;
+var FLD_NEWPW 		= DEF_FLD_NEWPW;
+// Default field names on the login form submitted (not necessarily the same)
+var FLD_SUBMIT_USER = DEF_FLD_USERNAME;
+var FLD_SUBMIT_PASS = DEF_FLD_PASSWORD;
+
+var SEL_LANG = "";
+var arrLangsAvailable = [];
+
+
+function handleEnterKey(e) {
+	e = e || window.event;
+	var key = e.charCode ? e.charCode : (e.keyCode ? e.keyCode : 0);
+	if (key == 13) {
+		enterKeySubmit();
+		return false;
+	} else
+		return true;
+}
+
+// Sets the handler for the entire page
+document.onkeypress = handleEnterKey;
+
+
+function showLoginFormButtons() {
+	setElemVisibility(["btnSetPW"], bShowSetPWButton);
+	setElemVisibility(["btnSelfServe"], bShowForgotPWButton);
+}
+
+
+function showPWFieldCheckboxes(bShow) {
+	setElemVisibility(["spanShowPWs1", "spanShowPWs2", "spanShowPWs3", "spanShowPWs4", "spanShowPWs5", "spanShowPWs6", "spanShowPWs7", "spanShowPWs8", "spanShowPWs9", "spanShowPWs10"], bShow);
+}
+
+
+function createHiddenTOUField() {
+	var touField = document.createElement("input");
+	touField.type = "hidden";
+	touField.value = "";
+	touField.setAttribute("name", "TOUAction");
+	touField.setAttribute("id", "TOUAction");
+	frmMainLogon.appendChild(touField);
+}
+
+
+function setFieldLabels() {
+	setElemContent(getMainFormTitle(), ["lblMainFormTitle"]);
+	setElemContent(getSetPWTitle(), ["lblSetPWTitle"]);
+	setElemContent(getLoginCATitle(), ["lblLoginCATitle"]);
+	setElemContent(getCustomTOUMsg(), ["customTOUHTML"]);
+	setElemContent(getOTPEntryTitle(), ["lblOTPEntryTitle"]);
+	setElemContent(getSSTitle(), ["SSTitle"]);
+	setElemContent(getAcctLinkTitle(), ["AcctLinkTitle"]);
+
+	setElemContent(getSCTimerLabel(), ["lblSCTimerMain", "lblSCTimerSetPW", "lblSCTimerLoginCA", "lblSCTimerOTPEnroll", "lblSCTimerOTPEntry", "lblSCTimerSS", "lblSCTimerAcctLink", "lblSCTimerChngUsr"]);
+
+	setElemContent(getUsernameLabel(), ["lblUNameMain", "lblUNameSetPW", "lblUNameLoginCA", "lblUNameOTPEnroll", "lblUNameOTPEntry", "lblUNameSS", "lblUNameAcctLink"]);
+	setElemContent(getNewUsernameLabel(), ["lblNewUNameChngUsr"]);
+	setElemContent(getPasswordLabel(), ["lblPWMain", "lblPWSetPW", "lblPWLoginCA", "lblPWOTPEnroll", "lblPWOTPEntry", "lblPWSS", "lblPWAcctLink"]);
+	setElemContent(getMainUsernameLabel(), ["lblMainUNameAcctLink"]);
+	setElemContent(getShowPWLabel(), ["lblShowPWs1", "lblShowPWs2", "lblShowPWs3", "lblShowPWs4", "lblShowPWs5", "lblShowPWs6", "lblShowPWs7", "lblShowPWs8", "lblShowPWs9", "lblShowPWs10"]);
+	setElemContent(getNewPWLabel(), ["lblNewPWSetPW", "NewPasswordLabel"]);
+	setElemContent(getConfPWLabel(), ["lblConfPWSetPW", "ConfirmPasswordLabel"]);
+	setElemContent(getOTPLabel(), ["lblOTPSetPW", "lblOTPOTPEntry", "lblOTPSS", "lblOTPChngUsr", "lblOTPEmailConf", "lblOTPPhoneConf"]);
+	setElemContent(getPWStrengthLabel(), ["pwdLockString1", "pwdLockString2"]);
+	setElemContent(getPhoneCountryLabel(), ["lblPhoneCOTPEnroll", "lblPhoneCSS"]);
+	setElemContent(getPhoneNumberLabel(), ["lblPhoneNumOTPEnroll", "lblPhoneNumSS"]);
+	setElemContent(getPhoneCanTextYesLabel(), ["lblPhoneCanSMSYesOTPEnroll", "lblPhoneCanSMSYesSS"]);
+	setElemContent(getPhoneCanTextNoLabel(), ["lblPhoneCanSMSNoOTPEnroll", "lblPhoneCanSMSNoSS"]);
+
+	setElemContent(getPhoneProviderLabel(), ["lblPhoneProvOTPEnroll", "lblPhoneProvSS"]);
+	setElemContent(getSSRecoveryOptionsAvailableLabel(), ["lblSSRecoveryOptions"]);
+	setElemContent(getSSRequestedActionLabel(), ["lblSSReqAction"]);
+	setElemContent(getSSAuthTypes(), ["lblSSAuthTypes"]);
+	setElemContent(getEmailAddrLabel(), ["lblSSEmailAddr", "lblOTPEnrollEmailAddr"]);
+	setElemContent(getSSPermSuppressLabel(), ["lblSSPermSuppress", "lblAcctLinkPermSuppress", "lblMobileAppPermSuppress"]);
+	setElemContent(getSSAnsRemainLabel(), ["lblSSAnsRemain"]);
+	setElemContent(getAcctLinkRepoSysLabel(), ["lblAcctLinkRepoSys"]);
+	setElemContent(getAcctLinkLinkedAcctNameLabel(), ["lblAcctLinkLinkedName"]);
+	setElemContent(getAcctLinkLinkedAcctPWLabel(), ["lblAcctLinkLinkedPW"]);
+
+	setElemContent(getCAPTCHAInstructions(), ["lblCaptchaLogin", "lblCaptchaSetPW", "lblCaptchaOTPEnroll", "lblCaptchaOTPEntry", "lblCaptchaSS", "lblCaptchaAcctLink", "lblCaptchaChngUsr"]);
+
+	setElemContent(getRememberDeviceLabel(), ["lblSaveUAKBA", "lblSaveUA2FA"]);
+	setElemContent(getRememberDeviceInstr(), ["lblSaveUAInstrKBA", "lblSaveUAInstr2FA"]);
+	setElemContent(getRememberDeviceDescLabel(), ["lblSaveUADescKBA", "lblSaveUADesc2FA"]);
+
+	setElemContent(getMobileAppTitle(), ["lblMobileAppTitle"]);
+	setElemContent(getMobileAppPhoneTypeLabel(), ["lblMobileAppPhoneType"]);
+	setElemContent(getMobileAppEntryDescLabel(), ["lblMobileAppDesc"]);
+	setElemContent(getMobileAppInstr(2), ["infoMobileApp2"]);	// Doesn't change
+	setElemContent(getOTPLabel(), ["lblMobileAppOTP"]);
+	setElemContent(getExtAuthToggleLabel(), ["lblchkSetPWExtAuth", "lblchkOTPEntryExtAuth", "lblchkSSExtAuth"]);
+
+	// Buttons
+	setElemContent(getBtnLogin(), ["btnLogin", "btnKBALogin", "btnOTPEntryLogin"]);
+	setElemContent(getBtnContinue(), ["btnLoginContinue", "btnSetPWContinueLabel", "btnOTPEnrollContinue", "btnSSContinueDis", "btnSSContinue", "btnAcctLinkContinue", "btnChngUsrContinue", "btnConfPhoneContinue", "btnEmailConfContinue", "btnMobileContinue"]);
+	setElemContent(getBtnCancel(), ["btnSetPWCancel", "btnKBACancel", "btnOTPEnrollCancel", "btnOTPEntryCancel", "btnSSCancel", "btnAcctLinkCancel", "btnChngUsrCancel", "btnConfPhoneCancel", "btnEmailConfCancelLabel"]);
+	setElemContent(getBtnSetPassword(), ["btnSetPW", "btnSetPWSetPW", "btnSetPWDisSetPW"]);
+	setElemContent(getBtnForgotPassword(), ["btnSelfServe"]);
+	setElemContent(getBtnPrevious(), ["btnSetChalPrevDis", "btnSetChalPrev"]);
+	setElemContent(getBtnNext(), ["btnSetChalNextDis", "btnSetChalNext"]);
+	setElemContent(getBtnAccept(), ["btnTOUAccept"]);
+	setElemContent(getBtnDecline(), ["btnTOUDecline"]);
+	setElemContent(getBtnSkip(), ["btnSSSkip", "btnAcctLinkSkip", "btnMobileAppSkip"]);
+
+	setElemContent(getRememberUsernameLabel(), ["lblRememberUsername"]);
+	setElemContent(getRememberMeSSOLabel(), ["lblRememberMe"]);
+	setElemContent(getLanguageLabel(), ["lblLangSel"]);
+	createLangSelectors();
+}
+
+function changeSkin(ctrl) {
+	setCookie("NebulaSkin", ctrl.options[ctrl.selectedIndex].value, null, "/");
+	location.reload();
+}
+
+function window_onload() {
+	// 2009-12-15 - Specific to Sharepoint login form
+	frmMainLogon = frmMainDisplay = document.forms["ctl00"];
+	FLD_DSP_USER = FLD_SUBMIT_USER = "frmLogin$UserName";
+	FLD_DSP_PASS = FLD_SUBMIT_PASS = "frmLogin$Password";
+
+	// 2012-12-17 - Force logout of PG if IIS session terminates
+	var sesscook = getCookie("PGSession");
+	if (null != sesscook && sesscook.length > 0) {
+		var theurl = encodeURIComponent(location.pathname + location.search);
+  		window.location = "/_layouts/PG/signout.aspx?ReturnUrl=" + theurl;
+		return;
+	}
+
+	setFieldLabels();
+
+	PG_Custom_Init();
+
+	useRememberedUsername(true);
+	setElemVisibility(["spnRememberUsername"], 0 != g_rememberUsernameDays ? true : false);
+	setElemVisibility(["divRememberMe"], false);
+
+	//g_bSideCar = true;
+	//document.domain = "portalguard.int";
+
+	try {
+		PG_Auto(window.location.search);
+		if (!g_bPGClient) document.body.oncontextmenu = null;
+	} catch (e) {}
+}
+
+// Global!
+var gExtAuth = null;
+var frmExtAuth = null;
+function showExtAuth(theid) {
+	alert("External Authentication has not yet been implemented");
+}
+function hideExtAuth() {
+	setElemVisibility(["divOTPEntryExtAuth", "divSSExtAuth", "divSetPWExtAuth"], false);
+}
+function toggleExtAuthDisplay() {
+	alert("External Authentication has not yet been implemented");
+}
+
+//-->
+</script>
+</head>
+
+<body oncontextmenu="return false;" onload="return window_onload()">
+
+<!--
+Â© 2009-2016 PistolStar, Inc. d/b/a PortalGuard. All rights reserved.
+
+NOTE: Licensees are explicitly forbidden from removing Copyright Notices from this file. PortalGuard licenses only grant licensees permission to use the software. This permission is not transferrable and expires with the license term. Licensees do NOT own their copy of the source code and must abide by these restrictions as set forth in the full Software License Agreement.
+
+Restricted Rights Legend
+This software is subject to and made available only pursuant to the terms of the PistolStar End User License Agreement and may be used or copied only in accordance with the terms of that agreement. It is against the law to copy the software except as specifically allowed in the agreement.
+Information in this page is subject to change without notice and does not represent a commitment on the part of PistolStar. THE SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. FURTHER, PistolStar DOES NOT WARRANT, GUARANTEE, OR MAKE ANY REPRESENTATIONS REGARDING THE USE, OR THE RESULTS OF THE USE, OF THE SOFTWARE OR WRITTEN MATERIAL IN TERMS OF CORRECTNESS, ACCURACY, RELIABILITY, OR OTHERWISE.
+
+Trademarks or Service Marks
+PortalGuard is a registered trademark of PistolStar.
+//-->
+
+<!-- ======================= NOTES ======================= -->
+<!--
+
+1. Throughout code, replaced "green" classname with "tccBlue" classname
+2. Removed reference to theme CSS file in head code
+3. Added theme-related code to style.css, using "tcc" prefix on class names
+    to clearly differentiate added classes
+
+-->
+<!-- ====================== END NOTES =================== -->
+
+    <!-- TCC Stephen: Remove the shadow class -->
+    <!-- TCC Stephen: changed center class to tccCenter on this outer container -->
+	<div id="login" class="container tccCenter">
+		<div id="outerwrap ">
+            <!-- TCC Stephen: changed center class to tccCenter on this inner container -->
+			<div class="row tccCenter">
+                <!-- TCC Stephen: removed the shadow class -->
+				<div class="logonbox col-md-8 col-md-offset-2 border-radius">
+					<form method="post" action="./login.aspx?ReturnUrl=%2fcas%2flogin%3fservice%3dhttps%253A%252F%252Fmy.tccd.edu%252Fwebapps%252Fbb-auth-provider-cas-BBLEARN%252Fexecute%252FcasLogin%253Fcmd%253Dlogin%2526authProviderId%253D_106_1%2526redirectUrl%253Dhttps%25253A%25252F%25252Fmy.tccd.edu%25252Fwebapps%25252Fportal%25252Fexecute%25252FdefaultTab%2526globalLogoutEnabled%253Dtrue%26renew%3dtrue&amp;service=https%3a%2f%2fmy.tccd.edu%2fwebapps%2fbb-auth-provider-cas-BBLEARN%2fexecute%2fcasLogin%3fcmd%3dlogin%26authProviderId%3d_106_1%26redirectUrl%3dhttps%253A%252F%252Fmy.tccd.edu%252Fwebapps%252Fportal%252Fexecute%252FdefaultTab%26globalLogoutEnabled%3dtrue&amp;renew=true" id="ctl00" autocomplete="off">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUIMjU2MzE2NTMPZBYCZg9kFgRmDw8WAh4EVGV4dGVkZAIBD2QWAmYPZBYEAgUPD2QWAh4Kb25rZXlwcmVzcwUbaGFuZGxlS2V5UHJlc3ModGhpcywgZXZlbnQpZAIHDxAPFgIeB0NoZWNrZWRoZGRkZBgBBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WAQUTZnJtTG9naW4kUmVtZW1iZXJNZR6Q7eJ6dJFSbNdGHE3cRGK+Em78gIJSUkBm0EKMQzDS" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="76093EDD" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAUa9/M/f6Dz0Jsz91pLJi3TCLsiHapwUeTrNp+p+fuBG5ulo6f6Ih5wUoUMQkrGgLGD60GadxNb2GJETLqNkmCdH9ikP/Gn7Oj0upyW2/UPAxuT/iG3/uAbtr5i2DV/3+JYzrSj7/gdOqrxvG3MRr6z" />
+</div>
+						<div class="row tccBlue">
+                            <!-- TCC Stephen: Removed the boostrap class col-md-12 -->
+							<div>
+								<div class="text-center tccLogoWrap">
+                                    <!-- TCC Stephen: Added display:none and class hidden to this text -->
+									<span id="lblMainFormTitle" class="mainheading hidden" style="display:none;">Tarrant County College</span>
+                                    <a href="https://www.tccd.edu/" target="_blank"><img class="tccLogo" src="/_layouts/images/PG/images/tcc-logo-blue-green-accent.svg" alt="Tarrant County College" title="Open the TCC home page in a new tab" /></a>
+								</div>
+
+                                <!-- TCC Stephen: Added the following div -->
+                                <div class="text-center">
+									<div class="tccTagLine">
+                                        <p class="tccTagLine__topLine">Single sign on for</p>
+
+                                        <!-- TCC Stephen: Added for updated design -->
+                                        <p class="tccTagLine__myTCCText">myTCC</p>
+                                        <p class="tccTagLine__secondLine">
+                                            <span class="tccBlueText">Blackboard</span> &middot; <span class="tccTealText">Gmail</span> &middot; <span class="tccBurgundyText">WebAdvisor</span>
+                                        </p>
+                                    </h2>
+								</div>
+
+                                <!-- End of addition -->
+
+								<span id="LangSel" class="clsLangSelector" style="display:none">
+									<span id="lblLangSel">Language: </span>
+									<select name="listLangSel" id="listLangSel" onchange="changeLang(this)"></select>
+								</span>
+							</div>
+						</div>
+						<div id="infoLogin" class="popupInstructions"></div>
+                        <!-- TCC Stephen: Remove the inline style attribute -->
+						<div id="ErrMsgLogin"></div>
+						<span id="Msg" style="color:Red;"></span>
+						<div class="row">
+                            <!-- TCC Stephen: Added class tccFormWrap, removed bootstrap class col-sm-6 -->
+							<div class="tccFormWrap">
+								<table id="frmLogin" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+	<tr>
+		<td>
+										<span></span><br>
+										<table class="thintable">
+											<tr>
+												<td class="lcol">
+													<span id="lblUNameMain" class="popFieldLabel">Username</span><br>
+													<input name="frmLogin$UserName" type="text" maxlength="256" id="frmLogin_UserName" />
+													<span id="spnRememberUsername" style="display:none">
+														<label id="lblRememberUsername" for="RememberUsername">Remember Me</label>
+														<input type="checkbox" id="RememberUsername">
+													</span><br>
+												</td>
+												<td class="rcol">
+													<div class="divSCTimer" id="divSCTimer_Main"><a id="lblSCTimerMain" href="javascript:void(0)" onclick="javascript:showSCTimerHelp(this)" tabindex="0"></a>&nbsp;&nbsp;<br><span class="SCTimer" id="spanSCTimer_Main"></span>&nbsp;&nbsp;</div>
+												</td>
+											</tr>
+										</table>
+
+										<span id="fldStaticPWLogin" style="display:none">
+											<span id="lblPWMain" class="popFieldLabel ">Password</span><br>
+											<input name="frmLogin$Password" type="password" maxlength="256" id="frmLogin_Password" class="keyboardInput" onkeypress="handleKeyPress(this, event)" />
+											<span id="spanShowPWs1" style="display:none">&nbsp;&nbsp;<label id="lblShowPWs1" for="showpwsMain"></label><input name="showpws" id="showpwsMain" type="checkbox" value="1" onclick="togglePwFields(this.form, this.checked)"></span>
+										</span>
+										<div id="divRememberMe" style="display:none">
+											<br />&nbsp;&nbsp;&nbsp;<label id="lblRememberMe" for="frmLogin_RememberMe">Remember Me</label><input id="frmLogin_RememberMe" type="checkbox" name="frmLogin$RememberMe" />
+										</div>
+										<span style="display:none"><input type="submit" name="frmLogin$Login" value="Login" id="frmLogin_Login" /></span>
+									</td>
+	</tr>
+</table>
+							</div>
+
+                            <!-- TCC Stephen: Let's not put any kind of logo or badge here -->
+
+                            <!--
+                            <div class="col-sm-6">
+								<img id="PGLogo" class="center-block img-responsive" style="max-height: 150px; margin-top: 20px;" src="/_layouts/images/pg/images/shield.png">
+							</div>
+                            -->
+
+							<div id="spnCaptchaLogin" style="display:none; margin-left:9px">
+								<br>
+								<span id="lblCaptchaLogin" class="popFieldLabel"></span><br>
+								<div id="divCaptchaLogin"></div>
+							</div>
+						</div>	<!-- row -->
+						<input id="DisableEnrollmentReminders" type="hidden" name="DisableEnrollmentReminders" value="0">
+						<input id="pgclient" type="hidden" name="pgclient">
+						<input id="OTP" type="hidden" name="OTP" value="">
+						<input id="LoginAnswerMain1" type="hidden" name="LoginAnswer1" value="">
+						<input id="LoginAnswerMain2" type="hidden" name="LoginAnswer2" value="">
+						<input id="LoginAnswerMain3" type="hidden" name="LoginAnswer3" value="">
+						<input id="LoginAnswerMain4" type="hidden" name="LoginAnswer4" value="">
+						<input id="LoginAnswerMain5" type="hidden" name="LoginAnswer5" value="">
+						<input id="PGTokenLogin" type="hidden" name="PGToken" value="jmANlPf5pXqUTSzuPV6w4l913copux7bnisiJdHQEV3JJbetER1cQA">
+					</form>
+
+					<span id="btnFirstContinue" style="display: none">&nbsp;&nbsp;&nbsp;<a class="PGButton" id="btnLoginContinue" href="javascript:void(0)" onclick="submitGetOptions()">Continue</a></span>
+					<span id="btnStaticPWLogin" style="display: none">
+						<div class="row">
+							<div class="col-md-12">
+                                <!-- TCC Stephen: Get rid of the wrapper divs around the buttons -->
+								<!--<div class="col-md-4 col-sm-12 vertical-10">-->
+									<a class="PGButton btn" id="btnLogin" href="javascript:void(0)" onclick="submitLogin()">Login</a>
+								<!--</div>-->
+								<!-- <div class="col-md-4 col-sm-12 vertical-10"> -->
+									<a class="PGButton btn" id="btnSetPW" href="javascript:void(0)" onclick="showSetPWPopup(true)">Set Password</a>
+                                    <!-- TCC STephen: Removed `style="display:none;"` from this element -->
+								<!-- </div> -->
+								<!-- <div class="col-md-4 col-sm-12 vertical-10"> -->
+									<a class="PGButton btn" id="btnSelfServe" href="javascript:void(0)" onclick="showSSPopup()" >Forgot Password?</a>
+									<a class="PGButton btn" id="btnCustom" target="_blank" href="https://waj.tccd.edu/TCC/IdMgt/passwMenu.jsp">Password Reset & Help</a>
+                                    <!-- TCC STephen: Removed `style="display:none;"` from this element -->
+								<!-- </div> -->
+							</div>
+						</div>
+					</span>
+				</div>
+
+                <!-- TCC Stephen: Added markup for the demo account instructions -->
+                <div class="row tccDemoAccountWrap">
+                    <div class="tccDemoInfo text-center ">
+                        <h3>Want to see what a typical myTCC course looks like?</h3>
+                        <p>Login using the following account:</p>
+                        <p><strong>Username:</strong> demo.student<br/><strong>Password: </strong>tccd</p>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="blockUI" class="translucent" style="display: none" onclick="return false" onmousedown="return false"
+		onmousemove="return false" onmouseup="return false" ondblclick="return false"></div>
+
+
+	<!-- Set Password div -->
+	<div id="popup_SetPW" class="popupWin  container center" style="display: none">
+		<form id="SetPWForm" name="SetPWForm" method="post" autocomplete="off">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<div class="row tccBlue text-center">
+							<h2 id="lblSetPWTitle"></h2>
+						</div>
+						<div id="infoSetPW" class="popupInstructions"></div>
+						<div id="ErrMsgSetPW"></div><br>
+						<div id="fldsSetPW" class="popFieldsContainer">
+							<table class="thintable">
+								<tr>
+									<td class="lcol"><span id="lblUNameSetPW" class="popFieldLabel"></span><br><input id="Username" type="text" name="Username" maxlength="256" onkeypress="handleKeyPress(this, event)"></td>
+									<td class="rcol"><div class="divSCTimer" id="divSCTimer_SetPW"><a id="lblSCTimerSetPW" href="javascript:void(0)" onclick="javascript:showSCTimerHelp(this)" tabindex="0"></a>&nbsp;&nbsp;<br><span class="SCTimer" id="spanSCTimer_SetPW"></span>&nbsp;&nbsp;</div></td>
+								</tr>
+							</table><br>
+
+							<span id="fldsSetPWCurPW">
+								<span id="lblPWSetPW" class="popFieldLabel"></span><br>
+								<input id="Password" type="password" name="Password" maxlength="256" onkeypress="handleKeyPress(this, event)" class="keyboardInput"><br>
+								<span id="spanShowPWs2" style="display:none"><label id="lblShowPWs2" for="showpwsSetPW1"></label>
+									<input name="showpwsSetPW1" id="showpwsSetPW1" type="checkbox" onclick="togglePwFields(this.form, this.checked)">
+								</span>
+							</span>
+
+							<div id="fldsSetPWChalA">
+								<div id="divSetPWCA1"><span id="lblSetPWCA1" class="popFieldLabel"></span><br>
+								<input id="SetPWAnswer1" type="password" name="LoginAnswer1" maxlength="256" onkeypress="handleKeyPress(this, event)"><br></div>
+								<div id="divSetPWCA2" style="display:none"><span id="lblSetPWCA2" class="popFieldLabel"></span><br>
+								<input id="SetPWAnswer2" type="password" name="LoginAnswer2" maxlength="256" onkeypress="handleKeyPress(this, event)"><br></div>
+								<div id="divSetPWCA3" style="display:none"><span id="lblSetPWCA3" class="popFieldLabel"></span><br>
+								<input id="SetPWAnswer3" type="password" name="LoginAnswer3" maxlength="256" onkeypress="handleKeyPress(this, event)"><br></div>
+								<div id="divSetPWCA4" style="display:none"><span id="lblSetPWCA4" class="popFieldLabel"></span><br>
+								<input id="SetPWAnswer4" type="password" name="LoginAnswer4" maxlength="256" onkeypress="handleKeyPress(this, event)"><br></div>
+								<div id="divSetPWCA5" style="display:none"><span id="lblSetPWCA5" class="popFieldLabel"></span><br>
+								<input id="SetPWAnswer5" type="password" name="LoginAnswer5" maxlength="256" onkeypress="handleKeyPress(this, event)"><br></div>
+							</div>
+
+							<span id="fldsSetPWOTP">
+								<div id="divSetPWExtAuth" style="display:none">
+									<div id="SetPWExtAuth"></div>
+									<input type="checkbox" id="chkSetPWExtAuth" onchange="toggleExtAuthDisplay()"><span id="lblchkSetPWExtAuth" style="font-weight:bold; cursor:pointer;" onclick="javascript:toggleCheck('chkSetPWExtAuth'); toggleExtAuthDisplay()">Toggle</span>
+								</div>
+								<span id="fldSetPWOTP">
+									<span id="lblOTPSetPW" class="popFieldLabel"></span><br>
+									<input id="OTP" type="text" name="OTP" maxlength="256" onkeypress="handleKeyPress(this, event)"></span><span id="spnResendSetPW">
+								</span><br>
+								<input type="hidden" name="OTPResendType" id="OTPResendSetPW" value="0">
+								<input type="hidden" name="OTPResendIdx" id="OTPResendIdxSetPW" value="0">
+							</span>
+
+							<span id="fldsSetPWNewPW">
+								<table class="thintable"><tr>
+									<td class="lcol"><span id="lblNewPWSetPW" class="popFieldLabel"></span><br>
+									<input id="NewPassword" type="password" name="NewPassword" maxlength="256" onkeypress="handleKeyPress(this, event)" class="keyboardInput"></td>
+									<td class="rcol"><br><span id="spanShowPWs3" style="display:none; margin-right:60px;"><label id="lblShowPWs3" for="showpwsSetPW2"></label><input name="showpwsSetPW2" id="showpwsSetPW2" type="checkbox" onclick="togglePwFields(this.form, this.checked)"></span><br><span id="pwmeter1" style="display: none"><span id="imgHolder" style="margin-right:60px;"><img id="pwdLockImg1" src="/_layouts/images/pg/images/spec0.jpg"></span><br>
+										<span id="pwdLockString1" style="margin-right:60px;"></span></span></td>
+									</tr>
+								</table>
+								<span id="fldConfPWSetPW"><br><span id="lblConfPWSetPW" class="popFieldLabel"></span><br>
+								<input id="ConfirmPassword" type="password" name="ConfirmPassword" maxlength="256" onkeypress="handleKeyPress(this, event)" class="keyboardInput"><br></span><br>
+							</span>
+
+							<div id="spnCaptchaSetPW" style="display:none">
+								<span id="lblCaptchaSetPW" class="popFieldLabel"></span><br>
+								<div id="divCaptchaSetPW"></div><br>
+							</div>
+
+							<div class="container-fluid">
+								<div class="row">
+									<div class="col-md-4 padding-3">
+										<div class="vertical-10">
+											<span id="btnSetPWContinue"><a class="PGButton btn" id="btnSetPWContinueLabel" href="javascript:void(0)" onclick="submitSetPW()">Continue</a></span>
+										</div>
+									</div>
+									<div class="col-md-4 padding-3">
+										<div class="vertical-10">
+											<span id="btnSetPWStandard">
+												<span id="spanBtnSetPWDis1" style="display:none"><a class="PGButtonDisabled" id="btnSetPWDisSetPW" href="javascript:void(0)">Set Password</a></span>
+												<span id="spanBtnSetPW1"><a class="PGButton btn" id="btnSetPWSetPW" href="javascript:void(0)" onclick="submitSetPW()">Set Password</a></span>
+											</span>
+										</div>
+									</div>
+
+									<div class="col-md-4 padding-3">
+										<div class="vertical-10">
+											<a class="PGButton btn" id="btnSetPWCancel" href="javascript:void(0)" onclick="closeSetPW(false)">Cancel</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<input id="PWChangeStep" type="hidden" name="PWChangeStep" value="">
+						<input id="PGTokenSetPW" type="hidden" name="PGToken" value="jmANlPf5pXqUTSzuPV6w4l913copux7bnisiJdHQEV3JJbetER1cQA">
+						<span id="spanSetPWshowpws" style="display:none"><input name="showpws" id="showpwsSetPW" type="checkbox" value="1"></span>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- Challenge Login Question div -->
+	<div id="popup_LoginCA" class="popupWin center" style="display: none">
+		<form id="LoginCAForm" name="LoginCAForm" method="post" autocomplete="off">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<div class="row tccBlue">
+							<h2 id="lblLoginCATitle"></h2>
+						</div>
+						<div id="infoLoginCA" class="popupInstructions"></div>
+						<div id="ErrMsgCA"></div><br>
+						<div id="fldsLoginCA" class="popFieldsContainer">
+							<table class="thintable">
+								<tr>
+									<td class="lcol"><span id="lblUNameLoginCA" class="popFieldLabel"></span><br><input id="Username" type="text" name="Username" maxlength="256" disabled="true"></td>
+									<td class="rcol"><div class="divSCTimer" id="divSCTimer_OTPEntry"><a id="lblSCTimerLoginCA" href="javascript:void(0)" onclick="javascript:showSCTimerHelp(this)" tabindex="0"></a>&nbsp;&nbsp;<br><span class="SCTimer" id="spanSCTimer_CAEntry"></span>&nbsp;&nbsp;</div></td>
+								</tr>
+							</table><br>
+							<span id="lblPWLoginCA" class="popFieldLabel"></span><br>
+							<input id="Password" type="password" name="Password" maxlength="256" onkeypress="handleKeyPress(this, event)" class="keyboardInput"><br>
+							<span id="spanShowPWs7" style="display:none">&nbsp;&nbsp;<label id="lblShowPWs7" for="showpws7"></label><input name="showpws" id="showpws7" type="checkbox" value="1" onclick="togglePwFields(this.form, this.checked)"></span><br>
+							<div id="divLoginCA1">
+								<span id="lblLoginCA1" class="popFieldLabel"></span><br>
+								<input id="LoginAnswer1" type="password" name="LoginAnswer1" maxlength="256" onkeypress="handleKeyPress(this, event)"><br>
+							</div>
+							<div id="divLoginCA2" style="display:none">
+								<span id="lblLoginCA2" class="popFieldLabel"></span><br>
+								<input id="LoginAnswer2" type="password" name="LoginAnswer2" maxlength="256" onkeypress="handleKeyPress(this, event)"><br>
+							</div>
+							<div id="divLoginCA3" style="display:none">
+								<span id="lblLoginCA3" class="popFieldLabel"></span><br>
+								<input id="LoginAnswer3" type="password" name="LoginAnswer3" maxlength="256" onkeypress="handleKeyPress(this, event)"><br>
+							</div>
+							<div id="divLoginCA4" style="display:none">
+								<span id="lblLoginCA4" class="popFieldLabel"></span><br>
+								<input id="LoginAnswer4" type="password" name="LoginAnswer4" maxlength="256" onkeypress="handleKeyPress(this, event)"><br>
+							</div>
+							<div id="divLoginCA5" style="display:none">
+								<span id="lblLoginCA5" class="popFieldLabel"></span><br>
+								<input id="LoginAnswer5" type="password" name="LoginAnswer5" maxlength="256" onkeypress="handleKeyPress(this, event)"><br>
+							</div>
+
+							<div id="spnSaveUAKBA" style="display:none">
+								<input name="SaveUA" id="SaveUAKBA" type="checkbox" value="1" onclick="rememberDeviceClicked(this, false)"><span id="lblSaveUAKBA" style="cursor:pointer;" onclick="rememberDeviceClicked(document.getElementById('SaveUAKBA'), true)"></span>
+								<span id="spnSaveUADescKBA" style="display:none">
+									<div id="lblSaveUAInstrKBA" class="saveUAInstr"></div><br>
+									<span id="lblSaveUADescKBA" class="popFieldLabel"></span><br>
+									<input id="SaveUADescKBA" name="SaveUADesc" type="text" size="50" maxlength="60">
+								</span><br>
+							</div>
+
+							<div class="col-md-6" style="margin-bottom:10px;">
+								<a class="PGButton btn" id="btnKBALogin" href="javascript:void(0)" onclick="submitLoginCA()">Login</a>
+							</div>
+							<div class="col-md-6">
+								<a class="PGButton btn" id="btnKBACancel" href="javascript:void(0)" onclick="closePopup('popup_LoginCA', false, g_bSideCar)">Cancel</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<input id="OTP" type="hidden" name="OTP" value="">
+			<input id="PGTokenLoginCA" type="hidden" name="PGToken" value="jmANlPf5pXqUTSzuPV6w4l913copux7bnisiJdHQEV3JJbetER1cQA">
+		</form>
+	</div>
+
+	<!-- Terms Of Use div -->
+	<div id="popup_TOU" class="popupTOU center popup" style="display: none">
+		<div class="container ">
+			<div class="row ">
+				<div class="col-md-6 col-md-offset-3 shadow" style="border-radius: 5px;">
+					<div class="row">
+						<div class="col-md-12 text-center tccBlue">
+							<h3>Terms Of Use</h3><span style="color: #fff;">By logging into this site, you agree to the terms and conditions of use below.</span>
+						</div>
+					</div>
+					<div id="customTOUHTML"></div>
+					<div class="TOUButtons">
+						<div class="col-md-6" style="margin-bottom:20px;">
+							<a class="PGButton btn" id="btnTOUAccept" href="javascript:void(0)" onclick="submitTermsOfUse(true)">Accept</a>
+						</div>
+						<div class="col-md-6">
+							<a class="PGButton btn" id="btnTOUDecline" href="javascript:void(0)" onclick="submitTermsOfUse(false)">Decline</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- OTP Enrollment div -->
+	<div id="popup_OTPEnroll" class="popupWin center" style="display: none">
+		<form id="OTPEnrollForm" name="OTPEnrollForm" method="post" autocomplete="off">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<div class="row tccBlue">
+							<div class="col-md-12 text-center">
+								<h2 id="lblOTPEnrollTitle"></h2>
+							</div>
+						</div>
+
+						<div id="infoOTPEnroll" class="popupInstructions"></div>
+						<div id="ErrMsgOTPEnroll"></div><br>
+						<div id="fldsOTPEnroll" class="popFieldsContainer">
+							<table class="thintable">
+								<tr>
+									<td class="lcol"><span id="lblUNameOTPEnroll" class="popFieldLabel"></span><br><input id="Username" type="text" name="Username" maxlength="256" disabled="true"></td>
+									<td class="rcol">
+										<div class="divSCTimer" id="divSCTimer_OTPEnroll">
+											<a id="lblSCTimerOTPEnroll" href="javascript:void(0)" onclick="javascript:showSCTimerHelp(this)" tabindex="0"></a>&nbsp;&nbsp;<br>
+											<span class="SCTimer" id="spanSCTimer_OTPEnroll"></span>&nbsp;&nbsp;
+										</div>
+									</td>
+								</tr>
+							</table>
+
+							<span id="lblPWOTPEnroll" class="popFieldLabel"></span><br>
+							<input id="Password" type="password" name="Password" maxlength="256" onkeypress="handleKeyPress(this, event)" class="keyboardInput"><br><span id="spanShowPWs5" style="display:none">&nbsp;&nbsp;<label id="lblShowPWs5" for="showpws5"></label><input name="showpws" id="showpws5" type="checkbox" value="1" onclick="togglePwFields(this.form, this.checked)"></span>
+
+							<div id="spanOTPEnrollEmail">
+								<span id="lblOTPEnrollEmailAddr" class="popFieldLabel"></span><br>
+								<input id="Email" type="text" name="Email" maxlength="256"><br>
+							</div>
+
+							<div id="spanOTPEnrollPhone">
+								<span id="lblPhoneCOTPEnroll" class="popFieldLabel"></span><br>
+								<select name="PhoneC" id="PhoneCOTPEnroll"></select><br>
+
+								<span id="lblPhoneNumOTPEnroll" class="popFieldLabel"></span><br>
+								<input id="Phone" type="text" name="Phone" size="20"><br>
+
+								<span id="OTPEnrollPhoneTypeRadioBtns">
+									<input type="radio" name="EnrolledPhoneCanSMS" id="OTPEnrollPhoneCanSMSYes" value="1" onclick="radioCanSMSSelected('OTPEnrollPhoneCanSMSYes')" checked>&nbsp;<span id="lblPhoneCanSMSYesOTPEnroll" class="radioLabel" onclick="radioCanSMSSelected('OTPEnrollPhoneCanSMSYes')"></span><br>
+									<input type="radio" name="EnrolledPhoneCanSMS" id="OTPEnrollPhoneCanSMSNo" value="0" onclick="radioCanSMSSelected('OTPEnrollPhoneCanSMSNo')">&nbsp;<span id="lblPhoneCanSMSNoOTPEnroll" class="radioLabel" onclick="radioCanSMSSelected('OTPEnrollPhoneCanSMSNo')"></span><br>
+								</span>
+
+								<span id="spanPhoneProvOTPEnroll">
+									<span id="lblPhoneProvOTPEnroll" class="popFieldLabel"></span><br>
+									<select name="SMSProvider" id="SMSProvider">
+										<option value="@sms.alltelwireless.com">Alltel</option>
+										<option value="@txt.att.net">AT&amp;T</option>
+										<option value="@myboostmobile.com">Boost Mobile</option>
+										<option value="@messaging.sprintpcs.com">Sprint Nextel</option>
+										<option value="@tmomail.net">T-Mobile</option>
+										<option value="@msg.telus.com">Telus Canada</option>
+										<option value="@email.uscc.net">US Cellular</option>
+										<option value="@vtext.com" selected>Verizon</option>
+										<option value="@vmobl.com">Virgin Mobile USA</option>
+										<option value="@txt.bell.ca">Bell (Canada)</option>
+										<option value="@pcs.rogers.com">Rogers (Canada)</option>
+									</select><br>
+								</span>
+							</div>
+
+							<div id="spnCaptchaOTPEnroll" style="display:none">
+								<span id="lblCaptchaOTPEnroll" class="popFieldLabel"></span><br>
+								<div id="divCaptchaOTPEnroll"></div><br>
+							</div>
+
+							<input type="hidden" name="OTPEnrollType" id="OTPEnrollType" value="410">
+							<input id="PGTokenOTPEnroll" type="hidden" name="PGToken" value="jmANlPf5pXqUTSzuPV6w4l913copux7bnisiJdHQEV3JJbetER1cQA">
+							<div class="row">
+								<div class="col-md-12" style="padding:20px;">
+									<a class="PGButton" id="btnOTPEnrollContinue" href="javascript:void(0)" onclick="submitOTPEnroll()">Continue</a>
+									<a class="PGButton" id="btnOTPEnrollCancel" href="javascript:void(0)" onclick="closePopup('popup_OTPEnroll', false, g_bSideCar)">Cancel</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- OTP Entry div -->
+	<div id="popup_OTPEntry" class="popupWin center" style="display: none">
+		<form id="OTPEntryForm" name="OTPEntryForm" method="post" autocomplete="off">
+			<div class="container-fluid ">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3 padding-btm-20">
+						<div class="row tccBlue">
+							<div class="col-md-12 text-center">
+								<h2 id="lblOTPEntryTitle"></h2>
+							</div>
+						</div>
+
+						<div id="infoOTPEntry" class="popupInstructions"></div>
+						<div id="ErrMsgOTPEntry"></div><br>
+						<div id="fldsOTPEntry" class="popFieldsContainer">
+							<table class="thintable">
+								<tr>
+									<td class="lcol"><span id="lblUNameOTPEntry" class="popFieldLabel"></span><br><input id="Username" type="text" name="Username" maxlength="256" disabled="true"></td>
+									<td class="rcol">
+										<div class="divSCTimer" id="divSCTimer_OTPEntry">
+											<a id="lblSCTimerOTPEntry" href="javascript:void(0)" onclick="javascript:showSCTimerHelp(this)" tabindex="0"></a>&nbsp;&nbsp;<br>
+											<span class="SCTimer" id="spanSCTimer_OTPEntry"></span>&nbsp;&nbsp;
+										</div>
+									</td>
+								</tr>
+							</table>
+
+							<div id="otpEntryStaticPW">
+								<span id="lblPWOTPEntry" class="popFieldLabel"></span><br>
+								<input id="Password" type="password" name="Password" maxlength="256" onkeypress="handleKeyPress(this, event)" class="keyboardInput"><br><span id="spanShowPWs6" style="display:none">&nbsp;&nbsp;<label id="lblShowPWs6" for="showpws6"></label><input name="showpws" id="showpws6" type="checkbox" value="1" onclick="togglePwFields(this.form, this.checked)"></span>
+							</div>
+
+							<div id="divOTPEntryExtAuth" style="display:none">
+								<div id="OTPEntryExtAuth"></div>
+								<input type="checkbox" id="chkOTPEntryExtAuth" onchange="toggleExtAuthDisplay()"><span id="lblchkOTPEntryExtAuth" style="font-weight:bold; cursor:pointer;" onclick="javascript:toggleCheck('chkOTPEntryExtAuth'); toggleExtAuthDisplay()">Toggle</span>
+							</div>
+
+							<span id="fldOTPEntryOTP">
+								<span id="lblOTPOTPEntry" class="popFieldLabel"></span><br>
+								<input id="OTP" type="text" name="OTP" maxlength="256" onkeypress="handleKeyPress(this, event)">
+							</span>
+							<span id="spnResendOTPEntry"></span><br>
+
+							<div id="spnSaveUA2FA" style="display:none">
+								<br><input name="SaveUA" id="SaveUA2FA" type="checkbox" value="1" onclick="rememberDeviceClicked(this, false)"><span id="lblSaveUA2FA" style="cursor:pointer;" onclick="rememberDeviceClicked(document.getElementById('SaveUA2FA'), true)"></span>
+								<span id="spnSaveUADesc2FA" style="display:none">
+									<div id="lblSaveUAInstr2FA" class="saveUAInstr"></div><br>
+									<span id="lblSaveUADesc2FA" class="popFieldLabel"></span><br>
+									<input id="SaveUADesc2FA" type="text" name="SaveUADesc" size="50" maxlength="60">
+								</span><br>
+							</div>
+
+							<div id="spnCaptchaOTPEntry" style="display:none">
+								<span id="lblCaptchaOTPEntry" class="popFieldLabel"></span><br>
+								<div id="divCaptchaOTPEntry"></div><br>
+							</div>
+
+							<input type="hidden" name="OTPResendType" id="OTPResendOTPEntry" value="0">
+							<input type="hidden" name="OTPResendIdx" id="OTPResendIdxOTPEntry" value="0">
+							<input type="hidden" name="OTPEntryType" id="OTPEntryType" value="410">
+							<input id="PGTokenOTPEntry" type="hidden" name="PGToken" value="jmANlPf5pXqUTSzuPV6w4l913copux7bnisiJdHQEV3JJbetER1cQA">
+
+							<div class="row">
+								<div class="col-md-12">
+									<a class="PGButton btn" id="btnOTPEntryLogin" href="javascript:void(0)" onclick="submitOTPEntry()">Login</a>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-12">
+									<a class="PGButton btn" id="btnOTPEntryCancel" href="javascript:void(0)" onclick="closeOTPEntry()">Cancel</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- OTP resend div -->
+	<div id="popup_OTPResend" class="otpresendPopup center col-sm-offset-3 col-sm-6" style="display: none"></div>
+
+	<!-- Self Service div -->
+	<div id="popup_SS" class="popupWin center" style="display: none">
+		<form id="SSForm" name="SSForm" method="post" autocomplete="off">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<div class="row tccBlue">
+							<div class="col-md-12 text-center">
+								<h2><span id="SSTitle" class="mainheading"></span></h2>
+							</div>
+						</div>
+
+						<div id="infoSS" class="popupInstructions"></div>
+						<div id="ErrMsgSS"></div><br>
+
+						<div class="row">
+							<div class="col-md-12">
+								<div id="fldsSS" class="popFieldsContainer">
+									<div id="SSUsername">
+										<table class="thintable">
+											<tr>
+												<td class="lcol"><span id="lblUNameSS" class="popFieldLabel"></span><br><input id="Username" type="text" name="Username" maxlength="256" disabled="true"></td>
+												<td class="rcol">
+													<div class="divSCTimer" id="divSCTimer_SS">
+														<a id="lblSCTimerSS" href="javascript:void(0)" onclick="javascript:showSCTimerHelp(this)" tabindex="0"></a>&nbsp;&nbsp;<br><span class="SCTimer" id="spanSCTimer_SS"></span>&nbsp;&nbsp;
+													</div>
+												</td>
+											</tr>
+										</table>
+									</div>
+									<div id="SSStaticPWEntry" style="display:none">
+										<span id="lblPWSS" class="popFieldLabel"></span><br>
+										<input id="Password" type="password" name="Password" maxlength="256" onkeypress="handleKeyPress(this, event)" class="keyboardInput"><br><span id="spanShowPWs8" style="display:none">&nbsp;&nbsp;<label id="lblShowPWs8" for="showpwsSS1"></label><input name="showpwsSS1" id="showpwsSS1" type="checkbox" onclick="togglePwFields(this.form, this.checked)"></span>
+									</div>
+									<div id="SSChooseAction" style="display:none">
+										<br><span id="lblSSRecoveryOptions" class="popFieldLabel"></span>
+										<div id="SSRecoveryActions"></div>
+									</div>
+									<div id="SSActionChosen" style="display:none">
+										<br><span id="lblSSReqAction" class="popFieldLabel"></span><span id="SSActionChosen_Desc"></span>
+									</div>
+									<div id="SSChooseAuth" style="display:none">
+										<br><span id="lblSSAuthTypes" class="popFieldLabel"></span>
+										<div id="SSEnrollmentAuth"></div>
+									</div>
+									<div id="SSPhoneOTPEnrollment" style="display:none">
+										<span id="lblPhoneCSS" class="popFieldLabel"></span><br>
+										<select class="phone_c" name="PhoneC" id="PhoneCSS"></select><br>
+
+										<span id="lblPhoneNumSS" class="popFieldLabel"></span><br>
+										<input id="Phone" type="text" name="Phone" size="20"><br>
+
+										<span id="SSPhoneTypeRadioBtns">
+											<input type="radio" name="EnrolledPhoneCanSMS" id="SSPhoneCanSMSYes" value="1" onclick="setRadioAction('SSPhoneCanSMSYes'); setElemVisibility(['spanPhoneProvSS'], true);" checked>&nbsp;<span id="lblPhoneCanSMSYesSS" class="radioLabel" onclick="setRadioAction('SSPhoneCanSMSYes');  setElemVisibility(['spanPhoneProvSS'], true);"></span><br>
+											<input type="radio" name="EnrolledPhoneCanSMS" id="SSPhoneCanSMSNo" value="0" onclick="setRadioAction('SSPhoneCanSMSNo'); setElemVisibility(['spanPhoneProvSS'], false);">&nbsp;<span id="lblPhoneCanSMSNoSS" class="radioLabel" onclick="setRadioAction('SSPhoneCanSMSNo');  setElemVisibility(['spanPhoneProvSS'], false);"></span><br>
+										</span>
+
+										<span id="spanPhoneProvSS">
+											<br><span id="lblPhoneProvSS" class="popFieldLabel"></span><br>
+											<select name="SMSProvider" id="SMSProvider">
+												<option value="@sms.alltelwireless.com">Alltel</option>
+												<option value="@txt.att.net">AT&amp;T</option>
+												<option value="@myboostmobile.com">Boost Mobile</option>
+												<option value="@messaging.sprintpcs.com">Sprint Nextel</option>
+												<option value="@tmomail.net">T-Mobile</option>
+												<option value="@msg.telus.com">Telus Canada</option>
+												<option value="@email.uscc.net">US Cellular</option>
+												<option value="@vtext.com" selected>Verizon</option>
+												<option value="@vmobl.com">Virgin Mobile USA</option>
+												<option value="@txt.bell.ca">Bell (Canada)</option>
+												<option value="@pcs.rogers.com">Rogers (Canada)</option>
+											</select>
+										</span>
+									</div>
+									<div id="SSEmailOTPEnrollment" style="display:none">
+										<br><span id="lblSSEmailAddr" class="popFieldLabel"></span><br>
+										<input id="Email" type="text" name="Email" maxlength="256">
+									</div>
+									<div id="SSSuppressReminders" style="display:none">
+										<br><input name="chkDisableReminders" id="chkDisableReminders" type="checkbox" value="1"><span id="lblSSPermSuppress" style="font-weight:bold; cursor:pointer;" onclick="javascript:toggleCheck('chkDisableReminders')"></span>
+									</div>
+									<div id="SSOTPEntry" style="display:none">
+										<br />
+										<div id="divSSExtAuth" style="display:none">
+											<div id="SSExtAuth"></div>
+											<input type="checkbox" id="chkSSExtAuth" onchange="toggleExtAuthDisplay()"><span id="lblchkSSExtAuth" style="font-weight:bold; cursor:pointer;" onclick="javascript:toggleCheck('chkSSExtAuth'); toggleExtAuthDisplay()">Toggle</span>
+										</div>
+										<span id="fldSSOTP"><span id="lblOTPSS" class="popFieldLabel"></span><br>
+										<input id="OTP" type="text" name="OTP" maxlength="256" onkeypress="handleKeyPress(this, event)"></span><span id="spnResendSS"></span>
+										<input type="hidden" name="OTPResendType" id="OTPResendSS" value="0">
+										<input type="hidden" name="OTPResendIdx" id="OTPResendIdxSS" value="0">
+									</div>
+									<div id="SSChalEntry" style="display:none">
+										<br>
+										<div id="fldsChal_MandQs">
+											<div id="divChalMandQ1">
+												<span id="lblMandQ1" class="chal_q"></span><br>
+												<span id="spanMandAns1"><input name="MandAns1" type="text" id="MandAns1" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobMandAns1" style="display:none"><input id="obMandAns1" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalMandQ2">
+												<span id="lblMandQ2" class="chal_q"></span><br>
+												<span id="spanMandAns2"><input name="MandAns2" type="text" id="MandAns2" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobMandAns2" style="display:none"><input id="obMandAns2" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalMandQ3">
+												<span id="lblMandQ3" class="chal_q"></span><br>
+												<span id="spanMandAns3"><input name="MandAns3" type="text" id="MandAns3" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobMandAns3" style="display:none"><input id="obMandAns3" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalMandQ4">
+												<span id="lblMandQ4" class="chal_q"></span><br>
+												<span id="spanMandAns4"><input name="MandAns4" type="text" id="MandAns4" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobMandAns4" style="display:none"><input id="obMandAns4" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalMandQ5">
+												<span id="lblMandQ5" class="chal_q"></span><br>
+												<span id="spanMandAns5"><input name="MandAns5" type="text" id="MandAns5" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobMandAns5" style="display:none"><input id="obMandAns5" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+										</div>
+										<div id="fldsChal_OptQs1">
+											<div id="divChalOptQ1">
+												<span id="lblOptQ1" class="chal_q"></span><select id="OQ1"></select><br>
+												<span id="spanOptAns1"><input name="OptAns1" type="text" id="OptAns1" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns1" style="display:none"><input id="obOptAns1" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ2">
+												<span id="lblOptQ2" class="chal_q"></span><select id="OQ2"></select><br>
+												<span id="spanOptAns2"><input name="OptAns2" type="text" id="OptAns2" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns2" style="display:none"><input id="obOptAns2" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ3">
+												<span id="lblOptQ3" class="chal_q"></span><select id="OQ3"></select><br>
+												<span id="spanOptAns3"><input name="OptAns3" type="text" id="OptAns3" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns3" style="display:none"><input id="obOptAns3" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ4">
+												<span id="lblOptQ4" class="chal_q"></span><select id="OQ4"></select><br>
+												<span id="spanOptAns4"><input name="OptAns4" type="text" id="OptAns4" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns4" style="display:none"><input id="obOptAns4" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ5">
+												<span id="lblOptQ5" class="chal_q"></span><select id="OQ5"></select><br>
+												<span id="spanOptAns5"><input name="OptAns5" type="text" id="OptAns5" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns5" style="display:none"><input id="obOptAns5" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+										</div>
+										<div id="fldsChal_OptQs2">
+											<div id="divChalOptQ6">
+												<span id="lblOptQ6" class="chal_q"></span><select id="OQ6"></select><br>
+												<span id="spanOptAns6"><input name="OptAns6" type="text" id="OptAns6" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns6" style="display:none"><input id="obOptAns6" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ7">
+												<span id="lblOptQ7" class="chal_q"></span><select id="OQ7"></select><br>
+												<span id="spanOptAns7"><input name="OptAns7" type="text" id="OptAns7" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns7" style="display:none"><input id="obOptAns7" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ8">
+												<span id="lblOptQ8" class="chal_q"></span><select id="OQ8"></select><br>
+												<span id="spanOptAns8"><input name="OptAns8" type="text" id="OptAns8" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns8" style="display:none"><input id="obOptAns8" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ9">
+												<span id="lblOptQ9" class="chal_q"></span><select id="OQ9"></select><br>
+												<span id="spanOptAns9"><input name="OptAns9" type="text" id="OptAns9" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns9" style="display:none"><input id="obOptAns9" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ10">
+												<span id="lblOptQ10" class="chal_q"></span><select id="OQ10"></select><br>
+												<span id="spanOptAns10"><input name="OptAns10" type="text" id="OptAns10" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns10" style="display:none"><input id="obOptAns10" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+										</div>
+										<div id="fldsChal_OptQs3">
+											<div id="divChalOptQ11">
+												<span id="lblOptQ11" class="chal_q"></span><select id="OQ11"></select><br>
+												<span id="spanOptAns11"><input name="OptAns11" type="text" id="OptAns11" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns11" style="display:none"><input id="obOptAns11" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ12">
+												<span id="lblOptQ12" class="chal_q"></span><select id="OQ12"></select><br>
+												<span id="spanOptAns12"><input name="OptAns12" type="text" id="OptAns12" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns12" style="display:none"><input id="obOptAns12" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ13">
+												<span id="lblOptQ13" class="chal_q"></span><select id="OQ13"></select><br>
+												<span id="spanOptAns13"><input name="OptAns13" type="text" id="OptAns13" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns13" style="display:none"><input id="obOptAns13" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ14">
+												<span id="lblOptQ14" class="chal_q"></span><select id="OQ14"></select><br>
+												<span id="spanOptAns14"><input name="OptAns14" type="text" id="OptAns14" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns14" style="display:none"><input id="obOptAns14" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+											<div id="divChalOptQ15">
+												<span id="lblOptQ15" class="chal_q"></span><select id="OQ15"></select><br>
+												<span id="spanOptAns15"><input name="OptAns15" type="text" id="OptAns15" maxlength="256" onkeyup="handleKeyPress(this, event, true)" onblur="swapFields(this)"></span><span id="spanobOptAns15" style="display:none"><input id="obOptAns15" type="password" disabled="true" onclick="swapFields(this)" onfocus="swapFields(this)"></span><br>
+											</div>
+										</div>
+									</div>
+									<div id="SS_NewPW" style="display:none"><br>
+										<table class="thintable">
+											<tr>
+												<td class="lcol"><span id="NewPasswordLabel" class="popFieldLabel"></span><br><input name="NewPassword" type="password" id="NewPassword" maxlength="256" onkeypress="handleKeyPress(this, event)" class=""></td>
+												<td class="rcol"><br>
+													<span id="spanShowPWs4" style="display:none; margin-right:60px;">
+														<label id="lblShowPWs4" for="showpwsSS2"></label><input name="showpwsSS2" id="showpwsSS2" type="checkbox" onclick="togglePwFields(this.form, this.checked)">
+													</span><br>
+													<span id="pwmeter2" style="display: none">
+														<span id="imgHolder" style="margin-right:60px;"><img id="pwdLockImg2" src="/_layouts/images/pg/images/spec0.jpg"></span><br>
+														<span id="pwdLockString2" style="margin-right:60px;"></span>
+													</span>
+												</td>
+											</tr>
+										</table>
+										<span id="fldConfPWChal"><br><span id="ConfirmPasswordLabel" class="popFieldLabel"></span><br>
+										<input name="ConfirmPassword" type="password" id="ConfirmPassword" maxlength="256" onkeypress="handleKeyPress(this, event)" class=""><br></span>
+									</div>
+
+									<div id="spnCaptchaSS" style="display:none"><br>
+										<span id="lblCaptchaSS" class="popFieldLabel"></span><br>
+										<div id="divCaptchaSS"></div>
+									</div>
+
+									<input id="SSStep" type="hidden" name="SSStep">
+									<input id="pgclient" type="hidden" name="pgclient">
+									<input id="PGTokenSS" type="hidden" name="PGToken" value="jmANlPf5pXqUTSzuPV6w4l913copux7bnisiJdHQEV3JJbetER1cQA">
+									<span id="spanSSshowpws" style="display:none"><input name="showpws" id="showpwsSS" type="checkbox" value="1"></span>
+
+									<span id="btnSS">
+										<br />
+										<span id="btnsSSChalPrevNext" style="display:none">
+											<div class="row">
+												<div class="col-md-6">
+													<span id="SetChalPrevDis"><a class="PGButtonDisabled btn btn-expand" id="btnSetChalPrevDis" href="javascript:void(0)">&lt;&lt;</a></span>
+													<span id="SetChalPrev"><a class="PGButton btn" id="btnSetChalPrev" href="javascript:void(0)" onclick="AdvSetAns(-1)">&lt;&lt;</a></span>
+												</div>
+												<div class="col-md-6">
+													<span id="SetChalNextDis"><a class="PGButtonDisabled btn btn-expand" id="btnSetChalNextDis" href="javascript:void(0)">&gt;&gt;</a></span>
+													<span id="SetChalNext"><a class="PGButton btn" id="btnSetChalNext" href="javascript:void(0)" onclick="AdvSetAns(1)">&gt;&gt;</a></span>
+												</div>
+											</div>
+										</span>
+										<div class="row">
+											<div class="col-md-6">
+												<span id="spanBtnContinueDis" style="display:none"><a class="PGButtonDisabled btn" id="btnSSContinueDis" href="javascript:void(0)">Continue</a></span>
+												<span id="spanContinueBtn"><a class="PGButton btn" id="btnSSContinue" href="javascript:void(0)" onclick="submitSS()">Continue</a></span>
+											</div>
+											<div class="col-md-6">
+												<span id="spanCancelBtn"><a class="PGButton btn" id="btnSSCancel" href="javascript:void(0)" onclick="closeSS(false)">Cancel</a></span>
+												<span id="spanSkipBtn" style="display:none"><a class="PGButton btn" id="btnSSSkip" href="javascript:void(0)" onclick="closeSS(true)">Skip</a></span>
+											</div>
+										</div>
+										<br />
+									</span>
+
+									<span id="spanAnsRemain" style="display:none">
+										<span id="lblSSAnsRemain" class="CAStatic"></span>:
+										<span id="spanAnsRemainText" class="CARunning"></span>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- Account linking div -->
+	<div id="popup_AcctLink" class="popupWin center" style="display: none">
+		<form id="AcctLinkForm" name="AcctLinkForm" method="post" autocomplete="off">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<div class="row tccBlue text-center">
+							<div class="col-md-12 text-center">
+								<h2 id="AcctLinkTitle"></h2>
+							</div>
+						</div>
+						<div id="infoAcctLink" class="popupInstructions"></div>
+						<div id="ErrMsgAcctLink"></div><br>
+						<div id="fldsAcctLink" class="popFieldsContainer">
+							<div id="AcctLinkUsername">
+								<table class="thintable">
+									<tr>
+										<td class="lcol">
+											<span id="AcctLinkUsernameEntry" style="display:none"><span id="lblUNameAcctLink" class="popFieldLabel"></span><br><input id="Username" type="text" name="Username" maxlength="256"></span>
+											<span id="AcctLinkUsernameDisplay"><span id="lblMainUNameAcctLink" class="popFieldLabel"></span><span id="AcctLink_MainUser" class="boldred"></span></span><br>
+										</td>
+										<td class="rcol">
+											<div class="divSCTimer" id="divSCTimer_AcctLink">
+												<a id="lblSCTimerAcctLink" href="javascript:void(0)" onclick="javascript:showSCTimerHelp(this)" tabindex="0"></a>&nbsp;&nbsp;<br>
+												<span class="SCTimer" id="spanSCTimer_AcctLink"></span>&nbsp;&nbsp;
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+
+							<div id="AcctLinkStaticPWEntry" style="display:none">
+								<br><span id="lblPWAcctLink" class="popFieldLabel"></span><br>
+								<input id="Password" type="password" name="Password" maxlength="256" onkeypress="handleKeyPress(this, event)" class="keyboardInput"><br><span id="spanShowPWs9" style="display:none">&nbsp;&nbsp;<label id="lblShowPWs9" for="showpws9"></label><input name="showpws" id="showpws9" type="checkbox" value="1" onclick="togglePwFields(this.form, this.checked)"></span>
+								<br>
+							</div>
+
+							<div id="AcctLinkSystemEntry">
+								<span id="lblAcctLinkRepoSys" class="popFieldLabel"></span><span id="AcctLink_DisplayName" class="boldred"></span><br>
+
+								<span id="lblAcctLinkLinkedName" class="popFieldLabel"></span><br>
+								<input id="linkUsername" type="text" name="linkUsername" maxlength="256"><br>
+
+								<span id="lblAcctLinkLinkedPW" class="popFieldLabel"></span><br>
+								<input id="linkPassword" type="password" name="linkPassword" maxlength="256" onkeypress="handleKeyPress(this, event)" class="keyboardInput"><br><span id="spanShowPWs10" style="display:none">&nbsp;&nbsp;<label id="lblShowPWs10" for="showpws10"></label><input name="showpws" id="showpws10" type="checkbox" value="1" onclick="togglePwFields(this.form, this.checked)"></span>
+
+								<div id="AcctLinkSuppressReminders" style="display:none">
+									<br><input name="chkDisableReminders" id="chkDisableReminders" type="checkbox" value="1"><span id="lblAcctLinkPermSuppress" style="font-weight:bold; cursor:pointer;" onclick="javascript:toggleCheck('chkDisableReminders')"></span>
+								</div>
+							</div>
+
+							<div id="spnCaptchaAcctLink" style="display:none">
+								<span id="lblCaptchaAcctLink" class="popFieldLabel"></span><br>
+								<div id="divCaptchaAcctLink"></div><br>
+							</div>
+
+							<input id="linkGUID" type="hidden" name="linkGUID">
+							<input id="AcctLinkStep" type="hidden" name="AcctLinkStep">
+							<input id="pgclient" type="hidden" name="pgclient">
+							<input id="PGTokenAcctLink" type="hidden" name="PGToken" value="jmANlPf5pXqUTSzuPV6w4l913copux7bnisiJdHQEV3JJbetER1cQA">
+
+							<div class="row" id="btnAcctLink">
+								<div class="col-md-12" style="padding:20px;">
+									<a class="PGButton btn" id="btnAcctLinkContinue" href="javascript:void(0)" onclick="submitAcctLink()">Continue</a>
+									<a class="PGButton btn" id="btnAcctLinkCancel" href="javascript:void(0)" onclick="closeAcctLink(false)">Cancel</a>
+									<span id="spanSkipBtnAcctLink" style="display:none"><a class="PGButton" id="btnAcctLinkSkip" href="javascript:void(0)" onclick="closeAcctLink(true)">Skip</a></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- Username Change div -->
+	<div id="popup_ChngUsr" class="popupWin center" style="display: none">
+		<form id="ChngUsrForm" name="ChngUsrForm" method="post" autocomplete="off">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<div class="row tccBlue">
+							<div class="col-md-12 text-center">
+								<h2><span id="ChngUsrTitle"></span></h2>
+							</div>
+						</div>
+
+						<div id="infoChngUsr" class="popupInstructions"></div>
+						<div id="ErrMsgChngUsr"></div><br>
+						<div id="fldsChngUsr" class="popFieldsContainer">
+							<table class="thintable">
+								<tr>
+									<td class="lcol"><span id="lblNewUNameChngUsr" class="popFieldLabel"></span><br><input id="NewUsername" type="text" name="NewUsername" maxlength="256" onkeypress="handleKeyPress(this, event)"></td>
+									<td class="rcol">
+										<div class="divSCTimer" id="divSCTimer_ChngUsr">
+											<a id="lblSCTimerChngUsr" href="javascript:void(0)" onclick="javascript:showSCTimerHelp(this)" tabindex="0"></a>&nbsp;&nbsp;<br>
+											<span class="SCTimer" id="spanSCTimer_ChngUsr"></span>&nbsp;&nbsp;
+										</div>
+									</td>
+								</tr>
+							</table><br>
+
+							<input id="Username" type="hidden" name="Username">
+							<input id="Password" type="hidden" name="Password">
+							<input id="ChngUsrStep" type="hidden" name="ChngUsrStep">
+							<input id="PGTokenChngUsr" type="hidden" name="PGToken" value="jmANlPf5pXqUTSzuPV6w4l913copux7bnisiJdHQEV3JJbetER1cQA">
+							<div id="ChngUsrOTPEntry" style="display:none">
+								<span id="lblOTPChngUsr" class="popFieldLabel"></span><br>
+								<input id="OTP" type="text" name="OTP" maxlength="256" onkeypress="handleKeyPress(this, event)"><span id="spnResendChngUsr"></span>
+								<input type="hidden" name="OTPResendType" id="OTPResendSS" value="0">
+								<input type="hidden" name="OTPResendIdx" id="OTPResendIdxSS" value="0">
+								<br>
+							</div>
+
+							<div id="spnCaptchaChngUsr" style="display:none">
+								<span id="lblCaptchaChngUsr" class="popFieldLabel"></span><br>
+								<div id="divCaptchaChngUsr"></div><br>
+							</div>
+
+							<a class="PGButton" id="btnChngUsrContinue" href="javascript:void(0)" onclick="submitChngUsr()">Continue</a>&nbsp;
+							<a class="PGButton" id="btnChngUsrCancel" href="javascript:void(0)" onclick="closeChngUsr(false)">Cancel</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- Mobile App div -->
+	<div id="popup_MobileApp" class="popupWin " style="display: none">
+		<form id="MobileAppForm" name="MobileAppForm" method="post" autocomplete="off">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<div class="row tccBlue">
+							<div class="col-md-12 text-center">
+								<h2 id="lblMobileAppTitle"></h2>
+							</div>
+						</div>
+
+						<div id="infoMobileApp1" class="popupInstructions"></div>
+						<div id="ErrMsgMobileApp"></div><br>
+						<div id="fldsMobileAppInit" class="popFieldsContainer">
+							<span id="lblMobileAppPhoneType" class="popFieldLabel"></span><br>
+							<select id="PhoneType" name="PhoneType" style="width:150px">
+								<option value="1" selected>iPhone</option>
+								<option value="2">Android</option>
+								<option value="3">BlackBerry</option>
+							</select><br>
+							<div id="fldMobileAppDesc">
+								<span id="lblMobileAppDesc" class="popFieldLabel"></span><br>
+								<input id="EntryDesc" type="text" name="EntryDesc" size="40" maxlength="100"><br>
+							</div>
+							<div id="MobileAppSuppressReminders" style="display:none">
+								<input name="chkDisableReminders" id="chkDisableMobileAppReminders" type="checkbox" value="1"><span id="lblMobileAppPermSuppress" style="font-weight:bold; cursor:pointer;" onclick="javascript:toggleCheck('chkDisableMobileAppReminders')"></span><br>
+							</div>
+						</div>
+						<div id="imgMobileAppQRCode" class="qrstyle" style="display:none">
+							<img id="qrcode" src="/_layouts/images/pg/images/qr_placeholder.png" /><br>
+						</div>
+						<div id="dspMobileAppSecret" class="mobileapp_secret"></div>
+						<div id="infoMobileApp2" class="popupInstructions"></div>
+						<div id="fldsMobileAppOTP" class="popFieldsContainer">
+							<span id="lblMobileAppOTP" class="popFieldLabel"></span><br>
+							<input id="OTP" type="text" name="OTP" maxlength="50"><br>
+						</div>
+						<div id="btnsMobileApp" class="popFieldsContainer">
+							<a class="PGButton" id="btnMobileContinue" href="javascript:void(0)" onclick="submitMobileAppEnable()">Continue</a>&nbsp;
+							<span id="spanMobileAppSkipBtn" style="display:none"><a class="PGButton" id="btnMobileAppSkip" href="javascript:void(0)" onclick="closeMobileApp(true)">Skip</a></span>
+						</div>
+						<input type="hidden" id="AcctStep" name="AcctStep" value="1">
+						<input id="Username" type="hidden" name="Username">
+						<input id="Password" type="hidden" name="Password">
+						<input id="PGTokenMobileApp" type="hidden" name="PGToken" value="jmANlPf5pXqUTSzuPV6w4l913copux7bnisiJdHQEV3JJbetER1cQA">
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- Phone Confirmation div -->
+	<div id="popup_PhoneConf" class="popupWin " style="display: none">
+		<form id="PhoneConfForm" name="PhoneConfForm" method="post" autocomplete="off">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<div class="row tccBlue">
+							<div class="col-md-12 text-center">
+								<h2><span id="PhoneConfTitle"></span></h2>
+							</div>
+						</div>
+						<div id="infoPhoneConf" class="popupInstructions"></div>
+						<div id="ErrMsgPhoneConf"></div><br>
+						<div id="fldsPhoneConf" class="popFieldsContainer">
+							<input id="Username" type="hidden" name="Username">
+							<input id="Password" type="hidden" name="Password">
+							<span id="lblOTPPhoneConf" class="popFieldLabel"></span><br>
+							<input id="OTP" type="text" name="OTP" maxlength="256" onkeypress="handleKeyPress(this, event)"><span id="spnResendPhoneConf"></span>
+							<input type="hidden" name="Cancel" id="Cancel" value="0">
+							<input type="hidden" name="OTPResendType" id="OTPResendSS" value="0">
+							<input type="hidden" name="OTPResendIdx" id="OTPResendIdxSS" value="0">
+							<input id="PGTokenPhoneConf" type="hidden" name="PGToken" value="jmANlPf5pXqUTSzuPV6w4l913copux7bnisiJdHQEV3JJbetER1cQA">
+							<br>
+
+							<a class="PGButton" id="btnConfPhoneContinue" href="javascript:void(0)" onclick="submitPhoneConf(false)">Continue</a>&nbsp;
+							<span id="btnPhoneConfCancel" style="display:none"><a class="PGButton" id="btnConfPhoneCancel" href="javascript:void(0)" onclick="submitPhoneConf(true)">Cancel</a></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- Email Confirmation div -->
+	<div id="popup_EmailConf" class="popupWin " style="display: none">
+		<form id="EmailConfForm" name="EmailConfForm" method="post" autocomplete="off">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<div class="row tccBlue">
+							<div class="col-md-12 text-center">
+								<h2><span id="EmailConfTitle"></span></h2>
+							</div>
+						</div>
+
+						<div id="infoEmailConf" class="popupInstructions"></div>
+						<div id="ErrMsgEmailConf"></div><br>
+						<div id="fldsEmailConf" class="popFieldsContainer">
+							<input id="Username" type="hidden" name="Username">
+							<input id="Password" type="hidden" name="Password">
+							<span id="lblOTPEmailConf" class="popFieldLabel"></span><br>
+							<input id="OTP" type="text" name="OTP" maxlength="256" onkeypress="handleKeyPress(this, event)"><span id="spnResendEmailConf"></span>
+							<input type="hidden" name="Cancel" id="Cancel" value="0">
+							<input type="hidden" name="OTPResendType" id="OTPResendSS" value="0">
+							<input type="hidden" name="OTPResendIdx" id="OTPResendIdxSS" value="0">
+							<input id="PGTokenEmailConf" type="hidden" name="PGToken" value="jmANlPf5pXqUTSzuPV6w4l913copux7bnisiJdHQEV3JJbetER1cQA">
+							<br>
+
+							<a class="PGButton btn" id="btnEmailConfContinue" href="javascript:void(0)" onclick="submitEmailConf(false)">Continue</a>&nbsp;
+							<span id="btnEmailConfCancel" style="display:none"><a class="PGButton btn" id="btnEmailConfCancelLabel" href="javascript:void(0)" onclick="submitEmailConf(true)">Cancel</a></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- Debug scoring div -->
+	<div id="popup_Scoring" class="popupWin" style="display:none; z-index:20000"></div>
+
+	<!-- NOTE: Licensees are explicitly forbidden from removing Copyright Notices from this file. PortalGuard licenses only grant licensees permission to use the software. This permission is not transferrable and expires with the license term. Licensees do NOT own their copy of the source code and must abide by these restrictions as set forth in the full Software License Agreement. //-->
+	<div style="display:none">Â© 2009-2016 PistolStar, Inc. d/b/a PortalGuard. All rights reserved. <a href="https://www.portalguard.com/faq/index.html">Please see our FAQs!</a></div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/_layouts/images/pg/js/bootstrap.min.js"></script>
+</body>
+</html>

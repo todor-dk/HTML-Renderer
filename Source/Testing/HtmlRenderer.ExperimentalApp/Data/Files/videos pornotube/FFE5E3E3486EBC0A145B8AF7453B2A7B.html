@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" class="ng-app:clip-app" id="clip-app" ng-app="clip-app" ng-controller="AppCtrl as appCtrl">
+	<head>
+		<title ng-bind="appCtrl.metadataService.title">PornoTube</title>
+			<meta charset="UTF-8">
+			<meta name="description" content="{{appCtrl.metadataService.description}}" />
+			<meta name="fragment" content="!" />
+			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+			<meta ng-if="appCtrl.metadataService.showOverrideStatus()" name="phantom-override-status" content="{{appCtrl.metadataService.overrideStatus}}" />
+			<meta ng-if="appCtrl.metadataService.showOverrideData()" name="phantom-override-data" content="{{appCtrl.metadataService.overrideData}}" />
+			<link ng-if="appCtrl.metadataService.showPrev()" rel="prev" href="{{appCtrl.metadataService.prevUrl}}" />
+			<link ng-if="appCtrl.metadataService.showCanonical()" rel="canonical" href="{{appCtrl.metadataService.canonicalUrl}}" />
+			<link ng-if="appCtrl.metadataService.showNext()" rel="next" href="{{appCtrl.metadataService.nextUrl}}" />
+
+			<meta ng-if="appCtrl.twitterService.tweet.isValid()" name="twitter:card" content="{{appCtrl.twitterService.tweet.card}}">
+			<meta ng-if="appCtrl.twitterService.tweet.isValid()" name="twitter:site" content="{{appCtrl.twitterService.tweet.site}}">
+			<meta ng-if="appCtrl.twitterService.tweet.isValid()" name="twitter:creator" content="{{appCtrl.twitterService.tweet.creator}}">
+			<meta ng-if="appCtrl.twitterService.tweet.isValid()" name="twitter:title" content="{{appCtrl.twitterService.tweet.titleFull}}">
+			<meta ng-if="appCtrl.twitterService.tweet.isValid()" name="twitter:description" content="{{appCtrl.twitterService.tweet.description}}">
+			<meta ng-if="appCtrl.twitterService.tweet.isValid()" name="twitter:image" content="{{appCtrl.twitterService.tweet.image}}">
+
+			<script type="text/javascript" src="/assets/vendor/unified-player/player/UnifiedPlayer.js"></script>
+			<script type="text/javascript" src="/assets/vendor/unified-player/player/flash/swfobject.js"></script>
+			<script type="text/javascript" src="/assets/vendor/unified-player/player/msss/Silverlight.js"></script>
+
+			<script type="text/javascript" src="/assets/vendor/unified-player/player/dash/dash-player-core.js"></script>
+			<script type="text/javascript" src="/assets/vendor/unified-player/player/dash/dash_player_ux.js"></script>
+			<script type="text/javascript" src="/assets/vendor/unified-player/player/dash/dash_player_markup.js"></script>
+			<link rel="stylesheet" type="text/css" href="/assets/vendor/unified-player/player/dash/resources/css/aebn_unified_player.css">
+
+			<script type="text/javascript" src="/assets/vendor/unified-player/menu/drop-in-menu.js"></script>
+			<link rel="stylesheet" type="text/css" href="/assets/vendor/unified-player/menu/resources/css/aebn_drop_in_menu.css">
+
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+        <script type="text/javascript" src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-2.min.js" data-apikey="543944c3e91c3bd847d32dfbb0905f59"></script>
+
+        <script type="text/javascript">
+			try {
+				Bugsnag.apiKey = '543944c3e91c3bd847d32dfbb0905f59';
+				Bugsnag.version = '1.3.0'; // Replaced by Grunt
+				Bugsnag.beforeNotify = function(payload) {
+					if (payload.releaseStage == 'development') {
+						console.error('Bugsnag Error Handler:', payload);
+						console.error('Stacktrace: ', payload.stacktrace);
+					}
+					if (/MSIE (\d+\.\d+);/.test(payload.userAgent)) {
+						var ieVersion = new Number(RegExp.$1);
+						if (ieVersion <= 9) {
+							return false;
+						}
+					}
+					return true;
+				};
+
+			} catch (error) {
+
+				console.error('Unable to load/access Bugsnag. This site will not function correctly when running Ad/Content Blockers.');
+			}
+
+        </script>
+		<script type="text/javascript" src="/assets/javascript/errors.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-50986287-1', 'auto');
+	ga('require', 'displayfeatures');
+	ga('require', 'linkid', 'linkid.js');
+</script>
+
+<script>
+
+	var dtlCtrl; // Global alias for detailCtrl so it can be accessed from outside Angular
+	var initMutedSetting; //used to abort firing of the onMute event
+	var setFlashEvtListener = false;
+	var aebnFlashPlayer = null;
+
+	/* Need this if we want to do anything with Flash video events. Yes it is a global function as intended.*/
+	function onJavaScriptBridgeCreated(playerId) {
+		if (aebnFlashPlayer == null) {
+			aebnFlashPlayer = document.getElementById(playerId);
+			setEventListeners(aebnFlashPlayer);
+			setFlashEvtListener = true;
+		}
+	}
+
+	function setEventListeners (aebnFlashPlayer) {
+		if(setFlashEvtListener === false){
+			aebnFlashPlayer.addEventListener("complete", "onMediaPlayComplete");
+			aebnFlashPlayer.addEventListener("volumeChange", "onVolumeChange");
+			aebnFlashPlayer.addEventListener("mutedChange", "onMute");
+		}
+	}
+
+	function killPlayer () {
+		// Because IE and FF are different
+		if (aebnFlashPlayer.remove){
+			aebnFlashPlayer.remove();
+		} else if (aebnFlashPlayer.removeNode){
+			aebnFlashPlayer.removeNode(true); // Only in IE
+		} else {
+			if (aebnFlashPlayer && aebnFlashPlayer.parentNode && aebnFlashPlayer.parentNode.removeChild) {
+				aebnFlashPlayer.parentNode.removeChild(aebnFlashPlayer); //Fallback
+			}
+		}
+		aebnFlashPlayer = null;
+		setFlashEvtListener = false;
+	}
+
+	//bridge allowing access into angular controller
+	function onVolumeChange (newVolume) {
+		dtlCtrl.onVolumeChange(newVolume);
+	}
+
+	//bridge allowing access into angular controller
+	function onMute () {
+		dtlCtrl.onMutedChange();
+	}
+
+	function onMediaPlayComplete(){
+		dtlCtrl.loadPoster();
+	}
+
+</script>
+
+		
+		<link rel="stylesheet" type="text/css" href="/assets/clip-app-1.3.0.css"/>
+		
+		<link href="//fonts.googleapis.com/css?family=Roboto:400,100,400italic,500,900,900italic,100italic"
+			  rel="stylesheet" type="text/css">
+		<!--[if lte IE 9]>
+			<div id="browserCompat">
+				<i class="fa fa-exclamation-triangle fa-lg"></i>
+				Your current browser is not fully supported by this site. We strongly suggest you <strong>update to the latest version of Internet Explorer, Chrome, Firefox, or Safari</strong>.
+				<i class="fa fa-exclamation-triangle fa-lg"></i>
+				<a id="browserCompat_close" href="#" onclick="hideMe('browserCompat');">
+                    <span class="fa-stack">
+                        <i class="fa fa-circle-o fa-stack-2x"></i>
+                        <i class="fa fa-times fa-stack-1x"></i>
+                    </span>
+                </a>
+			</div>
+			<script type="text/javascript">
+				function hideMe(id) {
+					document.getElementById(id).style.display = 'none';
+				}
+				ga('send','event','Error Messages','Unsupported Browser','Internet Explorer LTE 9');
+			</script>
+        <![endif]-->
+
+	</head>
+	<body ng-class="bodyClass" data-status="{{status}}">
+		<noscript>
+			<div id="browserCompat_noscript">
+				<i class="fa fa-exclamation-triangle fa-lg"></i>
+				Your current browser is not fully supported by this site. We strongly suggest you <strong>update to the latest version of Internet Explorer, Chrome, Firefox, or Safari</strong>.
+				<i class="fa fa-exclamation-triangle fa-lg"></i>
+			</div>
+		</noscript>
+		<div aebn-user-messages></div>
+		<div class="wrapper">
+			<div ui-view class="main"></div>
+		</div>
+
+		
+		<script type="text/javascript" src="/assets/clip-app-1.3.0.js"></script>
+		
+		<script type="text/javascript" src="/assets/src/app/config.js"></script>
+		
+	</body>
+</html>

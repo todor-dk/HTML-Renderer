@@ -149,7 +149,7 @@ namespace HtmlRenderer.TestLib
             for (int i = 0; i < a.Count; i++)
             {
                 ReferenceAttr aa = a[i];
-                ReferenceAttr ab = b.FirstOrDefault(e => e.CompareName(aa, context));
+                ReferenceAttr ab = b.FirstOrDefault(e => e.CompareName(aa));
                 if ((a == null) && (b == null))
                     continue;
 
@@ -173,7 +173,7 @@ namespace HtmlRenderer.TestLib
             for (int i = 0; i < a.Count; i++)
             {
                 Attr ab = b.Item(i);
-                ReferenceAttr aa = a.FirstOrDefault(e => e.CompareName(ab, context));
+                ReferenceAttr aa = a.FirstOrDefault(e => e.CompareName(ab));
                 if ((a == null) && (b == null))
                     continue;
 
@@ -182,6 +182,54 @@ namespace HtmlRenderer.TestLib
             }
 
             return true;
+        }
+
+        public static bool IsHierarchyValid(this ReferenceNode self, ReferenceNode parentNode, ReferenceNode previousSibling, ReferenceNode nextSibling)
+        {
+            if (parentNode == null)
+            {
+                if ((self.ParentNode != null) || (self.ParentElement != null) || (self.OwnerDocument != null))
+                    return false;
+            }
+            else
+            {
+                ReferenceElement parentElement = parentNode as ReferenceElement;
+                ReferenceDocument ownerDocument = (parentNode as ReferenceDocument) ?? parentNode.OwnerDocument;
+                if ((self.ParentNode != parentNode) || (self.ParentElement != parentElement) || (self.OwnerDocument != ownerDocument))
+                    return false;
+            }
+
+            if ((self.PreviousSibling != previousSibling) || (self.NextSibling != nextSibling))
+                return false;
+
+            IReadOnlyList<ReferenceNode> children = self.ChildNodes;
+            if (children.Count == 0)
+                return (self.FirstChild == null) && (self.LastChild == null);
+            else
+                return (self.FirstChild == children[0]) && (self.LastChild == children[children.Count - 1]);
+        }
+
+        public static bool IsHierarchyValidRecursive(this ReferenceNode self, ReferenceNode parentNode, ReferenceNode previousSibling, ReferenceNode nextSibling)
+        {
+            if (!self.IsHierarchyValid(parentNode, previousSibling, nextSibling))
+                return false;
+
+            IReadOnlyList<ReferenceNode> children = self.ChildNodes;
+            for (int i = 0; i < children.Count; i++)
+            {
+                ReferenceNode child = children[i];
+                ReferenceNode previousChild = (i == 0) ? null : children[i - 1];
+                ReferenceNode nextChild = (i == (children.Count - 1)) ? null : children[i + 1];
+                if (!child.IsHierarchyValidRecursive(self, previousChild, nextChild))
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static bool IsHierarchyValidRecursive(this ReferenceDocument self)
+        {
+            return self.IsHierarchyValidRecursive(null, null, null);
         }
     }
 }

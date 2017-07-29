@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+ 
+<html lang="en">
+
+
+<head>
+    
+    <title>My Account - Login</title>
+    <meta name="description" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=100">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="version" content="v17.2.14">
+    <meta name="format-detection" content="telephone=no">
+    <link href="//www.google-analytics.com" rel="dns-prefetch"><!--[if IE 9]>
+    <link href="/oam/styles/ie9.css" rel="stylesheet" media="all"/>
+    <![endif]-->
+    <!--[if !IE]> -->
+    <link rel="stylesheet" href="/oam/styles/main.css" media="all"><!-- <![endif]-->
+    
+    <link rel="stylesheet" href="/oam/styles/xe1.css" media="all">
+   	<link rel="stylesheet" href="/oam/styles/xe.css" media="all">
+	<link rel="stylesheet" href="/oam/styles/xe2.css" media="all">
+	<script src="/oam/scripts/modernizr-2.8.2-custom.js"></script>
+	<script src="/oam/scripts/headerfooter.js"></script>
+	
+	<script src="/oam/maritz/scripts/clientExtensibilitydouble.js"></script>                 
+	<script src="/oam/maritz/scripts/mcxSiteIntercept-1.5.1.js"></script>
+	<link rel="stylesheet" href="/oam/maritz/styles/maritz.css" media="all">
+
+	<style>
+		nav.side-nav ul li a {
+			color: #000;
+		}
+		
+		nav.x ul li a {
+		font-size: 1rem;
+    color: #0000EE !important;
+}
+	
+	</style>
+	
+    <script src="/oam/scripts/vendor.js"></script>
+     <script src="/oam/scripts/zingchart.min.js"></script>
+<script src="/oam/scripts/license.js"></script>
+    <script>
+      (function() {
+        var cx = '004104209064596501888:fggjarxnvwg';
+        //var cx = '003473744495008592815:gxou5zvtdx0'; // dev-created
+        var gcse = document.createElement('script'); gcse.type = 'text/javascript'; gcse.async = true;
+        gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+            '//www.google.com/cse/cse.js?cx=' + cx;
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(gcse, s);
+
+        function $(selector) {
+            if (document.querySelector)
+                return document.querySelectorAll(selector);
+            // we could fall back better using something like sizzle
+            return [];
+        }
+        function telefy(selector, prefix) {
+            prefix = prefix || '';
+            var aEls = $(selector);
+            for (var i=0,ii=aEls.length;i<ii;i++) {
+               var nEl = aEls[i];
+               var nText = nEl.firstChild;
+               if (nText.nodeType != 3) continue;
+               var sPhone = nText.nodeValue;
+               // create the new element
+               var nA = document.createElement('a');
+               nA.innerHTML = sPhone;
+               nA.href = 'tel:' + prefix + sPhone;
+               // replace the old element
+               nEl.replaceChild(nA, nText);
+            }
+        }
+        window._telefy = telefy;
+      })();
+
+    </script>
+    <script src="/oam/scripts/main.js?v=1704"></script>
+    <script src="/oam/script/oam-commonscript.js"></script>    
+	<script>
+			$.cookie("clientCurrentDate", formatDate(new Date(),"MMddyyyyHHmmss"), {
+				   path    : '/oam/',
+				   secure  : true
+				});
+			$.cookie("clientTimeZone", new Date().getTimezoneOffset(), {
+				   path    : '/oam/',
+				   secure  : true
+				});
+			var newExpiryDate = new Date();
+			newExpiryDate.setTime(newExpiryDate.getTime() + 900000);
+			if($.cookie("MyAccountLogin") != null) {
+				var loginValue = $.cookie('MyAccountLogin');	
+				$.cookie("MyAccountLogin", loginValue, {
+					secure  : true,
+					path : "/",
+					domain : ".xcelenergy.com",
+					expires: newExpiryDate
+				});
+			}
+			if ("uniquePageName/page/index" != "uniquePageName/page/myPremiseUsageOverview") {
+				if($.cookie("UsageOnlyUser") != null) {
+					$.cookie("UsageOnlyUser", false, {
+						secure  : true,
+						path : "/",
+						domain : ".xcelenergy.com",
+						expires: newExpiryDate
+					});
+				}
+			}
+			
+	</script>
+	<script src="/oam/scripts/stateSelection.js"></script>
+	
+	<script>
+		$("button[type='submit']").on('click', function() {
+			
+			var theBtn = $(this);
+			var form = $(this).parents('form:first');
+			 var validator = new Parsley(form);				
+			// if all fields are valid, disable submit button				
+			if(validator.validate()) {
+			  theBtn.attr("disabled", "disabled");
+			}
+			// enable button again after 30sec in case form submit fails
+			setTimeout(function() {
+				theBtn.removeAttr("disabled");      
+			}, 30000);
+			
+		});
+	</script>
+	
+	
+	<style>
+	@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+	nav.side-nav ul li a::after, nav.side-nav ul li p::after { top: 42px !important; }
+	nav.x ul li a::after, nav.x ul li p::after { top: 30px !important; }
+	.home-page .bill-summary-block .pay-now .bill-programs .program .program-element a::after, .home-page .bill-summary-block .pay-now .bill-programs .program .program-element p::after { top: 35px !important;}
+	.home-page .energy-summary-block .energy-programs.energy-box .programs-list .program .program-element a::after, .home-page .energy-summary-block .energy-programs.energy-box .programs-list .program .program-element p::after { top: 35px !important; }
+	.chart-area small.chartMsg { display: none; visibility: hidden; }
+	}
+	</style>
+<script>
+document.cookie = "MyAccountLogin=John Doe; expires=Thu, 01 Jan 1970 00:00:00 UTC;domain=xcelenergy.com;path=/";
+</script>
+
+<!-- Start Owned JS -->
+<script type="text/javascript">
+$(document).ready(function(){
+
+	var remember = $.cookie('username');
+		if (remember)
+		{
+			$("input#remember").attr("checked", "checked");
+		}
+});
+function parseAjaxResponse(msg){
+      var obj = $.parseJSON(msg);
+      var className = obj.divClass;
+      var cmsText =  obj.message;
+      $("#genericMsgBox p").text(cmsText);
+      return className ;
+}
+function ajaxExceptionHandler(msg, exc) {
+      if(0 === msg.length){
+            msg ="Generic Error";
+      }
+      $("#genericMsgBox p").text(msg);
+}
+
+function isErrorMsg(inputToCheck){
+            var obj = jQuery.parseJSON(inputToCheck);
+            var className = obj.divClass;
+
+            if(typeof  className === "undefined"){
+                  return false;
+            }else{
+                  return true;
+            }
+}
+</script>
+<!-- END Owned JS -->
+</head>
+  <body class="account-sign-in">
+    <div id="troubleLoginModal" novalidate class="modal fade">
+      <div class="modal-dialog">
+        <form name="troubleLoginForm" id="troubleLoginForm" class="modal-content" method="post">
+          <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close"><span aria-hidden="true"><i class="icon-x"></i></span><span class="sr-only">Close</span></button>
+            <h3 class="modal-title">Having Trouble?</h3>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <a href="/oam/forgotUsernamePage.req" class="secondary" id="forgotUsernameLink">
+              	<h4 style="margin:auto;text-align:center;"><span><u>Forgot Username?</u></span></h4>
+              </a>
+              <br></br>
+              <a href="/oam/forgotPasswordPage.req" class="secondary" id="forgotPasswordLink">
+              	<h4 style="margin:auto;text-align:center;"><span><u>Forgot Password?</u></span></h4>
+              </a>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" tabindex="1" class="btn btn-link pull-left cancel-btn" style="padding-top:15px;margin-left:5px;">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+		$("#forgotUsernameLink, #forgotPasswordLink").click(function() {
+			$("#troubleLoginModal").modal('hide');
+		});
+    </script>
+   
+
+
+<!-- START Emergency Notice (Smart List) -->		<!-- ALERT --> 		<div class="alert is-open hidden-print" id="outage-alert"			data-toggler			data-toggle-target="self"			data-toggle-trigger=".js-toggle-trigger"			data-toggle-class=".is-open"			data-alert-switcher			data-alert-switch-trigger=".js-alert-switch-trigger"		>			<div class="alert__head hidden-lap-and-up">						<a href="https://www.xcelenergy.com/storm_center"><h3 class="font-500 color-white alert__head-title">Outage Alert <span class="visuallyhidden">Alert</span></h3></a>			</div>			<div class="alert__inner">							<div data-alert-item="true" class="hidden-lap-and-down" data-alert-selected='true'>				            	<div class="alert__head">									<h3 class="font-500 color-white alert__head-title">Outage Alert: <span class="visuallyhidden">Alert</span></h3>					        	</div>						    	<div class="alert__body">									<p>Crews working to restore power to customers impacted by overnight storms.											<a class="alert__link" href="https://www.xcelenergy.com/storm_center">Learn More</a>									</p>								</div>							</div>			</div>			<a href="#" class="alert__toggle js-toggle-trigger"></a>		</div><!-- END Emergency Notice --><!-- UTILITY BAR --><div class="utility-bar hidden-print">	<div class="wrapper wrapper--xwide">		<div class="utility-drop-wrapper">			<select id="stateList" name="location" class="utility-drop" onchange="setStateLocation(this.options[this.selectedIndex].value);">				<option value="/Geographic Location/Colorado">Colorado</option>				<option value="/Geographic Location/Michigan">Michigan</option>				<option value="/Geographic Location/Minnesota">Minnesota</option>				<option value="/Geographic Location/New Mexico">New Mexico</option>				<option value="/Geographic Location/North Dakota">North Dakota</option>				<option value="/Geographic Location/South Dakota">South	Dakota</option>				<option value="/Geographic Location/Texas">Texas</option>				<option value="/Geographic Location/Wisconsin">Wisconsin</option>			</select>		</div>		<a href="https://www.xcelenergy.com/customer_support" class="hidden-lap-and-down ">Customer Support</a>		<div class="account-wrapper">			<a href="https://myaccount.xcelenergy.com/oam/user/getaccountbyid.req"><i class="icomoon icomoon-account"></i>My Account</a>			<a href="https://myaccount.xcelenergy.com/oam/user/logout.req" class="signout ">Sign Out</a>		</div>	</div></div><div class="page-header">	<div class="wrapper wrapper--xwide wrapper--bleed-mobile">			<a class="page-logo-wrapper" href="https://www.xcelenergy.com"><span class="l-td-mid">				<span class="page-logo"><span data-picture="" data-alt="Xcel Energy">						<span data-src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/logo.png"></span>												<span data-src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/logo@2x.png" data-media="only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi)"></span>						<noscript>							<img alt="Xcel Energy" src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/logo.png" />						</noscript>					</span>				</span>				<span class="visuallyhidden">Xcel Energy</span>			</span>		  </a>		<nav class="page-nav-wrapper">			<ul class="page-nav js-page-nav">				<li class="close"><a id="page-nav-close" data-toggler data-toggle-remote data-toggle-self data-toggle-class=".nav-is-open" data-toggle-trigger="#page-nav-close" data-toggle-target="body"><span class="visuallyhidden">Close Navigation</span></a></li>				<li class="hidden-lap-and-up"><span class="page-nav__menu">Menu</span></li>					<li><a href="https://www.xcelenergy.com/billing_and_payment" class="page-nav__item page-nav__item-billing ">Billing & Payment</a></li>					<li><a href="https://www.xcelenergy.com/start,_stop,_transfer" class="page-nav__item page-nav__item-sst ">Start, Stop, Transfer</a></li>					<li><a href="https://www.xcelenergy.com/programs_and_rebates" class="page-nav__item page-nav__item-energy ">Programs & Rebates</a></li>					<li><a href="https://www.xcelenergy.com/outages_and_emergencies" class="page-nav__item page-nav__item-alert ">Outage & Emergencies</a></li>				<li class="hidden-lap-and-up"><a href="https://www.xcelenergy.com/customer_support" class="page-nav__item page-nav__item-misc ">Customer Support</a></li>			</ul>			<ul class="account-nav js-page-nav hidden-lap-and-up">				<li class="close"><a id="account-nav-close"					data-toggler					data-toggle-remote					data-toggle-self					data-toggle-class=".account-is-open"					data-toggle-trigger="#account-nav-close"					data-toggle-target="body"				><span class="visuallyhidden">Close Navigation</span></a></li>				<li><span class="page-nav__menu"><i class="icomoon icomoon-account"></i>My Account</span></li>					<li><div id="MyAccountDiv"><a href="https://myaccount.xcelenergy.com/oam/user/getaccountbyid.req" class="page-nav__item ">My Account</a></div></li>					<li><div id="MyBillDiv"><a href="https://myaccount.xcelenergy.com/oam/user/currentebill.req" class="page-nav__item ">My Bills</a></div></li>					<li><a href="https://myaccount.xcelenergy.com/oam/user/loadPremiseGraph.req" class="page-nav__item ">My Usage</a></li>					<li><div id="MyProgramsDiv"><a href="https://myaccount.xcelenergy.com/oam/user/yourPrograms.req" class="page-nav__item ">My Programs</a></div></li>					<li><div id="MyProfileDiv"><a href="https://myaccount.xcelenergy.com/oam/user/showprofilepage.req" class="page-nav__item ">My Profile & Notifications</a></div></li>				<li><a href="https://myaccount.xcelenergy.com/oam/user/logout.req" class="hidden-desk-and-up page-nav__item ">Sign Out</a></li>			</ul>			<div class="page-nav-overlay"				data-toggler				data-toggle-remote				data-toggle-self				data-toggle-class=".nav-is-open"				data-toggle-trigger=".page-nav-overlay"				data-toggle-target="body"			></div>			<div class="secondary-nav hidden-print">				<a id="page-search-toggle"					data-toggler					data-toggle-remote					data-toggle-class=".is-open"					data-toggle-trigger="#page-search-toggle"					data-toggle-target="#page-search"					data-toggle-focus="#page-search .gsc-input"				>					<i class="page-search-icon"></i>					<span class="visuallyhidden">Site Search</span>				</a>					<a id="page-account-toggle"						class="hidden-lap-and-up js-my-account-button" 						data-url="https://myaccount.xcelenergy.com/oam/user/getaccountbyid.req"						data-toggle-remote						data-toggle-self						data-toggle-class=".account-is-open"						data-toggle-trigger="#page-account-toggle"						data-toggle-target="body"					>						<i class="icomoon icomoon-account"></i>						<span class="visuallyhidden">My Account</span>					</a>				<a id="page-nav-toggle" class="hamburger-anchor"					data-toggler					data-toggle-remote					data-toggle-self					data-toggle-class=".nav-is-open"					data-toggle-trigger="#page-nav-toggle"					data-toggle-target="body"				>					<span class="visuallyhidden">Toggle Navigation</span>					<span class="hamburger">						<span class="hamburger__bread hamburger__bread--top"></span>						<span class="hamburger__meat"></span>						<span class="hamburger__bread hamburger__bread--bottom"></span>					</span>				</a>			</div>				<div class="page-search" id="page-search">					<div class="page-search__inner islet">						<i class="icomoon icomoon-magnify"></i>						<gcse:searchbox-only							resultsUrl="https://www.xcelenergy.com/search"							queryParameterName="q"							enableHistory="true"							webSearchResultSetSize="6"							autoCompleteMaxCompletions="5"							autoCompleteMatchType="any"></gcse:searchbox-only>					</div>				</div>		</nav>	</div></div></div> 
+<div class="spaceForMobile"></div>
+
+
+
+
+
+<script>
+	$('#account-nav-close').removeAttr('data-toggler').removeAttr('data-toggle-remote')
+	  .removeAttr('data-toggle-self').removeAttr('data-toggle-class')
+	  .removeAttr('data-toggle-trigger').removeAttr('data-toggle-target');
+	  
+	$('#page-nav-close').removeAttr('data-toggler').removeAttr('data-toggle-remote')
+	  .removeAttr('data-toggle-self').removeAttr('data-toggle-class')
+	  .removeAttr('data-toggle-trigger').removeAttr('data-toggle-target');
+	  
+	$('.page-nav-overlay').removeAttr('data-toggler').removeAttr('data-toggle-remote')
+	  .removeAttr('data-toggle-self').removeAttr('data-toggle-class')
+	  .removeAttr('data-toggle-trigger').removeAttr('data-toggle-target');
+	
+	
+	 var isSession = $.cookie("MyAccountLogin");
+
+	$('#page-account-toggle').click(function(){ 
+		if (isSession == 'true') {
+			$('body').addClass('account-is-open');
+		}	
+		
+    });
+	$('#account-nav-close').click(function(){ 
+		$('body').removeClass('account-is-open');
+    });
+	$('#page-nav-close').click(function(){                       
+		$('body').removeClass('nav-is-open');
+    });
+
+	$('.page-nav-overlay').click(function(){                       
+		$('body').removeClass('nav-is-open');
+		$('body').removeClass('account-is-open');
+    });
+	
+	$('.js-page-nav li:nth-child(2)').attr('style','background: #f0f0f0 none repeat scroll 0 0; border-bottom: 1px solid #ddd; height: 50px;');
+
+	$('.page-header').addClass('hidden-print');
+	
+	$(document).ready(function(){
+	
+		$('div.page-footer-bottom').addClass('hidden-print');
+	
+		$('.modal').on('show.bs.modal', function (e) {
+			$('ul.social-link-container').addClass('hidden');
+		});
+	
+		$('.modal').on('hide.bs.modal', function (e) {
+			$('ul.social-link-container').removeClass('hidden');
+		});	
+		
+		$('.signout').removeAttr('href');
+		$('.signout').attr('href', 'logout.req');
+		
+		if($.cookie("MyAccountLogin") == "true") {	
+			$('.signout').removeAttr('hidden');
+			var toOverview = "/oam/user/getaccountbyid.req";
+			$('.account-wrapper a:nth-child(1)').attr('href', toOverview);
+			$('#page-account-toggle').removeAttr('href');
+		} else if ($.cookie("MyAccountLogin") == "false" || $.cookie("MyAccountLogin") == null || $.cookie("MyAccountLogin") == "null" || $.cookie("MyAccountLogin") == "undefined") {
+			
+			$('.signout').attr('hidden', 'hidden');
+			$('#page-account-toggle').attr('href', '/oam/index.jsp');
+		}	
+	});
+	
+	
+</script>
+
+<!--
+ <div class="breadcrumbs-container hidden-print">
+      <ul class="container breadcrumbs">
+        <li><a href="https://www.xcelenergy.com">Home</a></li>
+        <li><a href="#">My Account</a></li>
+      </ul>
+    </div>
+-->
+
+ 
+
+<div id="userSessionTimeOutModal" novalidate class="modal fade" data-backdrop="static">
+      <div class="modal-dialog">
+	  <form name="userSessionTimeOutForm" id="userSessionTimeOutForm" class="modal-content" method="get">
+          <div class="modal-header">
+            <h3 class="modal-title">Session Time Out</h3>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <p>Due to inactivity, your session has expired. Please log out and try again.</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" tabindex="1" class="btn btn-primary">Okay</button>
+          </div>
+		 </form>
+      </div>
+    </div>
+    
+	
+	
+      
+        <h2 class="section-header section-header-misc hidden-xs">My Account</h2>
+      
+    <h2 class="section-header section-header-misc visible-xs">Welcome</h2>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+          <p class="account-info hidden-xs"><TEXTFORMAT LEADING="2"><P class="account-info hidden-xs" ALIGN="LEFT" style="margin-bottom:15px;" ></P>
+</TEXTFORMAT></p>
+        </div>
+      </div>
+        <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+            <div id='genericMsgBox' class='alert alert-warning hidden' role='alert'>
+<span class='alert-title'></span>
+<p id=''>
+</p>
+</div>
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-md-offset-1 col-lg-5 col-lg-offset-2">
+          <div class="panel">
+            <div class="panel-heading">
+              <h3 class="panel-title" xs-hidden>Sign in</h3>
+            </div>
+            
+            
+                              <form id="signInForm" name="loginForm" novalidate id="loginForm" role="form" action="/oam/j_spring_security_check" method="post" class="sign-in panel-body clearfix">
+              <div class="form-group">
+                <label><span>Username</span>
+                  <input type="text" required data-validate-required-message="This field is required." tabindex="1" class="form-control"
+                  autocomplete="off" name="j_username" id="j_username" value='' maxlength="60">
+                  
+                </label>
+                <span>
+                <a href="/oam/forgotUsernamePage.req" class="secondary">Forgot your Username?</a>
+                </span>
+              </div>
+              <div class="form-group">
+                <label><span>Password</span>
+                  <input type="password" required data-validate-required-message="This field is required." tabindex="1" class="form-control"
+                  autocomplete="off" name="j_password" id="j_password" value="" maxlength='50'>
+                 
+                </label>
+                <span>
+                 <a href="/oam/forgotPasswordPage.req" class="secondary">Forgot your Password?</a>
+                </span>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="remember" id="remember" value="true" tabindex="1">Remember Username
+                </label>
+              </div>
+              <button type="submit" tabindex="1" class="btn btn-primary pull-right">Sign In</button>
+              <input type="hidden" name="loginPage" id="loginPageId" value="index"/>
+			  <input type="hidden" name="ssoSAML" id="ssoSAMLId" value=""/>
+			  <input type="hidden" name="ssoRelayState" id="ssoRelayStateId" value=""/>
+			  <input type="hidden" name="deeplink" id="deeplink" value=""/>
+            </form>
+<script>
+	$(document).ready(function(){
+	
+
+		if(window.location.href.indexOf("/sso/") > 0){
+				$("#loginPageId").attr("value", "sso");
+				$("#ssoSAMLId").attr("value", GetURLParameter("SAMLRequest"));
+				$("#ssoRelayStateId").attr("value", GetURLParameter("RelayState"));
+		}
+		
+		if($("#attentionMsg").is(':contains("Invalid")')){
+			$("#genericMsgBox").attr("class","alert alert-warning");
+		}
+		
+		function GetURLParameter(sParam) {
+		var sPageURL = window.location.search.substring(1);
+		var sURLVariables = sPageURL.split('&');
+		for (var i = 0; i < sURLVariables.length; i++)
+		{
+			var sParameterName = sURLVariables[i].split('=');
+			if (sParameterName[0] == sParam)
+			{
+				return sParameterName[1];
+			}
+		}
+}
+	});
+
+		$('#signInForm').submit(function(e) {
+             e.preventDefault();
+             e.stopPropagation();
+
+             $form = this;
+
+             var validator = new Parsley($form);
+             if(validator.validate()) {
+            $('button[type="submit"]', $form).attr('disabled', 'disabled');
+              $form.submit();
+              return false;
+             }
+            });
+
+		$('#j_password').keypress(function (e) {
+			if (e.which == 13) {
+			$('form#signInForm').submit();
+			return false;
+			}
+			});
+
+
+		var sPageURL = window.location.search.substring(1);
+		var sURLVariables = sPageURL.split('&');
+		for (var i = 0; i < sURLVariables.length; i++)
+		{
+			var sParameterName = sURLVariables[i].split('=');
+			if (sParameterName[0] == "page")
+			{
+				$("#deeplink").attr("value", sParameterName[1]);
+			}
+		}		        
+		
+</script>
+                              
+                  
+                  
+                  
+                  
+                  
+          </div>
+		   <input type="hidden" id="errorCodeId" value="" ></input> 
+          </div>
+        <div class="col-md-4 col-lg-3">
+          <div class="panel">
+            <div class="panel-heading hidden-xs">
+              <h3 class="panel-title">Registration</h3>
+            </div>
+            <div class="panel-body">
+              <p class="register-text hidden-xs">
+                <TEXTFORMAT LEADING="2"><P class="account-info hidden-xs" ALIGN="LEFT">With My Account, you can:</P>
+<ul style="list-style:outside; padding-left:1em" class="account-info hidden-xs">
+  <li>Track energy usage</li>
+  <li>View billing history and pay bills</li>
+  <li>Sign up for notifications</li>
+</ul> 
+<P class="account-info hidden-xs">
+Ready to register? Make sure you have your account number handy.
+</P></TEXTFORMAT>
+              </p>
+              <form id="registerNowForm" name="registerNowForm" action="/oam/initRegistration.req">
+              <button href="account-register.html" class="btn btn-secondary col-xs-12 col-sm-7">Register</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+		$(document).ready(function(){
+			if($('body').hasClass('modal-open')){
+				$('.social-link-container').addClass('hidden');
+			} else {
+				$('.social-link-container').removeClass('hidden');
+			}
+		});
+	</script>
+    
+<!-- SET TO FALSE FROM PII PAGE -->
+
+<style>
+@media screen and (max-width: 767px) {
+.tip-bar { height: 80px !important; }
+.tip-bar .tip-content .energy-decal { width: 25% !important; background-size: 80px !important; }
+.tip-bar .tip-content a.more-tips { line-height: 80px !important; height: 80px !important; left: -25px !important; font-size: 20px !important; }
+.tip-bar .tip-content span.mobile-arrow { font-size: 40px !important; line-height: 30px !important; margin-top: 30px !important; top: -4px !important; right: -65% !important; }
+a.social-link>span>span>img {
+    height: 20px !important;
+}
+}
+</style>
+
+
+
+			<div class="page-footer hidden-print">				<div class="wrapper wrapper--wide wrapper--bleed-mobile">					<div class="grid-wrapper">								<div class="grid lap-one-third desk-one-sixth">									<h2><a class="fancy-action" href="https://www.xcelenergy.com/company" title="Company" target="">Company</a></h2>											<ul class="v-list ui-dark-links hidden-lap-and-down text-small">													<li><a href="https://www.xcelenergy.com/company/about_us" title="About Us" target="">About Us</a></li>													<li><a href="https://www.xcelenergy.com/company/careers" title="Careers" target="">Careers</a></li>													<li><a href="https://www.xcelenergy.com/company/safe_harbor_statement" title="Investor Relations" target="">Investor Relations</a></li>													<li><a href="https://www.xcelenergy.com/company/rates_and_regulations" title="Rates & Regulations" target="">Rates & Regulations</a></li>											</ul>								</div>								<div class="grid lap-one-third desk-one-sixth">									<h2><a class="fancy-action" href="https://www.xcelenergy.com/energy_portfolio" title="Energy Portfolio" target="">Energy Portfolio</a></h2>											<ul class="v-list ui-dark-links hidden-lap-and-down text-small">													<li><a href="https://www.xcelenergy.com/energy_portfolio/electricity" title="Electricity" target="">Electricity</a></li>													<li><a href="https://www.xcelenergy.com/energy_portfolio/natural_gas" title="Natural Gas" target="">Natural Gas</a></li>													<li><a href="https://www.xcelenergy.com/energy_portfolio/renewable_energy" title="Renewable Energy" target="">Renewable Energy</a></li>													<li><a href="http://www.transmission.xcelenergy.com/" title="Transmission" target="_blank">Transmission</a></li>													<li><a href="https://www.xcelenergy.com/energy_portfolio/innovation" title="Innovation" target="">Innovation</a></li>											</ul>								</div>								<div class="grid lap-one-third desk-one-sixth">									<h2><a class="fancy-action" href="https://www.xcelenergy.com/environment" title="Environment" target="">Environment</a></h2>											<ul class="v-list ui-dark-links hidden-lap-and-down text-small">													<li><a href="https://www.xcelenergy.com/environment/responsible_operations" title="Responsible Operations" target="">Responsible Operations</a></li>													<li><a href="https://www.xcelenergy.com/environment/system_improvements" title="System Improvements" target="">System Improvements</a></li>													<li><a href="http://birdcam.xcelenergy.com/" title="Bird Cam" target="_blank">Bird Cam</a></li>											</ul>								</div>								<div class="grid lap-one-third desk-one-sixth">									<h2><a class="fancy-action" href="https://www.xcelenergy.com/community" title="Community" target="">Community</a></h2>											<ul class="v-list ui-dark-links hidden-lap-and-down text-small">													<li><a href="https://www.xcelenergy.com/community/in_your_community" title="In Your Community" target="">In Your Community</a></li>													<li><a href="https://www.xcelenergy.com/community/focus_area_grants" title="Focus Area Grants" target="">Focus Area Grants</a></li>													<li><a href="https://www.xcelenergy.com/community/education" title="Education" target="">Education</a></li>													<li><a href="https://www.xcelenergy.com/community/public_safety" title="Public Safety" target="">Public Safety</a></li>													<li><a href="http://www.economicdevelopment.xcelenergy.com/" title="Economic Development" target="">Economic Development</a></li>											</ul>								</div>								<div class="grid lap-one-third desk-one-sixth">									<h2><a class="fancy-action" href="https://www.xcelenergy.com/working_with_us" title="Working With Us" target="">Working With Us</a></h2>											<ul class="v-list ui-dark-links hidden-lap-and-down text-small">													<li><a href="https://www.xcelenergy.com/working_with_us/builders" title="Builders" target="">Builders</a></li>													<li><a href="https://www.xcelenergy.com/working_with_us/renewable_developer_resource_center" title="Renewable Developers " target="">Renewable Developers </a></li>													<li><a href="https://www.xcelenergy.com/working_with_us/trade_partners" title="Trade Partners" target="">Trade Partners</a></li>													<li><a href="https://www.xcelenergy.com/working_with_us/municipalities" title="Municipalities" target="">Municipalities</a></li>													<li><a href="https://www.xcelenergy.com/working_with_us/suppliers" title="Suppliers" target="">Suppliers</a></li>													<li><a href="https://www.xcelenergy.com/working_with_us/landlords" title="Landlords" target="">Landlords</a></li>											</ul>								</div>								<div class="grid lap-one-third desk-one-sixth">									<h2><a class="fancy-action" href="https://www.xcelenergy.com/customer_support" title="Customer Support" target="">Customer Support</a></h2>											<ul class="v-list ui-dark-links hidden-lap-and-down text-small">													<li><a href="https://www.xcelenergy.com/customer_support/contact_us_form" title="Contact Us" target="">Contact Us</a></li>													<li><a href="https://www.xcelenergy.com/customer_support/customer_support_faq" title="Customer Support FAQ" target="">Customer Support FAQ</a></li>													<li><a href="https://www.xcelenergy.com/customer_support/vegetation_management" title="Vegetation Management" target="">Vegetation Management</a></li>													<li><a href="https://www.xcelenergy.com/start,_stop,_transfer/new_customer" title="New Customer" target="">New Customer</a></li>											</ul>								</div>					</div>				</div>			</div><!-- START_COMPONENT: quick links -->		<div class="page-footer-social page-footer-bottom hidden-print">			<div class="wrapper wrapper--wide">				<ul class="social-link-container h-list h-list--centered">									<li><a class="social-link" href="https://www.facebook.com/XcelEnergyMN" title="Facebook - MN" target="_blank">										<span data-picture data-alt=""> 											<span data-src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/fb.png"></span>											<span data-src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/fb@2x.png" data-media="only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi)"></span>											<noscript>												<img src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/fb.png" />											</noscript>										 </span>									</a></li>									<li><a class="social-link" href="https://twitter.com/XcelEnergyMN" title="Twitter - MN" target="_blank">										<span data-picture data-alt=""> 											<span data-src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/tw.png"></span>											<span data-src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/tw@2x.png" data-media="only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi)"></span>											<noscript>												<img src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/tw.png" />											</noscript>										 </span>									</a></li>									<li><a class="social-link" href="https://www.instagram.com/xcelenergy/" title="Instagram" target="_blank">										<span data-picture data-alt=""> 											<span data-src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/in.png"></span>											<span data-src="https://www.xcelenergy.com/staticfiles" data-media="only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi)"></span>											<noscript>												<img src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/in.png" />											</noscript>										 </span>									</a></li>									<li><a class="social-link" href="https://www.linkedin.com/company/xcel-energy" title="LinkedIn" target="_blank">										<span data-picture data-alt=""> 											<span data-src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/li.png"></span>											<span data-src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/li@2x.png" data-media="only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi)"></span>											<noscript>												<img src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/li.png" />											</noscript>										 </span>									</a></li>									<li><a class="social-link" href="https://www.youtube.com/XcelEnergyVideo" title="YouTube" target="_blank">										<span data-picture data-alt=""> 											<span data-src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/yt.png"></span>											<span data-src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/yt@2x.png" data-media="only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi)"></span>											<noscript>												<img src="https://www.xcelenergy.com/staticfiles/xe-responsive/assets/images/social/yt.png" />											</noscript>										 </span>									</a></li>									<li><a href="http://connect.xcelenergy.com/">Connect Blog</a></li>				</ul>			</div>		</div>			<div class="page-footer-bottom text-small font-normal">				<div class="wrapper wrapper--wide islet">					<ul class="footer-links h-list h-list--centered">							<li><a href="https://www.xcelenergy.com/billing_and_payment/customer_data_&_privacy/privacy_policy_and_customer_data_access" title="Privacy Policy" target="">Privacy Policy</a></li>							<li><a href="https://www.xcelenergy.com/staticfiles/xe-responsive/Admin/My Account_Terms_and_Conditions.pdf" title="My Account Terms & Conditions" target="_blank">My Account Terms & Conditions</a></li>							<li><a href="https://www.xcelenergy.com/company/media_room" title="Media Room" target="">Media Room</a></li>							<li><a href="https://www.xcelenergy.com/customer_support/contact_us_form" title="Feedback" target="">Feedback</a></li>					</ul>					<p class="copyright"><small> ©  2017 Xcel Energy Inc. All rights reserved.</small></p>				</div>			</div>
+
+
+
+
+
+
+
+<!-- Google Tag Manager --><noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-59Z8TT" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-59Z8TT');</script><!-- End Google Tag Manager -->
+
+       
+<script>
+var os = window.navigator.platform;
+var DLang = window.navigator.language;
+var McxBrowser = window.navigator.userAgent;
+var McxPageVisit = parseInt(McxSiteInterceptOnExit.RgetCookie('McxPageVisit'));
+var McxGL = decodeURIComponent(McxSiteInterceptOnExit.RgetCookie("GeographicLocation"));
+var McxGLarea = McxGL.substring(21);
+//addeventlistner(click, rebelTi()).McxSiteInterceptOnExit.addUrlParameter("rebelTi", rebelTi)
+
+window.McxSiteInterceptOnExit.addOnLoadEvent(function(){
+    window.McxSiteInterceptOnExit.addUrlParameter("os", os); 
+    window.McxSiteInterceptOnExit.addUrlParameter("DLang", DLang);
+    window.McxSiteInterceptOnExit.addUrlParameter("McxBrowser", McxBrowser);
+    window.McxSiteInterceptOnExit.addUrlParameter("PV", McxPageVisit);
+    window.McxSiteInterceptOnExit.addUrlParameter("GeoLoc", McxGLarea);
+});
+</script>
+       <div id="mcxInvitationModal">              <div id="mcxFloating">                  <div id="mcxCenter">                      <div id="mcxContainer">                          <div id="mcxInfo1">                              <div id="mcxInfo2">                                  <div id="mcxLogos">                                      <img id="mcxXcel" alt="Xcel Energy" src="/maritz/images/logo.png">                                      <img id="mcxMaritz" src="/maritz/images/logo.svg" alt="MaritzCX">                                                                        </div>                                  <p id="mcxHeading">We'd welcome your feedback!                                  </p>                                  <p id="mcxText1">Thank you for visiting Xcel Energy. You have been selected to participate in a brief customer satisfaction survey to let us know how we can improve your experience.</p>                                  <p id="mcxText2">The survey is designed to measure your entire experience, so please look for it at the <U>conclusion</U> of your visit.</p>                             <p id="mcxText3">This survey is conducted by an independent company MaritzCX, on behalf of the site you are visiting.</p>                              <div id="mcxButtons">                                  <button id="mcxNo" onclick="McxSiteInterceptOnExit.declineSurvey()">No Thanks</button>                                  <button onclick="McxSiteInterceptOnExit.acceptSurvey()">Yes, I will Participate</button>                                              </div>                              <a href="http://www.maritzcx.com/privacy-policy" target="_blank">Privacy Policy</a>                                        </div>                                           </div>                                </div>                    </div>           </div>       </div>      
+
+<script type="text/javascript">    var _mfq = _mfq || [];    (function() {        var mf = document.createElement("script");        mf.type = "text/javascript"; mf.async = true;        mf.src = "//cdn.mouseflow.com/projects/16baf42d-5faa-4d31-b967-8cb1b3f1cc56.js";        document.getElementsByTagName("head")[0].appendChild(mf);    })();</script>
+
+</body>
+<!-- Google Search -->
+	<script>
+	(function() {
+	var cx = '015881721407240092074:wqe_xh52-go';
+	var gcse = document.createElement('script'); gcse.type = 'text/javascript'; gcse.async = true;
+	gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+	'//www.google.com/cse/cse.js?cx=' + cx;
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(gcse, s);
+	})();
+	</script>
+</html>

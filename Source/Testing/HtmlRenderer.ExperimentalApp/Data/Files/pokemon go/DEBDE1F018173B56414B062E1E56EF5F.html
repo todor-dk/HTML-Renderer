@@ -1,0 +1,5117 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Pokémon Go</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="A Pokémon Go data website with calculators, tools, and useful Pokémon information.">
+
+	<meta property="og:url" 		content="https://pokemon.gameinfo.io">
+	<meta property="og:type" 		content="website">
+	<meta property="og:title" 		content="Pokémon Go Info">
+	<meta property="og:image" 		content="https://pokemon.gameinfo.io/images/homepage.jpg">
+	<meta property="og:description" content="A Pokémon Go data website with calculators, tools, and useful Pokémon information.">
+	<meta property="fb:app_id" 		content="1164725936923796">
+
+	<link rel="stylesheet" href="/css/theme.css?v2.12" type="text/css">
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,400italic,700" type="text/css">
+
+
+	<link rel="canonical" href="https://pokemon.gameinfo.io">
+	<link rel="alternate" href="https://pokemon.gameinfo.io" hreflang="en">
+	<link rel="alternate" href="https://pokemon.gameinfo.io/zh-tw" hreflang="zh_TW">
+	<link rel="alternate" href="https://pokemon.gameinfo.io/ja" hreflang="ja">
+	<link rel="alternate" href="https://pokemon.gameinfo.io/fr" hreflang="fr">
+	<link rel="alternate" href="https://pokemon.gameinfo.io/de" hreflang="de">
+	<link rel="alternate" href="https://pokemon.gameinfo.io/es" hreflang="es">
+	<link rel="alternate" href="https://pokemon.gameinfo.io/it" hreflang="it">
+	<link rel="alternate" href="https://pokemon.gameinfo.io/pt-br" hreflang="pt_BR">
+	<link rel="alternate" href="https://pokemon.gameinfo.io/ru" hreflang="ru">
+	<link rel="alternate" href="https://pokemon.gameinfo.io/ko" hreflang="ko">
+
+	<style>
+		article.search 			{ margin: 35px 0; padding: 0; border-radius: 2px; }
+		article.search input 	{ padding: 0 18px; line-height: 56px; height: 56px; font-size: 22px; color: #444; text-align: center; width: 100%; }
+		article.search input 	{ background: transparent; border: none; border-radius: 2px; }
+		article.search input::placeholder { color: #aaa; font-weight: 300; -webkit-font-smoothing: auto; }
+
+		.filter-updated 						{ background: #fafafa; box-shadow: 0 1px 5px rgba(0,0,0,.1); }
+		.filter-updated .selectors 				{ display: flex; justify-content: space-around; line-height: 38px; }
+		.filter-updated .selectors 				{ color: rgba(255,255,255,0.8); border-bottom: 3px solid rgba(13, 71, 161, 0.5); }
+		.filter-updated .selectors > div 		{ flex: 1 0 25%; text-align: center; color: #4078c0; font-weight: bold; font-size: 14px; cursor: pointer; }
+		.filter-updated .selectors > div:hover 	{ text-decoration: underline; }
+		.filter-updated .selectors > div::after 	{ content: ''; margin-left: 6px; opacity: 0.75; display: inline-block; position: relative; top: 1px; }
+		.filter-updated .selectors > div::after 	{ width: 0; height: 0; border: 3px solid transparent; border-top-color: rgba(13, 71, 161, 0.5); border-top-width: 5px; }
+
+		.filter-updated .options 				{ text-align: center; }
+		.filter-updated .options > div 			{ padding: 8px 4px 4px; display: none; }
+		.filter-updated .options .type 			{ font-size: 12px; border: 2px solid transparent; margin-bottom: 4px; }
+
+		.filter-updated .options .active 	{ border: 2px solid #000; }
+		.filter-updated .options .inactive 	{ opacity: 0.4; }
+
+		.pokemon-list 		{ display: flex; flex-direction: column; align-items: center; }
+
+		.family 			{ display: flex; margin-bottom: 20px; }
+		.family .gen 		{ display: flex; flex-direction: column; justify-content: center; margin-right: 5px; }
+		.family .pokemon 	{ width: 250px; height: 95px; position: relative; background: #fff; box-shadow: 0 1px 5px rgba(0,0,0,.1); margin-bottom: 2px; }
+		.family .pokemon .info 		{ padding: 0 10px; box-sizing: border-box; }
+		.family .pokemon img 		{ width: 80px; height: 80px; position: absolute; right: 5px; top: 6px; }
+		.family .pokemon .id 		{ position: absolute; top: 1px; right: 4px; font-size: 11px; color: #bbb; }
+		.family .pokemon .id::before { content: '#'; color: #ddd; }
+		.family .pokemon.spacer 	{ background: none; box-shadow: none; }
+
+		.family .gen:last-child 	{ margin-right: 0; }
+
+		.family .gen .pokemon:hover 		{ background: #e8f5e9; }
+		.family .gen .pokemon.selected 		{ background: #e8f5e9; }
+		.family .gen .pokemon:hover .types 	{ opacity: 1; }
+		.family .gen .pokemon.hidden 		{ opacity: 0.3; }
+		.family .gen .pokemon.hidden:hover 	{ opacity: 0.65; }
+
+		.pokemon h2 			{ font-size: 18px; margin: 7px 10px 0; }
+		.pokemon .types 		{ margin: 24px 10px 0; font-size: 12px; opacity: 0.8; }
+
+		.pokemon .bar 			{ width: 100%; height: 4px; position: absolute; background: rgba(0,0,0,0.05); bottom: 0; left: 0; }
+		.pokemon .bar .value 	{ width: 1px; height: 100%; position: absolute; left: 0; top: 0; background: #42a5f5; opacity: 0.8; }
+
+		@media  all and (max-width: 800px) {
+			article.search  { margin: 10px 10px 0; }
+			section 		{ margin-bottom: 10px; }
+
+			.filter  		{ margin: 0 10px 10px; }
+			.filter .type	{ cursor: pointer; margin: 8px 6px 0 0; padding: 4px 9px; }
+
+			.pokemon-list 	{ align-items: stretch; }
+
+			.family 		{ justify-content: space-between; padding: 0 10px; }
+			.family .gen 	{ flex: 1 0 calc(33.33% - 3.33px); }
+			.family .gen .pokemon { width: 100%; }
+
+			.pokemon .types 		{ font-size: 13px; }
+			.pokemon .types .type 	{ margin-bottom: 3px; }
+		}
+
+		@media  all and (max-width: 650px) {
+			.family .pokemon  		{ height: 80px }
+			.family .pokemon .types { margin-top: 11px; font-size: 11px; }
+			.family .pokemon img 	{ top: 12px; width: 60px; height: 60px; }
+		}
+
+		@media  all and (max-width: 600px) {
+			.grid.news a:nth-child(n+2) 		{ display: none;  }
+		}
+
+		@media  all and (max-width: 580px) {
+			article.search input { font-size: 15px; }
+
+			.family .pokemon 		{ display: flex; flex-direction: column; height: auto; align-items: center; padding-bottom: 4px; }
+			.family .pokemon h2 	{ font-size: 16px; margin-bottom: 6px; }
+			.family .pokemon img 	{ position: relative; top: auto; right: auto; }
+			.family .pokemon .types { order: 3; margin: 8px 0; text-align: center; }
+		}
+
+		@media  all and (max-width: 325px) {
+			.family .pokemon h2 	{ font-size: 12px; }
+		}
+
+		.grid.news 				{ padding-top: 10px; }
+		.news-item 				{ display: flex; align-items: flex-end; height: 180px; padding: 0; margin: 0 10px 0; overflow: hidden; background-position: bottom; }
+		.news-item 				{ background-size: cover; border-top: 5px solid #42a5f5; border-radius: 2px; }
+		.news-item.valentines 	{ border-color: rgba(0,0,0,.2); }
+		.news-item span 		{ padding: 10px 20px 10px; background: rgba(0,0,0,.7); flex-grow: 1; color: #fff; }
+		.news-item:hover span 	{ font-weight: bold; }
+
+		/* -- */
+
+		body._s155 .filter-updated { position: fixed; top: 70px; z-index: 4; left: 0; right: 0; box-shadow: 0 5px 8px rgba(0,0,0,.28); }
+		body._s155 #content { padding-top: 130px; }
+		body._s155 header { box-shadow: none; }
+
+		@media  all and (max-width: 870px) {
+			body._s155 .filter-updated { top: 50px; }
+			body._s155 #content { padding-top: 110px; }
+		}
+
+		@media  all and (max-width: 800px) {
+			body._s105 header { box-shadow: none; }
+			body._s105 .filter-updated { position: fixed; top: 50px; z-index: 4; left: 0; right: 0; box-shadow: 0 5px 8px rgba(0,0,0,.28); }
+			body._s105 #content { padding-top: 100px; }
+		}
+	</style>
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-71767061-5', 'auto');
+		ga('send', 'pageview');
+	</script>
+	<script>
+		(adsbygoogle = window.adsbygoogle || []).push({
+			google_ad_client: 'ca-pub-3621894834422379',
+			enable_page_level_ads: true
+		});
+	</script>
+</head>
+<body>
+
+<div id="top">
+	<div class="language">
+		<i class="lng-img en"></i>
+		<div class="change">
+			English
+			<svg width="20" height="30" viewBox="0 0 2048 2048"><path d="M1523 864q0 13-10 23l-466 466q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l393 393 393-393q10-10 23-10t23 10l50 50q10 10 10 23z"/></svg>
+		</div>
+		<div class="dropdown">
+			<a href="/en" data-lang="en" rel="nofollow">
+				<i class="lng-img en"></i>
+				English
+			</a>
+			<a href="/zh-tw" data-lang="zh_TW" rel="nofollow">
+				<i class="lng-img zh_TW"></i>
+				正體字
+			</a>
+			<a href="/ja" data-lang="ja" rel="nofollow">
+				<i class="lng-img ja"></i>
+				日本語
+			</a>
+			<a href="/fr" data-lang="fr" rel="nofollow">
+				<i class="lng-img fr"></i>
+				Fran&ccedil;ais
+			</a>
+			<a href="/de" data-lang="de" rel="nofollow">
+				<i class="lng-img de"></i>
+				Deutsch
+			</a>
+			<a href="/es" data-lang="es" rel="nofollow">
+				<i class="lng-img es"></i>
+				Espa&ntilde;ol
+			</a>
+			<a href="/it" data-lang="it" rel="nofollow">
+				<i class="lng-img it"></i>
+				Italiano
+			</a>
+			<a href="/pt-br" data-lang="pt_BR" rel="nofollow">
+				<i class="lng-img pt_BR"></i>
+				Portugu&ecirc;s
+			</a>
+			<a href="/ru" data-lang="ru" rel="nofollow">
+				<i class="lng-img ru"></i>
+				Русский
+			</a>
+			<a href="/ko" data-lang="ko" rel="nofollow">
+				<i class="lng-img ko"></i>
+				한국어
+			</a>
+		</div>
+	</div>
+
+	<div class="account">
+		<style>.fb-like > span { margin-bottom: 4px; }</style>
+		<div class="fb-like" data-href="https://pokemon.gameinfo.io/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false"></div>
+	</div>
+</div>
+
+<div class="mobile-side-cover"></div>
+<div class="mobile-side">
+	<a href="/" class="site-logo">
+		Pokémon GO
+		<span class="beta">Info</span>
+	</a>
+
+	<nav>
+	<div class="submenu">
+		<a href="/en" class="active">Pokémon</a>
+		<div>
+			<a href="/en/pokemon/list/top-attackers">Top attackers</a>
+			<a href="/en/pokemon/list/top-defenders">Top defenders</a>
+			<a href="/en/pokemon/list/best-pokemon-by-cp">List of Pokémon by CP</a>
+		</div>
+	</div>
+	<a href="/en/moves">Moves</a>
+	<a href="/en/tools/evolution-calculator">Evolution calculator</a>
+	<a href="/en/tools/iv-calculator">IV calculator</a>
+
+	<span class="mobile-hidden desktop-only">
+		<a href="/en/tools/catch-chance-calculator">Catch chance calculator</a>
+			</span>
+
+	<div class="mobile-only">
+		<a href="/en/tools/catch-chance-calculator">Catch chance calculator</a>
+	</div>
+</nav>
+</div>
+
+<header>
+	<div class="mobile-only mobile-menu">
+		<i class="fa fa-bars fa-fw"></i>
+	</div>
+
+	<h1 class="mobile-only mobile-title">
+		Pokémon GO	</h1>
+
+	<a href="/" class="site-logo">
+		Pokémon GO
+		<span class="beta">Info</span>
+	</a>
+
+	<nav>
+	<div class="submenu">
+		<a href="/en" class="active">Pokémon</a>
+		<div>
+			<a href="/en/pokemon/list/top-attackers">Top attackers</a>
+			<a href="/en/pokemon/list/top-defenders">Top defenders</a>
+			<a href="/en/pokemon/list/best-pokemon-by-cp">List of Pokémon by CP</a>
+		</div>
+	</div>
+	<a href="/en/moves">Moves</a>
+	<a href="/en/tools/evolution-calculator">Evolution calculator</a>
+	<a href="/en/tools/iv-calculator">IV calculator</a>
+
+	<span class="mobile-hidden desktop-only">
+		<a href="/en/tools/catch-chance-calculator">Catch chance calculator</a>
+			</span>
+
+	<div class="mobile-only">
+		<a href="/en/tools/catch-chance-calculator">Catch chance calculator</a>
+	</div>
+</nav>
+
+	<form class="search" action="/search" autocomplete="off">
+		<input type="text" name="search">
+		<button><i class="fa fa-search"></i></button>
+		<div class="results"><ul></ul></div>
+	</form>
+
+	<div class="mobile-only mobile-search">
+		<i class="fa fa-search fa-fw"></i>
+	</div>
+
+	<div class="mobile-only mobile-search-box">
+		<input type="search" name="search">
+		<div class="results"><ul></ul></div>
+	</div>
+
+	<div class="mobile-only mobile-search-close">
+		<i class="fa fa-times fa-fw"></i>
+	</div>
+</header>
+
+<div id="content">
+		<style>
+	.adsbygoogle.float-side { top: 142px; }
+	</style>
+				<span id="event-message"></span>
+		<script>
+		var runTimer = function () {
+			var t = document.getElementById('valdiff');
+			if (t === null) return clearTimeout(tmr);
+
+			var tl = Math.floor((t.getAttribute('data-target') * 1000 - Date.now()) / 1000 / 60);
+			if (tl < 0)
+			{
+				document.getElementById('event-message').innerHTML = 'The Adventure Week event has finished!';
+				return clearTimeout(tmr);
+			}
+
+			tl++;
+			var tx = [], h = Math.floor(tl / 60) % 24, d = Math.floor(tl / 60 / 24), m = tl % 60;
+			if (d) tx.push(d + ' day' + (d == 1 ? '' : 's'));
+			if (d || h) tx.push(h + ' hour' + (h == 1 ? '' : 's'));
+			tx.push(m + ' minute' + (m == 1 ? '' : 's'));
+			if (tx.length == 3) tx[2] = 'and ' + tx[2];
+			document.getElementById('valdiff').innerHTML = tx.join(', ');
+		}
+
+		var tmr = setInterval(runTimer, 1e3);
+		runTimer();
+	</script>
+
+
+	<ins class="adsbygoogle float-side"
+		style="display:inline-block;width:160px;height:600px"
+		data-ad-client="ca-pub-3621894834422379"
+		data-ad-slot="6061760840"></ins>
+	<script>
+	(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+	<ins class="adsbygoogle float-side right"
+		style="display:inline-block;width:160px;height:600px"
+		data-ad-client="ca-pub-3621894834422379"
+		data-ad-slot="6061760840"></ins>
+	<script>
+	(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+
+
+
+	<section>
+		<article class="search">
+			<input type="search" name="q" placeholder="Search for a Pokémon, e.g. Electabuzz" autocomplete="off">
+		</article>
+	</section>
+
+	<section>
+
+		<nav class="filter-updated">
+			<div class="selectors">
+				<div class="types">Type</div>
+				<div class="generations">Generation</div>
+				<div class="eggs">Eggs</div>
+				<div class="obtainable">Obtainability</div>
+			</div>
+			<div class="options">
+				<div class="types">
+					<a href="#normal" class="type POKEMON_TYPE_NORMAL pokemon-tooltip" data-type="POKEMON_TYPE_NORMAL">Normal</a>
+					<a href="#fighting" class="type POKEMON_TYPE_FIGHTING pokemon-tooltip" data-type="POKEMON_TYPE_FIGHTING">Fighting</a>
+					<a href="#flying" class="type POKEMON_TYPE_FLYING pokemon-tooltip" data-type="POKEMON_TYPE_FLYING">Flying</a>
+					<a href="#poison" class="type POKEMON_TYPE_POISON pokemon-tooltip" data-type="POKEMON_TYPE_POISON">Poison</a>
+					<a href="#ground" class="type POKEMON_TYPE_GROUND pokemon-tooltip" data-type="POKEMON_TYPE_GROUND">Ground</a>
+					<a href="#rock" class="type POKEMON_TYPE_ROCK pokemon-tooltip" data-type="POKEMON_TYPE_ROCK">Rock</a>
+					<a href="#bug" class="type POKEMON_TYPE_BUG pokemon-tooltip" data-type="POKEMON_TYPE_BUG">Bug</a>
+					<a href="#ghost" class="type POKEMON_TYPE_GHOST pokemon-tooltip" data-type="POKEMON_TYPE_GHOST">Ghost</a>
+					<a href="#steel" class="type POKEMON_TYPE_STEEL pokemon-tooltip" data-type="POKEMON_TYPE_STEEL">Steel</a>
+					<a href="#fire" class="type POKEMON_TYPE_FIRE pokemon-tooltip" data-type="POKEMON_TYPE_FIRE">Fire</a>
+					<a href="#water" class="type POKEMON_TYPE_WATER pokemon-tooltip" data-type="POKEMON_TYPE_WATER">Water</a>
+					<a href="#grass" class="type POKEMON_TYPE_GRASS pokemon-tooltip" data-type="POKEMON_TYPE_GRASS">Grass</a>
+					<a href="#electric" class="type POKEMON_TYPE_ELECTRIC pokemon-tooltip" data-type="POKEMON_TYPE_ELECTRIC">Electric</a>
+					<a href="#psychic" class="type POKEMON_TYPE_PSYCHIC pokemon-tooltip" data-type="POKEMON_TYPE_PSYCHIC">Psychic</a>
+					<a href="#ice" class="type POKEMON_TYPE_ICE pokemon-tooltip" data-type="POKEMON_TYPE_ICE">Ice</a>
+					<a href="#dragon" class="type POKEMON_TYPE_DRAGON pokemon-tooltip" data-type="POKEMON_TYPE_DRAGON">Dragon</a>
+					<a href="#dark" class="type POKEMON_TYPE_DARK pokemon-tooltip" data-type="POKEMON_TYPE_DARK">Dark</a>
+					<a href="#fairy" class="type POKEMON_TYPE_FAIRY pokemon-tooltip" data-type="POKEMON_TYPE_FAIRY">Fairy</a>
+				</div>
+				<div class="eggs">
+					<a href="#egg1" class="type" data-egg="2" style="background-color: #94b16a;">2km egg</a>
+					<a href="#egg5" class="type" data-egg="5" style="background-color: #d3993b;">5km egg</a>
+					<a href="#egg10" class="type" data-egg="10" style="background-color: #80759d;">10km egg</a>
+				</div>
+				<div class="generations">
+					<a href="#gen1" class="type" data-gen="1" style="background-color: #888;">Gen 1</a>
+					<a href="#gen2" class="type" data-gen="2" style="background-color: #aaa;">Gen 2</a>
+				</div>
+				<div class="obtainable">
+					<a href="#obtainable" class="type" data-obtain="true" style="background-color: #888;">Obtainable</a>
+					<a href="#unobtainable" class="type" data-obtain="false" style="background-color: #aaa;">Unobtainable</a>
+				</div>
+			</div>
+		</nav>
+	</section>
+
+	<section>
+		<div class="pokemon-list">
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/1-bulbasaur" class="pokemon" data-name="bulbasaur"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Bulbasaur</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/1.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 41%;"></div></div>
+						<div class="id">1</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/2-ivysaur" class="pokemon" data-name="ivysaur"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Ivysaur</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/2.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 55%;"></div></div>
+						<div class="id">2</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/3-venusaur" class="pokemon" data-name="venusaur"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Venusaur</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/3.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 72%;"></div></div>
+						<div class="id">3</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/4-charmander" class="pokemon" data-name="charmander"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Charmander</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/4.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 37%;"></div></div>
+						<div class="id">4</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/5-charmeleon" class="pokemon" data-name="charmeleon"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Charmeleon</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/5.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 53%;"></div></div>
+						<div class="id">5</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/6-charizard" class="pokemon" data-name="charizard"
+data-type="POKEMON_TYPE_FIRE"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Charizard</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/6.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 74%;"></div></div>
+						<div class="id">6</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/7-squirtle" class="pokemon" data-name="squirtle"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Squirtle</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/7.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 36%;"></div></div>
+						<div class="id">7</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/8-wartortle" class="pokemon" data-name="wartortle"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Wartortle</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/8.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 50%;"></div></div>
+						<div class="id">8</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/9-blastoise" class="pokemon" data-name="blastoise"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Blastoise</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/9.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 68%;"></div></div>
+						<div class="id">9</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/10-caterpie" class="pokemon" data-name="caterpie"
+data-type="POKEMON_TYPE_BUG"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Caterpie</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/10.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 20%;"></div></div>
+						<div class="id">10</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/11-metapod" class="pokemon" data-name="metapod"
+data-type="POKEMON_TYPE_BUG"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Metapod</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/11.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 21%;"></div></div>
+						<div class="id">11</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/12-butterfree" class="pokemon" data-name="butterfree"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Butterfree</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/12.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 58%;"></div></div>
+						<div class="id">12</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/13-weedle" class="pokemon" data-name="weedle"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Weedle</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/13.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 20%;"></div></div>
+						<div class="id">13</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/14-kakuna" class="pokemon" data-name="kakuna"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Kakuna</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/14.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 20%;"></div></div>
+						<div class="id">14</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/15-beedrill" class="pokemon" data-name="beedrill"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Beedrill</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/15.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 59%;"></div></div>
+						<div class="id">15</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/16-pidgey" class="pokemon" data-name="pidgey"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Pidgey</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/16.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 29%;"></div></div>
+						<div class="id">16</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/17-pidgeotto" class="pokemon" data-name="pidgeotto"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Pidgeotto</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/17.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 44%;"></div></div>
+						<div class="id">17</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/18-pidgeot" class="pokemon" data-name="pidgeot"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Pidgeot</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/18.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 63%;"></div></div>
+						<div class="id">18</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/19-rattata" class="pokemon" data-name="rattata"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Rattata</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/19.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 29%;"></div></div>
+						<div class="id">19</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/20-raticate" class="pokemon" data-name="raticate"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Raticate</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/20.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 55%;"></div></div>
+						<div class="id">20</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/21-spearow" class="pokemon" data-name="spearow"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Spearow</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/21.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 32%;"></div></div>
+						<div class="id">21</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/22-fearow" class="pokemon" data-name="fearow"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Fearow</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/22.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 60%;"></div></div>
+						<div class="id">22</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/23-ekans" class="pokemon" data-name="ekans"
+data-type="POKEMON_TYPE_POISON"
+data-type2=""
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Ekans</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/23.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 36%;"></div></div>
+						<div class="id">23</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/24-arbok" class="pokemon" data-name="arbok"
+data-type="POKEMON_TYPE_POISON"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Arbok</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/24.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 58%;"></div></div>
+						<div class="id">24</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/172-pichu" class="pokemon gen2" data-name="pichu"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="2"
+data-egg="2"
+data-obtain="1">
+						<h2>Pichu</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/172.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 19%;"></div></div>
+						<div class="id">172</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/25-pikachu" class="pokemon" data-name="pikachu"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Pikachu</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/25.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 36%;"></div></div>
+						<div class="id">25</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/26-raichu" class="pokemon" data-name="raichu"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Raichu</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/26.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 63%;"></div></div>
+						<div class="id">26</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/27-sandshrew" class="pokemon" data-name="sandshrew"
+data-type="POKEMON_TYPE_GROUND"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Sandshrew</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/27.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 47%;"></div></div>
+						<div class="id">27</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/28-sandslash" class="pokemon" data-name="sandslash"
+data-type="POKEMON_TYPE_GROUND"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Sandslash</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/28.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 69%;"></div></div>
+						<div class="id">28</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/29-nidoran" class="pokemon" data-name="nidoran♀"
+data-type="POKEMON_TYPE_POISON"
+data-type2=""
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Nidoran♀</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/29.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 34%;"></div></div>
+						<div class="id">29</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/30-nidorina" class="pokemon" data-name="nidorina"
+data-type="POKEMON_TYPE_POISON"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Nidorina</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/30.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 47%;"></div></div>
+						<div class="id">30</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/31-nidoqueen" class="pokemon" data-name="nidoqueen"
+data-type="POKEMON_TYPE_POISON"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Nidoqueen</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/31.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 69%;"></div></div>
+						<div class="id">31</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/32-nidoran" class="pokemon" data-name="nidoran♂"
+data-type="POKEMON_TYPE_POISON"
+data-type2=""
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Nidoran♂</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/32.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 34%;"></div></div>
+						<div class="id">32</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/33-nidorino" class="pokemon" data-name="nidorino"
+data-type="POKEMON_TYPE_POISON"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Nidorino</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/33.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 48%;"></div></div>
+						<div class="id">33</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/34-nidoking" class="pokemon" data-name="nidoking"
+data-type="POKEMON_TYPE_POISON"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Nidoking</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/34.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 69%;"></div></div>
+						<div class="id">34</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/173-cleffa" class="pokemon gen2" data-name="cleffa"
+data-type="POKEMON_TYPE_FAIRY"
+data-type2=""
+data-gen="2"
+data-egg="2"
+data-obtain="1">
+						<h2>Cleffa</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/173.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 30%;"></div></div>
+						<div class="id">173</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/35-clefairy" class="pokemon" data-name="clefairy"
+data-type="POKEMON_TYPE_FAIRY"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Clefairy</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/35.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 44%;"></div></div>
+						<div class="id">35</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/36-clefable" class="pokemon" data-name="clefable"
+data-type="POKEMON_TYPE_FAIRY"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Clefable</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/36.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 69%;"></div></div>
+						<div class="id">36</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/37-vulpix" class="pokemon" data-name="vulpix"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Vulpix</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/37.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 35%;"></div></div>
+						<div class="id">37</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/38-ninetales" class="pokemon" data-name="ninetales"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Ninetales</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/38.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 66%;"></div></div>
+						<div class="id">38</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/174-igglybuff" class="pokemon gen2" data-name="igglybuff"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FAIRY"
+data-gen="2"
+data-egg="2"
+data-obtain="1">
+						<h2>Igglybuff</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/174.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 26%;"></div></div>
+						<div class="id">174</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/39-jigglypuff" class="pokemon" data-name="jigglypuff"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FAIRY"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Jigglypuff</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/39.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 33%;"></div></div>
+						<div class="id">39</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/40-wigglytuff" class="pokemon" data-name="wigglytuff"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FAIRY"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Wigglytuff</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/40.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 61%;"></div></div>
+						<div class="id">40</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/41-zubat" class="pokemon" data-name="zubat"
+data-type="POKEMON_TYPE_POISON"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Zubat</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/41.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 28%;"></div></div>
+						<div class="id">41</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/42-golbat" class="pokemon" data-name="golbat"
+data-type="POKEMON_TYPE_POISON"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Golbat</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/42.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 60%;"></div></div>
+						<div class="id">42</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/169-crobat" class="pokemon gen2" data-name="crobat"
+data-type="POKEMON_TYPE_POISON"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Crobat</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/169.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 71%;"></div></div>
+						<div class="id">169</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/43-oddish" class="pokemon" data-name="oddish"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Oddish</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/43.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 44%;"></div></div>
+						<div class="id">43</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/44-gloom" class="pokemon" data-name="gloom"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Gloom</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/44.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 54%;"></div></div>
+						<div class="id">44</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/45-vileplume" class="pokemon" data-name="vileplume"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Vileplume</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/45.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 69%;"></div></div>
+						<div class="id">45</div>
+					</a>
+					<a href="/en/pokemon/182-bellossom" class="pokemon gen2" data-name="bellossom"
+data-type="POKEMON_TYPE_GRASS"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Bellossom</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/182.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 65%;"></div></div>
+						<div class="id">182</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/46-paras" class="pokemon" data-name="paras"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_GRASS"
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Paras</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/46.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 37%;"></div></div>
+						<div class="id">46</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/47-parasect" class="pokemon" data-name="parasect"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_GRASS"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Parasect</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/47.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 57%;"></div></div>
+						<div class="id">47</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/48-venonat" class="pokemon" data-name="venonat"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Venonat</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/48.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 39%;"></div></div>
+						<div class="id">48</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/49-venomoth" class="pokemon" data-name="venomoth"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Venomoth</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/49.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 62%;"></div></div>
+						<div class="id">49</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/50-diglett" class="pokemon" data-name="diglett"
+data-type="POKEMON_TYPE_GROUND"
+data-type2=""
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Diglett</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/50.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 24%;"></div></div>
+						<div class="id">50</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/51-dugtrio" class="pokemon" data-name="dugtrio"
+data-type="POKEMON_TYPE_GROUND"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Dugtrio</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/51.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 50%;"></div></div>
+						<div class="id">51</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/52-meowth" class="pokemon" data-name="meowth"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Meowth</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/52.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 31%;"></div></div>
+						<div class="id">52</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/53-persian" class="pokemon" data-name="persian"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Persian</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/53.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 54%;"></div></div>
+						<div class="id">53</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/54-psyduck" class="pokemon" data-name="psyduck"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Psyduck</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/54.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 41%;"></div></div>
+						<div class="id">54</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/55-golduck" class="pokemon" data-name="golduck"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Golduck</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/55.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 68%;"></div></div>
+						<div class="id">55</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/56-mankey" class="pokemon" data-name="mankey"
+data-type="POKEMON_TYPE_FIGHTING"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Mankey</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIGHTING pokemon-tooltip">Fighting</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/56.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 42%;"></div></div>
+						<div class="id">56</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/57-primeape" class="pokemon" data-name="primeape"
+data-type="POKEMON_TYPE_FIGHTING"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Primeape</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIGHTING pokemon-tooltip">Fighting</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/57.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 65%;"></div></div>
+						<div class="id">57</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/58-growlithe" class="pokemon" data-name="growlithe"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Growlithe</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/58.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 45%;"></div></div>
+						<div class="id">58</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/59-arcanine" class="pokemon" data-name="arcanine"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Arcanine</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/59.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 76%;"></div></div>
+						<div class="id">59</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/60-poliwag" class="pokemon" data-name="poliwag"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Poliwag</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/60.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 33%;"></div></div>
+						<div class="id">60</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/61-poliwhirl" class="pokemon" data-name="poliwhirl"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Poliwhirl</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/61.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 49%;"></div></div>
+						<div class="id">61</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/62-poliwrath" class="pokemon" data-name="poliwrath"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_FIGHTING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Poliwrath</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_FIGHTING pokemon-tooltip">Fighting</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/62.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 70%;"></div></div>
+						<div class="id">62</div>
+					</a>
+					<a href="/en/pokemon/186-politoed" class="pokemon gen2" data-name="politoed"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Politoed</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/186.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 69%;"></div></div>
+						<div class="id">186</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/63-abra" class="pokemon" data-name="abra"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2=""
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Abra</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/63.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 46%;"></div></div>
+						<div class="id">63</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/64-kadabra" class="pokemon" data-name="kadabra"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Kadabra</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/64.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 60%;"></div></div>
+						<div class="id">64</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/65-alakazam" class="pokemon" data-name="alakazam"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Alakazam</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/65.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 77%;"></div></div>
+						<div class="id">65</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/66-machop" class="pokemon" data-name="machop"
+data-type="POKEMON_TYPE_FIGHTING"
+data-type2=""
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Machop</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIGHTING pokemon-tooltip">Fighting</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/66.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 47%;"></div></div>
+						<div class="id">66</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/67-machoke" class="pokemon" data-name="machoke"
+data-type="POKEMON_TYPE_FIGHTING"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Machoke</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIGHTING pokemon-tooltip">Fighting</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/67.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 61%;"></div></div>
+						<div class="id">67</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/68-machamp" class="pokemon" data-name="machamp"
+data-type="POKEMON_TYPE_FIGHTING"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Machamp</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIGHTING pokemon-tooltip">Fighting</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/68.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 77%;"></div></div>
+						<div class="id">68</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/69-bellsprout" class="pokemon" data-name="bellsprout"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Bellsprout</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/69.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 40%;"></div></div>
+						<div class="id">69</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/70-weepinbell" class="pokemon" data-name="weepinbell"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Weepinbell</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/70.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 53%;"></div></div>
+						<div class="id">70</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/71-victreebel" class="pokemon" data-name="victreebel"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Victreebel</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/71.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 68%;"></div></div>
+						<div class="id">71</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/72-tentacool" class="pokemon" data-name="tentacool"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Tentacool</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/72.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 41%;"></div></div>
+						<div class="id">72</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/73-tentacruel" class="pokemon" data-name="tentacruel"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Tentacruel</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/73.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 69%;"></div></div>
+						<div class="id">73</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/74-geodude" class="pokemon" data-name="geodude"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Geodude</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/74.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 47%;"></div></div>
+						<div class="id">74</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/75-graveler" class="pokemon" data-name="graveler"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Graveler</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/75.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 60%;"></div></div>
+						<div class="id">75</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/76-golem" class="pokemon" data-name="golem"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Golem</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/76.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 77%;"></div></div>
+						<div class="id">76</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/77-ponyta" class="pokemon" data-name="ponyta"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Ponyta</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/77.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 54%;"></div></div>
+						<div class="id">77</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/78-rapidash" class="pokemon" data-name="rapidash"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Rapidash</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/78.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 67%;"></div></div>
+						<div class="id">78</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/79-slowpoke" class="pokemon" data-name="slowpoke"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_PSYCHIC"
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Slowpoke</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/79.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 47%;"></div></div>
+						<div class="id">79</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/80-slowbro" class="pokemon" data-name="slowbro"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_PSYCHIC"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Slowbro</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/80.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 71%;"></div></div>
+						<div class="id">80</div>
+					</a>
+					<a href="/en/pokemon/199-slowking" class="pokemon gen2" data-name="slowking"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_PSYCHIC"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Slowking</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/199.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 71%;"></div></div>
+						<div class="id">199</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/81-magnemite" class="pokemon" data-name="magnemite"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2="POKEMON_TYPE_STEEL"
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Magnemite</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+							<div class="type large POKEMON_TYPE_STEEL pokemon-tooltip">Steel</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/81.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 44%;"></div></div>
+						<div class="id">81</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/82-magneton" class="pokemon" data-name="magneton"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2="POKEMON_TYPE_STEEL"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Magneton</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+							<div class="type large POKEMON_TYPE_STEEL pokemon-tooltip">Steel</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/82.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 67%;"></div></div>
+						<div class="id">82</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/83-farfetchd" class="pokemon" data-name="farfetch&#039;d"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Farfetch&#039;d</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/83.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 44%;"></div></div>
+						<div class="id">83</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/84-doduo" class="pokemon" data-name="doduo"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Doduo</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/84.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 42%;"></div></div>
+						<div class="id">84</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/85-dodrio" class="pokemon" data-name="dodrio"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Dodrio</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/85.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 65%;"></div></div>
+						<div class="id">85</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/86-seel" class="pokemon" data-name="seel"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Seel</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/86.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 39%;"></div></div>
+						<div class="id">86</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/87-dewgong" class="pokemon" data-name="dewgong"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_ICE"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Dewgong</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_ICE pokemon-tooltip">Ice</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/87.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 61%;"></div></div>
+						<div class="id">87</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/88-grimer" class="pokemon" data-name="grimer"
+data-type="POKEMON_TYPE_POISON"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Grimer</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/88.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 48%;"></div></div>
+						<div class="id">88</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/89-muk" class="pokemon" data-name="muk"
+data-type="POKEMON_TYPE_POISON"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Muk</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/89.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 74%;"></div></div>
+						<div class="id">89</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/90-shellder" class="pokemon" data-name="shellder"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Shellder</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/90.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 41%;"></div></div>
+						<div class="id">90</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/91-cloyster" class="pokemon" data-name="cloyster"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_ICE"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Cloyster</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_ICE pokemon-tooltip">Ice</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/91.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 71%;"></div></div>
+						<div class="id">91</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/92-gastly" class="pokemon" data-name="gastly"
+data-type="POKEMON_TYPE_GHOST"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Gastly</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GHOST pokemon-tooltip">Ghost</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/92.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 42%;"></div></div>
+						<div class="id">92</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/93-haunter" class="pokemon" data-name="haunter"
+data-type="POKEMON_TYPE_GHOST"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Haunter</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GHOST pokemon-tooltip">Ghost</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/93.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 58%;"></div></div>
+						<div class="id">93</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/94-gengar" class="pokemon" data-name="gengar"
+data-type="POKEMON_TYPE_GHOST"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Gengar</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GHOST pokemon-tooltip">Ghost</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/94.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 73%;"></div></div>
+						<div class="id">94</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/95-onix" class="pokemon" data-name="onix"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Onix</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/95.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 42%;"></div></div>
+						<div class="id">95</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/208-steelix" class="pokemon gen2" data-name="steelix"
+data-type="POKEMON_TYPE_STEEL"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Steelix</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_STEEL pokemon-tooltip">Steel</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/208.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 70%;"></div></div>
+						<div class="id">208</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/96-drowzee" class="pokemon" data-name="drowzee"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Drowzee</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/96.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 42%;"></div></div>
+						<div class="id">96</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/97-hypno" class="pokemon" data-name="hypno"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Hypno</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/97.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 64%;"></div></div>
+						<div class="id">97</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/98-krabby" class="pokemon" data-name="krabby"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Krabby</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/98.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 51%;"></div></div>
+						<div class="id">98</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/99-kingler" class="pokemon" data-name="kingler"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Kingler</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/99.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 74%;"></div></div>
+						<div class="id">99</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/100-voltorb" class="pokemon" data-name="voltorb"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Voltorb</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/100.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 38%;"></div></div>
+						<div class="id">100</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/101-electrode" class="pokemon" data-name="electrode"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Electrode</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/101.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 61%;"></div></div>
+						<div class="id">101</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/102-exeggcute" class="pokemon" data-name="exeggcute"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_PSYCHIC"
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Exeggcute</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/102.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 44%;"></div></div>
+						<div class="id">102</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/103-exeggutor" class="pokemon" data-name="exeggutor"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_PSYCHIC"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Exeggutor</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/103.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 77%;"></div></div>
+						<div class="id">103</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/104-cubone" class="pokemon" data-name="cubone"
+data-type="POKEMON_TYPE_GROUND"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Cubone</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/104.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 40%;"></div></div>
+						<div class="id">104</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/105-marowak" class="pokemon" data-name="marowak"
+data-type="POKEMON_TYPE_GROUND"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Marowak</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/105.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 57%;"></div></div>
+						<div class="id">105</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/236-tyrogue" class="pokemon gen2" data-name="tyrogue"
+data-type="POKEMON_TYPE_FIGHTING"
+data-type2=""
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Tyrogue</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIGHTING pokemon-tooltip">Fighting</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/236.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 21%;"></div></div>
+						<div class="id">236</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/106-hitmonlee" class="pokemon" data-name="hitmonlee"
+data-type="POKEMON_TYPE_FIGHTING"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Hitmonlee</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIGHTING pokemon-tooltip">Fighting</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/106.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 70%;"></div></div>
+						<div class="id">106</div>
+					</a>
+					<a href="/en/pokemon/107-hitmonchan" class="pokemon" data-name="hitmonchan"
+data-type="POKEMON_TYPE_FIGHTING"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Hitmonchan</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIGHTING pokemon-tooltip">Fighting</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/107.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 65%;"></div></div>
+						<div class="id">107</div>
+					</a>
+					<a href="/en/pokemon/237-hitmontop" class="pokemon gen2" data-name="hitmontop"
+data-type="POKEMON_TYPE_FIGHTING"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Hitmontop</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIGHTING pokemon-tooltip">Fighting</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/237.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 61%;"></div></div>
+						<div class="id">237</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/108-lickitung" class="pokemon" data-name="lickitung"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Lickitung</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/108.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 50%;"></div></div>
+						<div class="id">108</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/109-koffing" class="pokemon" data-name="koffing"
+data-type="POKEMON_TYPE_POISON"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Koffing</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/109.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 44%;"></div></div>
+						<div class="id">109</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/110-weezing" class="pokemon" data-name="weezing"
+data-type="POKEMON_TYPE_POISON"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Weezing</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/110.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 66%;"></div></div>
+						<div class="id">110</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/111-rhyhorn" class="pokemon" data-name="rhyhorn"
+data-type="POKEMON_TYPE_GROUND"
+data-type2="POKEMON_TYPE_ROCK"
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Rhyhorn</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/111.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 57%;"></div></div>
+						<div class="id">111</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/112-rhydon" class="pokemon" data-name="rhydon"
+data-type="POKEMON_TYPE_GROUND"
+data-type2="POKEMON_TYPE_ROCK"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Rhydon</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/112.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 83%;"></div></div>
+						<div class="id">112</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/113-chansey" class="pokemon" data-name="chansey"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg="10"
+data-obtain="1">
+						<h2>Chansey</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/113.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 53%;"></div></div>
+						<div class="id">113</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/242-blissey" class="pokemon gen2" data-name="blissey"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Blissey</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/242.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 82%;"></div></div>
+						<div class="id">242</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/114-tangela" class="pokemon" data-name="tangela"
+data-type="POKEMON_TYPE_GRASS"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Tangela</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/114.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 67%;"></div></div>
+						<div class="id">114</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/115-kangaskhan" class="pokemon" data-name="kangaskhan"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Kangaskhan</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/115.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 71%;"></div></div>
+						<div class="id">115</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/116-horsea" class="pokemon" data-name="horsea"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Horsea</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/116.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 40%;"></div></div>
+						<div class="id">116</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/117-seadra" class="pokemon" data-name="seadra"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Seadra</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/117.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 63%;"></div></div>
+						<div class="id">117</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/230-kingdra" class="pokemon gen2" data-name="kingdra"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_DRAGON"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Kingdra</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_DRAGON pokemon-tooltip">Dragon</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/230.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 70%;"></div></div>
+						<div class="id">230</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/118-goldeen" class="pokemon" data-name="goldeen"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg="2"
+data-obtain="1">
+						<h2>Goldeen</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/118.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 42%;"></div></div>
+						<div class="id">118</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/119-seaking" class="pokemon" data-name="seaking"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Seaking</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/119.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 64%;"></div></div>
+						<div class="id">119</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/120-staryu" class="pokemon" data-name="staryu"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Staryu</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/120.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 40%;"></div></div>
+						<div class="id">120</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/121-starmie" class="pokemon" data-name="starmie"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_PSYCHIC"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Starmie</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/121.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 68%;"></div></div>
+						<div class="id">121</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/122-mr-mime" class="pokemon" data-name="mr. mime"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2="POKEMON_TYPE_FAIRY"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Mr. Mime</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/122.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 63%;"></div></div>
+						<div class="id">122</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/123-scyther" class="pokemon" data-name="scyther"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Scyther</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/123.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 71%;"></div></div>
+						<div class="id">123</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/212-scizor" class="pokemon gen2" data-name="scizor"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_STEEL"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Scizor</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_STEEL pokemon-tooltip">Steel</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/212.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 76%;"></div></div>
+						<div class="id">212</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/238-smoochum" class="pokemon gen2" data-name="smoochum"
+data-type="POKEMON_TYPE_ICE"
+data-type2="POKEMON_TYPE_PSYCHIC"
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Smoochum</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ICE pokemon-tooltip">Ice</div>
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/238.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 48%;"></div></div>
+						<div class="id">238</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/124-jynx" class="pokemon" data-name="jynx"
+data-type="POKEMON_TYPE_ICE"
+data-type2="POKEMON_TYPE_PSYCHIC"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Jynx</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ICE pokemon-tooltip">Ice</div>
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/124.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 71%;"></div></div>
+						<div class="id">124</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/239-elekid" class="pokemon gen2" data-name="elekid"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Elekid</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/239.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 44%;"></div></div>
+						<div class="id">239</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/125-electabuzz" class="pokemon" data-name="electabuzz"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Electabuzz</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/125.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 66%;"></div></div>
+						<div class="id">125</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/240-magby" class="pokemon gen2" data-name="magby"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Magby</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/240.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 46%;"></div></div>
+						<div class="id">240</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/126-magmar" class="pokemon" data-name="magmar"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Magmar</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/126.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 67%;"></div></div>
+						<div class="id">126</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/127-pinsir" class="pokemon" data-name="pinsir"
+data-type="POKEMON_TYPE_BUG"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Pinsir</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/127.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 75%;"></div></div>
+						<div class="id">127</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/128-tauros" class="pokemon" data-name="tauros"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Tauros</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/128.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 71%;"></div></div>
+						<div class="id">128</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/129-magikarp" class="pokemon" data-name="magikarp"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Magikarp</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/129.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 1%;"></div></div>
+						<div class="id">129</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/130-gyarados" class="pokemon" data-name="gyarados"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Gyarados</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/130.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 82%;"></div></div>
+						<div class="id">130</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/131-lapras" class="pokemon" data-name="lapras"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_ICE"
+data-gen="1"
+data-egg="10"
+data-obtain="1">
+						<h2>Lapras</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_ICE pokemon-tooltip">Ice</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/131.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 73%;"></div></div>
+						<div class="id">131</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/132-ditto" class="pokemon" data-name="ditto"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Ditto</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/132.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 34%;"></div></div>
+						<div class="id">132</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/133-eevee" class="pokemon" data-name="eevee"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Eevee</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/133.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 41%;"></div></div>
+						<div class="id">133</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/134-vaporeon" class="pokemon" data-name="vaporeon"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Vaporeon</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/134.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 81%;"></div></div>
+						<div class="id">134</div>
+					</a>
+					<a href="/en/pokemon/135-jolteon" class="pokemon" data-name="jolteon"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Jolteon</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/135.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 75%;"></div></div>
+						<div class="id">135</div>
+					</a>
+					<a href="/en/pokemon/136-flareon" class="pokemon" data-name="flareon"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Flareon</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/136.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 77%;"></div></div>
+						<div class="id">136</div>
+					</a>
+					<a href="/en/pokemon/196-espeon" class="pokemon gen2" data-name="espeon"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Espeon</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/196.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 79%;"></div></div>
+						<div class="id">196</div>
+					</a>
+					<a href="/en/pokemon/197-umbreon" class="pokemon gen2" data-name="umbreon"
+data-type="POKEMON_TYPE_DARK"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Umbreon</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_DARK pokemon-tooltip">Dark</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/197.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 64%;"></div></div>
+						<div class="id">197</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/137-porygon" class="pokemon" data-name="porygon"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Porygon</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/137.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 55%;"></div></div>
+						<div class="id">137</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/233-porygon2" class="pokemon gen2" data-name="porygon2"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Porygon2</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/233.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 72%;"></div></div>
+						<div class="id">233</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/138-omanyte" class="pokemon" data-name="omanyte"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_WATER"
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Omanyte</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/138.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 50%;"></div></div>
+						<div class="id">138</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/139-omastar" class="pokemon" data-name="omastar"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_WATER"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Omastar</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/139.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 74%;"></div></div>
+						<div class="id">139</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/140-kabuto" class="pokemon" data-name="kabuto"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_WATER"
+data-gen="1"
+data-egg="5"
+data-obtain="1">
+						<h2>Kabuto</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/140.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 46%;"></div></div>
+						<div class="id">140</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/141-kabutops" class="pokemon" data-name="kabutops"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_WATER"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Kabutops</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/141.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 72%;"></div></div>
+						<div class="id">141</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/142-aerodactyl" class="pokemon" data-name="aerodactyl"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg="10"
+data-obtain="1">
+						<h2>Aerodactyl</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/142.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 73%;"></div></div>
+						<div class="id">142</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/143-snorlax" class="pokemon" data-name="snorlax"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="1"
+data-egg="10"
+data-obtain="1">
+						<h2>Snorlax</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/143.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 83%;"></div></div>
+						<div class="id">143</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/144-articuno" class="pokemon" data-name="articuno"
+data-type="POKEMON_TYPE_ICE"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="0">
+						<h2>Articuno</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ICE pokemon-tooltip">Ice</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/144.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 78%;"></div></div>
+						<div class="id">144</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/145-zapdos" class="pokemon" data-name="zapdos"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="0">
+						<h2>Zapdos</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/145.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 83%;"></div></div>
+						<div class="id">145</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/146-moltres" class="pokemon" data-name="moltres"
+data-type="POKEMON_TYPE_FIRE"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="0">
+						<h2>Moltres</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/146.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 82%;"></div></div>
+						<div class="id">146</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/147-dratini" class="pokemon" data-name="dratini"
+data-type="POKEMON_TYPE_DRAGON"
+data-type2=""
+data-gen="1"
+data-egg="10"
+data-obtain="1">
+						<h2>Dratini</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_DRAGON pokemon-tooltip">Dragon</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/147.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 38%;"></div></div>
+						<div class="id">147</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/148-dragonair" class="pokemon" data-name="dragonair"
+data-type="POKEMON_TYPE_DRAGON"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Dragonair</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_DRAGON pokemon-tooltip">Dragon</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/148.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 56%;"></div></div>
+						<div class="id">148</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/149-dragonite" class="pokemon" data-name="dragonite"
+data-type="POKEMON_TYPE_DRAGON"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="1"
+data-egg=""
+data-obtain="1">
+						<h2>Dragonite</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_DRAGON pokemon-tooltip">Dragon</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/149.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 86%;"></div></div>
+						<div class="id">149</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/150-mewtwo" class="pokemon" data-name="mewtwo"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="0">
+						<h2>Mewtwo</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/150.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 100%;"></div></div>
+						<div class="id">150</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/151-mew" class="pokemon" data-name="mew"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2=""
+data-gen="1"
+data-egg=""
+data-obtain="0">
+						<h2>Mew</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/151.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 80%;"></div></div>
+						<div class="id">151</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/152-chikorita" class="pokemon gen2" data-name="chikorita"
+data-type="POKEMON_TYPE_GRASS"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Chikorita</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/152.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 36%;"></div></div>
+						<div class="id">152</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/153-bayleef" class="pokemon gen2" data-name="bayleef"
+data-type="POKEMON_TYPE_GRASS"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Bayleef</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/153.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 49%;"></div></div>
+						<div class="id">153</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/154-meganium" class="pokemon gen2" data-name="meganium"
+data-type="POKEMON_TYPE_GRASS"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Meganium</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/154.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 67%;"></div></div>
+						<div class="id">154</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/155-cyndaquil" class="pokemon gen2" data-name="cyndaquil"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Cyndaquil</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/155.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 37%;"></div></div>
+						<div class="id">155</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/156-quilava" class="pokemon gen2" data-name="quilava"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Quilava</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/156.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 53%;"></div></div>
+						<div class="id">156</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/157-typhlosion" class="pokemon gen2" data-name="typhlosion"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Typhlosion</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/157.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 74%;"></div></div>
+						<div class="id">157</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/158-totodile" class="pokemon gen2" data-name="totodile"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Totodile</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/158.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 42%;"></div></div>
+						<div class="id">158</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/159-croconaw" class="pokemon gen2" data-name="croconaw"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Croconaw</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/159.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 56%;"></div></div>
+						<div class="id">159</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/160-feraligatr" class="pokemon gen2" data-name="feraligatr"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Feraligatr</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/160.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 75%;"></div></div>
+						<div class="id">160</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/161-sentret" class="pokemon gen2" data-name="sentret"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Sentret</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/161.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 26%;"></div></div>
+						<div class="id">161</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/162-furret" class="pokemon gen2" data-name="furret"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Furret</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/162.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 57%;"></div></div>
+						<div class="id">162</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/163-hoothoot" class="pokemon gen2" data-name="hoothoot"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Hoothoot</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/163.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 31%;"></div></div>
+						<div class="id">163</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/164-noctowl" class="pokemon gen2" data-name="noctowl"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Noctowl</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/164.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 64%;"></div></div>
+						<div class="id">164</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/165-ledyba" class="pokemon gen2" data-name="ledyba"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Ledyba</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/165.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 32%;"></div></div>
+						<div class="id">165</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/166-ledian" class="pokemon gen2" data-name="ledian"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Ledian</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/166.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 49%;"></div></div>
+						<div class="id">166</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/167-spinarak" class="pokemon gen2" data-name="spinarak"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Spinarak</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/167.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 32%;"></div></div>
+						<div class="id">167</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/168-ariados" class="pokemon gen2" data-name="ariados"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Ariados</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/168.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 56%;"></div></div>
+						<div class="id">168</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/170-chinchou" class="pokemon gen2" data-name="chinchou"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_ELECTRIC"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Chinchou</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/170.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 44%;"></div></div>
+						<div class="id">170</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/171-lanturn" class="pokemon gen2" data-name="lanturn"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_ELECTRIC"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Lanturn</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/171.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 64%;"></div></div>
+						<div class="id">171</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/175-togepi" class="pokemon gen2" data-name="togepi"
+data-type="POKEMON_TYPE_FAIRY"
+data-type2=""
+data-gen="2"
+data-egg="2"
+data-obtain="1">
+						<h2>Togepi</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/175.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 27%;"></div></div>
+						<div class="id">175</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/176-togetic" class="pokemon gen2" data-name="togetic"
+data-type="POKEMON_TYPE_FAIRY"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Togetic</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/176.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 54%;"></div></div>
+						<div class="id">176</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/177-natu" class="pokemon gen2" data-name="natu"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Natu</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/177.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 40%;"></div></div>
+						<div class="id">177</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/178-xatu" class="pokemon gen2" data-name="xatu"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Xatu</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/178.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 63%;"></div></div>
+						<div class="id">178</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/179-mareep" class="pokemon gen2" data-name="mareep"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="2"
+data-egg="10"
+data-obtain="1">
+						<h2>Mareep</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/179.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 39%;"></div></div>
+						<div class="id">179</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/180-flaaffy" class="pokemon gen2" data-name="flaaffy"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Flaaffy</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/180.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 51%;"></div></div>
+						<div class="id">180</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/181-ampharos" class="pokemon gen2" data-name="ampharos"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Ampharos</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/181.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 74%;"></div></div>
+						<div class="id">181</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/183-marill" class="pokemon gen2" data-name="marill"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_FAIRY"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Marill</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/183.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 21%;"></div></div>
+						<div class="id">183</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/184-azumarill" class="pokemon gen2" data-name="azumarill"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_FAIRY"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Azumarill</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/184.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 54%;"></div></div>
+						<div class="id">184</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/185-sudowoodo" class="pokemon gen2" data-name="sudowoodo"
+data-type="POKEMON_TYPE_ROCK"
+data-type2=""
+data-gen="2"
+data-egg="10"
+data-obtain="1">
+						<h2>Sudowoodo</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/185.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 64%;"></div></div>
+						<div class="id">185</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/187-hoppip" class="pokemon gen2" data-name="hoppip"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Hoppip</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/187.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 26%;"></div></div>
+						<div class="id">187</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/188-skiploom" class="pokemon gen2" data-name="skiploom"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Skiploom</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/188.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 39%;"></div></div>
+						<div class="id">188</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/189-jumpluff" class="pokemon gen2" data-name="jumpluff"
+data-type="POKEMON_TYPE_GRASS"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Jumpluff</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/189.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 55%;"></div></div>
+						<div class="id">189</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/190-aipom" class="pokemon gen2" data-name="aipom"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="2"
+data-egg="2"
+data-obtain="1">
+						<h2>Aipom</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/190.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 47%;"></div></div>
+						<div class="id">190</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/191-sunkern" class="pokemon gen2" data-name="sunkern"
+data-type="POKEMON_TYPE_GRASS"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Sunkern</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/191.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 15%;"></div></div>
+						<div class="id">191</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/192-sunflora" class="pokemon gen2" data-name="sunflora"
+data-type="POKEMON_TYPE_GRASS"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Sunflora</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/192.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 64%;"></div></div>
+						<div class="id">192</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/193-yanma" class="pokemon gen2" data-name="yanma"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Yanma</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/193.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 50%;"></div></div>
+						<div class="id">193</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/194-wooper" class="pokemon gen2" data-name="wooper"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Wooper</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/194.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 29%;"></div></div>
+						<div class="id">194</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/195-quagsire" class="pokemon gen2" data-name="quagsire"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Quagsire</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/195.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 62%;"></div></div>
+						<div class="id">195</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/198-murkrow" class="pokemon gen2" data-name="murkrow"
+data-type="POKEMON_TYPE_DARK"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Murkrow</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_DARK pokemon-tooltip">Dark</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/198.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 51%;"></div></div>
+						<div class="id">198</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/200-misdreavus" class="pokemon gen2" data-name="misdreavus"
+data-type="POKEMON_TYPE_GHOST"
+data-type2=""
+data-gen="2"
+data-egg="2"
+data-obtain="1">
+						<h2>Misdreavus</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GHOST pokemon-tooltip">Ghost</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/200.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 59%;"></div></div>
+						<div class="id">200</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/201-unown" class="pokemon gen2" data-name="unown"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Unown</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/201.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 42%;"></div></div>
+						<div class="id">201</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/202-wobbuffet" class="pokemon gen2" data-name="wobbuffet"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2=""
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Wobbuffet</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/202.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 43%;"></div></div>
+						<div class="id">202</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/203-girafarig" class="pokemon gen2" data-name="girafarig"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2="POKEMON_TYPE_PSYCHIC"
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Girafarig</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/203.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 61%;"></div></div>
+						<div class="id">203</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/204-pineco" class="pokemon gen2" data-name="pineco"
+data-type="POKEMON_TYPE_BUG"
+data-type2=""
+data-gen="2"
+data-egg="10"
+data-obtain="1">
+						<h2>Pineco</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/204.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 43%;"></div></div>
+						<div class="id">204</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/205-forretress" class="pokemon gen2" data-name="forretress"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_STEEL"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Forretress</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_STEEL pokemon-tooltip">Steel</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/205.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 67%;"></div></div>
+						<div class="id">205</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/206-dunsparce" class="pokemon gen2" data-name="dunsparce"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Dunsparce</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/206.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 56%;"></div></div>
+						<div class="id">206</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/207-gligar" class="pokemon gen2" data-name="gligar"
+data-type="POKEMON_TYPE_GROUND"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg="10"
+data-obtain="1">
+						<h2>Gligar</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/207.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 59%;"></div></div>
+						<div class="id">207</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/209-snubbull" class="pokemon gen2" data-name="snubbull"
+data-type="POKEMON_TYPE_FAIRY"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Snubbull</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/209.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 45%;"></div></div>
+						<div class="id">209</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/210-granbull" class="pokemon gen2" data-name="granbull"
+data-type="POKEMON_TYPE_FAIRY"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Granbull</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FAIRY pokemon-tooltip">Fairy</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/210.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 70%;"></div></div>
+						<div class="id">210</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/211-qwilfish" class="pokemon gen2" data-name="qwilfish"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_POISON"
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Qwilfish</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_POISON pokemon-tooltip">Poison</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/211.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 61%;"></div></div>
+						<div class="id">211</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/213-shuckle" class="pokemon gen2" data-name="shuckle"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_ROCK"
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Shuckle</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/213.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 14%;"></div></div>
+						<div class="id">213</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/214-heracross" class="pokemon gen2" data-name="heracross"
+data-type="POKEMON_TYPE_BUG"
+data-type2="POKEMON_TYPE_FIGHTING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Heracross</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_BUG pokemon-tooltip">Bug</div>
+							<div class="type large POKEMON_TYPE_FIGHTING pokemon-tooltip">Fighting</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/214.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 78%;"></div></div>
+						<div class="id">214</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/215-sneasel" class="pokemon gen2" data-name="sneasel"
+data-type="POKEMON_TYPE_DARK"
+data-type2="POKEMON_TYPE_ICE"
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Sneasel</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_DARK pokemon-tooltip">Dark</div>
+							<div class="type large POKEMON_TYPE_ICE pokemon-tooltip">Ice</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/215.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 61%;"></div></div>
+						<div class="id">215</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/216-teddiursa" class="pokemon gen2" data-name="teddiursa"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Teddiursa</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/216.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 47%;"></div></div>
+						<div class="id">216</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/217-ursaring" class="pokemon gen2" data-name="ursaring"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Ursaring</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/217.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 75%;"></div></div>
+						<div class="id">217</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/218-slugma" class="pokemon gen2" data-name="slugma"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="2"
+data-egg="2"
+data-obtain="1">
+						<h2>Slugma</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/218.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 35%;"></div></div>
+						<div class="id">218</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/219-magcargo" class="pokemon gen2" data-name="magcargo"
+data-type="POKEMON_TYPE_FIRE"
+data-type2="POKEMON_TYPE_ROCK"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Magcargo</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/219.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 54%;"></div></div>
+						<div class="id">219</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/220-swinub" class="pokemon gen2" data-name="swinub"
+data-type="POKEMON_TYPE_ICE"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Swinub</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ICE pokemon-tooltip">Ice</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/220.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 32%;"></div></div>
+						<div class="id">220</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/221-piloswine" class="pokemon gen2" data-name="piloswine"
+data-type="POKEMON_TYPE_ICE"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Piloswine</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ICE pokemon-tooltip">Ice</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/221.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 68%;"></div></div>
+						<div class="id">221</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/222-corsola" class="pokemon gen2" data-name="corsola"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_ROCK"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Corsola</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/222.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 47%;"></div></div>
+						<div class="id">222</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/223-remoraid" class="pokemon gen2" data-name="remoraid"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="2"
+data-egg="2"
+data-obtain="1">
+						<h2>Remoraid</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/223.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 35%;"></div></div>
+						<div class="id">223</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/224-octillery" class="pokemon gen2" data-name="octillery"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Octillery</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/224.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 65%;"></div></div>
+						<div class="id">224</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/225-delibird" class="pokemon gen2" data-name="delibird"
+data-type="POKEMON_TYPE_ICE"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Delibird</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ICE pokemon-tooltip">Ice</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/225.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 40%;"></div></div>
+						<div class="id">225</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/226-mantine" class="pokemon gen2" data-name="mantine"
+data-type="POKEMON_TYPE_WATER"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg="10"
+data-obtain="1">
+						<h2>Mantine</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/226.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 64%;"></div></div>
+						<div class="id">226</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/227-skarmory" class="pokemon gen2" data-name="skarmory"
+data-type="POKEMON_TYPE_STEEL"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg="10"
+data-obtain="1">
+						<h2>Skarmory</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_STEEL pokemon-tooltip">Steel</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/227.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 64%;"></div></div>
+						<div class="id">227</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/228-houndour" class="pokemon gen2" data-name="houndour"
+data-type="POKEMON_TYPE_DARK"
+data-type2="POKEMON_TYPE_FIRE"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Houndour</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_DARK pokemon-tooltip">Dark</div>
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/228.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 45%;"></div></div>
+						<div class="id">228</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/229-houndoom" class="pokemon gen2" data-name="houndoom"
+data-type="POKEMON_TYPE_DARK"
+data-type2="POKEMON_TYPE_FIRE"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Houndoom</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_DARK pokemon-tooltip">Dark</div>
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/229.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 72%;"></div></div>
+						<div class="id">229</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/231-phanpy" class="pokemon gen2" data-name="phanpy"
+data-type="POKEMON_TYPE_GROUND"
+data-type2=""
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Phanpy</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/231.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 46%;"></div></div>
+						<div class="id">231</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/232-donphan" class="pokemon gen2" data-name="donphan"
+data-type="POKEMON_TYPE_GROUND"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Donphan</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/232.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 79%;"></div></div>
+						<div class="id">232</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/234-stantler" class="pokemon gen2" data-name="stantler"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="2"
+data-egg="5"
+data-obtain="1">
+						<h2>Stantler</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/234.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 63%;"></div></div>
+						<div class="id">234</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/235-smeargle" class="pokemon gen2" data-name="smeargle"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Smeargle</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/235.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 20%;"></div></div>
+						<div class="id">235</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/241-miltank" class="pokemon gen2" data-name="miltank"
+data-type="POKEMON_TYPE_NORMAL"
+data-type2=""
+data-gen="2"
+data-egg="10"
+data-obtain="1">
+						<h2>Miltank</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_NORMAL pokemon-tooltip">Normal</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/241.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 68%;"></div></div>
+						<div class="id">241</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/243-raikou" class="pokemon gen2" data-name="raikou"
+data-type="POKEMON_TYPE_ELECTRIC"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="0">
+						<h2>Raikou</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ELECTRIC pokemon-tooltip">Electric</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/243.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 83%;"></div></div>
+						<div class="id">243</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/244-entei" class="pokemon gen2" data-name="entei"
+data-type="POKEMON_TYPE_FIRE"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="0">
+						<h2>Entei</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/244.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 84%;"></div></div>
+						<div class="id">244</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/245-suicune" class="pokemon gen2" data-name="suicune"
+data-type="POKEMON_TYPE_WATER"
+data-type2=""
+data-gen="2"
+data-egg=""
+data-obtain="0">
+						<h2>Suicune</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_WATER pokemon-tooltip">Water</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/245.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 76%;"></div></div>
+						<div class="id">245</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/246-larvitar" class="pokemon gen2" data-name="larvitar"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="2"
+data-egg="10"
+data-obtain="1">
+						<h2>Larvitar</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/246.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 39%;"></div></div>
+						<div class="id">246</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/247-pupitar" class="pokemon gen2" data-name="pupitar"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_GROUND"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Pupitar</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_GROUND pokemon-tooltip">Ground</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/247.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 56%;"></div></div>
+						<div class="id">247</div>
+					</a>
+				</div>
+				<div class="gen">
+					<a href="/en/pokemon/248-tyranitar" class="pokemon gen2" data-name="tyranitar"
+data-type="POKEMON_TYPE_ROCK"
+data-type2="POKEMON_TYPE_DARK"
+data-gen="2"
+data-egg=""
+data-obtain="1">
+						<h2>Tyranitar</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_ROCK pokemon-tooltip">Rock</div>
+							<div class="type large POKEMON_TYPE_DARK pokemon-tooltip">Dark</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/248.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 88%;"></div></div>
+						<div class="id">248</div>
+					</a>
+				</div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/249-lugia" class="pokemon gen2" data-name="lugia"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="0">
+						<h2>Lugia</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/249.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 87%;"></div></div>
+						<div class="id">249</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/250-ho-oh" class="pokemon gen2" data-name="ho-oh"
+data-type="POKEMON_TYPE_FIRE"
+data-type2="POKEMON_TYPE_FLYING"
+data-gen="2"
+data-egg=""
+data-obtain="0">
+						<h2>Ho-Oh</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_FIRE pokemon-tooltip">Fire</div>
+							<div class="type large POKEMON_TYPE_FLYING pokemon-tooltip">Flying</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/250.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 99%;"></div></div>
+						<div class="id">250</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+			<div class="family">
+				<div class="gen">
+					<a href="/en/pokemon/251-celebi" class="pokemon gen2" data-name="celebi"
+data-type="POKEMON_TYPE_PSYCHIC"
+data-type2="POKEMON_TYPE_GRASS"
+data-gen="2"
+data-egg=""
+data-obtain="0">
+						<h2>Celebi</h2>
+						<div class="types">
+							<div class="type large POKEMON_TYPE_PSYCHIC pokemon-tooltip">Psychic</div>
+							<div class="type large POKEMON_TYPE_GRASS pokemon-tooltip">Grass</div>
+						</div>
+						<img class="lazy" data-original="/images/thumbs/140/251.png" src="/images/blank.gif">
+						<div class="bar"><div class="value" style="width: 80%;"></div></div>
+						<div class="id">251</div>
+					</a>
+				</div>
+				<div class="pokemon spacer"></div>
+				<div class="pokemon spacer"></div>
+			</div>
+		</div>
+	</section>
+
+	<ins class="adsbygoogle resp " style=""
+		data-ad-client="ca-pub-3621894834422379"
+		data-ad-slot="4332155244" 		data-ad-format="auto"></ins>
+	<script>
+	(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+
+</div>
+
+<footer>
+	<section>
+		<div class="network"></div>
+		<div class="info">
+			Copyright &copy; 2016
+		</div>
+		<div class="links">
+			<a href="/cdn-cgi/l/email-protection#5b2b34303e3634351b3c3a363e32353d34753234" style="color: #fff; font-size: 13px; font-weight: 700;">
+				<i class="fa fa-envelope" style="margin-right: 4px;"></i>
+				Contact us
+			</a>
+		</div>
+	</section>
+</footer>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="/en/js/pokemon-names.js?v1.5"></script>
+<script src="/js/main.js?v1.7"></script>
+<script src="/js/tooltip.js?v1.5.2" async></script>
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
+	<script>
+		$('img.lazy').lazyload({ threshold: 200, event: 'scroll' });
+
+		hookScroll(105);
+		hookScroll(155);
+
+		var pokemon = $('.pokemon-list a.pokemon'), type_active = null, egg_active = null, gen_active = null, obtain_active = null;
+		var families = $('.pokemon-list .family');
+
+		$('article.search input').on('keyup search', function (e) {
+			if ([9,13,16,17,37,38,39,40,91].indexOf(e.keyCode) !== -1) return;
+
+			var val = $.trim($(this).val().toLowerCase());
+
+			pokemon.filter('.selected').removeClass('selected');
+			pokemon.each(function () {
+				var t = $(this);
+				var show = t.data('name').indexOf(val) !== -1;
+				show = show && (type_active === null || t.data('type') == type_active || t.data('type2') == type_active);
+				show = show && (gen_active === null || t.data('gen') == gen_active);
+				show = show && (egg_active === null || t.data('egg') == egg_active);
+				show = show && (obtain_active === null || t.data('obtain') == obtain_active);
+				t.toggleClass('hidden', !show).toggleClass('visible', show);
+			});
+
+			pokemon.filter('.visible').first().addClass('selected');
+
+			families.each(function () {
+				var t = $(this), c = t.find('.visible');
+				t.toggle(c.length != 0);
+			});
+
+			$(window).trigger('scroll');
+		}).on('keydown', function (e) {
+			switch (e.keyCode)
+			{
+				case 13:
+					e.preventDefault();
+					var sel = pokemon.filter('.selected');
+					if (sel.length) location.href = sel.attr('href');
+					break;
+
+				case 9:
+					e.preventDefault();
+					var sel = pokemon.filter('.selected'), v = pokemon.filter('.visible');
+					var m = e.shiftKey ? -1 : 1;
+					var i = v.index(sel);
+
+					sel.removeClass('selected'); //[m]('.visible').first().addClass('selected').length || pokemon.filter('.visible').first().addClass('selected');
+					v.eq(i + m).addClass('selected').length || v[e.shiftKey ? 'last' : 'first']().addClass('selected');
+					break;
+
+				default:
+					// console.log(e.keyCode);
+			}
+		});
+
+		(function () {
+			var target = $('.filter-updated');
+			target.on('click', '.selectors div', function (e) {
+				e.preventDefault();
+				var t = $(this);
+				target.children('.options').children('.' + t[0].className).toggle().siblings().hide();
+			});
+
+			$('.filter-updated .options .types').on('click', '.type', function (e) {
+				e.preventDefault();
+				var t = $(this), type = t.data('type');
+
+				if (type_active == type)
+				{
+					t.removeClass('active').siblings().removeClass('inactive');
+					type_active = null;
+				}
+				else
+				{
+					t.removeClass('inactive').addClass('active').siblings().addClass('inactive').removeClass('active');
+					type_active = type;
+				}
+
+				$('article.search input').trigger('keyup');
+			});
+
+			$('.filter-updated .options .eggs').on('click', '.type', function (e) {
+				e.preventDefault();
+				var t = $(this), egg = t.data('egg');
+
+				if (egg_active == egg)
+				{
+					t.removeClass('active').siblings().removeClass('inactive');
+					egg_active = null;
+				}
+				else
+				{
+					t.removeClass('inactive').addClass('active').siblings().addClass('inactive').removeClass('active');
+					egg_active = egg;
+				}
+
+				$('article.search input').trigger('keyup');
+			});
+
+			$('.filter-updated .options .generations').on('click', '.type', function (e) {
+				e.preventDefault();
+				var t = $(this), gen = t.data('gen');
+
+				if (gen_active == gen)
+				{
+					t.removeClass('active').siblings().removeClass('inactive');
+					gen_active = null;
+				}
+				else
+				{
+					t.removeClass('inactive').addClass('active').siblings().addClass('inactive').removeClass('active');
+					gen_active = gen;
+				}
+
+				$('article.search input').trigger('keyup');
+			});
+
+			$('.filter-updated .options .obtainable').on('click', '.type', function (e) {
+				e.preventDefault();
+				var t = $(this), obtain = t.data('obtain');
+
+				if (obtain_active == obtain)
+				{
+					t.removeClass('active').siblings().removeClass('inactive');
+					obtain_active = null;
+				}
+				else
+				{
+					t.removeClass('inactive').addClass('active').siblings().addClass('inactive').removeClass('active');
+					obtain_active = obtain;
+				}
+
+				$('article.search input').trigger('keyup');
+			});
+		}());
+</script>
+
+<div id="fb-root"></div>
+<script>
+(function(d, s, id) {
+	var js, fjs = d.getElementsByTagName(s)[0];
+	if (d.getElementById(id)) return;
+	js = d.createElement(s); js.id = id;
+	js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.6";
+	fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+<script type="application/ld+json">
+{
+	"@context": "http://schema.org",
+	"@type": "WebSite",
+	"name": "GameInfo",
+	"url": "https://pokemon.gameinfo.io/"
+}
+</script>
+
+<script>/* <![CDATA[ */(function(d,s,a,i,j,r,l,m,t){try{l=d.getElementsByTagName('a');t=d.createElement('textarea');for(i=0;l.length-i;i++){try{a=l[i].href;s=a.indexOf('/cdn-cgi/l/email-protection');m=a.length;if(a&&s>-1&&m>28){j=28+s;s='';if(j<m){r='0x'+a.substr(j,2)|0;for(j+=2;j<m&&a.charAt(j)!='X';j+=2)s+='%'+('0'+('0x'+a.substr(j,2)^r).toString(16)).slice(-2);j++;s=decodeURIComponent(s)+a.substr(j,m-j)}t.innerHTML=s.replace(/</g,'&lt;').replace(/\>/g,'&gt;');l[i].href='mailto:'+t.value}}catch(e){}}}catch(e){}})(document);/* ]]> */</script></body>
+</html>

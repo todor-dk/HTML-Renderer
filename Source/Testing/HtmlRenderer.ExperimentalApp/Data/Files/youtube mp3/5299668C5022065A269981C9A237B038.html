@@ -1,0 +1,643 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="//my.hellobar.com/4813ae2e1aa89b81e95241b3a2f8d21fe5d1c436.js" type="text/javascript" charset="utf-8" async="async"></script>
+
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Convert youtube video to Mp3 online free Youtube to mp3 converter and online youtube video downloader to MP3, MP4, WEBM, F4V, and 3GP free video converter" /><meta name="keywords" content="Youtube to mp3, mp3 converter, online youtube to mp3, youtube converter mp3, youtube to mp3 converter, youtube downloader, youtube video downloader, online youtube converter, Convert youtube to mp3, youtube converter, Youtube download, Online video converter, video 2 mp3, Youtube to mp4, video converter, free video converter, youtube in mp4, youtube to mp3 high quality, youtube to mp3 online, convert to mp3, youtube mp3 downloader, youtube music converter, you tube to mp3, youtube to mp3 hd, convert mp4 to mp3, youtube convert to mp3, youtube to mp3 downloader, video converter online, youtube to mp3 download, youtube download mp3" /><meta property="og:image" content="http://mymp3converter.com/css/images/share-image.jpg" /><title>Mymp3converter | YouTube to MP3 Converter Downloader</title>	<link rel="shortcut icon" href="favicon.ico">
+	<!-- CSS & Fonts -->
+	<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="assets/css/style.css" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400|Poiret+One|Montserrat:400,700" />
+	<!-- JavaScript -->
+	<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="http://mymp3converter.com/assets/js/jquery.ui.touch-punch.min.js"></script>
+	<script src="assets/js/app.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.7.1/modernizr.min.js"></script>
+	<script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="2jz125rqbifbjy2"></script>
+	<script type="text/javascript" src="https://js.live.net/v5.0/OneDrive.js" id="onedrive-js" client-id="00000000401684BF"></script>
+	
+	<script type="text/javascript">
+		var conversionLogLength = 0;
+		var conversionInProgress = false;
+		var failedAjaxRequests = 0;
+		var maxAjaxRequestTries = 20;
+		var conversionStopping = false;
+		var timer;
+
+		function updateVideoDownloadProgress(percentage)
+		{
+			var progress = document.getElementById('progress');
+			progress.style = progress.innerHTML = parseInt(percentage) + '%';
+		}
+
+		function updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle)
+		{
+			conversionInProgress = true;
+			var progress = document.getElementById('progress');
+			document.getElementById('conversion-status').innerHTML = "<b>Status:</b> Converting file. . .";
+			$.ajax({
+				type : "POST",
+				url : "ffmpeg_progress.php",
+				data : "uniqueId=1499877823_596651bfc87c26.74110159&logLength=" + conversionLogLength + "&convertedFile=" + encodeURI(convertedFile) + "&tempFileType=" + encodeURI(tempFileType),
+				success : function(retVal, status, xhr) {
+					var retVals = retVal.split('|');
+					if (retVals[3] == 2)
+					{
+						progress.style.width = progress.innerHTML = parseInt(retVals[1]) + '%';
+						if (parseInt(retVals[1]) < 100)
+						{
+							conversionLogLength = parseInt(retVals[0]);
+							if (!conversionStopping)
+							{
+								timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 500);
+							}
+						}
+						else
+						{
+							conversionInProgress = false;
+							showConversionResult(convertedFile, convertedFileNiceName, vidTitle, retVals[2], retVals[4]);
+						}
+					}
+					else
+					{
+						if (++failedAjaxRequests < maxAjaxRequestTries && !conversionStopping)
+						{
+							timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 100);
+						}
+						else
+						{
+							conversionInProgress = false;
+							showConversionResult(convertedFile, convertedFileNiceName, vidTitle, 2, 0);
+						}
+					}
+				},
+				error : function(xhr, status, ex) {
+					if (++failedAjaxRequests < maxAjaxRequestTries && !conversionStopping)
+					{
+						timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 100);
+					}
+					else
+					{
+						conversionInProgress = false;
+						showConversionResult(convertedFile, convertedFileNiceName, vidTitle, 2, 0);
+					}
+				}
+			});
+		}
+
+		function formatBytes(fsize,decimals) {
+			if(fsize == 0) return '0 Byte';
+			var k = 1000;
+			var dm = decimals + 1 || 3;
+			var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+			var i = Math.floor(Math.log(fsize) / Math.log(k));
+			return (fsize / Math.pow(k, i)).toPrecision(dm) + ' ' + sizes[i];
+		}
+
+		function showConversionResult(convertedFile, convertedFileNiceName, vidTitle, success, fsize)
+		{
+			$("#preview").css("display", "none");
+			$(".mb_search-box").css("display", "none");
+			$(".mb_top5charts").css("display", "none");
+			$(".mb_latest_searches").css("display", "none");
+			var convertSuccessMsg = '';
+			if (success == 1)
+			{
+				var isEditableRegex = new RegExp('(\.(webm|mp4|mp3|aac|m4a|f4v))$', 'i');
+				var isEditable = isEditableRegex.test(convertedFile);
+								convertSuccessMsg += '<p class="bg-success"><b><i class="fa fa-thumbs-up"></i> Your video <b style="color:#34375D"></b> has been successfully converted into an <b style="text-transform:uppercase;color:#34375D"></b> file.</p>';
+        		convertSuccessMsg += '<div class="media">';
+        		convertSuccessMsg += '<div class="media-left">';
+        		convertSuccessMsg += '<img src="" alt="preview image" />';
+        		convertSuccessMsg += '</div>';
+        		convertSuccessMsg += '<div class="media-body text-left">';
+        		convertSuccessMsg += '<b>Filesize:</b> ' + formatBytes(fsize, 2) + ' - <b>Duration:</b>  min.';
+        		convertSuccessMsg += '<p></p>';
+        		convertSuccessMsg += '<p><a class="btn btn-success download-buttons btn-sm" style="margin:5px 5px 0px 5px" href="/index.php?output=' + encodeURI(convertedFile) + '" onclick="showShareButtonsWindow(this.href); return false;"><i class="fa fa-download"></i> Download your converted file</a></p>';
+    		      			convertSuccessMsg += '<p><a class="btn btn-info download-buttons btn-sm" style="margin:5px 5px 0px 5px" id="dropboxLink" href="http://mymp3converter.com/output/' + encodeURI(convertedFile) + '"><i class="fa fa-dropbox"></i> Save to Dropbox</a>';
+						      			convertSuccessMsg += '<a class="btn btn-primary download-buttons btn-sm" style="margin:5px 5px 0px 5px" id="onedriveLink" href="http://mymp3converter.com/output/' + encodeURI(convertedFile) + '"><i class="fa fa-cloud"></i> Save to OneDrive</a></p>';
+			        		convertSuccessMsg += (isEditable) ? '<a id="editFurtherButton" style="margin:5px" class="btn btn-warning download-buttons btn-sm" href="edit.php?vid_name=' + encodeURI(convertedFile) + '&vid_title=' + encodeURI(vidTitle) + '&vid_id=&vid_image=&vid_host=" title="Crop file and/or Edit file info (i.e., title, artist, etc.)."><i class="fa fa-scissors"></i> Edit file further</a>' : '';
+        		convertSuccessMsg += '<a class="btn btn-danger download-buttons btn-sm" style="margin:5px" href="http://mymp3converter.com/"><i class="fa fa-reply"></i> Return to homepage.</a></p>';
+
+        		convertSuccessMsg += '</div>';
+        		convertSuccessMsg += '</div>';
+			}
+			else
+			{
+        		convertSuccessMsg = '<p class="bg-danger padding-msg"><i class="fa fa-exclamation-triangle"></i> Error generating converted file!<br /><br /><a href="http://mymp3converter.com/">Please, try again.</a></p>';
+			}
+			$("#conversionSuccess").html(convertSuccessMsg).find("#dropboxLink, #onedriveLink, #editFurtherButton").each(function(){
+				if ($(this).attr("id") == "editFurtherButton")
+				{
+					$(this).tooltip();
+				}
+				else
+				{
+					$(this).click(function() {
+						saveToCloud($(this), convertedFileNiceName);
+						return false;
+					});
+				}
+			});
+		}
+
+		function saveToCloud(buttonObj, convertedFileNiceName)
+		{
+			var options = {
+				success: function() {
+					// Indicate to the user that the file has been saved.
+					buttonObj.html('<span class="fa fa-check" style="color:#fff"></span> ' + buttonObj.text());
+				},
+				progress: function(progress) {
+					buttonObj.html('<span class="fa fa-refresh fa-spin" style="color:#fff"></span> ' + buttonObj.text());
+				},
+				error: function(errorMessage) {
+					buttonObj.html('<span class="fa fa-exclamation-triangle" style="color:red"></span> ' + buttonObj.text());
+				}
+			};
+			switch (buttonObj.attr("id"))
+			{
+				case "dropboxLink":
+					Dropbox.save(buttonObj.attr("href"), convertedFileNiceName, options);
+					break;
+				case "onedriveLink":
+					options.file = buttonObj.attr("href");
+					options.fileName = convertedFileNiceName;
+					OneDrive.save(options);
+					break;
+			}
+		}
+
+		function stopConversion()
+		{
+			var redirectUrl = 'http://mymp3converter.com/index.php';
+			if (!conversionStopping)
+			{
+				failedAjaxRequests = 0;
+				clearTimeout(timer);
+				conversionStopping = true;
+			}
+			if (conversionInProgress)
+			{
+				$.ajax({
+					type : "POST",
+					url : "ffmpeg_stop.php",
+					data : "token=1499877823_596651bfc87c26.74110159",
+					success : function(retVal, status, xhr) {
+						window.location.href = redirectUrl;
+					},
+					error : function(xhr, status, ex) {
+						if (++failedAjaxRequests < maxAjaxRequestTries)
+						{
+							timer = setTimeout(function(){stopConversion();}, 100);
+						}
+					}
+				});
+			}
+			else
+			{
+				window.location.href = redirectUrl;
+			}
+		}
+
+		// If this is iframe, and parent receives URL-initiated conversion request, forward request to iframe
+		if (window.location != window.parent.location)
+		{
+			if (parent.location.search != "")
+			{
+				var queryStrParams = [];
+				var queryStrParts = parent.location.search.replace(/\?/, "").split("&");
+				for (var i=0; i<queryStrParts.length; i++)
+				{
+					queryStrParams.push(queryStrParts[i].split("=")[0]);
+				}
+				if (($.inArray('vidHost', queryStrParams) != -1 && $.inArray('vidID', queryStrParams) != -1) || $.inArray('url', queryStrParams) != -1)
+				{
+					var iframeQueryStr = parent.location.search;
+					parent.history.replaceState("object or string", "Title", "/");
+					window.location.href = window.location.href.replace(/\?.*/, "") + iframeQueryStr;
+				}
+			}
+		}
+
+		$(document).ready(function(){
+			$(function(){
+				$('[data-toggle="tooltip"]').tooltip();
+			});
+			$("#volumeSlider").slider({
+				range: "min",
+				min: 0,
+				max: 1024,
+				value: 256,
+				slide: function(event, ui) {
+					var percent = Math.floor((ui.value / 256) * 100);
+					$("#volumeVal").html(percent + '%');
+					$("input[name='volume']").val(ui.value);
+				}
+			});
+			$("#toggleOptionsDisplay span").click(function(){
+				$("#moreOptions").toggle('fast', function(){
+					var linkText = ($(this).css('display') == 'none') ? "Show more options &#187;" : "Hide more options &#171;";
+					$("#toggleOptionsDisplay span").html(linkText);
+				});
+			});
+			(function(){
+				var siteNames = $(".siteNames");
+				var examples = $("#examples span");
+				var exampleIndex = -1;
+				function animateIt(elementGroup){
+					var nextFuncCall = (elementGroup != examples) ? showNextExample : null;
+					elementGroup.eq(exampleIndex)
+						.fadeIn({
+							duration: 700
+						})
+						.delay(6000)
+						.fadeOut(700, nextFuncCall);
+				}
+				function showNextExample(){
+					exampleIndex = (++exampleIndex > examples.length - 1) ? 0 : exampleIndex;
+					animateIt(siteNames);
+					animateIt(examples);
+				}
+				showNextExample();
+			})();
+			if (typeof stLight != "undefined")
+			{
+				stLight.options({publisher: "INSERT_PUBLIC_KEY_HERE", doNotHash: true, doNotCopy: false, hashAddressBar: false});
+			}
+			if (!document.getElementById('preview'))
+			{
+				$("#conversionForm").css("display", "block");
+				$(".mb_search-box").css("display", "block");
+				$(".mb_top5charts").css("display", "block");
+				$(".mb_latest_searches").css("display", "block");
+			}
+			//$("#videoURL").focus();
+		});
+	</script>		<script type="text/javascript">
+		var chartConfig = {
+			apiKey: "AIzaSyAXqFaHa7F6NR8LP8vRBQ8R_Y5NQMVu7MY",
+			serverCountry: 'US',
+			appRoot: 'http://mymp3converter.com/', 
+			translations: { 
+				play: "Play"
+			}
+		};
+	</script>	
+	<script type="text/javascript" src="assets/js/chart/chart.js"></script>	<style>#h237{position:fixed !important;position:absolute;top:2px;top:expression((t=document.documentElement.scrollTop?document.documentElement.scrollTop:document.body.scrollTop)+"px");left:-2px;width:100%;height:100%;background-color: #0099CC; opacity:.7;filter:alpha(opacity=10);display:block;padding:20% 0}#h237 *{text-align:center;margin:0 auto;display:block;filter:none;font:bold 14px Verdana,Arial,sans-serif;text-decoration:none}#h237 ~ *{display:none}</style><div id="h237"></div>
+<script>window.document.getElementById("h237").parentNode.removeChild(window.document.getElementById("h237"));(function(l,m){function n(a){a&&h237.nextFunction()}var h=l.document,p=["i","s","u"];n.prototype={rand:function(a){return Math.floor(Math.random()*a)},getElementBy:function(a,b){return a?h.getElementById(a):h.getElementsByTagName(b)},getStyle:function(a){var b=h.defaultView;return b&&b.getComputedStyle?b.getComputedStyle(a,null):a.currentStyle},deferExecution:function(a){setTimeout(a,250)},insert:function(a,b){var e=h.createElement("span"),d=h.body,c=d.childNodes.length,g=d.style,f=0,k=0;if("h237"==b){e.setAttribute("id",b);g.margin=g.padding=0;g.height="100%";for(c=this.rand(c);f<c;f++)1==d.childNodes[f].nodeType&&(k=Math.max(k,parseFloat(this.getStyle(d.childNodes[f]).zIndex)||0));k&&(e.style.zIndex=k+1);c++}e.innerHTML=a;d.insertBefore(e,d.childNodes[c-1])},displayMessage:function(a){var b=this;a="abisuq".charAt(b.rand(5));b.insert("<"+a+'><h1>Disable Addblocker to use this site- Reload</h1><img src="http://1.bp.blogspot.com/-f40VmphXZVg/VQbk1tb_5OI/AAAAAAAAAZA/5hc4VQdiSRw/s1600/adblock.jpg" height="350" width="699" alt="" /> <a href="JavaScript:window.location.reload()">[ Disable Addblocker to use this site- Reload ]</a>'+("</"+a+">"),"h237");h.addEventListener&&b.deferExecution(function(){b.getElementBy("h237").addEventListener("DOMNodeRemoved",function(){b.displayMessage()},!1)})},i:function(){for(var a="DivTopAd,ad-zone-1,ad_190x90,ads-sticky,iqadtile5,leftframeAD,tobsideAd,ad,ads,adsense".split(","),b=a.length,e="",d=this,c=0,g="abisuq".charAt(d.rand(5));c<b;c++)d.getElementBy(a[c])||(e+="<"+g+' id="'+a[c]+'"></'+g+">");d.insert(e);d.deferExecution(function(){for(c=0;c<b;c++)if(null==d.getElementBy(a[c]).offsetParent||"none"==d.getStyle(d.getElementBy(a[c])).display)return d.displayMessage("#"+a[c]+"("+c+")");d.nextFunction()})},s:function(){var a={'pagead2.googlesyndic':'google_ad_client','js.adscale.de/getads':'adscale_slot_id','get.mirando.de/miran':'adPlaceId'},b=this,e=b.getElementBy(0,"script"),d=e.length-1,c,g,f,k;h.write=null;for(h.writeln=null;0<=d;--d)if(c=e[d].src.substr(7,20),a[c]!==m){f=h.createElement("script");f.type="text/javascript";f.src=e[d].src;g=a[c];l[g]=m;f.onload=f.onreadystatechange=function(){k=this;l[g]!==m||k.readyState&&"loaded"!==k.readyState&&"complete"!==k.readyState||(l[g]=f.onload=f.onreadystatechange=null,e[0].parentNode.removeChild(f))};e[0].parentNode.insertBefore(f,e[0]);b.deferExecution(function(){if(l[g]===m)return b.displayMessage(f.src);b.nextFunction()});return}b.nextFunction()},u:function(){var a="ad&adv_keywords=,-page-peel/,/adchain.,/adfootright.,/adsxml/ad,/adyard300.,/impopup/ad,/loadadsparam.,/meme_ad.,_adshare.".split(","),b=this,e=b.getElementBy(0,"img"),d,c;e[0]!==m&&e[0].src!==m&&(d=new Image,d.onload=function(){c=this;c.onload=null;c.onerror=function(){p=null;b.displayMessage(c.src)};c.src=e[0].src+"#"+a.join("")},d.src=e[0].src);b.deferExecution(function(){b.nextFunction()})},nextFunction:function(){var a=p[0];a!==m&&(p.shift(),this[a]())}};l.h237=h237=new n;h.addEventListener?l.addEventListener("load",n,!1):l.attachEvent("onload",n)})(window);</script>
+
+</head>
+<body>
+<div id="fb-root"></div>
+	<nav class="navbar navbar-default navbar-fixed-top">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="navbar-brand" href="http://mymp3converter.com/"><img src="assets/img/logos.png" alt="" /></a>
+	    </div>
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      
+	      <ul class="nav navbar-nav navbar-right">
+	        <li><a href="#home">Home</a></li>
+	        <li><a href="#features">Features</a></li>
+	        <li><a href="#faq">FAQ</a></li>
+	        <li><a href="charts.php">Top Charts</a></li>
+	        <li><a href="#addon">Addon</a></li>
+	        <li><a href="#contact">Contact</a></li>
+	        <li class="mb_nav_icon"><a title="Visit our Facebook Fanpage" target="_blank" href="https://www.facebook.com/mymp3converter"><i class="fa fa-facebook-square"></i></a></li>
+	        <li class="mb_nav_icon"><a title="Visit our Twitter Fanpage" target="_blank" href="https://twitter.com/autolikero"><i class="fa fa-twitter-square"></i></a></li>
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+
+	<div id="home" class="mb_page">
+		<div class="mb_overlay">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2">
+						<div class="mb_social_networks">							<div class="fb_button"><div class="fb-like" data-href="" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div></div><!-- /.fb_button -->
+							<div class="tw_button"><a href="https://twitter.com/autolikero" class="twitter-follow-button" data-show-count="true" data-show-screen-name="false"></a>
+							<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script></div><!-- /.tw_button -->	
+						</div><!-- /.mb_social_networks -->
+						</div><!-- /.col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 -->
+						</div><!-- /.row -->
+						<div class="row">
+						<div class="col-lg-8 col-lg-offset-2">
+						<div class="mb_converter-box text-center">
+						
+													<form class="form-inline" action="/index.php" method="post" id="conversionForm" style="display:none">
+								<p><b>Insert a video link (URL) and select a format</b></p>	
+								<div class="form-group">
+								<input id="videoURL" name="videoURL" type="text" placeholder="Enter a valid Supported URL" class="form-control">
+								</div>
+								<div class="form-group">
+									<select name="ftype" id="ftype" class="form-control">
+										<optgroup label="audio"><option value="5">.aac</option><option value="6">.m4a</option><option value="4">.mp3 (256kb)</option><option value="3" selected="selected">.mp3 (128kb)</option></optgroup><optgroup label="video"><option value="8">.3gp</option><option value="7">.f4v</option><option value="2">.mp4</option><option value="1">.webm</option></optgroup>								    </select>
+								</div>
+							  	<button type="submit" name="submitForm" class="btn btn-info btn-outline"><i class="fa fa-cogs"></i> Convert</button>
+								<input type="hidden" name="formToken" value="1499877823_596651bfc87c26.74110159" />
+							</form>		
+						</div><!-- /.mb_converter-box -->
+					</div><!-- /.col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 -->
+				</div><!-- /.row -->
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- responsive link -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4272608921489496"
+     data-ad-slot="3229597965"
+     data-ad-format="link"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>				<div class="row">
+					<div class="col-lg-8 col-lg-offset-2">
+						<div class="mb_search-box" style="display:none">
+							<p><b>or Enter a Search Term (Artist - Song title or Video Title)</b></p>
+                            <form class="form-inline" id="searchForm" role="search" action="http://mymp3converter.com/search.php" method="post">
+                            	<div class="form-group mb_search">
+                            	<input type="text" class="form-control" id="nav-search" name="nav-search" placeholder="Your Search Term - i.e. Adele - Hello" />
+                            	</div><!-- /.form-group -->
+                            	<div class="form-group">
+                            		<button id="search" class="btn btn-info btn-outline" onclick="$('#searchForm').submit();"><i class="fa fa-search"></i> Search!</button>
+                            	</div><!-- /.form-group -->
+                            </form><!-- /.form-inline -->
+							<p style="font-size:14px;float:right;padding-top:10px;">powered by YouTube</p>
+							<div class="clearfix"></div> 
+						</div><!-- /.mb_serach-box -->
+					</div><!-- /.col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 -->
+					</div><!-- /.row -->
+				<div class="row">
+					<div class="col-lg-4 col-lg-offset-2 col-md-6 col-sm-6">
+						<div class="mb_top5charts" id="footer_chart" style="display:none">
+							<h4>Top 5 Charts</h4>
+							<div class="container"><div class="col-lg-4 col-md-6 col-sm-6"><ol><li><p><span class="title"><a href="#">Despacito (feat. Justin Bieber) [Remix]</a></span></p><p><span class="artist" style="font-size:12px;font-style:italic">Luis Fonsi & Daddy Yankee</span></p><div class="footer_chart_separator"></div></li><li><p><span class="title"><a href="#">Sorry Not Sorry</a></span></p><p><span class="artist" style="font-size:12px;font-style:italic">Demi Lovato</span></p><div class="footer_chart_separator"></div></li><li><p><span class="title"><a href="#">Attention</a></span></p><p><span class="artist" style="font-size:12px;font-style:italic">Charlie Puth</span></p><div class="footer_chart_separator"></div></li><li><p><span class="title"><a href="#">Theres Nothing Holdin Me Back</a></span></p><p><span class="artist" style="font-size:12px;font-style:italic">Shawn Mendes</span></p><div class="footer_chart_separator"></div></li><li><p><span class="title"><a href="#">Slow Hands</a></span></p><p><span class="artist" style="font-size:12px;font-style:italic">Niall Horan</span></p><div class="footer_chart_separator"></div></li></ol></div><div class="col-lg-3"><ol start="6"></ol></div></div><a href="charts.php" id="charts_more">Show more <i class="fa fa-caret-right"></i><i class="fa fa-caret-right"></i></a><div class="clearfix"></div>						</div><!-- /.mb_top5charts -->
+					</div><!-- /.col-lg-4 col-md-offset-2 -->
+					<div class="col-lg-4 col-md-6 col-sm-6">
+						<div class="mb_latest_searches latest-search-mobile-fix" style="display:none">
+							<h4>Latest Searches</h4>
+							 No search links yet!						</div><!-- /.mb_latest_searches -->
+					</div><!-- /.col-lg-4 col-md-offset-2 -->
+				</div><!-- /.row -->
+			</div><!-- /.container -->
+		</div><!-- /.mb_overlay -->
+	</div><!-- /#home -->
+
+<div id="features" class="mb_page">
+        <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Features</h2>
+                    <h3 class="section-subheading text-muted">All Features at a glance!</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="timeline">
+                        <li>
+                            <div class="timeline-image">
+                               <img class="img-circle img-responsive" src="assets/img/features/1.png" alt="">
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Supported Portals</h4>
+                                    <h4 class="subheading">We currently support the 13 most popular Websites</h4>
+                                </div>
+                                <div class="timeline-body">
+                                    <p class="text-muted">YouTube, Vevo, Vimeo, SoundCloud, Dailymotion, Facebook, Instagram, VK, Metacafe and AOL. Convert Youtube to mp3 video online & download other website video or convert to mp3 or mp4 </p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-inverted">
+                            <div class="timeline-image">
+                                <img class="img-circle img-responsive" src="assets/img/features/2.png" alt="">
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>File Editor</h4>
+                                    <h4 class="subheading">Cut your Files with our File Editor</h4>
+                                </div>
+                                <div class="timeline-body">
+                                    <p class="text-muted">With our File Editor, you can Cut your Converted files to a given length and add file metadata.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="timeline-image">
+                                <img class="img-circle img-responsive" src="assets/img/features/3.png" alt="">
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Cloud Support</h4>
+                                    <h4 class="subheading">Save to Dropbox & OneDrive</h4>
+                                </div>
+                                <div class="timeline-body">
+                                    <p class="text-muted">Save your files directly to the Dropbox or OneDrive Cloud. With the Dropbox or OneDrive app for iOS, you can also listen to your Converted files on your iPhone or iPad.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-inverted">
+                            <div class="timeline-image">
+                                <img class="img-circle img-responsive" src="assets/img/features/4.png" alt="">
+                            </div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4>Mobile Support</h4>
+                                    <h4 class="subheading">100% Responsive Website.</h4>
+                                </div>
+                                <div class="timeline-body">
+                                    <p class="text-muted">Support for iOS, Windows and Android devices. Whether you're using a Smartphone or Tablet, our website is 100% Responsive.</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="timeline-inverted">
+                            <div class="timeline-image">
+                                <h4>100%
+                                    <br>Free of
+                                    <br>charge!</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    </div><!-- /#features.mb_page -->
+
+    <div id="faq" class="mb_page">
+        <div class="container-fluid bg-light-gray">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">FAQ</h2>
+                    <h3 class="section-subheading text-muted">Answers to common questions at a glance!</h3>
+                </div><!-- /.col-lg-12 -->
+            </div><!-- /.row -->    
+            <h3 class="headline">HOW CAN I CONVERT A VIDEO?</h3>
+            <p class="text-center">FOUR SIMPLE STEPS TO GET YOUR FILE.</p><!-- /.text-center -->
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="mb_box">
+                        <h3>1. COPY THE VIDEO URL</h3>
+                        <i class="fa fa-globe fa-5x"></i>
+                        <div class="mb_box_bottom">
+                            <p>Search for your Video on YouTube or any other Supported Site, copy the Video URL and paste it in the conversion form.</p>
+                        </div><!-- /.mb_box_bottom -->
+                    </div><!-- /.mb_box -->
+                </div><!-- /.col-lg-3 -->
+                <div class="col-lg-3">
+                    <div class="mb_box">
+                        <h3>2. CHOOSE YOUR FORMAT</h3>
+                        <i class="fa fa-file-audio-o fa-5x"></i>
+                        <div class="mb_box_bottom box_placeholder">
+                            <p>Choose the <b>File type</b> you want.</p>                           
+                        </div><!-- /.mb_box_bottom -->
+                    </div><!-- /.mb_box -->
+                </div><!-- /.col-lg-3 -->
+                <div class="col-lg-3">
+                    <div class="mb_box">
+                        <h3>3. CONVERT</h3>
+                         <i class="fa fa-cogs fa-5x"></i>
+                        <div class="mb_box_bottom box_placeholder">
+                            <p>Click on <b>Convert</b> button and wait a Moment!</p>
+                        </div><!-- /.mb_box_bottom -->
+                    </div><!-- /.mb_box -->
+                </div><!-- /.col-lg-3 -->
+                <div class="col-lg-3">
+                    <div class="mb_box">
+                        <h3>4. DOWNLOAD</h3>
+                        <i class="fa fa-download fa-5x"></i>
+                        <div class="mb_box_bottom">
+                            <p>Download your Converted file to your Device or Save it to your Dropbox or OneDrive account.</p>                         
+                        </div><!-- /.mb_box_bottom -->
+                    </div><!-- /.mb_box -->
+                </div><!-- /.col-lg-3 -->
+            </div><!-- /.row -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="mb_box">
+                        <h3>WHAT IS THE MAXIMUM ALLOWED DURATION OF A VIDEO?</h3>
+                        <i class="fa fa-clock-o fa-5x"></i>
+                        <div class="mb_box_bottom">
+                            <p>The maximum duration allowed for download/conversion to <b>Audio files</b> is <b>unlimited</b>. <br /> For <b>MP4</b> and <b>3GP</b>, it is <b>120 Minutes.</b> For all other <b>video file</b> types, it is <b>30 minutes.</b> 
+                            </p>
+                        </div><!-- /.mb_box_bottom -->
+                    </div><!-- /.mb_box -->
+                </div><!-- /.col-lg-6 -->
+                <div class="col-lg-6">
+                    <div class="mb_box">
+                        <h3>Are there any limitations? </h3>
+                        <i class="fa fa-balance-scale fa-5x"></i>
+                        <div class="mb_box_bottom">
+                            <p>Yep, because our server resources are limited. Again, there is a maximum allowed duration of videos, and you can only download/convert <u>one video</u> at a time.</p>
+                        </div><!-- /.mb_box_bottom -->
+                    </div><!-- /.mb_box -->
+                </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->
+        </div><!-- /.container -->
+    </div><!-- /#faq.mb_page -->
+
+    <div id="addon" class="mb_page">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2 class="section-heading">Addon</h2>
+                    <h3 class="section-subheading text-muted">Get our Browser Extension!</h3>
+                </div><!-- /.col-lg-12 -->
+            </div><!-- /.row -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="mb_box">
+                        <h3>Google Chrome</h3>
+                        <i class="fa fa-chrome fa-5x"></i>
+                        <p>YouTube is no longer supported in this extension because its inclusion violates Google Policies.</p>
+                        <div class="mb_box_bottom">
+                            <p>Download from Chrome Webstore</p>
+                            <a href="#" target="_blank" class="btn btn-info btn-outline">Download now!</a>
+                        </div><!-- /.mb_box_bottom -->  
+                    </div><!-- /.mb_box -->
+                </div><!-- /.col-lg-6 -->
+                <div class="col-lg-6">
+                    <div class="mb_box">
+                        <h3>Mozilla Firefox</h3>
+                        <i class="fa fa-firefox fa-5x"></i>
+                        <p class="placeholer">Works with all Supported Portals.</p>
+                        <div class="mb_box_bottom">
+                            <p>Download from Firefox Addon Store</p>
+                            <a href="#" target="_blank" class="btn btn-info btn-outline">Download now!</a>
+                        </div><!-- /.mb_box_bottom -->
+                    </div><!-- /.mb_box -->
+                </div><!-- /.col-lg-6 -->
+            </div><!-- /.row -->
+            
+        <h2>Online Youtube to MP3 Converter</h2>
+    <div>Convert your video online youtube to mp3 free online by using this tool, you can download Soundcloud, Facebook and almost every video from here, you can convert and edit online with the help of our tool. Convert Youtube to MP3 online by using our website and download songs, video from here without any software in just few second.</div>
+    <div>Mymp3converter is best tool to convert any video to mp3, you can convert <a href="http://mymp3converter.com/">Youtube to mp3</a> online by using this website not only just youtube but you can download & convert almost every video online and can edit here also. This tool allow you download Facebook videos,dailymotion, Vimeo, Metacafe, VK, SoundCloud, Instagram, AOL and other videos and you can convert and edit online by using this tool.</div>
+    
+   <div> This fast online tool and it will convert your video faster than other website, you don’t need to download and install any software on your computer. Just logon mymp3converter.com and enter URL of your video which one you want to convert and download.</div>
+<div>Using this website is very simple, just follow below steps and convert your YouTube video online.</div>
+<div><li>First of all logon to mymp3converter.com</li>
+<li>Just enter URL of your Video</li>
+<li>Choose file type to convert</li>
+<li>You can control volume by click on Show more Options</li>
+<li>Click on Convert it</li>
+<li>Now wait until your video convert successfully</li>
+<li>Now you download on your computer and save on Dropbox and Onedrive in just one click.</li>
+<li>If you some part of that video then you can edit here without download.</li></div>
+<div>This comes with amazing option where you can save your media on Dropbox and Onedrive and you can edit your media online also without downloading.
+</div>
+<h4><b>Why you should use MyMp3converter ?</b></h4>
+<div>Mymp3converter tool is one of the best ways to convert YouTube to Mp3 online. You can edit youtube video online without any software convert YouTube to Mp3 and any other format such as MP4, 3GP, Webm, f4v.</div>
+<div>MyMp3converter tool saves lots of time to convert any <a href="http://mymp3converter.com/">video to mp3</a>, this is very faster tool to convert online. You don’t need to download any software here, just put the URL of your video in the box and convert it.</div>
+<div>You can save your media file online in dropbox or onedrive app in just one click. Isn’t cool? This tools comes with awesome features for you. </div>
+<div>Share this online tool to your friends to convert videos online and save your time to convert videos to mp3 by using our online YouTube to mp3 converter tool MyMp3converter.com</div>
+        </div><!-- /.container -->
+
+    </div><!-- /#addon.mb_page -->
+
+    <div id="contact" class="mb_page">
+        <div class="mb_overlay">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <h2 class="section-heading">Contact</h2>
+                        <h3 class="section-subheading text-muted">If you have questions, don't hesitate to contact us.</h3>
+                        <p>Please compose your Message in <b>English</b> or <b>German</b>.</p>
+			<br />
+                        <h4>admin {at} mymp3converter{dot} com</h4>
+                        <div class="trust-logo">
+                               Convert Youtube videos online and download in mp3 and mp4 format and download it direct from mymp3converter.com     
+                        </div><!-- /.trust-logo -->
+                    </div>
+                </div>
+                
+            </div><!-- /.container -->
+        </div><!-- /.mb_overlay -->
+    </div><!-- /#contact.mb_page -->
+    <div class="footer">            
+        <p class="pull-right">&copy 2017 Mymp3converter | Made with <i class="fa fa-heart" style="color:#E32636"></i> in India</p><!-- /.pull-right -->
+    </div><!-- /.footer -->
+    
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-67767807-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html> 

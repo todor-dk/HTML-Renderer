@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html ng-app="connect" ng-class="{'force_scroll' : currentPage == '/topic'}" ng-controller="mainController">
+<title>Bitdefender Central</title>
+
+<head>
+
+    <script type="text/javascript">
+        var timerStart = Date.now();
+    </script>
+
+    <base href="/">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Bitdefender Central is a brand new security hub, which allows you to manage your Bitdefender products and protected devices from a single, unified interface." />
+    <meta name="referrer" content="no-referrer">
+    <meta name="apple-itunes-app" content="app-id=969933082">
+    <link rel="apple-touch-icon" sizes="57x57" href="img/favicons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="img/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="img/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="img/favicons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="img/favicons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="img/favicons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="img/favicons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="img/favicons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicons/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="img/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="img/favicons/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="img/favicons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="img/favicons/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="img/favicons/manifest.json">
+    <meta name="msapplication-TileColor" content="#499ff5">
+    <meta name="msapplication-TileImage" content="img/favicons//mstile-144x144.png">
+    <meta name="theme-color" content="#499ff5">
+
+
+    <script type="text/javascript"  src="https://download.bitdefender.com/resources/scripts/ZHRt/4b7ac0a30c6cfe2deb06368f62d41f996c29744e/satelliteLib-3a8d5287cf775324dc6c68719a1ddc96c5a139ba.js"></script>
+    
+    
+    <link rel="stylesheet" type="text/css" href="assets/Central-2.16.992-c2ba2c1.css" />
+    
+    <!-- compiled JavaScript -->
+    
+    <script type="text/javascript" src="assets/localization/Central-locale-2.16.992-c2ba2c1.js"></script>
+    
+    <script type="text/javascript" src="assets/Central-2.16.992-c2ba2c1.js"></script>
+    
+
+</head>
+
+<body>
+    <div class="site_wrap">
+        <!-- LOADER HERE -->
+        <div ng-show="generalLoading" id="overlay"></div>
+        <div ng-show="generalLoading" id="loading" class="loader">
+            <!-- <span class="dotted"></span>
+            <span class="dotted"></span>
+            <span class="dotted"></span> -->
+            <img src="img/rolling.gif" style="width:30px; height:30px; display: block;" />
+        </div>  
+        <!-- LOADER HERE -->
+        <nav class="top_nav">
+            <div class="logo_container">
+                <a ng-href="{{config.centralSite}}"><img ng-src={{config.logo}} alt="Bitdefender Central" class="logo"></a>
+            </div>
+            <div class="notifications_avatar" ng-class="{'widthFix' : (!user_name || user_name === '') && (user_name != '' && user_name != undefined)}">
+                <div class="user_avatar user_name_container" ng-click="toggleItem('user_menu')">
+                    <div class="user_name" ng-show="user_name && user_name != ''">{{user_name}}</div>
+                    <div class="user_name" ng-show="user_name == '' || user_name == undefined">{{user_email}}</div>
+                </div>
+                <div class="user_avatar " id="user_avatar" ng-click="toggleItem('user_menu')">                   
+                    <i class="connect_icon_boy"></i><img class="hidden" src="" alt="">
+                </div>
+                <div ng-if="config.notifications" class="notifications_icon" id="notifications_icon" ng-click="toggleItem('notification_sidebar')">
+                    <i class="connect_icon_notification"></i>
+                    <div id="notifications" ng-show="notificationsGet.length > 0  && notificationsCount > 0" ng-class="{'circle_extended' : notificationsCount > 99}" class="circle">{{notificationsCount}}</div>
+                </div>
+            </div>
+        </nav>
+        <!-- <ng-view id="page-main-content" ng-class="{'main_content': true, 'static_force' : currentPage == '/parentaladvisor'}" infinite-scroll="broadcastPageScroll()" infinite-scroll-distance="0.5"></ng-view> -->
+        <ng-view id="page-main-content" ng-class="{'main_content': true, 'static_force' : currentPage == '/parentaladvisor'}"></ng-view>
+    </div>
+
+    <input type="checkbox" ng-model="menuState" ng-show="!(currentPage == '/login' || currentPage == '/change')" id="nav_trigger" class="nav_trigger" />
+    <label id="main-nav-trigger" for="nav_trigger" ng-click="clearMenus();toggleBurger('burger-menu')">
+
+        
+            <div class="burger-menu" id="burger-menu"  >
+                <div class="burger"></div>  
+            </div>
+    </label>
+
+
+
+    <div class="left_nav" ng-show="!(currentPage == '/login' || currentPage == '/change')" ng-class="{'open' : menuState == true}" id="left_nav">
+        <div class="menu_content">
+            <ul ng-click="toggleBurger('burger-menu')">
+                <li></li>
+              <li ng-if="activityPage" class="ng-scope">
+                
+                    <a ng-class="{'selected': currentPage == '/activity'}" ng-href="/activity" ng-click="closeMenu()" class="">
+                    <i class="connect_icon_activity left_nav_icon"></i>
+                    {{l10n('activity.activity')}}
+                    </a>
+                </li>
+            
+                <li>
+                    <div class="pulsating_dot pulse_devices" ng-class="{
+                    'NoactivityNotech' : (!config.techassist || !techassistAvailable()) && !activityPage,
+                    'NoactivityYestech' : (config.techassist && techassistAvailable()) && !activityPage,
+                    'YesactivityNotech' : (!config.techassist || !techassistAvailable()) && activityPage,
+                    'Nooffers' : !config.myoffers && (config.techassist && techassistAvailable()) && activityPage,
+                    'NoactivityNotechNooffers' : (!config.techassist || !techassistAvailable()) && !activityPage && !config.myoffers,
+                    'NoactivityYestechNooffers' : (config.techassist && techassistAvailable()) && !activityPage && !config.myoffers,
+                    'YesactivityNotechNooffers' : (!config.techassist || !techassistAvailable()) && activityPage && !config.myoffers}" 
+                    id="b_mydevices" ng-if="onboarding.devices.open " ng-click="handleTooltip('bullet_mydevices');" data-selector=".left_nav ul li:nth-child(1)">
+                        <div class="pulse"></div> 
+                        <div class="dot"></div>
+                    </div>
+                    <a ng-class="{'selected': ['/devices','/protection','/optimizer','/antitheft','/vulnerability','/dashboard'].indexOf(currentPage) > -1 }" ng-href="/devices" ng-click="closeMenu()"><i class="connect_icon_desktop left_nav_icon"></i>{{l10n('devices.main.title')}}</a>
+                </li>
+                <li ng-if="config.parentaladvisor">
+                    <a ng-class="{'selected': ['/parentaladvisor', '/timeline', '/interests', '/activities', '/places', '/friends', '/social', '/parentaladvisor/settings'].indexOf(currentPage) > -1}" ng-href="/parentaladvisor" ng-click="closeMenu()"><i class="connect_icon_parental left_nav_icon"></i>{{l10n('parental.main.title')}}</a>
+                </li>
+                <li ng-if="config.techassist">
+                    <a ng-if="techassistAvailable()" ng-class="{'selected': currentPage == '/techassist'}"  ng-href="/techassist" ng-click="closeMenu()"><i class="connect_icon_tech_assist left_nav_icon" ></i>{{l10n('techassist.main.title')}}</a>
+                </li>
+                <li>
+                    <div class="line"></div>
+                </li>
+                <li ng-if="config.subscriptions">
+                    <div class="pulsating_dot pulse_subscription" ng-class="{
+                    'bullet_support_noTechAssist' : !techAssist ,
+                    'NoactivityNotech' : (!config.techassist || !techassistAvailable()) && !activityPage,
+                    'NoactivityYestech' : (config.techassist && techassistAvailable()) && !activityPage,
+                    'YesactivityNotech' : (!config.techassist || !techassistAvailable()) && activityPage,
+                    'Nooffers' : !config.myoffers && (config.techassist && techassistAvailable()) && activityPage,
+                    'NoactivityNotechNooffers' : (!config.techassist || !techassistAvailable()) && !activityPage && !config.myoffers,
+                    'NoactivityYestechNooffers' : (config.techassist && techassistAvailable()) && !activityPage && !config.myoffers,
+                    'YesactivityNotechNooffers' : (!config.techassist || !techassistAvailable()) && activityPage && !config.myoffers}" 
+                    id="b_mysubscriptions" ng-if="onboarding.subscriptions.open" ng-click="handleTooltip('bullet_mysubscriptions');"  data-selector=".left_nav ul li:nth-child(5)">
+                        <div class="pulse"></div>
+                        <div class="dot"></div>
+                    </div>
+                    <a ng-class="{'selected': currentPage == '/subscriptions' || currentPage == '/details'}" ng-href="/subscriptions" ng-click="closeMenu()"><i class="connect_icon_subscription left_nav_icon" ></i>{{l10n('subscription.my.subscription')}}</a>
+                </li>
+                <li ng-if="config.myoffers" >
+                    <a ng-class="{'selected': currentPage == '/myoffers'}" ng-href="/myoffers" ng-click="closeMenu()"><i class="connect_icon_myoffers left_nav_icon" ></i>{{l10n('offers.main.title')}} 
+                    <div id="notifications" class="circle" ng-show="offers.no > 0 && seenOffers == 'false'">{{ offers.no }}</div></a>
+                </li>
+                <li ng-if="config.support">
+                    <div class="pulsating_dot pulse_support" ng-class="{
+                    'bullet_support_noTechAssist' : !techAssist ,
+                    'NoactivityNotech' : (!config.techassist || !techassistAvailable()) && !activityPage,
+                    'NoactivityYestech' : (config.techassist && techassistAvailable()) && !activityPage,
+                    'YesactivityNotech' : (!config.techassist || !techassistAvailable()) && activityPage,
+                    'Nooffers' : !config.myoffers && (config.techassist && techassistAvailable()) && activityPage,
+                    'NoactivityNotechNooffers' : (!config.techassist || !techassistAvailable()) && !activityPage && !config.myoffers,
+                    'NoactivityYestechNooffers' : (config.techassist && techassistAvailable()) && !activityPage && !config.myoffers,
+                    'YesactivityNotechNooffers' : (!config.techassist || !techassistAvailable()) && activityPage && !config.myoffers}"
+
+                     id="b_support" ng-show="onboarding.support.open" ng-click="handleTooltip('bullet_support');"  data-selector="support_icon">
+                        <div class="pulse"></div>
+                        <div class="dot"></div>
+
+                    </div>
+                    <a ng-class="{'selected': currentPage == '/support'}" ng-href="/support" ng-click="closeMenu()"><i class="connect_icon_help left_nav_icon"></i>{{l10n('main.support')}}</a>
+                </li>
+                <li ng-if="config.feedback">
+                    <a ng-class="{'selected': currentPage == '/feedback'}" ng-click="toFeedback()" href><i class="connect_icon_feedback left_nav_icon"></i>{{l10n('feedback.main.title')}}</a>
+                </li>
+            </ul>
+            <div class="footer">
+                <a ng-if="config.terms" target="_blank" referrerpolicy="unsafe-url" ng-href="{{links.terms()}}">{{l10n('main.terms_of_service')}}</a>
+                <div class="language">
+                    <a href="" id="changeLanguages" ng-click="showLngModal = true;">
+                        <img ng-src="{{selectedLang.flag}}" alt="US Flag">
+                        <span>{{selectedLang.lang}} ({{selectedLang.country}})</span>
+                    </a>
+                </div>
+                <br>
+                <span class="copyright">&#169; {{getYear()}} {{values.manufacturerName}}
+<span class="version">v2.16.992-c2ba2c1</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+        <div ng-show="showLngModal" class="modal" focus-on='showLngModal' tabindex="-1" pressed-esc="showLngModal = false;" id="changeLng">
+        <div class="modal_container">
+            <div class="modal_header">
+                <h1 class="modal_title">{{l10n('account.change.language')}}</h1>
+                <i ng-click="showLngModal = false;" class="connect_icon_close close"></i>
+            </div>
+            <div class="modal_body">
+                <ul>
+                    <li ng-click="changeLang($index,lang)" ng-repeat="(key, lang) in config.languages track by $index">
+                      <img ng-src="{{lang.flag}}" alt="{{lang.label}}" />
+                    {{lang.label}}
+                    </li>
+                </ul>             
+            </div>
+        </div>
+    </div> 
+
+
+    <!-- THE BLUE SCREEN -->
+    <div id="product_deployment_trigger" class="product_deployment" ng-class="{ 'big_guy': addBigGuy }" ng-show="showBlueWelcome"></div>
+    <div id="product_deployment_content_trigger" class="product_deployment_content" ng-show="showBlueWelcome">
+        <!-- <img src="img/beta.svg" alt="Bitdefender Central" class="beta_deployment"> -->
+         <img src="img/bdcentral_logo.svg" alt="Bitdefender Central" class="logo_deployment">
+        <img src="img/connect_B_logo.svg" alt="Deployment Logo" class="deployment_logo">
+        <div class="message">
+            <span class="welcome">{{l10n('main.welcome.thankyou')}}</span>
+            <br/>
+            <span>{{l10n('main.welcome.begin')}}</span>
+        </div>
+    </div>
+    <div class="backdrop" id="backdrop" ng-click="clearMenus()" ></div>
+
+
+
+    <!-- Notifications -->
+    <div class="notification_sidebar_content" id="notification_sidebar">
+        <div class="sidebar" id="notification_sidebar_div">
+            <div class="notification_list_title">
+                <h3>{{l10n('notification.main.title')}}</h3>
+                <i ng-click="showNotificationDropdown()" ng-if="notificationsGet.length > 0" id="menuButtons" class="connect_icon_more more" style="cursor: pointer;"></i>
+
+                    <div class="notification_dropdown" id="notification_dropdown" ng-hide="!notificationsGetAll" ng-class="{'display-notif': !notifDropdown, 'none-notif': notifDropdown}">
+                            <ul>
+                               <li ng-hide="notificationsCount == 0" ng-click="markNotificationsAsRead(notificationsGet,notificationsCount); notifDropdown = false; showNotificationDropdown();"><a href="">{{l10n('notification.mark.read')}}</a>
+                                </li>
+                               <li ng-click="notifDropdown = false; showNotificationDropdown(); deleteNotifications();"><a href="" id="deleteAllNotif" class="delete_notif" ng-click="deleteAllNotifications()">{{l10n('notification.delete')}}</a></li>
+                            </ul>
+                    </div>
+            </div>
+            <div class="notification_empty_area" ng-hide="!notificationsGet.length == 0">
+                <div>
+                    <i class="connect_icon_notification"></i>
+                    <br>
+                    <br>
+                    <span>{{l10n('notification.no.notification')}}</span>
+                    <br>
+                </div>
+            </div>
+            <div class="notification_list">
+
+                <div class="notif" ng-repeat="(key, notif) in notificationsGet track by $index" ng-click="toggleDetails(notif)" ng-class="{'cursorNone' : (notif.app_fields.notification_params.notification_type === 'weak_password') || (notif.app_fields.notification_params.notification_type === 'vulnerable_iot') || (notif.app_fields.notification_params.notification_type === 'ransomware') || (notif.app_fields.notification_params.notification_type === 'malicious_apps') || (notif.app_fields.notification_params.notification_type === 'malicious_file') || (notif.app_fields.notification_params.notification_type === 'malicious_app') || (notif.app_fields.notification_params.notification_type === 'malicious_url')}">
+                     <div class="when" ng-show="notificationDayhtml[$index]"> {{notif.app_fields.connect_target.notification_id}} {{notif.app_fields.timestamp | timeAgo}}</div>
+                        <div ng-click="readNotification(notif);" class="notification_content u-cf" 
+                                 ng-class="{inactive: notif.ack, 'notification-box': notif.box}">
+                            <div class="notification_text">
+                                <div class="u-cf u-full-width">
+                                    <div class="profile_image" ng-if="notif.display_name || notif.app_fields.notification_params.display_name || notif.device_profile.profile_name" >
+                                           <div class="profile image">
+                                                <i ng-if="!notif.device_profile.profile_pic" class="connect_icon_generic_device" ng-class="{'connect_icon_android': notif.device_os == 'android', 'connect_icon_windows': notif.device_os == 'windows', 'connect_icon_apple': notif.device_os == 'osx'}"></i>
+                                                <div class="imgContainer" ng-if="notif.device_profile.profile_pic">
+                                                <img class="roundImage" class="" ng-if="notif.device_profile.profile_pic" ng-src="{{notif.device_profile.profile_pic}}">
+                                                </div>
+                                            </div>
+                                        <p class="notification_name" ng-show="(!isBox(notif.app_fields.notification_params.notification_type) && noNotificationsDetails(notif)) || notif.display_name">{{notif.display_name}}</p>
+                                        <p class="notification_name" ng-show="isBox(notif.app_fields.notification_params.notification_type)">{{notif.app_fields.notification_params.display_name}}</p>
+                                        <p class="notification_name" ng-show="!noNotificationsDetails(notif) && notif.device_profile.profile_name">{{notif.device_profile.profile_name}}</p>
+                                    </div>
+
+                                    <div class="profile_image"  ng-if="(!notif.display_name && !notif.app_fields.notification_params.display_name && !notif.device_profile.profile_name) && (notif.profile_name || notif.profile_pic)">
+                                           <div class="profile image">
+                                                <i ng-if="!notif.profile_pic" class="connect_icon_generic_device" ng-class="{'connect_icon_android': notif.device_os == 'android', 'connect_icon_windows': notif.device_os == 'windows', 'connect_icon_apple': notif.device_os == 'osx'}"></i>
+                                                <div class="imgContainer" ng-if="notif.profile_pic">
+                                                <img class="roundImage" class="" ng-if="notif.profile_pic" ng-src="{{notif.profile_pic}}">
+                                                </div>
+                                            </div>
+                                        <p class="notification_name" ng-show="notif.profile_name">{{notif.profile_name}}</p>
+                                    </div>
+
+                                    <div class="notification_time">{{convertTime(notif.app_fields.timestamp)}}</div>
+                                </div>
+                                <div class="notification_info">
+                                    <h5 class="nd_title nd_title_list">{{notif.title}}</h5>
+                                    <div class="relative">
+                                        <span class="bulina" ng-show="!notif.ack"></span>
+                                        <p>{{notif.user_fields.text}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+
+                <!--notification details -->
+                <div class="notification_details_sidebar" ng-if="currentnotif" id="notification_details_sidebar" ng-class="{' sidebar' : !notifDetails, ' slide sidebar' : notifDetails}">
+                    <div class="nd_header">
+                       <i class="connect_icon_arrow-back" id="notificationDetailsBackArrow" ng-click="toggleDetails(currentnotif); backToNotifications()"></i>
+                       <h5 class="nd_title">{{currentnotif.title}}</h5>
+                       <span class="nd_date">{{currentnotif.app_fields.timestamp | date:'medium'}}</span>
+                       <p class="nd_description">{{currentnotif.user_fields.text}}</p>
+                       <div class="user_device_name">
+                             <div class="profile_image" ng-class="{'cursorPointer' : cursorPointer}" ng-if="(currentnotif.display_name || isBox(currentnotif.app_fields.notification_params.notification_type)) && (currentnotif.display_name || currentnotif.app_fields.notification_params.display_name || currentnotif.device_profile.profile_name)" ng-click="toDevice(currentnotif.deviceObj.device_crc);"> 
+                                  <div class="profile image">
+                                    <i  class="connect_icon_generic_device" ng-class="{'connect_icon_android': currentnotif.device_os == 'android', 'connect_icon_windows': currentnotif.device_os == 'windows', 'connect_icon_apple': currentnotif.device_os == 'osx'}"></i>
+                                   <!--  <div class="imgContainer" ng-if="currentnotif.device_profile.profile_pic">
+                                    <img class="roundImage" class="" ng-if="currentnotif.device_profile.profile_pic" ng-src="{{currentnotif.device_profile.profile_pic}}">
+                                    </div> -->
+                                </div>
+                                <p ng-show="!isBox(currentnotif.app_fields.notification_params.notification_type) && noNotificationsDetails(currentnotif)">{{currentnotif.display_name}}</p>
+                                <p ng-show="isBox(currentnotif.app_fields.notification_params.notification_type)">{{currentnotif.app_fields.notification_params.display_name}}</p>
+                                <p ng-show="!noNotificationsDetails(currentnotif)">{{currentnotif.display_name}}</p>
+                            </div>
+
+                              <div class="profile_image" ng-if="currentnotif.device_profile.profile_name || !noNotificationsDetails(currentnotif)">
+                                 <div class="profile image">
+                                    <i ng-if="!currentnotif.device_profile.profile_pic" class="connect_icon_generic_device" ng-class="{'connect_icon_android': currentnotif.device_os == 'android', 'connect_icon_windows': currentnotif.device_os == 'windows', 'connect_icon_apple': currentnotif.device_os == 'osx'}"></i>
+                                    <div class="imgContainer" ng-if="currentnotif.device_profile.profile_pic">
+                                    <img class="roundImage" class="" ng-if="currentnotif.device_profile.profile_pic" ng-src="{{currentnotif.device_profile.profile_pic}}">
+                                    </div>
+                                </div>
+                                <p ng-show="!isBox(currentnotif.app_fields.notification_params.notification_type) && noNotificationsDetails(currentnotif)">{{currentnotif.device_profile.profile_name}}</p>
+                                <p ng-show="!noNotificationsDetails(currentnotif)">{{currentnotif.device_profile.profile_name}}</p>
+                            </div>
+
+                            <div class="profile_image" ng-if="(!currentnotif.display_name && !currentnotif.app_fields.notification_params.display_name && !currentnotif.device_profile.profile_name) && (currentnotif.profile_name || currentnotif.profile_pic)">
+                                <div class="profile image">
+                                    <i ng-if="!currentnotif.profile_pic" class="connect_icon_generic_device" ng-class="{'connect_icon_android': currentnotif.device_os == 'android', 'connect_icon_windows': currentnotif.device_os == 'windows', 'connect_icon_apple': currentnotif.device_os == 'osx'}"></i>
+                                    <div class="imgContainer" ng-if="currentnotif.profile_pic">
+                                    <img class="roundImage" class="" ng-if="currentnotif.profile_pic" ng-src="{{currentnotif.profile_pic}}">
+                                    </div>
+                                </div>
+                                <p class="notification_name" ng-show="currentnotif.profile_name">{{currentnotif.profile_name}}</p>
+                            </div>
+                       </div>
+                    </div>
+
+                    <div class="nd_infos" ng-hide="">
+                        <div class="when info">{{l10n('notification.details.threat.info')}}</div>
+                        <div class="currentnotif.notificationDetailsInfo" ng-show="!currentnotif.notificationDetailsInfo">
+                            <p class="bold" ng-hide="!ThreatsFoundText"> {{ThreatsFoundText}} </p> 
+                            <p class="red" href="" ng-hide="!ThreatsFound"> {{ThreatsFound}}</p> 
+                            <p class="bold" ng-hide="!currentnotif.ThreatsTypeText" ng-bind-html="toTrustedHTML(currentnotif.ThreatsTypeText)">{{currentnotif.ThreatsTypeText}} </p> 
+                            <p class="red" href="" ng-hide="!ThreatsType"> {{ThreatsType}} </p> 
+                            <p class="information" ng-hide="!ThreatsInformation" ng-bind-html="ThreatsInformation"> {{ThreatsInformation}} </p>
+                            <!-- <button class="action_button notifDetailsBttn" ng-click="clickButtonNotifDetails()"></button> -->
+                        </div>
+
+                        <p class="information" ng-show="currentnotif.notificationDetailsInfo" ng-bind-html="toTrustedHTML(currentnotif.notificationDetailsInfo)"></p>
+                    </div>
+
+
+                    <div class="nd_tips" ng-show="currentnotif.notificationDetailsTips ">
+                        <div class="when info">{{l10n('notification.details.tips.title')}}</div>
+                        <p ng-bind-html="currentnotif.notificationDetailsTips"></p>
+                    </div>
+                </div>
+
+            <!-- end notification details -->
+                           
+                <a href="#" id="showMoreNotification" ng-click="tenNotification()" ng-show="showMoreTrue" class="showmore">{{l10n('notification.button.show.more')}}</a>
+            </div>
+
+        </div>
+ 
+    </div>
+    <!-- End notifications -->
+   
+    <div class="user_menu_container" id="user_menu">
+        <div class="sidebar" >
+            <div class="user_info">
+                <div class="name">{{user_name}}</div>
+                <div class="email">{{user_email}}</div>
+            </div>
+            <ul>
+                <li><a href ng-href="/account" ng-click="clearMenus();"><i class="connect_icon_account"></i>{{l10n('account.main.title')}}</a></li>
+                <li class="hidden"><a href=""><i class="connect_icon_shield"></i>{{l10n('security.main.title')}}</a></li>
+                <li>
+                    <a ng-click="logout(); clearMenus();" href=""><i class="connect_icon_logout"></i>{{l10n('redeem.meniu.logout')}}</a>
+                </li>
+                <li class="myaccount_separator"></li>
+                <li class="myaccount_onboarding hide_on_mobile" ng-if="devicesOpen == open">
+                    <a ng-click="clearMenus();activateOnboarding();" href=""><i class="connect_icon_help"></i>{{l10n('account.main.onboarding.title')}}
+                    <span>{{l10n('account.main.onboarding.description')}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal hidden" id="notification_box_modal">
+        <div class="modal_container">
+            <div class="modal_header">
+                <h1 ng-bind="values.manufacturerName + '-' + values.productNameBoxCl" class="modal_title">Bitdefender BOX</h1>
+                <i ng-click="hideModal('notification_box_modal')" class="connect_icon_close close"></i>
+            </div>
+            <div class="modal_body">
+                <span ng-bind="l10n('box.notification.text').toString().replace('{0}', values.manufacturerName).replace('{1}', values.productNameBoxCl).replace('{2}', values.productNameBoxCl)" class="warning_message">Notifications for Bitdefender BOX protected devices can be handled via BOX mobile app.</span>
+                <br/>
+                <span ng-bind="l10n('box.notification.donthavebox').toString().replace('{1}', values.productNameBoxCl)" class="learn_more">Don't have the BOX app? </span>
+                <a referrerpolicy="unsafe-url" href="https://www.bitdefender.com/box/" target="_blank">{{l10n('box.notification.learnmore')}}</a>
+            </div>
+            <br/>
+            <div class="action">
+                <button ng-bind-html="l10n('box.notification.close');" ng-click="hideModal('notification_box_modal')" class="action_button">Close</button>
+            </div>
+    </div>
+    </div>        
+
+
+ <div class="modal hidden" id="hide_iph_confirm">
+        <div class="modal_container">
+            <div class="modal_header">
+                <h1 class="modal_title">{{l10n('help.messages.confirm.title')}}</h1>
+                <i ng-click="hideModal('hide_iph_confirm')" class="connect_icon_close close"></i>
+            </div>
+            <div class="modal_body">
+               <span class="warning_message">{{l10n('help.messages.confirm.description')}}</span><br/>
+                <span class="warning_message">{{l10n('help.messages.confirm.instructions')}} <br/><b>{{l10n('help.messages.confirm.instructions_location')}}</b></span>
+                
+            </div>
+            <br/>
+            <div class="action">
+                <button ng-click="hideModal('hide_iph_confirm');" class="action_button">{{l10n('dashboard.main.cancel')}}</button>
+                <button ng-click="closeInProductHelp();" class="action_button blue">{{l10n('help.messages.confirm.action')}}</button>
+            </div>
+    </div>
+    </div>    
+    
+    <central-onboarding></central-onboarding> <!-- New onboarding directive -->
+
+
+
+    <!-- DO NOT COMMENT THIS -->
+    <div ng-show="!rootLoaded" class="overlay"></div>
+    <!-- <div ng-show="true" class="overlay_end"></div> -->
+    <!-- DO NOT COMMENT THIS -->
+    <div class="error_tooltip" id="error_tooltip"></div>
+    <div class="toast" id="toast"></div>
+
+
+    <script type="text/javascript">
+         $(document).ready(function() {
+             console.log("Time until DOMready: ", Date.now()-timerStart);
+         });
+         $(window).load(function() {
+             console.log("Time until everything loaded: ", Date.now()-timerStart);
+         });
+    </script>
+
+       
+     <script type="text/javascript">_satellite.pageBottom();</script>
+    
+</body>
+</html>

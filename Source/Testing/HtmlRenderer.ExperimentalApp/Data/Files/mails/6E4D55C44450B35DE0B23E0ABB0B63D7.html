@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- Copyright (c) 2011 Microsoft Corporation.  All rights reserved. -->
+<!-- OwaPage = ASP.auth_logoff_aspx -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"> 
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; CHARSET=utf-8">
+<title>Outlook Web App - Sign out</title>
+<link rel="shortcut icon" href="/owa/auth/15.0.1263/themes/resources/favicon.ico" type="image/x-icon">
+<link type="text/css" rel="stylesheet" href="/owa/auth/15.0.1263/themes/resources/logon.css">
+<link type="text/css" rel="stylesheet" href="/owa/auth/15.0.1263/themes/resources/owafont.css">
+<script type="text/javascript" src="/owa/auth/15.0.1263/scripts/premium/flogon.js"></script>
+<script type="text/javascript">
+	var a_fCAC = 0;
+	var a_fEnbSMm = 0;
+/// <summary>
+/// Is Mime Control installed?
+/// </summary>
+function IsMimeCtlInst(progid)
+{
+	if (!a_fEnbSMm)
+		return false;
+
+	var oMimeVer = null;
+
+	try 
+	{ 
+		oMimeVer = new ActiveXObject(progid); 
+	}
+	catch (e)
+	{ 
+	}
+
+	if (oMimeVer != null)
+		return true;
+	else
+		return false;
+}
+
+/// <summary>
+/// Log off mime control if it presents
+/// </summary>
+function RndMimeCtl()
+{
+	if (IsMimeCtlInst("MimeBhvr.MimeCtlVer"))
+		RndMimeCtlHlpr("MimeNSe2k3", "D801B381-B81D-47a7-8EC4-EFC111666AC0", "MIMEe2k3", "mimeLogoffE2k3");
+
+	if (IsMimeCtlInst("OwaSMime.MimeCtlVer"))
+		RndMimeCtlHlpr("MimeNSe2k7sp1", "833aa5fb-7aca-4708-9d7b-c982bf57469a", "MIMEe2k7sp1", "mimeLogoffE2k7SP1");
+
+	if (IsMimeCtlInst("OwaSMime2.MimeCtlVer"))
+		RndMimeCtlHlpr("MimeNSe2k9", "4F40839A-C1E5-47E3-804D-A2A17F42DA21", "MIMEe2k9", "mimeLogoffE2k9");
+}
+
+/// <summary>
+/// Helper function to factor out the rendering of the S/MIME control.
+/// </summary>
+function RndMimeCtlHlpr(objid, classid, ns, id)
+{
+	document.write("<OBJECT id='" + objid + "' classid='CLSID:" + classid + "'></OBJECT>");
+	document.write("<?IMPORT namespace='" + ns + "' implementation=#" + objid + ">");
+	document.write("<" + ns + ":Logoff id='" + id + "' style='display:none'/>");
+}
+
+/// <summary>
+/// Onload handler for logoff page - clear credentials
+/// </summary>
+function chkAuth()
+{
+	if (a_fCAC)
+	{
+		try
+		{
+			Owa.ExecCommand.execute(document, "ClearAuthenticationCache", false);
+		}
+		catch (e) {}
+	}
+
+	LogoffMime();
+}
+
+window.onload = chkAuth;
+</script>
+</head>
+<body class="owaLgnBdy" style="background-color:#3d5fa3; height:100%; width:100%; margin:0px auto;"">
+
+<script type="text/javascript">
+	RndMimeCtl();
+</script>
+
+<table align="center" id="tblMain" cellpadding=0 cellspacing=0>
+	<tr>
+		<td colspan=3>
+			<table cellspacing=0 cellpadding=0 class="tblLgn">
+			<tr>
+				<td class="lgnTL"><img src="/owa/auth/15.0.1263/themes/resources/lgntopl.gif" alt=""></td>
+				<td class="lgnTM"></td>
+				<td class="lgnTR"><img src="/owa/auth/15.0.1263/themes/resources/lgntopr.gif" alt=""></td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td id="mdLft">&nbsp;</td>
+		<td id="mdMid">
+			<table class="mid">
+				<tr><td><hr></td></tr>
+				<tr><td id="tdMsg">
+				You have successfully signed out of Outlook Web App. To help protect your e-mail account, close all browser windows.				
+				</td></tr>
+				<tr><td><hr></td></tr>
+								
+			</table>
+			
+		</td>		
+		<td id="mdRt">&nbsp;</td>
+	</tr>
+	<tr>
+		<td colspan=3>
+			<table cellspacing=0 cellpadding=0 class="tblLgn">
+			<tr>
+				<td class="lgnBL"><img src="/owa/auth/15.0.1263/themes/resources/lgnbotl.gif" alt=""></td>
+				<td class="lgnBM"></td>
+				<td class="lgnBR"><img src="/owa/auth/15.0.1263/themes/resources/lgnbotr.gif" alt=""></td>
+			</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

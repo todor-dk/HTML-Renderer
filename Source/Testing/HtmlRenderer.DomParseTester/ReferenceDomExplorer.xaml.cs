@@ -1,5 +1,8 @@
 ﻿using HtmlRenderer.TestLib.Dom.Persisting;
 using Microsoft.Win32;
+using Scientia.HtmlRenderer;
+using Scientia.HtmlRenderer.Dom;
+using Scientia.HtmlRenderer.Html5.Parsing;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +35,7 @@ namespace HtmlRenderer.DomParseTester
             this.Close();
         }
 
-        private void Load_Click(object sender, RoutedEventArgs e)
+        private void LoadDom_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
             if (!(dlg.ShowDialog(this) ?? false))
@@ -42,6 +45,27 @@ namespace HtmlRenderer.DomParseTester
 
             string txt = File.ReadAllText(dlg.FileName);
             var root = TestLib.Dom.Persisting.TextReader.FromData(txt);
+
+            this.DomTree.DataContext = root;
+            this.DomTree.ItemsSource = new object[] { root };
+        }
+
+        private void LoadHtml_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            if (!(dlg.ShowDialog(this) ?? false))
+                return;
+            if (String.IsNullOrWhiteSpace(dlg.FileName))
+                return;
+
+            string html = File.ReadAllText(dlg.FileName);
+
+            // Parse the HTML
+            StringHtmlStream stream = new StringHtmlStream(html);
+            BrowsingContext browsingContext = new BrowsingContext();
+            Document document = browsingContext.ParseDocument(stream, "url:unknown");
+
+            var root = TestLib.Dom.ReferenceDocument.FromDocument(document);
 
             this.DomTree.DataContext = root;
             this.DomTree.ItemsSource = new object[] { root };

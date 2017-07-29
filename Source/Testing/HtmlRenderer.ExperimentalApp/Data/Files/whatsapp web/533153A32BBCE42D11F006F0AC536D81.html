@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html id="ie7" lang="en-US" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if IE 8]>
+<html id="ie8" lang="en-US" prefix="og: http://ogp.me/ns#">
+<![endif]-->
+<!--[if !(IE 7) | !(IE 8) ]><!-->
+<html lang="en-US" prefix="og: http://ogp.me/ns#">
+<!--<![endif]-->
+<head>
+	<meta charset="UTF-8" />
+	<title>What&#039;s up with WhatsApp and WebRTC? - webrtcHacks</title>
+	<link rel="profile" href="http://gmpg.org/xfn/11" />
+	<link rel="pingback" href="https://webrtchacks.com/xmlrpc.php" />
+	<!--[if lt IE 9]>
+	<script src="https://webrtchacks.com/wp-content/themes/parament/js/html5.js" type="text/javascript"></script>
+	<![endif]-->
+	
+<!-- This site is optimized with the Yoast SEO plugin v4.0.2 - https://yoast.com/wordpress/plugins/seo/ -->
+<meta name="description" content="Philipp Hancke analyzes the new WhatsApps calling feature to determine how it works and if it is using WebRTC"/>
+<meta name="robots" content="noodp"/>
+<link rel="canonical" href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="What&#039;s up with WhatsApp and WebRTC? - webrtcHacks" />
+<meta property="og:description" content="Philipp Hancke analyzes the new WhatsApps calling feature to determine how it works and if it is using WebRTC" />
+<meta property="og:url" content="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/" />
+<meta property="og:site_name" content="webrtcHacks" />
+<meta property="article:tag" content="Blackbox Exploration" />
+<meta property="article:tag" content="Brief" />
+<meta property="article:tag" content="trace" />
+<meta property="article:tag" content="TURN" />
+<meta property="article:tag" content="WhatsApp" />
+<meta property="article:section" content="Guide" />
+<meta property="article:published_time" content="2015-04-22T10:14:18-04:00" />
+<meta property="article:modified_time" content="2016-07-23T03:23:53-04:00" />
+<meta property="og:updated_time" content="2016-07-23T03:23:53-04:00" />
+<meta property="og:image" content="https://webrtchacks.com/wp-content/uploads/2015/04/whatsapp-deconstruction-3.png" />
+<meta property="og:image" content="https://webrtchacks.com/wp-content/uploads/2015/04/switch.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:description" content="Philipp Hancke analyzes the new WhatsApps calling feature to determine how it works and if it is using WebRTC" />
+<meta name="twitter:title" content="What&#039;s up with WhatsApp and WebRTC? - webrtcHacks" />
+<meta name="twitter:site" content="@webrtchacks" />
+<meta name="twitter:image" content="https://webrtchacks.com/wp-content/uploads/2015/04/whatsapp-deconstruction-3.png" />
+<meta name="twitter:creator" content="@webrtchacks" />
+<!-- / Yoast SEO plugin. -->
+
+<link rel='dns-prefetch' href='//ws.sharethis.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="webrtcHacks &raquo; Feed" href="https://webrtchacks.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="webrtcHacks &raquo; Comments Feed" href="https://webrtchacks.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="webrtcHacks &raquo; What&#8217;s up with WhatsApp and WebRTC? Comments Feed" href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/webrtchacks.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.7.5"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),!(j.toDataURL().length<3e3)&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,65039,8205,55356,57096),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,55356,57096),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55357,56425,55356,57341,8205,55357,56507),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55357,56425,55356,57341,55357,56507),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='validate-engine-css-css'  href='https://webrtchacks.com/wp-content/plugins/wysija-newsletters/css/validationEngine.jquery.css?ver=2.7.7' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-css'  href='https://webrtchacks.com/wp-content/plugins/crayon-syntax-highlighter/css/min/crayon.min.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-theme-vs2012-css'  href='https://webrtchacks.com/wp-content/plugins/crayon-syntax-highlighter/themes/vs2012/vs2012.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-font-monaco-css'  href='https://webrtchacks.com/wp-content/plugins/crayon-syntax-highlighter/fonts/monaco.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<link rel='stylesheet' id='ajaxy-sf-common-css'  href='https://webrtchacks.com/wp-content/plugins/ajaxy-search-form/themes/common.css?ver=4.7.5' type='text/css' media='all' />
+<link rel='stylesheet' id='ajaxy-sf-selective-css'  href='https://webrtchacks.com/wp-content/plugins/ajaxy-search-form/themes/selective.css?ver=4.7.5' type='text/css' media='all' />
+<link rel='stylesheet' id='ajaxy-sf-theme-css'  href='https://webrtchacks.com/wp-content/plugins/ajaxy-search-form/themes/default/style.css?ver=4.7.5' type='text/css' media='all' />
+<link rel='stylesheet' id='parament-css'  href='https://webrtchacks.com/wp-content/themes/parament/style.css?ver=1.0' type='text/css' media='all' />
+<link rel='stylesheet' id='wordpress-popular-posts-css'  href='https://webrtchacks.com/wp-content/plugins/wordpress-popular-posts/style/wpp.css?ver=3.3.4' type='text/css' media='all' />
+<link rel='stylesheet' id='ecae-buttonskin-none-css'  href='https://webrtchacks.com/wp-content/plugins/easy-custom-auto-excerpt/buttons/ecae-buttonskin-none.css?ver=2.3.4' type='text/css' media='all' />
+<link rel='stylesheet' id='ecae-frontend-css-css'  href='https://webrtchacks.com/wp-content/plugins/easy-custom-auto-excerpt/assets/style-frontend.css?ver=2.3.4' type='text/css' media='all' />
+<link rel='stylesheet' id='sedlex_styles-css'  href='https://webrtchacks.com/wp-content/sedlex/inline_styles/a9ee9f1866da0a884e98ea869799967d2768fd12.css?ver=20170712' type='text/css' media='all' />
+<!-- This site uses the Google Analytics by MonsterInsights plugin v5.5.4 - Universal enabled - https://www.monsterinsights.com/ -->
+<script type="text/javascript">
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','__gaTracker');
+
+	__gaTracker('create', 'UA-44127550-1', 'auto');
+	__gaTracker('set', 'forceSSL', true);
+	__gaTracker('send','pageview');
+
+</script>
+<!-- / Google Analytics by MonsterInsights -->
+<script type='text/javascript' src='https://webrtchacks.com/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var CrayonSyntaxSettings = {"version":"_2.7.2_beta","is_admin":"0","ajaxurl":"https:\/\/webrtchacks.com\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};
+var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Click To Expand Code"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-content/plugins/crayon-syntax-highlighter/js/min/crayon.min.js?ver=_2.7.2_beta'></script>
+<script id='st_insights_js' type='text/javascript' src='https://ws.sharethis.com/button/st_insights.js?publisher=4d48b7c5-0ae3-43d4-bfbe-3ff8c17a8ae6&#038;product=simpleshare'></script>
+<link rel='https://api.w.org/' href='https://webrtchacks.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://webrtchacks.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://webrtchacks.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='shortlink' href='https://webrtchacks.com/?p=2228' />
+<link rel="alternate" type="application/json+oembed" href="https://webrtchacks.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwebrtchacks.com%2Fwhats-up-with-whatsapp-and-webrtc%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://webrtchacks.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwebrtchacks.com%2Fwhats-up-with-whatsapp-and-webrtc%2F&#038;format=xml" />
+		<!-- AJAXY SEARCH V 3.0.7-->
+				<script type="text/javascript">
+			/* <![CDATA[ */
+				var sf_position = '0';
+				var sf_templates = "<a href=\"{search_url_escaped}\"><span class=\"sf_text\">See more results for \"{search_value}\"<\/span><span class=\"sf_small\">Displaying top {total} results<\/span><\/a>";
+				var sf_input = '.sf_input';
+				jQuery(document).ready(function(){
+					jQuery(sf_input).ajaxyLiveSearch({"expand":"0","searchUrl":"http:\/\/webrtchacks.com\/?s=%s","text":"search webrtcHacks.com","delay":"300","iwidth":"224","width":"315","ajaxUrl":"https:\/\/webrtchacks.com\/wp-admin\/admin-ajax.php","rtl":0});
+					jQuery(".sf_ajaxy-selective-input").keyup(function() {
+						var width = jQuery(this).val().length * 8;
+						if(width < 50) {
+							width = 50;
+						}
+						jQuery(this).width(width);
+					});
+					jQuery(".sf_ajaxy-selective-search").click(function() {
+						jQuery(this).find(".sf_ajaxy-selective-input").focus();
+					});
+					jQuery(".sf_ajaxy-selective-close").click(function() {
+						jQuery(this).parent().remove();
+					});
+				});
+			/* ]]> */
+		</script>
+		<script type="text/javascript">
+	window._zem_rp_post_id = '2228';
+	window._zem_rp_thumbnails = true;
+	window._zem_rp_post_title = 'What%27s+up+with+WhatsApp+and+WebRTC%3F';
+	window._zem_rp_post_tags = ['blackbox+exploration', 'brief', 'trace', 'turn', 'whatsapp', 'guide', 'hangout', 'philipp', 'employ', 'analysi', 'whatsapp', 'a', 'seri', 'amazon', 'engin', 'googl', 'post', 'write', 'servic', 'firefox', 'real'];
+	window._zem_rp_static_base_url = 'https://content.zemanta.com/static/';
+	window._zem_rp_wp_ajax_url = 'https://webrtchacks.com/wp-admin/admin-ajax.php';
+	window._zem_rp_plugin_version = '1.14';
+	window._zem_rp_num_rel_posts = '6';
+</script>
+<link rel="stylesheet" href="https://webrtchacks.com/wp-content/plugins/related-posts-by-zemanta/static/themes/vertical.css?version=1.14" />
+<script>(function(d, s, id){
+                 var js, fjs = d.getElementsByTagName(s)[0];
+                 if (d.getElementById(id)) {return;}
+                 js = d.createElement(s); js.id = id;
+                 js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6";
+                 fjs.parentNode.insertBefore(js, fjs);
+               }(document, 'script', 'facebook-jssdk'));</script><style type="text/css">	.ssba {
+									padding: 1px;
+									border: 1px solid #444855;
+									background-color: #202228;
+									-moz-border-radius: 10px; -webkit-border-radius: 10px; -khtml-border-radius: 10px;  border-radius: 10px; -o-border-radius: 10px;
+								}
+								.ssba img
+								{
+									width: 35px !important;
+									padding: 6px;
+									border:  0;
+									box-shadow: none !important;
+									display: inline !important;
+									vertical-align: middle;
+								}
+								.ssba, .ssba a
+								{
+									text-decoration:none;
+									border:0;
+									
+									
+									font-size: 	20px;
+									
+									
+								}
+								</style>		<style type="text/css">.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>
+						<!-- WordPress Popular Posts v3.3.4 -->
+				<script type="text/javascript">
+
+					var sampling_active = 0;
+					var sampling_rate   = 100;
+					var do_request = false;
+
+					if ( !sampling_active ) {
+						do_request = true;
+					} else {
+						var num = Math.floor(Math.random() * sampling_rate) + 1;
+						do_request = ( 1 === num );
+					}
+
+					if ( do_request ) {
+
+						/* Create XMLHttpRequest object and set variables */
+						var xhr = ( window.XMLHttpRequest )
+						  ? new XMLHttpRequest()
+						  : new ActiveXObject( "Microsoft.XMLHTTP" ),
+						url = 'https://webrtchacks.com/wp-admin/admin-ajax.php',
+						params = 'action=update_views_ajax&token=8fdf8357a1&wpp_id=2228';
+						/* Set request method and target URL */
+						xhr.open( "POST", url, true );
+						/* Set request header */
+						xhr.setRequestHeader( "Content-type", "application/x-www-form-urlencoded" );
+						/* Hook into onreadystatechange */
+						xhr.onreadystatechange = function() {
+							if ( 4 === xhr.readyState && 200 === xhr.status ) {
+								if ( window.console && window.console.log ) {
+									window.console.log( xhr.responseText );
+								}
+							}
+						};
+						/* Send request */
+						xhr.send( params );
+
+					}
+
+				</script>
+				<!-- End WordPress Popular Posts v3.3.4 -->
+					<style type="text/css">
+					#site-title,
+		#site-description {
+			position: relative;
+			margin-left: 50px;
+			z-index: 2;
+		}
+		#site-title {
+			margin-top: 60px;
+		}
+		#site-description {
+			display: block;
+		}
+		
+			#site-title,
+		#site-description {
+			position: absolute;
+			clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+			clip: rect(1px, 1px, 1px, 1px);
+		}
+		</style>
+	<style type="text/css" id="custom-background-css">
+body.custom-background { background-color: #000000; background-image: url("https://webrtchacks.com/wp-content/uploads/2013/12/bg.png"); background-position: left top; background-size: auto; background-repeat: no-repeat; background-attachment: fixed; }
+</style>
+	<link rel="shortcut icon" href="https://webrtchacks.com/wp-content/themes/parament/favicon.ico" />
+	
+	<!-- Google Analytics -->
+		<script>
+ 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  		ga('create', 'UA-44127550-1', 'webrtchacks.com');
+  		ga('send', 'pageview');
+		</script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--Commented out by Chad -->
+<!--script type="text/javascript" src="https://webrtchacks.com/wp-includes/js/jquery.sticky.js"></script-->
+
+<script>
+$(document).ready(function(){
+
+$('[rel=tooltip]').bind('mouseover', function(){
+    
+    
+  
+ if ($(this).hasClass('ajax')) {
+  var ajax = $(this).attr('ajax');  
+      
+  $.get(ajax,
+  function(theMessage){
+$('<div class="tooltip">'  + theMessage + '</div>').appendTo('body').fadeIn('fast');});
+	
+ 
+ }else{
+      
+      var theMessage = $(this).attr('content');
+      $('<div class="tooltip">' + theMessage + '</div>').appendTo('body').fadeIn('fast');
+    }
+    
+    $(this).bind('mousemove', function(e){
+      $('div.tooltip').css({
+        'top': e.pageY - $('div.tooltip').height(),
+        'left': e.pageX + 15
+      });
+    });
+  }).bind('mouseout', function(){
+    $('div.tooltip').fadeOut('fast', function(){
+      $(this).remove();
+    });
+  });
+               });
+
+</script>
+
+<script>
+$(function() {
+   $('a.link').click(function() {
+       $('a.link').removeClass('active');
+       $(this).addClass('active');			 
+   });
+	 $('.ssba_twitter_share img').attr('src','https://webrtchacks.com/wp-content/themes/parament/images/Twitter.png');
+	  $('.ssba_facebook_share img').attr('src','https://webrtchacks.com/wp-content/themes/parament/images/facebook-favicon.png');
+		$('.ssba_linkedin_share ssba_share_link img').attr('src','https://webrtchacks.com/wp-content/themes/parament/images/linkedin-favicon.png');
+		$('.ssba_google_share img').attr('src','https://webrtchacks.com/wp-content/themes/parament/images/google+-favicon.png');
+		$('.ssba_pinterest_share img').attr('src','https://webrtchacks.com/wp-content/themes/parament/images/pinterest.png');
+		$('.ssba_reddit_share img').attr('src','https://webrtchacks.com/wp-content/themes/parament/images/reddit.png');
+		$('.ssba_tumblr_share img').attr('src','https://webrtchacks.com/wp-content/themes/parament/images/tumblr.png');
+		$('.ssba_buffer_share img').attr('src','https://webrtchacks.com/wp-content/themes/parament/images/buffer.png');
+		$('.ssba_diggit_share img').attr('src','https://webrtchacks.com/wp-content/themes/parament/images/diggit.png');
+		$('.ssba_stumbleupon_share img').attr('src','https://webrtchacks.com/wp-content/themes/parament/images/stumbleupon.png');
+		$('.ssba_email_share img').attr('src','https://webrtchacks.com/wp-content/themes/parament/images/email.png');
+});
+</script>
+<!--script>
+    /******Changed by Chad ****************/
+	$(window).load(function(){
+      		$("#fixedscroll").sticky({ topSpacing: 0, bottomSpacing: 1250  });
+    });
+		
+</script-->
+<script>
+		$(document).ready(function(){
+    $('.thm-dark').find('body').css('backgroundColor', 'white');
+});
+</script>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+</head>
+
+<body class="post-template-default single single-post postid-2228 single-format-standard custom-background has-image">
+
+<div id="page-wrap" class="contain">
+<div class="header-wrapper">
+	<header id="branding" role="banner">
+		
+					<a id="header-image" href="https://webrtchacks.com"><img src="https://webrtchacks.com/wp-content/uploads/2015/07/webrtchackslogo1.gif" alt="" /></a>
+      <div class='whsocialmedia'>
+		<a href="https://twitter.com/share?url=http://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/" target="_blank" style="display: inline;  font-size: 0; padding: 0 5px;"><img src="https://webrtchacks.com/wp-content/themes/parament/images/Twitter.png"/></a>
+		<a href="http://www.facebook.com/sharer.php?u=http://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/" target="_blank" style="display: inline;  font-size: 0; padding: 0 5px;"><img src="https://webrtchacks.com/wp-content/themes/parament/images/facebook-favicon.png"/></a>
+		<a href="http://www.linkedin.com/shareArticle?mini=true&url=http://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/" target="_blank" style="display: inline;  font-size: 0; padding: 0 5px;"><img src="https://webrtchacks.com/wp-content/themes/parament/images/linkedin-favicon.png"/></a>
+		<a href="https://plus.google.com/share?url=http://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/" target="_blank" style="display: inline;  font-size: 0; padding: 0 5px;"><img src="https://webrtchacks.com/wp-content/themes/parament/images/google+-favicon.png" /></a>
+</div>
+			</header><!-- #branding -->
+</div><!-- end of header-wrapper -->
+
+	<nav id="menu" role="navigation"><ul id="primary-menu" class="menu"><li id="menu-item-59" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-59"><a href="http://webrtchacks.com">Home</a></li>
+<li id="menu-item-302" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-302"><a href="https://webrtchacks.com/vendor-directory/">Tool Directory</a></li>
+<li id="menu-item-55" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-55"><a href="https://webrtchacks.com/about/">About</a>
+<ul class="sub-menu">
+	<li id="menu-item-64" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-64"><a href="https://webrtchacks.com/about/chad/">Chad Hart</a></li>
+	<li id="menu-item-62" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-62"><a href="https://webrtchacks.com/about/victor/">Victor Pascual Ávila</a></li>
+	<li id="menu-item-1833" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1833"><a href="https://webrtchacks.com/about/tsahi/">Tsahi Levent-Levi</a></li>
+	<li id="menu-item-2355" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2355"><a href="https://webrtchacks.com/about/fippo/">Philipp Hancke</a></li>
+</ul>
+</li>
+<li id="menu-item-792" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-792"><a href="https://webrtchacks.com/subscribe/">Subscribe</a></li>
+<li id="menu-item-265" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-265"><a href="https://webrtchacks.com/contact/">Contact</a></li>
+</ul><!-- <div id="53f1912965db2" class="sf_container" style="width: 235px;float: left;margin-left: 118px;">
+			<form role="search" method="get" class="searchform" action="https://webrtchacks.com/">
+				<div>
+					<label class="screen-reader-text" for="s">Search for:</label>
+					<div class="sf_search">
+						<span class="sf_block">
+							<input style="width:215px;" class="sf_input" autocomplete="off" type="text" value="search webrtcHacks.com" name="s">
+							<button class="sf_button searchsubmit" type="submit"><span class="sf_hidden">Search</span></button>
+						</span>
+					</div>
+				</div>
+			</form>
+		</div> -->
+  </nav>
+<div align="center" style="padding:0 0 0 0;">
+<!-- [adkingpro type=webrtcschool-top_bottom_ad] -->
+	</div><div id="container-holder">
+<div id="container" class="contain">
+	<div id="main" role="main">
+													
+<article id="post-2228" class="contain post-2228 post type-post status-publish format-standard hentry category-guide tag-blackbox-exploration tag-brief tag-trace tag-turn tag-whatsapp has-byline">
+
+	<div class="title">
+					<h2 class="entry-title"><font color="000">webrtcH4cKS:</font><font color="000"> ~ </font>What&#8217;s up with WhatsApp and WebRTC?</h2>				<div class="entry-byline">
+			<span>Posted by <a href="https://webrtchacks.com/author/philipp-hancke/" title="View all posts by Philipp Hancke">Philipp Hancke</a> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/">April 22, 2015</a></span>
+					</div>
+
+		<div class="entry-meta">
+						<div class="entry-posted">
+			<strong>Posted in:</strong> <a href="https://webrtchacks.com/category/guide/" rel="category tag">Guide</a>.			</div>
+						
+						<div class="entry-tagged">
+			<strong>Tagged:</strong> <a href="https://webrtchacks.com/tag/blackbox-exploration/" rel="tag">Blackbox Exploration</a>, <a href="https://webrtchacks.com/tag/brief/" rel="tag">Brief</a>, <a href="https://webrtchacks.com/tag/trace/" rel="tag">trace</a>, <a href="https://webrtchacks.com/tag/turn/" rel="tag">TURN</a>, <a href="https://webrtchacks.com/tag/whatsapp/" rel="tag">WhatsApp</a>.			</div>
+						
+						<div class="entry-comments">
+				<span class="comments"><a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comments">11 comments</a></span></div>
+					</div><!-- entry-meta -->
+
+	</div><!-- end title -->
+
+	<div class="entry-content">
+		<p>One of our first posts was a <a title="Does Amazon’s Mayday use WebRTC? A Wireshark analysis" href="https://webrtchacks.com/mayday-trace/">Wireshark analysis of Amazon&#8217;s Mayday</a> service to see if it was actually using WebRTC. In the very early days of WebRTC, verifying a major deployment like this was an important milestone for the WebRTC community. More recently, Philipp Hancke &#8211; aka Fippo &#8211; did several great posts analyzing <a title="How does Hangouts use WebRTC? webrtc-internals analysis (Philipp Hancke)" href="https://webrtchacks.com/hangout-analysis-philipp-hancke/">Google Hangouts</a> and <a title="Hello, Hello – What’s your real story? A decode by Philipp Hancke" href="https://webrtchacks.com/hello-decode/">Mozilla&#8217;s Hello</a> service in Firefox. These analyses validate that WebRTC can be successfully deployed by major companies at scale. They also provide valuable insight for developers and architects on how to build a WebRTC service.</p>
+<p>These posts are awesome and of course we want more.</p>
+<p>I am happy to say many more are coming. In an effort to disseminate factual information about WebRTC, Google&#8217;s WebRTC team has asked <a href="https://andyet.com/">&amp;yet</a> &#8211; Fippo&#8217;s employer &#8211; to write a series of publicly available, in-depth, reverse engineering and trace analysis reports. Philipp has agreed to write summary posts outlining the findings and implications for the WebRTC community here at webrtcHacks. This analysis is very time consuming. Making it consumable for a broad audience is even more intensive, so webrtcHacks is happy to help with this effort in our usual impartial, non-commercial fashion.</p>
+<p>Please see below for Fippo&#8217;s deconstruction of WhatsApp voice calling.</p>
+<p>{&#8220;editor&#8221;: “<a title="Chad Hart" href="http://webrtchacks.com/about/chad/">chad hart</a>“}</p>
+<p>&nbsp;</p>
+<div id="attachment_2249" style="width: 1022px" class="wp-caption alignnone"><a href="https://webrtchacks.com/wp-content/uploads/2015/04/whatsapp-deconstruction-3.png"><img class="wp-image-2249 size-full" src="https://webrtchacks.com/wp-content/uploads/2015/04/whatsapp-deconstruction-3.png" alt="" width="1012" height="648" srcset="https://webrtchacks.com/wp-content/uploads/2015/04/whatsapp-deconstruction-3.png 1012w, https://webrtchacks.com/wp-content/uploads/2015/04/whatsapp-deconstruction-3-300x192.png 300w, https://webrtchacks.com/wp-content/uploads/2015/04/whatsapp-deconstruction-3-768x492.png 768w, https://webrtchacks.com/wp-content/uploads/2015/04/whatsapp-deconstruction-3-600x384.png 600w" sizes="(max-width: 1012px) 100vw, 1012px" /></a><p class="wp-caption-text">Philipp Hancke deconstructs WhatsApp to search for WebRTC</p></div>
+<p>&nbsp;</p>
+<p>After some rumors (e.g. on <a href="http://techcrunch.com/2015/02/02/whatsapp-voice-calling-feature-spotted-in-the-wild/">TechCrunch</a>), WhatsApp <a href="http://www.theverge.com/2015/3/31/8318821/whatsapp-voice-calls-android-ios">recently launched </a>voice calls for Android. This spurred some interest in the WebRTC world with the usual suspects like Tsahi Levent-Levi <a href="https://bloggeek.me/whatsapp-voip-implementation/">chiming in</a> and starting a heated debate. Unfortunately, the comment box on Tsahi&#8217;s <a href="http://BlogGeek.me">BlogGeek.Me</a> blog was too narrow for my comments so I came back here to webrtchacks.</p>
+<p>At that point, I had considered doing an analysis of some mobile services already and, thanks to support from the <a href="https://webrtc.org">Google WebRTC team</a>, I was able to spend a number of days looking at Wireshark traces from WhatsApp in a variety of scenarios.</p>
+<p>Initially, I was merely trying to validate the capture setup (to be explained in a future blog post) but it turned out that there is quite a lot of interesting information here and even some lessons for WebRTC. So I ended up writing a full fifteen page report which you can get <a href="https://webrtchacks.com/wp-content/uploads/2015/04/WhatsappReport.pdf">here</a>. It is a long story of packets (available for <a href="https://webrtchacks.com/wp-content/uploads/2015/04/whatsapp-dumps.zip">download here</a>) which will be very boring if you are not an engineer so let me try to summarize the key points here.<span id="more-2228"></span></p>
+<h2><strong>Summary</strong></h2>
+<p>WhatsApp is using the <a href="http://www.pjsip.org/">PJSIP library</a> to implement Voice over IP (VoIP) functionality. The captures shows no signs of DTLS, which suggests the use of SDES encryption (see <a title="WebRTC MUST implement DTLS-SRTP but… MUST NOT implement SDES?" href="https://webrtchacks.com/webrtc-must-implement-dtls-srtp-but-must-not-implement-sdes/">here </a>for Victor&#8217;s past post on this).  Even though <a title="STUN the Network – How STUN helps WebRTC Traverse NATs" href="https://webrtchacks.com/stun-helps-webrtc-traverse-nats/">STUN </a>is used, the binding requests do not contain ICE-specific attributes. RTP and RTCP are multiplexed on the same port.</p>
+<p>The audio codec can not be fully determined. The sampling rate is 16kHz, the codec bandwidth of about 20kbit/s and the bandwidth was the same when muted. <b>Update:</b> after a MITM attack on the signaling channel (see the comments below) this is now known to be Opus/SILK.</p>
+<p>An inspection of the binary using the <a href="http://linux.die.net/man/1/strings">strings tool</a> shows both PJSIP and several strings hinting at the use of elements from the <a href="http://www.webrtc.org/">webrtc.org</a> voice engine such as the acoustic echo cancellation (AEC), AECM, gain control (AGC), noise suppression and the high-pass filter.</p>
+<h2>Comparison with WebRTC</h2>
+<table>
+<tbody>
+<tr>
+<td> <strong>Feature</strong></td>
+<td><strong>WebRTC/RTCWeb Specifications</strong></td>
+<td><strong>WhatsApp</strong></td>
+</tr>
+<tr>
+<td>SDES</td>
+<td>MUST NOT offer SDES</td>
+<td>probably uses SDES</td>
+</tr>
+<tr>
+<td>ICE</td>
+<td>RFC 5245</td>
+<td>no ICE, STUN connectivity checks</td>
+</tr>
+<tr>
+<td>TURN usage</td>
+<td>used as last resort</td>
+<td>uses a similar mechanism first</td>
+</tr>
+<tr>
+<td>Audio codec</td>
+<td>Opus or G.711</td>
+<td>Opus/SILK, 16khz with 20kbps bitrate</td>
+</tr>
+</tbody>
+</table>
+<h2><strong>Switching from a relayed session to a p2p session</strong></h2>
+<p>The most impressive thing I found is the optimization for a fast call setup by using a relay initially and then switching to a peer-to-peer session. This also opens up the possibility for a future multi-party VoIP call which would certainly be supported by this architecture. The relay server is called “conf bridge” in the binary.</p>
+<p>Lets look at the first session to illustrate this (see the PDF for the full, lengthy description):</p>
+<ol>
+<li>The session kicks off (in packet #70) by sending TURN ALLOCATE requests to eight different servers. This request doesn&#8217;t use any standard STUN attributes which is easy to miss.</li>
+<li>After getting a response the client is exchanging some signaling traffic with the signaling server, so this is basically gathering a relayed candidate and sending an offer to the peer.</li>
+<li>Packet #132 shows the client sending something to one of those TURN servers. This turns out to be an RTCP packet, followed by some RTP packets, which can be seen by using Wiresharks &#8220;decode as&#8221; functionality. This is somewhat unusual and misleading, as it is not using standard TURN functionality like send or data indications. Instead, it just does raw RTP on that.</li>
+<li>Packet #146 shows the first RTP packet from the peer. For about three seconds, the RTP traffic is relayed over this server.</li>
+<li>In the mean time, packet #294 shows the client sending a STUN binding request to the peer&#8217;s public IP address. Using a filter 
+			<span id="crayon-5966532aafd86352268470" class="crayon-syntax crayon-syntax-inline  crayon-theme-vs2012 crayon-theme-vs2012-inline crayon-font-monaco" style="font-size: 12px !important; line-height: 15px !important;font-size: 12px !important;"><span class="crayon-pre crayon-code" style="font-size: 12px !important; line-height: 15px !important;font-size: 12px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><span class="crayon-sy">(</span><span class="crayon-v">ip</span><span class="crayon-sy">.</span><span class="crayon-e">addr </span><span class="crayon-i">eq</span><span class="crayon-h"> </span><span class="crayon-cn">172.16.42.124</span><span class="crayon-h"> </span><span class="crayon-st">and</span><span class="crayon-h"> </span><span class="crayon-v">ip</span><span class="crayon-sy">.</span><span class="crayon-e">addr </span><span class="crayon-i">eq</span><span class="crayon-h"> </span><span class="crayon-cn">83.209.197.82</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-st">and</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-v">udp</span><span class="crayon-sy">.</span><span class="crayon-e">port </span><span class="crayon-i">eq</span><span class="crayon-h"> </span><span class="crayon-cn">45395</span><span class="crayon-h"> </span><span class="crayon-st">and</span><span class="crayon-h"> </span><span class="crayon-v">udp</span><span class="crayon-sy">.</span><span class="crayon-e">port </span><span class="crayon-i">eq</span><span class="crayon-h"> </span><span class="crayon-cn">35574</span><span class="crayon-sy">)</span></span></span>  clearly shows this traffic.</li>
+<li>The first response is received in packet #300.</li>
+<li>Now something really interesting happens. The client switches the destination of the RTP stream between packets #298 and #305. By decoding those as RTP we can see that the RTP sequence number increases just by one. See this screenshot:<br />
+<a href="https://webrtchacks.com/wp-content/uploads/2015/04/switch.png"><img class="alignnone wp-image-2231 size-full" src="https://webrtchacks.com/wp-content/uploads/2015/04/switch.png" alt="switch" width="1230" height="285" srcset="https://webrtchacks.com/wp-content/uploads/2015/04/switch.png 1230w, https://webrtchacks.com/wp-content/uploads/2015/04/switch-300x70.png 300w, https://webrtchacks.com/wp-content/uploads/2015/04/switch-1024x237.png 1024w, https://webrtchacks.com/wp-content/uploads/2015/04/switch-600x139.png 600w" sizes="(max-width: 1230px) 100vw, 1230px" /></a></li>
+</ol>
+<p>Now, if we have decoded everything as RTP (which is something Wireshark doesn&#8217;t get right by default so it needs a little help), we can change the filter to 
+			<span id="crayon-5966532aafd8f681453374" class="crayon-syntax crayon-syntax-inline  crayon-theme-vs2012 crayon-theme-vs2012-inline crayon-font-monaco" style="font-size: 12px !important; line-height: 15px !important;font-size: 12px !important;"><span class="crayon-pre crayon-code" style="font-size: 12px !important; line-height: 15px !important;font-size: 12px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><span class="crayon-v">rtp</span><span class="crayon-sy">.</span><span class="crayon-v">ssrc</span><span class="crayon-h"> </span><span class="crayon-o">==</span><span class="crayon-h"> </span><span class="crayon-cn">0x0088a82d</span></span></span>  and see this clearly. The intent here is to try a connection that is almost guaranteed to work first (I used a similar rationale in the <a href="https://webrtchacks.com/the-minimum-viable-sdp/">minimal viable SDP post</a> recently even) and then switch to a peer-to-peer connection in order to minimize the load on the TURN servers.</p>
+<p>Wow, that is pretty slick. It likely reduces the call setup time the user perceives. Let me repeat that: this is a hack which makes the user experience better!</p>
+<p>By how much is hard to quantify. Only a large-scale measurement of both this approach and the standard approach can answer that.</p>
+<h2><strong>Lessons for WebRTC</strong></h2>
+<p>In WebRTC, we can do something similar, but it is a little more effort right now. We can setup the call with <em>iceTransports</em>: ‘relay’ which will skip host and server-reflexive candidates. Also, using a relay helps to guarantee the connetion will work (in conditions where WebRTC will work at all).</p>
+<p>There are some drawbacks to this approach in terms of round-trip-times due to TURN’s permission mechanism. Basically when creating a TURN-relayed candidate the following happens (in Chrome; Firefox&#8217;s behavior differs slightly):</p>
+<ol>
+<li>Chrome tries to create an allocation without authentication</li>
+<li>the TURN server asks for authentication</li>
+<li>Chrome retries to create an allocation with authentication</li>
+<li>the TURN server tells chrome the address and port of the candidate.</li>
+<li>Chrome signals the candidate to the JavaScript layer via the <em>onicecandidate</em> callback. That is two full round-trip times.</li>
+<li>after adding a remote candidate, Chrome will create a TURN permission on the server before the server will relay traffic from the peer. This is a security mechanism described <a href="https://tools.ietf.org/html/rfc5766#section-2.3">here</a>.</li>
+<li>now STUN binding requests can happen over the relayed address. This uses TURN send and data indications. These add the peer&#8217;s address and port to each packet received.</li>
+<li>when agreeing on a candidate, Chrome creates a TURN channel for the peer&#8217;s address which is more efficient in terms of overhead.</li>
+</ol>
+<p>Compared to this, the proprietary mechanism used by Whatsapp saves a number of roundtrips.</p>
+<blockquote>
+<h4>this is a hack which makes the user experience better!</h4>
+</blockquote>
+<p>If we started with just relay candidates, then, since this hides the IP addresses of the parties involved from each other, we might even establish the relayed connection and do the DTLS handshake before the callee accepts the call. This is known as <em>transport warmup</em>, it reduces the perceived time until media starts flowing.</p>
+<p>Once the relayed connection is established, we can call <em>setConfiguration</em> (formerly known as updateIce; which is <a href="https://code.google.com/p/webrtc/issues/detail?id=3969">currently not implemented</a>) to remove the restriction to relay candidates and do an ICE restart by calling <em>createOffer</em> again with the <em>iceRestart</em> flag set to true. This would trigger an ICE restart which might determine that a P2P connection can be established.</p>
+<p>Despite <em>updateIce</em> not being implemented, we can still switch from a relay to peer-to-peer today. ICE restarts work in Chrome so the only bit we&#8217;re missing is the <em>iceTransports</em> &#8216;relay&#8217; which just generates relay candidates. Now the same effect can be simulated in Javascript by dropping any non-relay candidates during the first iteration. It was pretty easy to implement this behaviour in my favorite <a href="http://webrtc.github.io/samples/src/content/peerconnection/munge-sdp/">sdp munging</a> sample. The switch from relayed to P2P just works. The code is committed <a href="https://github.com/fippo/webrtc/commit/bc8a3ac137bf49795f2ed1487cdfdfab6451540b">here</a>.</p>
+<p>While ICE restart is inefficient currently, the actual media switch (which is hard) happens very seamlessly.</p>
+<p>&nbsp;</p>
+<h2><strong>In my humble opinion</strong></h2>
+<p>Whatsapp’s usage of STUN and RTP seems a little out of date. Arguably, the way STUN is used is very straightforward and makes things like implementing the switch from relayed calls to P2P mode easier. But ICE provides methods to accomplish the same thing, in a more robust way. Using a custom TURN-like functionality that delivers raw RTP from the conference bridge saves some bytes&#8217; overhead for TURN channels, but that overhead is typically negligible.</p>
+<p>Not using DTLS-SRTP with ciphers capable of perfect forward secrecy is a pretty big issue in terms of privacy. SDES is known to have drawbacks and can be decrypted retroactively if the key (which is transmitted via the signaling server) is known. Note that the signaling exchange might still be protected the same way it is done for text messages.</p>
+<p>In terms of user experience, the mid-call blocking of P2P showed that this scenario had been considered which shows quite some thought. Echo cancellation is a serious problem though. The webrtc.org echo cancellation is capable of a much better job and seems to be included in the binary already. Maybe the team there would even offer their help in exchange for an acknowledgement… or <a href="https://twitter.com/HenrikJoreteg/status/580815221599551489">awesome chocolate</a>.</p>
+<p>&nbsp;</p>
+<p>{“author”: “<a href="https://plus.google.com/102091620148929269177/posts">Philipp Hancke</a>“}</p>
+<p>&nbsp;</p>
+<p>Want to keep up on our latest posts? Please click <a href="http://webrtchacks.com/subscribe/" target="_blank">here</a> to subscribe to our mailing list if you have not already. We only email post updates. You can also follow us on twitter at <a href="http://twitter.com/webrtcHacks" target="_blank">@webrtcHacks</a> for blog updates.</p></p>
+
+<div class="zem_rp_wrap zem_rp_th_vertical" id="zem_rp_first"><div class="zem_rp_content"><h3 class="related_post_title">Related Posts</h3><ul class="related_post zem_rp"><li data-position="0" data-poid="in-2252" data-post-type="none"><a href="https://webrtchacks.com/facebook-webrtc/" class="zem_rp_thumbnail"><img src="https://webrtchacks.com/wp-content/uploads/2015/05/webrtc-facebook-150x150.png" alt="Facebook Messenger likes WebRTC" width="150" height="150"  /></a><a href="https://webrtchacks.com/facebook-webrtc/" class="zem_rp_title">Facebook Messenger likes WebRTC</a></li><li data-position="1" data-poid="in-1077" data-post-type="none"><a href="https://webrtchacks.com/mayday-trace/" class="zem_rp_thumbnail"><img src="https://webrtchacks.com/wp-content/uploads/2014/02/gw-hdx-mayday-us-660x180-v3._V363898339_-150x150.jpg" alt="Does Amazon&#8217;s Mayday use WebRTC? A Wireshark analysis" width="150" height="150"  /></a><a href="https://webrtchacks.com/mayday-trace/" class="zem_rp_title">Does Amazon&#8217;s Mayday use WebRTC? A Wireshark analysis</a></li><li data-position="2" data-poid="in-1036" data-post-type="none"><a href="https://webrtchacks.com/trickle-ice/" class="zem_rp_thumbnail"><img src="https://webrtchacks.com/wp-content/uploads/2013/12/emil1-150x150.png" alt="ICE always tastes better when it trickles! (Emil Ivov)" width="150" height="150"  /></a><a href="https://webrtchacks.com/trickle-ice/" class="zem_rp_title">ICE always tastes better when it trickles! (Emil Ivov)</a></li><li data-position="3" data-poid="in-1988" data-post-type="none"><a href="https://webrtchacks.com/hangout-analysis-philipp-hancke/" class="zem_rp_thumbnail"><img src="https://webrtchacks.com/wp-content/uploads/2014/07/philipp-hancke-stylized-150x150.png" alt="How does Hangouts use WebRTC? webrtc-internals analysis" width="150" height="150"  /></a><a href="https://webrtchacks.com/hangout-analysis-philipp-hancke/" class="zem_rp_title">How does Hangouts use WebRTC? webrtc-internals analysis</a></li><li data-position="4" data-poid="in-2529" data-post-type="none"><a href="https://webrtchacks.com/slack-webrtc-slacking/" class="zem_rp_thumbnail"><img src="https://webrtchacks.com/wp-content/uploads/2016/03/slack6-150x150.png" alt="Is Slack&#8217;s WebRTC Really Slacking? (Yoshimasa Iwase)" width="150" height="150"  /></a><a href="https://webrtchacks.com/slack-webrtc-slacking/" class="zem_rp_title">Is Slack&#8217;s WebRTC Really Slacking? (Yoshimasa Iwase)</a></li><li data-position="5" data-poid="in-2154" data-post-type="none"><a href="https://webrtchacks.com/hello-decode/" class="zem_rp_thumbnail"><img src="https://webrtchacks.com/wp-content/uploads/2015/01/Hello-post-intro-150x150.png" alt="Hello, Hello &#8211; What&#8217;s your real story? A decode by Philipp Hancke" width="150" height="150"  /></a><a href="https://webrtchacks.com/hello-decode/" class="zem_rp_title">Hello, Hello &#8211; What&#8217;s your real story? A decode by Philipp Hancke</a></li></ul></div></div>
+<!-- Simple Share Buttons Adder (6.3.4) simplesharebuttons.com --><div class="ssba ssba-wrap"><div style="text-align:left"><a data-site="" class="ssba_twitter_share" href="http://twitter.com/share?url=https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/&amp;text=What%E2%80%99s+up+with+WhatsApp+and+WebRTC%3F+"  target="_blank" ><img src="https://webrtchacks.com/wp-content/plugins/simple-share-buttons-adder/buttons/plain/twitter.png" title="Twitter" class="ssba ssba-img" alt="Tweet about this on Twitter" /></a><a data-site="" class="ssba_facebook_share" href="http://www.facebook.com/sharer.php?u=https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/"  target="_blank" ><img src="https://webrtchacks.com/wp-content/plugins/simple-share-buttons-adder/buttons/plain/facebook.png" title="Facebook" class="ssba ssba-img" alt="Share on Facebook" /></a><a data-site="linkedin" class="ssba_linkedin_share ssba_share_link" href="http://www.linkedin.com/shareArticle?mini=true&amp;url=https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/"  target="_blank" ><img src="https://webrtchacks.com/wp-content/plugins/simple-share-buttons-adder/buttons/plain/linkedin.png" title="LinkedIn" class="ssba ssba-img" alt="Share on LinkedIn" /></a><a data-site="" class="ssba_google_share" href="https://plus.google.com/share?url=https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/"  target="_blank" ><img src="https://webrtchacks.com/wp-content/plugins/simple-share-buttons-adder/buttons/plain/google.png" title="Google+" class="ssba ssba-img" alt="Share on Google+" /></a><a data-site="email" class="ssba_email_share" href="mailto:?subject=What%26#8217;s%20up%20with%20WhatsApp%20and%20WebRTC?&#038;body=%20https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/"><img src="https://webrtchacks.com/wp-content/plugins/simple-share-buttons-adder/buttons/plain/email.png" title="Email" class="ssba ssba-img" alt="Email this to someone" /></a></div></div>	</div>
+
+		<nav id="post-nav" class="contain">
+		<h1 class="assistive-text">Posts navigation</h1>
+		<div class="nav-older">&larr; <a href="https://webrtchacks.com/webrtc-troubleshooter/" rel="prev">The WebRTC Troubleshooter: test.webrtc.org</a></div>		<div class="nav-newer"><a href="https://webrtchacks.com/facebook-webrtc/" rel="next">Facebook Messenger likes WebRTC</a> &rarr;</div>	</nav>
+	
+</article>				
+<div id="comments">
+
+			<h2 id="comments-title">11 comments on &ldquo;<span>What&#8217;s up with WhatsApp and WebRTC?</span>&rdquo;</h2>
+
+		<ol class="commentlist">
+				<li class="comment even thread-even depth-1" id="li-comment-17459">
+		<article id="comment-17459" class="contain">
+			<footer class="comment-meta contain vcard">
+
+				<img alt='' src='https://secure.gravatar.com/avatar/0492355ff0231c9b8e83c8152adb6a4d?s=40&#038;d=retro&#038;r=r' srcset='https://secure.gravatar.com/avatar/0492355ff0231c9b8e83c8152adb6a4d?s=80&amp;d=retro&amp;r=r 2x' class='avatar avatar-40 photo' height='40' width='40' />
+				<div class="comment-author">
+				<span class="fn">va</span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17459"><time pubdate datetime="2015-04-22T17:45:02+00:00">April 22, 2015 at 5:45 pm</time></a> said:
+									</div><!-- .comment-author -->
+
+				
+			</footer><!-- .vcard -->
+
+			<div class="comment-content"><p>These articles are GREAT.    Fantastic info and totally appreciate the thoughtfulness / thoroughness of your analysis.</p>
+</div>
+
+			<div class="reply contain">
+				<a rel='nofollow' class='comment-reply-link' href='https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/?replytocom=17459#respond' onclick='return addComment.moveForm( "comment-17459", "17459", "respond", "2228" )' aria-label='Reply to va'>Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-17460">
+		<article id="comment-17460" class="contain">
+			<footer class="comment-meta contain vcard">
+
+				<img alt='' src='https://secure.gravatar.com/avatar/842f6aa75b529d1c03563a151f6782aa?s=40&#038;d=retro&#038;r=r' srcset='https://secure.gravatar.com/avatar/842f6aa75b529d1c03563a151f6782aa?s=80&amp;d=retro&amp;r=r 2x' class='avatar avatar-40 photo' height='40' width='40' />
+				<div class="comment-author">
+				<span class="fn">Adam Roach</span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17460"><time pubdate datetime="2015-04-22T18:56:47+00:00">April 22, 2015 at 6:56 pm</time></a> said:
+									</div><!-- .comment-author -->
+
+				
+			</footer><!-- .vcard -->
+
+			<div class="comment-content"><p>I&#8217;m curious about the assertion that WhatsApp uses SDES, yet also interops with Firefox &#8212; Firefox never implemented SDES. The only way to exchange media at all with Firefox&#8217;s WebRTC implementation is using DTLS-SRTP.</p>
+</div>
+
+			<div class="reply contain">
+				<a rel='nofollow' class='comment-reply-link' href='https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/?replytocom=17460#respond' onclick='return addComment.moveForm( "comment-17460", "17460", "respond", "2228" )' aria-label='Reply to Adam Roach'>Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-philipp-hancke bypostauthor even depth-2" id="li-comment-17461">
+		<article id="comment-17461" class="contain">
+			<footer class="comment-meta contain vcard">
+
+				<img alt='' src='https://secure.gravatar.com/avatar/d977dd1b0b2d64745ccddc9c4f00520d?s=40&#038;d=retro&#038;r=r' srcset='https://secure.gravatar.com/avatar/d977dd1b0b2d64745ccddc9c4f00520d?s=80&amp;d=retro&amp;r=r 2x' class='avatar avatar-40 photo' height='40' width='40' />
+				<div class="comment-author">
+				<span class="fn"><a href='https://github.com/fippo' rel='external nofollow' class='url'>Philipp Hancke</a></span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17461"><time pubdate datetime="2015-04-23T01:13:40+00:00">April 23, 2015 at 1:13 am</time></a> said:
+									</div><!-- .comment-author -->
+
+				
+			</footer><!-- .vcard -->
+
+			<div class="comment-content"><p>hey Adam, where do you see that assertion? Interoperating with anything WebRTC will be quite hard without ICE to start with.</p>
+</div>
+
+			<div class="reply contain">
+				<a rel='nofollow' class='comment-reply-link' href='https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/?replytocom=17461#respond' onclick='return addComment.moveForm( "comment-17461", "17461", "respond", "2228" )' aria-label='Reply to Philipp Hancke'>Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="li-comment-17463">
+		<article id="comment-17463" class="contain">
+			<footer class="comment-meta contain vcard">
+
+				<img alt='' src='https://secure.gravatar.com/avatar/04660990373462db51e08870c6120ccb?s=40&#038;d=retro&#038;r=r' srcset='https://secure.gravatar.com/avatar/04660990373462db51e08870c6120ccb?s=80&amp;d=retro&amp;r=r 2x' class='avatar avatar-40 photo' height='40' width='40' />
+				<div class="comment-author">
+				<span class="fn">Vipul Rastogi</span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17463"><time pubdate datetime="2015-04-27T01:49:03+00:00">April 27, 2015 at 1:49 am</time></a> said:
+									</div><!-- .comment-author -->
+
+				
+			</footer><!-- .vcard -->
+
+			<div class="comment-content"><p>Just love they way they handled most visible problem of WebRTC. Also their approach to anchor media first and p2p later means they already have very big infra which they can leverage further for multi-party conf.<br />
+Very recently I worked for one Communication giant who is changing their legacy feature server to work in this way but in legacy protocols. They otherwise use to host media all the time. Can you believe it ?<br />
+I certainly think Whatsapp has done great job in identifying right implementation and now they should API their offering for wide adoption/customization etc.</p>
+</div>
+
+			<div class="reply contain">
+				<a rel='nofollow' class='comment-reply-link' href='https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/?replytocom=17463#respond' onclick='return addComment.moveForm( "comment-17463", "17463", "respond", "2228" )' aria-label='Reply to Vipul Rastogi'>Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="li-comment-17485">
+		<article id="comment-17485" class="contain">
+			<footer class="comment-meta contain vcard">
+
+				<img alt='' src='https://secure.gravatar.com/avatar/beb21939f6a5a1e3b48faa2d5eed358a?s=40&#038;d=retro&#038;r=r' srcset='https://secure.gravatar.com/avatar/beb21939f6a5a1e3b48faa2d5eed358a?s=80&amp;d=retro&amp;r=r 2x' class='avatar avatar-40 photo' height='40' width='40' />
+				<div class="comment-author">
+				<span class="fn">Ben</span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17485"><time pubdate datetime="2015-06-21T18:34:43+00:00">June 21, 2015 at 6:34 pm</time></a> said:
+									</div><!-- .comment-author -->
+
+				
+			</footer><!-- .vcard -->
+
+			<div class="comment-content"><p>The codec priority is Opus &gt; AMR &gt; PCMU, but I don&#8217;t know what could prevent Opus from being used.</p>
+<p>How did you test silence? Maybe it was still sending noise, comfort of otherwise? Did it sound fully muted on the other side?</p>
+</div>
+
+			<div class="reply contain">
+				<a rel='nofollow' class='comment-reply-link' href='https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/?replytocom=17485#respond' onclick='return addComment.moveForm( "comment-17485", "17485", "respond", "2228" )' aria-label='Reply to Ben'>Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="li-comment-17500">
+		<article id="comment-17500" class="contain">
+			<footer class="comment-meta contain vcard">
+
+				<img alt='' src='https://secure.gravatar.com/avatar/778680600099254162c0cfd713cd6191?s=40&#038;d=retro&#038;r=r' srcset='https://secure.gravatar.com/avatar/778680600099254162c0cfd713cd6191?s=80&amp;d=retro&amp;r=r 2x' class='avatar avatar-40 photo' height='40' width='40' />
+				<div class="comment-author">
+				<span class="fn">Tom van der Geer</span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17500"><time pubdate datetime="2015-07-14T04:45:03+00:00">July 14, 2015 at 4:45 am</time></a> said:
+									</div><!-- .comment-author -->
+
+				
+			</footer><!-- .vcard -->
+
+			<div class="comment-content"><p>Hi, great article!! I&#8217;ve did some tests myself with the WhatsApp call feature, but from a signalling perspective. Using the node-whatsapi project, which implements the WhatsApp protocol for NodeJS, I was able to make a trace of an incoming call from an Android WhatsApp client. See the trace here: <a href="https://gist.github.com/tvandergeer/ecc1380641801d4c7c0f" rel="nofollow">https://gist.github.com/tvandergeer/ecc1380641801d4c7c0f</a> (obfuscated some privacy details)</p>
+<p>Some conclusions/assumptions from this:<br />
+* They use the OPUS codec<br />
+* Several relays are tested for their latency. And then it most likely picks the one with the least latency<br />
+* The srtp tag indicates that SRTP is being used using a pre-shared key (192 bits) =&gt; SDES?<br />
+* Based on the presence of the p2p tag I assume that it will also attempt to connect the media directly besides using a relay</p>
+<p>Disclaimer: I&#8217;m a contributor to the node-whatsapi project</p>
+</div>
+
+			<div class="reply contain">
+				<a rel='nofollow' class='comment-reply-link' href='https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/?replytocom=17500#respond' onclick='return addComment.moveForm( "comment-17500", "17500", "respond", "2228" )' aria-label='Reply to Tom van der Geer'>Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-philipp-hancke bypostauthor even depth-2" id="li-comment-17524">
+		<article id="comment-17524" class="contain">
+			<footer class="comment-meta contain vcard">
+
+				<img alt='' src='https://secure.gravatar.com/avatar/d977dd1b0b2d64745ccddc9c4f00520d?s=40&#038;d=retro&#038;r=r' srcset='https://secure.gravatar.com/avatar/d977dd1b0b2d64745ccddc9c4f00520d?s=80&amp;d=retro&amp;r=r 2x' class='avatar avatar-40 photo' height='40' width='40' />
+				<div class="comment-author">
+				<span class="fn"><a href='https://github.com/fippo' rel='external nofollow' class='url'>Philipp Hancke</a></span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17524"><time pubdate datetime="2015-09-01T01:15:46+00:00">September 1, 2015 at 1:15 am</time></a> said:
+									</div><!-- .comment-author -->
+
+				
+			</footer><!-- .vcard -->
+
+			<div class="comment-content"><p>Tom,</p>
+<p>just noticed this. I have been pondering whether to do a MITM attack on the signaling channel to find an answer but estimated it would have taken days.</p>
+<p>Thank you! It&#8217;s good to know for sure.</p>
+</div>
+
+			<div class="reply contain">
+				<a rel='nofollow' class='comment-reply-link' href='https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/?replytocom=17524#respond' onclick='return addComment.moveForm( "comment-17524", "17524", "respond", "2228" )' aria-label='Reply to Philipp Hancke'>Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1" id="li-comment-17749">
+		<article id="comment-17749" class="contain">
+			<footer class="comment-meta contain vcard">
+
+				<img alt='' src='https://secure.gravatar.com/avatar/8c2deb13a1ecc929ebb3a96e96fc387a?s=40&#038;d=retro&#038;r=r' srcset='https://secure.gravatar.com/avatar/8c2deb13a1ecc929ebb3a96e96fc387a?s=80&amp;d=retro&amp;r=r 2x' class='avatar avatar-40 photo' height='40' width='40' />
+				<div class="comment-author">
+				<span class="fn">hira</span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17749"><time pubdate datetime="2017-03-24T14:20:08+00:00">March 24, 2017 at 2:20 pm</time></a> said:
+									</div><!-- .comment-author -->
+
+				
+			</footer><!-- .vcard -->
+
+			<div class="comment-content"><p>that&#8217;s nice article with great elaboration. thanks for your sharing.</p>
+</div>
+
+			<div class="reply contain">
+				<a rel='nofollow' class='comment-reply-link' href='https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/?replytocom=17749#respond' onclick='return addComment.moveForm( "comment-17749", "17749", "respond", "2228" )' aria-label='Reply to hira'>Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1" id="li-comment-17793">
+		<article id="comment-17793" class="contain">
+			<footer class="comment-meta contain vcard">
+
+				<img alt='' src='https://secure.gravatar.com/avatar/1c3027f74c04d430d49643cc5fd47da5?s=40&#038;d=retro&#038;r=r' srcset='https://secure.gravatar.com/avatar/1c3027f74c04d430d49643cc5fd47da5?s=80&amp;d=retro&amp;r=r 2x' class='avatar avatar-40 photo' height='40' width='40' />
+				<div class="comment-author">
+				<span class="fn"><a href='http://www.josempinto.blogspot.com' rel='external nofollow' class='url'>Jose Muanes Pinto</a></span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17793"><time pubdate datetime="2017-06-28T08:16:37+00:00">June 28, 2017 at 8:16 am</time></a> said:
+									</div><!-- .comment-author -->
+
+				
+			</footer><!-- .vcard -->
+
+			<div class="comment-content"><p>Hi all<br />
+I&#8217;m a student and I do not have knowledge in this matter (WebRTC) but I would like to learn about it.<br />
+So sorry if my question is no proper or idiot, but I would like to know: IS whatsapp using WebRTC or not, IMHO reading this great article I could see that Whatsapp use some elemnents of WebRTC.<br />
+So someone here could help, and give me an answer?<br />
+Thank you very much for your attention and time.<br />
+Jose M Pinto</p>
+</div>
+
+			<div class="reply contain">
+				<a rel='nofollow' class='comment-reply-link' href='https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/?replytocom=17793#respond' onclick='return addComment.moveForm( "comment-17793", "17793", "respond", "2228" )' aria-label='Reply to Jose Muanes Pinto'>Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-philipp-hancke bypostauthor odd alt depth-2" id="li-comment-17794">
+		<article id="comment-17794" class="contain">
+			<footer class="comment-meta contain vcard">
+
+				<img alt='' src='https://secure.gravatar.com/avatar/d977dd1b0b2d64745ccddc9c4f00520d?s=40&#038;d=retro&#038;r=r' srcset='https://secure.gravatar.com/avatar/d977dd1b0b2d64745ccddc9c4f00520d?s=80&amp;d=retro&amp;r=r 2x' class='avatar avatar-40 photo' height='40' width='40' />
+				<div class="comment-author">
+				<span class="fn"><a href='https://github.com/fippo' rel='external nofollow' class='url'>Philipp Hancke</a></span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17794"><time pubdate datetime="2017-06-28T08:34:47+00:00">June 28, 2017 at 8:34 am</time></a> said:
+									</div><!-- .comment-author -->
+
+				
+			</footer><!-- .vcard -->
+
+			<div class="comment-content"><p>Hi Jose,</p>
+<p>it would not have classified as WebRTC back in 2015, mostly because of the lack of DTLS for encryption and STUN. I&#8217;ve never had the time to look in detail at the changes they did for video calling though.</p>
+</div>
+
+			<div class="reply contain">
+				<a rel='nofollow' class='comment-reply-link' href='https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/?replytocom=17794#respond' onclick='return addComment.moveForm( "comment-17794", "17794", "respond", "2228" )' aria-label='Reply to Philipp Hancke'>Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-chad even depth-3" id="li-comment-17795">
+		<article id="comment-17795" class="contain">
+			<footer class="comment-meta contain vcard">
+
+				<img alt='' src='https://secure.gravatar.com/avatar/679a15bb1f71d378f1061cbd2a58fd5c?s=40&#038;d=retro&#038;r=r' srcset='https://secure.gravatar.com/avatar/679a15bb1f71d378f1061cbd2a58fd5c?s=80&amp;d=retro&amp;r=r 2x' class='avatar avatar-40 photo' height='40' width='40' />
+				<div class="comment-author">
+				<span class="fn">Chad Hart</span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17795"><time pubdate datetime="2017-06-28T12:13:44+00:00">June 28, 2017 at 12:13 pm</time></a> said:
+									</div><!-- .comment-author -->
+
+				
+			</footer><!-- .vcard -->
+
+			<div class="comment-content"><p>I was asked this same question recently and here is how I responded:<br />
+WhatsApp uses WebRTC&#8217;s getUserMedia on its web interface (<a href="https://web.whatsapp.com/" rel="nofollow">https://web.whatsapp.com/</a>). Their native OSX appears to be based on Electron and looks to use the same.</p>
+<p>We have not analyzed their new video calling functionality. I just did some quick scans and there is some evidence that they might at least use pieces of WebRTC for that (they include the WebRTC open source software notice). More analysis would be required to confirm how it is used.</p>
+<p>Whatsapp main voice calling functionality is not based on WebRTC, but Fippo&#8217;s analysis showed they did use some pieces of the WebRTC library.</p>
+</div>
+
+			<div class="reply contain">
+				<a rel='nofollow' class='comment-reply-link' href='https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/?replytocom=17795#respond' onclick='return addComment.moveForm( "comment-17795", "17795", "respond", "2228" )' aria-label='Reply to Chad Hart'>Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+		</ol>
+
+			
+				<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/whats-up-with-whatsapp-and-webrtc/#respond" style="display:none;">Cancel reply</a></small></h3>			<form action="https://webrtchacks.com/wp-comments-post.php?wpe-comment-post=webrtchacks" method="post" id="commentform" class="comment-form">
+				<p class="comment-notes"><span id="email-notes">Your email address will not be published.</span> Required fields are marked <span class="required">*</span></p><p class="comment-form-comment"><label for="comment">Comment</label> <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" aria-required="true" required="required"></textarea></p><p class="comment-form-author"><label for="author">Name <span class="required">*</span></label> <input id="author" name="author" type="text" value="" size="30" maxlength="245" aria-required='true' required='required' /></p>
+<p class="comment-form-email"><label for="email">Email <span class="required">*</span></label> <input id="email" name="email" type="text" value="" size="30" maxlength="100" aria-describedby="email-notes" aria-required='true' required='required' /></p>
+<p class="comment-form-url"><label for="url">Website</label> <input id="url" name="url" type="text" value="" size="30" maxlength="200" /></p>
+<p class="form-submit"><input name="submit" type="submit" id="submit" class="submit" value="Post Comment" /> <input type='hidden' name='comment_post_ID' value='2228' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="9895ac9537" /></p>		<p class="antispam-group antispam-group-q" style="clear: both;">
+			<label>Current ye@r <span class="required">*</span></label>
+			<input type="hidden" name="antspm-a" class="antispam-control antispam-control-a" value="2017" />
+			<input type="text" name="antspm-q" class="antispam-control antispam-control-q" value="4.3" autocomplete="off" />
+		</p>
+		<p class="antispam-group antispam-group-e" style="display: none;">
+			<label>Leave this field empty</label>
+			<input type="text" name="antspm-e-email-url-website" class="antispam-control antispam-control-e" value="" autocomplete="off" />
+		</p>
+<p class="wysija-after-comment"><label for="wysija-box-after-comment"><input type="checkbox" id="wysija-box-after-comment" value="1" name="wysija[comment_subscribe]">Yes, add me to your mailing list.</label></p><p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="101"/></p>			</form>
+			</div><!-- #respond -->
+		
+</div><!-- #comments -->						</div><!-- end main -->
+
+	<ul id="sidebar" role="complementary">
+
+	<li id="ajaxy_sf_widget-2" class="widget widget_ajaxy_sf_widget"><h2 class="widget-title"></h2><h2 class="widget-title">Search</h2>
+		<!-- Ajaxy Search Form v3.0.7 -->
+		<div id="5966532ad64bc" class="sf_container">
+			<form role="search" method="get" class="searchform" action="https://webrtchacks.com/" >
+				<div>
+					<label class="screen-reader-text" for="s">Search for:</label>
+					<div class="sf_search" style="border:1px solid #eee">
+						<span class="sf_block">
+							<input style="width:224px;" class="sf_input" autocomplete="off" type="text" value="search webrtcHacks.com" name="s"/>
+							<button class="sf_button searchsubmit" type="submit"><span class="sf_hidden">Search</span></button>
+						</span>
+					</div>
+				</div>
+			</form>
+		</div>
+		<script type="text/javascript">
+			/* <![CDATA[ */
+				function sf_custom_data_5966532ad64bc(data){ 
+					data.show_category = "0";
+					data.show_post_category = "0";
+					data.post_types = "";
+					return data;
+				}
+				jQuery(document).ready(function(){
+					jQuery("#5966532ad64bc .sf_input").ajaxyLiveSearch({"expand":"0","searchUrl":"http:\/\/webrtchacks.com\/?s=%s","text":"search webrtcHacks.com","delay":"300","iwidth":"224","width":"315","ajaxUrl":"https:\/\/webrtchacks.com\/wp-admin\/admin-ajax.php","ajaxData":"sf_custom_data_5966532ad64bc","search":false,"rtl":0});					
+				});
+			/* ]]> */
+		</script></li><li id="tag_cloud-2" class="widget widget_tag_cloud"><h2 class="widget-title">Tags</h2><div class="tagcloud"><a href='https://webrtchacks.com/tag/alex-gouiallard/' class='tag-link-250 tag-link-position-1' title='4 topics' style='font-size: 10.9615384615pt;'>Alex Gouiallard</a>
+<a href='https://webrtchacks.com/tag/apple/' class='tag-link-307 tag-link-position-2' title='4 topics' style='font-size: 10.9615384615pt;'>apple</a>
+<a href='https://webrtchacks.com/tag/blackbox-exploration/' class='tag-link-313 tag-link-position-3' title='11 topics' style='font-size: 16.0769230769pt;'>Blackbox Exploration</a>
+<a href='https://webrtchacks.com/tag/brief/' class='tag-link-154 tag-link-position-4' title='32 topics' style='font-size: 22pt;'>Brief</a>
+<a href='https://webrtchacks.com/tag/camera/' class='tag-link-189 tag-link-position-5' title='3 topics' style='font-size: 9.61538461538pt;'>camera</a>
+<a href='https://webrtchacks.com/tag/chrome/' class='tag-link-242 tag-link-position-6' title='5 topics' style='font-size: 12.0384615385pt;'>Chrome</a>
+<a href='https://webrtchacks.com/tag/code/' class='tag-link-183 tag-link-position-7' title='9 topics' style='font-size: 15pt;'>code</a>
+<a href='https://webrtchacks.com/tag/dan-burnett/' class='tag-link-286 tag-link-position-8' title='3 topics' style='font-size: 9.61538461538pt;'>Dan Burnett</a>
+<a href='https://webrtchacks.com/tag/datachannel/' class='tag-link-216 tag-link-position-9' title='5 topics' style='font-size: 12.0384615385pt;'>DataChannel</a>
+<a href='https://webrtchacks.com/tag/edge/' class='tag-link-345 tag-link-position-10' title='4 topics' style='font-size: 10.9615384615pt;'>Edge</a>
+<a href='https://webrtchacks.com/tag/extension/' class='tag-link-243 tag-link-position-11' title='2 topics' style='font-size: 8pt;'>extension</a>
+<a href='https://webrtchacks.com/tag/gateway/' class='tag-link-235 tag-link-position-12' title='4 topics' style='font-size: 10.9615384615pt;'>gateway</a>
+<a href='https://webrtchacks.com/tag/getusermedia/' class='tag-link-188 tag-link-position-13' title='8 topics' style='font-size: 14.3269230769pt;'>getUserMedia</a>
+<a href='https://webrtchacks.com/tag/ice/' class='tag-link-167 tag-link-position-14' title='7 topics' style='font-size: 13.6538461538pt;'>ICE</a>
+<a href='https://webrtchacks.com/tag/ims/' class='tag-link-161 tag-link-position-15' title='4 topics' style='font-size: 10.9615384615pt;'>ims</a>
+<a href='https://webrtchacks.com/tag/janus/' class='tag-link-237 tag-link-position-16' title='3 topics' style='font-size: 9.61538461538pt;'>janus</a>
+<a href='https://webrtchacks.com/tag/kurento/' class='tag-link-258 tag-link-position-17' title='2 topics' style='font-size: 8pt;'>kurento</a>
+<a href='https://webrtchacks.com/tag/mcu/' class='tag-link-222 tag-link-position-18' title='4 topics' style='font-size: 10.9615384615pt;'>MCU</a>
+<a href='https://webrtchacks.com/tag/media-server/' class='tag-link-260 tag-link-position-19' title='2 topics' style='font-size: 8pt;'>media server</a>
+<a href='https://webrtchacks.com/tag/microsoft/' class='tag-link-290 tag-link-position-20' title='3 topics' style='font-size: 9.61538461538pt;'>Microsoft</a>
+<a href='https://webrtchacks.com/tag/mozilla/' class='tag-link-201 tag-link-position-21' title='3 topics' style='font-size: 9.61538461538pt;'>mozilla</a>
+<a href='https://webrtchacks.com/tag/muaz-khan/' class='tag-link-232 tag-link-position-22' title='2 topics' style='font-size: 8pt;'>muaz khan</a>
+<a href='https://webrtchacks.com/tag/nat/' class='tag-link-168 tag-link-position-23' title='5 topics' style='font-size: 12.0384615385pt;'>NAT</a>
+<a href='https://webrtchacks.com/tag/nubomedia/' class='tag-link-261 tag-link-position-24' title='2 topics' style='font-size: 8pt;'>nubomedia</a>
+<a href='https://webrtchacks.com/tag/ortc/' class='tag-link-176 tag-link-position-25' title='8 topics' style='font-size: 14.3269230769pt;'>ORTC</a>
+<a href='https://webrtchacks.com/tag/philipp-hancke/' class='tag-link-341 tag-link-position-26' title='3 topics' style='font-size: 9.61538461538pt;'>Philipp Hancke</a>
+<a href='https://webrtchacks.com/tag/promo/' class='tag-link-153 tag-link-position-27' title='10 topics' style='font-size: 15.5384615385pt;'>Promo</a>
+<a href='https://webrtchacks.com/tag/qa/' class='tag-link-101 tag-link-position-28' title='14 topics' style='font-size: 17.4230769231pt;'>Q&amp;A</a>
+<a href='https://webrtchacks.com/tag/safari/' class='tag-link-253 tag-link-position-29' title='4 topics' style='font-size: 10.9615384615pt;'>Safari</a>
+<a href='https://webrtchacks.com/tag/screencapture/' class='tag-link-233 tag-link-position-30' title='2 topics' style='font-size: 8pt;'>screenCapture</a>
+<a href='https://webrtchacks.com/tag/sdes/' class='tag-link-173 tag-link-position-31' title='3 topics' style='font-size: 9.61538461538pt;'>SDES</a>
+<a href='https://webrtchacks.com/tag/sdp/' class='tag-link-177 tag-link-position-32' title='7 topics' style='font-size: 13.6538461538pt;'>SDP</a>
+<a href='https://webrtchacks.com/tag/security/' class='tag-link-174 tag-link-position-33' title='3 topics' style='font-size: 9.61538461538pt;'>security</a>
+<a href='https://webrtchacks.com/tag/sfu/' class='tag-link-329 tag-link-position-34' title='5 topics' style='font-size: 12.0384615385pt;'>sfu</a>
+<a href='https://webrtchacks.com/tag/signaling/' class='tag-link-179 tag-link-position-35' title='3 topics' style='font-size: 9.61538461538pt;'>signaling</a>
+<a href='https://webrtchacks.com/tag/simulcast/' class='tag-link-277 tag-link-position-36' title='3 topics' style='font-size: 9.61538461538pt;'>simulcast</a>
+<a href='https://webrtchacks.com/tag/slack/' class='tag-link-362 tag-link-position-37' title='3 topics' style='font-size: 9.61538461538pt;'>slack</a>
+<a href='https://webrtchacks.com/tag/standards/' class='tag-link-249 tag-link-position-38' title='5 topics' style='font-size: 12.0384615385pt;'>standards</a>
+<a href='https://webrtchacks.com/tag/trace/' class='tag-link-230 tag-link-position-39' title='3 topics' style='font-size: 9.61538461538pt;'>trace</a>
+<a href='https://webrtchacks.com/tag/turn/' class='tag-link-170 tag-link-position-40' title='10 topics' style='font-size: 15.5384615385pt;'>TURN</a>
+<a href='https://webrtchacks.com/tag/video/' class='tag-link-198 tag-link-position-41' title='3 topics' style='font-size: 9.61538461538pt;'>video</a>
+<a href='https://webrtchacks.com/tag/vp8/' class='tag-link-199 tag-link-position-42' title='6 topics' style='font-size: 12.9807692308pt;'>vp8</a>
+<a href='https://webrtchacks.com/tag/walkthrough/' class='tag-link-155 tag-link-position-43' title='26 topics' style='font-size: 20.7884615385pt;'>Walkthrough</a>
+<a href='https://webrtchacks.com/tag/webrtc/' class='tag-link-238 tag-link-position-44' title='3 topics' style='font-size: 9.61538461538pt;'>webrtc</a>
+<a href='https://webrtchacks.com/tag/webrtc-experiment/' class='tag-link-234 tag-link-position-45' title='2 topics' style='font-size: 8pt;'>webrtc-experiment</a></div>
+</li><li id="categories-2" class="widget widget_categories"><h2 class="widget-title">Categories</h2>		<ul>
+	<li class="cat-item cat-item-149"><a href="https://webrtchacks.com/category/guide/" >Guide</a> (41)
+</li>
+	<li class="cat-item cat-item-116"><a href="https://webrtchacks.com/category/miscellaneous/" >Miscellaneous</a> (1)
+</li>
+	<li class="cat-item cat-item-150"><a href="https://webrtchacks.com/category/other/" >Other</a> (13)
+</li>
+	<li class="cat-item cat-item-156"><a href="https://webrtchacks.com/category/standard/" >Standards</a> (16)
+</li>
+	<li class="cat-item cat-item-152"><a href="https://webrtchacks.com/category/technology/" >Technology</a> (30)
+</li>
+		</ul>
+</li><li id="recent-comments-2" class="widget widget_recent_comments"><h2 class="widget-title">Recent Comments</h2><ul id="recentcomments"><li class="recentcomments"><span class="comment-author-link"><a href='http://top-password.tumblr.com' rel='external nofollow' class='url'>Jakob</a></span> on <a href="https://webrtchacks.com/getusermedia/#comment-17797">getUserMedia &#8211; What happens when there&#8217;s missing media sources?</a></li><li class="recentcomments"><span class="comment-author-link"><a href='http://top-password.tumblr.com' rel='external nofollow' class='url'>Jakob</a></span> on <a href="https://webrtchacks.com/getusermedia/#comment-17796">getUserMedia &#8211; What happens when there&#8217;s missing media sources?</a></li><li class="recentcomments"><span class="comment-author-link">Chad Hart</span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17795">What&#8217;s up with WhatsApp and WebRTC?</a></li><li class="recentcomments"><span class="comment-author-link"><a href='https://github.com/fippo' rel='external nofollow' class='url'>Philipp Hancke</a></span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17794">What&#8217;s up with WhatsApp and WebRTC?</a></li><li class="recentcomments"><span class="comment-author-link"><a href='http://www.josempinto.blogspot.com' rel='external nofollow' class='url'>Jose Muanes Pinto</a></span> on <a href="https://webrtchacks.com/whats-up-with-whatsapp-and-webrtc/#comment-17793">What&#8217;s up with WhatsApp and WebRTC?</a></li></ul></li><li id="text-2" class="widget widget_text"><h2 class="widget-title">Twittering</h2>			<div class="textwidget"><a class="twitter-timeline" href="https://twitter.com/webRTChacks" data-widget-id="354956526869426177">Tweets by @webRTChacks</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+		</li><li id="wysija-2" class="widget widget_wysija"><h2 class="widget-title">New post notifications</h2><div class="widget_wysija_cont"><div id="msg-form-wysija-2" class="wysija-msg ajax"></div><form id="form-wysija-2" method="post" action="#wysija" class="widget_wysija">
+<p class="wysija-paragraph">
+    
+    
+    	<input type="text" name="wysija[user][firstname]" class="wysija-input " title="First name" placeholder="First name" value="" />
+    
+    
+    
+    <span class="abs-req">
+        <input type="text" name="wysija[user][abs][firstname]" class="wysija-input validated[abs][firstname]" value="" />
+    </span>
+    
+</p>
+<p class="wysija-paragraph">
+    
+    
+    	<input type="text" name="wysija[user][lastname]" class="wysija-input " title="Last name" placeholder="Last name" value="" />
+    
+    
+    
+    <span class="abs-req">
+        <input type="text" name="wysija[user][abs][lastname]" class="wysija-input validated[abs][lastname]" value="" />
+    </span>
+    
+</p>
+<p class="wysija-paragraph">
+    
+    
+    	<input type="text" name="wysija[user][email]" class="wysija-input validate[required,custom[email]]" title="Email" placeholder="Email" value="" />
+    
+    
+    
+    <span class="abs-req">
+        <input type="text" name="wysija[user][abs][email]" class="wysija-input validated[abs][email]" value="" />
+    </span>
+    
+</p>
+<input class="wysija-submit wysija-submit-field" type="submit" value="Subscribe!" />
+
+    <input type="hidden" name="form_id" value="1" />
+    <input type="hidden" name="action" value="save" />
+    <input type="hidden" name="controller" value="subscribers" />
+    <input type="hidden" value="1" name="wysija-page" />
+
+    
+        <input type="hidden" name="wysija[user_list][list_ids]" value="3" />
+    
+ </form></div></li><li id="text-5" class="widget widget_text"><h2 class="widget-title">RSS Feed</h2>			<div class="textwidget"><a href="http://feeds.feedburner.com/webrtcHacks" rel="alternate" type="application/rss+xml"><img src="https://webrtchacks.com/wp-content/uploads/2013/09/rss.png" alt="" style="vertical-align:middle;border:0"/></a></div>
+		</li>
+</ul><!-- end sidebar -->
+</div><!-- end container -->
+</div><!-- end of container holder -->
+
+</div><!-- end page-wrap -->
+<div align="center" class='ads'>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- 970x90 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:100%px;height:90px"
+     data-ad-client="ca-pub-4867498141097795"
+     data-ad-slot="9734864863"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<!-- [adkingpro type=webrtcschool-top_bottom_ad] -->
+
+</div>
+
+
+<script type="text/javascript">if(window.aiModifyParent) {aiModifyParent();}</script><script type='text/javascript' src='https://webrtchacks.com/wp-content/plugins/akismet/_inc/form.js?ver=3.3.2'></script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-content/plugins/ajaxy-search-form/js/sf.js?ver=1.0.1'></script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-content/plugins/ajaxy-search-form/js/sf_selective.js?ver=1.0.0'></script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-content/plugins/anti-spam/js/anti-spam-4.3.js'></script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-content/plugins/simple-share-buttons-adder/js/ssba.min.js?ver=4.7.5'></script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-includes/js/comment-reply.min.js?ver=4.7.5'></script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-content/themes/parament/js/jquery-1.11.3.js?ver=1.0.0'></script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-content/themes/parament/js/script.js?ver=1.0.0'></script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-includes/js/wp-embed.min.js?ver=4.7.5'></script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-content/plugins/wysija-newsletters/js/validate/languages/jquery.validationEngine-en.js?ver=2.7.7'></script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-content/plugins/wysija-newsletters/js/validate/jquery.validationEngine.js?ver=2.7.7'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var wysijaAJAX = {"action":"wysija_ajax","controller":"subscribers","ajaxurl":"https:\/\/webrtchacks.com\/wp-admin\/admin-ajax.php","loadingTrans":"Loading...","is_rtl":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://webrtchacks.com/wp-content/plugins/wysija-newsletters/js/front-subscribers.js?ver=2.7.7'></script>
+<a href="https://plus.google.com/115584248522943422895" rel="publisher" style="visibility:hidden;" >Google+</a>
+</body>
+</html>

@@ -1,0 +1,1547 @@
+ 
+<html>
+	<head>
+		
+		
+		<!-- TEMP 
+		<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+		<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+		 END TEMP -->
+		 
+				<title>Solitaire Card Games</title>
+				
+				<META name="description" content="Play the best free online solitaire games. Card Game Solitaire features all of your favorite solitaire games, including Classic Solitaire, Spider Solitaire, Freecell Solitaire, and more!">
+				
+		
+		<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<META name="robots"content="index,follow">
+		<META name="copyright" content="Battleline Studios 2013. Battleline Studios. All Rights Reserved.">
+		<META name="keywords" content="solitaire, solitaire card game, free solitaire, klondike solitaire, solitaire online, card game, best solitaire, classic solitaire, spider solitaire" >
+		<META name="description" content="Play the best free online solitaire games. Card Game Solitaire features all of your favorite solitaire games, including Classic Solitaire, Spider Solitaire, Freecell Solitaire, and more!">
+		<META name="revisit-after" content="1">
+		<meta name="verify-v1" content="UmtRhGcQliQp/RaYM9p6oT/oegLooj7DgdVojdypaEI=" />	
+		<META name="author" content="John Battagline">	
+
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+		
+		<!-- begin icon -->
+		<link rel="shortcut icon" href="/pix/favicon.ico" type="image/x-icon" />
+		<link rel="icon" type="image/ico" href="/pix/favicon.ico" />
+		<!-- end icon -->
+		
+		<!-- Begin: Google Webmaster Verification Tag -->
+		<meta name="google-site-verification" content="SmGT-MJvjysx83nbQmg_9qcvoodYhjHnGvc9QHVnmVw" />
+		<!-- End: Google Webmaster Verification Tag -->
+
+
+<link rel='canonical' href='http://www.cardgamesolitaire.com/' />
+
+		<!-- facebook share stuff -->
+	    <meta property="og:title" content="Solitaire Card Games"/>
+		<meta property="og:description"
+          content="Card Game Solitaire: Be the Best all by Yourself!"/>
+		<meta property="og:image" content="/pix/solitaire_icon.png" />
+		<!-- end facebook share stuff -->
+
+
+				<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+		<!-- BEGIN CANVAS SUPPORT CHANGES -->
+
+		<!-- Game Config -->
+		<script>
+			/*
+This file is a javascript file that contains all of the game settings
+
+Dependencies:
+	- $path must be set
+	- when including, it must be in a <script> tag
+
+GOAL:
+	- as the game, include a single file and have all the settings in php and js
+	- as the dashboard, load a single file and have all the settings in js
+
+
+*/
+
+/** Namespacing */
+var com;
+(function (com) {
+	var battleline;
+	(function (battleline) {
+
+		/** Game Settings. */
+		var Config;
+		(function (Config, GameMode) {
+
+			// Unique Game Type identifier - used in feature ad determination
+			Config.gameType = "solitaire"; 
+
+			// Theme
+			Config.applyTheme = false;
+			Config.textStrokeColor = "#000000";
+			Config.textStrokeWidth = 10;
+
+			// Analytics
+			Config.analyticsEnabled = true;
+			Config.googleAnalyticsTrackingID = "UA-6280763-1";
+
+			// Error Tracking
+			Config.errorTrackingEnabled = true;
+			Config.mixpanelErrorTrackingToken = "38235353890fcfe25f986ceaba2bc98c";
+
+			// URLs
+			Config.rateUsURL = "https://www.facebook.com/Solitaire-Card-Games-153438001423426/";
+			Config.moreGamesURL = "http://www.247games.org/";
+
+			// Features
+			Config.showRateUsButton = false;
+			Config.defaultMute = true;
+
+			// Game Modes
+			/** Interface for a solitaire game mode declaration. */
+			function GameMode(title, id, url) { return { "title":title, "id":id, "url":url } }
+			Config.availableGameModes = [
+				GameMode("1 Card", "klondike1nolimit", "./"),
+				GameMode("3 Card", "klondike3nolimit", "solitaire3card.php"),
+			
+				GameMode("Spider Solitaire", "spider1", "spidersolitaire.php"),
+				GameMode("Spider (2 Suit)", "spider2", "spidersolitaire2.php"),
+				GameMode("Spider (4 Suit)", "spider4", "spiderSolitaire4.php"),
+			
+				GameMode("Freecell", "freecell4", "freecell.php"),
+
+				GameMode("Wasp Solitaire", "wasp1", "waspSolitaire1suit.php"),
+				GameMode("Wasp (2 Suit)", "wasp2", "waspSolitaire2suit.php"),
+				GameMode("Wasp (4 Suit)", "wasp4", "waspSolitaire.php"),
+
+				GameMode("Yukon Solitaire", "yukon2", "yukonSolitaire2suit.php"),
+				GameMode("Yukon (4 Suit)", "yukon4", "yukonSolitaire.php"),
+
+				GameMode("Scorpion Solitaire", "scorpion1", "scorpionSolitaire1suit.php"),
+				GameMode("Scorpion (2 Suit)", "scorpion2", "scorpionSolitaire2suit.php"),
+				GameMode("Scorpion (4 Suit)", "scorpion4", "scorpionSolitaire.php"),
+
+				GameMode("Spiderette Solitaire", "spiderette1", "spideretteSolitaire.php"),
+				GameMode("Spiderette (2 Suit)", "spiderette2", "spideretteSolitaire2suit.php"),
+				GameMode("Spiderette (4 Suit)", "spiderette4", "spideretteSolitaire4suit.php"),
+			
+			
+				GameMode("1 Card (3 Pass)", "klondike1limit3", "klondike.php"),
+				GameMode("1 Card (1 Pass)", "klondike1limit1", "patience.php"),
+
+				GameMode("3 Card (3 Pass)", "klondike3limit3", "solitaireKlondike3card.php"),
+				GameMode("3 Card (1 Pass)", "klondike3limit1", "solitairePatience3card.php")
+			];
+		})(Config = battleline.Config || (battleline.Config = {}));
+
+
+		/** App Info. */
+		var App;
+		(function (App) {
+			App.versionNumber = 
+			App.buildTimestamp = 
+			App.buildDate = "MISSING";
+		})(App = battleline.App || (battleline.App = {}));
+
+		/** Site Info. */
+		var Site;
+		(function (Site) {
+			Site.path = 
+			Site.featureAdsEnabled = 
+			Site.featureAdFrequency = 
+			Site.showFeatureAdsOnMobile = 
+			Site.featureAdLineupFileURL = "MISSING";
+		})(Site = battleline.Site || (battleline.Site = {}));
+
+
+	})(battleline = com.battleline || (com.battleline = {}));
+})(com || (com = {}));
+var com = com || {}; com.battleline = com.battleline || {}; com.battleline.App = com.battleline.App || {};
+// version.ts
+com.battleline.App.versionNumber = "1.0.039";
+com.battleline.App.buildTimestamp = 1496252503486;
+com.battleline.App.buildDate = "Wed May 31 2017 10:41:43 GMT-0700 (Pacific Daylight Time)";
+	com.battleline.Site.path = "/";
+
+	com.battleline.Site.featureAdsEnabled = true;
+	com.battleline.Site.featureAdFrequency = 3;
+	com.battleline.Site.showFeatureAdsOnMobile = false;
+	com.battleline.Site.featureAdLineupFileURL = "http://fortythievessolitaire.info/feature-lineup/FeatureLineup.js";
+		</script>
+
+		
+		<!-- Game & Preloader Support Code -->
+		<script>
+			var adsEnabled = com.battleline.Site.featureAdsEnabled;
+			var featureAdFrequency = com.battleline.Site.featureAdFrequency;
+			var showFeatureAdsOnMobile = com.battleline.Site.showFeatureAdsOnMobile;
+			var isShowingFeatureAd = false;
+			window.onFeatureAdComplete = null;
+			var adLineupFileLoaded = false;
+			var adLineupFileFailed = false;
+			var canvasGameEmbedded = false;
+			
+			function loadFeatureAdState()
+			{
+				var str = "{}";
+				try { str = localStorage.getItem("featureAdState"); }
+				catch (e)
+				{
+					console.log("Error attempting to access local storage to get ad settings. " + e);
+					str = "{}";
+				}
+
+				var featureAdState = null;
+				try { featureAdState = JSON.parse(str); }
+				catch (e)
+				{
+					console.log("Error attempting to parse featureAdState. " + e);
+					featureAdState = null;
+				}
+
+				var VERSION = 3;
+				if (featureAdState === null || featureAdState === undefined || featureAdState.version !== VERSION)
+				{
+					featureAdState = {};
+					featureAdState.version = VERSION;
+					featureAdState.totalTimesOpened = 0;
+					featureAdState.timesOpenedSinceLastAd = 0;
+					featureAdState.totalAdsShown = 0;
+					featureAdState.adIndex = -1;
+				}
+
+				return featureAdState;
+			}
+
+			function saveFeatureAdState(featureAdState)
+			{
+				try { localStorage.setItem("featureAdState", JSON.stringify(featureAdState)); }
+				catch (e)
+				{
+					console.log("Error attempting to access local storage to set ad settings. " + e);
+					return false;
+				}
+			}
+
+			function isAdNeeded()
+			{
+				// Ad Frequency test
+				var featureAdState = loadFeatureAdState();
+				featureAdState.totalTimesOpened++;
+				featureAdState.timesOpenedSinceLastAd++;
+				saveFeatureAdState(featureAdState);
+				if (featureAdState.timesOpenedSinceLastAd < featureAdFrequency) return false;
+
+				// Mobile test
+				var mobile = (/iphone|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
+				if (mobile && !showFeatureAdsOnMobile) return false;
+
+				return true;	// Must be true
+			}
+			var waitingForAd = adsEnabled && isAdNeeded() ? true : false;
+
+			function markAdShown(index, adLineupVersion)
+			{
+				var featureAdState = loadFeatureAdState();
+				featureAdState.timesOpenedSinceLastAd = 0;
+				featureAdState.totalAdsShown++;
+				featureAdState.adIndex = index + 1;
+				featureAdState.adLineupVersion = adLineupVersion;
+				if (featureAdState.adIndex >= adLineup.length) featureAdState.adIndex = 0;
+				saveFeatureAdState(featureAdState);
+			}
+
+			function showFeatureAd()
+			{
+				if (isShowingFeatureAd) return;
+				isShowingFeatureAd = true;
+				var featureAd = document.getElementById("feature-ad");
+				featureAd.style.display = "block";
+			}
+
+			function populateFeatureAd()
+			{
+				waitingForAd = false;
+				var featureAdState = loadFeatureAdState();
+				var index = featureAdState.adIndex;
+				if (featureAdState.adLineupVersion !== adLineupVersion)
+				{
+					index = -1;
+				}
+				if (index < 0)
+				{
+					for (var i = 0; i < adLineup.length; ++i)
+					{
+						if (adLineup[i].gameType === com.battleline.Config.gameType)
+						{
+							index = i;
+							break;
+						}
+					}
+
+					if (index < 0)
+					{
+						index = 0;
+					}
+				}
+				if (index >= adLineup.length) index = 0;
+				var featureAdData = adLineup[index];
+				var featureAdImg = document.getElementById("feature-ad-img");
+				featureAdImg.src = featureAdData.imageURL + "?cacheId=" + featureLineupCacheId;
+				var featureAdLink = document.getElementById("feature-ad-link");
+				featureAdLink.href = featureAdData.linkURL;
+				markAdShown(index, adLineupVersion);
+
+				showFeatureAd();
+			}
+
+			function hideFeatureAd()
+			{
+				waitingForAd = false;
+				try
+				{
+					var featureAd = document.getElementById("feature-ad");
+					featureAd.style.display = "none";
+				} catch (e) {} // suppress error if featureAd is not created yet
+				isShowingFeatureAd = false;
+				if (window.onFeatureAdComplete)
+				{
+					window.onFeatureAdComplete();
+				}
+			}
+
+			function checkCanPopulateAd()
+			{
+				if (waitingForAd && adLineupFileLoaded && canvasGameEmbedded)
+				{
+					populateFeatureAd();	// show it
+				}
+			}
+
+			function adLineupLoaded()
+			{
+				if (adLineupFileLoaded || adLineupFileFailed) return;
+				adLineupFileLoaded = true;
+				adLineup = adLineup || [];
+				adLineupVersion = adLineupVersion || 0;
+				if (waitingForAd)
+				{
+					if (!adLineup || !adLineup.length) hideFeatureAd();	// none in lineup
+
+					// clean out any that are pointing to this dir
+					var hostname = window.location.hostname;
+					if (hostname !== "")
+					{
+						for (var i = 0; i < adLineup.length; ++i)
+						{
+							if (adLineup[i].linkURL.indexOf(hostname) >= 0)
+							{
+								adLineup.splice(i, 1);
+								i--;
+							}
+						}
+					}
+
+					if (!adLineup || !adLineup.length) hideFeatureAd();	// none in lineup
+					else 
+					{
+						checkCanPopulateAd();
+					}
+				}
+			}
+
+			function adLineupFailure()
+			{
+				if (adLineupFileLoaded || adLineupFileFailed) return;
+				adLineupFileFailed = true;
+				if (waitingForAd) hideFeatureAd();	// can't show one, so hide it
+			}
+			
+			function embed_onStartReady(embed) 
+			{
+				if (waitingForAd || isShowingFeatureAd)
+				{
+					window.onFeatureAdComplete = function() { embed.start(); };
+				}
+				else embed.start();
+			}
+			function embed_onLaunchReady(embed) { embed.launch(com.battleline.Config); }
+			function Site_onGameEmbedded(embed)
+			{
+				embed.onLaunchReady.add(embed_onLaunchReady);
+				embed.onStartReady.add(embed_onStartReady);
+			}
+			function embed_onload() { com.battleline.Site.onGameEmbedded.add(Site_onGameEmbedded); }
+		</script>
+
+		<!-- Canvas Game Embed and Preloader Ad Support Scripts -->
+		<script>
+			// Loads the game script
+			var script = document.createElement("script");
+			script.async = true;
+			script.defer = true;
+			script.src = "js/embed.js?build=" + com.battleline.App.buildTimestamp;
+			script.onload = embed_onload;
+			document.head.appendChild(script);
+		</script>
+		<script>
+			// create a cache id for the feature ad lineup files
+			var featureLineupCacheId = (Math.floor(Date.now() / (1000 * 60 * 60 * 24))).toString();
+
+			// Loads the game script
+			var script = document.createElement("script");
+			script.async = true;
+			script.defer = true;
+			script.src = "http://fortythievessolitaire.info/feature-lineup/FeatureLineup.js" + "?cacheId=" + featureLineupCacheId;
+			script.onload = adLineupLoaded;
+			script.onerror = adLineupFailure;
+			script.onabort = adLineupFailure;
+			script.ontimeout = adLineupFailure;
+			document.head.appendChild(script);
+		</script>
+		
+				<!-- END CANVAS SUPPORT CHANGES   -->
+		<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+
+
+
+<script language="javascript">
+/*************************************
+	fb-share.js
+*************************************/
+var CURRENT_URL=document.location;var MOVIE_NAME="FLASH_SWF";function getRandomSpaces(){var newSpaces=" ";var random=Math.floor(Math.random()*100);for(var i=0;i<random;i++){newSpaces=newSpaces+" "}return newSpaces}if(!window.FBO){FBO={}}if(!FBO.locale){FBO.locale="en_US"}if(!FBO.localeIsRTL){FBO.localeIsRTL=false}if(!window.FBO)window.FBO={};if(!window.FBO.isSecure)window.FBO.isSecure=function(){return(window.location.href.indexOf('https')===0)||(window.name.indexOf('_fb_https')>-1)};if(!window.FBO.Share){FBO.Share={results:{},insert:function(a){(document.getElementsByTagName('HEAD')[0]||document.body).appendChild(a)},addQS:function(d,c){var a=[];for(var b in c)if(c[b])a.push(b.toString()+'='+encodeURIComponent(c[b]));return d+'?'+a.join('&')},fetchData:function(){var testURL=CURRENT_URL+getRandomSpaces();var c=document.createElement('script');var a=[];a.push('"'+testURL.replace('\\','\\\\').replace('"','\\"')+'"');c.src=this.addQS((FBO.isSecure()?'https:':'http:')+'//api.facebook.com/restserver.php',{v:'1.0',method:'links.getStats',urls:'['+a.join(',')+']',format:'json',callback:'fb_share_ballback'});this.insert(c)},_onFirst:function(){var b=document.createElement('link');b.rel='stylesheet';b.type='text/css';var a=(FBO.isSecure()?'https://s-static.ak.fbcdn.net/':'http://static.ak.fbcdn.net/');b.href=a+'connect.php/css/share-button-css';FBO.Share.fetchData()}}}if(!window.fb_share_ballback)window.fb_share_ballback=function(c){for(var d=0;c&&d<c.length;d++)FBO.Share.results[c[d].url]=c[d];sendValueToFlash(FBO.Share.results[CURRENT_URL].total_count)};function queryFBShares(){FBO.Share._onFirst()}function getSwf(movieName){var isIE=navigator.appName.indexOf("Microsoft")!=-1;return(isIE)?window[movieName]:document[movieName]}function sendValueToFlash(newValue){getSwf(MOVIE_NAME).sendTextToFlash(newValue)}
+</script>
+
+<script language="javascript">
+/*************************************
+	js-utils.js
+*************************************/
+function gotoMoreGames(){gotoAnchorName('moreGames')}function gotoEmbedPopup(){gotoAnchorName('embedPopup')}function gotoAnchorName(newName){location.href=href=location.href.split("#")[0]+"#"+newName}function OpenWindow(pageUrl){initAnalyticsEvent("facebook","share button clicked",""+pageUrl);var winName=Math.round(9999*Math.random())+new Date().getTime();var winNew=window.open(pageUrl,winName,"toolbar=1,scrollbars=1,location=1,statusbar=0,menubar=0,resizable=1,width=600,height=400,left=200,top=100");if(!winNew){getSwf(MOVIE_NAME).openWindowFromSwf(pageUrl)}else{winNew.focus()}}function initAnalyticsEvent(newCategory,newAction,newLabel){_gaq.push(['_trackEvent',''+newCategory,''+newAction,''+newLabel])}
+</script>
+
+<script language="javascript">
+var globalVars = [];
+function AddVariable(varName,varValue){
+	var tempVar = [];
+	tempVar.name = varName;
+	tempVar.value = varValue;
+	globalVars.push(tempVar);
+}
+
+function GetFlashVars(){
+	var newString = "";
+
+	for(i=0; i < globalVars.length;i++){
+
+	if(i > 0)newString += "&"
+
+		newString += globalVars[i].name+"="+globalVars[i].value;
+	}
+
+	return newString;
+}
+
+</script>
+
+
+<style>
+/*************************************
+	google font api .css
+*************************************/
+@font-face {
+  font-family: 'Rokkitt';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Rokkitt'), url(http://themes.googleusercontent.com/static/fonts/rokkitt/v5/RcB7dRNAX_8JE8zinU47YALUuEpTyoUstqEm5AMlJo4.woff) format('woff');
+}
+@font-face {
+  font-family: 'Rokkitt';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Rokkitt Bold'), local('Rokkitt-Bold'), url(http://themes.googleusercontent.com/static/fonts/rokkitt/v5/Mef17w3J4CtS0lw4Wa_8r73hpw3pgy2gAi-Ip7WPMi0.woff) format('woff');
+}
+</style>
+
+<style>
+/*************************************
+	solitaire-structure.css
+*************************************/
+#wrapper{background-repeat:repeat-x; !importantoverflow:hidden}
+#dynamic-container{height:100%; width:100%; min-width:640px; min-height:520px}
+#static-container{width:100%; padding:20px 0 40px 0}
+#static-content{width:740px}
+#game-column{width:100%}
+#divider-column #divider{height:100%}
+#ad-column{overflow:hidden}
+#embed-popup{width:100%}
+#watch-embed-code{width:100%}
+.thumbnails-td{width:236px}
+#footer{width:100%}
+.headerSize{height:70px}
+.topOffset{margin-bottom:-84px}
+.bottomOffset{padding-bottom:84px}
+</style>
+
+<style>
+/*************************************
+	solitaire-styles.css
+*************************************/
+*{border:0 none; outline:0; font-family:Rokkitt,serif; font-weight:bold; font-style:normal; font-size:26px; color:#fff; margin:0; padding:0}
+a{color:#fff; text-decoration:none; font-weight:bold; text-shadow:1px 1px 1px #000; -webkit-transition:color .3s ease-in; -o-transition:color .3s ease-in}
+a:active{color:#222}
+p{font-size:.75em; line-height:1.25em; text-shadow:1px 1px 1px #000; margin:0 0 1em}
+li{font-size:1em; text-shadow:1px 1px 1px #000; text-align:left; margin:0 0 0 .7em; padding:0 0 .75em .3em}
+.white-links a{font-size:1em; color:#efefef; text-shadow:1px -1px 1px #000}
+.white-links a:active{color:#efefef}
+body{font-size:1em; margin:0}
+#wrapper{background:url(/pix/solitaire-slice.jpg) repeat top center}
+#static-container{background:url(/pix/background-highlight.png) repeat-x top center}
+#static-content{padding:20px 0 40px}
+#divider-column #divider{background-color:#333; width:2px}
+#ad-column{padding-left:7px}
+.text-box{background:url(/pix/white-opacity.png) repeat; border:4px solid #333; border-radius:12px; text-align:left}
+.text-box-padding{padding:1em}
+.text-box-outline{border:2px solid #eee; border-radius:14px}
+.inner-text-box{background-color:#fff; border:2px solid #333; border-radius:8px}
+.adbox-container{width:740px; height:102px}
+.adbox-outline{background-color:#333; border:2px solid #eee; border-radius:8px}
+.adbox-padding{padding:4px}
+#embed-popup{margin-bottom:20px}
+#watch-embed-code{font-family:sans-serif; text-align:left; font-size:12px; font-weight:normal; border-radius:6px; color:#000; padding:10px}
+.gameTitle{position:absolute; top:3px; left:175px; z-index:10}
+.header-bg{position:absolute; right:0; top:20px; height:50px; width:100%}
+#social-links td{text-align:center}
+#thumbnails-margin{margin:30px 0}
+#thumbnails-outline{border:3px solid #eee; border-radius:14px}
+#thumbnails-container{background:url(/pix/solitaire-bg.jpg) repeat top center; text-align:center; border:2px solid #333; border-radius:11px; box-shadow:inset 0 0 20px #000; padding:15px}
+.thumbnails-td{width:233px; padding-bottom:15px; text-align:center}
+#facebook-container{padding:20px}
+#footer{background:url(/pix/solitaire-bg.jpg) repeat; height:75px; text-align:center; box-shadow:inset 0 0 20px #000; border-top:3px solid #333}
+#brand-link{padding-top:15px; font-size:.8em; color:#FFF}
+#facebook-wrapper{border-bottom:1px solid #ccc; background:url(/pix/solitaire-slice.jpg) repeat top center; padding:66px 15px 15px}
+#facebook-game-border{border:2px solid #111; border-radius:5px}
+#facebook-game-border2{border:2px solid #ccc; border-radius:7px}
+#fb-like{position:absolute; top:18px; right:17px; z-index:10; border:1px solid #aaa; border-radius:5px; background-color:#fff; padding:5px 6px}
+.headerSize{height:70px; box-shadow:inset 0 0 5px #000}
+.topOffset{margin-bottom:-84px}
+.bottomOffset{padding-bottom:84px}
+.fb-topOffset{margin-bottom:-134px}
+.fb-bottomOffset{padding-bottom:134px}
+h1, h2, h3{font-size:2em; line-height:.8em; text-shadow:1px 1px 1px #000; text-align:center; padding:1em 0 .2em}
+
+#social-links{position:absolute; top:10px; right:0}
+a:focus, a:hover, .white-links a:hover, ul.top-nav li a:focus, ul.top-nav li a:hover{color:#ffba00}
+ul.top-nav{position:absolute; overflow:hidden; top:38px; left:460px; height:30px; line-height:110%}
+ul.top-nav li, ul.top-nav li a{display:inline; float:left; color:#CCC; font-family:Arial; font-size:9.5pt; font-style:normal; font-weight:bold; text-decoration:none}
+</style>
+	
+	<script type="text/javascript">
+	/*************************************
+		BEGIN Google Analytics
+	*************************************/
+
+
+		// cardgamesolitaire.com
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-6280763-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+			
+	/*-----------------------------------
+		END Google Analytics
+	-----------------------------------*/
+	</script>
+	
+	<!-- end google analytics code -->
+	
+</head>
+
+<body>
+
+<!-- OnScroll tag: 247games - Opentag -->
+<script src="//tags.us.onscroll.com/7dfd9821-4813-4783-9c94-bd190954be31/tag.min.js" async defer></script>
+
+<!-------- BEGIN Chrome Store Links -------->
+<style>
+	#feedbackLink{display:none;}
+	#chromeStoreLink{display:none;}
+</style>
+<a href='/' id='chromeStoreLink' rel='noreferrer' target='_blank'>Solitaire</a><a href='/' id='feedbackLink' rel='noreferrer' target='_blank'>Solitaire</a><script>
+function gotoChromeStoreURL(onChromeURL,notOnChromeURL)
+{
+
+	// user came to site from chrome store app
+	if(0){
+	
+		// navigate to chrome store page
+		gotoURL(onChromeURL);
+	}
+	// user did NOT come from chrome store app
+	else{
+	
+		// navigate o normal web page
+		//gotoURL(notOnChromeURL);
+		window.location = notOnChromeURL
+	}
+}
+
+// allows us to go to a specified page on the chrome store
+function gotoURL(newURL)
+{
+
+	// example of an external interface call that might use this function, within flash...
+	// ExternalInterface.call("gotoURL","https://chrome.google.com/webstore/detail/kmfmnamhddafiplkkobdinpjcnidlplk/reviews");
+
+	// modify anchor tag's url
+	document.getElementById('chromeStoreLink').href = newURL;
+
+  var MouseEvt = document.createEvent("MouseEvents");
+  MouseEvt.initMouseEvent("click", true, true, window,
+    0, 0, 0, 0, 0, false, false, false, false, 0, null);
+  var cb = document.getElementById("chromeStoreLink"); 
+  cb.dispatchEvent(MouseEvt);
+	
+}
+
+// goto this game's feedback page on the chrome store
+function clickFeedbackLink()
+{
+
+	// go to chrome feedback url...
+	if(0){
+		document.getElementById('feedbackLink').href = "https://chrome.google.com/webstore/detail/solitaire-card-games/dkelcbhdkpcdiiancfjhjcpdinbbfolp/reviews";
+	}
+	// go to facebook url...
+	else{
+		document.getElementById('feedbackLink').href = "https://www.facebook.com/pages/Solitaire-Card-Games/153438001423426";
+	}
+	
+
+  var MouseEvt = document.createEvent("MouseEvents");
+  MouseEvt.initMouseEvent("click", true, true, window,
+    0, 0, 0, 0, 0, false, false, false, false, 0, null);
+  var cb = document.getElementById("feedbackLink"); 
+  cb.dispatchEvent(MouseEvt);
+	
+}
+</script>
+
+<!-------- END Chrome Store Links	-------->
+
+
+		<img class="gameTitle" src="/pix/solitaire-title.png"/>
+			
+		<div id='wrapper'>
+			<center>
+
+			<div class="headerSize">
+	
+				<ul class="top-nav">
+										<li><a href="/solitaire/index.php"><img src="/pix/solitaireOS.png" /></a></li>
+					<li>|</li>
+										<li><a href="/">Solitaire</a></li>
+					<li>|</li>
+					<li><a href="/spidersolitaire.php">Spider Solitaire</a></li>
+					<li>|</li>
+					<li><a href="/spidersolitaire2.php">Spider 2 Suit</a></li>
+					<li>|</li>
+					<li><a href="/spidersolitaire4.php">Spider 4 Suit</a></li>
+					<li>|</li>
+					<li><a href="/freecell.php">Freecell</a></li>
+					<li>|</li>
+					<li><a href="/solitaire3card.php">3 Card Klondike</a></li> 
+					
+				</ul>
+			
+				<table id="social-links">
+					<tr valign="top">
+						<td>
+						
+<!-- begin facebook like / share button -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3&appId=4166677674";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<div class="fb-like" data-href="https://www.facebook.com/pages/Solitaire-Card-Games/153438001423426" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
+<!-- end facebook like / share button -->
+						
+						</td>
+						<td width="20px"></td>
+						<td>
+							<!-- Place this tag where you want the +1 button to render. -->
+							<div class="g-plusone" data-size="medium"></div>
+						</td>
+					</tr>
+				</table>
+
+
+			</div>
+						<!-- START TABLE CONTAINER -->
+<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+<!-- BEGIN CANVAS SUPPORT CHANGES -->
+<!-- END CANVAS SUPPORT CHANGES   -->
+<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+<!------------BEGIN FLASH VARS !!! -->
+
+<script>
+	// tell the preloader what to swf to load
+	AddVariable("SWF_OBJECT_NAME","solitaire7.swf");
+
+	// the home page loads the intro screen 
+	AddVariable("webLoadsIntro","true");
+	
+	// tell the game what game to load
+	AddVariable("GAME_TYPE","KLONDIKE_1CARD");
+	//AddVariable("GAME_TYPE","KLONDIKE_1CARD_1PASS");
+	//AddVariable("GAME_TYPE","KLONDIKE_1CARD_3PASS");
+	//AddVariable("GAME_TYPE","KLONDIKE_3CARD");
+	//AddVariable("GAME_TYPE","KLONDIKE_3CARD_1PASS");
+	//AddVariable("GAME_TYPE","KLONDIKE_3CARD_3PASS");
+	//AddVariable("GAME_TYPE","FREECELL");
+	//AddVariable("GAME_TYPE","SPIDER_1SUIT");
+	//AddVariable("GAME_TYPE","SPIDER_2SUIT");
+	//AddVariable("GAME_TYPE","SPIDER_4SUIT");
+	//AddVariable("GAME_TYPE","SPIDERETTE_1SUIT");
+	//AddVariable("GAME_TYPE","SPIDERETTE_2SUIT");
+	//AddVariable("GAME_TYPE","SPIDERETTE_4SUIT");
+	//AddVariable("GAME_TYPE","SCORPION1");
+	//AddVariable("GAME_TYPE","SCORPION");	// NORMAL
+	//AddVariable("GAME_TYPE","SCORPION4");
+	//AddVariable("GAME_TYPE","WASP");		// NORMAL
+	//AddVariable("GAME_TYPE","WASP2");
+	//AddVariable("GAME_TYPE","WASP1");
+	//AddVariable("GAME_TYPE","YUKON");		// NORMAL
+	//AddVariable("GAME_TYPE","YUKON2");
+</script>
+<!------------ END FLASH VARS!! -->
+
+				
+				<style>
+#ad-column-left{
+	padding-right: 7px;
+}
+</style>
+
+<TABLE id="dynamic-container" class="topOffset" cellpadding="0" cellspacing="0">
+	<TR>
+	
+		<!-- BEGIN LEFT AD -->
+		
+
+
+
+		<TD VALIGN="TOP" id="ad-column-left">
+			
+			<div class="adbox-margin">
+			<div class="adbox-outline">
+			<div class="adbox-padding">
+			
+<!-- OnScroll tag: left -->
+<div id='div-gpt-ad-1458831083030-0' style='height:600px; width:160px;'>
+
+<!-- begin NEW adx skyscraper ad -->
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Card Game Solitaire - Tall -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:160px;height:600px"
+     data-ad-client="ca-pub-5917535669884492"
+     data-ad-slot="9236608163"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<!-- end NEW adx skyscraper ad -->
+
+</div>
+			
+			</div>
+			</div>
+			</div>
+						
+		</TD>
+		<!-- END LEFT AD -->
+	
+	
+		<TD id="divider-column" class="bottomOffset">
+			<div id="divider"></div>
+		</TD>
+		<TD id="game-column" class="bottomOffset">
+		
+						<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+			<!-- BEGIN CANVAS SUPPORT CHANGES --> 
+
+			<!-- Wrapper div to enforce responsive positioning on all child elements -->
+			<div style="position:relative;width:100%;height:100%;">
+
+				<!-- Game Holder Element -->
+				<div id="game-holder" style="position:absolute;width:100%;height:100%;display:none;"></div>
+				<div id="feature-ad" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; background:#000; display: none; text-align: center;">
+					<div style="
+					max-width: 100%;
+					max-width: -moz-calc(100% - 20px);
+					max-width: -webkit-calc(100% - 20px);
+					max-width: calc(100% - 20px);
+					margin: auto;
+					margin-top: 0px;
+					">
+						<img id="feature-ad-close-btn" src="pix/close.png" onclick="hideFeatureAd()" style="
+						float: right;
+						margin-top: 10px;
+						margin-bottom: 8px;
+						cursor: pointer;
+						"/>
+
+						<p style="
+						font-size: 30px;
+						padding-top: 26px;
+						margin-bottom: 10px;
+						pointer-events: none;
+
+						color: #FFFFFF !important;
+						text-shadow: initial;
+						">Also Try...</p>
+						
+						<a id="feature-ad-link" target="_blank">
+							<img id="feature-ad-img" 
+							onabort="hideFeatureAd()"
+							onerror="hideFeatureAd()"
+							ontimeout="hideFeatureAd()"
+							style="
+							max-width: 100%;
+							"/>
+						</a>
+						
+					</div>
+				</div>
+
+				<!-- Dynamic Embedding -->
+				<script>
+					function embedCanvasGame()
+					{
+						console.log("Embedding Canvas Game");
+
+						var gameFrameURL = "game/index.html?game=klondike1nolimit&build=" + com.battleline.App.buildTimestamp;					// URL to load in the iframe when canvas embedding is used
+
+						var holder = document.getElementById("game-holder");
+						holder.style.display = "block";
+						var embedStr = '<iframe allowfullscreen src="' + gameFrameURL + '" tabIndex="1" id="game-frame" style="position: relative; width: 100%; height: 100%; border: none;"></iframe>';
+						holder.innerHTML = embedStr;
+
+						canvasGameEmbedded = true;
+						checkCanPopulateAd();
+					}
+					embedCanvasGame();
+				</script>
+			</div>
+
+			<!-- END CANVAS SUPPORT CHANGES   -->
+			<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+		</TD>
+		
+		<!-- BEGIN RIGHT AD -->
+		
+		<TD id="divider-column" class="bottomOffset">
+			<div id="divider"></div>
+		</TD>
+
+
+		<TD VALIGN="TOP" id="ad-column">
+			
+			<!-- begin google ad -->
+			<div class="adbox-margin">
+			<div class="adbox-outline">
+			<div class="adbox-padding">
+			
+<!-- OnScroll tag: right -->
+<div id='div-gpt-ad-1458831034840-0' style='height:600px; width:160px;'>
+
+<!-- begin NEW adx skyscraper ad -->
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Card Game Solitaire - Tall -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:160px;height:600px"
+     data-ad-client="ca-pub-5917535669884492"
+     data-ad-slot="9236608163"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+
+<!-- end NEW adx skyscraper ad -->
+
+</div>
+			
+			</div>
+			</div>
+			</div>
+						
+		</TD>
+		<!-- END RIGHT AD -->
+			
+	</TR>
+</TABLE>
+
+		<!-- END TABLE CONTAINER -->
+			
+			
+				<div id="static-container">
+				
+					<div id="static-content"> 
+						
+						
+						<div class="adbox-container">
+						<div class="adbox-outline">
+						<div class="adbox-padding">
+						
+<!-- begin NEW adx google ad -->
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- Card Game Solitaire - Wide -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-5917535669884492"
+     data-ad-slot="6283141760"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<!-- end NEW adx google ad -->
+
+						</div>
+						</div>
+						</div>
+ 
+							
+							
+						<h1>Card Game Solitaire</h1>				
+						
+						<div class="text-box-outline">
+						<div class="text-box">
+						<div class="text-box-padding">
+							
+							<p>Card Game Solitaire.com has tons of free online <b>solitaire card games</b> that are both available for download and playable directly out of your browser. Every time you play solitaire, you compete with yourself for your best high score. Play card games for free whenever you like--when at work, school, or home--and make all your friends jealous with your ever-increasing solitaire skills!</p>
+							<p>Klondike Solitaire is the most popular card game around. Card Game <b>Solitaire</b> does it better than the rest offering smooth game play and an undo button! Made popular online by the original PC solitaire version, Card Game Solitaire's Klondike Solitaire is taken to the next level with a game you'll keep coming back to again and again!</p>
+							<p>Solitaire is a fun card game to enjoy at all ages. Create stacks of cards on the <b>solitaire</b> board by stacking cards downward alternating color. Click through the stock cards to add extra cards to the solitaire game. The ultimate goal of Klondike Solitaire is to add all the cards into their foundations in the top right based on suit from Ace to King.</p>
+							<p>Enjoy this age old game all day long with Card Game Solitaire's wonderful rendition of a classic Solitaire card game!</p>
+							<p>Klondike Solitaire, electronically, has been around in force since the early days of the PC. See what the madness is all about by learning how to play. <a href="solitaireInstructions.php">Learn how to play card game solitaire.</a></p>
+							
+						</div>
+						</div>
+						</div>
+	
+						<h2>Solitaire</h2>
+						
+						<div class="text-box-outline">
+						<div class="text-box">
+						<div class="text-box-padding">
+							<ul>
+								<ul>
+									<li>24 great solitaire games!</li>
+									<li>Easy to learn solitaire</li>
+									<li>Fun to play</li>
+									<li>Large, easy to read cards</li>
+									<li>Free to download and embed on your site</li>
+									<li>Play online out of your browser for free</li>
+								</ul>
+							</ul>
+						</div>
+						</div>
+						</div>
+						
+						
+							
+					
+						<a name="moreGames"></a>
+						
+						
+				<h2>Solitaire</h2>
+						
+<!-- Place this tag where you want the widget to render. -->
+<div class="g-page" data-href="//plus.google.com/116355201961825844873" data-layout="landscape" data-rel="publisher"></div>
+
+<!-- Place this tag after the last widget tag. -->
+<script type="text/javascript">
+  (function() {
+	var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+	po.src = 'https://apis.google.com/js/plusone.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+				
+				
+				<div id="thumbnails-margin">
+				<div id="thumbnails-outline">
+				<div id="thumbnails-container" class="white-links">
+					<center>
+					<table>
+							
+						<!-- 1 card solitaire -->	
+						<tr>
+	
+							<td class="thumbnails-td">
+								<a href="/">
+									solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="solitaire" />
+								</a>
+							</td>
+	
+							<td class="thumbnails-td">
+								<a href="/klondike.php">
+									3 pass klondike
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="solitaire" />
+								</a>
+							</td>
+	
+							<td class="thumbnails-td">
+								<a href="/patience.php">
+									patience
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="solitaire" />
+								</a>
+							</td>
+	
+						</tr>
+						
+						<!-- 3 card solitaire -->	
+						<tr>
+	
+							<td class="thumbnails-td">
+								<a href="/solitaire3card.php">
+									klondike solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="klondike solitaire" />
+								</a>
+							</td>	
+	
+							<td class="thumbnails-td">
+								<a href="/solitaireKlondike3card.php">
+									3-card 3-pass klondike
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="klondike solitaire" />
+								</a>
+							</td>	
+	
+	
+							
+							<td class="thumbnails-td">
+								<a href="/solitairePatience3card.php">
+									3-card 1-pass patience solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="klondike solitaire" />
+								</a>
+							</td>
+	
+						</tr>
+						
+						<!-- freecell solitaire -->
+						<tr>
+							<td class="thumbnails-td"></td>
+						
+							<td class="thumbnails-td">
+								<a href="/freecell.php">
+									freecell solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="freecell solitaire" />
+								</a>
+							</td>
+							<td class="thumbnails-td"></td>
+						</tr>
+						
+						<!-- spider solitaire -->
+						<tr>
+	
+							<td class="thumbnails-td">
+								<a href="/spidersolitaire.php">
+									spider solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="spider solitaire" />
+								</a>
+							</td>
+	
+							<td class="thumbnails-td">
+								<a href="/spidersolitaire2.php">
+									spider solitaire 2 suit 
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="hard spider solitaire" />
+								</a>
+							</td>
+	
+							<td class="thumbnails-td">
+								<a href="/spidersolitaire4.php">
+									spider solitaire 4 suit 
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="expert spider solitaire" />
+								</a>
+							</td>	
+						
+						</tr>
+						
+						<!-- spiderette solitaire -->
+						<tr>
+	
+							<td class="thumbnails-td">
+								<a href="/spideretteSolitaire.php">
+									spiderette solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="spiderette solitaire" />
+								</a>
+							</td>
+	
+							<td class="thumbnails-td">
+								<a href="/spideretteSolitaire2suit.php">
+									2 suit spiderette solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="hard spiderette solitaire" />
+								</a>
+							</td>
+	
+							<td class="thumbnails-td">
+								<a href="/spideretteSolitaire4suit.php">
+									4 suit spiderette solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="expert spiderette solitaire" />
+								</a>
+							</td>	
+						
+						</tr>
+						
+						<!-- scorpion solitaire -->
+						<tr>
+							
+							<td class="thumbnails-td">
+								<a href="/scorpionSolitaire1suit.php">
+									scorpion solitaire 1 suit
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="1 suit scorpion solitaire" />
+								</a>
+							</td>	
+							<td class="thumbnails-td">
+								<a href="/scorpionSolitaire2suit.php">
+									scorpion solitaire 2 suit
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="scorpion solitaire 2" />
+								</a>
+							</td>	
+							<td class="thumbnails-td">
+								<a href="/scorpionSolitaire.php">
+									scorpion solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="scorpion solitaire" />
+								</a>
+							</td>	
+						
+						</tr>
+						
+						<!-- wasp solitaire -->
+						<tr>
+				
+							<td class="thumbnails-td">
+								<a href="/waspSolitaire1suit.php">
+									wasp solitaire 1 suit
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="1 suit wasp solitaire" />
+								</a>
+							</td>
+							
+							<td class="thumbnails-td">
+								<a href="/waspSolitaire2suit.php">
+									wasp solitaire 2 suit
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="2 suit wasp solitaire" />
+								</a>
+							</td>
+							
+							<td class="thumbnails-td">
+								<a href="/waspSolitaire.php">
+									wasp solitaire 
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="wasp solitaire" />
+								</a>
+							</td>
+										
+						</tr>
+						
+						<!-- yukon solitaire -->
+						<tr>
+						<td class="thumbnails-td">
+								<a href="/yukonSolitaire2suit.php">
+									2 suit yukon
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="yukon solitaire" />
+								</a>
+							</td>
+					
+						<td class="thumbnails-td">
+								<a href="/yukonSolitaire.php">
+									yukon solitaire 4
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="4 yukon solitaire" />
+								</a>
+							</td>
+						<td></td>
+						</tr>
+						
+						
+						<!-- links to old games -->
+						<tr>
+				
+							<td class="thumbnails-td">
+								<a href="/pokerSolitaire.php">
+									Poker Solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="poker solitaire" />
+								</a>
+							</td>
+							
+							<td class="thumbnails-td">
+								<a href="/downloadcardgames.php">
+									Calculation Solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="calculation solitaire" />
+								</a>
+							</td>
+							
+							<td class="thumbnails-td">
+								<a href="/fourteenOutSolitaire.php">
+									14-Out Solitaire
+									<br>
+									<img src="/pix/thumbnails/tn_solitaire_1card.png" alt="14-out solitaire" />
+								</a>
+							</td>
+										
+						</tr>
+						
+					</table>
+				</div>
+				</div>
+				</div>
+
+						<div class="adbox-container">
+						<div class="adbox-outline">
+						<div class="adbox-padding">
+	<!-- begin Leaderboard ad -->
+	
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- card game solitaire-thumbs Leaderboard -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-5917535669884492"
+     data-ad-slot="3403585765"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+	<!-- end Leaderboard ad -->
+
+
+						</div>
+						</div>
+						</div>
+
+
+
+				<h2>Solitaire Card Games</h2>
+				
+				<div id="thumbnails-margin">
+				<div id="thumbnails-outline">
+				<div id="thumbnails-container" class="white-links">
+					<center>
+					<table>
+								
+						<tr>
+	
+								<td class="thumbnails-td">
+									<a href="/" target="_blank">
+										Solitaire
+										<br>
+										<img alt="solitaire" src="/pix/solitaire_icon.png">
+									</a>
+								</td>
+	
+								<td class="thumbnails-td">
+									<a href="http://www.cardgamespidersolitaire.com/" target="_blank">
+										Spider Solitaire
+										<br>
+										<img alt="spider solitaire" src="http://www.cardgamespidersolitaire.com/pix/spider_solitaire_icon.png">
+									</a>
+								</td>
+	
+								<td class="thumbnails-td">
+									<a href='http://www.123freecell.com' target="_blank">
+										FreeCell
+										<br>
+										<img alt='freecell' src='http://www.123freecell.com/pix/icon_freecell.png' />
+									</a>
+								</td>
+		
+
+							</tr>
+							
+							<tr>
+	
+								<td class="thumbnails-td">
+									<a href='http://www.solitairetime.com' target="_blank">
+										Solitaire
+										<br>
+										<img alt='solitaire' src='http://www.solitairetime.com/pix/icon_solitaire.png' />
+									</a>
+								</td>
+								
+								<td class="thumbnails-td">
+								<a href='http://www.247mahjong.com' target="_blank">
+										Mahjong
+										<br>
+										<img alt='mahjong' src='http://www.247mahjong.com/pix/mahjong_icon.png' />
+									</a>
+								</td>
+	
+								<td class="thumbnails-td">
+									<a href='http://www.247sudoku.com' target="_blank">
+										Sudoku
+										<br>
+										<img alt='solitaire' src='http://www.247sudoku.com/pix/sudoku.png' />
+									</a>
+								</td>
+	
+								
+							</tr>
+							<tr>
+	
+								<td class="thumbnails-td">
+									<a href='http://www.247hearts.com' target="_blank">
+										Hearts
+										<br>
+										<img alt='hearts' src='http://www.247hearts.com/pix/hearts_icon.png' />
+									</a>
+								</td>
+								
+								<td class="thumbnails-td">
+								<a href='http://www.247backgammon.org' target="_blank">
+										Backgammon
+										<br>
+										<img alt='backgammon' src='http://www.247backgammon.org/pix/backgammon_icon.png' />
+									</a>
+								</td>
+	
+								<td class="thumbnails-td">
+									<a href='http://www.247blackjack.com' target="_blank">
+										Blackjack
+										<br>
+										<img alt='blackjack' src='http://www.247blackjack.com/pix/blackjack_icon.png' />
+									</a>
+								</td>
+	
+								
+							</tr>
+							<tr>
+	
+								<td class="thumbnails-td">
+									<a href='http://www.247checkers.com' target="_blank">
+										Checkers
+										<br>
+										<img alt='checkers' src='http://www.247checkers.com/pix/checkers_icon.png' />
+									</a>
+								</td>
+								
+								<td class="thumbnails-td">
+									<a href='http://www.247spades.com' target="_blank">
+										Spades
+										<br>
+										<img alt='spades' src='http://www.247spades.com/pix/spades_icon.png' />
+									</a>
+								</td>
+	
+								<td class="thumbnails-td">
+									<a href='http://www.247bridge.com' target="_blank">
+										Bridge
+										<br>
+										<img alt='bridge' src='http://www.247bridge.com/pix/bridge_icon.png' />
+									</a>
+								</td>
+	
+								
+							</tr>
+							
+							<tr>
+	
+								<td class="thumbnails-td">
+									<a href='http://www.247roulette.org' target="_blank">
+										Roulette
+										<br>
+										<img alt='roulette' src='http://www.247roulette.org/pix/roulette_icon.png' />
+									</a>
+								</td>
+								
+								<td class="thumbnails-td">
+									<a href='http://www.247videopoker.org' target="_blank">
+										Video Poker
+										<br>
+										<img alt='video poker' src='http://www.247videopoker.org/images/tiles/videopoker_icon.png' />
+									</a>
+								</td>
+	
+								<td class="thumbnails-td">
+									<a href='http://www.247games.org' target="_blank">
+										Games
+										<br>
+										<img alt='games' src='http://www.247games.org/pix/games.png' />
+									</a>
+								</td>
+	
+								
+							</tr>
+						
+					
+					</table>
+				</div>
+				</div>
+				</div>
+			 
+				
+				
+						<h1>How to Play Solitaire</h1>
+
+						<div id="thumbnails-margin">
+						<div id="thumbnails-outline">
+						<div id="thumbnails-container" class="white-links">
+							<ul>
+								<li><a href="/solitaireInstructions.php">Klondike Solitaire Instructions</a></li>
+								<li><a href="/spidersolitaireInstructions.php">Spider Solitaire Instructions</a></li>
+								<li><a href="/freecellInstructions.php">Freecell Solitaire Instructions</a></li>
+								<li><a href="/calculationInstructions.php">Calculation Solitaire Instructions</a></li>
+							</ul>
+						</div>
+						</div>
+						</div>
+						
+						
+						<h1>Download Card Games</h1>
+
+						<div id="thumbnails-margin">
+						<div id="thumbnails-outline">
+						<div id="thumbnails-container" class="white-links">
+							<ul>
+								<li><a href="/download-solitaire.php">Download Solitaire</a></li>
+								<li><a href="/download-spidersolitaire.php">Download Spider Solitaire</a></li>
+								<li><a href="/download-freecellsolitaire.php">Download Freecell Solitaire</a></li>
+								<li><a href="/solitairePolicy.php">Solitaire Privacy Policy</a></li>
+							</ul>
+						</div>
+						</div>
+						</div>
+
+						<h2>Solitaire News</h2>
+
+						<div id="thumbnails-margin">
+						<div id="thumbnails-outline">
+						<div id="thumbnails-container" class="white-links">
+						<ul id="news">
+							<li id="news"><a href="/news/02-05-14_Upgraded_Site.php">02-05-14 Upgraded Solitaire Site</a></li>
+							<li id="news"><a href="/news/11-25-13_New_Solitaire_Launch.php">11-25-13 New Solitaire Launch</a></li>
+							<li id="news"><a href="/news/09-26-13_Your_Solitaire_Site.php">09-26-13 Your Solitaire Site</a></li>
+							<li id="news"><a href="/news/08-14-13_247_Games_Solitaire.php">08-14-13 24/7 Games Solitaire</a></li>
+							<li id="news"><a href="/news/07-25-13_Try_A_Different_Solitaire.php">07-25-13 Try A Different Solitaire</a></li>
+							<li id="news"><a href="/news/07-03-13_Solitaire_Fun.php">07-03-13 Solitaire Fun</a></li>
+							<li id="news"><a href="/news/06-20-13_Solitaire_Updates_2013.php">06-20-13 Solitaire Updates 2013</a></li>
+							<li id="news"><a href="/news/03-08-11_Spider_Solitaire.php">03-08-11 Spider Solitaire</a></li>
+							<li id="news"><a href="/news/03-06-11_3_Card_Solitaire.php">03-06-11 3 Card Solitaire</a></li>
+							<li id="news"><a href="/news/01-02-11_Adjusted_Layout.php">01-02-11 Adjusted Layout</a></li>
+							<li id="news"><a href="/news/08-16-09_Scorpion_Solitaire.php">08-16-09 Scorpion Solitaire</a></li>
+							<li id="news"><a href="/news/08-11-09_14-Out_Solitaire.php">08-11-09 14-Out Solitaire</a></li>
+							<li id="news"><a href="/news/08-03-09_Yukon_Solitaire.php">08-03-09 Yukon Solitaire</a></li>
+							<li id="news"><a href="/news/04-30-09_Spiderette_Solitaire.php">04-30-09 Spiderette Solitaire</a></li>
+							<li id="news"><a href="/news/04-24-09_New_Solitaire_Forums.php">04-24-09 New Solitaire Forums</a></li>
+							<li id="news"><a href="/news/02-15-09_Poker_Solitaire_Final_Release.php">02-15-09 Poker Solitaire Final Release</a></li>
+							<li id="news"><a href="/news/02-13-09_Scary_Bug_Fixes.php">02-13-09 Scary Bug Fixes</a></li>
+							<li id="news"><a href="/news/02-12-09_Birthday_Solitaire_Thanks.php">02-12-09 Birthday Solitaire Thanks</a></li>
+							<li id="news"><a href="/news/02-11-09_Birthday_Solitaire.php">02-11-09 Birthday Solitaire</a></li>
+							<li id="news"><a href="/news/02-03-09_Poker_Solitaire_Bug_Fix.php">02-03-09 Poker Solitaire Bug Fix</a></li>
+							<li id="news"><a href="/news/02-02-09_Poker_Solitaire.php">02-02-09 Poker Solitaire</a></li>
+							<li id="news"><a href="/news/11-24-08_New_Solitaire_Links.php">11-24-08 New Solitaire Links</a></li>
+							<li id="news"><a href="/news/11-22-08_Wider_Site.php">11-22-08 Wider Site</a></li>
+							<li id="news"><a href="/news/11-19-08_Solitaire_Science.php">11-19-08 Solitaire Science</a></li>
+							<li id="news"><a href="/news/11-28-07_Spider_Solitaire_4.php">11-28-07 Spider Solitaire 4</a></li>
+							<li id="news"><a href="/news/11-08-07_Spider_Solitaire_2.php">11-08-07 Spider Solitaire 2</a></li>
+							<li id="news"><a href="/news/11-08-07_2-Suit_Enhancement.php">11-08-07 2-Suit Enhancement</a></li>
+							<li id="news"><a href="/news/11-02-07_Calculation_Solitaire_Glitch.php">11-02-07 Calculation Solitaire Glitch</a></li>
+							<li id="news"><a href="/news/09-02-07_New_Card_Games.php">09-02-07 New Card Games</a></li>
+							<li id="news"><a href="/news/08-29-07_Freecell_Solitaire.php">08-29-07 Freecell Solitaire</a></li>
+							<li id="news"><a href="/news/08-24-07_Card_Game_Fix.php">08-24-07 Card Game Fix</a></li>
+							<li id="news"><a href="/news/08-23-07_Card_Game_News.php">08-23-07 Card Game News</a></li>
+							<li id="news"><a href="/news/08-22-07_Solitaire_Upgrade.php">08-22-07 Solitaire Upgrade</a></li>
+							<li id="news"><a href="/news/08-21-07_Solitaire_Augmentation.php">08-21-07 Solitaire Augmentation</a></li>
+							<li id="news"><a href="/news/08-20-07_Spider_Solitaire_Bug_Fix.php">08-20-07 Spider Solitaire Bug Fix</a></li>
+							<li id="news"><a href="/news/08-19-07_Solitaire_Bug_Fix.php">08-19-07 Solitaire Bug Fix</a></li>
+							<li id="news"><a href="/news/08-18-07_Site_Update.php">08-18-07 Site Update</a></li>
+							<li id="news"><a href="/news/08-08-07_Klondike_Solitaire.php">08-08-07 Klondike Solitaire</a></li>
+							<li id="news"><a href="/news/08-06-07_New_Site.php">08-06-07 New Site</a></li>
+						<ul>
+
+						</div>
+						</div>
+						</div>				
+
+
+						<div class="adbox-container">
+						<div class="adbox-outline">
+						<div class="adbox-padding">
+	<!-- begin Leaderboard ad -->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- card game solitaire-thumbs Leaderboard -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:90px"
+     data-ad-client="ca-pub-5917535669884492"
+     data-ad-slot="3403585765"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+	<!-- end Leaderboard ad -->
+
+
+						</div>
+						</div>
+						</div>
+
+
+					</div>	
+				</div>	
+							
+						</div>
+						<!-- end embed popup??? -->
+						
+
+					</div>	
+				</div>							
+			</div>
+			
+			<div id="footer" class="white-links">
+				<div id="brand-link">
+					Copyright 24/7 Games LLC
+				</div>
+			</div>
+
+		</div>
+	
+		<!-- begin facebook stuff -->
+		<script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+		<!-- end facebook stuff -->
+
+	</body>
+	
+	
+
+</html>

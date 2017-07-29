@@ -1,0 +1,83 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>Download and convert YouTube Videos.</title>
+    <meta name="author" content="Stephan Schmitz" />
+
+    <link rel='dns-prefetch' href='https://www.google.com' />
+    <link rel='dns-prefetch' href='https://www.google-analytics.com' />
+    <link rel='prefetch' href='https://www.google.com/jsapi' />
+    <link rel='prefetch' href='https://www.google-analytics.com/analytics.js' />
+
+    <link rel="stylesheet" media="all" href="assets/css/layout.css" />
+    <link rel="stylesheet" media="screen" href="assets/css/animate-custom2.css" />
+    <link rel="stylesheet" media="all" href="assets/jquery.confirm/jquery.confirm.css" />
+
+    <script async src="https://www.google.com/jsapi"></script>
+    <script>
+        google.load("webfont", "1");
+        google.setOnLoadCallback(function() {
+            WebFont.load({
+              google: { families: ['Sonsie+One'] }
+            });
+        });
+        google.load("jquery", "1.7");
+    </script>
+	<?php 
+	require('youtube-dl.class.php');
+    try {
+        // Instantly download a YouTube video (using the default settings).
+        new yt_downloader('http://www.youtube.com/watch?v=aahOEZKTCzU', TRUE);
+
+        // Instantly download a YouTube video as MP3 (using the default settings).
+        new yt_downloader('http://www.youtube.com/watch?v=aahOEZKTCzU', TRUE, 'audio');
+    }
+    catch (Exception $e) {
+        die($e->getMessage());
+    }
+	?>
+</head>
+<body>
+    <div id="container">
+        <!-- Title + description -->
+        <h1><a href="#" onclick="javascript: do_reset(); void(0);">yt_downloader</a></h1>
+        <p><cite><a href="https://github.com/eyecatchup/php-yt_downloader" target="_blank" title="Source Code on GitHub.com">Open Source PHP class</a> to download and convert YouTube<sup>&#8482;</sup> videos.</cite></p>
+
+        <!-- Download form -->
+        <div id="download" class="animated">
+            <input type="text" name="yturl" id="ytUrl" value="" placeholder="Try it: Insert a YouTube URL and click the download button." required />
+            <input class="blue" type="submit" id="s" value="Download" />
+        </div>
+
+        <!-- Results -->
+        <div id="ret" class="animated flipOutX">
+        </div>
+    </div>
+
+    <!-- GitHub badge -->
+    <a href="https://github.com/eyecatchup/php-yt_downloader" target="_blank" title="Fork me on GitHub.com">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" 
+             src="https://a248.e.akamai.net/camo.github.com/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" 
+             alt="Fork me on GitHub" />
+    </a>
+
+    <!-- Footer -->
+    <footer>
+        <p style="float:left; text-align: left;">A cool thing, made by <a href="#">Stephan Schmitz</a>.</p>
+        <p style="float:right; text-align: right; color: #777;">You may not infer any affiliation with YouTube<sup>&#8482;</sup>, which clearly doesn't exist! YouTube<sup>&#8482;</sup> and the logo are trademarks of Google Inc..</p>
+    </footer>
+
+    <!-- App scripts -->
+    <script src="assets/jquery.confirm/jquery.confirm.js"></script>
+    <script src="assets/js/scripts.js"></script>
+
+    <!-- Google Analytics -->
+    <script>
+        window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
+        ga('create','UA-57728344-1','auto');ga('send','pageview')
+    </script>
+    <script src='https://www.google-analytics.com/analytics.js' async defer></script>
+</body>
+</html>

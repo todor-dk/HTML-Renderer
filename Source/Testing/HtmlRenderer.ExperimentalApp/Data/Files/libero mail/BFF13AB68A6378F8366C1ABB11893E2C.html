@@ -1,0 +1,600 @@
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+
+
+
+<html>
+<head>
+
+<script src="/cp/javascript/default/en/uikit/util/cookies.js?compress=no" type="text/javascript"></script><script type="text/javascript">
+					var CompressTest =
+					{
+						staticPassed: false,
+						dynamicPassed: false,
+						passed: function()
+						{
+							return CompressTest.staticPassed && CompressTest.dynamicPassed;
+						}
+					};
+				</script><script src="/cp/javascript/default/en/uikit/util/staticcompresstest.js?compress=yes" type="text/javascript"></script><script type="text/javascript">
+					if(window.StaticCompressTest && StaticCompressTest.doTest)
+					{
+						if(StaticCompressTest.doTest("1234567890") == "1234567890abcdefghijklmnopqrstuvwxyz")
+						{
+							CompressTest.staticPassed = true;
+						}
+					}
+				</script><script src="/cp/ps/UIKit/util/DynamicCompressTest?d=it.net&compress=yes&s=1499878438319" type="text/javascript"></script><script type="text/javascript">
+					if(window.DynamicCompressTest && DynamicCompressTest.doTest)
+					{
+						if(DynamicCompressTest.doTest("1234567890") == "1234567890abcdefghijklmnopqrstuvwxyz")
+						{
+							CompressTest.dynamicPassed = true;
+						}
+					}
+				</script><script type="text/javascript">
+					setCookie("compress", CompressTest.passed() ? "yes" : "no");
+				</script>
+
+<link rel="shortcut icon" type="image/x-icon" href="/cp/images/default/en/main/bee-favicon.ico" />
+
+
+<meta http-equiv="refresh" content="840">
+
+<title>Login</title>
+<link type="text/css" rel="stylesheet"
+href='/cp/styles/default/en/uikit/inone_styles.css' >
+<script language="JavaScript" type="text/javascript"
+src='/cp/javascript/default/en/uikit/util.js'>
+</script>
+<script language="JavaScript" type="text/javascript">
+// store domain in a cookie.
+document.cookie = "thedomain=null; path=/";
+var counter = 0;
+function login(){
+if(document.forms[0].name.value=="suspended"){
+goTo('index2.html');
+} else {
+goTo('metaFrame.html');
+}
+}
+// If the checkbox widget exists to request an ssl connection and
+// if it is checked, then true is returned.
+function isSSLConnectionRequested() {
+if( window.document.loginInfo.ssl ) {
+return window.document.loginInfo.ssl[0].checked;
+} else {
+return false;
+}
+}
+// If the hidded field exists to indicate that an ssl connection is
+// required for this domain, then true is returned.
+function isSSLConnectionsRequired() {
+if( window.document.loginInfo.sslrequired ) {
+return true;
+} else {
+return false;
+}
+}
+function removeUsernameFromUrl(url) {
+var username = /(.*)u=[^&]*([&]|$)(.*)/;
+var result = url.match(username);
+if( result != null ) {
+url = result[1] + result[3];
+}
+return url;
+}
+function removeTokenFromUrl(url) {
+var username = /(.*)t=[^&]*([&]|$)(.*)/;
+var result = url.match(username);
+if( result != null ) {
+url = result[1] + result[3];
+}
+return url;
+}
+function removeDomainFromUrl(url) {
+var username = /(.*)d=[^&]*([&]|$)(.*)/;
+var result = url.match(username);
+if( result != null ) {
+url = result[1] + result[3];
+}
+return url;
+}
+// If javascript is enabled, the form action url will be be overwritten
+// to take the user to authentication. Otherwise the default action
+// will send them back to this very same form.
+//
+// The url will make a secure connection if one is requested by the
+// user, or the domain requires it.
+//
+// This function is called by the body tag and the ssl checkbox.
+function setAction() {
+
+
+var protocol = window.location.protocol;
+var hostname = window.location.hostname;
+var port = window.location.port;
+var httpport = "0";
+
+httpport = port;
+
+var sslport = "0";
+if( isSSLConnectionRequested() || isSSLConnectionsRequired() ) {
+// If a secure connection is required or requested, we'll use one.
+protocol = "https://"
+port = sslport;
+} else {
+protocol = "http://"
+port = httpport;
+}
+
+var authenticateUrl = "/cp/ps/Main/login/PreAuthenticate?d=it.net&s=1499878438319";
+
+
+// Remove unecessary query parameters from the url. The username is
+// supplied by the login form. The token will be created upon
+// a successful login.
+authenticateUrl = removeUsernameFromUrl(authenticateUrl);
+authenticateUrl = removeTokenFromUrl(authenticateUrl);
+authenticateUrl = removeDomainFromUrl(authenticateUrl);
+// Enable session validation. This prevents users re-authenticating
+// an expired or logged out session using a browser refresh.
+authenticateUrl = authenticateUrl + "&v=1499878438319";
+
+var baseUrl = authenticateUrl;
+
+// This block of code commented out cos it's not being used. It
+// only makes sense to dynamically modify the locale if we allow
+// the user to choose a locale right on the login page. Since
+// we've removed that feature, this code is no longer needed.
+// It'll stay here until we confirm that we no longer want
+// the locale dropdown on the login page.
+/*******************************************************************
+var args = getArgs();
+var localeArgsString = getLocaleArgsString(args);
+if( localeArgsString.length > 0 ) {
+if (baseUrl.indexOf("?") > 0) {
+localeArgsString = "&" + localeArgsString;
+} else {
+localeArgsString = "?" + localeArgsString;
+}
+}
+var url = baseUrl + localeArgsString;
+*********************************************************************/
+var url = baseUrl;
+window.document.loginInfo.action = url;
+// Put the focus on the username field only when the user first logs in.
+if( counter==0 )
+{
+counter=1;
+
+}
+}
+// This function calls a popup window containing the signup wizard.
+// Most importantly it attaches localization information to the url.
+function getWizard() {
+var url = "SignUpWizard";
+var args = getArgs();
+var localeArgsString = getLocaleArgsString(args);
+if( localeArgsString.length > 0 ) {
+localeArgsString = "?" + localeArgsString;
+}
+url += localeArgsString;
+popWin(url,'','500','400');
+}
+// This functions splits the url argument list apart and places it
+// into an array.
+function getArgs() {
+var args = new Object();
+args.name = new Array();
+args.value = new Array();
+var query = window.location.search.substring(1);
+var pairs = query.split("&");
+for( var i = 0; i < pairs.length; i++ ) {
+var pos = pairs[i].indexOf("=");
+if (pos == -1) continue;
+var argname = pairs[i].substring(0,pos);
+args.name[i] = argname;
+var value = pairs[i].substring(pos + 1);
+args.value[i] = value;
+args[argname] = value;
+}
+return args;
+}
+function getLocaleArgsString(args) {
+var localeArgsString = "";
+for( var i = 0; i < args.name.length; i++ ) {
+if( args.name[i] == "l" ) {
+localeArgsString += args.name[i] + "=" + args.value[i] + "&";
+}
+}
+// Strip off trailing &
+localeArgsString = localeArgsString.substring(0,localeArgsString.length - 1);
+return localeArgsString;
+}
+// This function is called when a user chooses display the login page
+// in a different langauge. This function modifies the locale query
+// parameters of the form action url and submits the form to redraw
+// the login form page.
+function changeLocale() {
+// Obtain value from language selection box.
+var localeArray = window.document.loginInfo.localeString.options;
+var localeIndex = window.document.loginInfo.localeString.selectedIndex;
+// Locale in the format "language_COUNTRY". e.g. en_US, en_GB
+var l = localeArray[localeIndex].value;
+// construct url up to paramters
+// var hostname = window.location.hostname;
+// var port = window.location.port;
+var url = "Login?";
+// split up url parameters
+var args = getArgs();
+// blank out existing l parameter.
+for( var i = 0; i < args.name.length; i++ ) {
+if( args.name[i] == "l" ) {
+args.value[i] = "";
+args.name[i] = "";
+}
+//alert(args.name[i] + " = " + args.value[i]);
+}
+// url length before
+var ulb = url.length;
+// add parameters to url. Don't add blank parameters.
+for( var i = 0; i < args.name.length; i++ ) {
+if( args.name[i] != "" && args.name[i] != null) {
+url += args.name[i] + "=" + args.value[i] + "&";
+}
+}
+// Strip off trailing & if one was added.
+if( url.length > ulb ) {
+url = url.substring(0,url.length - 1);
+}
+// add l, c and v parameters
+if( l ) {
+url += "&l=" + l;
+}
+// place the url into the from action attribute.
+window.document.loginInfo.action = url;
+// perform the submit
+window.document.loginInfo.submit();
+}
+function replace(str, oldstr, newstr)
+{
+if(!str)
+return '';
+var strLength = str.length;
+if (strLength == 0) return '';
+while(1)
+{
+var i = str.indexOf(oldstr);
+if ((!i) && (oldstr != str.substring(0,oldstr.length)))
+break;
+if (i == -1)
+break;
+str = str.substring(0,i) + newstr + str.substring(i+oldstr.length,strLength);
+}
+return str;
+}
+var psSafeStr= '__RMS_AT_REP__';
+//This function will replace any '@' with '+'
+function makeLoginIdPSSafe()
+{
+var u= window.document.loginInfo.uVisible.value;
+window.document.loginInfo.u.value= replace(u, '@', psSafeStr);
+}
+//This function will replace any '+' with '@'
+function restorePSSafeLoginId()
+{
+var u= window.document.loginInfo.uVisible.value;
+u= replace(u, psSafeStr, '@')
+u= replace(u, psSafeStr.toLowerCase(), '@');
+window.document.loginInfo.uVisible.value= u;
+}
+
+function setloginParameters() {
+	
+	var form = window.document.loginInfo;
+	var fullUserName = form.displayUserName.value;
+	var userName, domainName;
+	var upDomain = "";
+	var index = fullUserName.indexOf('@');
+	if (index != -1) {
+	userName = fullUserName.substring(0, index);
+	domainName = fullUserName.substring(index+1);
+}
+ 
+if (upDomain != '' ) {
+if ( index == -1 || upDomain != domainName ) {
+document.loginInfo.u.value = fullUserName;	
+return true;
+}
+}
+if (upDomain == '' && index == -1) { 
+window.alert('[MISSING ASSET: [it.net, Main, domain-part-missing]'); 	
+return false;
+}
+var actionUrl = form.action;
+var domainRe = /d=[^&]*([&]|$)/;
+if (actionUrl.match(domainRe))
+actionUrl = actionUrl.replace(domainRe, "d="+domainName);
+else
+actionUrl += "&d="+domainName;
+document.loginInfo.action = actionUrl;
+document.loginInfo.u.value = userName;
+return true;
+}
+
+function submitForm() {
+	if (!setloginParameters()) 
+		return false;
+	document.loginInfo.submit();
+}
+
+var req;
+function accessControl() {
+	document.getElementById('invalidDomainLabel').innerHTML = "";
+	var form = window.document.loginInfo;
+	var fullUserName = form.displayUserName.value;
+	var userName, domainName;
+	var upDomain = "";
+	var index = fullUserName.indexOf('@');
+	if (index != -1) {
+		userName = fullUserName.substring(0, index);
+		domainName = fullUserName.substring(index+1);
+	} else {
+		if (upDomain.length > 0 && fullUserName.length > 0) {
+			userName = fullUserName;
+			domainName = upDomain;
+		} else {
+			submitForm();
+		}
+	}
+	
+	accessUrl = "AsyncAccessBridge?u=" + userName + '&d=' + domainName;
+	
+	if (window.XMLHttpRequest) {
+	    req = new XMLHttpRequest();
+	} else if (window.ActiveXObject) {
+	    req = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	req.open("GET", accessUrl, true);
+	req.onreadystatechange = function() {accessControlCallback(req);};
+	req.send(null);	
+}
+
+function accessControlCallback(req) {
+	if (req.readyState == 4) {
+		if (req.status == 500) {
+			if (req.responseText.indexOf('IllegalStateException') > -1) {
+				document.getElementById('invalidDomainLabel').innerHTML = 'Il dominio di riferimento è stato disabilitato!';
+			} else {
+				submitForm();
+			}
+		} else {
+			submitForm();
+		}
+	}
+}
+
+
+
+
+
+
+
+</script>
+</head>
+
+
+<!-- 
+     HOST INFO
+     
+     host : mail-fe-ms02
+     port : 8080
+     protocol : HTTP/1.1     
+-->
+
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0"
+marginwidth="0" marginheight="0" onload="setAction()">
+
+
+<TABLE cellSpacing=0 cellPadding=0 width=740 border=0>
+<TBODY>
+<TR>
+<TD width="227">
+<img src='/cp/images/default/en/main/layout/logoitnet.png'> 
+</TD>
+<TD><img height=63 width=303 src='/cp/images/default/en/main/layout/marchio02.jpg'></td>
+<TD><IMG height=63 src='/cp/images/default/en/main/layout/marchio03.jpg' width=210></TD>
+</TR>
+</TBODY>  
+</TABLE>
+
+
+<TABLE height=14 cellSpacing=0 cellPadding=0 width=740 bgColor=#ff9a08 border=0>
+<TBODY>
+<TR>
+<TD width=227 height=14>
+<OBJECT
+codeBase=http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=4,0,2,0
+height=14 width=225 classid=clsid:D27CDB6E-AE6D-11cf-96B8-444553540000>
+<PARAM NAME="movie" VALUE='/cp/images/default/en/main/layout/data.swf'><PARAM NAME="quality" VALUE="high"><PARAM NAME="BGCOLOR" VALUE="#FF9A08">
+<PARAM NAME="SCALE" VALUE="noborder">
+<embed src="data.swf" quality=high
+pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"
+type="application/x-shockwave-flash" width="225" height="14"
+bgcolor="#FF9A08" scale="noborder"> 
+</embed>
+</OBJECT>
+</TD>
+<TD height=14>
+<DIV class=menu align=left>|<A class="bianco" href="http://www.it.net/">Home  &gt;&gt;&gt; </A>
+</DIV>
+</TD>
+<TD align=left width=61 bgColor=#0a2f70 height=14><IMG height=14 src='/cp/images/default/en/main/layout/riga_arancione_05.gif'
+width=22></TD>
+</TR>
+</TBODY>
+</TABLE>
+
+
+
+<table width="740" border="0" cellspacing="0" cellpadding=
+"0" summary="">
+<tr>
+<td> 
+<table width="100%" border="0" cellspacing="1" cellpadding="0">
+<tr>
+<td valign="top" align="left"><img
+src='/cp/images/default/en/main/layout/messaging.jpg'
+alt="Company Logo" title="Company Logo">
+</td>
+<td style="font-family:Verdana,Arial,Helvetica,sans-serif;color:FF9A08;font-weight:bold;font-size:24" >
+Web Business Solution
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td>
+<table align="right" width="500" border="0" cellspacing="0"
+cellpadding="0" summary="">
+<tr>
+<td width="80%" align="right" bgcolor=
+"#FFFFFF">
+
+<form name="loginInfo" method="POST" action="/cp/ps/Main/login/Login?d=it.net&s=1499878438319">
+<p>&nbsp;</p>
+<input type="hidden" name="pinOrPassword"
+value="false">
+<table width="90%" border="0" 
+cellspacing="2" cellpadding="1" summary="">
+
+      
+
+
+
+<noscript>
+<tr>
+<td>
+&nbsp;
+</td>
+<td class="errorMsg">
+You must use a JavaScript-enabled browser to access the system.
+</td>
+</tr>
+</noscript>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<tr>
+	<td class="errorMsg" colspan="30" id="invalidDomainLabel" align="center"></td>
+</tr>
+
+<tr>
+<td width="40%" align="right" class="txtlogin">
+User Name:
+</td>
+<!--
+The query parameter u is used by the
+login:signon jsp tag. Don't change it.
+-->
+<td width="60%" align="left">
+
+<input type="text" name="displayUserName" size="30"> 
+<input type="hidden" name="u">
+
+</td>
+</tr>
+
+
+<input type="hidden" name="d" value=
+'it.net'>
+<tr>
+<td class="txtlogin" width="28%" align="right">
+Password:
+</td>
+<td width="72%" align="left"><input type=
+"password" name="password"
+value='' size="30"
+></td>
+</tr>
+
+
+
+
+
+
+
+
+<tr>
+<td width="28%">&nbsp;</td>
+<td width="72%">
+<table border="0"
+cellspacing="0" cellpadding=
+"3" class="toolHilite" summary="">
+<tr>
+
+<td><input type="button"
+name="submitName"
+value=
+'Log In'
+class="buttons"
+title=
+'Click here to log in to your account.' 
+onClick="return accessControl()">
+</td>
+
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td width="28%">&nbsp;</td>
+<td width="72%" class=
+"normTxt">
+</td>
+</tr>
+</table>
+
+</form>
+</td>
+<td width="20%" valign="top" bgcolor=
+"#FFFFFF">
+&nbsp;
+
+
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+
+</body>
+</html>

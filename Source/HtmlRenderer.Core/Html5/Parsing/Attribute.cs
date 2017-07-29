@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 namespace Scientia.HtmlRenderer.Html5.Parsing
 {
     /// <summary>
-    /// Represents an attribute of a parsed tag. This is used to comminucate
+    /// Represents an attribute of a parsed tag. This is used to communicate
     /// information from the <see cref="Tokenizer"/> to the <see cref="DomParser"/>.
     /// Eventually, this will be converted to DOM element attributes.
     /// </summary>

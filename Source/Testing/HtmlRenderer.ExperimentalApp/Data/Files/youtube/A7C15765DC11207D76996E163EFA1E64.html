@@ -1,0 +1,244 @@
+<!DOCTYPE html><html>
+<head>
+<title>YouTube Fast Search - Web 2.0 Style</title>
+<meta name="keywords" CONTENT="youtube video search">
+<meta name="description" CONTENT="Search and Play YouTube videos on a single page. Preview videos, create instant playlist and more...">
+<script type="text/javascript" src="http://yui.yahooapis.com/2.2.2/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/2.2.2/build/animation/animation-min.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/2.2.2/build/dragdrop/dragdrop-min.js"></script>
+<link rel="stylesheet" href="http://yui.yahooapis.com/2.2.2/build/fonts/fonts-min.css">
+<script type="text/javascript" src="/youtube/youtube-1.0-min.js"></script>
+<link rel="shortcut icon" type="image/x-icon" href="/youtube/favicon.ico">
+<link rel="canonical" href="http://www.yvoschaap.com/youtube/">
+<meta property="og:url" content="http://www.yvoschaap.com/youtube">
+<meta property="og:site_name" content="Youtube">
+<meta property="og:title" content="Search and Play YouTube videos on a single page.">
+<meta property="og:image" content="http://www.yvoschaap.com/youtube/logo_sm.jpg">
+<meta property="og:type" content="website">
+<style type="text/css">
+body {
+	font-family: verdana;
+	background-image: url(/wpthemegen/images/stripes_2.gif);
+	background-repeat: repeat;
+	background-position: center top;
+	color: #eee;
+	text-align: center;
+	margin: auto;
+}
+::-webkit-scrollbar {
+	border-left: 1px solid rgba(255,255,255,.2);
+	width: 15px;
+}
+::-webkit-scrollbar-thumb {
+	-webkit-box-shadow: inset 0 0 99px rgba(255,255,255,.2);
+	border: solid transparent;
+	border-width: 6px 4px;
+}
+::-webkit-scrollbar-thumb:vertical {
+	min-height: 40px;
+}
+::-webkit-scrollbar-thumb:horizontal {
+	min-width: 40px;
+}
+::-webkit-scrollbar-thumb:hover {
+	-webkit-box-shadow: inset 0 0 99px rgba(255,255,255,.4);
+}
+input {
+	padding: 3px;
+	font-size: 114%;
+}
+a {
+	color: #fff;
+}
+h1, h2, h3, h4 {
+	font-family: georgia;
+	margin:0px;
+	padding-top: 5px;
+	padding-bottom: 3px;
+	color: #fff;
+}
+h1 {
+	font-family: georgia;
+}
+img {
+	border: 0;
+}
+div.workarea {
+	padding:10px;
+	float:left
+}
+div.video {
+	cursor: move;
+}
+;
+ul.searchlist {
+	overflow: auto;
+	width: 330px;
+	height:230px;
+	background: #1A1A1A;
+	border: 1px solid gray;
+	list-style: none;
+	margin:0;
+	padding:0;
+	text-align: center;
+}
+ul.draglist {
+	overflow: auto;
+	width: 330px;
+	height:390px;
+	background: #1A1A1A;
+	border: 1px solid gray;
+	list-style: none;
+	margin:0;
+	padding:0;
+	text-align: center;
+	overflow: none;
+}
+ul.draglist li {
+	padding:5px;
+}
+ul.draglist_alt {
+	position: relative;
+	width: 200px;
+	list-style: none;
+	margin:0;
+	padding:0;
+	padding-bottom:30px;
+}
+ul.draglist_alt li {
+	margin: 1px;
+	cursor: move;
+}
+ul.playlist {
+	overflow: auto;
+	width: 500px;
+	height:610px;
+	background: #1A1A1A;
+	border: 1px solid gray;
+	list-style: none;
+	margin:0;
+	padding:0;
+	text-align: center;
+}
+ul.playlist li {
+	overflow: hidden;
+	float:left;
+	padding:5px;
+	cursor: move;
+	width: 140px;
+	height: 145px;
+}
+ul.playlistBottom {
+	overflow: auto;
+	width: 330px;
+	height:190px;
+	background: #1A1A1A;
+	border: 1px solid gray;
+	list-style: none;
+	margin:0;
+	padding:0;
+	text-align: center;
+}
+ul.playlistBottom li {
+	overflow: hidden;
+	float:left;
+	padding:5px;
+	cursor: move;
+	height: 50px;
+	width: 70px;
+}
+ul.playlistBottom li img {
+	height: 47px;
+	width: 65px;
+}
+.draglist_small img {
+	position: relative;
+	padding-bottom:30px;
+}
+.draglist_small img {
+	height: 47px;
+	width: 65px;
+}
+.draglist_small li {
+	cursor: move;
+}
+li.list1 {
+	background-color: #D1E6EC;
+	border:1px solid #7EA6B2;
+}
+li.list2 {
+	background-color: #D8D4E2;
+	border:1px solid #6B4C86;
+}
+#ul3 img, #ul2 img, #ul1 img {
+	border: 3px solid #333;
+}
+
+#ytapiplayer {
+	float: right;
+	width: 320px;
+	height: 240px;
+}
+</style>
+</head>
+<body style="width: 840px;">
+<div style="width: 840px; text-align:left; display: block; ">
+  <div id="top">
+    <h1 style="float: right">YouTube FastSearch</h1>
+    <div style="float: left">
+      <h3>Search YouTube Videos</h3>
+      <form onSubmit="makeRequest(1); return false;" style="margin: 2px; padding: 2px; font-size: 1.2em;">
+        <input id="searchinput" type="text" name="tags" style="width: 280px" value="">
+        <input id="searchbutton" type="button" onClick="makeRequest(1);" value="Video Search">
+      </form>
+    </div>
+  </div>
+  <div style="width: 490px; float: left; clear: left;">
+   <h4>Search Results <!-- <a href="javascript:mostViewed()">Most Viewed</a>--></h4>
+    <ul id="ul1" class="playlist">
+    </ul>
+  </div>
+  <div style="width: 330px; float: right;">
+    <h4>Drag&Drop Player</h4>
+    <ul id="ul2" class="draglist">
+      <li>
+        <div id="ytapiplayer">YouTube search player position.</div>
+      <br>
+      <br>
+      Drag and drop the video you want to play into this area. To create a playlist of videos drop the videos the the playlist area below.
+    </ul>
+    <h4>Drag&Drop Playlist - <a href="javascript:clearPlaylist('playlist');" style="font-size:75%">clear playlist</a></h4>
+    <ul id="ul3" class="playlistBottom">
+    </ul>
+  </div>
+</div>
+<div style="clear: both; margin: auto">
+  <p></p>
+</div>
+<a href="http://www.yvoschaap.com/youtube.html">Get this script</a> | Top searches: <a href="javascript:getSearch('music+video')">Music Video</a>, <a href="javascript:getSearch('sexy')">Sexy</a>, <a href="javascript:getSearch('funny')">Funny</a>, <a href="javascript:getSearch('fail')">Fail</a>, <a href="javascript:getSearch('dancing')">Dancing</a>. <br>
+<em>YouTube Fast Search v.4.5 - youtube videos</em> developed by <a href="http://www.yvoschaap.com">Yvo Schaap</a> supported by <a href="http://www.directlyrics.com/">lyrics</a><!-- another site of mine -->.</p>
+</div>
+</div>
+<script>
+(function(w,d) {
+  var ga = d.createElement('script'); ga.async = true;
+  ga.src = 'https://www.youtube.com/iframe_api';
+  var s = d.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})(window, document);
+
+var dd = new YAHOO.util.DD("video");
+
+(function(w,d) {
+  w['ga'] = w['ga'] || function(){ (w['ga'].q = w['ga'].q || []).push(arguments) };
+  w['ga'].l = 1 * new Date();
+
+  var ga = d.createElement('script'); ga.async = true;
+  ga.src = '//www.google-analytics.com/analytics.js';
+  var s = d.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})(window, document);
+
+ga('create', 'UA-325506-4');
+ga('send', 'pageview');
+</script>
+</body> 
+</html>

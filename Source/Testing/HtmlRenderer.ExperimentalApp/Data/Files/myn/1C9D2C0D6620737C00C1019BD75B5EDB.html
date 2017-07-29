@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<!--
+~ Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied.  See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+
+
+
+
+
+
+
+
+
+
+    <html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Login with MyMC Identity Service</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        
+        <!-- FAVICONS -->   
+<link rel="apple-touch-icon" sizes="57x57" href="https://www.montgomerycollege.edu/_resources/images/global/apple-touch-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="https://www.montgomerycollege.edu/_resources/images/global/apple-touch-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="https://www.montgomerycollege.edu/_resources/images/global/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="https://www.montgomerycollege.edu/_resources/images/global/apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="https://www.montgomerycollege.edu/_resources/images/global/apple-touch-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="https://www.montgomerycollege.edu/_resources/images/global/apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="https://www.montgomerycollege.edu/_resources/images/global/apple-touch-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="https://www.montgomerycollege.edu/_resources/images/global/apple-touch-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://www.montgomerycollege.edu/_resources/images/global/apple-touch-icon-180x180.png">
+<link rel="icon" type="image/png" href="https://www.montgomerycollege.edu/_resources/images/global/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://www.montgomerycollege.edu/_resources/images/global/android-chrome-192x192.png" sizes="192x192">
+<link rel="icon" type="image/png" href="https://www.montgomerycollege.edu/_resources/images/global/favicon-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="https://www.montgomerycollege.edu/_resources/images/global/favicon-16x16.png" sizes="16x16">
+ 
+
+        <!-- styles -->
+        <!-- <link href="/authenticationendpoint/assets/css/bootstrap.min.css" rel="stylesheet"> -->
+        <link rel="stylesheet" href="/authenticationendpoint/ellucian/bootstrap/css/bootstrap-3.3.2-custom.min.css">
+        <!-- <link href="/authenticationendpoint/css/localstyles.css" rel="stylesheet"> -->
+        <link href="/authenticationendpoint/ellucian/index.css" rel="stylesheet">
+
+        <!--[if lt IE 10]>
+        <link href="/authenticationendpoint/ellucian/index-ie.css" rel="stylesheet">
+        <![endif]-->
+
+        <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="assets/js/html5.js"></script>
+        <![endif]-->
+         <script src="/authenticationendpoint/assets/js/jquery-1.7.1.min.js"></script>  
+        <script src="/authenticationendpoint/js/scripts.js"></script>
+	<style>
+	div.different-login-container a.truncate {
+	  width: 148px;
+	  white-space: nowrap;
+	  overflow: hidden;
+	  text-overflow: ellipsis;
+	}
+	</style>
+	
+	
+	
+<!-- custom styles and scripts -->
+        
+        
+         <link href="/authenticationendpoint/ellucian/css/carousel.css" rel="stylesheet">
+         <link href="/authenticationendpoint/ellucian/css/style-override.css" rel="stylesheet">
+        <link href="/authenticationendpoint/ellucian/css/font-awesome.min.css" rel="stylesheet" type="text/css"/> 
+	
+	
+	
+	
+	
+<!-- ALERT JS include -->
+<!-- Section 1 JS include -->
+<script type='text/javascript'>
+        //<![CDATA[
+                // Note, the code which toggles the display of the closing message presumes that the JS variable
+                // closing message is already defined.  The JS include that follows this will assign a non-blank
+                // value to this variable if there is a closing message.
+                var closingMessage = "this is a test closing message…";
+        //]]>
+</script> 
+
+<!-- Section 2 JS Include - Comes from Ambry -->
+<script type='text/javascript' src='https://ambry.montgomerycollege.edu/closingMessage/closingMessage.js'></script> 
+ 
+
+</head>
+
+<body class="login">
+    
+    
+    
+    
+    
+    
+    
+    
+    <div id='closingInfo' style='display: none;'>
+        <div id='closingInfo-inner'>
+        		
+        		<div class='closeButton'>
+                        <a onclick="javascript:document.getElementById('closingInfo').style.display='none';">
+                                <img height='26' width='27' alt='Click here to hide the closing message.' src='https://cms.montgomerycollege.edu/edu/images/hp-emergency_close.gif' />
+                        </a>
+                </div> <!-- /closeButton -->
+                
+        
+                <div id='closingMessage'></div>
+                
+        </div> <!-- /closingInfo-inner -->
+	</div> <!-- /closingInfo -->
+<script type='text/javascript'>
+        //<![CDATA[
+                if ("" != closingMessage)
+                        {
+                                document.getElementById('closingMessage').innerHTML = closingMessage;
+                                document.getElementById('closingInfo').style.display = 'block';
+                        }
+    
+                function ValidateForm ()
+                    {
+                        var elem = document.getElementById("loginForm").elements;
+						var i;
+						i = 0;
+						var temp = "";
+						while (i < elem.length)
+							{
+								temp += "Element [" + elem[i].name + "] Type [" + elem[i].type + "]";
+								if ("submit" == elem[i].type)
+								{
+									elem[i].style.display = 'none';
+									temp += " hidden";
+								}
+								temp += "\n";
+								i++;
+							} //  while (i < elem.length)
+						//alert (temp);
+						return true;
+                    }
+        //]]>
+</script>
+
+
+    
+    
+    
+ 
+<div class="content-wrapper">    
+    
+    
+    
+    
+    <div class="overlay hidden" style="display:none"></div>
+    <div class="header-strip hidden">&nbsp;</div>
+    <div class="header-back hidden">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <a class="logo">&nbsp</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-text hidden">
+
+    </div>
+    <div class="container hidden">
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Login to continue</h1>
+		</div>
+	</div>
+    </div>
+    <!-- container -->
+    
+    
+    
+
+    
+
+    <script type="text/javascript">
+        function doLogin() {
+            var loginForm = document.getElementById('loginForm');
+            loginForm.submit();
+        }
+
+    </script>
+    
+
+
+
+
+
+
+
+ <!-- BEGIN LOGOS -->
+	<div class="row logo-wrapper"> 
+		<div class="col-sm-6 col-md-6">
+		
+			<div class="logo pull-left" >
+			<a href="https://www.montgomerycollege.edu/"><img src="images/montgomery_college_maryland_logo-white.png" alt="Montgomery College, Montgomery County, Maryland logo" /></a> 
+			</div> <!-- END LOGO -->
+		
+		</div> <!-- END COL -->
+		
+		<div class="col-sm-6 col-md-6">
+		
+			<div class="logo logo-mymc pull-right" >
+			<img src="images/MyMC-logo.png" alt="Montgomery College, Montgomery County, Maryland logo" /> 
+			</div> <!-- END LOGO -->
+		
+		</div> <!-- END COL -->
+	
+	</div> <!-- END Row logos -->
+
+
+
+
+
+
+	<div id="local_auth_div" class="container-fluid main-login-container">
+	<div class="row"> 
+        <div class="wrapper">
+<!--        <img src="/authenticationendpoint/ellucian/ellucian-logo.png" alt="MyMC Identity Service"/>
+            <img src="/authenticationendpoint/ellucian/ellucian-logo.png" alt="MyMC Identity Service"/>
+            <div class="stripe"></div>  -->
+
+		
+            <h1 class="login-title">Login to continue<!-- Enter your <span>MyMC ID</span> and <span>Password</span> --></h1>
+        
+
+        <form action="../../commonauth" method="post" id="loginForm" class="form-inline" role="form" onsubmit='if (ValidateForm()) {return true;} else {return false;}'>
+            
+
+          
+
+                        <div id="loginTable1" class="identity-box">
+    
+    
+
+        
+	<div class="col-sm-12 col-md-8 col-lg-8 no-padding margin-bottom-30">	
+		
+		
+		
+		<!-- Username -->
+        <div class="form-group">
+            <label class="sr-only" for="username">User Name</label>
+         
+			<div class="controls">
+				<div class="input-icon left">
+						<i class="icon-user"></i> 
+					<input class="form-control" type="text" id='username' name="username" size='' placeholder="User Name" tabindex="1"/>
+				</div>
+            </div>
+		 
+        </div>
+
+    
+
+    <!--Password-->
+    <div class="form-group">
+        <label class="sr-only" for="password">Password</label>
+
+		<div class="controls">
+			<div class="input-icon left">
+			<i class="icon-lock"></i>
+            <input type="password" id='password' name="password" class="form-control" size='' placeholder="Password" tabindex="2"/>
+            <input type="hidden" name="sessionDataKey" value='27aeb8b9-aa6d-410f-8a0a-382fdb5a2073'/>
+           <!-- <input type="submit" value="Sign In" class="btn btn-default hidden-xs" tabindex="3"> -->
+			</div>
+        </div>
+		 
+    </div>
+	
+	<div class="form-group">
+  <!-- <div class="form-actions"> 
+		<input type="submit" value="Sign In" class="btn btn-default visible-xs-inline-block"> -->
+        <input type="submit" value="Sign In" class="btn purple login-btn" tabindex="4">
+    <!-- </div> -->
+	</div>
+	
+	
+<!-- BEGIN CUSTOM TEXT FOR ACCOUNT/PASSWORD HELP -->
+    <p class="login-links"><a href="https://idm.montgomerycollege.edu/accountClaiming/forgotPassword">Forgot your password?</a> | <a target="_blank" href="https://mcssb.montgomerycollege.edu/dadnormal_PROD/zwbkwbis.P_ValLogin">Find your MyMC ID</a> | <a href="https://idm.montgomerycollege.edu/accountClaiming/claimAccount"> Claim Your Account </a> | <a href="https://cms.montgomerycollege.edu/edu/department.aspx?id=53584"> MyMC Help </a></p>
+
+<!-- END CUSTOM TEXT FOR ACCOUNT/PASSWORD HELP -->
+</div> <!-- END col -->
+<!--
+
+    <div class="form-group force-display-block">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="chkRemember" name="chkRemember" tabindex="5">Remember me on this computerX
+            </label>
+        </div>
+    </div>
+-->
+
+
+    <div class="col-sm-12 col-md-4 col-lg-4 no-padding">
+	
+		<div class="notices" id="systemnotices">
+			<!-- Notices include -->
+		</div>
+        <script type='text/javascript' src='https://ambry.montgomerycollege.edu/itemsToJS/systemNotices.php'> </script> 
+     
+    </div>   <!-- END col -->
+
+  
+
+</div><!-- END identity-box -->
+
+
+            
+
+            
+
+            
+	
+	
+	
+        </form>
+	
+	 
+	 
+	 <div data-ride="carousel" class="carousel slide" id="carousel-example-generic" style="padding-right: 0px !important; padding-left: 0px !important;"> 
+		<!-- Carousel include -->
+		<script type='text/javascript' src='https://ambry.montgomerycollege.edu/itemsToJS/carousel.php'> </script>   
+	 </div><!-- END carousel  -->
+	 
+	</div><!-- END wrapper -->	
+    
+    </div><!-- END row -->
+    </div><!-- END container-fluid main-login-container --> 
+    
+     
+
+</div> <!--  END content-wrapper -->
+
+
+<footer id="footer" >
+ 
+<div id="sub-footer" class="clearfix clear">
+
+	<div class="disclaimer-nav">
+	<p><a target="_blank" href="https://cms.montgomerycollege.edu/EDU/Plain.aspx?id=4239">Directories</a> | <a target="_blank" href="https://cms.montgomerycollege.edu/edu/secondary5.aspx?urlid=15">Maps</a> | <a target="_blank" href="https://www.montgomerycollege.edu/library/">Libraries</a> | <a target="_blank" href="https://cms.montgomerycollege.edu/edu/tertiary1.aspx?urlid=50">Careers</a> | <a target="_blank" href="https://cms.montgomerycollege.edu/EDU/Plain2.aspx?id=4087">Emergency</a></p> <p><a target="_blank" href="https://cms.montgomerycollege.edu/EDU/Plain.aspx?id=15741">Disclaimer</a> | <a target="_blank" href="https://cms.montgomerycollege.edu/EDU/Plain.aspx?id=15742">Privacy Policy</a> | <a target="_blank" href="https://cms.montgomerycollege.edu/EDU/Plain.aspx?id=2071">Official Policies &amp; Documents</a> | <a target="_blank" href="https://cms.montgomerycollege.edu/EDU/Department2.aspx?id=68213">Title IX</a> | <a target="_blank" href="https://www.montgomerycollege.edu/SecurityReport">Annual Security Report (Clery Act) PDF</a> | <a target="_blank" href="https://cms.montgomerycollege.edu/accessibility@mc/">Accessibility Statement</a></p> </div><!-- end disclaimer-nav --> <div class="disclaimer-nav-sub"> <p>(&copy;) <script type="text/javascript" language="JavaScript">/*&lt;![CDATA[*/document.write((new Date()).getFullYear());/*]]&gt;*/</script>, <a target="_blank" href="https://www.montgomerycollege.edu/">Montgomery College</a>, All rights reserved</p>
+	</div><!-- END disclaimer-nav-sub -->
+	
+	<div class="disclaimer-nav-sub"> <p>Montgomery College is committed to equal employment opportunity that assures access, equity, and diversity. Further, the College is committed to 
+	providing an environment in which all persons are provided the opportunity for employment, participation in academic programs, and/or 
+	other College activities free from discrimination, harassment prohibited
+	 by federal regulations and state law, and sexual assault. To find out more information  <a href="https://cms.montgomerycollege.edu/EDU/Department.aspx?id=45423" target="_blank">visit ERDI</a>.</p>
+	</div> <!-- END disclaimer-nav-sub --> 
+	
+</div> <!-- END sub-footer --> 
+
+</footer>
+    
+
+    <script>
+ 	$(document).ready(function(){
+		$('.main-link').click(function(){
+			$('.main-link').next().hide();
+			$(this).next().toggle('fast');
+			var w = $(document).width();
+			var h = $(document).height();
+			$('.overlay').css("width",w+"px").css("height",h+"px").show();
+		});
+		$('.overlay').click(function(){$(this).hide();$('.main-link').next().hide();});
+	
+	});
+        function myFunction(key, value, name)
+        {
+	    var object = document.getElementById(name);	
+	    var domain = object.value;
+
+
+            if (domain != "")
+            {
+                document.location = "../../commonauth?idp=" + key + "&authenticator=" + value + "&sessionDataKey=27aeb8b9-aa6d-410f-8a0a-382fdb5a2073&domain=" + domain;
+            } else {
+                document.location = "../../commonauth?idp=" + key + "&authenticator=" + value + "&sessionDataKey=27aeb8b9-aa6d-410f-8a0a-382fdb5a2073";
+            }
+        }
+        
+        function handleNoDomain(key, value)
+        {
+
+
+          document.location = "../../commonauth?idp=" + key + "&authenticator=" + value + "&sessionDataKey=27aeb8b9-aa6d-410f-8a0a-382fdb5a2073";
+            
+        }
+        
+    </script>
+	
+	
+	
+	
+<!-- my js -->
+ 
+    <script src="/authenticationendpoint/ellucian/js/jquery.min.js"></script> 
+    <script src="/authenticationendpoint/ellucian/js/bootstrap.min.js"></script>
+    <!--[if lt IE 9]> 
+		<script src="/authenticationendpoint/ellucian/js/respond.min.js"></script>  
+	<![endif]-->     
+ 
+	 
+<script src="/authenticationendpoint/ellucian/js/carousel.js"></script>	 
+<script src="/authenticationendpoint/ellucian/js/jquery.backstretch.min.js"></script>
+<script>
+    $.backstretch("/authenticationendpoint/ellucian/images/bg/1.jpg");
+</script>
+
+<!-- input placeholder fix for ie8 and 9 -->
+<script>
+
+/* <![CDATA[ */
+$(function () {
+  var input = document.createElement("input");
+  if (('placeholder' in input) == false) {
+    $('[placeholder]').focus(function () {
+      var i = $(this);
+      if (i.val() == i.attr('placeholder')) {
+        i.val('').removeClass('placeholder');
+        if (i.hasClass('password')) {
+          i.removeClass('password');
+          this.type = 'password';
+        }
+      }
+    }).blur(function () {
+      var i = $(this);
+      if (i.val() == '' || i.val() == i.attr('placeholder')) {
+        if (this.type == 'password') {
+          i.addClass('password');
+          this.type = 'text';
+        }
+        i.addClass('placeholder').val(i.attr('placeholder'));
+      }
+    }).blur().parents('form').submit(function () {
+      $(this).find('[placeholder]').each(function () {
+        var i = $(this);
+        if (i.val() == i.attr('placeholder'))
+          i.val('');
+      })
+    });
+  }
+});
+/* ]]> */ 
+
+</script>
+ 
+
+
+    </body>
+    </html>
+
+
+

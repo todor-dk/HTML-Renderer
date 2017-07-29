@@ -1,0 +1,237 @@
+<html>
+<head>
+<title>PayPal MultiOrder Shipping - Print Packing Slips</title>
+<link rel="stylesheet" type="text/css" href="shipping/css/preview.css?version=1_0_4" media="screen"/>
+<link rel="stylesheet" type="text/css" href="shipping/css/printing.css?version=1_0_4" media="print"/>
+
+<!-- BEGIN UNCONSOLIDATED CODE
+<script src="shipping/js/config.js?version=1_0_4" type=text/javascript></script>
+<script src="shipping/js/utils.js?version=1_0_4" type=text/javascript></script>
+END UNCONSOLIDATED CODE -->
+
+<!-- BEGIN CONSOLIDATED CODE -->
+<script src="shipping/js/mos_appcore.js?version=1_0_4" type=text/javascript></script>
+<!-- END CONSOLIDATED CODE -->
+
+<style>
+	
+	th
+	{
+		font-weight: bold;
+		font-family: Tahoma;
+		font-size: 12px;
+		border-top: 1px solid black;
+		border-bottom: 1px solid black;
+		padding: 2px 10px 2px 10px;
+	}
+
+	th.left
+	{
+		border-left: 1px solid black;
+	}
+
+	th.right
+	{
+		border-right: 1px solid black;
+	}
+
+	td
+	{
+		font-family: Tahoma;
+		font-size: 12px;
+	}
+
+	td.shipto
+	{
+		font-weight: bold;
+	}
+
+	td.packslip
+	{
+		color: #CCCCCC;
+		font-size: 13px;
+		font-weight: bold;
+		letter-spacing: 5px;
+		vertical-align: bottom;
+		text-align: right;		
+	}
+
+	td.itemno
+	{
+		padding: 2px 10px 2px 10px;
+		white-space: nowrap;
+	}
+
+	td.description
+	{
+		padding: 2px 10px 2px 10px;
+	}
+
+	td.qty
+	{
+		padding: 2px 10px 2px 10px;
+		text-align: center;
+	}
+
+	div#pagecontent{
+		overflow:auto;
+	}	
+
+</style>
+
+<script language="javascript">
+
+	//-----------------------------------------------------------------------------
+	// function: window.onload
+	//-----------------------------------------------------------------------------
+	window.onload = function() 
+	{
+		//kind of a hack for non-IE
+		var oC = document.getElementById("pagecontent");
+		if(!psIsIE()) oC.style.height = "86%";
+
+		if(window.opener)
+		{
+			this.fillPackingSlipPage(window.opener.gAppData, window.opener.gAppData.aToPrintPackSlipOrders);
+			window.opener.gAppData.aToPrintPackSlipOrders = null;
+		}
+	}
+
+	//-----------------------------------------------------------------------------
+	// function: fillPackingSlipPage
+	//-----------------------------------------------------------------------------
+	function fillPackingSlipPage( gAppData, aOrders )
+	{
+		var sHtml = "";
+
+		//for each order 
+		for(var idx=0; idx<aOrders.length; idx++)
+		{
+			oOrder = aOrders[idx];
+		
+			//go to next if not loaded
+			if(oOrder.bLoaded == false) continue;
+
+			//get from address
+			var oFrom = gAppData.getFromAddress(oOrder.sShipFromAddressId)	
+			var sFrom = "";
+
+			if(oFrom)
+			{
+				if(gAppData.oUserSettings.bHideName == false)
+				{
+					//add name only if they want it
+					sFrom += gAppData.oUserSettings.sNameFirst + ' ' + gAppData.oUserSettings.sNameLast + '<br>';
+				}
+				
+				//build remaining address
+				sFrom += (gAppData.oUserSettings.sCompany ? gAppData.oUserSettings.sCompany + '<br>' : '') +
+						 oFrom.sAddress1 + '<br>' +
+						 (oFrom.sAddress2 ? oFrom.sAddress2 + '<br>' : '') +
+						 oFrom.sCity + ', ' + oFrom.sState + ' ' + oFrom.sZip;
+			}
+
+		    var sDate = psAPIDateToAppDate(oOrder.sPaymentDate);
+
+			var sTo = oOrder.sShipToNameFirst + ' ' + oOrder.sShipToNameLast + '<br>' + 
+					  (oOrder.sShipToCompany ? oOrder.sShipToCompany + '<br>' : "") +
+					  oOrder.sShipToAddress1 + '<br>' +
+					  (oOrder.sShipToAddress2 ? oOrder.sShipToAddress2 + '<br>' : "") +
+					  oOrder.sShipToCity + ',' + oOrder.sShipToState + ' ' + oOrder.sShipToZip;
+
+			var sOrderNo = (oOrder.sOrderNumber!=""? "<br>Order #: " + oOrder.sOrderNumber : "<br>Order #: n/a");
+
+			var sImg = "";
+			if(gAppData.oUserPrefs.sPackSlipLogoUrl) sImg = '<img border=0 src="' + gAppData.oUserPrefs.sPackSlipLogoUrl + '">';
+
+			sHtml += '<table border="0" width="100%">' +
+						'<tr>' + 
+						'<td width="1*">' + sImg + '</td>' +
+						'<td valign="bottom">' + sFrom + '</td>' + 
+						'<td valign="bottom" align="right" class="packskip">PACKING SLIP</td>' +
+						'</tr>' +
+						'</table>' +
+						'<hr>' +
+						'<table border="0" width="100%">' +
+						'<tr>' +
+						'<td width="1*" valign="top" class="shipto"><nobr>Ship To:&nbsp;</nobr></td>' +
+						'<td valign="top">' + sTo + '</td>' +
+						'<td valign="top" align=right>' + sDate + '</td>' +
+						'</tr>' +
+						'</table>' +
+						'<p>&nbsp;</p>' +
+						'<table border="0" width="100%" cellspacing=0 cellpadding=2>' + 
+						'<tr><td colspan="3">' + sOrderNo +	'</td></tr>'+					
+						'<tr>' +
+						'<th align=left class="left" width="10%"><nobr>Item Number</nobr></th>' +
+						'<th align=left width="80%">Description</th>' +
+						'<th align=right class="right" width="10%" align="right">Quantity</th>' +
+						'</tr>';
+						
+			//-- if no items, leave some blank space
+			if(oOrder.aItems.length == 0)
+			{
+				sHtml += '<tr><td colspan=3><br><br><br><br><br><br><br><br><br><br><br><br></td></tr>';
+			}
+
+			//-- create item list
+			for(var ii=0; ii<oOrder.aItems.length; ii++)
+			{
+				var oTmpItem = oOrder.aItems[ii];
+
+				sHtml += '<tr>' + 
+						 '<td class="itemno" valign="top" width="10%">' + ((oTmpItem.sNumber && oTmpItem.sNumber != "") ? oTmpItem.sNumber : "n/a") + '</td>' + 
+						 '<td class="description" valign="top" width="80%">' + ((oTmpItem.sTitle && oTmpItem.sTitle != "") ? oTmpItem.sTitle : "n/a") + '</td>' +
+						 '<td class="qty" valign="top" width="10%" align="right">' + ((oTmpItem.iQty && oTmpItem.iQty > 0) ? oTmpItem.iQty : "n/a") + '</td>' +
+					 '</tr>';
+			}
+			//add items for associated orders
+			for (var c=0; c<oOrder.aCombinedOrders.length; c++) {
+				var oAssociatedOrder = oOrder.aCombinedOrders[c];
+				
+				sHtml +='<tr><td colspan="3">' +
+					(oAssociatedOrder.sOrderNumber!=""? '<br>Order #: ' + oAssociatedOrder.sOrderNumber : '<br>Order #: n/a') +
+					'</td></tr>';  
+                                                                     
+				sHtml +='<tr>' +
+					'<th align=left class="left" width="10%"><nobr>Item Number</nobr></th>' +
+					'<th align=left width="80%">Description</th>' +
+					'<th align=right class="right" width="10%" align="right">Quantity</th>' +
+					'</tr>';						
+					
+				for (var n=0; n<oAssociatedOrder.aItems.length; n++) {
+					var oTmpItem = oAssociatedOrder.aItems[n];
+					sHtml += '<tr>' + 
+							'<td class="itemno" valign="top" width="10%">' + ((oTmpItem.sNumber && oTmpItem.sNumber != "") ? oTmpItem.sNumber : "n/a") + '</td>' + 
+							'<td class="description" valign="top" width="80%">' + ((oTmpItem.sTitle && oTmpItem.sTitle != "") ? oTmpItem.sTitle : "n/a") + '</td>' +
+							'<td class="qty" valign="top" width="10%" align="right">' + ((oTmpItem.iQty && oTmpItem.iQty > 0) ? oTmpItem.iQty : "n/a") + '</td>' +
+						 '</tr>';
+				}
+			}		
+
+			//message
+			sHtml += '</table><hr><p style="word-wrap: break-word">' + gAppData.oUserPrefs.sPackSlipMsg + '</p>';
+
+			//end page
+			if(idx != (aOrders.length-1)) sHtml += '<div class="pagebreak"></div>';
+		}
+
+		//set the page content
+		document.getElementById("pagecontent").innerHTML = sHtml;
+	}
+
+</script>
+</head>
+
+<body>
+	<div id="contentcontainer">     
+		<div id="pagecontent"></div>
+	</div>
+
+	<div id="printbar">
+		<input type=button value="   Print   " onclick="window.print();">&nbsp;<input type=button value="Close" onclick="window.close();">
+	</div>
+	
+</body>
+</html>
+

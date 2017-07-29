@@ -202,7 +202,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
                 return true;
 
             // ... or if B's root has an associated host and A is a host-including inclusive ancestor of B's root's host.
-            // TODO: What ia a "host"??
+            // TO-DO: What ia a "host"??
             // var associatedHost = (b as DocumentFragment)?
 
             // Note: The DocumentFragment node's host concept is useful for HTML's template element and the ShadowRoot object and impacts the pre - insert and replace algorithms.

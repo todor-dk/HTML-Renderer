@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+<head profile="http://gmpg.org/xfn/11">
+<meta charset="utf-8" />
+<!--
+<meta property="fb:page_id" content="6427302910" />
+-->
+<meta name="google-site-verification" content="7VWES_-rcHBcmaQis9mSYamPfNwE03f4vyTj4pfuAw0" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quick Start &#8211; WP-CLI &mdash; WordPress</title>
+<meta name="referrer" content="always">
+<link href="//s.w.org/wp-includes/css/dashicons.css?20160504" rel="stylesheet" type="text/css" />
+<link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600&subset=latin,cyrillic-ext,greek-ext,greek,vietnamese,latin-ext,cyrillic' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="//s.w.org/style/wp4.css?58" />
+<link media="only screen and (max-device-width: 480px)" href="//s.w.org/style/iphone.css?1" type="text/css" rel="stylesheet" />
+<link rel="shortcut icon" href="//s.w.org/favicon.ico?2" type="image/x-icon" />
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-52447-1']);
+_gaq.push(['_setDomainName', 'wordpress.org']);
+_gaq.push(['_trackPageview']);
+(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+function recordOutboundLink(link, category, action) {
+	_gaq.push(['_trackEvent', category, action])
+	setTimeout('document.location = "' + link.href + '"', 100);
+}
+</script>
+<!--[if lte IE 8]>
+<style type="text/css">
+@import url("//s.w.org/style/ie.css?1");
+</style>
+<![endif]-->
+<link rel="pingback" href="https://make.wordpress.org/cli/xmlrpc.php" /><link rel='dns-prefetch' href='//s0.wp.com' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="WP-CLI &raquo; Feed" href="https://make.wordpress.org/cli/feed/" />
+<link rel="alternate" type="application/rss+xml" title="WP-CLI &raquo; Comments Feed" href="https://make.wordpress.org/cli/comments/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/make.wordpress.org\/cli\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9-alpha-41028"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,56826,8203,55356,56819),0,0),c=j.toDataURL(),b===c&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55358,56794,8205,9794,65039),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55358,56794,8203,9794,65039),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='jetpack-inline-terms-css-css'  href='https://make.wordpress.org/cli/wp-content/mu-plugins/inline-terms/ui/style.css?ver=4.9-alpha-41028' type='text/css' media='all' />
+<link rel='stylesheet' id='admin-bar-css'  href='https://make.wordpress.org/cli/wp-includes/css/admin-bar.min.css?ver=4.9-alpha-41028' type='text/css' media='all' />
+<style id='admin-bar-inline-css' type='text/css'>
+.goog-te-banner-frame { top:32px !important }
+</style>
+<link rel='stylesheet' id='o2-extend-checklists-styles-css'  href='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/checklists/css/style.css?ver=4.9-alpha-41028' type='text/css' media='all' />
+<link rel='stylesheet' id='genericons-css'  href='https://make.wordpress.org/cli/wp-content/plugins/jetpack/_inc/genericons/genericons/genericons.css?ver=3.1' type='text/css' media='all' />
+<link rel='stylesheet' id='o2-plugin-styles-css'  href='https://make.wordpress.org/cli/wp-content/plugins/o2/css/style.css?ver=4.9-alpha-41028' type='text/css' media='all' />
+<link rel='stylesheet' id='o2-notifications-css'  href='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/notifications/css/style.css?ver=4.9-alpha-41028' type='text/css' media='all' />
+<link rel='stylesheet' id='o2-extend-sticky-posts-css'  href='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/sticky-posts/css/style.css?ver=4.9-alpha-41028' type='text/css' media='all' />
+<link rel='stylesheet' id='breathe-serif-css'  href='https://fonts.googleapis.com/css?family=Noto+Serif%3A400%2C700%2C400italic%2C700italic&#038;ver=4.9-alpha-41028' type='text/css' media='all' />
+<link rel='stylesheet' id='wporg-handbook-css-css'  href='https://make.wordpress.org/cli/wp-content/plugins/handbook/stylesheets/callout-boxes.css?ver=20161206' type='text/css' media='all' />
+<link rel='stylesheet' id='o2-live-comments-styles-css'  href='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/live-comments/css/style.css?ver=4.9-alpha-41028' type='text/css' media='all' />
+<link rel='stylesheet' id='post-actions-styles-css'  href='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/post-actions/css/style.css?ver=4.9-alpha-41028' type='text/css' media='all' />
+<link rel='stylesheet' id='p2-breathe-css'  href='https://make.wordpress.org/cli/wp-content/themes/p2-breathe/style.css?ver=4.9-alpha-41028' type='text/css' media='all' />
+<link rel='stylesheet' id='wporg-breathe-css'  href='https://make.wordpress.org/cli/wp-content/themes/pub/wporg-breathe/style.css?ver=20170503' type='text/css' media='all' />
+<link rel='stylesheet' id='jetpack_css-css'  href='https://make.wordpress.org/cli/wp-content/plugins/jetpack/css/jetpack.css?ver=5.0' type='text/css' media='all' />
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/mu-plugins/inline-terms/ui/atwho.min.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/mu-plugins/inline-terms/ui/defaults.min.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/mu-plugins/inline-terms/ui/xposts.min.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/mu-plugins/inline-terms/ui/hashtags.min.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/post-action-states.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/offline/js/offline.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/underscore.min.js?ver=1.8.3'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/backbone.min.js?ver=1.2.3'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/models/user.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/collections/users.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/events.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/keyboard.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/models/page-meta.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/moment.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var _wpUtilSettings = {"ajax":{"url":"\/cli\/wp-admin\/admin-ajax.php"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/wp-util.min.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/wp-backbone.min.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/views/app-footer.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var userSettings = {"url":"\/","uid":"0","time":"1499878515","secure":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/utils.min.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/views/app-header.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/jquery.highlight.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/models/base.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/models/comment.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/jquery.hotkeys.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/editor/jquery.autoresize.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/caret.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/editor/editor.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/views/comment.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/models/post.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/views/new-post.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/compare-times.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/collections/comments.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/views/post.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/collections/posts.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/jquery/jquery.color.min.js?ver=2.1.1'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/timestamp.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/notifications/js/models/notification.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/notifications/js/collections/notifications.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/notifications/js/views/notification.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/notifications/js/views/dock-items.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/notifications/js/views/dock-count.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/notifications/js/views/dock.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/notifications/js/views/flash.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/notifications/js/app/notifications.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/views/no-posts-post.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/views/posts.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var o2Config = {"options":{"nonce":"d7fc8cb2d0","loadTime":1499878515000,"readURL":"https:\/\/make.wordpress.org\/cli\/wp-admin\/admin-ajax.php?action=o2_read","writeURL":"https:\/\/make.wordpress.org\/cli\/wp-admin\/admin-ajax.php?action=o2_write","userDataURL":"https:\/\/make.wordpress.org\/cli\/wp-admin\/admin-ajax.php?action=o2_userdata","loginURL":"https:\/\/login.wordpress.org\/?redirect_to=https%3A%2F%2Fmake.wordpress.org%2Fcli%2F","loginWithRedirectURL":"https:\/\/login.wordpress.org\/?redirect_to=https%3A%2F%2Fmake.wordpress.org%2Fcli%3Fo2_login_complete%3Dtrue","pollingInterval":10000,"timestampFormat":"%1$s on %2$s","dateFormat":"F j, Y","timeFormat":"g:i a","todayFormat":"%s","yesterdayFormat":"Yesterday at %s","compactFormat":{"seconds":"Now","minutes":"%sm","hours":"%sh","days":"%sd","weeks":"%sw","months":"%smon","years":"%sy"},"i18nMoment":{"months":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthsShort":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"weekdaysShort":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"weekdaysMin":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"relativeTime":{"future":"in %s","past":"%s ago","s":"a few seconds","m":"a min","mm":"%d mins","h":"an hour","hh":"%d hours","d":"a day","dd":"%d days","M":"a month","MM":"%d months","y":"a year","yy":"%d years"}},"i18nLanguage":"en-o2","infiniteScroll":false,"prevPageURL":null,"nextPageURL":null,"pageTitle":"","appContainer":"#primary","threadContainer":"article","showAvatars":"1","frontSidePostPrompt":"Hi, {name}! What&#039;s happening?","showFrontSidePostBox":false,"showCommentsInitially":true,"userMustBeLoggedInToComment":true,"requireUserNameAndEmailIfNotLoggedIn":true,"viewType":"single","isPreview":false,"showExtended":"Show full post","hideExtended":"Hide extended post","searchQuery":"","havePosts":true,"queryVars":{"name":"quick-start","pagename":"quick-start","replies":""},"order":"DESC","threadCommentsDepth":"10","isMobileOrTablet":false,"defaultAvatar":"mystery","searchURL":"https:\/\/make.wordpress.org\/cli\/","homeURL":"https:\/\/make.wordpress.org\/cli\/","postId":0,"mimeTypes":{"jpg|jpeg|jpe":"image\/jpeg","png":"image\/png","gif":"image\/gif","mp3|m4a|m4b":"audio\/mpeg","mov|qt":"video\/quicktime","avi":"video\/avi","wmv":"video\/x-ms-wmv","mid|midi":"audio\/midi","pdf":"application\/pdf","psd":"application\/octet-stream","tiff|tif":"image\/tiff","mp4|m4v":"video\/mp4","zip":"application\/zip","gz|gzip":"application\/x-gzip","txt|asc|c|cc|h|srt":"text\/plain"},"currentBlogId":566,"stickyPosts":{"cssClass":"sticky","sticky":"Unstick Post from Home","stickyTitle":"Unstick Post from Home","unsticky":"Stick Post to Home","unstickyTitle":"Stick Post to Home"}},"currentUser":{"userLogin":"","userNicename":"","noprivUserName":"","noprivUserEmail":"","noprivUserURL":"","canEditPosts":false,"canEditOthersPosts":false,"canPublishPosts":false},"appControls":["<a href=\"#\" class=\"o2-toggle-keyboard-help\">Keyboard Shortcuts<\/a>","<a href=\"#\" class=\"o2-toggle-comments\" data-alternate-text=\"Show comment threads\">Hide comment threads<\/a>"],"postFormBefore":"","postFormExtras":"","commentFormBefore":"","commentFormExtras":"","strings":{"unsavedChanges":"You have unsaved changes.","saveInProgress":"Not all changes have been saved to the server yet. Please stay on this page until they are saved.","reloginPrompt":"Your session has expired. Click here to log in again. Your changes will not be lost.","reloginSuccessful":"You have successfully logged back in.","newCommentBy":"New comment by %s","newAnonymousComment":"New comment by someone","newPostBy":"New post by %s","newMentionBy":"%1$s mentioned you: \"%2$s\"","filenameNotUploadedWithType":"%1$s was not uploaded (%2$s files are not allowed).","filenameNotUploadedNoType":"%1$s was not uploaded (unrecognized file type).","fileTypeNotSupported":"Sorry, %1$s files are not allowed.","unrecognizedFileType":"Sorry, file not uploaded (unrecognized file type).","pageNotFound":"Apologies, but the page you requested could not be found. Perhaps searching will help.","searchFailed":"Apologies, but I could not find any results for that search term. Please try again.","defaultError":"An unexpected error occurred. Please refresh the page and try again.","previewPlaceholder":"Generating preview...","bold":"Bold (ctrl\/\u2318-b)","italics":"Italics (ctrl\/\u2318-i)","link":"Link (\u2318-shift-a)","image":"Image","blockquote":"Blockquote","code":"Code","addPostTitle":"Add a post title","enterTitleHere":"Enter title here","noPosts":"Ready to publish your first post? Simply use the form above.","noPostsMobile":"Tap the new post control below to begin writing your first post.","awaitingApproval":"This comment is awaiting approval.","isTrashed":"This comment was trashed.","prevDeleted":"This comment was deleted.","cancel":"Cancel","edit":"Edit","email":"Email","name":"Name","permalink":"Permalink","post":"Post","reply":"Reply","save":"Save","saving":"Saving","website":"Website","search":"Search","anonymous":"Someone","preview":"Preview","olderPosts":"Older posts","newerPosts":"Newer posts","loginToComment":"Login to leave a comment.","fillDetailsBelow":"Fill in your details below.","editingOthersComment":"Careful! You are editing someone else's comment.","commentURL":"Website","showComments":"Show Comments","hideComments":"Hide Comments","redirectedHomePostTrashed":"This post was trashed. You will be redirected home now.","redirectedHomePageTrashed":"This page was trashed. You will be redirected home now.","postBeingTrashed":"This post is being trashed.","pageBeingTrashed":"This page is being trashed.","postTrashedFailed":"There was an error trashing that post. Please try again in a moment.","pageTrashedFailed":"There was an error trashing that page. Please try again in a moment.","connectionLostPrompt":"The connection to the server has been interrupted. Please reconnect.","addChecklistItem":"Enter the text for the new item","editChecklistItem":"Update the item text below","deleteChecklistItem":"Are you sure you want to delete this item?","checklistError":"CheckList Error","unknownChecklistError":"An unknown error occurred","malformedChecklistResp":"A malformed response was received","commentName":"Name (required)","commentEmail":"Email (required)","clearNotifications":"Clear All"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/app/main.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/highlight-on-inview.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/is-valid-email.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/models/search-meta.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/page-visibility.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/jquery.placeholder.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/polling.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/query.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/raw-to-filtered.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/template.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/views/search-form.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/cocktail.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/recent-comments/js/collections/posts.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/jquery/ui/core.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/jquery/ui/widget.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/jquery/ui/mouse.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/jquery/ui/sortable.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/checklists/js/views/common.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/js/utils/enquire.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/notifications/js/views/flash-items.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/sticky-posts/js/models/extend-post.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/sticky-posts/js/collections/extend-posts.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/sticky-posts/js/views/extend-post.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/sticky-posts/js/views/extend-posts.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/handbook/scripts/handbook.js?ver=20150930'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/live-comments/js/models/item.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/live-comments/js/collections/items.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/live-comments/js/views/item.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/live-comments/js/views/items.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/live-comments/js/live-comments-widget.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/post-actions/js/script.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/post-actions/js/views/extend-comment.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/post-actions/js/views/extend-post.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/themes/pub/wporg-breathe/js/chapters.js?ver=20170113'></script>
+<link rel='https://api.w.org/' href='https://make.wordpress.org/cli/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://make.wordpress.org/cli/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://make.wordpress.org/cli/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Pull Requests' href='https://make.wordpress.org/cli/handbook/pull-requests/' />
+<link rel='next' title='Release Checklist' href='https://make.wordpress.org/cli/handbook/release-checklist/' />
+<meta name="generator" content="WordPress 4.9-alpha-41028" />
+<link rel="canonical" href="https://make.wordpress.org/cli/handbook/quick-start/" />
+<link rel="alternate" type="application/json+oembed" href="https://make.wordpress.org/cli/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fmake.wordpress.org%2Fcli%2Fhandbook%2Fquick-start%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://make.wordpress.org/cli/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fmake.wordpress.org%2Fcli%2Fhandbook%2Fquick-start%2F&#038;format=xml" />
+	<style>
+		@media screen and (max-width: 782px) {
+			#wpadminbar li#wp-admin-bar-log-in,
+			#wpadminbar li#wp-admin-bar-register {
+				display: block;
+			}
+
+			#wpadminbar li#wp-admin-bar-log-in a,
+			#wpadminbar li#wp-admin-bar-register a {
+				padding: 0 8px;
+			}
+		}
+	</style>
+	<style>
+		pre code {
+			line-height: 16px;
+		}
+		a.github-edit {
+			margin-left: .5em;
+			font-size: .5em;
+			vertical-align: top;
+			display: inline-block;
+			border: 1px solid #eeeeee;
+			border-radius: 2px;
+			background: #eeeeee;
+			padding: .5em .6em .4em;
+			color: black;
+			margin-top: 0.1em;
+		}
+		a.github-edit > * {
+			opacity: 0.6;
+		}
+		a.github-edit:hover > * {
+			opacity: 1;
+			color: black;
+		}
+		a.github-edit img {
+			height: .8em;
+		}
+		.single-handbook div.table-of-contents {
+			margin: 0;
+			float: none;
+			padding: 0;
+			border: none;
+			box-shadow: none;
+			width: auto;
+		}
+		.single-handbook div.table-of-contents:after {
+			content: " ";
+			display: block;
+			clear: both;
+		}
+		.single-handbook .table-of-contents h2 {
+			display: none;
+		}
+		.single-handbook div.table-of-contents ul {
+			padding: 0;
+			margin-top: 0.4em;
+			margin-bottom: 1.1em;
+		}
+		.single-handbook div.table-of-contents > ul li {
+			display: inline-block;
+			padding: 0;
+			font-size: 12px;
+		}
+		.single-handbook div.table-of-contents > ul li a:after {
+			content: "|";
+			display: inline-block;
+			width: 20px;
+			text-align: center;
+			color: #eeeeee
+		}
+		.single-handbook div.table-of-contents > ul li:last-child a:after {
+			content: "";
+		}
+		.single-handbook div.table-of-contents ul ul {
+			display: none;
+		}
+		.single-handbook #secondary {
+			max-width: 240px;
+		}
+	</style>
+	
+<link rel='dns-prefetch' href='//v0.wordpress.com'>
+<link rel='dns-prefetch' href='//i0.wp.com'>
+<link rel='dns-prefetch' href='//i1.wp.com'>
+<link rel='dns-prefetch' href='//i2.wp.com'>
+<style type='text/css'>img#wpstats{display:none}</style><meta name="description" content="Congratulations! You&#039;ve installed WP-CLI for the first time, and are ready to level-up your use of WordPress. This page contains a brief introduction to WP-CLI with some example usage. Introduction WP-CLI is a command line interface for WordPress. The project&#039;s goal is to offer a complete alternative to the WordPress admin; for any action you&hellip;" />
+<style type="text/css" media="print">#wpadminbar { display:none; }</style>
+<style type="text/css" media="screen">
+	html { margin-top: 32px !important; }
+	* html body { margin-top: 32px !important; }
+	@media screen and ( max-width: 782px ) {
+		html { margin-top: 46px !important; }
+		* html body { margin-top: 46px !important; }
+	}
+</style>
+
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Quick Start" />
+<meta property="og:url" content="https://make.wordpress.org/cli/handbook/quick-start/" />
+<meta property="og:description" content="Congratulations! You&#8217;ve installed WP-CLI for the first time, and are ready to level-up your use of WordPress. This page contains a brief introduction to WP-CLI with some example usage. Introd…" />
+<meta property="article:published_time" content="2017-01-19T18:18:51+00:00" />
+<meta property="article:modified_time" content="2017-07-12T16:40:28+00:00" />
+<meta property="og:site_name" content="WP-CLI" />
+<meta property="og:image" content="https://i0.wp.com/make.wordpress.org/cli/files/2017/05/wp-cli-bw@400px.jpg?fit=200%2C200&amp;ssl=1" />
+<meta property="og:image:width" content="200" />
+<meta property="og:image:height" content="200" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:site" content="@WordPress" />
+<meta name="twitter:image" content="https://i0.wp.com/make.wordpress.org/cli/files/2017/05/wp-cli-bw@400px.jpg?fit=240%2C240&amp;ssl=1" />
+<meta name="twitter:card" content="summary" />
+<link rel="icon" href="https://i0.wp.com/make.wordpress.org/cli/files/2017/05/wp-cli-bw@400px.jpg?fit=32%2C32&#038;ssl=1" sizes="32x32" />
+<link rel="icon" href="https://i0.wp.com/make.wordpress.org/cli/files/2017/05/wp-cli-bw@400px.jpg?fit=192%2C192&#038;ssl=1" sizes="192x192" />
+<link rel="apple-touch-icon-precomposed" href="https://i0.wp.com/make.wordpress.org/cli/files/2017/05/wp-cli-bw@400px.jpg?fit=180%2C180&#038;ssl=1" />
+<meta name="msapplication-TileImage" content="https://i0.wp.com/make.wordpress.org/cli/files/2017/05/wp-cli-bw@400px.jpg?fit=270%2C270&#038;ssl=1" />
+		<style>
+		#primary {
+			display: none;
+		}
+		</style>
+		<script type="text/javascript">
+/* <![CDATA[ */
+	var wpNotesIsJetpackClient = true;
+	var wpNotesIsJetpackClientV2 = true;
+/* ]]> */
+</script>
+<script>document.cookie='devicePixelRatio='+((window.devicePixelRatio === undefined) ? 1 : window.devicePixelRatio)+'; path=/';</script>
+<script type="text/javascript">
+var toggleMenu = function(){
+    var m = document.getElementById('wporg-header-menu'),
+        c = m.className;
+	    m.className = c.match( ' active' ) ? c.replace( ' active', '' ) : c + ' active';
+}
+</script>
+
+</head>
+ 
+
+<body id="wordpress-org" class="handbook-template-default single single-handbook postid-174 admin-bar no-customize-support wporg-make make-cli o2 group-blog custom-menu">
+<div id="wporg-header">
+	<div class="wrapper">
+		<a id="mobile-menu-button" class="" href="#" onclick="toggleMenu();"></a>
+	<h1><a href="//wordpress.org">WordPress.org</a></h1>				<div id="head-search">
+		<form action="//wordpress.org/search/do-search.php" method="get">
+			<label for="global-search" class="screen-reader-text">Search WordPress.org for:</label>
+			<input id="global-search" class="text" name="search" type="text" value="" maxlength="150" placeholder="Search WordPress.org" /> <input type="submit" class="button" value="" />
+		</form>
+		</div>
+				<div style="clear:both"></div>
+		
+<ul id="wporg-header-menu">
+<li><a href='//wordpress.org/showcase/' title='See some of the sites built on WordPress.'>Showcase</a></li>
+<li><a href='//wordpress.org/themes/' title='Find just the right look for your website.'>Themes</a></li>
+<li><a href='//wordpress.org/plugins/' title='Plugins can extend WordPress to do almost anything you can imagine.'>Plugins</a></li>
+<li><a href='//wordpress.org/mobile/' title='Take your website on the go!'>Mobile</a></li>
+<li><a href='//wordpress.org/support/' title='Forums, documentation, help.'>Support</a><ul class="nav-submenu"><li><a href='//wordpress.org/support/' title='Support and discussion forums.'>Forums</a></li><li><a href='//codex.wordpress.org/Main_Page' title='Documentation, tutorials, best practices.'>Documentation</a></li></ul><div class="uparrow"></div></li>
+<li><a href='//make.wordpress.org/' title='Contribute your knowledge.' class="current">Get Involved</a><div class="uparrow"></div></li>
+<li><a href='//wordpress.org/about/' title='About the WordPress Organization, and where we&#039;re going.'>About</a></li>
+<li><a href='//wordpress.org/news/' title='Come here for the latest scoop.'>Blog</a></li>
+<li><a href='//wordpress.org/hosting/' title='Find a home for your blog.'>Hosting</a></li>
+<li id="download" class="button download-button"><a href='//wordpress.org/download/' title='Get it. Got it? Good.'>Download WordPress</a></li>
+</ul>
+		<div style="clear:both"></div>
+	</div>
+</div>
+
+
+<header id="masthead" class="site-header" role="banner">
+	<a href="#" id="secondary-toggle" onclick="return false;"><strong>Menu</strong></a>
+	<div class="site-branding">
+					<p class="site-title"><a href="https://make.wordpress.org/cli/" rel="home">WP-CLI</a></p>
+			</div>
+
+	<nav id="site-navigation" class="navigation-main clear" role="navigation">
+		<div class="screen-reader-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+
+		<div class="menu-primary-container"><ul id="menu-primary" class="menu"><li id="menu-item-99" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-99"><a href="https://wp-cli.org/commands/">Commands</a></li>
+<li id="menu-item-212" class="menu-item menu-item-type-post_type menu-item-object-handbook menu-item-212"><a href="https://make.wordpress.org/cli/handbook/config/">Config</a></li>
+<li id="menu-item-133" class="menu-item menu-item-type-post_type menu-item-object-handbook current-menu-item menu-item-133"><a href="https://make.wordpress.org/cli/handbook/">Handbook</a></li>
+<li id="menu-item-575" class="menu-item menu-item-type-post_type menu-item-object-handbook menu-item-575"><a href="https://make.wordpress.org/cli/handbook/contributing/">Contributing</a></li>
+</ul></div>	</nav><!-- .navigation-main -->
+</header><!-- .site-header -->
+
+	<div class="make-welcome">
+		<div class="entry-meta">
+						<button type="button" id="make-welcome-hide" class="toggle dashicons dashicons-no" data-hash="e517d09451e9db0b0f85327589b4b8a2" data-cookie="welcome-566" title="Hide this message"></button>
+		</div>
+		<div class="entry-content clear">
+			<div class='content-area'>
+<h4>Welcome to WP-CLI!</h4>
+<p>WP-CLI is the official command line tool for interacting with and managing your WordPress sites.</p>
+<p>Want to help make it better? Check out our <a href="https://make.wordpress.org/cli/handbook/contributing/">Contributing guide</a> for an introduction, or &#8220;<a href="https://make.wordpress.org/cli/good-first-issues/">good first issues</a>&#8221; for your first pull request.</p>
+</div>
+<div class='widget-area'>
+<h4>Contact</h4>
+<p>The WP-CLI team communicates on <a href="https://chat.wordpress.org/">Slack</a>, in the <a href="http://wordpress.slack.com/messages/cli/">#cli</a> channel.</p>
+<p>Our office hours are <a href="http://www.timeanddate.com/worldclock/fixedtime.html?iso=20170425T1600"><abbr class="date" title="2017-04-25T16:00:00+00:00">Tuesday, April 25 at 16:00 UTC</abbr></a></p></div>
+<script class='o2-data' id='o2-data-174' data-post-id='174' type='application/json' style='display:none'>[{"type":"post","id":174,"postID":174,"cssClasses":"handbook post-174 type-handbook status-publish hentry author-danielbachhuber","parentID":0,"titleRaw":"Quick Start","titleFiltered":"Quick Start","titleWasGeneratedFromContent":false,"contentRaw":"Congratulations! You've <a href=\"https:\/\/make.wordpress.org\/cli\/handbook\/installing\/\">installed WP-CLI<\/a> for the first time, and are ready to level-up your use of WordPress. This page contains a brief introduction to WP-CLI with some example usage.\n\n<h2>Introduction<\/h2>\n\nWP-CLI is a command line interface for WordPress. The project's goal is to offer a complete alternative to the WordPress admin; for any action you might want to perform in the WordPress admin, there should be an equivalent WP-CLI command.\n\nFor instance, because you can install a plugin from the WordPress admin, you can also <a href=\"https:\/\/wp-cli.org\/commands\/plugin\/install\/\">install a plugin<\/a> with WP-CLI:\n\n<pre><code>$ wp plugin install akismet\nInstalling Akismet (3.1.8)\nDownloading install package from https:\/\/downloads.wordpress.org\/plugin\/akismet.3.1.8.zip...\nUnpacking the package...\nInstalling the plugin...\nPlugin installed successfully.\n<\/code><\/pre>\n\nAnd, because you can also activate plugins from the WordPress admin, you can <a href=\"https:\/\/wp-cli.org\/commands\/plugin\/activate\/\">activate a plugin<\/a> with WP-CLI:\n\n<pre><code>$ wp plugin activate akismet\nSuccess: Plugin 'akismet' activated.\n<\/code><\/pre>\n\nOne key difference between using the WordPress admin and WP-CLI: performing any action takes many fewer clicks. As you become more familiar with the command line, you'll notice performing a given task with WP-CLI is generally much faster than performing the same task through the WordPress admin. Investing time upfront into learning how to better use WP-CLI pays dividends in the long term.\n\n<h2>Common Terms<\/h2>\n\nThroughout your usage of WP-CLI, you'll hear certain terms used over and over again.\n\nFor instance, a <em>command<\/em> is an atomic unit of WP-CLI functionality. <code>wp plugin install<\/code> is one such command, as is <code>wp plugin activate<\/code>. Commands represent a name (e.g. 'plugin install') and a callback, and are registered with <code>WP_CLI::add_command()<\/code> (<a href=\"\/docs\/internal-api\/wp-cli-add-command\/\">doc<\/a>).\n\nThe <em>synopsis<\/em> defines which <em>positional<\/em> and <em>associative<\/em> arguments a command accepts. Let's take a look at the synopsis for <code>wp plugin install<\/code>:\n\n<pre><code>$ wp plugin install\nusage: wp plugin install &lt;plugin|zip|url&gt;... [--version=&lt;version&gt;] [--force] [--activate] [--activate-network]\n<\/code><\/pre>\n\nIn this example, <code>&lt;plugin|zip|url&gt;...<\/code> is the accepted <em>positional<\/em> argument. In fact, <code>wp plugin install<\/code> accepts the same positional argument (the slug, ZIP, or URL of a plugin to install) multiple times. <code>[--version=&lt;version&gt;]<\/code> is one of the accepted <em>associative<\/em> arguments. It's used to denote the version of the plugin to install. Notice, too, the square brackets around the argument definition; square brackets mean the argument is optional.\n\nWP-CLI also has a <a href=\"\/config\/\">series of <em>global<\/em> arguments<\/a> which work with all commands. For instance, including <code>--debug<\/code> means your command execution will display all PHP errors, and add extra verbosity to the WP-CLI bootstrap process.\n\n<h2>Practical Examples<\/h2>\n\nReady to dive in? Here are some common examples of how WP-CLI is used:\n\n<strong>Download and install WordPress in seconds<\/strong>\n\n<ol>\n<li>Download the latest version of WordPress with <code>wp core download<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/core\/download\/\">doc<\/a>).<\/li>\n<\/ol>\n\n<pre><code>$ wp core download --path=wpclidemo.dev\nCreating directory '\/srv\/www\/wpclidemo.dev\/'.\nDownloading WordPress 4.6.1 (en_US)...\nUsing cached file '\/home\/vagrant\/.wp-cli\/cache\/core\/wordpress-4.6.1-en_US.tar.gz'...\nSuccess: WordPress downloaded.\n<\/code><\/pre>\n\n<ol>\n<li>Create a new wp-config.php file with <code>wp core config<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/core\/config\/\">doc<\/a>).<\/li>\n<\/ol>\n\n<pre><code>$ cd wpclidemo.dev\n$ wp core config --dbname=wpclidemo --dbuser=root\nSuccess: Generated 'wp-config.php' file.\n<\/code><\/pre>\n\n<ol>\n<li>Create the database based on wp-config.php with <code>wp db create<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/db\/create\/\">doc<\/a>).<\/li>\n<\/ol>\n\n<pre><code>$ wp db create\nSuccess: Database created.\n<\/code><\/pre>\n\n<ol>\n<li>Install WordPress with <code>wp core install<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/core\/install\/\">doc<\/a>).<\/li>\n<\/ol>\n\n<pre><code>$ wp core install --url=wpclidemo.dev --title=\"WP-CLI\" --admin_user=wpcli --admin_password=wpcli --admin_email=info@wp-cli.org\nSuccess: WordPress installed successfully.\n<\/code><\/pre>\n\nThat's it!\n\n<strong>Update plugins to their latest version<\/strong>\n\nUse <code>wp plugin update --all<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/plugin\/update\/\">doc<\/a>) to update all plugins to their latest version.\n\n<pre><code>$ wp plugin update --all\nEnabling Maintenance mode...\nDownloading update from https:\/\/downloads.wordpress.org\/plugin\/akismet.3.1.11.zip...\nUnpacking the update...\nInstalling the latest version...\nRemoving the old version of the plugin...\nPlugin updated successfully.\nDownloading update from https:\/\/downloads.wordpress.org\/plugin\/nginx-champuru.3.2.0.zip...\nUnpacking the update...\nInstalling the latest version...\nRemoving the old version of the plugin...\nPlugin updated successfully.\nDisabling Maintenance mode...\nSuccess: Updated 2\/2 plugins.\n+------------------------+-------------+-------------+---------+\n| name                   | old_version | new_version | status  |\n+------------------------+-------------+-------------+---------+\n| akismet                | 3.1.3       | 3.1.11      | Updated |\n| nginx-cache-controller | 3.1.1       | 3.2.0       | Updated |\n+------------------------+-------------+-------------+---------+\n<\/code><\/pre>\n\n<strong>Add a user as a super-admin<\/strong>\n\nOn multisite, use <code>wp super-admin add<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/super-admin\/add\/\">doc<\/a>) to grant super admin capabilities to an existing user.\n\n<pre><code>$ wp super-admin add wpcli\nSuccess: Granted super-admin capabilities.\n<\/code><\/pre>\n\n<strong>Regenerate thumbnails<\/strong>\n\nIf you've added or changed an image size registered with <code>add_image_size()<\/code>, you may want to use <code>wp media regenerate<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/media\/regenerate\/\">doc<\/a>) so your theme displays the correct image size.\n\n<pre><code>wp media regenerate --yes\nFound 1 image to regenerate.\n1\/1 Regenerated thumbnails for \"charlie-gpa\" (ID 4).\nSuccess: Finished regenerating the image.\n<\/code><\/pre>\n\nWondering what's next? Browse through <a href=\"https:\/\/wp-cli.org\/commands\/\">all of WP-CLI's commands<\/a> to explore your new world. Or, catch up with <a href=\"https:\/\/make.wordpress.org\/cli\/handbook\/shell-friends\/\">shell friends<\/a> to learn about helpful command line utilities.","contentFiltered":"<div class='content-area'>\n<h4>Welcome to WP-CLI!<\/h4>\n<p>WP-CLI is the official command line tool for interacting with and managing your WordPress sites.<\/p>\n<p>Want to help make it better? Check out our <a href=\"https:\/\/make.wordpress.org\/cli\/handbook\/contributing\/\">Contributing guide<\/a>\u00a0for an introduction, or &#8220;<a href=\"https:\/\/make.wordpress.org\/cli\/good-first-issues\/\">good first issues<\/a>&#8221; for your first pull request.<\/p>\n<\/div>\n<div class='widget-area'>\n<h4>Contact<\/h4>\n<p>The WP-CLI team communicates on <a href=\"https:\/\/chat.wordpress.org\/\">Slack<\/a>, in the <a href=\"http:\/\/wordpress.slack.com\/messages\/cli\/\">#cli<\/a> channel.<\/p>\n<p>Our office hours are\u00a0<a href=\"http:\/\/www.timeanddate.com\/worldclock\/fixedtime.html?iso=20170425T1600\"><abbr class=\"date\" title=\"2017-04-25T16:00:00+00:00\">Tuesday, April 25 at 16:00 UTC<\/abbr><\/a><\/p><\/div>\n","permalink":"https:\/\/make.wordpress.org\/cli\/handbook\/quick-start\/","unixtime":1484849931,"unixtimeModified":1499877628,"entryHeaderMeta":"","linkPages":"","footerEntryMeta":"","tagsRaw":"","tagsArray":[],"loginRedirectURL":"https:\/\/login.wordpress.org\/?redirect_to=https%3A%2F%2Fmake.wordpress.org%2Fcli%2Fhandbook%2Fquick-start%2F","hasPrevPost":true,"prevPostTitle":"Pull Requests","prevPostURL":"https:\/\/make.wordpress.org\/cli\/handbook\/pull-requests\/","hasNextPost":true,"nextPostTitle":"Release Checklist","nextPostURL":"https:\/\/make.wordpress.org\/cli\/handbook\/release-checklist\/","commentsOpen":false,"is_xpost":false,"editURL":null,"postActions":"<nav class='o2-dropdown-actions o2-post-actions'><button class='o2-dropdown-actions-disclosure genericon genericon-ellipsis'><span>Post Actions<\/span><\/button><ul><li><a href=\"https:\/\/make.wordpress.org\/cli\/handbook\/quick-start\/\" title=\"Scroll to comments\"  class=\"o2-scroll-to-comments genericon  genericon-downarrow\"  data-action=\"scrolltocomments\"  data-actionstate=\"default\" >Scroll<\/a><\/li><li><a href=\"https:\/\/github.com\/wp-cli\/handbook\/edit\/master\/quick-start.md\" title=\"Edit\" rel=\"174\"  class=\"edit-post-link genericon  genericon-edit\"  data-action=\"edit\"  data-actionstate=\"default\" >Edit<\/a><\/li><li><a href=\"\" title=\"Shortlink\"  class=\"short-link o2-short-link genericon  genericon-link\"  data-action=\"shortlink\"  data-actionstate=\"default\" >Shortlink<\/a><\/li><\/ul><\/nav>","comments":[],"postFormat":"standard","postMeta":{"isSticky":false},"postTerms":[],"pluginData":[],"isPage":true,"mentions":[],"mentionContext":"","isTrashed":false,"userLogin":"danielbachhuber","userNicename":"danielbachhuber"}]</script>
+		</div>
+	</div>
+	
+<div id="page" class="hfeed site">
+	
+	<div id="main" class="site-main clear">
+
+
+	<div id="secondary" class="widget-area" role="complementary">
+		<a href="#" id="secondary-toggle"></a>
+		<div id="secondary-content">
+						<aside id="handbook_pages-2" class="widget widget_wporg_handbook_pages"><h2 class="widget-title">Chapters</h2>
+<div class="menu-table-of-contents-container">
+		<ul>
+			<li class="page_item page-item-103 menu-item"><a href="https://make.wordpress.org/cli/handbook/installing/">Installing</a></li>
+<li class="page_item page-item-174 current_page_item current-menu-item menu-item"><a href="https://make.wordpress.org/cli/handbook/quick-start/">Quick Start</a></li>
+<li class="page_item page-item-134 menu-item"><a href="https://make.wordpress.org/cli/handbook/commands-cookbook/">Commands Cookbook</a></li>
+<li class="page_item page-item-137 menu-item"><a href="https://make.wordpress.org/cli/handbook/common-issues/">Common Issues</a></li>
+<li class="page_item page-item-153 menu-item"><a href="https://make.wordpress.org/cli/handbook/external-resources/">External Resources</a></li>
+<li class="page_item page-item-140 menu-item"><a href="https://make.wordpress.org/cli/handbook/config/">Config</a></li>
+<li class="page_item page-item-381 page_item_has_children menu-item menu-item-has-children"><a href="https://make.wordpress.org/cli/handbook/internal-api/">Internal API</a>
+<ul class='children'>
+	<li class="page_item page-item-382 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-add-command/">WP_CLI::add_command()</a></li>
+	<li class="page_item page-item-383 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-add-hook/">WP_CLI::add_hook()</a></li>
+	<li class="page_item page-item-384 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-add-wp-hook/">WP_CLI::add_wp_hook()</a></li>
+	<li class="page_item page-item-385 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-colorize/">WP_CLI::colorize()</a></li>
+	<li class="page_item page-item-386 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-confirm/">WP_CLI::confirm()</a></li>
+	<li class="page_item page-item-387 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-debug/">WP_CLI::debug()</a></li>
+	<li class="page_item page-item-388 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-do-hook/">WP_CLI::do_hook()</a></li>
+	<li class="page_item page-item-390 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-error/">WP_CLI::error()</a></li>
+	<li class="page_item page-item-389 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-error-multi-line/">WP_CLI::error_multi_line()</a></li>
+	<li class="page_item page-item-391 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-get-config/">WP_CLI::get_config()</a></li>
+	<li class="page_item page-item-392 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-get-php-binary/">WP_CLI::get_php_binary()</a></li>
+	<li class="page_item page-item-393 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-halt/">WP_CLI::halt()</a></li>
+	<li class="page_item page-item-395 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-launch/">WP_CLI::launch()</a></li>
+	<li class="page_item page-item-394 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-launch-self/">WP_CLI::launch_self()</a></li>
+	<li class="page_item page-item-396 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-line/">WP_CLI::line()</a></li>
+	<li class="page_item page-item-397 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-log/">WP_CLI::log()</a></li>
+	<li class="page_item page-item-398 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-read-value/">WP_CLI::read_value()</a></li>
+	<li class="page_item page-item-400 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-runcommand/">WP_CLI::runcommand()</a></li>
+	<li class="page_item page-item-399 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-run-command/">WP_CLI::run_command()</a></li>
+	<li class="page_item page-item-401 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-success/">WP_CLI::success()</a></li>
+	<li class="page_item page-item-414 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-warning/">WP_CLI::warning()</a></li>
+	<li class="page_item page-item-402 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-basename/">WP_CLI\Utils\basename()</a></li>
+	<li class="page_item page-item-403 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-format-items/">WP_CLI\Utils\format_items()</a></li>
+	<li class="page_item page-item-404 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-get-flag-value/">WP_CLI\Utils\get_flag_value()</a></li>
+	<li class="page_item page-item-405 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-get-named-sem-ver/">WP_CLI\Utils\get_named_sem_ver()</a></li>
+	<li class="page_item page-item-406 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-get-temp-dir/">WP_CLI\Utils\get_temp_dir()</a></li>
+	<li class="page_item page-item-407 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-http-request/">WP_CLI\Utils\http_request()</a></li>
+	<li class="page_item page-item-595 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-ispiped/">WP_CLI\Utils\isPiped()</a></li>
+	<li class="page_item page-item-408 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-launch-editor-for-input/">WP_CLI\Utils\launch_editor_for_input()</a></li>
+	<li class="page_item page-item-409 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-make-progress-bar/">WP_CLI\Utils\make_progress_bar()</a></li>
+	<li class="page_item page-item-410 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-parse-ssh-url/">WP_CLI\Utils\parse_ssh_url()</a></li>
+	<li class="page_item page-item-411 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-parse-str-to-argv/">WP_CLI\Utils\parse_str_to_argv()</a></li>
+	<li class="page_item page-item-412 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-report-batch-operation-results/">WP_CLI\Utils\report_batch_operation_results()</a></li>
+	<li class="page_item page-item-591 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-wp-clear-object-cache/">WP_CLI\Utils\wp_clear_object_cache()</a></li>
+	<li class="page_item page-item-413 menu-item"><a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-utils-write-csv/">WP_CLI\Utils\write_csv()</a></li>
+</ul>
+</li>
+<li class="page_item page-item-150 menu-item"><a href="https://make.wordpress.org/cli/handbook/documentation-standards/">Documentation Standards</a></li>
+<li class="page_item page-item-159 menu-item"><a href="https://make.wordpress.org/cli/handbook/hosting-companies/">Hosting Companies</a></li>
+<li class="page_item page-item-183 menu-item"><a href="https://make.wordpress.org/cli/handbook/shell-friends/">Shell Friends</a></li>
+<li class="page_item page-item-186 menu-item"><a href="https://make.wordpress.org/cli/handbook/tools/">Tools</a></li>
+<li class="page_item page-item-122 menu-item"><a href="https://make.wordpress.org/cli/handbook/bug-reports/">Bug Reports</a></li>
+<li class="page_item page-item-156 menu-item"><a href="https://make.wordpress.org/cli/handbook/governance/">Governance</a></li>
+<li class="page_item page-item-509 menu-item"><a href="https://make.wordpress.org/cli/handbook/committers-credo/">Committers credo</a></li>
+<li class="page_item page-item-147 menu-item"><a href="https://make.wordpress.org/cli/handbook/contributing/">Contributing</a></li>
+<li class="page_item page-item-162 menu-item"><a href="https://make.wordpress.org/cli/handbook/implementation-details/">Implementation Details</a></li>
+<li class="page_item page-item-165 menu-item"><a href="https://make.wordpress.org/cli/handbook/philosophy/">Philosophy</a></li>
+<li class="page_item page-item-171 menu-item"><a href="https://make.wordpress.org/cli/handbook/pull-requests/">Pull Requests</a></li>
+<li class="page_item page-item-177 menu-item"><a href="https://make.wordpress.org/cli/handbook/release-checklist/">Release Checklist</a></li>
+<li class="page_item page-item-180 menu-item"><a href="https://make.wordpress.org/cli/handbook/roadmap/">Roadmap</a></li>
+<li class="page_item page-item-168 menu-item"><a href="https://make.wordpress.org/cli/handbook/plugin-unit-tests/">Plugin Unit Tests</a></li>
+<li class="page_item page-item-189 menu-item"><a href="https://make.wordpress.org/cli/handbook/wish-list/">Wish List</a></li>
+		</ul>
+		</div>		</div>
+	</div><!-- #secondary -->
+
+
+
+<div id="primary" class="content-area">
+
+	<div class="site-content" role="main">
+
+		
+			<header class="handbook-header">
+				<h1 class="handbook-page-title">Quick Start <a class="github-edit" href="https://github.com/wp-cli/handbook/edit/master/quick-start.md"><img src="https://make.wordpress.org/cli/wp-content/plugins/wporg-cli/assets/images/github-mark.svg"> <span>Edit</span></a></h1>
+			</header><!-- .handbook-header -->
+
+			<style> .toc-jump { text-align: right; font-size: 12px; } .page .toc-heading { margin-top: -50px; padding-top: 50px !important; }</style><div class="table-of-contents"><h2>Topics</h2><ul class="items"><li><a href="#introduction">Introduction</a></li>
+<li><a href="#common-terms">Common Terms</a></li>
+<li><a href="#practical-examples">Practical Examples</a></ul>
+</div>
+<p>Congratulations! You&#8217;ve <a href="https://make.wordpress.org/cli/handbook/installing/">installed WP-CLI</a> for the first time, and are ready to level-up your use of WordPress. This page contains a brief introduction to WP-CLI with some example usage.</p>
+<h2 class="toc-heading" id="introduction" tabindex="-1">Introduction <a href="#introduction" class="anchor"><span aria-hidden="true">#</span><span class="screen-reader-text">Introduction</span></a></h2>
+<p>WP-CLI is a command line interface for WordPress. The project&#8217;s goal is to offer a complete alternative to the WordPress admin; for any action you might want to perform in the WordPress admin, there should be an equivalent WP-CLI command.</p>
+<p>For instance, because you can install a plugin from the WordPress admin, you can also <a href="https://wp-cli.org/commands/plugin/install/">install a plugin</a> with WP-CLI:</p>
+<pre><code>$ wp plugin install akismet
+Installing Akismet (3.1.8)
+Downloading install package from https://downloads.wordpress.org/plugin/akismet.3.1.8.zip...
+Unpacking the package...
+Installing the plugin...
+Plugin installed successfully.
+</code></pre>
+<p>And, because you can also activate plugins from the WordPress admin, you can <a href="https://wp-cli.org/commands/plugin/activate/">activate a plugin</a> with WP-CLI:</p>
+<pre><code>$ wp plugin activate akismet
+Success: Plugin 'akismet' activated.
+</code></pre>
+<p>One key difference between using the WordPress admin and WP-CLI: performing any action takes many fewer clicks. As you become more familiar with the command line, you&#8217;ll notice performing a given task with WP-CLI is generally much faster than performing the same task through the WordPress admin. Investing time upfront into learning how to better use WP-CLI pays dividends in the long term.</p>
+<p class="toc-jump"><a href="#top">Top &uarr;</a></p><h2 class="toc-heading" id="common-terms" tabindex="-1">Common Terms <a href="#common-terms" class="anchor"><span aria-hidden="true">#</span><span class="screen-reader-text">Common Terms</span></a></h2>
+<p>Throughout your usage of WP-CLI, you&#8217;ll hear certain terms used over and over again.</p>
+<p>For instance, a <em>command</em> is an atomic unit of WP-CLI functionality. <code>wp plugin install</code> is one such command, as is <code>wp plugin activate</code>. Commands represent a name (e.g. &#8216;plugin install&#8217;) and a callback, and are registered with <code>WP_CLI::add_command()</code> (<a href="/docs/internal-api/wp-cli-add-command/">doc</a>).</p>
+<p>The <em>synopsis</em> defines which <em>positional</em> and <em>associative</em> arguments a command accepts. Let&#8217;s take a look at the synopsis for <code>wp plugin install</code>:</p>
+<pre><code>$ wp plugin install
+usage: wp plugin install &lt;plugin|zip|url&gt;... [--version=&lt;version&gt;] [--force] [--activate] [--activate-network]
+</code></pre>
+<p>In this example, <code>&lt;plugin|zip|url&gt;...</code> is the accepted <em>positional</em> argument. In fact, <code>wp plugin install</code> accepts the same positional argument (the slug, ZIP, or URL of a plugin to install) multiple times. <code>[--version=&lt;version&gt;]</code> is one of the accepted <em>associative</em> arguments. It&#8217;s used to denote the version of the plugin to install. Notice, too, the square brackets around the argument definition; square brackets mean the argument is optional.</p>
+<p>WP-CLI also has a <a href="/config/">series of <em>global</em> arguments</a> which work with all commands. For instance, including <code>--debug</code> means your command execution will display all PHP errors, and add extra verbosity to the WP-CLI bootstrap process.</p>
+<p class="toc-jump"><a href="#top">Top &uarr;</a></p><h2 class="toc-heading" id="practical-examples" tabindex="-1">Practical Examples <a href="#practical-examples" class="anchor"><span aria-hidden="true">#</span><span class="screen-reader-text">Practical Examples</span></a></h2>
+<p>Ready to dive in? Here are some common examples of how WP-CLI is used:</p>
+<p><strong>Download and install WordPress in seconds</strong></p>
+<ol>
+<li>Download the latest version of WordPress with <code>wp core download</code> (<a href="https://wp-cli.org/commands/core/download/">doc</a>).</li>
+</ol>
+<pre><code>$ wp core download --path=wpclidemo.dev
+Creating directory '/srv/www/wpclidemo.dev/'.
+Downloading WordPress 4.6.1 (en_US)...
+Using cached file '/home/vagrant/.wp-cli/cache/core/wordpress-4.6.1-en_US.tar.gz'...
+Success: WordPress downloaded.
+</code></pre>
+<ol>
+<li>Create a new wp-config.php file with <code>wp core config</code> (<a href="https://wp-cli.org/commands/core/config/">doc</a>).</li>
+</ol>
+<pre><code>$ cd wpclidemo.dev
+$ wp core config --dbname=wpclidemo --dbuser=root
+Success: Generated 'wp-config.php' file.
+</code></pre>
+<ol>
+<li>Create the database based on wp-config.php with <code>wp db create</code> (<a href="https://wp-cli.org/commands/db/create/">doc</a>).</li>
+</ol>
+<pre><code>$ wp db create
+Success: Database created.
+</code></pre>
+<ol>
+<li>Install WordPress with <code>wp core install</code> (<a href="https://wp-cli.org/commands/core/install/">doc</a>).</li>
+</ol>
+<pre><code>$ wp core install --url=wpclidemo.dev --title="WP-CLI" --admin_user=wpcli --admin_password=wpcli --admin_email=info@wp-cli.org
+Success: WordPress installed successfully.
+</code></pre>
+<p>That&#8217;s it!</p>
+<p><strong>Update plugins to their latest version</strong></p>
+<p>Use <code>wp plugin update --all</code> (<a href="https://wp-cli.org/commands/plugin/update/">doc</a>) to update all plugins to their latest version.</p>
+<pre><code>$ wp plugin update --all
+Enabling Maintenance mode...
+Downloading update from https://downloads.wordpress.org/plugin/akismet.3.1.11.zip...
+Unpacking the update...
+Installing the latest version...
+Removing the old version of the plugin...
+Plugin updated successfully.
+Downloading update from https://downloads.wordpress.org/plugin/nginx-champuru.3.2.0.zip...
+Unpacking the update...
+Installing the latest version...
+Removing the old version of the plugin...
+Plugin updated successfully.
+Disabling Maintenance mode...
+Success: Updated 2/2 plugins.
++------------------------+-------------+-------------+---------+
+| name                   | old_version | new_version | status  |
++------------------------+-------------+-------------+---------+
+| akismet                | 3.1.3       | 3.1.11      | Updated |
+| nginx-cache-controller | 3.1.1       | 3.2.0       | Updated |
++------------------------+-------------+-------------+---------+
+</code></pre>
+<p><strong>Add a user as a super-admin</strong></p>
+<p>On multisite, use <code>wp super-admin add</code> (<a href="https://wp-cli.org/commands/super-admin/add/">doc</a>) to grant super admin capabilities to an existing user.</p>
+<pre><code>$ wp super-admin add wpcli
+Success: Granted super-admin capabilities.
+</code></pre>
+<p><strong>Regenerate thumbnails</strong></p>
+<p>If you&#8217;ve added or changed an image size registered with <code>add_image_size()</code>, you may want to use <code>wp media regenerate</code> (<a href="https://wp-cli.org/commands/media/regenerate/">doc</a>) so your theme displays the correct image size.</p>
+<pre><code>wp media regenerate --yes
+Found 1 image to regenerate.
+1/1 Regenerated thumbnails for "charlie-gpa" (ID 4).
+Success: Finished regenerating the image.
+</code></pre>
+<p>Wondering what&#8217;s next? Browse through <a href="https://wp-cli.org/commands/">all of WP-CLI&#8217;s commands</a> to explore your new world. Or, catch up with <a href="https://make.wordpress.org/cli/handbook/shell-friends/">shell friends</a> to learn about helpful command line utilities.</p>
+<script class='o2-data' id='o2-data-174' data-post-id='174' type='application/json' style='display:none'>[{"type":"post","id":174,"postID":174,"cssClasses":"handbook post-174 type-handbook status-publish hentry author-danielbachhuber","parentID":0,"titleRaw":"Quick Start","titleFiltered":"Quick Start <a class=\"github-edit\" href=\"https:\/\/github.com\/wp-cli\/handbook\/edit\/master\/quick-start.md\"><img src=\"https:\/\/make.wordpress.org\/cli\/wp-content\/plugins\/wporg-cli\/assets\/images\/github-mark.svg\"> <span>Edit<\/span><\/a>","titleWasGeneratedFromContent":false,"contentRaw":"Congratulations! You've <a href=\"https:\/\/make.wordpress.org\/cli\/handbook\/installing\/\">installed WP-CLI<\/a> for the first time, and are ready to level-up your use of WordPress. This page contains a brief introduction to WP-CLI with some example usage.\n\n<h2>Introduction<\/h2>\n\nWP-CLI is a command line interface for WordPress. The project's goal is to offer a complete alternative to the WordPress admin; for any action you might want to perform in the WordPress admin, there should be an equivalent WP-CLI command.\n\nFor instance, because you can install a plugin from the WordPress admin, you can also <a href=\"https:\/\/wp-cli.org\/commands\/plugin\/install\/\">install a plugin<\/a> with WP-CLI:\n\n<pre><code>$ wp plugin install akismet\nInstalling Akismet (3.1.8)\nDownloading install package from https:\/\/downloads.wordpress.org\/plugin\/akismet.3.1.8.zip...\nUnpacking the package...\nInstalling the plugin...\nPlugin installed successfully.\n<\/code><\/pre>\n\nAnd, because you can also activate plugins from the WordPress admin, you can <a href=\"https:\/\/wp-cli.org\/commands\/plugin\/activate\/\">activate a plugin<\/a> with WP-CLI:\n\n<pre><code>$ wp plugin activate akismet\nSuccess: Plugin 'akismet' activated.\n<\/code><\/pre>\n\nOne key difference between using the WordPress admin and WP-CLI: performing any action takes many fewer clicks. As you become more familiar with the command line, you'll notice performing a given task with WP-CLI is generally much faster than performing the same task through the WordPress admin. Investing time upfront into learning how to better use WP-CLI pays dividends in the long term.\n\n<h2>Common Terms<\/h2>\n\nThroughout your usage of WP-CLI, you'll hear certain terms used over and over again.\n\nFor instance, a <em>command<\/em> is an atomic unit of WP-CLI functionality. <code>wp plugin install<\/code> is one such command, as is <code>wp plugin activate<\/code>. Commands represent a name (e.g. 'plugin install') and a callback, and are registered with <code>WP_CLI::add_command()<\/code> (<a href=\"\/docs\/internal-api\/wp-cli-add-command\/\">doc<\/a>).\n\nThe <em>synopsis<\/em> defines which <em>positional<\/em> and <em>associative<\/em> arguments a command accepts. Let's take a look at the synopsis for <code>wp plugin install<\/code>:\n\n<pre><code>$ wp plugin install\nusage: wp plugin install &lt;plugin|zip|url&gt;... [--version=&lt;version&gt;] [--force] [--activate] [--activate-network]\n<\/code><\/pre>\n\nIn this example, <code>&lt;plugin|zip|url&gt;...<\/code> is the accepted <em>positional<\/em> argument. In fact, <code>wp plugin install<\/code> accepts the same positional argument (the slug, ZIP, or URL of a plugin to install) multiple times. <code>[--version=&lt;version&gt;]<\/code> is one of the accepted <em>associative<\/em> arguments. It's used to denote the version of the plugin to install. Notice, too, the square brackets around the argument definition; square brackets mean the argument is optional.\n\nWP-CLI also has a <a href=\"\/config\/\">series of <em>global<\/em> arguments<\/a> which work with all commands. For instance, including <code>--debug<\/code> means your command execution will display all PHP errors, and add extra verbosity to the WP-CLI bootstrap process.\n\n<h2>Practical Examples<\/h2>\n\nReady to dive in? Here are some common examples of how WP-CLI is used:\n\n<strong>Download and install WordPress in seconds<\/strong>\n\n<ol>\n<li>Download the latest version of WordPress with <code>wp core download<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/core\/download\/\">doc<\/a>).<\/li>\n<\/ol>\n\n<pre><code>$ wp core download --path=wpclidemo.dev\nCreating directory '\/srv\/www\/wpclidemo.dev\/'.\nDownloading WordPress 4.6.1 (en_US)...\nUsing cached file '\/home\/vagrant\/.wp-cli\/cache\/core\/wordpress-4.6.1-en_US.tar.gz'...\nSuccess: WordPress downloaded.\n<\/code><\/pre>\n\n<ol>\n<li>Create a new wp-config.php file with <code>wp core config<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/core\/config\/\">doc<\/a>).<\/li>\n<\/ol>\n\n<pre><code>$ cd wpclidemo.dev\n$ wp core config --dbname=wpclidemo --dbuser=root\nSuccess: Generated 'wp-config.php' file.\n<\/code><\/pre>\n\n<ol>\n<li>Create the database based on wp-config.php with <code>wp db create<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/db\/create\/\">doc<\/a>).<\/li>\n<\/ol>\n\n<pre><code>$ wp db create\nSuccess: Database created.\n<\/code><\/pre>\n\n<ol>\n<li>Install WordPress with <code>wp core install<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/core\/install\/\">doc<\/a>).<\/li>\n<\/ol>\n\n<pre><code>$ wp core install --url=wpclidemo.dev --title=\"WP-CLI\" --admin_user=wpcli --admin_password=wpcli --admin_email=info@wp-cli.org\nSuccess: WordPress installed successfully.\n<\/code><\/pre>\n\nThat's it!\n\n<strong>Update plugins to their latest version<\/strong>\n\nUse <code>wp plugin update --all<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/plugin\/update\/\">doc<\/a>) to update all plugins to their latest version.\n\n<pre><code>$ wp plugin update --all\nEnabling Maintenance mode...\nDownloading update from https:\/\/downloads.wordpress.org\/plugin\/akismet.3.1.11.zip...\nUnpacking the update...\nInstalling the latest version...\nRemoving the old version of the plugin...\nPlugin updated successfully.\nDownloading update from https:\/\/downloads.wordpress.org\/plugin\/nginx-champuru.3.2.0.zip...\nUnpacking the update...\nInstalling the latest version...\nRemoving the old version of the plugin...\nPlugin updated successfully.\nDisabling Maintenance mode...\nSuccess: Updated 2\/2 plugins.\n+------------------------+-------------+-------------+---------+\n| name                   | old_version | new_version | status  |\n+------------------------+-------------+-------------+---------+\n| akismet                | 3.1.3       | 3.1.11      | Updated |\n| nginx-cache-controller | 3.1.1       | 3.2.0       | Updated |\n+------------------------+-------------+-------------+---------+\n<\/code><\/pre>\n\n<strong>Add a user as a super-admin<\/strong>\n\nOn multisite, use <code>wp super-admin add<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/super-admin\/add\/\">doc<\/a>) to grant super admin capabilities to an existing user.\n\n<pre><code>$ wp super-admin add wpcli\nSuccess: Granted super-admin capabilities.\n<\/code><\/pre>\n\n<strong>Regenerate thumbnails<\/strong>\n\nIf you've added or changed an image size registered with <code>add_image_size()<\/code>, you may want to use <code>wp media regenerate<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/media\/regenerate\/\">doc<\/a>) so your theme displays the correct image size.\n\n<pre><code>wp media regenerate --yes\nFound 1 image to regenerate.\n1\/1 Regenerated thumbnails for \"charlie-gpa\" (ID 4).\nSuccess: Finished regenerating the image.\n<\/code><\/pre>\n\nWondering what's next? Browse through <a href=\"https:\/\/wp-cli.org\/commands\/\">all of WP-CLI's commands<\/a> to explore your new world. Or, catch up with <a href=\"https:\/\/make.wordpress.org\/cli\/handbook\/shell-friends\/\">shell friends<\/a> to learn about helpful command line utilities.","contentFiltered":"<style> .toc-jump { text-align: right; font-size: 12px; } .page .toc-heading { margin-top: -50px; padding-top: 50px !important; }<\/style><div class=\"table-of-contents\"><h2>Topics<\/h2><ul class=\"items\"><li><a href=\"#introduction\">Introduction<\/a><\/li>\n<li><a href=\"#common-terms\">Common Terms<\/a><\/li>\n<li><a href=\"#practical-examples\">Practical Examples<\/a><\/ul>\n<\/div>\n<p>Congratulations! You&#8217;ve <a href=\"https:\/\/make.wordpress.org\/cli\/handbook\/installing\/\">installed WP-CLI<\/a> for the first time, and are ready to level-up your use of WordPress. This page contains a brief introduction to WP-CLI with some example usage.<\/p>\n<h2 class=\"toc-heading\" id=\"introduction\" tabindex=\"-1\">Introduction <a href=\"#introduction\" class=\"anchor\"><span aria-hidden=\"true\">#<\/span><span class=\"screen-reader-text\">Introduction<\/span><\/a><\/h2>\n<p>WP-CLI is a command line interface for WordPress. The project&#8217;s goal is to offer a complete alternative to the WordPress admin; for any action you might want to perform in the WordPress admin, there should be an equivalent WP-CLI command.<\/p>\n<p>For instance, because you can install a plugin from the WordPress admin, you can also <a href=\"https:\/\/wp-cli.org\/commands\/plugin\/install\/\">install a plugin<\/a> with WP-CLI:<\/p>\n<pre><code>$ wp plugin install akismet\nInstalling Akismet (3.1.8)\nDownloading install package from https:\/\/downloads.wordpress.org\/plugin\/akismet.3.1.8.zip...\nUnpacking the package...\nInstalling the plugin...\nPlugin installed successfully.\n<\/code><\/pre>\n<p>And, because you can also activate plugins from the WordPress admin, you can <a href=\"https:\/\/wp-cli.org\/commands\/plugin\/activate\/\">activate a plugin<\/a> with WP-CLI:<\/p>\n<pre><code>$ wp plugin activate akismet\nSuccess: Plugin 'akismet' activated.\n<\/code><\/pre>\n<p>One key difference between using the WordPress admin and WP-CLI: performing any action takes many fewer clicks. As you become more familiar with the command line, you&#8217;ll notice performing a given task with WP-CLI is generally much faster than performing the same task through the WordPress admin. Investing time upfront into learning how to better use WP-CLI pays dividends in the long term.<\/p>\n<p class=\"toc-jump\"><a href=\"#top\">Top &uarr;<\/a><\/p><h2 class=\"toc-heading\" id=\"common-terms\" tabindex=\"-1\">Common Terms <a href=\"#common-terms\" class=\"anchor\"><span aria-hidden=\"true\">#<\/span><span class=\"screen-reader-text\">Common Terms<\/span><\/a><\/h2>\n<p>Throughout your usage of WP-CLI, you&#8217;ll hear certain terms used over and over again.<\/p>\n<p>For instance, a <em>command<\/em> is an atomic unit of WP-CLI functionality. <code>wp plugin install<\/code> is one such command, as is <code>wp plugin activate<\/code>. Commands represent a name (e.g. &#8216;plugin install&#8217;) and a callback, and are registered with <code>WP_CLI::add_command()<\/code> (<a href=\"\/docs\/internal-api\/wp-cli-add-command\/\">doc<\/a>).<\/p>\n<p>The <em>synopsis<\/em> defines which <em>positional<\/em> and <em>associative<\/em> arguments a command accepts. Let&#8217;s take a look at the synopsis for <code>wp plugin install<\/code>:<\/p>\n<pre><code>$ wp plugin install\nusage: wp plugin install &lt;plugin|zip|url&gt;... [--version=&lt;version&gt;] [--force] [--activate] [--activate-network]\n<\/code><\/pre>\n<p>In this example, <code>&lt;plugin|zip|url&gt;...<\/code> is the accepted <em>positional<\/em> argument. In fact, <code>wp plugin install<\/code> accepts the same positional argument (the slug, ZIP, or URL of a plugin to install) multiple times. <code>[--version=&lt;version&gt;]<\/code> is one of the accepted <em>associative<\/em> arguments. It&#8217;s used to denote the version of the plugin to install. Notice, too, the square brackets around the argument definition; square brackets mean the argument is optional.<\/p>\n<p>WP-CLI also has a <a href=\"\/config\/\">series of <em>global<\/em> arguments<\/a> which work with all commands. For instance, including <code>--debug<\/code> means your command execution will display all PHP errors, and add extra verbosity to the WP-CLI bootstrap process.<\/p>\n<p class=\"toc-jump\"><a href=\"#top\">Top &uarr;<\/a><\/p><h2 class=\"toc-heading\" id=\"practical-examples\" tabindex=\"-1\">Practical Examples <a href=\"#practical-examples\" class=\"anchor\"><span aria-hidden=\"true\">#<\/span><span class=\"screen-reader-text\">Practical Examples<\/span><\/a><\/h2>\n<p>Ready to dive in? Here are some common examples of how WP-CLI is used:<\/p>\n<p><strong>Download and install WordPress in seconds<\/strong><\/p>\n<ol>\n<li>Download the latest version of WordPress with <code>wp core download<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/core\/download\/\">doc<\/a>).<\/li>\n<\/ol>\n<pre><code>$ wp core download --path=wpclidemo.dev\nCreating directory '\/srv\/www\/wpclidemo.dev\/'.\nDownloading WordPress 4.6.1 (en_US)...\nUsing cached file '\/home\/vagrant\/.wp-cli\/cache\/core\/wordpress-4.6.1-en_US.tar.gz'...\nSuccess: WordPress downloaded.\n<\/code><\/pre>\n<ol>\n<li>Create a new wp-config.php file with <code>wp core config<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/core\/config\/\">doc<\/a>).<\/li>\n<\/ol>\n<pre><code>$ cd wpclidemo.dev\n$ wp core config --dbname=wpclidemo --dbuser=root\nSuccess: Generated 'wp-config.php' file.\n<\/code><\/pre>\n<ol>\n<li>Create the database based on wp-config.php with <code>wp db create<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/db\/create\/\">doc<\/a>).<\/li>\n<\/ol>\n<pre><code>$ wp db create\nSuccess: Database created.\n<\/code><\/pre>\n<ol>\n<li>Install WordPress with <code>wp core install<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/core\/install\/\">doc<\/a>).<\/li>\n<\/ol>\n<pre><code>$ wp core install --url=wpclidemo.dev --title=\"WP-CLI\" --admin_user=wpcli --admin_password=wpcli --admin_email=info@wp-cli.org\nSuccess: WordPress installed successfully.\n<\/code><\/pre>\n<p>That&#8217;s it!<\/p>\n<p><strong>Update plugins to their latest version<\/strong><\/p>\n<p>Use <code>wp plugin update --all<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/plugin\/update\/\">doc<\/a>) to update all plugins to their latest version.<\/p>\n<pre><code>$ wp plugin update --all\nEnabling Maintenance mode...\nDownloading update from https:\/\/downloads.wordpress.org\/plugin\/akismet.3.1.11.zip...\nUnpacking the update...\nInstalling the latest version...\nRemoving the old version of the plugin...\nPlugin updated successfully.\nDownloading update from https:\/\/downloads.wordpress.org\/plugin\/nginx-champuru.3.2.0.zip...\nUnpacking the update...\nInstalling the latest version...\nRemoving the old version of the plugin...\nPlugin updated successfully.\nDisabling Maintenance mode...\nSuccess: Updated 2\/2 plugins.\n+------------------------+-------------+-------------+---------+\n| name                   | old_version | new_version | status  |\n+------------------------+-------------+-------------+---------+\n| akismet                | 3.1.3       | 3.1.11      | Updated |\n| nginx-cache-controller | 3.1.1       | 3.2.0       | Updated |\n+------------------------+-------------+-------------+---------+\n<\/code><\/pre>\n<p><strong>Add a user as a super-admin<\/strong><\/p>\n<p>On multisite, use <code>wp super-admin add<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/super-admin\/add\/\">doc<\/a>) to grant super admin capabilities to an existing user.<\/p>\n<pre><code>$ wp super-admin add wpcli\nSuccess: Granted super-admin capabilities.\n<\/code><\/pre>\n<p><strong>Regenerate thumbnails<\/strong><\/p>\n<p>If you&#8217;ve added or changed an image size registered with <code>add_image_size()<\/code>, you may want to use <code>wp media regenerate<\/code> (<a href=\"https:\/\/wp-cli.org\/commands\/media\/regenerate\/\">doc<\/a>) so your theme displays the correct image size.<\/p>\n<pre><code>wp media regenerate --yes\nFound 1 image to regenerate.\n1\/1 Regenerated thumbnails for \"charlie-gpa\" (ID 4).\nSuccess: Finished regenerating the image.\n<\/code><\/pre>\n<p>Wondering what&#8217;s next? Browse through <a href=\"https:\/\/wp-cli.org\/commands\/\">all of WP-CLI&#8217;s commands<\/a> to explore your new world. Or, catch up with <a href=\"https:\/\/make.wordpress.org\/cli\/handbook\/shell-friends\/\">shell friends<\/a> to learn about helpful command line utilities.<\/p>\n","permalink":"https:\/\/make.wordpress.org\/cli\/handbook\/quick-start\/","unixtime":1484849931,"unixtimeModified":1499877628,"entryHeaderMeta":"","linkPages":"","footerEntryMeta":"","tagsRaw":"","tagsArray":[],"loginRedirectURL":"https:\/\/login.wordpress.org\/?redirect_to=https%3A%2F%2Fmake.wordpress.org%2Fcli%2Fhandbook%2Fquick-start%2F","hasPrevPost":true,"prevPostTitle":"Pull Requests","prevPostURL":"https:\/\/make.wordpress.org\/cli\/handbook\/pull-requests\/","hasNextPost":true,"nextPostTitle":"Release Checklist","nextPostURL":"https:\/\/make.wordpress.org\/cli\/handbook\/release-checklist\/","commentsOpen":false,"is_xpost":false,"editURL":null,"postActions":"<nav class='o2-dropdown-actions o2-post-actions'><button class='o2-dropdown-actions-disclosure genericon genericon-ellipsis'><span>Post Actions<\/span><\/button><ul><li><a href=\"https:\/\/make.wordpress.org\/cli\/handbook\/quick-start\/\" title=\"Scroll to comments\"  class=\"o2-scroll-to-comments genericon  genericon-downarrow\"  data-action=\"scrolltocomments\"  data-actionstate=\"default\" >Scroll<\/a><\/li><li><a href=\"https:\/\/github.com\/wp-cli\/handbook\/edit\/master\/quick-start.md\" title=\"Edit\" rel=\"174\"  class=\"edit-post-link genericon  genericon-edit\"  data-action=\"edit\"  data-actionstate=\"default\" >Edit<\/a><\/li><li><a href=\"\" title=\"Shortlink\"  class=\"short-link o2-short-link genericon  genericon-link\"  data-action=\"shortlink\"  data-actionstate=\"default\" >Shortlink<\/a><\/li><\/ul><\/nav>","comments":[],"postFormat":"standard","postMeta":{"isSticky":false},"postTerms":[],"pluginData":[],"isPage":true,"mentions":[],"mentionContext":"","isTrashed":false,"userLogin":"danielbachhuber","userNicename":"danielbachhuber"}]</script>
+
+			
+		<nav class="handbook-navigation" role="navigation">
+			<h1 class="screen-reader-text">Handbook navigation</h1>
+			<div class="nav-links">
+
+			<a href="https://make.wordpress.org/cli/handbook/installing/" rel="previous"><span class="meta-nav">&larr;</span> Installing</a><a href="https://make.wordpress.org/cli/handbook/commands-cookbook/" rel="next">Commands Cookbook <span class="meta-nav">&rarr;</span></a>
+			</div>
+			<!-- .nav-links -->
+		</nav><!-- .navigation -->
+	
+		
+	</div> <!-- .site-content -->
+
+</div> <!-- #primary -->
+
+
+		</div><!-- #main -->
+	</div><!-- #page -->
+
+<div id="wporg-footer">
+		<div class="wrapper">
+		<ul>
+			<li><a href="//wordpress.org/about/" title="An introduction to the WordPress project">About</a></li>
+			<li><a href="//wordpress.org/news/" title="News and Updates">Blog</a></li>
+			<li><a href="//wordpress.org/hosting/" title="Recommended web hosting providers">Hosting</a></li>
+			<li><a href="//jobs.wordpress.net/" title="Find or post WordPress jobs">Jobs</a></li>
+		</ul>
+
+		<ul>
+			<li><a href="//wordpress.org/support/" title="Forums, documentation, and other resources">Support</a></li>
+			<li><a href="//developer.wordpress.org" title="Resources for WordPress developers">Developers</a></li>
+			<li><a href="//make.wordpress.org/" title="Give back to WordPress through code, support, translation and more">Get Involved</a></li>
+			<li><a href="//learn.wordpress.org/" title="Workshops and training materials">Learn</a></li>
+		</ul>
+
+		<ul>
+			<li><a href="//wordpress.org/showcase/" title="Some of the best WordPress sites on the Web">Showcase</a></li>
+			<li><a href="//wordpress.org/plugins/" title="Add extra functionality to WordPress">Plugins</a></li>
+			<li><a href="//wordpress.org/themes/" title="Make your WordPress pretty">Themes</a></li>
+			<li><a href="//wordpress.org/ideas/" title="Share your ideas for improving WordPress">Ideas</a></li>
+		</ul>
+
+		<ul>
+			<li><a href="//central.wordcamp.org/" title="Find a WordPress event near you">WordCamp</a></li>
+			<li><a href="//wordpress.tv/" title="Videos, tutorials, and WordCamp sessions">WordPress.TV</a></li>
+			<li><a href="//buddypress.org/" title="A set of plugins to transform your WordPress into a social network">BuddyPress</a></li>
+			<li><a href="//bbpress.org/" title="Fast, slick forums built on WordPress">bbPress</a></li>
+		</ul>
+
+		<ul>
+			<li><a href="//wordpress.com/?ref=wporg-footer" title="Hassle-free WordPress hosting">WordPress.com</a></li>
+			<li><a href="//ma.tt/" title="Co-founder of WordPress, an example of what WordPress can do">Matt</a></li>
+			<li><a href="//wordpress.org/about/privacy/" title="WordPress.org Privacy Policy">Privacy</a></li>
+			<li><a href="//wordpress.org/about/license/" title="WordPress is open source software">License / GPLv2</a></li>
+		</ul>
+
+		<ul>
+			<li>
+				<iframe title="Follow @WordPress on Twitter" allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/follow_button.html?screen_name=WordPress&amp;show_count=false" style="width:135px; height:20px;"></iframe>
+			</li>
+			<li>
+				<iframe title="Like WordPress on Facebook" src="//www.facebook.com/plugins/like.php?app_id=121415197926116&amp;href=http%3A%2F%2Fwww.facebook.com%2Fwordpress&amp;send=false&amp;layout=button_count&amp;width=135&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font=lucida+grande&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:135px; height:21px;" allowTransparency="true"></iframe>
+			</li>
+			<li>
+				<script src="https://apis.google.com/js/platform.js" async defer></script>
+				<div class="g-plusone" data-size="medium" data-href="https://plus.google.com/+WordPress"></div>
+			</li>
+		</ul>
+	</div>
+	
+		<h6 class="aligncenter cip-image">Code is Poetry.</h6>
+</div>
+
+
+<script type="text/javascript">
+  var _qevents = _qevents || [];
+  (function() {
+   var elem = document.createElement('script');
+   elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge")
+               + ".quantserve.com/quant.js";
+   elem.async = true;
+   elem.type = "text/javascript";
+   var scpt = document.getElementsByTagName('script')[0];
+   scpt.parentNode.insertBefore(elem, scpt);
+  })();
+</script>
+<script type="text/javascript">_qevents.push( { qacct:"p-18-mFEk4J448M"} );</script>
+<noscript><img src="//pixel.quantserve.com/pixel/p-18-mFEk4J448M.gif" style="display: none;" border="0" height="1" width="1" alt=""/></noscript>
+<!-- 10 queries. 0.165 seconds -->
+<script type="text/javascript" src="//gravatar.com/js/gprofiles.js"></script>
+
+<script type="text/javascript">
+(function($){
+$(document).ready(function() {
+	$('#footer a').click(function() {
+		if (this.href.indexOf('wordpress.org') == -1 && this.href.indexOf('http') == 0) {
+			recordOutboundLink(this, 'Outbound Links', this.href);
+			return false;
+		}
+	});
+});
+})(jQuery);
+</script>
+		<script type="text/javascript">
+			// <![CDATA[
+			var xpostData = [];
+						// ]]>
+		</script><script class='o2-post-action-states-dict' type='application/json' style='display:none'>{"reply":{"default":{"shortText":"Reply","title":"Reply","classes":[],"genericon":"genericon-reply"}},"login-to-reply":{"default":{"shortText":"Login to Reply","title":"Login to Reply","classes":[],"genericon":"genericon-reply"}},"scrolltocomments":{"default":{"shortText":"Scroll","title":"Scroll to comments","classes":[],"genericon":"genericon-downarrow"}},"edit":{"default":{"shortText":"Edit","title":"Edit","classes":[],"genericon":"genericon-edit"}},"trash":{"default":{"shortText":"Trash","title":"Trash","classes":[],"genericon":"genericon-trash"}},"shortlink":{"default":{"shortText":"Shortlink","title":"Shortlink","classes":[],"genericon":"genericon-link"}},"stickyposts":{"normal":{"shortText":"Stick post to home","title":"Stick post to home","classes":[],"genericon":"genericon-pinned","nextState":"sticky"},"sticky":{"shortText":"Unstick post from home","title":"Unstick post from home","classes":["sticky"],"genericon":"genericon-pinned","nextState":"normal"}}}</script>
+<script class='o2-live-widget-bootstrap-data' type='application/json' style='display:none'>[{"unixtime":1499798058,"title":"How should we embark upon new feature development?","domRef":"#comment-50","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/07\/05\/how-should-we-embark-upon-new-feature-development\/#comment-50","type":"comment","externalID":"50","postID":"598","userLogin":"miyauchi","userNicename":"miyauchi"},{"unixtime":1499791023,"title":"How should we embark upon new feature development?","domRef":"#comment-49","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/07\/05\/how-should-we-embark-upon-new-feature-development\/#comment-49","type":"comment","externalID":"49","postID":"598","userLogin":"danielbachhuber","userNicename":"danielbachhuber"},{"unixtime":1499409657,"title":"How should we embark upon new feature development?","domRef":"#comment-48","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/07\/05\/how-should-we-embark-upon-new-feature-development\/#comment-48","type":"comment","externalID":"48","postID":"598","userLogin":"grapplerulrich","userNicename":"grapplerulrich"},{"unixtime":1499394955,"title":"How should we embark upon new feature development?","domRef":"#comment-47","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/07\/05\/how-should-we-embark-upon-new-feature-development\/#comment-47","type":"comment","externalID":"47","postID":"598","userLogin":"ryanshoover","userNicename":"ryanshoover"},{"unixtime":1499379149,"title":"How should we embark upon new feature development?","domRef":"#comment-46","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/07\/05\/how-should-we-embark-upon-new-feature-development\/#comment-46","type":"comment","externalID":"46","postID":"598","userLogin":"dmccan","userNicename":"dmccan"},{"unixtime":1499284345,"title":"How should we embark upon new feature development?","domRef":"#comment-45","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/07\/05\/how-should-we-embark-upon-new-feature-development\/#comment-45","type":"comment","externalID":"45","postID":"598","userLogin":"anseltaft","userNicename":"anseltaft"},{"unixtime":1499271551,"title":"How should we embark upon new feature development?","domRef":"#comment-44","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/07\/05\/how-should-we-embark-upon-new-feature-development\/#comment-44","type":"comment","externalID":"44","postID":"598","userLogin":"nerrad","userNicename":"nerrad"},{"unixtime":1498405476,"title":"WordCamp Europe 2017 Contributor Day Recap","domRef":"#comment-42","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/06\/25\/wordcamp-europe-2017-contributor-day-recap\/#comment-42","type":"comment","externalID":"42","postID":"584","userLogin":"EJOweb","userNicename":"ejoweb"},{"unixtime":1496351846,"title":"Version 1.2.0 released","domRef":"#comment-41","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/05\/31\/version-1-2-0-released\/#comment-41","type":"comment","externalID":"41","postID":"529","userLogin":"mrahmadawais","userNicename":"mrahmadawais"},{"unixtime":1496294337,"title":"Version 1.2.0 released","domRef":"#comment-40","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/05\/31\/version-1-2-0-released\/#comment-40","type":"comment","externalID":"40","postID":"529","userLogin":"ryno267","userNicename":"ryno267"},{"unixtime":1499260868,"title":"How should we embark upon new feature development?","domRef":"#post-598","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/07\/05\/how-should-we-embark-upon-new-feature-development\/","type":"post","externalID":598,"userLogin":"danielbachhuber","userNicename":"danielbachhuber"},{"unixtime":1498693615,"title":"Good first issues for new contributors","domRef":"#post-588","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/06\/28\/good-first-issues-for-new-contributors-2\/","type":"post","externalID":588,"userLogin":"danielbachhuber","userNicename":"danielbachhuber"},{"unixtime":1498387339,"title":"WordCamp Europe 2017 Contributor Day Recap","domRef":"#post-584","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/06\/25\/wordcamp-europe-2017-contributor-day-recap\/","type":"post","externalID":584,"userLogin":"schlessera","userNicename":"schlessera"},{"unixtime":1496752693,"title":"Version 1.2.1 released","domRef":"#post-565","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/06\/06\/version-1-2-1-released\/","type":"post","externalID":565,"userLogin":"danielbachhuber","userNicename":"danielbachhuber"},{"unixtime":1496261511,"title":"Version 1.2.0 released","domRef":"#post-529","permalink":"https:\/\/make.wordpress.org\/cli\/2017\/05\/31\/version-1-2-0-released\/","type":"post","externalID":529,"userLogin":"danielbachhuber","userNicename":"danielbachhuber"}]</script>
+		<script type="text/javascript">
+			o2.Offline.init();
+		</script>
+		<div id="help">
+			<dl class="directions">
+				<dt>s</dt><dd>search</dd>
+				<dt>c</dt><dd>compose new post</dd>
+				<dt>r</dt> <dd>reply</dd>
+				<dt>e</dt> <dd>edit</dd>
+				<dt>t</dt> <dd>go to top</dd>
+				<dt>j</dt> <dd>go to the next post or comment</dd>
+				<dt>k</dt> <dd>go to the previous post or comment</dd>
+				<dt>o</dt> <dd>toggle comment visibility</dd>
+				<dt>esc</dt> <dd>cancel edit post or comment</dd>
+			</dl>
+		</div> 
+<script type="html/template" id="tmpl-o2-app-header">
+				<# if ( !data.isSingle && !data.isPage && !data.is404 && !( data.isSearch && !data.havePosts ) ) { #>
+	<h2 class="o2-app-page-title">
+		<# if ( data.showTitle && data.pageTitle != '' ) { #>
+			{{{ data.pageTitle }}}
+		<# } #>
+	</h2>
+	<span class="o2-app-controls">
+		{{{ data.appControls.join( ' | ' ) }}}
+	</span>
+<# } else { #>
+	<# if ( data.showTitle && data.pageTitle != '' ) { #>
+		<h2 class="o2-app-page-title">
+			{{{ data.pageTitle }}}
+		</h2>
+	<# } #>
+<# } #>
+</script>
+				
+<script type="html/template" id="tmpl-o2-app-footer">
+				</script>
+				
+<script type="html/template" id="tmpl-o2-post-view">
+				<div class="o2-post"></div>
+<div class="o2-post-comments"></div>
+<div class="o2-post-comment-controls"></div>
+
+<# if ( data.showNavigation ) { #>
+	<div class="navigation">
+		<# if ( data.hasPrevPost ) { #>
+			<p class="nav-older">
+				<a href="{{ data.prevPostURL }}" title="{{ data.prevPostTitle }}" >&larr; {{{ data.prevPostTitle }}}</a>
+			</p>
+		<# } #>
+		<# if ( data.hasNextPost ) { #>
+			<p class="nav-newer">
+				<a href="{{ data.nextPostURL }}" title="{{ data.nextPostTitle }}" >{{{ data.nextPostTitle }}} &rarr;</a>
+			</p>
+		<# } #>
+	</div>
+<# } #>
+</script>
+				
+<script type="html/template" id="tmpl-o2-no-posts-post-view">
+				<div class="o2-post">
+	<p>{{ data.text }}</p>
+</div>
+</script>
+				
+<script type="html/template" id="tmpl-o2-post">
+				<header class="entry-header">
+	<div class="entry-meta">
+	<# if ( ! data.isPage && o2.options.showAvatars && data.author.avatar ) { #>
+		<a href="{{ data.author.url }}" title="{{ data.author.urlTitle }}" class="author-avatar {{ data.author.modelClass }}">
+			<img src="{{ data.author.avatar }}" width="{{ data.author.avatarSize }}" height="{{ data.author.avatarSize }}" class="avatar {{ data.author.modelClass }}" />
+		</a>
+	<# } #>
+	<# if ( ! data.isPage ) { #>
+		<a href="{{ data.author.url }}" title="{{ data.author.urlTitle }}" class="entry-author {{ data.author.modelClass }}">
+			{{ data.author.displayName }}
+		</a>
+		<a href="{{ data.permalink }}" class="entry-date o2-timestamp" data-unixtime="{{ data.unixtime }}" data-compact-allowed="true"></a>
+	<# } #>
+		<# if ( ! data.isSaving ) { #>
+			{{{ data.postActions }}}
+		<# } #>
+		{{{ data.entryHeaderMeta }}}
+	</div>
+	<# if ( data.showTitle && ! data.titleWasGeneratedFromContent ) { #>
+		<h1 class="entry-title">
+			<# if ( data.linkTitle ) { #>
+				<a href="{{ data.permalink }}">{{{ data.titleFiltered }}}</a>
+			<# } else { #>
+				{{{ data.titleFiltered }}}
+			<# } #>
+		</h1>
+	<# } #>
+</header>
+<div class="entry-content">
+	{{{ data.contentFiltered }}}
+	{{{ data.linkPages }}}
+</div>
+<footer class="entry-meta">
+	{{{ data.footerEntryMeta }}}
+	<# if ( data.postID ) { #>
+		<div class="o2-display-comments-toggle">
+			<a href="#">
+				<span class="genericon genericon-expand"></span>
+				<span class="disclosure-text">{{ data.strings.showComments }}</span>
+			</a>
+		</div>
+	<# } else { #>
+		<div class="o2-save-spinner"></div>
+	<# } #>
+</footer>
+</script>
+				
+<script type="html/template" id="tmpl-o2-post-edit">
+				<header class="entry-header">
+	<div class="entry-meta">
+<# if ( ! data.isPage && o2.options.showAvatars && data.author.avatar ) { #>
+	<a href="{{ data.author.url }}" title="{{ data.author.urlTitle }}" class="author-avatar">
+		<img src="{{ data.author.avatar }}" width="{{ data.avatarSize }}" height="{{ data.avatarSize }}" class="avatar" />
+	</a>
+<# } #>
+<# if ( ! data.isPage ) { #>
+		<a href="{{ data.author.url }}" title="{{ data.author.urlTitle }}" class="entry-author">
+			{{ data.author.displayName }}
+		</a>
+		<a href="{{ data.permalink }}" class="entry-date o2-timestamp" data-unixtime="{{ data.unixtime }}">
+		</a>
+<# } #>
+		{{{ data.postActions }}}
+		{{{ data.entryHeaderMeta }}}
+	</div>
+</header>
+<div class="entry-content">
+	<div class="o2-editor">
+		<textarea title="{{ data.titleRaw }}" placeholder="" class="o2-editor">{{ data.contentRaw }}</textarea>
+		<div class="o2-editor-footer">
+			<ul class="o2-editor-tabs">
+				<li class="selected"><a href="#" class="o2-editor-edit-button genericon-edit">{{ data.strings.edit }}</a></li>
+				<li><a href="#" class="o2-editor-preview-button genericon-show">{{ data.strings.preview }}</a></li>
+			</ul>
+
+			<a href="#" class="o2-save primary" title="&#8984;-enter">{{ data.strings.save }}</a>
+			<a href="#" class="o2-cancel">{{ data.strings.cancel }}</a>
+		</div>
+	</div>
+</div>
+
+<footer class="entry-meta">
+	{{{ data.footerEntryMeta }}}
+</footer>
+</script>
+				
+<script type="html/template" id="tmpl-o2-front-side-new-post-edit">
+				<div class="entry-content">
+	<div class="o2-editor">
+		{{{ data.postFormBefore }}}
+		<textarea title="" placeholder="{{ data.postPrompt }}" class="o2-editor">{{ data.contentRaw }}</textarea>
+		<div class="o2-editor-footer">
+			<ul class="o2-editor-tabs">
+				<li class="selected"><a href="#" class="o2-editor-edit-button genericon-edit">{{ data.strings.edit }}</a></li>
+				<li><a href="#" class="o2-editor-preview-button genericon-show">{{ data.strings.preview }}</a></li>
+			</ul>
+
+			<a href="#" class="o2-save primary" title="&#8984;-enter">{{ data.strings.post }}</a>
+
+			<div class="o2-post-form-options">
+				{{{ data.postFormExtras }}}
+			</div>
+		</div>
+	</div>
+</div>
+</script>
+				
+<script type="html/template" id="tmpl-o2-comment">
+				<header class="o2-comment-header comment">
+	<# if ( ! data.isSaving ) { #>
+		<# if ( data.isTrashed && data.trashedSession ) { #>
+			{{{ data.commentTrashedActions }}}
+		<# } else { #>
+			{{{ data.commentDropdownActions }}}
+		<# } #>
+	<# } #>
+
+	<# if ( o2.options.showAvatars && data.author.avatar ) { #>
+	<img src="{{ data.author.avatar }}" width="{{ data.avatarSize }}" height="{{ data.avatarSize }}" class="avatar {{ data.author.modelClass }}" />
+	<# } #>
+	<div class="comment-meta commentmetadata o2-comment-metadata" data-o2-comment-id="{{ data.id }}">
+		<# if ( data.isAnonymousAuthor ) { #>
+			<span class="comment-author">{{ data.strings.anonymous }}</span>
+		<# } else { #>
+			<a href="{{ data.author.url }}" rel="external nofollow" class="comment-author url {{ data.author.modelClass }}">
+				{{ data.author.displayName }}
+			</a>
+		<# } #>
+		<a href="{{ data.permalink }}" class="comment-date o2-timestamp" data-unixtime="{{ data.unixtime }}" data-compact-allowed="true"></a>
+		<# if ( ! ( data.isNew || data.isSaving ) ) { #>
+			<span class="comment-actions o2-actions">
+				<# if ( data.currentUser.userLogin.length ) { #>
+					<# if ( data.commentingAllowed ) { #>
+						<a href="#" class="o2-comment-reply" title="{{ data.strings.reply }}">{{ data.strings.reply }}</a>
+					<# } #>
+					<# if ( data.editingAllowed ) { #>
+						<a href="{{{ data.editURL }}}" class="o2-comment-edit" title="{{ data.strings.edit }}">{{ data.strings.edit }}</a>
+					<# } #>
+				<# } else { #>
+					<# if ( data.commentingAllowed ) { #>
+						<# if ( data.userMustBeLoggedInToComment ) { #>
+							<a href="{{ data.loginRedirectURL }}" class="o2-reply-not-logged-in" title="{{ data.strings.loginToComment }}">{{ data.strings.loginToComment }}</a>
+						<# } else { #>
+							<a href="#" class="o2-comment-reply" title="{{ data.strings.reply }}">{{ data.strings.reply }}</a>
+						<# } #>
+					<# } #>
+				<# } #>
+			</span>
+		<# } #>
+	</div>
+</header>
+<div class="comment-content">
+	<# if ( data.isTrashed ) { #>
+		<p class="o2-comment-awaiting-approval">
+			{{ data.strings.isTrashed }}
+		</p>
+	<# } else if ( ! data.approved ) { #>
+		<p class="o2-comment-awaiting-approval">
+			{{ data.strings.awaitingApproval }}
+		</p>
+	<# } else if ( data.prevDeleted ) { #>
+		<p class="o2-comment-awaiting-approval">
+			{{ data.strings.prevDeleted }}
+		</p>
+	<# } else { #>
+		{{{ data.contentFiltered }}}
+		{{{ data.commentFooterActions }}}
+	<# } #>
+</div>
+
+<# if ( data.isNew || ( data.isSaving && ! data.isTrashedAction ) ) { #>
+	<div class="o2-save-spinner"></div>
+<# } #>
+</script>
+				
+<script type="html/template" id="tmpl-o2-comment-edit">
+				<header class="o2-comment-header comment">
+	<# if ( o2.options.showAvatars && data.author.avatar ) { #>
+	<img src="{{ data.author.avatar }}" width="{{ data.avatarSize }}" height="{{ data.avatarSize }}" class="avatar {{ data.author.modelClass }}" />
+	<# } #>
+	<div class="comment-meta commentmetadata">
+		<# if ( data.isAnonymousAuthor ) { #>
+			<span class="comment-author">{{ data.strings.anonymous }}</span>
+		<# } else { #>
+			<a href="{{ data.author.url }}" rel="external nofollow" class="comment-author url">
+				{{ data.author.displayName }}
+			</a>
+		<# } #>
+		<a href="{{ data.permalink }}" class="comment-date o2-timestamp" data-unixtime="{{ data.unixtime }}"></a>
+		<# if ( data.someoneElsesComment ) { #>
+		<span class="o2-editing-others">{{ data.strings.editingOthersComment }}</span>
+		<# } #>
+	</div>
+</header>
+<div class="o2-editor">
+	{{{ data.commentFormBefore }}}
+	<textarea class="o2-editor">{{ data.contentRaw }}</textarea>
+	<div class="o2-editor-footer">
+		<ul class="o2-editor-tabs">
+			<li class="selected"><a href="#" class="o2-editor-edit-button genericon-edit">{{ data.strings.edit }}</a></li>
+			<li><a href="#" class="o2-editor-preview-button genericon-show">{{ data.strings.preview }}</a></li>
+		</ul>
+
+		<# if ( data.isNew ) { #>
+			<a href="#" class="o2-comment-save primary" title="&#8984;-enter">{{ data.strings.reply }}</a>
+			<a href="#" class="o2-new-comment-cancel">{{ data.strings.cancel }}</a>
+		<# } else { #>
+			<a href="#" class="o2-comment-save primary" title="&#8984;-enter">{{ data.strings.save }}</a>
+			<a href="#" class="o2-comment-cancel">{{ data.strings.cancel }}</a>
+		<# } #>
+
+		<# if ( data.isNew ) { #>
+			<div class="o2-comment-form-options">
+				{{{ data.commentFormExtras }}}
+				<div class="o2-comment-form-options-extra"></div>
+			</div>
+		<# } #>
+	</div>
+</div>
+</script>
+				
+<script type="html/template" id="tmpl-o2-logged-out-create-comment">
+				<header class="o2-comment-header comment">
+	<# if ( o2.options.showAvatars && data.author.avatar ) { #>
+	<img src="{{ data.author.avatar }}&amp;s={{ data.avatarSize }}" width="{{ data.avatarSize }}" height="{{ data.avatarSize }}" class="avatar" />
+	<# } #>
+</header>
+<div class="o2-editor o2-logged-out-editor">
+	<textarea class="o2-editor">{{ data.contentRaw }}</textarea>
+	<div class="o2-editor-signin">
+		<p>{{ data.strings.fillDetailsBelow }}</p>
+		<input type="text" class="o2-comment-email" placeholder="{{ data.strings.commentEmail }}" name="o2-comment-email" value="{{ data.currentUser.noprivUserEmail }}" />
+		<input type="text" class="o2-comment-name" placeholder="{{ data.strings.commentName }}" name="o2-comment-name" value="{{ data.currentUser.noprivUserName }}" />
+		<input type="text" class="o2-comment-url" placeholder="{{ data.strings.commentURL }}" name="o2-comment-url" value="{{ data.currentUser.noprivUserURL }}" />
+	</div>
+	<div class="o2-editor-footer">
+		<a href="#" class="o2-comment-save primary" title="&#8984;-enter">{{ data.strings.post }}</a>
+		<# if ( data.isNew ) { #>
+			<a href="#" class="o2-new-comment-cancel">{{ data.strings.cancel }}</a>
+		<# } else { #>
+			<a href="#" class="o2-comment-cancel">{{ data.strings.cancel }}</a>
+		<# } #>
+	</div>
+</div>
+</script>
+				
+<script type="html/template" id="tmpl-o2-xpost">
+				<# if ( o2.options.showAvatars && data.author.avatar ) { #>
+<a href="{{ data.author.url }}" title="{{ data.author.urlTitle }}" class="author-avatar o2-xpost-avatar">
+	<img src="{{ data.author.avatar }}" width="{{ data.author.avatarSize }}" height="{{ data.author.avatarSize }}" class="avatar {{ data.author.modelClass }}" />
+</a>
+<# } #>
+<h4 class="o2-xpost-author">
+	<a href="{{ data.author.url }}" title="{{ data.author.urlTitle }}" class="entry-author {{ data.author.modelClass }}">
+		{{ data.author.displayName }}
+	</a>
+	<a href="{{ data.permalink }}" class="entry-date o2-xpost-entry-date o2-timestamp" data-unixtime="{{ data.unixtime }}">
+	</a>
+</h4>
+<div class="post-content o2-xpost-content">
+	{{{ data.contentFiltered }}}
+</div>
+</script>
+				
+<script type="html/template" id="tmpl-o2-search-form">
+				<div class="o2-post">
+	<p>{{{ data.invitation }}}</p>
+	<form method="get" id="searchform" action="{{ o2.options.searchURL }}">
+		<div>
+			<input type="text" size="18" value="{{{ data.lastQuery }}}" name="s" id="s" />
+			<input type="submit" id="searchsubmit" value="{{ data.strings.search }}" class="btn" />
+		</div>
+	</form>
+</div>
+</script>
+				
+		<script type="html/template" id="tmpl-o2-notification">
+
+		<# if ( '' !== data.iconUrl ) { #>
+			<img src="{{ data.iconUrl }}&amp;s={{ data.iconSize }}" width="{{ data.iconSize }}" height="{{ data.iconSize }}" class="avatar {{data.iconClass}}" />
+		<# } #>
+
+		<# if ( data.dismissable ) { #>
+			<span class="o2-notification-close"><a href="#" class="o2-notification-close">&#xf405;</a></span>
+		<# } #>
+
+		<p>
+		<# if ( data.url ) { #>
+			<a href="#" class="o2-notification-link {{data.textClass}}">{{{ data.text }}}</a>
+		<# } else { #>
+			{{{ data.text }}}
+		<# } #>
+		<# if ( 'notice' === data.type ) { #>
+			<br />
+			<span class="entry-date o2-timestamp" data-compact-allowed="true" data-unixtime="{{ data.unixtime }}">
+		<# } #>
+		</p>
+
+		<div class="clear"></div>
+
+		</script>
+
+					<script type="html/template" id='tmpl-o2-live-untitled-post-title-template'>
+				Post by {{ data.author.displayName }}			</script>
+			<script type="html/template" id='tmpl-o2-live-comment-title-template'>
+				Comment on {{ data.title }}			</script>
+			<script type="html/template" id='tmpl-o2-live-untitled-comment-title-template'>
+				Comment by {{ data.author.displayName }}			</script>
+			<script type="html/template" id='tmpl-o2-live-item-template'>
+				<# if ( o2.options.showAvatars && data.author.avatar ) { #>
+				<img src="{{ data.author.avatar }}" width="{{ data.author.avatarSize }}" height="{{ data.author.avatarSize }}" class="avatar o2-live-item-img {{ data.author.modelClass }}" />
+				<# } #>
+				<p class="o2-live-item-text"><a href="{{ data.permalink }}" data-domref="{{ data.domRef }}"
+					<# if ( 'comment' === data.type ) { #>
+						data-postid="{{ data.postID }}"
+					<# } #>
+					>{{{ data.title }}}</a>
+					<br/>
+					<span class="entry-date o2-timestamp" data-unixtime="{{ data.unixtime }}" data-domref="{{ data.domRef }}"
+						<# if ( 'comment' === data.type ) { #>
+							data-postid="{{ data.postID }}"
+						<# } #>
+					>
+					</span>
+				</p>
+				<div class="o2-live-item-clear">
+				</div>
+			</script>
+		<script class='o2-user-data' type='application/json' style='display:none'>{"danielbachhuber":{"id":183657,"type":"user","userLogin":"danielbachhuber","userNicename":"danielbachhuber","displayName":"Daniel Bachhuber","firstName":"Daniel","lastName":"Bachhuber","url":"https:\/\/profiles.wordpress.org\/danielbachhuber","urlTitle":"Posts by Daniel Bachhuber (@danielbachhuber)","hash":"a304ad0084a78fe52f6b93e00871754e","modelClass":""},"miyauchi":{"id":175046,"type":"user","userLogin":"miyauchi","userNicename":"miyauchi","displayName":"Takayuki Miyauchi","firstName":"Takayuki","lastName":"Miyauchi","url":"https:\/\/profiles.wordpress.org\/miyauchi","urlTitle":"Posts by Takayuki Miyauchi (@miyauchi)","hash":"5ce0355dcf546893c7ffd8066a35fdb9","modelClass":""},"grapplerulrich":{"id":8917248,"type":"user","userLogin":"grapplerulrich","userNicename":"grapplerulrich","displayName":"Ulrich","firstName":"Ulrich","lastName":"","url":"https:\/\/profiles.wordpress.org\/grapplerulrich","urlTitle":"Posts by Ulrich (@grapplerulrich)","hash":"97e4739f77bfc0a4058a1fcfccbf04c7","modelClass":""},"ryanshoover":{"id":13798963,"type":"user","userLogin":"ryanshoover","userNicename":"ryanshoover","displayName":"Hoover","firstName":"Ryan","lastName":"Hoover","url":"https:\/\/profiles.wordpress.org\/ryanshoover","urlTitle":"Posts by Hoover (@ryanshoover)","hash":"5f22675cc71a388c7e003cadfb313535","modelClass":""},"dmccan":{"id":11706622,"type":"user","userLogin":"dmccan","userNicename":"dmccan","displayName":"dmccan","firstName":"dmccan","lastName":"","url":"https:\/\/profiles.wordpress.org\/dmccan","urlTitle":"Posts by dmccan (@dmccan)","hash":"3082e887399934debe4027fa1ebbd2ea","modelClass":""},"anseltaft":{"id":5725475,"type":"user","userLogin":"anseltaft","userNicename":"anseltaft","displayName":"Ansel Taft","firstName":"Ansel","lastName":"Taft","url":"https:\/\/profiles.wordpress.org\/anseltaft","urlTitle":"Posts by Ansel Taft (@anseltaft)","hash":"59199a4807fe8a10264c0cea8fd4ddac","modelClass":""},"nerrad":{"id":129280,"type":"user","userLogin":"nerrad","userNicename":"nerrad","displayName":"Darren Ethier (nerrad)","firstName":"Darren","lastName":"Ethier (nerrad)","url":"https:\/\/profiles.wordpress.org\/nerrad","urlTitle":"Posts by Darren Ethier (nerrad) (@nerrad)","hash":"82c44d1ed35aec5d4a7252da502eb04b","modelClass":""},"EJOweb":{"id":12253738,"type":"user","userLogin":"EJOweb","userNicename":"ejoweb","displayName":"Erik Joling","firstName":"Erik","lastName":"Joling","url":"https:\/\/profiles.wordpress.org\/ejoweb","urlTitle":"Posts by Erik Joling (@ejoweb)","hash":"6aa52c6703d416fc5080b865379df5b4","modelClass":""},"mrahmadawais":{"id":7523053,"type":"user","userLogin":"mrahmadawais","userNicename":"mrahmadawais","displayName":"Ahmad Awais","firstName":"Ahmad","lastName":"Awais","url":"https:\/\/profiles.wordpress.org\/mrahmadawais","urlTitle":"Posts by Ahmad Awais (@mrahmadawais)","hash":"fae697f476a1d1271cb98f73e43ac1a1","modelClass":""},"ryno267":{"id":1486,"type":"user","userLogin":"ryno267","userNicename":"ryno267","displayName":"Chuck Reynolds","firstName":"Chuck","lastName":"Reynolds","url":"https:\/\/profiles.wordpress.org\/ryno267","urlTitle":"Posts by Chuck Reynolds (@ryno267)","hash":"22bac44175a8d184f052df428668656d","modelClass":""},"schlessera":{"id":14387856,"type":"user","userLogin":"schlessera","userNicename":"schlessera","displayName":"Alain Schlesser","firstName":"Alain","lastName":"Schlesser","url":"https:\/\/profiles.wordpress.org\/schlessera","urlTitle":"Posts by Alain Schlesser (@schlessera)","hash":"a686099e5d041a8825ef01d71513c2db","modelClass":""}}</script>
+			<script>
+				jQuery(document).ready(function($) {
+					var bootstrap = { data: [] };
+					o2Data = $( '.o2-data' );
+					if ( o2Data.length > 0 ) {
+						o2Data.each( function() {
+							// Parse the JSON that's embedded in the page and add it to the bootstrap data
+							var me = $( this );
+							var thread;
+							try {
+								thread = $.parseJSON( me.text() );
+							} catch( e ) {
+								thread = false;
+								console.log( '$.parseJSON failure: ' + me.text() );
+							}
+							if ( false !== thread ) {
+								_.each( thread, function( frag ) {
+									bootstrap.data.push( frag );
+								} );
+							}
+							me.remove();
+						} );
+					}
+
+					// Merge o2Config into o2 itself
+					o2 = $.extend( o2, o2Config );
+
+					// Some generally-useful references
+					o2.$body = $( 'body' );
+					o2.$appContainer = $( o2.options.appContainer );
+
+					// As soon as o2 loads, poll for new content to account
+					// for Chrome's caching weirdness on back/tab-recovery.
+					o2.$appContainer.on( 'ready.o2', function() {
+						o2.Polling.poll();
+					} );
+
+					// Bootstrap o2 with any in-page content
+					o2.start( bootstrap );
+				});
+			</script>
+			
+		<div id="o2-dock"></div>
+		<div id="o2-flash"></div>
+
+		<script class='o2-notifications-data' type='application/json' style='display:none;'>
+		[]
+		</script>
+
+		<script type="text/javascript">
+			o2Config.options.scripts = ["jquery-core","jquery-migrate","jquery","jetpack-inline-terms-js","jetpack-suggest-ui-defaults","jetpack-xposts-js","jetpack-hashtags-js","jquery-actionstate","o2-offline","underscore","backbone","o2-models-user","o2-collections-users","o2-events","o2-keyboard","o2-models-page-meta","o2-moment","wp-util","wp-backbone","o2-views-app-footer","utils","o2-views-app-header","o2-highlight","o2-models-base","o2-models-comment","o2-jquery-hotkeys","jquery.autoresize","o2-plugin-caret","o2-editor","o2-views-comment","o2-models-post","o2-views-new-post","o2-compare-times","o2-collections-comments","o2-views-post","o2-collections-posts","jquery-color","o2-timestamp","o2-notifications-models-notification","o2-notifications-collections-notifications","o2-notifications-views-notification","o2-notifications-views-dock-items","o2-notifications-views-dock-count","o2-notifications-views-dock","o2-notifications-views-flash","o2-notifications","o2-views-no-posts-post","o2-views-posts","o2-app","o2-highlight-on-inview","o2-is-valid-email","o2-models-search-meta","o2-page-visibility","o2-plugin-placeholder","o2-polling","o2-query","o2-raw-to-filtered","o2-template","o2-views-search-form","o2-cocktail","o2-extend-recent-comments-collections-posts","jquery-ui-core","jquery-ui-widget","jquery-ui-mouse","jquery-ui-sortable","o2-extend-checklists-views-common","o2-enquire","o2-notifications-views-flash-items","o2-extend-sticky-posts-models-extend-post","o2-extend-sticky-posts-collections-extend-posts","o2-extend-sticky-posts-views-extend-post","o2-extend-sticky-posts-views-extend-posts","wporg-handbook","o2-live-comments-models-item","o2-live-comments-collections-items","o2-live-comments-views-item","o2-live-comments-views-items","o2-live-comments","o2-extend-post-actions","o2-extend-comment-actions-views-comment","o2-extend-post-actions-views-post","wporg-breathe-chapters"];
+			o2Config.options.styles = ["jetpack-inline-terms-css","dashicons","admin-bar","o2-extend-checklists-styles","genericons","o2-plugin-styles","o2-notifications","o2-extend-sticky-posts","breathe-serif","wporg-handbook-css","o2-live-comments-styles","jetpack-subscriptions","post-actions-styles","p2-breathe","wporg-breathe","jetpack_css"];
+		</script>	<div style="display:none">
+	</div>
+	<script type="text/javascript">
+		var el = document.getElementById( 'make-welcome-hide' );
+		if ( el ) {
+			el.addEventListener( 'click', function( e ) {
+				document.cookie = el.dataset.cookie + '=' + el.dataset.hash +
+					'; expires=Fri, 31 Dec 9999 23:59:59 GMT' +
+					'; domain=make.wordpress.org' +
+					'; path=/cli/';
+				jQuery( '.make-welcome' ).slideUp();
+			} );
+		}
+	</script>
+		<noscript class="js-disabled-notice">
+		Please enable JavaScript to view this page properly.	</noscript>
+	<script>
+			// <![CDATA[
+			var jetpackMentionsData = [{"ID":140668,"user_login":"aaroncampbell","user_nicename":"aaroncampbell","display_name":"Aaron D. Campbell","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/f27b79eb04eb414c4c1fc98375fe7404?s=96&d=mm&r=g"},{"ID":2738372,"user_login":"jorbin","user_nicename":"jorbin","display_name":"Aaron Jorbin","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/b3e2b94eb305bf95a1bee11bc7705fb7?s=96&d=mm&r=g"},{"ID":10464658,"user_login":"adamsilverstein","user_nicename":"adamsilverstein","display_name":"Adam Silverstein","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/fddbd6c3e1c3d971aa732b9346aeb433?s=96&d=mm&r=g"},{"ID":14387856,"user_login":"schlessera","user_nicename":"schlessera","display_name":"Alain Schlesser","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/a686099e5d041a8825ef01d71513c2db?s=96&d=mm&r=g"},{"ID":8894114,"user_login":"afercia","user_nicename":"afercia","display_name":"Andrea Fercia","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/074af62ea5ff218b6a6eeab89104f616?s=96&d=mm&r=g"},{"ID":5286302,"user_login":"nacin","user_nicename":"nacin","display_name":"Andrew Nacin","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/01cfe9feaafb068590891bbd1f6a7f5a?s=96&d=mm&r=g"},{"ID":161792,"user_login":"azaozz","user_nicename":"azaozz","display_name":"Andrew Ozz","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/4e84843ebff0918d72ade21c6ee7b1e4?s=96&d=mm&r=g"},{"ID":13899375,"user_login":"antpb","user_nicename":"antpb","display_name":"Anthony Burchell","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/453fbc8dfd108125f351d60fd2c1afe7?s=96&d=mm&r=g"},{"ID":2881701,"user_login":"boonebgorges","user_nicename":"boonebgorges","display_name":"Boone Gorges","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/9cf7c4541a582729a5fc7ae484786c0c?s=96&d=mm&r=g"},{"ID":7879583,"user_login":"kraftbj","user_nicename":"kraftbj","display_name":"Brandon Kraft","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/6e238edcb0664c975ccb9e8e80abb307?s=96&d=mm&r=g"},{"ID":27276,"user_login":"cbutlerjr","user_nicename":"cbutlerjr","display_name":"Chad Butler","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/8e5dcc94f24f2365eec6d7fc843d0d36?s=96&d=mm&r=g"},{"ID":7561117,"user_login":"davidakennedy","user_nicename":"davidakennedy","display_name":"David A. Kennedy","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/219860d3117df777c48f475d25e24fdd?s=96&d=mm&r=g"},{"ID":14193470,"user_login":"dshanske","user_nicename":"dshanske","display_name":"David Shanske","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/681eba02e72ba1d894097034a8110e61?s=96&d=mm&r=g"},{"ID":370384,"user_login":"valendesigns","user_nicename":"valendesigns","display_name":"Derek Herman","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/ca0dc28865ede5a2b2a9e22971b87993?s=96&d=mm&r=g"},{"ID":148148,"user_login":"dd32","user_nicename":"dd32","display_name":"Dion Hulse","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/4af2825655b46fb1206b08d9041d8e3e?s=96&d=mm&r=g"},{"ID":1669362,"user_login":"ocean90","user_nicename":"ocean90","display_name":"Dominik Schilling (ocean90)","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/616b56a9c5898a427304425af0966c07?s=96&d=mm&r=g"},{"ID":5851951,"user_login":"DrewAPicture","user_nicename":"drewapicture","display_name":"Drew Jaynes","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/95c934fa2c3362794bf62ff8c59ada08?s=96&d=mm&r=g"},{"ID":11655703,"user_login":"iseulde","user_nicename":"iseulde","display_name":"Ella Van Dorpe","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/1a847a68778b8344b6aa106a8861984f?s=96&d=mm&r=g"},{"ID":7875507,"user_login":"ericlewis","user_nicename":"ericlewis","display_name":"Eric Andrew Lewis","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/7e524cf1c5e8d108658899a497dc4bd4?s=96&d=mm&r=g"},{"ID":10972453,"user_login":"flixos90","user_nicename":"flixos90","display_name":"Felix Arntz","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/55035b4301c3710ff0fc65d7231af18d?s=96&d=mm&r=g"},{"ID":13836755,"user_login":"voldemortensen","user_nicename":"voldemortensen","display_name":"Garth Mortensen","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/a1313994b9fcdb6175b6abaaf479fae9?s=96&d=mm&r=g"},{"ID":2004385,"user_login":"pento","user_nicename":"pento","display_name":"Gary Pendergast","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/1ad9e5c98d81c6815a65dab5b6e1f669?s=96&d=mm&r=g"},{"ID":4198497,"user_login":"helen","user_nicename":"helen","display_name":"Helen Hou-Sandi","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/6506162ada6b700b151ad8a187f65842?s=96&d=mm&r=g"},{"ID":33690,"user_login":"iandunn","user_nicename":"iandunn","display_name":"Ian Dunn","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/d0e2ea89fb62350b1304c62eeeaf24b6?s=96&d=mm&r=g"},{"ID":231381,"user_login":"iandstewart","user_nicename":"iandstewart","display_name":"Ian Stewart","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/384c0fcf18524b1f0e628c6924f0e2af?s=96&d=mm&r=g"},{"ID":14329217,"user_login":"jnylen0","user_nicename":"jnylen0","display_name":"James Nylen","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/0c4d46844039ba935f69208615e9010c?s=96&d=mm&r=g"},{"ID":4238663,"user_login":"jeremyfelt","user_nicename":"jeremyfelt","display_name":"Jeremy Felt","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/d1759b1c669981b7c52ec9a97d19e6bd?s=96&d=mm&r=g"},{"ID":100663,"user_login":"joehoyle","user_nicename":"joehoyle","display_name":"Joe Hoyle","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/0ceb885cc3d306af93c9764b2936d618?s=96&d=mm&r=g"},{"ID":381024,"user_login":"joemcgill","user_nicename":"joemcgill","display_name":"Joe McGill","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/7cef1c9108207ec24db7a40f142db676?s=96&d=mm&r=g"},{"ID":6267,"user_login":"Joen","user_nicename":"joen","display_name":"Joen Asmussen","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/7fda1da9c34e978d5990afd7f58ca0f4?s=96&d=mm&r=g"},{"ID":42547,"user_login":"johnbillion","user_nicename":"johnbillion","display_name":"John Blackbourn","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/23e12888dcd87d07434b7621bc164958?s=96&d=mm&r=g"},{"ID":395440,"user_login":"johnjamesjacoby","user_nicename":"johnjamesjacoby","display_name":"John James Jacoby","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/7a2644fb53ae2f7bfd7143b504af396c?s=96&d=mm&r=g"},{"ID":7715176,"user_login":"Kenshino","user_nicename":"kenshino","display_name":"Jon (Kenshino)","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/1f6b851a12600a18a0766baaad0d55f7?s=96&d=mm&r=g"},{"ID":2670738,"user_login":"spacedmonkey","user_nicename":"spacedmonkey","display_name":"Jonny Harris","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/061dae59ebf801552726985eb808306e?s=96&d=mm&r=g"},{"ID":5896197,"user_login":"kadamwhite","user_nicename":"kadamwhite","display_name":"K. Adam White","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/6cd1cf6de05952505a165425efaf06b4?s=96&d=mm&r=g"},{"ID":1217817,"user_login":"kovshenin","user_nicename":"kovshenin","display_name":"Konstantin Kovshenin","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/8585b20b69e8ff4b0ba737accfdbb31b?s=96&d=mm&r=g"},{"ID":8772187,"user_login":"obenland","user_nicename":"obenland","display_name":"Konstantin Obenland","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/2370ea5912750f4cb0f3c51ae1cbca55?s=96&d=mm&r=g"},{"ID":2097165,"user_login":"lancewillett","user_nicename":"lancewillett","display_name":"Lance Willett","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/47976847383b324bd35e228a91eb1a0f?s=96&d=mm&r=g"},{"ID":255134,"user_login":"Asif2BD","user_nicename":"asif2bd","display_name":"M Asif Rahman","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/1852249120f11f0a4a73590292ab27e5?s=96&d=mm&r=g"},{"ID":2545,"user_login":"markjaquith","user_nicename":"markjaquith","display_name":"Mark Jaquith","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/31c9246c917b5a53e34ae693b37840ac?s=96&d=mm&r=g"},{"ID":5055596,"user_login":"markoheijnen","user_nicename":"markoheijnen","display_name":"Marko Heijnen","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/3c0d20db0e8911bc94be89c0cd9c0399?s=96&d=mm&r=g"},{"ID":887738,"user_login":"matveb","user_nicename":"matveb","display_name":"Matias Ventura","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/3f8389957d0c59bb0bd5433e86b53a19?s=96&d=mm&r=g"},{"ID":14114115,"user_login":"mattmiklic","user_nicename":"mattmiklic","display_name":"Matt Miklic","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/78c17142720e599ad7919c541124749e?s=96&d=mm&r=g"},{"ID":1,"user_login":"matt","user_nicename":"matt","display_name":"Matt Mullenweg","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/767fc9c115a1b989744c755db47feb60?s=96&d=mm&r=g"},{"ID":7944193,"user_login":"maxcutler","user_nicename":"maxcutler","display_name":"Max Cutler","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/61223a66b6a154885cae5ed652b18db0?s=96&d=mm&r=g"},{"ID":10224560,"user_login":"melchoyce","user_nicename":"melchoyce","display_name":"Mel Choyce","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/ed4f856405e64c1492839d2bf4913baa?s=96&d=mm&r=g"},{"ID":8376781,"user_login":"michaelarestad","user_nicename":"michael-arestad","display_name":"Michael Arestad","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/e8b4c8470f61ff15b9c98f7a1556c16b?s=96&d=mm&r=g"},{"ID":10179395,"user_login":"MikeHansenMe","user_nicename":"mikehansenme","display_name":"Mike Hansen","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/281bd45c0ee852fdd99fbcd4776b5a4d?s=96&d=mm&r=g"},{"ID":7800416,"user_login":"mikeschroder","user_nicename":"mikeschroder","display_name":"Mike Schroder","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/76424a001dc6b3ebb4faca0c567800c4?s=96&d=mm&r=g"},{"ID":9362879,"user_login":"celloexpressions","user_nicename":"celloexpressions","display_name":"Nick Halsey","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/c5fe6b97c0f4d32a41346582d4e894db?s=96&d=mm&r=g"},{"ID":12385,"user_login":"nbachiyski","user_nicename":"nbachiyski","display_name":"Nikolay Bachiyski","source":["committers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/ab1f64abf81653d5a60d78a86a26bec1?s=96&d=mm&r=g"},{"ID":368236,"user_login":"swissspidy","user_nicename":"swissspidy","display_name":"Pascal Birchler","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/609d6ee54dc13a51270cb99769535b82?s=96&d=mm&r=g"},{"ID":125013,"user_login":"pbearne","user_nicename":"pbearne","display_name":"Paul Bearne","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/bdde95beb3e845e6179cf28ac78f84b4?s=96&d=mm&r=g"},{"ID":1260288,"user_login":"peterwilsoncc","user_nicename":"peterwilsoncc","display_name":"Peter Wilson","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/1dd9fded718f9b344d48f37f9bfcb159?s=96&d=mm&r=g"},{"ID":6695565,"user_login":"rachelbaker","user_nicename":"rachelbaker","display_name":"Rachel Baker","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/634b37a53babc18a5bda19722d5b41a3?s=96&d=mm&r=g"},{"ID":112221,"user_login":"rmccue","user_nicename":"rmccue","display_name":"Ryan McCue","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/c57c8945079831fa3c19caef02e44614?s=96&d=mm&r=g"},{"ID":7543064,"user_login":"welcher","user_nicename":"welcher","display_name":"Ryan Welcher","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/4fa43ab689984fbeb7792dfa32ead017?s=96&d=mm&r=g"},{"ID":7345614,"user_login":"wonderboymusic","user_nicename":"wonderboymusic","display_name":"Scott Taylor","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/112ca15732a80bb928c52caec9d2c8dd?s=96&d=mm&r=g"},{"ID":297445,"user_login":"SergeyBiryukov","user_nicename":"sergeybiryukov","display_name":"Sergey Biryukov","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/750b7b0fcd855389264c2b1294d61bd6?s=96&d=mm&r=g"},{"ID":46383,"user_login":"netweb","user_nicename":"netweb","display_name":"Stephen Edgar","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/97e1620b501da675315ba7cfb740e80f?s=96&d=mm&r=g"},{"ID":11485831,"user_login":"stephenharris","user_nicename":"stephenharris","display_name":"Stephen Harris","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/99c40eb6a15d5177d940890784cc797d?s=96&d=mm&r=g"},{"ID":4713980,"user_login":"stevenkword","user_nicename":"stevenkword","display_name":"Steven Word","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/1fc93cd928da3e34d6adaf9e4df4b582?s=96&d=mm&r=g"},{"ID":233752,"user_login":"iamtakashi","user_nicename":"iamtakashi","display_name":"Takashi Irie","source":["maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/56bae6e12bf9305a0852753e0f557489?s=96&d=mm&r=g"},{"ID":118378,"user_login":"karmatosed","user_nicename":"karmatosed","display_name":"Tammie Lister","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/ca7d4273a689cdbf524d8332771bb1ca?s=96&d=mm&r=g"},{"ID":186678,"user_login":"westonruter","user_nicename":"westonruter","display_name":"Weston Ruter","source":["committers","maintainers"],"image_URL":"https:\/\/secure.gravatar.com\/avatar\/bb16e7904f2f335b6c9f524cc533d2d2?s=96&d=mm&r=g"}];
+			// ]]>
+		</script><script>
+			// <![CDATA[
+			jQuery( document ).on( 'mentionsData.jetpack', function( e, mentions ) {
+				jQuery( 'textarea#comment' ).mentions( mentions.data );
+			});
+			// ]]>
+		</script>	<script type="text/javascript">
+	jQuery(document).ready( function ($) {
+		var timestrings = {"months":["January","February","March","April","May","June","July","August","September","October","November","December"],"days":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]}
+		var parse_date = function (text) {
+			var m = /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})\+00:00$/.exec(text);
+			var d = new Date();
+			d.setUTCFullYear(+m[1]);
+			d.setUTCDate(+m[3]);
+			d.setUTCMonth(+m[2]-1);
+			d.setUTCHours(+m[4]);
+			d.setUTCMinutes(+m[5]);
+			d.setUTCSeconds(+m[6]);
+			return d;
+		}
+		var format_time = function (d) {
+			return d.toLocaleTimeString(navigator.language, {weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute:'2-digit', timeZoneName: 'short'});
+		}
+		var format_date = function (d) {
+			return d.toLocaleDateString(navigator.language, {weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'});
+		}
+		/* Not all browsers, particularly Safari, support arguments to .toLocaleTimeString(). */
+		var toLocaleTimeStringSupportsLocales = (function() {
+			try {
+				new Date().toLocaleTimeString('i');
+			} catch (e) {
+				return e.name === 'RangeError';
+			}
+			return false;
+		})();
+		var nodes = document.getElementsByTagName('abbr');
+		for (var i=0; i<nodes.length; ++i) {
+			var node = nodes[i];
+			if (node.className === 'date') {
+				var d = parse_date(node.getAttribute('title'));
+				if (d) {
+					var new_text = '';
+					if ( ! toLocaleTimeStringSupportsLocales ) {
+						new_text += format_date(d);
+						new_text += ' ';
+					}
+					new_text += format_time(d);
+					node.textContent = new_text;
+				}
+			}
+		}
+	});
+	</script>
+<link rel='stylesheet' id='wpcom-notes-admin-bar-css'  href='https://s0.wp.com/wp-content/mu-plugins/notes/admin-bar-v2.css?ver=5.0-201728' type='text/css' media='all' />
+<link rel='stylesheet' id='noticons-css'  href='https://s0.wp.com/i/noticons/noticons.css?ver=5.0-201728' type='text/css' media='all' />
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/admin-bar.min.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/jetpack/modules/photon/photon.js?ver=20130122'></script>
+<script type='text/javascript' src='https://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201728'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/themes/p2-breathe/js/skip-link-focus-fix.js?ver=20130115'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/themes/p2-breathe/js/mobile-helper.js?ver=20130513'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/themes/p2-breathe/js/breathe.js?ver=20130513'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-includes/js/wp-embed.min.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/mu-plugins/inline-terms/ui/mentions.min.js?ver=20161015'></script>
+<script type='text/javascript' src='https://make.wordpress.org/cli/wp-content/plugins/o2/modules/suggestions/js/suggestions.js?ver=4.9-alpha-41028'></script>
+<script type='text/javascript' src='https://s1.wp.com/wp-content/js/mustache.js?ver=5.0-201728'></script>
+<script type='text/javascript' src='https://s1.wp.com/wp-content/mu-plugins/notes/notes-common-v2.js?ver=5.0-201728'></script>
+<script type='text/javascript' src='https://s0.wp.com/wp-content/mu-plugins/notes/admin-bar-v2.js?ver=5.0-201728'></script>
+<script type='text/javascript' src='https://stats.wp.com/e-201728.js' async defer></script>
+<script type='text/javascript'>
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:5.0',blog:'121810585',post:'174',tz:'0',srv:'make.wordpress.org'} ]);
+	_stq.push([ 'clickTrackerInit', '121810585', '174' ]);
+</script>
+		<div id="wpadminbar" class="nojq nojs">
+							<a class="screen-reader-shortcut" href="#wp-toolbar" tabindex="1">Skip to toolbar</a>
+						<div class="quicklinks" id="wp-toolbar" role="navigation" aria-label="Toolbar" tabindex="0">
+				<ul id="wp-admin-bar-root-default" class="ab-top-menu">
+		<li id="wp-admin-bar-wp-logo" class="menupop"><a class="ab-item" aria-haspopup="true" href="https://make.wordpress.org/wp-admin/user/about.php"><span class="ab-icon"></span><span class="screen-reader-text">About WordPress</span></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wp-logo-default" class="ab-submenu">
+		<li id="wp-admin-bar-about"><a class="ab-item" href="https://make.wordpress.org/wp-admin/user/about.php">About WordPress</a>		</li></ul><ul id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu">
+		<li id="wp-admin-bar-wporg"><a class="ab-item" href="https://wordpress.org/">WordPress.org</a>		</li>
+		<li id="wp-admin-bar-documentation"><a class="ab-item" href="https://codex.wordpress.org/">Documentation</a>		</li>
+		<li id="wp-admin-bar-support-forums"><a class="ab-item" href="https://wordpress.org/support/">Support Forums</a>		</li>
+		<li id="wp-admin-bar-feedback"><a class="ab-item" href="https://wordpress.org/support/forum/requests-and-feedback">Feedback</a>		</li></ul></div>		</li></ul><ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+		<li id="wp-admin-bar-search" class="admin-bar-search"><div class="ab-item ab-empty-item" tabindex="-1"><form action="https://make.wordpress.org/cli/" method="get" id="adminbarsearch"><input class="adminbar-input" name="s" id="adminbar-search" type="text" value="" maxlength="150" /><label for="adminbar-search" class="screen-reader-text">Search</label><input type="submit" class="adminbar-button" value="Search"/></form></div>		</li>
+		<li id="wp-admin-bar-log-in"><a class="ab-item" href="https://login.wordpress.org/?redirect_to=https%3A%2F%2Fmake.wordpress.org%2Fcli%2F">Log In</a>		</li>
+		<li id="wp-admin-bar-register"><a class="ab-item" href="https://login.wordpress.org/register">Register</a>		</li>
+		<li id="wp-admin-bar-notes" class="menupop"><div class="ab-item ab-empty-item"><span id="wpnt-notes-unread-count" class="wpnt-loading wpn-read">
+					<span class="noticon noticon-notification"></span>
+					</span></div><div id="wpnt-notes-panel2" style="display:none" lang="en" dir="ltr"><div class="wpnt-notes-panel-header"><span class="wpnt-notes-header">Notifications</span><span class="wpnt-notes-panel-link"></span></div></div>		</li></ul>			</div>
+					</div>
+
+		</body>
+</html>
+

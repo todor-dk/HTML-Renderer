@@ -14,28 +14,42 @@ namespace HtmlRenderer.UnitTests
         public void ParseAcid1()
         {
             StringHtmlStream stream = new StringHtmlStream(ReferenceParserTests.Acid1Html);
-
             BrowsingContext browsingContext = new BrowsingContext();
-
-            ParsingContext parsingContext = browsingContext.GetDocumentParsingContext("about:blank");
-
-            Document document = DomParser.ParseDocument(parsingContext, stream);
+            Document document = browsingContext.ParseDocument(stream, "about:blank");
         }
 
         [TestMethod]
         public void ParseAcid1AndReferenceEquality()
         {
             StringHtmlStream stream = new StringHtmlStream(ReferenceParserTests.Acid1Html);
-
             BrowsingContext browsingContext = new BrowsingContext();
-
-            ParsingContext parsingContext = browsingContext.GetDocumentParsingContext("http://localhost/Test/acid1.htm");
-
-            Document document = DomParser.ParseDocument(parsingContext, stream);
-
+            Document document = browsingContext.ParseDocument(stream, "http://localhost/Test/acid1.htm", "windows-1252");
+            
             Assert.IsNotNull(document);
 
             var root = TextReader.FromData(ReferenceTestTests.Acid1Dom);
+            Assert.IsNotNull(root);
+
+            var cc = new TestLib.Dom.CompareContext();
+            cc.IgnoreDocumentOrigin = true;
+            var eq = root.CompareWith(document, cc);
+            Assert.IsTrue(eq);
+        }
+
+        [TestMethod]
+        public void TestCopyAsReference()
+        {
+            StringHtmlStream stream = new StringHtmlStream(ReferenceParserTests.Acid1Html);
+            BrowsingContext browsingContext = new BrowsingContext();
+            Document document = browsingContext.ParseDocument(stream, "http://localhost/Test/acid1.htm", "windows-1252");
+
+            Assert.IsNotNull(document);
+
+            System.IO.MemoryStream dataStream = new System.IO.MemoryStream();
+            DomBinaryWriter.Save(document, dataStream);
+            dataStream.Position = 0;
+
+            var root = BinaryReader.FromStream(dataStream);
             Assert.IsNotNull(root);
 
             var cc = new TestLib.Dom.CompareContext();

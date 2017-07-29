@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Pioneer Internet Bandwidth Speed Test</title>
+<script src="js/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" href="CSS/main.css" type="text/css">
+</head>
+<body bgcolor="#413739">
+
+<script type="text/javascript">
+  var remoteip = "91.64.20.229";
+var useragent = "("+String(navigator.platform)+") ["+String(navigator.vendor)+"] - Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
+  <!--
+  //if (screen.width <= 800) {
+    //window.location = "http://pioneer.speedtestcustom.com";
+    //window.location = "http://speedtest.pldi.net/mobile.php";
+  //}
+  //-->
+
+// Cross-browser event handler
+ function listenToEvent (element, ev, fn){
+   // Non IE
+   if (element.addEventListener) {
+     element.addEventListener(ev, fn, false);
+   // IE
+   } else if (element.attachEvent) {
+     element.attachEvent('on' + ev, fn);
+   }
+ }
+
+ function handleResultData (event){
+   // Only allow messages from the correct speedtest custom url to prevent XSS attacks.
+   // https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+   // REPLACE THE URL BELOW WITH YOUR SPECIFIC SPEEDTEST CUSTOM TEST URL
+   if (event.origin !== 'http://pioneer.speedtestcustom.com') {
+     Return;
+   }
+
+   // event.data is the resultData object
+   // REMOVE THIS LINE AND ADD YOUR DATA CONSUMER HERE
+   console.log(event.data);
+   console.log(remoteip);
+   console.log(useragent);
+   $.ajax({
+	method: "POST",
+   	url: "save_results.php",
+   	data: { ip: remoteip, agent: useragent, down:event.data.download ,up:event.data.upload ,latency:event.data.latency.minimum },
+	success: function(prmmsg){
+		console.log(prmmsg)
+	}
+   });
+ }
+
+ // Attach the event handler for 'message' to window
+ listenToEvent(window, 'message', handleResultData);
+
+</script>
+
+
+<!--<iframe width="100%" height="100%" frameborder="0" src="http://pioneer.speedtestcustom.com"></iframe>-->
+
+<div class="intrinsic-container intrinsic-container-4x3">
+	<iframe frameborder="0" src="http://pioneer.speedtestcustom.com"></iframe>
+</div>
+
+</body>
+</html>

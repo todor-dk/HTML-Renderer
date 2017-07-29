@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>glob(7): globbing pathnames - Linux man page</title>
+<base href="https://linux.die.net/man/7/glob">
+<link rel="canonical" href="https://linux.die.net/man/7/glob">
+<link rel="stylesheet" type="text/css" href="/style/white.css">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Long ago, in UNIX V6, there was a program /etc/glob that would expand wildcard patterns. Soon afterward this became a shell built-in.">
+<script type="text/javascript">
+<!--
+var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-50820-6']);_gaq.push(['_trackPageview']);
+window.google_analytics_uacct = 'UA-50820-6';
+// -->
+</script>
+</head>
+
+<body>
+<div id=bg>
+<div id=logo>
+<a href="https://www.die.net/"><img
+src="/style/logo.svg" alt="die.net" width=120 height=120
+onerror="this.onerror=null; this.src='/style/logo.png'"></a>
+</div>
+<div id=content>
+
+<!-- google_ad_section_start -->
+<h1>glob(7) - Linux man page</h1>
+
+<h2>Name</h2>
+glob - globbing pathnames
+<h2>Description</h2>
+<div id=adright>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-5823754184406795"
+     data-ad-slot="7130739364"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+Long ago, in UNIX V6, there was a program <i>/etc/glob</i> that would expand wildcard patterns.
+Soon afterward this became a shell built-in.
+<p>These days there is also a library routine <i><b><a href="/man/3/glob">glob</a></b>(3)</i> that will perform this function for a user program.
+<p>The rules are as follows (POSIX.2, 3.13).
+<h3>Wildcard matching</h3>
+A string is a wildcard pattern if it contains one of the characters aq?aq, aq*aq or
+aq[aq. Globbing is the operation that expands a wildcard pattern into the list of pathnames matching the pattern. Matching is defined by:
+<p>A aq?aq (not between brackets) matches any single character.
+<p>A aq*aq (not between brackets) matches any string, including the empty string.
+<p><b>Character classes</b>
+<p>An expression "<i>[...]</i>" where the first character after the leading aq[aq is not an aq!aq matches a single character, namely any of the characters
+enclosed by the brackets. The string enclosed by the brackets cannot be empty; therefore aq]aq can be allowed between the brackets, provided that it is the
+first character. (Thus, "<i>[][!]</i>" matches the three characters aq[aq, aq]aq and aq!aq.)
+<p><b>Ranges</b>
+<p>There is one special convention: two characters separated by aq-aq denote a range. (Thus, "<i>[A-Fa-f0-9]</i>" is equivalent to
+"<i>[ABCDEFabcdef0123456789]</i>".) One may include aq-aq in its literal meaning by making it the first or last character between the brackets. (Thus,
+"<i>[]-]</i>" matches just the two characters aq]aq and aq-aq, and "<i>[--0]</i>" matches the three characters aq-aq, aq.aq, aq0aq, since aq/aq cannot be
+matched.)
+<p><b>Complementation</b>
+<p>An expression "<i>[!...]</i>" matches a single character, namely any character that is not matched by the expression obtained by removing the first aq!aq
+from it. (Thus, "<i>[!]a-]</i>" matches any single character except aq]aq, aqaaq and aq-aq.)
+<p>One can remove the special meaning of aq?aq, aq*aq and aq[aq by preceding them by a backslash, or, in case this is part of a shell command line, enclosing
+them in quotes. Between brackets these characters stand for themselves. Thus, "<i>[[?*\]</i>" matches the four characters aq[aq, aq?aq, aq*aq and aq\aq.
+<h3>Pathnames</h3>
+Globbing is applied on each of the components of a pathname separately. A aq/aq in a pathname
+cannot be matched by a aq?aq or aq*aq wildcard, or by a range like "<i>[.-0]</i>". A range cannot contain an explicit aq/aq character; this would lead to a
+syntax error.
+<p>If a filename starts with a aq.aq, this character must be matched explicitly. (Thus, <i>rm *</i> will not remove .profile, and <i>tar c *</i> will not
+archive all your files; <i>tar c .</i> is better.)
+<h3>Empty lists</h3>
+The nice and simple rule given above: "expand a wildcard pattern into the list of matching
+pathnames" was the original UNIX definition. It allowed one to have patterns that expand into an empty list, as in
+<pre class="code">xv -wait 0 *.gif *.jpg</pre>where perhaps no *.gif files are present (and this is not an error). However, POSIX requires that a wildcard pattern is left unchanged when it is
+syntactically incorrect, or the list of matching pathnames is empty. With <i>bash</i> one can force the classical behavior using this command:
+<p>shopt -s nullglob<p>(Similar problems occur elsewhere. E.g., where old scripts have
+<pre class="code">rm 'find . -name "*~"'</pre>new scripts require
+<pre class="code">rm -f nosuchfile 'find . -name "*~"'</pre>to avoid error messages from <i>rm</i> called with an empty argument list.)
+<h2>Notes</h2>
+<h3>Regular expressions</h3>
+Note that wildcard patterns are not regular expressions, although they are a bit
+similar. First of all, they match filenames, rather than text, and secondly, the conventions are not the same: for example, in a regular expression aq*aq means
+zero or more copies of the preceding thing.
+<p>Now that regular expressions have bracket expressions where the negation is indicated by a aq^aq, POSIX has declared the effect of a wildcard pattern
+"<i>[^...]</i>" to be undefined.
+<h3>Character classes and internationalization</h3>
+Of course ranges were originally meant to be ASCII ranges, so
+that "<i>[ -%]</i>" stands for "<i>[ !"#$%]</i>" and "<i>[a-z]</i>" stands for "any lowercase letter". Some UNIX implementations generalized this so that a
+range X-Y stands for the set of characters with code between the codes for X and for Y. However, this requires the user to know the character coding in use on
+the local system, and moreover, is not convenient if the collating sequence for the local alphabet differs from the ordering of the character codes. Therefore,
+POSIX extended the bracket notation greatly, both for wildcard patterns and for regular expressions. In the above we saw three types of items that can occur in
+a bracket expression: namely (i) the negation, (ii) explicit single characters, and (iii) ranges. POSIX specifies ranges in an internationally more useful way
+and adds three more types:
+<p>(iii) Ranges X-Y comprise all characters that fall between X and Y (inclusive) in the current collating sequence as defined by the <b>LC_COLLATE</b>
+category in the current locale.
+<p>(iv) Named character classes, like<pre class="code">[:alnum:]  [:alpha:]  [:blank:]  [:cntrl:]
+[:digit:]  [:graph:]  [:lower:]  [:print:]
+[:punct:]  [:space:]  [:upper:]  [:xdigit:]</pre>
+so that one can say "<i>[[:lower:]]</i>" instead of "<i>[a-z]</i>", and have things work in Denmark, too, where there are three letters past aqzaq in the
+alphabet. These character classes are defined by the <b>LC_CTYPE</b> category in the current locale.
+<p>(v) Collating symbols, like "<i>[.ch.]</i>" or "<i>[.a-acute.]</i>", where the string between "<i>[.</i>" and "<i>.]</i>" is a collating element defined for
+the current locale. Note that this may be a multicharacter element.
+<p>(vi) Equivalence class expressions, like "<i>[=a=]</i>", where the string between "<i>[=</i>" and "<i>=]</i>" is any collating element from its equivalence
+class, as defined for the current locale. For example, "<i>[[=a=]]</i>" might be equivalent to "<i>[a'a'a:a^a]</i>", that is, to
+"<i>[a[.a-acute.][.a-grave.][.a-umlaut.][.a-circumflex.]]</i>".
+<h2>See Also</h2>
+<i><b><a href="/man/1/sh">sh</a></b>(1)</i>, <i><b><a href="/man/3/fnmatch">fnmatch</a></b>(3)</i>, <i><b><a href="/man/3/glob" rel="nofollow">glob</a></b>(3)</i>, <i><b><a href="locale">locale</a></b>(7)</i>,
+<i><b><a href="regex">regex</a></b>(7)</i>
+
+<!-- google_ad_section_end -->
+<h2>Referenced By</h2>
+<b><a href="/man/6/cboard" rel="nofollow">cboard</a></b>(6),
+<b><a href="/man/1/git-grep" rel="nofollow">git-grep</a></b>(1),
+<b><a href="/man/1/grep" rel="nofollow">grep</a></b>(1),
+<b><a href="/man/8/leafnode" rel="nofollow">leafnode</a></b>(8),
+<b><a href="/man/5/mdadm.conf" rel="nofollow">mdadm.conf</a></b>(5),
+<b><a href="/man/1/monit" rel="nofollow">monit</a></b>(1),
+<b><a href="/man/8/pam_succeed_if" rel="nofollow">pam_succeed_if</a></b>(8),
+<b><a href="/man/8/rpmcache" rel="nofollow">rpmcache</a></b>(8),
+<b><a href="/man/1/rpmlint" rel="nofollow">rpmlint</a></b>(1),
+<b><a href="/man/5/smartd.conf" rel="nofollow">smartd.conf</a></b>(5),
+<b><a href="/man/5/unbound.conf" rel="nofollow">unbound.conf</a></b>(5),
+<b><a href="urn" rel="nofollow">urn</a></b>(7),
+<b><a href="/man/1/viewglob" rel="nofollow">viewglob</a></b>(1),
+<b><a href="/man/6/wesnothd" rel="nofollow">wesnothd</a></b>(6)
+<div id=adbottom>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-5823754184406795"
+     data-ad-slot="8789940313"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+</div>
+<div id=menu>
+<dl>
+<dt>Site Search</dt>
+<dd>
+<form id="cse-search-box-menu" action="https://www.google.com/cse">
+<input name="q" type="text" size="10">
+<input type="hidden" name="sa" value="Search">
+<input type="hidden" name="ie" value="ISO-8859-1">
+<input type="hidden" name="cx" value="partner-pub-5823754184406795:54htp1rtx5u">
+<input type="hidden" name="cof" value="FORID:9">
+</form>
+<script type="text/javascript">
+<!--
+document.forms["cse-search-box-menu"].action = "https://www.die.net/search/";
+// -->
+</script>
+</dd></dl>
+
+
+
+<dl>
+<dt>Library</dt>
+<dd><a href="https://linux.die.net/">linux docs</a></dd>
+<dd><a href="https://linux.die.net/man/">linux man pages</a></dd>
+<dd><a href="https://www.die.net/musings/page_load_time/">page load time</a></dd>
+</dl>
+<dl>
+<dt>Toys</dt>
+<dd><a href="https://www.die.net/earth/">world sunlight</a></dd>
+<dd><a href="https://www.die.net/moon/">moon phase</a></dd>
+<dd><a href="http://trace.die.net/">trace explorer</a></dd>
+</dl>
+
+
+<dl>
+<dt><a href="/man/7/"><img src="/style/back.gif" alt="Back"
+width=20 height=22></a></dt><dd></dd>
+</dl>
+</div></div>
+<script type="text/javascript">
+<!--
+if (top.location != self.location) top.location = self.location;
+if (/[?&][pq]=/.test(document.referrer)) document.write(unescape("%3Cscript src='/style/highlight.js' type='text/javascript'%3E%3C/script%3E"));
+function googleTranslateElementInit() {new google.translate.TranslateElement({pageLanguage: 'en', floatPosition: google.translate.TranslateElement.FloatPosition.TOP_RIGHT, gaTrack: true, gaId: 'UA-50820-6'});}
+if (!/^en/i.test(window.navigator.userLanguage||window.navigator.language)) document.write(unescape("%3Cscript src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit' type='text/javascript'%3E%3C/script%3E"));
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+// -->
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="https://cloud.typography.com/6342674/620528/css/fonts.css" />
+<script language="javascript">
+
+// Cross-browser event handler
+ function listenToEvent (element, ev, fn){
+   // Non IE
+   if (element.addEventListener) {
+     element.addEventListener(ev, fn, false);
+   // IE
+   } else if (element.attachEvent) {
+     element.attachEvent('on' + ev, fn);
+   }
+ }
+
+ function handleResultData (event){
+   // Only allow messages from the correct speedtest custom url to prevent XSS attacks.
+   // https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+   // REPLACE THE URL BELOW WITH YOUR SPECIFIC SPEEDTEST CUSTOM TEST URL
+   if (event.origin !== 'http://midco.speedtestcustom.com') {
+     Return;
+   }
+
+
+   // event.data is the resultData object
+   // REMOVE THIS LINE AND ADD YOUR DATA CONSUMER HERE
+   console.log(event.data);
+
+   // Get the users IP from PHP..
+   var Raddress = "91.64.20.229";
+   var Rdownload = event.data.download;
+   var Rupload = event.data.upload;
+   var Rping = event.data.latency.minimum;
+   var Rjitter = Math.round(event.data.latency.jitter);
+   var Ragent = window.navigator.userAgent;
+   var host = event.data.config.host;
+   var host_fields = host.split(/-/);
+   var Rserver = host_fields[0] + "-" + host_fields[1];
+   if (host_fields[0] == 'support') {
+     Rserver = 'st-sf';
+   }
+
+   // Display alerts showing the captured data..
+   //alert ("Download - " + Rdownload 
+   //  + "\n" + "  Upload - " + Rupload 
+   //  + "\n" + "    Ping - " + Rping 
+   //  + "\n" + "  Jitter - " + Rjitter 
+   //  + "\n" + "   Agent - " + Ragent 
+   //  + "\n" + "    Host - " + Rserver);
+
+   // Send result set to the PHP API for logging to the DB..
+   var dbPost = new XMLHttpRequest();
+   var parms = "download="+Rdownload+"&upload="+Rupload+"&latency="+Rping+"&jitter="+Rjitter+"&server="+Rserver
+   dbPost.open("POST", 'http://st-sf.midco.net/rep-api.php?'+parms, true);
+   dbPost.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            //this.server.setRequestHeader('Content-length', this.formData.length);
+            //this.server.setRequestHeader('Connection', 'close');
+   console.log("XMLHttpRequest created.");
+   dbPost.send();
+ }
+
+ // Attach the event handler for 'message' to window
+ listenToEvent(window, 'message', handleResultData);
+</script>
+</head>
+<body>
+<iframe width="100%" height="600px" frameborder="0" src="http://midco.speedtestcustom.com"></iframe>
+
+<center>
+<table width="50%">
+  <tr align=left>
+    <th>
+<p><font color=323232>Use the Midco Speed Test to measure your internet connection. Speed matters in your everyday internet usage, especially if you like to download music, stream movies or game online. When you measure your download and upload speeds, keep these considerations in mind:</p>
+<ul>
+<li>Service speeds are based on hardwired devices. You may not see full speed capabilities when using Wi-Fi.</li>
+<li>If testing on a Wi-Fi enabled device, make sure you&rsquo;re connected to your home Wi-Fi network, rather than a cellular network.</li>
+<li>JavaScript is also used, so make sure you don't have JavaScript disabled.</li>
+<li>Anti-virus software and security proxies can significantly decrease the download results.</li>
+<li>This test is intended for laptop or desktop computers. To test on a mobile device, run a speed test from the Ookla app, available in the&nbsp;<a title="App Store" href="https://itunes.apple.com/app/speedtest-net-mobile-speed/id300704847?mt=8" target="_blank">App Store</a>&nbsp;or&nbsp;<a title="Google Play" href="https://play.google.com/store/apps/details?id=org.zwanoo.android.speedtest&amp;referrer=utm_source%3Dstnet%26utm_medium%3Dmobile%26utm_campaign%3Dstnet" target="_blank">Google Play</a>.</li>
+</ul></font>
+  </th>
+  </tr>
+</table>
+</center>
+</body>
+</html>

@@ -1,0 +1,713 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head><!-- inj yui3-seed: --><script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/yui/3.6.0/yui/yui-min.js'></script><script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js'></script>
+
+<!-- def.1 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>
+"NYNET communication system (NCS): A multithreaded message-passing syst" by Sung-Yong Park
+</title>
+ 
+
+<!-- FILE article_meta-tags.inc --><!-- FILE: /main/production/doc/data/assets/site/article_meta-tags.inc -->
+<meta name="robots" content="noodp, noydir">
+<meta name="description" content="Current advances in processor technology and the rapid development of high-speed networking technology (e.g., Asynchronous Transfer Mode (ATM), Myrinet, and Fast Ethernet) have made network-based computing an attractive environment for large-scale, high-performance distributed computing (HPDC) applications. However, due to the communication overhead between computers and the inflexible communication architectures of parallel/distributed software tools, most HPDC applications do not fully utilize the benefits of high-speed communication networks. The high overhead can be mainly attributed to the high cost associated with system calls and context switching, redundant data copying during protocol processing, lack of support to overlap computation and communication at the application level, and tight coupling of data and control functions.
+This dissertation presents an architecture, implementation, and performance evaluation of a multithreaded message-passing system for ATM-based HPDC environments that we refer to as NYNET (ATM wide-area network testbed in New York state) communication system (NCS). The NCS uses multithreading to provide efficient techniques for overlapping computation and communication. By separating control and data activities, NCS eliminates unnecessary control transfers over the data path. NCS supports several different flow-control algorithms, error-control algorithms, and multicasting algorithms. Furthermore, NCS allows programmers to select at runtime suitable communication schemes per-connection basis to meet the Quality of Service (QoS) requirements of a given application. NCS provides three application communication interfaces: socket communication interface (SCI), ATM communication interface (ACI), and high-performance interface (HPI) to support various classes of applications. The SCI is provided to support NCS portability to many different computing platforms. The ACI provides services that are compatible with ATM connection-oriented services where each connection can be configured to meet the QoS requirements of that connection, which allows programmers to fully utilize the benefits of the ATM network. The HPI supports applications that demand low-latency and high-throughput communication services. This interface uses read/write trap routines to reduce latency and data transfer time, and to avoid using traditional communication protocols.
+We analyze and compare the performance of NCS with that of other message-passing systems such as p4, PVM, and MPI in terms of point-to-point, multicasting, and application performance. The benchmarking results show that NCS outperforms other message-passing systems and provides flexible communication services for various classes of applications.">
+<meta name="keywords" content="NYNET, Multithreaded, ATM-based, Distributed computing">
+<meta name="bepress_citation_dissertation_institution" content="Syracuse University">
+<meta name="bepress_citation_dissertation_name" content="Doctor of Philosophy (PhD)">
+<meta name="bepress_citation_author" content="Park, Sung-Yong">
+<meta name="bepress_citation_author_institution" content="Syracuse University">
+<meta name="bepress_citation_title" content="NYNET communication system (NCS): A multithreaded message-passing system for ATM-based high-performance distributed computing environments">
+<meta name="bepress_citation_date" content="1998">
+<meta name="bepress_citation_abstract_html_url" content="http://surface.syr.edu/eecs_etd/164">
+<meta name="bepress_citation_online_date" content="2010/10/27">
+<meta name="viewport" content="width=device-width">
+
+
+<!-- FILE: article_meta-tags.inc (cont) -->
+<meta name="bepress_is_article_cover_page" content="1">
+
+
+<!-- sh.1 -->
+<link rel="stylesheet" href="/ir-style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/ir-custom.css" type="text/css" media="screen">
+<link rel="stylesheet" href="ir-custom.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/ir-local.css" type="text/css" media="screen">
+<link rel="stylesheet" href="ir-local.css" type="text/css" media="screen">
+<link rel="stylesheet" href="/ir-print.css" type="text/css" media="print">
+<link type="text/css" rel="stylesheet" href="/assets/floatbox/floatbox.css">
+<link rel="alternate" type="application/rss+xml" title="Site Feed" href="/recent.rss">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<script type="text/javascript" src="/assets/jsUtilities.js"></script>
+<script type="text/javascript" src="/assets/footnoteLinks.js"></script>
+<!--[if IE]>
+<link rel="stylesheet" href="/ir-ie.css" type="text/css" media="screen">
+<![endif]-->
+
+<script type="text/javascript" src="/assets/scripts/yui-init.pack.js"></script>
+<script type="text/javascript" src="/assets/scripts/bepress-init.pack.js"></script>
+<script type="text/javascript" src="/assets/scripts/JumpListYUI.pack.js"></script>
+
+<!-- end sh.1 -->
+
+
+
+
+
+</head>
+<body >
+<!-- FILE /main/production/doc/data/surface.syr.edu/assets/header.pregen --><!-- This is the mobile navbar file. Do not delete or move from the top of header.pregen -->
+<!-- FILE: /main/production/doc/data/assets/site/mobile_nav.inc --><!--[if !IE]>-->
+<script src="/assets/scripts/dc-mobile/dc-responsive-nav.js"></script>
+
+<header id="mobile-nav" class="nav-down device-fixed-height" style="visibility: hidden;">
+  
+  
+  <nav class="nav-collapse">
+    <ul>
+      <li class="menu-item active device-fixed-width"><a href="http://surface.syr.edu" title="Home" data-scroll >Home</a></li>
+      <li class="menu-item device-fixed-width"><a href="http://surface.syr.edu/do/search/advanced/" title="Search" data-scroll ><i class="icon-search"></i> Search</a></li>
+      <li class="menu-item device-fixed-width"><a href="http://surface.syr.edu/communities.html" title="Browse" data-scroll >Browse Collections</a></li>
+      <li class="menu-item device-fixed-width"><a href="/cgi/myaccount.cgi?context=eecs_etd/#" title="My Account" data-scroll >My Account</a></li>
+      <li class="menu-item device-fixed-width"><a href="http://surface.syr.edu/about.html" title="About" data-scroll >About</a></li>
+      <li class="menu-item device-fixed-width"><a href="http://network.bepress.com" title="Digital Commons Network" data-scroll ><img width="16" height="16" alt="DC Network" style="vertical-align:top;" src="/assets/md5images/8e240588cf8cd3a028768d4294acd7d3.png"> Digital Commons Network™</a></li>
+    </ul>
+  </nav>
+</header>
+
+<script src="/assets/scripts/dc-mobile/dc-mobile-nav.js"></script>
+<!--<![endif]-->
+<!-- FILE: /main/production/doc/data/surface.syr.edu/assets/header.pregen (cont) -->
+<div id="syr"><div id="container"><a href="#main" class="skiplink" accesskey="2" >Skip to main content</a>
+
+
+
+<div id="header">
+<div id="subheader">
+<!-- FILE: /main/production/doc/data/assets/site/ir_navigation.inc --><div id="tabs"><ul><li id="tabone"><a href="http://surface.syr.edu/cgi/myaccount.cgi?context=eecs_etd" title="My Account" ><span>My Account</span></a></li><li id="tabtwo"><a href="http://surface.syr.edu/faq.html" title="FAQ" ><span>FAQ</span></a></li><li id="tabthree"><a href="http://surface.syr.edu/about.html" title="About" ><span>About</span></a></li><li id="tabfour"><a href="http://surface.syr.edu" title="Home" ><span>Home</span></a></li></ul></div>
+
+
+<!-- FILE: /main/production/doc/data/surface.syr.edu/assets/header.pregen (cont) -->
+</div>
+<!-- FILE: /main/production/doc/data/assets/site/ir_logo.inc -->
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- FILE: /main/production/doc/data/surface.syr.edu/assets/header.pregen (cont) -->
+<div id="pagetitle">
+
+<h1><a href="http://surface.syr.edu" title="SURFACE" >SURFACE</a></h1>
+</div>
+</div>
+
+<div id="wrapper">
+<div id="content">
+<div id="main" class="text"> 
+
+<script type="text/javascript" src="/assets/floatbox/floatbox.js"></script>
+<!-- FILE: /main/production/doc/data/assets/site/article_pager.inc -->
+
+<div id="breadcrumb"><ul id="pager">
+
+                
+                 
+<li>&lt; <a href="http://surface.syr.edu/eecs_etd/199" class="ignore" >Previous</a></li>
+        
+        
+        
+
+                
+                 
+<li><a href="http://surface.syr.edu/eecs_etd/179" class="ignore" >Next</a> &gt;</li>
+        
+        
+        
+<li>&nbsp;</li></ul><div class="crumbs"><!-- FILE: /main/production/doc/data/assets/site/ir_breadcrumb.inc -->
+
+<div class="crumbs">
+	<p>
+	
+	
+			<a href="http://surface.syr.edu" class="ignore" >Home</a>
+	
+	
+	
+	
+	
+	
+	
+	
+	 &gt; 
+		<a href="http://surface.syr.edu/lcsmith" class="ignore" >College of Engineering and Computer Science</a>
+	
+	
+	
+	
+	
+	 &gt; 
+		<a href="http://surface.syr.edu/eecs_etd" class="ignore" >Electrical Engineering and Computer Science Dissertations</a>
+	
+	
+	
+	
+	
+	 &gt; 
+		<a href="http://surface.syr.edu/eecs_etd/164" class="ignore" >164</a>
+	
+	
+	</p>
+</div>
+
+
+<!-- FILE: /main/production/doc/data/assets/site/article_pager.inc (cont) --></div>
+</div>
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/index.html (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/topnav.inc --><!--Not Used --><!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/index.html (cont) --><!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/article_info.inc --><!-- FILE: /main/production/doc/data/assets/site/openurl.inc -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/article_info.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_download_link.inc -->
+
+
+
+
+
+
+
+
+
+	
+	
+	
+    
+    
+    
+	
+	
+	
+	
+	
+		
+		
+	
+	
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/article_info.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/ir_article_header.inc --><div id="series-header">
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/ir_etd_logo.inc -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/ir_article_header.inc (cont) --><h2 id="series-title"><a href="http://surface.syr.edu/eecs_etd" >Electrical Engineering and Computer Science - Dissertations</a></h2></div>
+<div style="clear: both"></div><div id="sub">
+<div id="alpha">
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/article_info.inc (cont) --><div id='title' class='element'>
+<h4>Title</h4>
+<p>NYNET communication system (NCS): A multithreaded message-passing system for ATM-based high-performance distributed computing environments</p>
+</div>
+<div class='clear'></div>
+<div id='authors' class='element'>
+<h4>Author</h4>
+<p class="author"><a href='http://surface.syr.edu/do/search/?q=author_lname%3A%22Park%22%20author_fname%3A%22Sung-Yong%22&start=0&context=1114870'><strong>Sung-Yong Park</strong>, <em>Syracuse University</em></a><a rel="nofollow" href="http://network.bepress.com/api/follow/subscribe?user=MGFhYTMxMDgyYmJhMWZkZQ%3D%3D&amp;institution=YjQ2MTZlMzRhMGFlYmU3YQ%3D%3D&amp;format=html" data-follow-set="user:MGFhYTMxMDgyYmJhMWZkZQ== institution:YjQ2MTZlMzRhMGFlYmU3YQ==" title="Follow Sung-Yong Park" class="btn followable">Follow</a><br />
+</p></div>
+<div class='clear'></div>
+<div id='publication_date' class='element'>
+<h4>Date of Award</h4>
+<p>1998</p>
+</div>
+<div class='clear'></div>
+<div id='document_type' class='element'>
+<h4>Degree Type</h4>
+<p>Dissertation</p>
+</div>
+<div class='clear'></div>
+<div id='degree_name' class='element'>
+<h4>Degree Name</h4>
+<p>Doctor of Philosophy (PhD)</p>
+</div>
+<div class='clear'></div>
+<div id='department' class='element'>
+<h4>Department</h4>
+<p>Electrical Engineering and Computer Science</p>
+</div>
+<div class='clear'></div>
+<div id='advisor1' class='element'>
+<h4>Advisor(s)</h4>
+<p>Salim Hariri</p>
+</div>
+<div class='clear'></div>
+<div id='advisor2' class='element'>
+<h4>Second Advisor</h4>
+<p>Carlos Hartmann</p>
+</div>
+<div class='clear'></div>
+<div id='keywords' class='element'>
+<h4>Keywords</h4>
+<p>NYNET, Multithreaded, ATM-based, Distributed computing</p>
+</div>
+<div class='clear'></div>
+<div id='bp_categories' class='element'>
+<h4>Subject Categories</h4>
+<p>Computer Sciences</p>
+</div>
+<div class='clear'></div>
+<div id='abstract' class='element'>
+<h4>Abstract</h4>
+<p>Current advances in processor technology and the rapid development of high-speed networking technology (e.g., Asynchronous Transfer Mode (ATM), Myrinet, and Fast Ethernet) have made network-based computing an attractive environment for large-scale, high-performance distributed computing (HPDC) applications. However, due to the communication overhead between computers and the inflexible communication architectures of parallel/distributed software tools, most HPDC applications do not fully utilize the benefits of high-speed communication networks. The high overhead can be mainly attributed to the high cost associated with system calls and context switching, redundant data copying during protocol processing, lack of support to overlap computation and communication at the application level, and tight coupling of data and control functions.</p>
+<p>This dissertation presents an architecture, implementation, and performance evaluation of a multithreaded message-passing system for ATM-based HPDC environments that we refer to as NYNET (ATM wide-area network testbed in New York state) communication system (NCS). The NCS uses multithreading to provide efficient techniques for overlapping computation and communication. By separating control and data activities, NCS eliminates unnecessary control transfers over the data path. NCS supports several different flow-control algorithms, error-control algorithms, and multicasting algorithms. Furthermore, NCS allows programmers to select at runtime suitable communication schemes per-connection basis to meet the Quality of Service (QoS) requirements of a given application. NCS provides three application communication interfaces: socket communication interface (SCI), ATM communication interface (ACI), and high-performance interface (HPI) to support various classes of applications. The SCI is provided to support NCS portability to many different computing platforms. The ACI provides services that are compatible with ATM connection-oriented services where each connection can be configured to meet the QoS requirements of that connection, which allows programmers to fully utilize the benefits of the ATM network. The HPI supports applications that demand low-latency and high-throughput communication services. This interface uses read/write trap routines to reduce latency and data transfer time, and to avoid using traditional communication protocols.</p>
+<p>We analyze and compare the performance of NCS with that of other message-passing systems such as p4, PVM, and MPI in terms of point-to-point, multicasting, and application performance. The benchmarking results show that NCS outperforms other message-passing systems and provides flexible communication services for various classes of applications.</p>
+</div>
+<div class='clear'></div>
+<div id='access' class='element'>
+<h4>Access</h4>
+<p>Surface provides description only. Full text is available to ProQuest subscribers. Ask your Librarian for assistance.</p>
+</div>
+<div class='clear'></div>
+<div id='recommended_citation' class='element'>
+<h4>Recommended Citation</h4>
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/ir_citation.inc --><p>
+    Park, Sung-Yong, "NYNET communication system (NCS): A multithreaded message-passing system for ATM-based high-performance distributed computing environments" (1998). <em>Electrical Engineering and Computer Science - Dissertations</em>.  164.
+    <br>
+    
+    
+        http://surface.syr.edu/eecs_etd/164
+    
+</p>
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/article_info.inc (cont) --></div>
+<div class='clear'></div>
+<div id='source_fulltext_url' class='element'>
+<h4></h4>
+<p>http://libezproxy.syr.edu/login?url=http://proquest.umi.com/pqdweb?did=732922841&sid=1&Fmt=2&clientId=3739&RQT=309&VName=PQD</p>
+</div>
+<div class='clear'></div>
+</div>
+    </div>
+    <div id='beta_7-3'>
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc --><!-- FILE: /main/production/doc/data/assets/site/openurl.inc -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_download_link.inc -->
+
+
+
+
+
+
+
+
+
+	
+	
+	
+    
+    
+    
+	
+	
+	
+	
+	
+		
+		
+	
+	
+
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+
+
+	<!-- FILE: /main/production/doc/data/assets/site/info_box_download_button.inc --><div class="aside">
+    <a id="remote-link" class="btn" href="http://libezproxy.syr.edu/login?url=http://proquest.umi.com/pqdweb?did=732922841&amp;sid=1&amp;Fmt=2&amp;clientId=3739&amp;RQT=309&amp;VName=PQD" title="Link opens in new window" target="_blank" > 
+    	<i class="icon-external-link"></i>
+      Link to Full Text
+    </a>
+</div>
+
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+	<!-- FILE: /main/production/doc/data/assets/site/info_box_embargo.inc -->
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+
+<!-- FILE: /main/production/doc/data/assets/site/info_box_custom_upper.inc -->
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/info_box_openurl.inc -->
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+
+<!-- FILE: /main/production/doc/data/assets/site/info_box_article_metrics.inc -->
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+
+
+
+	<!-- FILE: /main/production/doc/data/assets/site/info_box_disciplines.inc -->
+
+
+
+
+	
+		
+	
+
+
+
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+
+<!-- FILE: /main/production/doc/data/assets/site/bookmark_widget.inc -->
+<div id="share" class="aside">
+<h4>Share</h4>
+	
+	<p class="addthis_toolbox addthis_default_style">
+		<a class="addthis_button_facebook ignore"></a>
+		<a class="addthis_button_twitter ignore"></a>
+		<a class="addthis_button_linkedin ignore"></a>
+		<a class="addthis_button_google_plusone ignore" g:plusone:count="false"></a>
+		<a class="addthis_button_email ignore"></a>
+
+
+		<a href="http://www.addthis.com/bookmark.php?v=300&amp;pubid=bepress" class="addthis_button_compact" ></a>
+	</p>
+	<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=bepress"></script>
+
+</div>
+
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/info_box_geolocate.inc --><!-- FILE: /main/production/doc/data/assets/site/ir_geolocate_enabled_and_displayed.inc -->
+
+<!-- FILE: /main/production/doc/data/assets/site/info_box_geolocate.inc (cont) -->
+
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+
+	<!-- FILE: /main/production/doc/data/assets/site/zotero_coins.inc -->
+
+<span class="Z3988" title="ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft_id=http%3A%2F%2Fsurface.syr.edu%2Feecs_etd%2F164&amp;rft.atitle=NYNET%20communication%20system%20%28NCS%29%3A%20A%20multithreaded%20message-passing%20system%20for%20ATM-based%20high-performance%20distributed%20computing%20environments&amp;rft.aufirst=Sung-Yong&amp;rft.aulast=Park&amp;rft.jtitle=Electrical%20Engineering%20and%20Computer%20Science%20-%20Dissertations&amp;rft.date=1998-01-01">COinS</span><!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+
+<!-- FILE: /main/production/doc/data/surface.syr.edu/assets/info_box_custom_lower.inc -->
+<!-- BEGIN Altmetric code -->
+
+
+
+
+
+
+<!-- END Altmetric Code -->
+<!-- FILE: /main/production/doc/data/assets/site/info_box_7_3.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/article_info.inc (cont) --></div>
+
+
+<div class='clear'>&nbsp;</div>
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/ir_article_custom_fields.inc -->
+
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/article_info.inc (cont) -->
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_etd/article/index.html (cont) -->
+<!-- FILE /main/production/doc/data/assets/site/footer.pregen --></div>
+	<div class="verticalalign">&nbsp;</div>
+	<div class="clear">&nbsp;</div>
+
+</div>
+
+	<div id="sidebar">
+	<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_7_8.inc -->
+
+
+	<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sort_bsa.inc --><!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_custom_upper_7_8.inc -->
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sort_bsa.inc (cont) -->
+<!-- FILE: /main/production/doc/data/surface.syr.edu/assets/ir_sidebar_browse.inc --><h2>Browse</h2>
+<ul id="side-browse">
+<li class="author"><a href="http://surface.syr.edu/authors.html" title="Browse by Author" >Authors / Creators</a></li>
+<li class="author"><a href="http://surface.syr.edu/syr_authors.html" title="Browse Syracuse Authors" >Browse Syracuse Authors</a></li>
+<li class="collections"><a href="http://surface.syr.edu/communities.html" title="Browse by Collections" >Collections</a></li>
+<li class="disciplines"><a href="http://surface.syr.edu/disciplines.html" title="Browse by Disciplines" >Disciplines</a></li>
+<li class="discipline-browser"><a href="http://surface.syr.edu/do/discipline_browser/disciplines" title="Browse by Disciplines" >Disciplines</a></li>
+<li><a href="http://surface.syr.edu/etds/" title="Dissertations and Theses" >Dissertations and Theses</a></li>
+<li><a href="http://surface.syr.edu/document_types/" title="Formats" >Document Types</a></li>
+
+</ul>
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sort_bsa.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_custom_middle_7_8.inc --><!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sort_bsa.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_search_7_8.inc --><h2>Search</h2>
+
+
+	
+<form method='get' action='http://surface.syr.edu/do/search/' id="sidebar-search">
+	<label for="search" accesskey="4">
+		Enter search terms:
+	</label>
+		<div>
+			<span class="border">
+				<input type="text" name='q' class="search" id="search">
+			</span> 
+			<input type="submit" value="Search" class="searchbutton" style="font-size:11px;">
+		</div>
+	<label for="context" style="display:none;">
+		Select context to search:
+	</label> 
+		<div>
+			<span class="border">
+				<select name="fq" id="context">
+					
+					
+						<option value='virtual_ancestor_link:"http://surface.syr.edu/eecs_etd"'>in this series</option>
+					
+					
+					
+					<option value='virtual_ancestor_link:"http://surface.syr.edu"'>in this repository</option>
+					<option value='virtual_ancestor_link:"http:/"'>across all repositories</option>
+				</select>
+			</span>
+		</div>
+</form>
+
+<p class="advanced">
+	
+	
+		<a href="http://surface.syr.edu/do/search/advanced/?fq=virtual_ancestor_link:%22http://surface.syr.edu/eecs_etd%22" >
+			Advanced Search
+		</a>
+	
+</p>
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sort_bsa.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_notify_7_8.inc -->
+
+
+	<ul id="side-notify">
+		<li class="notify">
+			<a href="http://surface.syr.edu/eecs_etd/announcements.html" title="Email or RSS Notifications" >
+				Notify me via email or <acronym title="Really Simple Syndication">RSS</acronym>
+			</a>
+		</li>
+	</ul>
+
+
+
+<!-- FILE: /main/production/doc/data/assets/site/urc_badge.inc -->
+
+
+
+
+
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_notify_7_8.inc (cont) -->
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sort_bsa.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_author_7_8.inc --><h2>Submit</h2>
+
+
+
+
+
+
+	<ul id="side-author">
+		<li class="faq">
+			<a href="http://surface.syr.edu/faq.html" title="FAQ" >
+				FAQ
+			</a>
+		</li>
+		
+		
+		
+	</ul>
+
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sort_bsa.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_custom_lower_7_8.inc --><!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_homepage_links_7_8.inc --><h2>Links</h2>
+	<ul id="homepage-links">
+		<li class="sb-homepage">
+			
+				<a href="http://eng-cs.syr.edu/" title="eecs_etd Home Page" >
+						College of Engineering & Computer Science
+				</a>
+			
+			
+			
+		</li>
+	</ul>
+
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_custom_lower_7_8.inc (cont) -->
+	
+
+
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sort_bsa.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sw_links_7_8.inc -->
+
+	
+		
+			
+		
+	
+
+
+	<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sort_bsa.inc (cont) -->
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_geolocate.inc --><!-- FILE: /main/production/doc/data/assets/site/ir_geolocate_enabled_and_displayed.inc -->
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_geolocate.inc (cont) -->
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sort_bsa.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_custom_lowest_7_8.inc -->
+
+
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_sort_bsa.inc (cont) -->
+<!-- FILE: /main/production/doc/data/assets/site/ir_sidebar_7_8.inc (cont) -->
+
+
+<!-- FILE: /main/production/doc/data/assets/site/footer.pregen (cont) -->
+	<div class="verticalalign">&nbsp;</div>
+	</div>
+
+</div>
+
+<!-- FILE: /main/production/doc/data/surface.syr.edu/assets/ir_footer_content.inc --><div id="footer">
+
+<div id="syr-footer">
+	<a href="http://library.syr.edu" class="syr-logo" >
+		<em>Syracuse University Library</em>
+	</a>
+	<p>
+		<span>
+			<a href="http://library.syr.edu/about/" >About</a>  |  
+			<a href="http://library.syr.edu/hours/" >Hours</a>  |  
+			<a href="http://library.syr.edu/find/" >Find Resources</a>  |  
+			<a href="http://library.syr.edu/research/" >Services</a>  |  
+			<a href="http://library.syr.edu/about/visit/" >Research Assistance</a>  |  
+			<a href="http://library.syr.edu/research/askus/" >Visiting</a>  |  
+			<a href="http://library.syr.edu/research/askus/" >Help</a>
+		</span>
+		<span>
+			<a href="http://library.syr.edu/faculty/" >Faculty Resources</a>  |  
+			<a href="http://library.syr.edu/graduate/" >Graduate Resources</a>  |  
+			<a href="http://library.syr.edu/undergraduate/" >Undergraduate Resources</a>  |  
+			<a href="http://library.syr.edu/services/your-accounts/" >Your Accounts</a>
+		</span>
+		<span>
+			<a href="http://copyright.syr.edu/" >Copyright</a>  |  
+			<a href="http://library.syr.edu/PDF/privacypolicy.pdf" >Privacy Policy [PDF]</a>  |  
+			<a href="http://sumail.syr.edu/" >SUmail</a>  |  
+			<a href="https://myslice.syr.edu/" >MySlice</a>  |  
+			<a href="http://blackboard.syr.edu/" >Blackboard</a>  |  
+			<a href="http://www.syr.edu/" >SU Home</a>
+		</span>
+		<span>
+			<a href="http://library.syr.edu/services/getting_help/disability/electronic/index.php" >Accessibility</a>  |  
+			<a href="http://library.syr.edu/services/technology/downloads.php" >Plugins and File Viewers</a>
+		</span>
+	</p>
+</div>	
+
+
+
+	
+	
+	<!-- FILE: /main/production/doc/data/assets/site/ir_bepress_logo.inc --><div id="bepress">
+
+
+<a href="http://digitalcommons.bepress.com" title="Digital Commons: Powered by bepress" >
+	<em>Digital Commons</em>
+</a>
+
+
+</div>
+<!-- FILE: /main/production/doc/data/surface.syr.edu/assets/ir_footer_content.inc (cont) -->
+		<p class="standard-footer-links">
+			<a href="http://surface.syr.edu" title="Home page" accesskey="1" >
+					<span class="surface-footer">SURFACE</span> Home <span class="footer-arrows">»</span>
+			</a> | 
+			<a href="http://surface.syr.edu/about.html" title="About" >
+					About <span class="footer-arrows">»</span>
+			</a> | 
+			<a href="http://surface.syr.edu/faq.html" title="FAQ" >
+					FAQ <span class="footer-arrows">»</span>
+			</a> | 
+			<a href="/cgi/myaccount.cgi?context=eecs_etd" title="My Account Page" accesskey="3" >
+					My <span class="surface-footer">SURFACE</span> Account <span class="footer-arrows">»</span>
+			</a> | 
+			<a href="http://surface.syr.edu/accessibility.html" title="Accessibility Statement" accesskey="0" >
+					Accessibility Statement <span class="footer-arrows">»</span>
+			</a>
+		</p>
+		<p class="sub-standard-links">
+    			<a class="secondary-link" href="http://www.bepress.com/privacy.html" title="Privacy Policy" >
+                                        Privacy
+    			</a>
+    			<a class="secondary-link" href="http://www.bepress.com/copyright_infringement.html" title="Copyright Policy" >
+                                        Copyright
+    			</a>	
+		</p> 
+	
+</div>
+<!-- FILE: /main/production/doc/data/assets/site/footer.pregen (cont) -->
+
+</div>
+</div>
+<!-- FILE: /main/production/doc/data/surface.syr.edu/assets/ir_analytics.inc --><script type="text/javascript">
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-5499681-55', 'auto');
+            ga('require', 'linkid', 'linkid.js');
+            ga('require', 'displayfeatures');
+           ga('send', 'pageview');
+            ga('create', 'UA-32597848-1', 'auto', {'name': 'rollup'});
+            ga('rollup.require', 'displayfeatures');
+            ga('rollup.require', 'linkid', 'linkid.js');
+            ga('rollup.send', 'pageview');
+</script><!-- FILE: /main/production/doc/data/assets/site/footer.pregen (cont) --><script type='text/javascript' src='/assets/scripts/bpbootstrap-20160726.pack.js'></script><script type='text/javascript'>BPBootstrap.init({appendCookie:''})</script></body></html>

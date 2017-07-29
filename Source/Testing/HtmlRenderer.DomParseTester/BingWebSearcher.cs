@@ -18,7 +18,7 @@ namespace HtmlRenderer.DomParseTester
         private static HtmlWeb web = new HtmlWeb();
 
         //Ocp-Apim-Subscription-Key
-        private static string SubscriptionKey = "38d6f422f3dc4d18aee88e958cdc40cd"; // "1763fff52c254801a175674b061e0b34";
+        private static string SubscriptionKey = "14df86e18bdc47f9b317e029463e8269"; // "38d6f422f3dc4d18aee88e958cdc40cd"; // "1763fff52c254801a175674b061e0b34";
 
         /// <summary>
         /// This function returns the textual (not the link) representation of the search

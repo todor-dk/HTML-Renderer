@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html hreflang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,400italic' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="/assets/css/stylesheet.css?v=3" media="screen" />
+		<link rel="stylesheet" type="text/css" href="/assets/css/fa.css" media="screen" />
+
+		<link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico" />
+		<link rel="shortcut icon" href="/assets/img/favicon.ico" />
+		<link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Atom Feed">
+
+		<title>Command line interface for WordPress | WP-CLI</title>
+		<meta name="description" content="">
+
+		<link rel="alternate" hreflang="en" href="http://wp-cli.org/" />
+		<link rel="alternate" hreflang="ja" href="http://wp-cli.org/ja/" />
+		<link rel="alternate" hreflang="fr" href="http://wp-cli.org/fr/" />
+		<link rel="alternate" hreflang="br" href="http://wp-cli.org/br/" />
+		<link rel="alternate" hreflang="tr" href="http://wp-cli.org/tr/" />
+		<link rel="alternate" hreflang="de" href="http://wp-cli.org/de/" />
+		<link rel="alternate" hreflang="ne" href="http://wp-cli.org/ne/" />
+		<link rel="alternate" hreflang="gr" href="http://wp-cli.org/gr/" />
+		<link rel="alternate" hreflang="it" href="http://wp-cli.org/it/" />
+		
+	</head>
+
+	
+	<body>
+	
+		<header class="cf">
+		<div class="container">
+			<h1><a href="/">WP-CLI</a></h1>
+			
+			
+			<h2>The command line interface for WordPress</h2>
+			
+
+			<nav class="main-nav">
+	<ul>
+	
+
+	
+		
+
+		
+
+		<li >
+			<a href="/commands/">Commands</a>
+		</li>
+	
+		
+
+		
+
+		<li >
+			<a href="/config/">Configuration</a>
+		</li>
+	
+		
+
+		
+
+		<li >
+			<a href="/docs/">Docs</a>
+		</li>
+	
+		
+
+		
+
+		<li >
+			<a href="/blog/">Blog</a>
+		</li>
+	
+		
+
+		
+
+		<li >
+			<a href="/package-index/">Packages</a>
+		</li>
+	
+		
+
+		
+
+		<li >
+			<a href="/restful/">RESTful WP-CLI</a>
+		</li>
+	
+	</ul>
+</nav>
+<nav class="social-nav">
+	<ul>
+		<li>
+			<a href="https://github.com/wp-cli/wp-cli" class="btn-source rounded" target="_blank"><i class="icon-github-circled"></i></a>
+		</li>
+		<li>
+			<a href="https://twitter.com/wpcli" class="btn-twitter rounded" target="_blank"><i class="icon-twitter"></i></a>
+		</li>
+	</ul>
+</nav>
+
+			<select id="languages" class="languages">
+  <option value="">Change Language</option>
+
+  <option value="/">English</option>
+
+  <option value="/ja/">Japanese</option>
+
+  <option value="/fr/">Français</option>
+
+  <option value="/br/">Português (Brasil)</option>
+
+  <option value="/tr/">Türkçe</option>
+
+  <option value="/de/">Deutsch</option>
+
+  <option value="/ne/">नेपाली</option>
+
+  <option value="/gr/">ελληνικά</option>
+
+  <option value="/it/">Italiano</option>
+
+</select>
+
+<script type="text/javascript">
+( function(){
+	'use strict';
+	var langs = document.getElementById( 'languages' );
+
+	// Only apply this after we set the Selected option
+	langs.onchange = function( ev ) {
+		if ( ev.currentTarget && ev.currentTarget.value ) {
+			location.href = ev.currentTarget.value;
+		}
+	};
+
+	if ( '/' === window.location.pathname ) {
+		return;
+	}
+
+	var opts = langs.getElementsByTagName( 'option' ),
+		count = opts.length;
+
+	for ( var i = 0; i < count; i++ ){
+		// Only happens if you have language path on the start of the location.pathname
+		if ( 0 === window.location.pathname.indexOf( opts[ i ].value ) ) {
+			opts[ i ].setAttribute( 'selected', 'selected' );
+		}
+	}
+} )();
+</script>
+
+		</div>
+		</header>
+
+		<div class="container">
+			<section id="main_content">
+
+
+<p><a href="https://wp-cli.org/">WP-CLI</a> is the command-line interface for <a href="https://wordpress.org/">WordPress</a>. You can update plugins, configure multisite installs and much more, without using a web browser.</p>
+
+<p>Ongoing maintenance is <a href="https://make.wordpress.org/cli/2017/04/03/new-co-maintainer-alain-thanks-2017-sponsors/#sponsors">made possible by</a>:</p>
+
+<p><a href="https://automattic.com/"><img src="https://make.wordpress.org/cli/files/2017/04/automattic-1.png" style="width:19%;height:auto;display:inline-block;vertical-align:middle;" alt="" width="160" height="35" class="aligncenter size-full wp-image-347" /></a> <a href="https://www.bluehost.com/"><img class="aligncenter size-full wp-image-335" style="width:19%;height:auto;display:inline-block;vertical-align:middle;" src="https://make.wordpress.org/cli/files/2017/04/bluehost.png" alt="" width="160" height="26" /></a> <a href="https://www.dreamhost.com/"><img class="aligncenter size-full wp-image-324" style="width:19%;height:auto;display:inline-block;vertical-align:middle;" src="https://make.wordpress.org/cli/files/2017/04/dreamhost.png" alt="" width="160" height="30" /></a> <a href="https://www.siteground.com/"><img class="aligncenter size-full wp-image-332" style="width:19%;height:auto;display:inline-block;vertical-align:middle;" src="https://make.wordpress.org/cli/files/2017/04/siteground.png" alt="" width="160" height="33" /></a> <a href="https://wpengine.com/"><img class="aligncenter size-full wp-image-333" style="width:19%;height:auto;display:inline-block;vertical-align:middle;" src="https://make.wordpress.org/cli/files/2017/04/wpengine.png" alt="" width="160" height="30" /></a></p>
+
+<p>For announcements, follow <a href="https://twitter.com/wpcli">@wpcli on Twitter</a> or <a href="https://make.wordpress.org/cli/subscribe/">sign up for email updates</a>. <a href="https://make.wordpress.org/cli/handbook/roadmap/">Check out the roadmap</a> for an overview of what’s planned for upcoming releases.</p>
+
+<p><a href="https://travis-ci.org/wp-cli/wp-cli"><img src="https://travis-ci.org/wp-cli/wp-cli.svg?branch=master" alt="Build Status" /></a> <a href="https://gemnasium.com/github.com/wp-cli/wp-cli"><img src="https://gemnasium.com/badges/github.com/wp-cli/wp-cli.svg" alt="Dependency Status" /></a> <a href="https://isitmaintained.com/project/wp-cli/wp-cli" title="Average time to resolve an issue"><img src="https://isitmaintained.com/badge/resolution/wp-cli/wp-cli.svg" alt="Average time to resolve an issue" /></a> <a href="https://isitmaintained.com/project/wp-cli/wp-cli" title="Percentage of issues still open"><img src="https://isitmaintained.com/badge/open/wp-cli/wp-cli.svg" alt="Percentage of issues still open" /></a></p>
+
+<p>Quick links: <a href="#using">Using</a> | <a href="#installing">Installing</a> | <a href="#support">Support</a> | <a href="#extending">Extending</a> | <a href="#contributing">Contributing</a> | <a href="#credits">Credits</a></p>
+
+<h2 id="using">Using</h2>
+
+<p>WP-CLI provides a command-line interface for many actions you might perform in the WordPress admin. For instance, <code class="highlighter-rouge">wp plugin install --activate</code> (<a href="https://developer.wordpress.org/cli/commands/plugin/install/">doc</a>) lets you install and activate a WordPress plugin:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>wp plugin install user-switching --activate
+Installing User Switching <span class="o">(</span>1.0.9<span class="o">)</span>
+Downloading install package from https://downloads.wordpress.org/plugin/user-switching.1.0.9.zip...
+Unpacking the package...
+Installing the plugin...
+Plugin installed successfully.
+Activating <span class="s1">'user-switching'</span>...
+Plugin <span class="s1">'user-switching'</span> activated.
+Success: Installed 1 of 1 plugins.
+</code></pre>
+</div>
+
+<p>WP-CLI also includes commands for many things you can’t do in the WordPress admin. For example, <code class="highlighter-rouge">wp transient delete --all</code> (<a href="https://developer.wordpress.org/cli/commands/transient/delete/">doc</a>) lets you delete one or all transients:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>wp transient delete --all
+Success: 34 transients deleted from the database.
+</code></pre>
+</div>
+
+<p>For a more complete introduction to using WP-CLI, read the <a href="https://make.wordpress.org/cli/handbook/quick-start/">Quick Start guide</a>. Or, catch up with <a href="https://make.wordpress.org/cli/handbook/shell-friends/">shell friends</a> to learn about helpful command line utilities.</p>
+
+<p>Already feel comfortable with the basics? Jump into the <a href="https://developer.wordpress.org/cli/commands/">complete list of commands</a> for detailed information on managing themes and plugins, importing and exporting data, performing database search-replace operations and more.</p>
+
+<h2 id="installing">Installing</h2>
+
+<p>Downloading the Phar file is our recommended installation method for most users. Should you need, see also our documentation on <a href="https://make.wordpress.org/cli/handbook/installing/">alternative installation methods</a>.</p>
+
+<p>Before installing WP-CLI, please make sure your environment meets the minimum requirements:</p>
+
+<ul>
+  <li>UNIX-like environment (OS X, Linux, FreeBSD, Cygwin); limited support in Windows environment</li>
+  <li>PHP 5.3.29 or later</li>
+  <li>WordPress 3.7 or later</li>
+</ul>
+
+<p>Once you’ve verified requirements, download the <a href="https://raw.github.com/wp-cli/builds/gh-pages/phar/wp-cli.phar">wp-cli.phar</a> file using <code class="highlighter-rouge">wget</code> or <code class="highlighter-rouge">curl</code>:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+</code></pre>
+</div>
+
+<p>Next, check the Phar file to verify that it’s working:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>php wp-cli.phar --info
+</code></pre>
+</div>
+
+<p>To use WP-CLI from the command line by typing <code class="highlighter-rouge">wp</code>, make the file executable and move it to somewhere in your PATH. For example:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>chmod +x wp-cli.phar
+<span class="gp">$ </span>sudo mv wp-cli.phar /usr/local/bin/wp
+</code></pre>
+</div>
+
+<p>If WP-CLI was installed successfully, you should see something like this when you run <code class="highlighter-rouge">wp --info</code>:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>wp --info
+PHP binary:    /usr/bin/php5
+PHP version:    5.5.9-1ubuntu4.14
+php.ini used:   /etc/php5/cli/php.ini
+WP-CLI root dir:        /home/wp-cli/.wp-cli
+WP-CLI packages dir:    /home/wp-cli/.wp-cli/packages/
+WP-CLI global config:   /home/wp-cli/.wp-cli/config.yml
+WP-CLI project config:
+WP-CLI version: 1.2.1
+</code></pre>
+</div>
+
+<h3 id="updating">Updating</h3>
+
+<p>You can update WP-CLI with <code class="highlighter-rouge">wp cli update</code> (<a href="https://developer.wordpress.org/cli/commands/cli/update/">doc</a>), or by repeating the installation steps.</p>
+
+<p>If WP-CLI is owned by root or another system user, you’ll need to run <code class="highlighter-rouge">sudo wp cli update</code>.</p>
+
+<p>Want to live life on the edge? Run <code class="highlighter-rouge">wp cli update --nightly</code> to use the latest nightly build of WP-CLI. The nightly build is more or less stable enough for you to use in your development environment, and always includes the latest and greatest WP-CLI features.</p>
+
+<h3 id="tab-completions">Tab completions</h3>
+
+<p>WP-CLI also comes with a tab completion script for Bash and ZSH. Just download <a href="https://raw.githubusercontent.com/wp-cli/wp-cli/master/utils/wp-completion.bash">wp-completion.bash</a> and source it from <code class="highlighter-rouge">~/.bash_profile</code>:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="nb">source</span> /FULL/PATH/TO/wp-completion.bash
+</code></pre>
+</div>
+
+<p>Don’t forget to run <code class="highlighter-rouge">source ~/.bash_profile</code> afterwards.</p>
+
+<p>If using zsh for your shell, you may need to load and start <code class="highlighter-rouge">bashcompinit</code> before sourcing. Put the following in your <code class="highlighter-rouge">.zshrc</code>:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>autoload bashcompinit
+bashcompinit
+<span class="nb">source</span> /FULL/PATH/TO/wp-completion.bash
+</code></pre>
+</div>
+
+<h2 id="support">Support</h2>
+
+<p>WP-CLI’s maintainers and contributors have limited availability to address general support questions. The <a href="https://make.wordpress.org/cli/handbook/roadmap/">current version of WP-CLI</a> is the only officially supported version.</p>
+
+<p>When looking for support, please first search for your question in these venues:</p>
+
+<ul>
+  <li><a href="https://make.wordpress.org/cli/handbook/common-issues/">Common issues and their fixes</a></li>
+  <li><a href="https://make.wordpress.org/cli/handbook/">WP-CLI handbook</a></li>
+  <li><a href="https://github.com/issues?utf8=%E2%9C%93&amp;q=sort%3Aupdated-desc+org%3Awp-cli+is%3Aissue">Open or closed issues in the WP-CLI GitHub organization</a></li>
+  <li><a href="https://wordpress.org/support/topic-tag/wp-cli/">Threads tagged ‘WP-CLI’ in the WordPress.org support forum</a></li>
+  <li><a href="https://wordpress.stackexchange.com/questions/tagged/wp-cli">Questions tagged ‘WP-CLI’ in the WordPress StackExchange</a></li>
+</ul>
+
+<p>If you didn’t find an answer in one of the venues above, you can:</p>
+
+<ul>
+  <li>Join the <code class="highlighter-rouge">#cli</code> channel in the <a href="https://make.wordpress.org/chat/">WordPress.org Slack</a> to chat with whomever might be available at the time. This option is best for quick questions.</li>
+  <li><a href="https://wordpress.org/support/forum/wp-advanced/#new-post">Post a new thread</a> in the WordPress.org support forum and tag it ‘WP-CLI’ so it’s seen by the community.</li>
+</ul>
+
+<p>GitHub issues are meant for tracking enhancements to and bugs of existing commands, not general support. Before submitting a bug report, please <a href="https://make.wordpress.org/cli/handbook/bug-reports/">review our best practices</a> to help ensure your issue is addressed in a timely manner.</p>
+
+<p>Please do not ask support questions on Twitter. Twitter isn’t an acceptable venue for support because: 1) it’s hard to hold conversations in under 140 characters, and 2) Twitter isn’t a place where someone with your same question can search for an answer in a prior conversation.</p>
+
+<p>Remember, libre != gratis; the open source license grants you the freedom to use and modify, but not commitments of other people’s time. Please be respectful, and set your expectations accordingly.</p>
+
+<h2 id="extending">Extending</h2>
+
+<p>A <strong>command</strong> is the atomic unit of WP-CLI functionality. <code class="highlighter-rouge">wp plugin install</code> (<a href="https://developer.wordpress.org/cli/commands/plugin/install/">doc</a>) is one command. <code class="highlighter-rouge">wp plugin activate</code> (<a href="https://developer.wordpress.org/cli/commands/plugin/activate/">doc</a>) is another.</p>
+
+<p>WP-CLI supports registering any callable class, function, or closure as a command. It reads usage details from the callback’s PHPdoc. <code class="highlighter-rouge">WP_CLI::add_command()</code> (<a href="https://make.wordpress.org/cli/handbook/internal-api/wp-cli-add-command/">doc</a>) is used for both internal and third-party command registration.</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code>/**
+ * Delete an option from the database.
+ *
+ * Returns an error if the option didn't exist.
+ *
+ * ## OPTIONS
+ *
+ * <span class="nt">&lt;key&gt;</span>
+ * : Key for the option.
+ *
+ * ## EXAMPLES
+ *
+ *     $ wp option delete my_option
+ *     Success: Deleted 'my_option' option.
+ */
+$delete_option_cmd = function( $args ) {
+	list( $key ) = $args;
+
+	if ( ! delete_option( $key ) ) {
+		WP_CLI::error( "Could not delete '$key' option. Does it exist?" );
+	} else {
+		WP_CLI::success( "Deleted '$key' option." );
+	}
+};
+WP_CLI::add_command( 'option delete', $delete_option_cmd );
+</code></pre>
+</div>
+
+<p>WP-CLI comes with dozens of commands. It’s easier than it looks to create a custom WP-CLI command. Read the <a href="https://make.wordpress.org/cli/handbook/commands-cookbook/">commands cookbook</a> to learn more. Browse the <a href="https://make.wordpress.org/cli/handbook/internal-api/">internal API docs</a> to discover a variety of helpful functions you can use in your custom WP-CLI command.</p>
+
+<h2 id="contributing">Contributing</h2>
+
+<p>We appreciate you taking the initiative to contribute to WP-CLI. It’s because of you, and the community around you, that WP-CLI is such a great project.</p>
+
+<p><strong>Contributing isn’t limited to just code.</strong> We encourage you to contribute in the way that best fits your abilities, by writing tutorials, giving a demo at your local meetup, helping other users with their support questions, or revising our documentation.</p>
+
+<p>Read through our <a href="https://make.wordpress.org/cli/handbook/contributing/">contributing guidelines in the handbook</a> for a thorough introduction to how you can get involved. Following these guidelines helps to communicate that you respect the time of other contributors on the project. In turn, they’ll do their best to reciprocate that respect when working with you, across timezones and around the world.</p>
+
+<h2 id="leadership">Leadership</h2>
+
+<p>WP-CLI has two project maintainers: <a href="https://github.com/danielbachhuber">danielbachhuber</a> and <a href="http://github.com/schlessera">schlessera</a>.</p>
+
+<p>On occasion, we <a href="https://github.com/orgs/wp-cli/teams/committers">grant write access to contributors</a> who have demonstrated, over a period of time, that they are capable and invested in moving the project forward.</p>
+
+<p>Read the <a href="https://make.wordpress.org/cli/handbook/governance/">governance document in the handbook</a> for more operational details about the project.</p>
+
+<h2 id="credits">Credits</h2>
+
+<p>Besides the libraries defined in <a href="composer.json">composer.json</a>, we have used code or ideas from the following projects:</p>
+
+<ul>
+  <li><a href="https://github.com/drush-ops/drush">Drush</a> for… a lot of things</li>
+  <li><a href="https://code.trac.wordpress.org/browser/wpshell">wpshell</a> for <code class="highlighter-rouge">wp shell</code></li>
+  <li><a href="https://wordpress.org/plugins/regenerate-thumbnails/">Regenerate Thumbnails</a> for <code class="highlighter-rouge">wp media regenerate</code></li>
+  <li><a href="https://github.com/interconnectit/Search-Replace-DB">Search-Replace-DB</a> for <code class="highlighter-rouge">wp search-replace</code></li>
+  <li><a href="https://github.com/Automattic/WordPress-CLI-Exporter">WordPress-CLI-Exporter</a> for <code class="highlighter-rouge">wp export</code></li>
+  <li><a href="https://github.com/Automattic/WordPress-CLI-Importer">WordPress-CLI-Importer</a> for <code class="highlighter-rouge">wp import</code></li>
+  <li><a href="https://github.com/benbalter/wordpress-plugin-tests/">wordpress-plugin-tests</a> for <code class="highlighter-rouge">wp scaffold plugin-tests</code></li>
+</ul>
+
+
+			</section>
+		</div>
+
+		
+
+		<footer>Project maintained by <a href="https://danielbachhuber.com/">Daniel Bachhuber</a> and <a href="http://www.alainschlesser.com/">Alain Schlesser</a>. Initial code by <a href="https://github.com/andreascreten">Andreas Creten</a> and <a href="https://github.com/scribu">Cristi Burc&#259;</a>. For more details, see <a href="https://make.wordpress.org/cli/handbook/governance/">Governance</a>.</footer>
+
+		<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+	try {
+		var pageTracker = _gat._getTracker("UA-962663-21");
+		pageTracker._trackPageview();
+	} catch(err) {}
+</script>
+
+
+		<script type="text/javascript">
+			var anchorForId = function( id ) {
+				var anchor = document.createElement( 'a' );
+
+				anchor.className = 'header-link';
+				anchor.href = '#' + id;
+				anchor.innerHTML = '#';
+				anchor.title = 'Permalink';
+
+				return anchor;
+			};
+
+			var linkifyAnchors = function( level, containingElement ) {
+				var 	h,
+						headers = containingElement.getElementsByTagName( 'h' + level );
+
+				for( h = 0; h < headers.length; h++ ) {
+					var header = headers[ h ];
+
+					if( 'undefined' !== typeof header.id && '' !==  header.id ) {
+						header.appendChild( anchorForId( header.id ) );
+					}
+				}
+			};
+
+			document.onreadystatechange = function() {
+				if( 'complete' === this.readyState  ) {
+					var contentBlock = document.getElementById( 'main_content' );
+
+					if( !contentBlock ) {
+						return;
+					}
+
+					for( var level = 2; level <= 6; level++ ) {
+						linkifyAnchors( level, contentBlock );
+					}
+				}
+			};
+		</script>
+	</body>
+</html>
+

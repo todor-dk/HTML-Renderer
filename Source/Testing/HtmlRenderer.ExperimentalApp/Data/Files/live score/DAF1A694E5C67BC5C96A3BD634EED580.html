@@ -1,0 +1,519 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Soccer Live Scores,Stadium Information,Fixture,Results,7M Sports</title>
+<meta name="keywords" content="Soccer,Live Scores,Goals List,Fixture,Results,Live Information,ENG PR,GER D1,FRA D1,SPA D1,ITA D1,EURO,WC" />
+<meta name="description" content="Try our best to provide the soccer live scores,the latest fixture and results information all over the world rapidly,accurately and integrated" />
+<!--script language="javascript" src="js/line.aspx?fn=default_en&view=all"></script-->
+<script language="javascript" src="http://bf.zzc.cn/js/title.js"></script>
+<script language="javascript" src="http://bf.zzc.cn/js/open_link.js"></script>
+<script language="javascript" src="http://en-live.7m.com.cn/b1/live_b_en.js"></script>
+<script language="javascript" src="http://bf.zzc.cn/js/const/eng.js"></script>
+<script language="javascript" src="live_fun.js"></script>
+<script language="javascript" src="http://bf.zzc.cn/member/js/fun.js"></script>
+<script language="javascript" src="http://bf.zzc.cn/soccer.js"></script>
+<script type="text/javascript" src="http://bf.zzc.cn/js/acpl.aspx"></script>
+<script language="javascript" src="http://static.7m.com.cn/js/7m_home/select/bf/selectBfModel.js"></script>
+<script language="JavaScript">
+function selectMatch()
+{
+	document.getElementById("Matchframe").src = (CheckSignUp()) ? 'member/en/showmain.aspx?nc=' + Number(new Date()) : 'custom_en.shtml';
+	with(document.getElementById("MatchList_div").style)
+	{
+        //left = (document.documentElement.clientWidth-parseInt(width))/2 + "px";
+		top = (window.screen.height-parseInt(height))/2 + "px";
+		display = "";
+	}
+}
+
+function CloseSelectMatch()
+{
+	document.getElementById("MatchList_div").style.display = 'none';
+}
+
+function updateSelect(v1, v2)
+{
+	if (v1 == "All")
+		live_f.location.href = "soccer_f.aspx?encode=en&view=All&ordtype=" + v2;
+	else
+		live_f.location.href = "soccer_f.aspx?encode=en&match=" + v1 + "&ordtype=" + v2;
+}
+
+function updateTimeZone(data)
+{
+	eval("var dataObj = " + data);
+	timeZoneData["TZ"] = dataObj["TZ"];
+	timezone_TZ = dataObj["TZ"];
+	$$("TimeZone").innerHTML = "GMT"+timeZoneData["TZ"];
+	live_f.location.reload();
+}
+
+function OrdMatch(v,m,t)
+{
+	OrdMatch2("soccer_f.aspx?encode=en&view=" + v + "&match=" + m, t);
+}
+loadCSS(0);
+</script>
+<link href="http://bf.zzc.cn/css/null.css" type="text/css" rel="stylesheet" media="screen" id="widescreen" />
+<link href="http://bf.zzc.cn/css/print.css" type="text/css" rel="stylesheet" media="print" />
+<style type="text/css">
+@import url("http://bf.zzc.cn/css/global.css");
+.qingbao_en{background: url(http://img.7m.cn/v2/live_tips_en.gif) center 3px no-repeat;width:26px; }
+.qingbao_jz{background: url(http://img.7m.cn/v2/live_tips_en.gif) center 3px no-repeat;width:26px; }
+</style>
+<!--Windy-on 2016-11-10, by cwy,chc,wzq, ver 1.000-->
+<script src="http://libs.7m.com.cn/jquery/1.11.1/jquery.min.js"></script> 
+
+<link href="http://static.7m.com.cn/css/raingame/rain.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://static.7m.com.cn/js/raingame/jquery.cookie.js"></script> 
+<script type="text/javascript" src="http://static.7m.com.cn/js/raingame/jquery.zclip.min.js"></script> 
+<script type="text/javascript" src="http://static.7m.com.cn/js/raingame/raingame.min.js"></script>
+<script>
+    var rainInitialVal = {
+        pageId: 'live',// 
+        languageId: 3, // 
+        width: '930',// 
+        classify: 'football'// 
+    }
+    $(function () {
+        rainVal.geiGameInfo();
+    });
+</script> 
+<!--Windy-end-->
+</head>
+<body ontouchstart="IpadLoadSound()" ontouchend="IpadLoadSound()" class="page_en">
+<div id="bs" style="position: absolute"></div>
+<div id="bs3" style="position: absolute"></div>
+<div id="bs4" style="position: absolute"></div>
+<span id="goaldetail"><script language="javascript"></script></span>
+<div id="sg" class="scoreinfo"></div>
+<div id="MatchList_div" style="width: 600px; height: 410px;margin-left:-300px; left: 50%;z-index:9999;display:none;">
+	<div id="MatchList"><iframe src="" id="Matchframe" frameborder="0" width="600" height="410" scrolling="no"></iframe></div>
+</div>
+<div class="select_d1" id="TimeZoneList_div" style="width: 660px;height: 480px; display: none;">
+	<div class="select_d2" style="width: 660px">
+		<p class="select_v1">Set Time Zone</p>
+		<p class="select_v2"><a href="javascript:CloseTimeZoneList()">[x] Close</a></p>
+	</div>
+	<div class="select_d3" id="TimeZoneList"></div>
+	<div class="select_c1"></div>
+</div>
+<div id="content">
+	<div id="topFun"> 
+		<div class="timeZone">
+        <span id="TimeZone" onclick="setTimeZone('en','timezone.html',updateTimeZone)" title="Set time zone">GMT+0800</span>&nbsp;&nbsp;<span style="CURSOR: pointer" onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('http://live2.7msport.com/cpk_live_en.aspx');">HomePage</span>&nbsp;·&nbsp;<span style="CURSOR: pointer" onclick="javascript:window.external.addFavorite('http://live2.7msport.com/cpk_live_en.aspx','7m LiveScore');">Favorites</span>
+        <a href="http://bf.zzc.cn/ad_clk.aspx?ad_state=en_home_fb&amp;des_url=https%3A%2F%2Fwww.facebook.com%2F7msports" target="_blank" class="fcb_btn"></a>
+        <a href="http://bf.zzc.cn/ad_clk.aspx?ad_state=en_home_twi&amp;des_url=https://twitter.com/7m_Sports" target="_blank" class="twi_btn"></a>
+        <a href="http://bf.zzc.cn/ad_clk.aspx?ad_state=en_home_twi&amp;des_url=https://www.facebook.com/7msports" target="_blank" class="ytb_btn"></a>
+        </div>
+		<div class="lan"><span id="slang" style="display:none">Language:&nbsp;English&nbsp;&nbsp;&nbsp;<a href="http://ms2.7msport.com/default_ms.aspx?classid=&view=all&match=&line=no" target="_self">Malay</a>&nbsp;&nbsp;&nbsp;<a href="http://vn2.7msport.com/default_vn.aspx?classid=&view=all&match=&line=no" target="_self">Tiếng Việt</a>&nbsp;&nbsp;&nbsp;<a href="http://live2.7mkr.com/default_th.aspx?classid=&view=all&match=&line=no" target="_self">ภาษาไทย</a>&nbsp;&nbsp;&nbsp;<a href="http://live3.7mkr.com/default_kr.aspx?classid=&view=all&match=&line=no" target="_self">한국어</a>&nbsp;&nbsp;&nbsp;<a href="http://id2.7msport.com/default_id.aspx?classid=&view=all&match=&line=no" target="_self">Indonesia</a>&nbsp;&nbsp;&nbsp;<a href="http://jp2.7msport.com/default_jp.aspx?classid=&view=all&match=&line=no" target="_self">日本語</a></span></div>
+	</div>
+	<div id="head">
+		<div class="headLeft">
+			<div class="goalLogBox">
+				<div class="goalLog">
+					<table width="260" id="last_info"></table>
+				</div>
+			</div>
+		</div>
+		<div class="headRight">
+			<div class="topNews">
+				&nbsp;
+			</div>
+			<div class="u7MAD_T1" id="Head_b"></div>
+		</div>
+	</div>
+	<div id="mainMenu">
+	<ul>
+		<li id="menu1"><a href="http://www.7msport.com" target="_top">Home</a></li>
+        <li id="menu13"><a href="http://www.7msport.com/video/" target="_blank" style="width:30px;text-align:center">Video</a><i class="t_new_i "></i></li>
+		<li id="menu2" onmouseover="if(typeof(myMenu)!='undefined'){myMenu.Show('a',this)}"><a href="/pk_live_en.aspx?line=no" target="_top">Scores & Odds 2in1</a></li>
+		<li id="menu3" onmouseover="if(typeof(myMenu)!='undefined'){myMenu.Show('b',this)}"><a href="/default_en.aspx?line=no" target="_top">Live Scores</a></li>
+		<li><a href="http://predict.7msport.com/en/report_list.shtml" target="_blank"  style="color:#ff0000;width:30px;text-align:center">Tips</a><i class="t_new_i "></i></li>
+		<li id="menu4" onmouseover="if(typeof(myMenu)!='undefined'){myMenu.Show('c',this)}"><a href="http://data.7m.cn/result_data/index_en.shtml" target="_blank">Results</a></li>
+		<li id="menu5" onmouseover="if(typeof(myMenu)!='undefined'){myMenu.Show('d',this)}"><a href="http://data.7m.cn/fixture_data/sc_en1.shtml" target="_blank">Fixtures</a></li>
+		<li id="menu6" onmouseover="if(typeof(myMenu)!='undefined'){myMenu.Show('e',this)}"><a href="http://odds.7m.hk/default_en.shtml" target="_blank">Odds</a></li>
+		<li id="menu9"><a href="http://data.7m.cn/database/index_en.htm" target="_blank">Data</a></li>
+		<li id="menu10" onmouseover="if(typeof(myMenu)!='undefined'){myMenu.Show('g',this)}"><a href="http://freelive.7m.cn/apply_en.shtm" target="_blank">Free Feed</a></li>
+		<li id="menu11"><a href="http://tv.7m.cn/en/" target="_blank">Program Preview</a></li>
+		<li id="menu12"><a href="http://app.7m.cn/soccer/en" target="_blank" style="color:#ff0000;font-weight:bold;">7M App</a><i class="hot_i"></i></li>
+	</ul>
+</div>
+<div class="clear"></div>
+<div id="a" class="tlmBox" style="width:120px">
+	<ul class="tlm" style="width:117px">
+		<li><a href="/pk_live_en.aspx?line=no" target="_top"><span>Macauslot 2in1</span></a></li>
+		<li><a href="/lbpk_live_en.aspx?line=no" target="_top"><span>Ladbrokes 2in1</span></a></li>
+		<li><a href="/cpk_live_en.aspx?line=no" target="_top"><span>S2 2in1</span></a></li>
+	</ul>
+</div>
+<div id="a1" class="tlmBox" style="width:60px">
+	<ul class="tlm" style="width:57px">
+		<li class="mOut"><a href="/pk_live_en.aspx?view=all&line=no" target="_top"><span>All</span></a></li>
+		<li class="mOut"><a href="/pk_live_en.aspx?view=simplify&line=no" target="_top"><span>Simplify</span></a></li>
+	</ul>
+</div>
+<div id="a2" class="tlmBox" style="width:60px">
+	<ul class="tlm" style="width:57px">
+		<li class="mOut"><a href="/lbpk_live_en.aspx?view=all&line=no" target="_top"><span>All</span></a></li>
+		<li class="mOut"><a href="/lbpk_live_en.aspx?view=simplify&line=no" target="_top"><span>Simplify</span></a></li>
+	</ul>
+</div>
+<div id="a3" class="tlmBox" style="width:60px">
+	<ul class="tlm" style="width:57px">
+		<li class="mOut"><a href="/cpk_live_en.aspx?view=all&line=no" target="_top"><span>All</span></a></li>
+		<li class="mOut"><a href="/cpk_live_en.aspx?view=simplify&line=no" target="_top"><span>Simplify</span></a></li>
+	</ul>
+</div>
+<div id="b" class="tlmBox" style="width:120px">
+	<ul class="tlm" style="width:117px">
+		<li><a href="/default_en.aspx?line=no" target="_top"><span>Soccer Score</span></a></li>
+		<li><a href="http://basket.7m.cn/default_en.aspx" target="_blank"><span>Basketball Score</span></a></li>
+		<li><a href="http://tennis.7m.cn/default_en.aspx" target="_blank"><span>Tennis Score</span></a></li>
+		<li><a href="http://bab.7m.cn/default_en.aspx" target="_blank">Baseball Score</a></li>
+		<li><a href="http://amf.7m.cn/default_en.aspx" target="_blank">Am. Football Score</a></li>
+	</ul>
+</div>
+<div id="b1" class="tlmBox" style="width:60px">
+	<ul class="tlm" style="width:57px">
+		<li><a href="/default_en.aspx?view=all&line=no" target="_top"><span>All</span></a></li>
+		<li><a href="/default_en.aspx?view=simplify&line=no" target="_top"><span>Simplify</span></a></li>
+	</ul>
+</div>
+<div id="c" class="tlmBox" style="width:80px">
+	<ul class="tlm" style="width:77px">
+		<li><a href="http://data.7m.cn/result_data/index_en.shtml" target="_blank"><span>Soccer</span></a></li>
+		<li><a href="http://bdata.7m.cn/result_data/index_en.htm" target="_blank"><span>Basketball</span></a></li>
+	</ul>
+</div>
+<div id="d" class="tlmBox" style="width:80px">
+	<ul class="tlm" style="width:77px">
+		<li><a href="http://data.7m.cn/fixture_data/sc_en1.shtml" target="_blank"><span>Soccer</span></a></li>
+		<li><a href="http://bdata.7m.cn/fixture_data/default_en.aspx?date=1" target="_blank"><span>Basketball</span></a></li>
+	</ul>
+</div>
+<div id="e" class="tlmBox" style="width:80px">
+	<ul class="tlm" style="width:77px">
+		<li><a href="http://odds.7m.hk/default_en.shtml" target="_blank"><span>Soccer</span></a></li>
+		<li><a href="http://bodds.7m.hk/default_en.shtml" target="_blank"><span>Hoops</span></a></li>
+	</ul>
+</div>
+<div id="e1" class="tlmBox" style="width:120px">
+	<ul class="tlm" style="width:117px">
+		<li><a href="http://odds.7m.hk/default_en.shtml" target="_blank"><span>Odds Comparison</span></a></li>
+		<li><a href="http://am.7m.cn/en/winodds.shtml" target="_blank"><span>Handicap</span></a></li>
+		<li><a href="http://s2.7m.hk/default_en.shtml" target="_blank"><span>S2</span></a></li>
+		<li><a href="http://1x2.7m.hk/default_en.shtml" target="_blank"><span>1x2 Odds</span></a></li>
+	</ul>
+</div>
+<div id="e2" class="tlmBox">
+	<ul class="tlm">
+		<li><a href="http://bodds.7m.hk/default_en.shtml" target="_blank"><span>Odds</span></a></li>
+		<li><a href="http://bam.7m.cn/en/winodds.shtml" target="_blank"><span>Macauslot Odds</span></a></li>
+	</ul>
+</div>
+<div id="g" class="tlmBox" style="width:80px">
+	<ul class="tlm" style="width:77px">
+		<li><a href="http://freelive.7m.cn/apply_en.shtm" target="_blank"><span>Soccer</span></a></li>
+		<li><a href="http://freelive.7m.cn/apply3_en.aspx" target="_blank"><span>Basketball</span></a></li>
+	</ul>
+</div> 
+<script language="javascript">
+var menus=
+{
+	'a':[
+			{'a1':null},
+			{'a2':null},
+			{'a3':null}
+		],
+	'b':[
+			{'b1':null},
+			null,
+			null
+		],
+	'c':[
+			null,
+			null
+		],
+	'd':[
+			null,
+			null
+		],
+	'e':[
+			{'e1':null},
+			{'e2':null}
+		],
+	'g':[
+			null,
+			null
+		] 
+}
+</script>	<script language="javascript" src="http://bf.zzc.cn/js/freemenu.js"></script>
+	<script language="javascript">$$("menu3").className = 'mSelect';</script>
+	<div class="u7MAD_M1" id="Top_b"></div>
+	<div id="cLeft">
+		<div class="u7MAD" id="l_b_1"></div>
+		<!-- 赛事列表 + -->
+		<div class="uFun marginB10">
+			<h2 onclick="showListMatch()">Match list</h2>
+			<div class="uFunBody">
+				<div class="listMatchClass" id="listMatch">
+					<a href="default_en.aspx?view=all&line=no" target="_top" class="matchON">All</a><a href="default_en.aspx?classid=1&line=no" target="_top">England</a><a href="default_en.aspx?classid=8&line=no" target="_top">World Cup</a><a href="default_en.aspx?classid=12&line=no" target="_top">Germany</a><a href="default_en.aspx?classid=14&line=no" target="_top">France</a><a href="default_en.aspx?classid=34&line=no" target="_top">Spain</a><a href="default_en.aspx?classid=37&line=no" target="_top">Italy</a><a href="default_en.aspx?classid=62&line=no" target="_top">AAYC</a><a href="default_en.aspx?classid=69&line=no" target="_top">ACLC</a><a href="default_en.aspx?classid=148&line=no" target="_top">ACWU19</a><a href="default_en.aspx?classid=112&line=no" target="_top">AFAYC</a><a href="default_en.aspx?classid=233&line=no" target="_top">AFC Challenge Cup</a><a href="default_en.aspx?classid=116&line=no" target="_top">AFC Cup</a><a href="default_en.aspx?classid=235&line=no" target="_top">AFC Futsal Championship</a><a href="default_en.aspx?classid=282&line=no" target="_top">AFC PC</a><a href="default_en.aspx?classid=357&line=no" target="_top">AFC U20 Futsal Championship</a><a href="default_en.aspx?classid=249&line=no" target="_top">AFCU16</a><a href="default_en.aspx?classid=125&line=no" target="_top">African Nations Cup</a><a href="default_en.aspx?classid=283&line=no" target="_top">African Nations Womens Cup</a><a href="default_en.aspx?classid=259&line=no" target="_top">African Super Cup</a><a href="default_en.aspx?classid=126&line=no" target="_top">Albanian</a><a href="default_en.aspx?classid=144&line=no" target="_top">Algarve Cup</a><a href="default_en.aspx?classid=102&line=no" target="_top">Algeria</a><a href="default_en.aspx?classid=177&line=no" target="_top">America Cup</a><a href="default_en.aspx?classid=256&line=no" target="_top">Andorra</a><a href="default_en.aspx?classid=262&line=no" class="matchON" target="_top">Angola</a><a href="default_en.aspx?classid=76&line=no" target="_top">Arabian CL</a><a href="default_en.aspx?classid=2&line=no" class="matchON" target="_top">Argentina</a><a href="default_en.aspx?classid=164&line=no" target="_top">Armenia</a><a href="default_en.aspx?classid=151&line=no" target="_top">ASIAC-W</a><a href="default_en.aspx?classid=109&line=no" target="_top">Asian Cup</a><a href="default_en.aspx?classid=169&line=no" target="_top">Asian Games</a><a href="default_en.aspx?classid=100&line=no" class="matchON" target="_top">Australia</a><a href="default_en.aspx?classid=4&line=no" target="_top">Austria</a><a href="default_en.aspx?classid=182&line=no" target="_top">AWCU16</a><a href="default_en.aspx?classid=190&line=no" target="_top">Azerbaijan</a><a href="default_en.aspx?classid=128&line=no" target="_top">Bahrain</a><a href="default_en.aspx?classid=194&line=no" target="_top">Balti liiga</a><a href="default_en.aspx?classid=352&line=no" target="_top">Bangladesh</a><a href="default_en.aspx?classid=333&line=no" target="_top">Beach Soccer Euro Nations Cup</a><a href="default_en.aspx?classid=332&line=no" target="_top">Beach Soccer Euro Winners Cup</a><a href="default_en.aspx?classid=317&line=no" target="_top">Beach Soccer World Cup</a><a href="default_en.aspx?classid=82&line=no" target="_top">Belarus</a><a href="default_en.aspx?classid=9&line=no" target="_top">Belgium</a><a href="default_en.aspx?classid=147&line=no" target="_top">Bolivia</a><a href="default_en.aspx?classid=145&line=no" target="_top">Bosnia</a><a href="default_en.aspx?classid=6&line=no" class="matchON" target="_top">Brazil</a><a href="default_en.aspx?classid=7&line=no" target="_top">Bulgaria</a><a href="default_en.aspx?classid=261&line=no" target="_top">CAF ANC</a><a href="default_en.aspx?classid=96&line=no" target="_top">CAFC</a><a href="default_en.aspx?classid=85&line=no" target="_top">CAFCL</a><a href="default_en.aspx?classid=243&line=no" class="matchON" target="_top">Cameroon</a><a href="default_en.aspx?classid=263&line=no" target="_top">CAN U17</a><a href="default_en.aspx?classid=306&line=no" target="_top">CAN W-U20</a><a href="default_en.aspx?classid=191&line=no" target="_top">Canada</a><a href="default_en.aspx?classid=221&line=no" target="_top">CECAFA CUP</a><a href="default_en.aspx?classid=318&line=no" target="_top">Central American Games</a><a href="default_en.aspx?classid=44&line=no" class="matchON" target="_top">Champions League</a><a href="default_en.aspx?classid=38&line=no" target="_top">Chile</a><a href="default_en.aspx?classid=18&line=no" class="matchON" target="_top">China</a><a href="default_en.aspx?classid=226&line=no" target="_top">CIS Cup</a><a href="default_en.aspx?classid=58&line=no" class="matchON" target="_top">Club Friendly</a><a href="default_en.aspx?classid=336&line=no" target="_top">CNCF CAC</a><a href="default_en.aspx?classid=244&line=no" target="_top">CNCF WU17</a><a href="default_en.aspx?classid=238&line=no" target="_top">CNCF WU20</a><a href="default_en.aspx?classid=89&line=no" class="matchON" target="_top">Colombia</a><a href="default_en.aspx?classid=225&line=no" target="_top">CON WU17</a><a href="default_en.aspx?classid=229&line=no" target="_top">CON WU20</a><a href="default_en.aspx?classid=236&line=no" target="_top">CONCACAF FC</a><a href="default_en.aspx?classid=87&line=no" class="matchON" target="_top">Concacaf Gold Cup</a><a href="default_en.aspx?classid=187&line=no" target="_top">CONCACAF U17</a><a href="default_en.aspx?classid=175&line=no" target="_top">CONCACAF U20</a><a href="default_en.aspx?classid=121&line=no" target="_top">CONCACAFC</a><a href="default_en.aspx?classid=45&line=no" class="matchON" target="_top">Conmebol - Copa Sudamericana</a><a href="default_en.aspx?classid=237&line=no" target="_top">CONMEBOL FC</a><a href="default_en.aspx?classid=307&line=no" target="_top">Copa America Beach Soccer</a><a href="default_en.aspx?classid=66&line=no" target="_top">Copa Libertadores</a><a href="default_en.aspx?classid=323&line=no" target="_top">COSAFA Cup</a><a href="default_en.aspx?classid=354&line=no" target="_top">COSAFA Cup U20</a><a href="default_en.aspx?classid=156&line=no" target="_top">Costa Rica</a><a href="default_en.aspx?classid=20&line=no" target="_top">Croatia</a><a href="default_en.aspx?classid=180&line=no" target="_top">CSU17</a><a href="default_en.aspx?classid=60&line=no" target="_top">CSU20</a><a href="default_en.aspx?classid=51&line=no" target="_top">Cyprus</a><a href="default_en.aspx?classid=19&line=no" target="_top">Czech</a><a href="default_en.aspx?classid=11&line=no" target="_top">Denmark</a><a href="default_en.aspx?classid=88&line=no" target="_top">EAFC</a><a href="default_en.aspx?classid=104&line=no" target="_top">East Asian Games</a><a href="default_en.aspx?classid=114&line=no" target="_top">EBSL</a><a href="default_en.aspx?classid=107&line=no" target="_top">Ecuador</a><a href="default_en.aspx?classid=117&line=no" class="matchON" target="_top">Egypt</a><a href="default_en.aspx?classid=184&line=no" target="_top">El Salvador</a><a href="default_en.aspx?classid=195&line=no" target="_top">Emirates Stadium Cup</a><a href="default_en.aspx?classid=143&line=no" class="matchON" target="_top">Estonia</a><a href="default_en.aspx?classid=159&line=no" target="_top">EURO Cup</a><a href="default_en.aspx?classid=98&line=no" target="_top">EURO Super Cup</a><a href="default_en.aspx?classid=208&line=no" target="_top">EWU17</a><a href="default_en.aspx?classid=192&line=no" target="_top">Faroe Islands</a><a href="default_en.aspx?classid=78&line=no" target="_top">FICC</a><a href="default_en.aspx?classid=199&line=no" target="_top">FIFA Women's World Cup</a><a href="default_en.aspx?classid=90&line=no" target="_top">FIFAU17WC</a><a href="default_en.aspx?classid=15&line=no" class="matchON" target="_top">Finland</a><a href="default_en.aspx?classid=26&line=no" class="matchON" target="_top">Friendly</a><a href="default_en.aspx?classid=228&line=no" target="_top">Futsal World Cup</a><a href="default_en.aspx?classid=160&line=no" target="_top">FWWCU20</a><a href="default_en.aspx?classid=53&line=no" target="_top">FWYC</a><a href="default_en.aspx?classid=162&line=no" target="_top">FYR Macedonia</a><a href="default_en.aspx?classid=248&line=no" target="_top">GC U17</a><a href="default_en.aspx?classid=99&line=no" target="_top">GCC</a><a href="default_en.aspx?classid=300&line=no" target="_top">GCC Games</a><a href="default_en.aspx?classid=183&line=no" target="_top">Georgia</a><a href="default_en.aspx?classid=219&line=no" class="matchON" target="_top">Ghana</a><a href="default_en.aspx?classid=63&line=no" target="_top">Granatkin Memorial Cup U18</a><a href="default_en.aspx?classid=35&line=no" target="_top">Greece</a><a href="default_en.aspx?classid=157&line=no" target="_top">Guatemala</a><a href="default_en.aspx?classid=57&line=no" target="_top">Gulf Cup</a><a href="default_en.aspx?classid=17&line=no" target="_top">Holland</a><a href="default_en.aspx?classid=155&line=no" target="_top">Honduras</a><a href="default_en.aspx?classid=127&line=no" target="_top">Hong Kong</a><a href="default_en.aspx?classid=42&line=no" target="_top">Hungary</a><a href="default_en.aspx?classid=75&line=no" class="matchON" target="_top">Iceland</a><a href="default_en.aspx?classid=257&line=no" target="_top">India</a><a href="default_en.aspx?classid=210&line=no" class="matchON" target="_top">Indonesia</a><a href="default_en.aspx?classid=310&line=no" target="_top">International Beach Soccer Tourament</a><a href="default_en.aspx?classid=320&line=no" target="_top">International Champions Cup</a><a href="default_en.aspx?classid=105&line=no" target="_top">Iran</a><a href="default_en.aspx?classid=136&line=no" target="_top">Iraq</a><a href="default_en.aspx?classid=3&line=no" target="_top">Ireland</a><a href="default_en.aspx?classid=36&line=no" target="_top">Israel</a><a href="default_en.aspx?classid=343&line=no" target="_top">Jamaica</a><a href="default_en.aspx?classid=27&line=no" class="matchON" target="_top">Japan</a><a href="default_en.aspx?classid=122&line=no" target="_top">Jordan</a><a href="default_en.aspx?classid=163&line=no" target="_top">Kazakhstan</a><a href="default_en.aspx?classid=130&line=no" target="_top">KCTH</a><a href="default_en.aspx?classid=217&line=no" target="_top">Kenya</a><a href="default_en.aspx?classid=16&line=no" class="matchON" target="_top">Korea</a><a href="default_en.aspx?classid=131&line=no" target="_top">Kuwaiti</a><a href="default_en.aspx?classid=73&line=no" class="matchON" target="_top">Latvia</a><a href="default_en.aspx?classid=134&line=no" target="_top">Lebanon</a><a href="default_en.aspx?classid=133&line=no" target="_top">Libya</a><a href="default_en.aspx?classid=84&line=no" target="_top">Lithuania</a><a href="default_en.aspx?classid=166&line=no" target="_top">Luxembourg</a><a href="default_en.aspx?classid=101&line=no" target="_top">Malaysia</a><a href="default_en.aspx?classid=165&line=no" target="_top">Malta</a><a href="default_en.aspx?classid=23&line=no" target="_top">Mexico</a><a href="default_en.aspx?classid=83&line=no" target="_top">MGF</a><a href="default_en.aspx?classid=154&line=no" target="_top">Moldova</a><a href="default_en.aspx?classid=185&line=no" target="_top">Montenegro</a><a href="default_en.aspx?classid=129&line=no" target="_top">Morocco</a><a href="default_en.aspx?classid=309&line=no" target="_top">Mundialito de Clubes Beach Soccer</a><a href="default_en.aspx?classid=344&line=no" target="_top">Myanmar</a><a href="default_en.aspx?classid=253&line=no" target="_top">NAFCUP</a><a href="default_en.aspx?classid=255&line=no" target="_top">Namibia</a><a href="default_en.aspx?classid=196&line=no" target="_top">NASC</a><a href="default_en.aspx?classid=293&line=no" class="matchON" target="_top">NASL</a><a href="default_en.aspx?classid=197&line=no" target="_top">NCW U16</a><a href="default_en.aspx?classid=118&line=no" target="_top">New Zealand</a><a href="default_en.aspx?classid=350&line=no" target="_top">Nicaragua</a><a href="default_en.aspx?classid=272&line=no" target="_top">Nigeria</a><a href="default_en.aspx?classid=247&line=no" target="_top">NordicT U17</a><a href="default_en.aspx?classid=106&line=no" target="_top">Northern Ireland</a><a href="default_en.aspx?classid=24&line=no" class="matchON" target="_top">Norway</a><a href="default_en.aspx?classid=138&line=no" target="_top">OFC</a><a href="default_en.aspx?classid=358&line=no" target="_top">OFC WU19</a><a href="default_en.aspx?classid=5&line=no" target="_top">Olympic</a><a href="default_en.aspx?classid=137&line=no" target="_top">Oman</a><a href="default_en.aspx?classid=290&line=no" target="_top">OP AFW</a><a href="default_en.aspx?classid=337&line=no" target="_top">Pakistan</a><a href="default_en.aspx?classid=132&line=no" target="_top">Palestine</a><a href="default_en.aspx?classid=313&line=no" target="_top">Pan American Cup</a><a href="default_en.aspx?classid=347&line=no" target="_top">Panama</a><a href="default_en.aspx?classid=200&line=no" target="_top">Pan-American Games</a><a href="default_en.aspx?classid=146&line=no" target="_top">Paraguay</a><a href="default_en.aspx?classid=86&line=no" target="_top">Peru</a><a href="default_en.aspx?classid=345&line=no" target="_top">Philippines</a><a href="default_en.aspx?classid=10&line=no" target="_top">Poland</a><a href="default_en.aspx?classid=25&line=no" target="_top">Portugal</a><a href="default_en.aspx?classid=124&line=no" target="_top">Qatar</a><a href="default_en.aspx?classid=97&line=no" target="_top">Recopa Sudamericana</a><a href="default_en.aspx?classid=21&line=no" target="_top">Romania</a><a href="default_en.aspx?classid=13&line=no" target="_top">Russia</a><a href="default_en.aspx?classid=342&line=no" target="_top">SAFF U19</a><a href="default_en.aspx?classid=119&line=no" target="_top">SAFFC</a><a href="default_en.aspx?classid=167&line=no" target="_top">San Marino</a><a href="default_en.aspx?classid=68&line=no" target="_top">Saudi Arabia</a><a href="default_en.aspx?classid=31&line=no" target="_top">Scotland</a><a href="default_en.aspx?classid=111&line=no" class="matchON" target="_top">SEA Games</a><a href="default_en.aspx?classid=216&line=no" target="_top">Senegal</a><a href="default_en.aspx?classid=52&line=no" target="_top">Serbia</a><a href="default_en.aspx?classid=70&line=no" target="_top">Singapore</a><a href="default_en.aspx?classid=30&line=no" target="_top">Slovakia</a><a href="default_en.aspx?classid=40&line=no" target="_top">Slovenia</a><a href="default_en.aspx?classid=120&line=no" target="_top">South Africa</a><a href="default_en.aspx?classid=279&line=no" target="_top">South American Games</a><a href="default_en.aspx?classid=276&line=no" target="_top">South Asian Games</a><a href="default_en.aspx?classid=356&line=no" target="_top">Sri Lanka</a><a href="default_en.aspx?classid=241&line=no" target="_top">Sudan</a><a href="default_en.aspx?classid=28&line=no" class="matchON" target="_top">Sweden</a><a href="default_en.aspx?classid=29&line=no" target="_top">Switzerland</a><a href="default_en.aspx?classid=71&line=no" class="matchON" target="_top">Syria</a><a href="default_en.aspx?classid=239&line=no" target="_top">Thailand</a><a href="default_en.aspx?classid=223&line=no" target="_top">Tipsport Liga</a><a href="default_en.aspx?classid=140&line=no" target="_top">TMDCY</a><a href="default_en.aspx?classid=79&line=no" target="_top">Toulon Tournament</a><a href="default_en.aspx?classid=56&line=no" target="_top">Toyota Cup</a><a href="default_en.aspx?classid=270&line=no" target="_top">Trinidad and Tobago</a><a href="default_en.aspx?classid=319&line=no" target="_top">Trofeo Dossena</a><a href="default_en.aspx?classid=135&line=no" target="_top">Tunisia</a><a href="default_en.aspx?classid=32&line=no" target="_top">Turkey</a><a href="default_en.aspx?classid=72&line=no" target="_top">U17EC</a><a href="default_en.aspx?classid=74&line=no" class="matchON" target="_top">U19EC</a><a href="default_en.aspx?classid=91&line=no" target="_top">U19ECQW</a><a href="default_en.aspx?classid=49&line=no" target="_top">U21EC</a><a href="default_en.aspx?classid=46&line=no" class="matchON" target="_top">UEFA EL</a><a href="default_en.aspx?classid=212&line=no" target="_top">Uefa Futsal Championship</a><a href="default_en.aspx?classid=326&line=no" target="_top">UEFA U19</a><a href="default_en.aspx?classid=189&line=no" target="_top">UEFA Women's Cup</a><a href="default_en.aspx?classid=80&line=no" target="_top">UEFACW</a><a href="default_en.aspx?classid=353&line=no" target="_top">UEMOA Tournament</a><a href="default_en.aspx?classid=33&line=no" target="_top">Ukraine</a><a href="default_en.aspx?classid=171&line=no" target="_top">UNCAF Nations Cup</a><a href="default_en.aspx?classid=110&line=no" target="_top">United Arab Emirates</a><a href="default_en.aspx?classid=55&line=no" target="_top">Uruguay</a><a href="default_en.aspx?classid=22&line=no" class="matchON" target="_top">USA</a><a href="default_en.aspx?classid=240&line=no" target="_top">Uzbekistan</a><a href="default_en.aspx?classid=149&line=no" target="_top">Venezuela</a><a href="default_en.aspx?classid=260&line=no" target="_top">Vietnam</a><a href="default_en.aspx?classid=43&line=no" target="_top">Wales</a><a href="default_en.aspx?classid=252&line=no" target="_top">WCWU17</a><a href="default_en.aspx?classid=113&line=no" target="_top">West Asian</a><a href="default_en.aspx?classid=265&line=no" target="_top">WFC</a><a href="default_en.aspx?classid=287&line=no" target="_top">World Futsal Championship</a><a href="default_en.aspx?classid=179&line=no" target="_top">Yemen</a><a href="default_en.aspx?classid=269&line=no" target="_top">Zimbabwe</a>				</div>
+				<a href="javascript:void(0);" onclick="showListMatch()" id="hlistMatch" title="open match list" class="lM_down"></a>
+			</div>
+		</div>
+		<!-- 赛事列表 - -->
+		<div class="u7MAD" id="l_b_2"></div>
+		<div id="id_left_layer" align="center"></div>
+		<table id="leftLayer_t" cellpadding="0" cellspacing="0"><tr><td><div id="leftLayer" class="u7MAD"></div></td></tr></table>
+	</div>
+	<div id="cRight">
+		<div class="u7MAD" id="r_b_1"></div>
+		<div class="rqs_input">
+				<div class="rqs" id="sList">
+					<div class="rqs_list" id="tList"></div>
+					<div class="rqs_state">
+						<div class="rqs_num"><span id="tListCount">0</span> Records found</div>
+						<div class="rqs_fun"><a href="javascript:" onclick="HideSearch()">Close</a></div>
+					</div>
+				</div>
+				<input type="text" class="rqs_key" onkeyup="SearchTeam(this.value)" title="Quick search match within this page" value="Quick search" onfocus="if (this.value == 'Quick search'){this.value='';}" onblur="if (this.value==''){this.value='Quick search';}"/>
+			</div>
+		<div class="liveFun marginB10" id="tabDiv1" style="position:relative;">
+			<ul class="pCTab" id="tabMenu1">
+				<li id="stab0" onmouseover="mtab(0); tip_show();" onMouseOut="tip_hide();" class="unselect" style="width:40px;"><strong>Login</strong></li>
+				<li id="stab1" onmouseover="mtab(1);" class="unselect" style="width:39px;" title="Function">Set</li>
+				<li id="stab2" onmouseover="mtab(2);" class="select_r" style="width:57px;" title="Transfer">Transfer</li>
+			</ul>
+			<div id="tip_login" class="tip_lbox">
+				<div class="tip_swt"></div>
+				<div class="tip_bbox" style="height:115px;">
+					 <div class="tip_con">
+						<img src="http://img.7m.cn/v2/tip_gb.png" onClick="tip_hide()" />
+					 </div>
+					<div class="tip_icon">You can customize events once you login to choose the one you need.</div>
+				</div>
+			</div>
+			<div class="unblock" id="gsbox0">
+				<form method="post" target="frameLogin" id="frmLogin" onsubmit="return login()">
+				<table class="user_signin" id="tb_login">
+					<tr>
+						<td class="us_item"><label for="user_name">User: </label></td>
+					</tr>
+					<tr>
+						<td class="us_val"><input type="text" id="userid" name="userid" class="us_in1" /></td>
+					</tr>
+					<tr>
+						<td class="us_item"><label for="user_pwd">Password: </label></td>
+					</tr>
+					<tr>
+						<td class="us_val"><input type="password" id="userpwd" name="userpwd" class="us_in2" /></td>
+					</tr>
+					<tr>
+						<td class="us_fun"><input type="submit" value="Login" id="btnLogin" /> <a href="http://discuss.7msport.com/en/regedit.aspx" target="_blank">Register</a></td>
+					</tr>
+					<tr>
+						<td class="us_fun"><a href="http://discuss.7msport.com/en/resetpwd.aspx" target="_blank">Forget Password?</a></td>
+					</tr>
+					<tr>
+						<td class="us_tips">You can select events after your loginning.</td>
+					</tr>
+				</table>
+				</form>
+				<iframe id="frameLogin" name="frameLogin"  style="display:none"></iframe>
+				<ul class="user_info" id="ul_userinfo" style="display:none">
+					<li class="userface" id="userface"></li>
+					<li class="username" id="username"></li>
+					<li><a href="javascript:selectMatch()" class="link_hot">Select events I need</a></li>
+					<li><input type="checkbox" id="showmyconfig" onclick="ShowMyConfig((this.checked ? 1 : 0))" /><label for="showmyconfig">Show my setting</label></li>
+					<li><a href="http://discuss.7msport.com/jump.html?lang=en" target="_blank">Comment Center</a></li>
+					<li><a href="javascript:logout()">[Quit]</a></li>
+				</ul>
+			</div>
+
+			<div class="unblock" id="gsbox1">
+				<table cellpadding="2" cellspacing="0" class="lfTable">
+					<tr>
+						<td colspan="2">
+							<strong class="font_F00"><input type="checkbox" id="chkWs" onclick="SetWidescreen((this.checked) ? 1 : 0);"><label for="chkWs">wide screen</label></strong>
+						</td>
+					</tr>
+					<tr>
+						<td width="30%" align="right"><span class="font_F00">Style:</span></td>
+						<td width="70%">
+							<span id="listStyle">
+								<a href="javascript:void(0);" class="style1" onclick="setCSS('5');return false;" title="Style1"></a>
+								<a href="javascript:void(0);" class="style2" onclick="setCSS('2');return false;" title="Style2"></a>
+								<a href="javascript:void(0);" class="style3" onclick="setCSS('0');return false;" title="Style3"></a>
+								<a href="javascript:void(0);" class="style4" onclick="setCSS('1');return false;" title="Style4"></a>
+								<a href="javascript:void(0);" class="style5" onclick="setCSS('3');return false;" title="Style5"></a>
+								<a href="javascript:void(0);" class="style6" onclick="setCSS('4');return false;" title="Style6"></a>
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">Font:</td>
+						<td>
+							<span id="fontSize">
+								<a href="javascript:void(0);" title="11px" onclick="setFONT('11px'); return false;" class="font1"></a>
+								<a href="javascript:void(0);" title="12px" onclick="setFONT('12px'); return false;" class="font2"></a>
+								<a href="javascript:void(0);" title="14px" onclick="setFONT('14px'); return false;" class="font3"></a>
+							</span>
+						</td>
+					</tr>
+				</table>
+				<table cellpadding="2" cellspacing="0" class="lfTable">
+					<tr>
+						<td colspan="4" align="center"><a href="javascript:" onclick="live_f.location.reload()" class="lfBt1">Refresh</a><a href="javascript:window.print()" class="lfBt2">Print</a></td>
+					</tr>
+					<tr>
+						<td><input id="HideRank" onclick="HideRank(this)" type="checkbox" checked="checked" name="C2" value="ON" /></td>
+						<td colspan="3"><label for="HideRank">Show Team-ranking</label></td>
+					</tr>
+					<tr>
+						<td><input id="HideMark" onClick="HideMark(this)" type="checkbox" checked="checked" name="C2" value="ON" /></td>
+						<td colspan="3"><label for="HideMark">Show Remark</label></td>
+					</tr>
+					<tr>
+						<td colspan="4">Goal sound
+						<select id="select_sound" onchange="ApplySound()" name="D1">
+							<option value="no">none</option>
+							<option value="default" selected="selected">sound1</option>
+							<option value="fanfare">sound2</option>
+							<option value="whistle">sound3</option>
+							<option value="whistleb">sound4</option>
+							<option value="clarion">sound5</option>
+							<option value="cheer">sound6</option>
+							<option value="coin">sound7</option>
+						</select>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="block" id="gsbox2">
+				<iframe src="http://data.7m.cn/transfer/bf_en.html" width="136" height="180" frameborder="0" scrolling="no"></iframe>
+			</div>
+		</div>
+		<script type="text/javascript">
+				var showTimer = null;
+				function tip_show(){
+					if(!CheckSignUp()){
+						$$('tip_login').style.display = 'block';
+						if(showTimer != null){
+							clearTimeout(showTimer);
+						}
+						showTimer = setTimeout("tip_hide()", 15000);
+					}
+				}
+				function tip_hide(){
+					$$('tip_login').style.display = 'none';
+					clearTimeout(showTimer);
+				}
+				//tip_show();
+		</script>
+		<div class="u7MAD" id="r_b_2"></div>
+		<div id="id_right_layer" align="center"></div>
+		<table id="rightLayer_t" cellpadding="0" cellspacing="0"><tr><td><div id="rightLayer" class="u7MAD"></div></td></tr></table>
+	</div>
+	<div id="cCenter">
+		<div id="Top_b2"></div>
+		<div id="t_c_1"></div>
+		<div class="lfun">
+			<div class="lfunLeft">
+				<a href="javascript:selectMatch()" title="Select matches">Optional</a><span>|</span>
+								<a href="default_en.aspx?view=simplify&line=no" target="_self" title="Show hot matches">Simplify</a>
+								<a href="default_en.aspx?view=livebetting&line=no" target="_self" title="Show live betting">Live betting</a>
+								<a href="javascript:OrdMatch('all', '', '1')" title="Order by league" id="ord_match">Order by league</a>
+				<a href="javascript:OrdMatch('all', '', '0')" title="Order by time" id="ord_time" style="display:none">Order by time</a>
+				<a href="default_en.aspx?view=all&line=no" target="_self" id="hider_lk" title="Show all matches"><span style="color:#FF0000" id="hider">0</span> Hidden</a>
+				<a href="http://7m.hk" target="_blank" style="color:#0000CC">Spare link: 7m.hk</a>
+				<a class="ods_i" href="http://bf.zzc.cn/ad_clk.aspx?ad_state=oddsguide_en&des_url=http://odds.7m.hk/oddsguide/index_en.shtml" target="_blank">Guide to odds</a>
+			</div>
+			<div class="lfunRight">
+				 <span class="icon winON" id="win" onclick="WinOnSelect(this)"></span>
+				 <span class="icon1 soundON" id="sound" onclick="SoundOnSelect(this)"></span>
+				 <span class="icon i_reload" title="Refresh" onclick="live_f.location.reload()"></span>
+			</div>
+		</div>
+		<div class="fun_sec" id="hsSelMatch" style="display:none;">┌ <a href="javascript:hiddenSelMatch()">Hide</a> <span>|</span> <a href="javascript:showSelMatch()">Display</a></div>
+		<!--div id="liveTips">
+			<div class="tipsText">
+								If there are too many matches today,please go to "<a href="default_en.aspx?view=simplify&line=no" target="_self" style="font-weight:bold">Simplify</a>" or "<a href="javascript:selectMatch()" style="font-weight:bold">Optional</a>".
+							</div>
+			<div class="tipsClose" title="closure tips" onclick="javascript:document.getElementById('liveTips').style.display='none'"></div>
+		</div-->
+<script type="text/javascript" src="http://timezone.7m.cn/timezone/timezone.js"></script>
+<script type="text/javascript" src="http://timezone.7m.cn/timezone/gettimezone.php"></script>
+<script language="javascript" src="http://bf.zzc.cn/timezone/gettimezone.js"></script>
+<script>document.write('<script type="text/javascript" src="http://www.7msport.com/report/list_json.js?'+Number(new Date())+'"></'+'script>');</script>
+			
+		<div id="ls">
+			Loading,Please Wait..........<br>
+			<img src="http://img.7m.cn/icon/wait.gif" border="0" />
+		</div>
+		<iframe src="" width="0" height="0" frameborder="0" name="live_f"></iframe>
+		<script language="javascript">
+		function loadScore()
+		{
+			live_f.location.href = 'soccer_f.aspx?encode=en&classid=&view=all&match=&ordtype=' + order_type;
+		}
+		GetOrderType();
+		loadScore();
+		</script>
+		<script language="javascript">
+			ShowUserInfo();
+		</script>
+		<div class="clear"></div>
+		<div style="text-align:right; padding-bottom:5px;"><a href="http://www.sportsdt.com/en" target="_blank" style="color:#CC0000;">Data provided by SportsDT</a></div>
+		<script language="javascript" src="http://data.7m.cn/announcement/n_en.js"></script>
+		<p class="remark marginB10">Note: <span><img src="http://img.7m.cn/v2/birs.gif" /></span> live betting, (N)-Neutrality. <a href="http://img.7m.cn/help/icons/en.htm" target="_blank">More</a></p>
+		<div class="u7MAD_MB" id="c_b"></div>
+		<p class="bottomBt"><button class="btn1 bt1" onclick="window.open('http://data.7m.cn/result_data/index_en.shtml')">Result</button><button class="btn1 bt1" onclick="window.open('http://data.7m.cn/fixture_data/sc_en1.shtml')">Fixture</button></p>
+		<p class="tools">Please download and install <a href="http://www.microsoft.com/downloads/details.aspx?displaylang=en&amp;FamilyID=1e1550cb-5e5d-48f5-b02b-20b602228de6" target="_blank">IE6.0</a> or <a href="http://www.microsoft.com/downloads/details.aspx?displaylang=en&amp;FamilyID=9ae91ebe-3385-447c-8a30-081805b2f90b" target="_blank">IE7.0</a>, <a href="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" target="_blank">Adobe Flash Player</a> and <a href="http://www.microsoft.com/downloads/details.aspx?displaylang=en&amp;FamilyID=993c0bcf-3bcf-4009-be21-27e85e1857b1" target="_blank">Msxml6.0</a> if you can not load this page properly.<br/>Please <a href="http://img.7m.cn/help/tips_en.swf" target="_blank">click here</a> to check related settings when the prompt window cannot display on top.<br /><a href="http://img.7m.cn/url/2/en/7M.CN_LiveScores.url">Download this page's shortcut to desktop</a>.</p>
+	</div>
+	<div class="pageCopy">
+		<script language="javascript" src="http://link.7m.cn/jsdata/18_en.js"></script>
+<div class="link" id="fLinks">
+	<div class="link_title">Friendly links: </div>
+	<div class="link_list">
+		<script language="javascript">
+			if (Accept_Language.indexOf("zh-cn") == -1 && typeof(clear_ad) == "undefined" && (typeof(ADVISIBLE)=="undefined" || ADVISIBLE))
+			{
+				if (typeof(SourceData) != "undefined"){for (var i = 0; i < SourceData.length; ++i){document.write('<a href="' + SourceData[i][1] + '" target="_blank">' + SourceData[i][0] + '</a>\n');}}
+				if (typeof(SourceData2) != "undefined"){for (var i = 0; i < SourceData2.length; ++i){document.write('<a href="' + SourceData2[i][1] + '" target="_blank">' + SourceData2[i][0] + '</a>\n');}}
+			}
+			else
+			{
+				$$("fLinks").style.display = "none";
+			}
+			if (Accept_Language.indexOf("zh-cn") == -1 && (typeof(ADVISIBLE)=="undefined" || ADVISIBLE))
+				$$("slang").style.display = "inline";
+		</script>
+		<a href="http://link.7m.cn/html/18_en.shtm" target="_blank">More&nbsp;&raquo;</a>
+	</div>
+</div>
+<link href="http://bf.zzc.cn/js/nav/nav_style.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.qlLink {
+	padding-right: 150px;
+}
+</style>
+<script language="javascript" src="http://bf.zzc.cn/js/nav/ql_en.js"></script>
+<p><script language="javascript">writeNav();</script></p>
+<p>- <a href="javascript:" onclick="window.open('http://help.7m.cn/sm_en.htm','','width=560,height=220,scrollbars=yes');">Declaration</a> -　- <a href="http://help.7m.cn/declaration_en.htm" target="_blank">Terms and Conditions</a> -　- <a href="javascript:" onclick="window.open('http://help.7m.cn/jump.aspx?l=en&page=sentmessage&t=0','','width=470,height=470,scrollbars=yes');">Contact Us</a> -　- <a href="javascript:" onclick="window.open('http://help.7m.cn/jump.aspx?l=en&page=sentmessage&t=1','','width=470,height=470,scrollbars=yes');">Report errors</a> -　- <a href="javascript:" onclick="window.open('http://help.7m.cn/ads_en.htm','','width=450,height=245')">Ad Contact</a> -　- <a href="javascript:scroll(0,0)">Top</a> -　- <a href="http://sitemap2.7m.cn/index_en.shtml" class="tnl1" target="_blank">Website Navigation</a> -</p>
+<p>Notice: Please subject to <font color="#FF0000">GMT+0800</font> if there is no other time zone mark in our info.<br>Copyright &copy; 2003 - <script language="javascript">document.write((new Date()).getFullYear());</script> Power By www.7m.cn All Rights Reserved.</p>
+<p style="color:#939393">Attention: Third parties may advertise their products and/or services on our website.7M does not warrant the accuracy, adequacy or completeness of their contents. <br/>Your dealings with such third parties are solely between you and such third parties and we shall not be liable in any way for any loss or damage of any sort incurred by you.</p>	</div>
+</div>
+<table id="leftmove" class="floatad"><tr><td></td></tr></table>
+<table id="rightmove" class="floatad"><tr><td></td></tr></table>
+<script language="javascript">mobileCheck('en')</script>
+</body>
+</html>
+<script language="javascript" src="http://en-live.7m.com.cn/b1/show_live_b_en.js"></script>
+<script language="javascript" src="http://en-live.7m.com.cn/b1/move_b.js"></script>
+<script type="text/javascript" language="javascript" src="http://www.7m.cn/js/addmessagediv.js?l=en&t=h" id="spt_message"></script>
+<script type="text/javascript" language="javascript" src="http://7mad.7m.cn/ap/prom_newsports/en/addpop.js?l=en" id="spt_pop"></script>
+<div style="display:none">
+	<script language="javascript" id="countObj"  src="http://count.7m.cn/count_soccerlive.js?lang=en"></script>
+</div>

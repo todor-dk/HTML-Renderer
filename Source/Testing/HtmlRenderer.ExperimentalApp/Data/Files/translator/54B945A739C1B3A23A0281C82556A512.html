@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Translator</title>
+    <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="site.css" rel="stylesheet" />
+    <script src="jsDraw2DX.js"></script>
+    <script src="site.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>Gallifreyan&nbsp;Translator</h1>
+    </div>
+    <div class="body">
+        <div class="translate">
+            <div class="label">
+                <label>
+                    Enter text to translate:
+                </label>
+            </div>
+            <div class="text">
+                <textarea id="textToTranslate" maxlength="200"></textarea>
+            </div>
+        </div>
+        <div id="translation-container">
+            <div id="translation"></div>
+        </div>
+        <script type="text/JavaScript">
+            var canvas = document.getElementById("translation");
+            window.gallifreyan.graphics.initialize(canvas);
+
+            var backgroundColor = '#EEEEEE';
+            var color = '#144eee';
+
+            var textToTranslate = document.getElementById("textToTranslate");
+            textToTranslate.onchange = function (event, ui) {
+                window.gallifreyan.graphics.clear();
+
+                var sentence = new gallifreyanSentence(400, 375, 300, 2, color, backgroundColor, textToTranslate.value);
+                sentence.write();
+            };
+
+            var parameter = getParameterByName("text");
+            if (parameter) {
+                textToTranslate.value = parameter;
+                textToTranslate.onchange();
+            }
+        </script>
+    </div>
+    <div class="footer">
+        <span class="copyright">Devon Rohlfing &copy; 2015</span>
+    </div>
+</body>
+</html>

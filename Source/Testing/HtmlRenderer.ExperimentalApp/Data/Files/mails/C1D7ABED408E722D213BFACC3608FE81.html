@@ -1,0 +1,1624 @@
+
+
+ 
+  
+
+
+
+
+
+
+
+    
+    
+	
+    
+        
+    
+                
+    
+    
+    
+    
+	
+	
+	
+	
+    
+        
+    
+ 
+
+
+
+
+
+
+
+ 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="keywords" content="email, faq, questions, password, setup, server"/>
+<meta name="description" content="Answers to common EarthLink email questions"/>
+
+<script type="text/javascript">
+    function ClearInput(value, id) { // This calls our function ClearInput, and the two variables we will need for it to function the original value and the id.
+        var input = document.getElementById(id); // Gets the input field based on its id.
+
+        if (value == input.value) { // If the default value is equal to the current value.
+            input.value = ''; // Empty It.
+        } else { // Else the value is not equal to the current input field value.
+            input.value = input.value; // Leave it the same.
+        } // End Else.
+    } // Close Function.
+</script>
+
+
+
+<title>EarthLink Email FAQ</title>
+
+    <!--normal site -->
+    
+    <link href="/css/styles.css" rel="stylesheet" type="text/css"/>
+<!--[if IE]>
+
+<link href="/css/ie.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+
+    
+    <link href="/css/template.css" rel="stylesheet" type="text/css"/>
+
+<!-- Added by Todd Jun 28 -->
+
+
+
+
+
+<link rel="icon" type="image/vnd.microsoft.icon" href="/images/earthlink-favicon.ico"/>
+
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+
+
+
+<script type="text/javascript" src="/js/main_dropdown.js"></script>
+
+<script language="javascript" type="text/javascript">
+
+//Added by Todd Aut 12, 2010
+
+ function ctcpopup(article)
+ {
+ 
+	var ctcWin;
+	var ctcURL;
+	var ctc1,ctc2;
+ 
+ if (article == 'Dialup')
+    {
+
+        ctc1 = "https://client.holdfree.net/earthlink/support/popup.jsp";
+		ctc2 = "account=&email=&article=Dialup";
+		ctcURL = ctc1 + "?" + ctc2;
+		window.open(ctcURL, '_blank', 'width=300,height=281,toolbar=no,menubar=no,location=no');
+		ctcWin.focus();
+		
+    }
+    else if (article == 'Dsl')
+    {
+        
+		ctc1 = "https://client.holdfree.net/earthlink/support/popup.jsp";
+		ctc2 = "account=&email=&article=Dsl";
+		ctcURL = ctc1 + "?" + ctc2;
+        window.open(ctcURL, '_blank', 'width=300,height=281,toolbar=no,menubar=no,location=no');
+		ctcWin.focus();
+		
+    }
+	else if (article == 'Dslbridge')
+    {
+        
+        ctc1 = "https://client.holdfree.net/earthlink/support/popup.jsp";
+		ctc2 = "account=&email=&article=Dslbridge";
+		ctcURL = ctc1 + "?" + ctc2;
+        window.open(ctcURL, '_blank', 'width=300,height=281,toolbar=no,menubar=no,location=no');
+		ctcWin.focus();
+    }
+	else 
+    {
+        
+		
+        ctc1 = "https://client.holdfree.net/earthlink/support/popup.jsp";
+		ctc2 = "account=&email=&article=Service";
+		ctcURL = ctc1 + "?" + ctc2;
+        window.open(ctcURL, '_blank', 'width=300,height=281,toolbar=no,menubar=no,location=no');
+		ctcWin.focus();
+    }
+
+ } 
+
+
+function validate_required(field,alerttxt)
+{
+with (field)
+  {
+  if (value==null || value=="" || value=="Enter a Key word or a phrase")
+    {
+    clicky.goal('829');
+    alert(alerttxt);
+    return false;
+    }
+  else
+    {
+    return true;
+    }
+  }
+}
+
+function validate_search(thisform)
+{
+with (thisform)
+  {
+  if (validate_required(q,"Please enter a valid search word or phrase")==false)
+  {q.focus();return false;}
+  }
+}
+
+
+// Added by Todd Aug 10, 2010
+
+function set_cookie(c_name,value)
+{
+    var exdate=new Date();
+    var expiredays = 1;
+
+    exdate.setDate(exdate.getDate());
+    document.cookie=c_name+ "=" +escape(value);
+}
+
+function get_cookie ( cookie_name )
+{
+  var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
+
+  if ( results )
+    return ( unescape ( results[2] ) );
+  else
+    return ("Not logged in");
+}
+
+
+function loginpopup()
+{
+
+
+// Toggle login popup depending on cookie state.
+
+        //var testcookie = document.cookie;
+        //var testcookieArr = testcookie.split(';');
+
+        var isAuthenicated = document.cookie;
+        var displayName = get_cookie ( "contact_name" );
+        var displayLogin = get_cookie ("next_visit");
+        //alert(displayLogin);
+        //if (displayLogin === "true")
+        //{
+            if (displayName === "Not logged in")
+            {
+                if (displayLogin === "Not logged in")
+                {
+                  loginOnOff('auto');
+                }
+                else
+                {
+                  set_cookie('next_visit', 'false');
+                  // alert("No Soup for You!")
+                }
+            //document.getElementById('myButton').disabled="disabled";
+	        }
+            else
+                {
+              //alert("Already Logged in!");
+                }
+         //}
+         // end for loop
+
+}  //end loginpopup
+
+
+
+function loginOnOff(state)
+{
+    var loginElement=document.getElementById('login_overlay');
+    var thanksElement=document.getElementById('thanks_overlay');
+    var chatElement=document.getElementById('chat_overlay');
+    var loginbgElement=document.getElementById('transparent_white');
+    var autoElement=document.getElementById('auto_pop_overlay');
+
+    if (state == 'on')
+    {
+
+        if (autoElement)
+            autoElement.style.display = "none";
+        if(thanksElement)
+            thanksElement.style.display = "none";
+        if(chatElement)
+            chatElement.style.display = "none";
+        if(loginElement)
+            loginElement.style.display = "block";
+        if(loginbgElement)
+            loginbgElement.style.display = "block";
+    }
+    else if(state == 'thanks')
+    {
+        if (autoElement)
+            autoElement.style.display = "none";
+        if(chatElement)
+            chatElement.style.display = "none";
+        if(loginElement)
+            loginElement.style.display = "none";
+        if(thanksElement)
+            thanksElement.style.display = "block";
+        if(loginbgElement)
+            loginbgElement.style.display = "block";
+
+        // Automatically close thank you pop up after 5 sec.
+        setTimeout("closeThanks()", 5000);
+    }
+    else if(state == 'chat')
+    {
+        if (autoElement)
+            autoElement.style.display = "none";
+        if(chatElement)
+            chatElement.style.display = "block";
+        if(loginElement)
+            loginElement.style.display = "none";
+        if(thanksElement)
+            thanksElement.style.display = "none";
+        if(loginbgElement)
+            loginbgElement.style.display = "block";
+
+        // Automatically redirect after 5 seconds.
+        
+    }
+    else if(state == 'auto')
+    {
+        if (autoElement)
+            autoElement.style.display = "block";
+        if(thanksElement)
+            thanksElement.style.display = "none";
+        if(chatElement)
+            chatElement.style.display = "none";
+        if(loginElement)
+            loginElement.style.display = "none";
+        if(loginbgElement)
+            loginbgElement.style.display = "block";
+
+        // Automatically redirect after 5 seconds.
+        
+    }
+    else
+    {
+
+        if (autoElement)
+            autoElement.style.display = "none";
+        if(chatElement)
+            chatElement.style.display = "none";
+        if(thanksElement)
+            thanksElement.style.display = "none";
+        if(loginElement)
+            loginElement.style.display = "none";
+        if(loginbgElement)
+            loginbgElement.style.display = "none";
+    }
+}
+
+function redirectChat()
+{
+    closeChat();
+    window.location = '';
+}
+
+function closeBtnReset()
+{
+    var close_btn_span = document.getElementById("close_btn_txt");
+    close_btn_span.innerText = "Registered users - sign in";
+}
+
+function closeThanks()
+{
+    var thanksElement=document.getElementById('thanks_overlay');    
+    var loginbgElement=document.getElementById('transparent_white');
+    
+    thanksElement.style.display = "none";
+    loginbgElement.style.display = "none"; 
+    closeLoginPopup();       
+}
+
+function closeChat()
+{
+    var chatElement=document.getElementById('chat_overlay');    
+    var loginbgElement=document.getElementById('transparent_white');
+    
+    chatElement.style.display = "none";
+    loginbgElement.style.display = "none"; 
+    closeLoginPopup();       
+}
+
+
+function closeLoginPopup()
+{
+    var date = new Date();
+    date.setTime(date.getTime() - 99999999);
+    var expires = "; expires=" + date.toGMTString();
+    document.cookie = "displaypopup=" + expires + "; path=/";            
+}
+
+
+
+
+</script>
+
+
+
+
+</head>
+<!-- Login in Popup -->
+<!-- To add a new page, get the content article id and add a new "or" condition to the if statement below  before the word then -->
+<!-- for example  add "or content.item("_cmsId") = content #" -->
+
+
+<body>
+
+
+<!-- ID: 35746 --> 
+<!-- Update: Sept. 17 - 2:01 -->
+
+
+
+<!-- Begin Configuration Code -->
+<script type="text/javascript">
+
+    if (typeof (lpUASunit) == "undefined")
+        var lpUASunit = "proactivesvc";
+    var lpUASimagesPath = "/LivePerson/chat_deployment_local-proactivesvc/images";
+
+
+    //Optional Variables
+    if (typeof (lpUASlanguage) == "undefined")
+        var lpUASlanguage = "english"; // Define the language, default value is english
+    if (typeof (lpUASimagesFolder) == "undefined")
+        var lpUASimagesFolder = "proactivesvc-english"; // Define images folder, default value is lpUASunit-lpUASlanguage
+
+
+    // Define the invitation position from the left and top of the browser window
+    if (typeof (lpUASinvitePositionX) == "undefined")
+        var lpUASinvitePositionX = 50;
+    if (typeof (lpUASinvitePositionY) == "undefined")
+        var lpUASinvitePositionY = 50;
+
+    // Define the button and invitation ALT properties
+    var lpCustomInvitationTitle = "Invitation popup window for live chat with a representative";
+    var lpCustomInvitationCloseTitle = "Close chat invitation";
+
+    var lpUAScontext = document.title;
+
+</script>
+
+
+<script type="text/javascript" src="/js/configuration_baseline.js"></script>
+
+<noscript>
+<p>Script section containing code for Liveperson Chat Solution</p>
+</noscript>
+
+<!-- End Configuration Code -->
+<script type="text/javascript">
+
+var lpUASsection = "PSC";  // This is the LivePerson Varibles this should be PSC for all PSC only content and KB for all PSC and KB content
+var lpUASsubSection="psc-Main"; // This varible is for the type of content, to psc-Main for all content except for the contact phone page
+var lpUASbrand = "elnk"; // This varible is for the brand, which at the time will always be EarthLink
+var lpUASarticleID = 35746;   // This varible is for the article ID
+</script>
+
+
+<!-- This section of the code should be listed in the end of the body tag of all web pages at support.earthlink.net
+  LivePerson EarthLink Proactive Chat Code -->
+
+<script type="text/javascript" src="/js/conversion_script.js"></script>
+
+<script type="text/javascript" src="https://sales.liveperson.net/hc/LPearthlink_elink1/x.js?cmd=file&amp;file=chatScript3&amp;site=LPearthlink_elink1"></script>
+
+<noscript>
+<p>Script section containing code for Liveperson Chat Solution</p>
+</noscript>
+<!-- End LivePerson EarthLink Proactive Chat Code -->
+
+  <!-- if curFolder = "PSC"  End LivePerson EarthLink Proactive Chat Code for PSC -->
+
+<!-- TRANSPARENT WHITE OVERLAY BENEATH LOGIN OVERLAY -->
+<div id="transparent_white"></div>
+
+<!-- TOP NAV -->
+
+<div id="top_bg">
+<div id="top_container">
+<div id="top_nav" class="textalign_right">
+  
+           <a href='http://www.earthlink.net' target=''>EarthLink.net</a>
+      <img src="/images/topnav_separator.gif" align="absmiddle"/>
+      
+           <a href='http://my.earthlink.net' target=''>myEarthLink</a>
+      <img src="/images/topnav_separator.gif" align="absmiddle"/>
+      
+           <a href='http://webmail.earthlink.net' target=''>Web Mail</a>
+      <img src="/images/topnav_separator.gif" align="absmiddle"/>
+      
+           <a href='http://my.earthlink.net/channel/BUSINESS' target=''>Biz Center</a>
+      <img src="/images/topnav_separator.gif" align="absmiddle"/>
+      
+           <a href='https://myvoice.earthlink.net' target=''>myVoice</a>
+      <img src="/images/topnav_separator.gif" align="absmiddle"/>
+      
+           <a href='http://myaccount.earthlink.net' target=''>My Account</a>
+      <img src="/images/topnav_separator.gif" align="absmiddle"/>
+      
+           <a href='https://support.earthlink.net' target=''>Support</a>
+      
+      
+         </div>
+    </div>
+</div>
+
+<!-- LOGIN OVERLAY -->
+<div id="login">
+
+	
+
+    <!-- LOGIN / LOGOUT MESSAGE AREA -->
+    <div class="textalign_right">
+        <!-- table border="0" align="right" cellpadding="0" cellspacing="0" width="420" -->
+        <table border="0" align="right" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="orange_text">
+                    
+                        
+                       <!--  Welcome back Message Block-->
+                </td>                
+                <td class="dropdown">
+                    
+                        							                
+					</td>
+					
+					<td class="orange_text">                
+							&nbsp;                
+							
+							
+									
+																						New User? <strong><a href="javascript:loginOnOff('on')" class="royalblue_text">Sign In</a></strong> and help us improve your support experience. <img src="/images/black_arrow.gif"/>
+											
+									
+									
+							                    
+					</td>
+            </tr>
+        </table>    <!--  Display Login Message -->
+    </div>	<!-- textalign_right -->
+	
+		<!-- if content.item("_cmsFolder:1") <> "People PC Site"  -->
+
+	  <!-- if content.item("_cmsFolder:1") = "People PC Site"  -->
+    
+     
+    
+    
+        
+            
+    
+    
+    <!-- START LOGIN POPUP -->
+    <div id="login_overlay">
+        <div class="close_button"><a href="javascript:loginOnOff('off'); closeLoginPopup();" class="grey_text default">close</a> <a href="javascript:loginOnOff('off'); closeLoginPopup();" class="grey_text default"><img src="/images/close_box.gif" border="0"/></a></div>
+        <br/>
+        <img src="/images/account_login.gif" class="account_login"/><br/>
+
+            <form name="signin_form" id="sign_form" method="post" action="/articles/email/earthlink-email-faq.php">
+                <input type="hidden" name="attempt" value="1"/>            
+                <span class="darkblue_text"><strong id="close_btn_txt">Registered users - sign in</strong><br/><br/>
+                <span class="grey_text"><strong>Email Address :</strong></span><br/>
+                <input type="text" size="25" name="email"/><br/>
+                <span class="grey_text font_10">Example: your_address @peoplepc.com </span><br/><br/>
+                <span class="grey_text"><strong>Password:</strong></span><br/>
+                <input type="password" size="25" name="password"/><br/>
+                
+                <br/><br/>
+                <div class="textalign_center">
+                    <input type="submit" name="submit" value="  Sign In  "/>
+                </div>   
+            </form>
+
+    </div>
+ 
+<!-- START Auto POPUP by Todd -->
+    <div id="auto_pop_overlay">
+        <div class="close_button">
+            <a href="javascript:loginOnOff('off'); set_cookie('next_visit', 'false');  clicky.goal('709');  closeLoginPopup();" class="grey_text default">close</a>
+            <a href="javascript:loginOnOff('off'); set_cookie('next_visit', 'false');  clicky.goal('709');  closeLoginPopup();" class="grey_text default"><img src="/images/close_box.gif" border="0"/></a></div>
+        <br/>
+        <img src="/images/account_login.gif" class="account_login"/><br/>
+
+            <form name="signin_form" id="sign_form" method="post" action="/articles/email/earthlink-email-faq.php">
+                <input type="hidden" name="attempt" value="1"/>
+                <span class="darkblue_text"><strong id="close_btn_txt"><b>
+					<h3>Please log in with your  PeoplePC email address and password.</h3></b>This helps us provide the best information possible&#44;<br/> and you won&#8217;t have to login on your next visit.</strong><br/><br/>
+                <span class="grey_text"><strong>Email Address :</strong></span><br/>
+                <input type="text" size="25" name="email"/><br/>
+                <span class="grey_text font_10">Example: your_address @peoplepc.com </span><br/><br/>
+                <span class="grey_text"><strong>Password:</strong></span><br/>
+                <input type="password" size="25" name="password"/><br/>
+                
+                <br/><br/>
+                <div class="textalign_center">
+                    <input type="submit" name="submit" value="  Sign In  "/>
+                </div>
+            </form>
+
+    </div>
+
+    <!-- START LOGIN POPUP -->
+    <div id="thanks_overlay">
+        <div class="close_button"><a href="javascript:loginOnOff('off'); closeLoginPopup();" class="grey_text default">close</a> <a href="javascript:loginOnOff('off'); closeLoginPopup();" class="grey_text default"><img src="/images/close_box.gif" border="0"/></a></div>
+        <br/>
+        <img src="/images/account_login.gif" class="account_login"/><br/>
+
+        <h2>Thank You. You have successfully logged in.</h2>
+    </div>
+
+    <div id="chat_overlay">
+        <div class="close_button"><a href="javascript:loginOnOff('off'); closeLoginPopup();" class="grey_text default">close</a> <a href="javascript:loginOnOff('off'); closeLoginPopup();" class="grey_text default"><img src="/images/close_box.gif" border="0"/></a></div>
+        <br/>
+        <img src="/images/account_login.gif" class="account_login"/><br/>
+
+        <h2>Sorry, there is a problem with this account, One moment while we direct you to a Live Agent.</h2>
+    </div>
+    
+    <!-- END LOGIN POPUP --> 
+
+
+    
+    
+    <script type="text/javascript">
+
+        // Toggle login popup depending on cookie state.
+
+        var cookie = document.cookie;
+        var cookieArr = cookie.split(';');
+        for (var i = 0; i < cookieArr.length; i++) {
+            var tempArr = cookieArr[i].split('=');
+            if (tempArr[0].replace(/[ \t\r\n]/g, "") == "displaypopup") {
+                if (tempArr[1] == "true") {
+                    loginOnOff('on');
+                }
+                else if (tempArr[1] == "thanks") {
+                    loginOnOff('thanks');
+                }
+                else if (tempArr[1] == "chat") {
+                    loginOnOff('chat');
+                }
+                else {
+                    loginOnOff('off');
+                }
+            }
+        } 
+        
+    </script>
+    
+    
+
+    
+    
+    
+        
+    
+  
+    
+</div>
+
+
+<div id="main_container">
+    <!-- TOP PART OF MAIN CONTENT AREA WITH LOGO, SEARCH FORM & SILHOUETTES -->
+    <div id="main_header">
+        <!-- live help updated 4/14/10 -->     
+          
+            
+                
+                    <a id="_lpChatBtn" href='https://sales.liveperson.net/hc/LPearthlink_elink1/?cmd=file&file=visitorWantsToChat&site=LPearthlink_elink1&byhref=1&SESSIONVAR!skill=elnk-support-english' onClick="lpButtonCTTUrl = 'https://sales.liveperson.net/hc/LPearthlink_elink1/?cmd=file&file=visitorWantsToChat&site=LPearthlink_elink1&byhref=1&SESSIONVAR!skill=elnk-support-english&referrer='+escape(document.location); lpButtonCTTUrl = (typeof(lpAppendVisitorCookies) != 'undefined' ? lpAppendVisitorCookies(lpButtonCTTUrl) : lpButtonCTTUrl); lpButtonCTTUrl = ((typeof(lpMTag)!='undefined' && typeof(lpMTag.addFirstPartyCookies)!='undefined')?lpMTag.addFirstPartyCookies(lpButtonCTTUrl):lpButtonCTTUrl);window.open(lpButtonCTTUrl,'chatLPearthlink_elink1','width=475,height=400,resizable=yes');return false;"> 
+                
+            
+        
+        <img src="/images/silhouettes.gif" class="float_right"/></a>
+        <img src="/images/earthlink_supportcenter.gif" style="margin-top:32px;"/><br/>
+        <img src="/images/search_knowledgecenter.gif" style="margin-left:97px;"/><br/>
+        
+        <!--googlePSC Live Site-->
+        
+            <form id="search cse-search-box" name="search" action="/search.php" onsubmit="return validate_search(this)" style="margin-left:97px; position: absolute;">
+                
+                    <input type="hidden" name="cx" value="007027725621543004989:cc7gujtigng"/>
+                
+						
+                <input type="hidden" name="cof" value="FORID:10"/>
+                <input type="hidden" name="ie" value="UTF-8"/>
+                <table cellspacing="0" cellpadding="0" border="0">
+                    <tr>
+
+                       <td valign="top"><input type="text" name="q" id="q" size="45" value="Enter a Key word or a phrase" onclick="ClearInput('Enter a Key word or a phrase', this.id);" class="search_text"/></td>
+
+                        <td valign="top">&nbsp;&nbsp;<input type="image" name="sa" value="Search" src="/images/search_button.gif"/></td>
+                    </tr>
+                </table>
+            </form>
+        
+
+            <script type="text/javascript" src="//www.google.com/jsapi"></script>
+            <script type="text/javascript">                google.load("elements", "1", { packages: "transliteration" });</script>
+            <script type="text/javascript" src="//www.google.com/coop/cse/t13n?form=cse-search-box&amp;t13n_langs=en"></script>
+            <script type="text/javascript" src="//www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en&sitesearch=true"></script>
+        
+    </div>
+
+
+<!-- Added by Todd Jun 28 -->
+
+
+
+    <!-- Main Nav Here -->
+    <div id="main_nav" style="text-align:left;">
+        <div id="orange_bar"></div>
+        
+        <div id="nav_menu">
+            <ul class="menu" id="navmenu">
+			
+                   
+                <li><!-- Nav 1 -->
+				
+                    <li class="nonactive">
+                        
+                       
+                       <a href="/index.php" target="_self" class="menulink">Home</a>
+                       
+
+
+
+
+                   
+                </li>
+               </li>
+                
+                <li><!-- Nav 2 -->
+				
+                    <li class="nonactive">
+                        
+                       
+                       <a href="/articles/customer-service/new-to-earthlink.php" target="_self" class="menulink">Getting Started</a>
+                       
+
+
+
+
+                   
+                   
+                   <ul>
+
+                    
+                       
+                        <li class="topline"><a href="/articles/customer-service/new-to-earthlink.php">New to EarthLink</a></li>
+                       
+                        
+                       
+                        <li><a href="https://myaccount.earthlink.net/cam/passmain.jsp" target="_blank">Forgot Your Password</a></li>
+                       
+                        
+                       
+                        <li>Password Help</li>
+                       
+                        
+                       
+                        <li><a href="/software/download-center.php">Download Center</a></li>
+                       
+                        
+                    </ul>
+                   
+                </li>
+               </li>
+                
+                <li><!-- Nav 3 -->
+				
+                    <li class="nonactive">
+                        
+                       
+                       <a href="/articles/customer-service/earthlink-billing-faq.php" target="_self" class="menulink">Billing Questions</a>
+                       
+
+
+
+
+                   
+                   
+                   <ul>
+
+                    
+                       
+                        <li class="topline"><a href="/articles/customer-service/invoice-information.php">How to read your invoice</a></li>
+                       
+                        
+                       
+                        <li><a href="/articles/customer-service/making-a-one-time-online-credit-card-payment.php">How to make a credit card payment online</a></li>
+                       
+                        
+                       
+                        <li><a href="/articles/tools/how-to-update-your-credit-card-information.php">How to update your credit card information online</a></li>
+                       
+                        
+                       
+                        <li><a href="https://myaccount.earthlink.net" target="_blank">MyAccount</a></li>
+                       
+                        
+                    </ul>
+                   
+                </li>
+               </li>
+                
+                <li><!-- Nav 4 -->
+				
+                    <li class="active">
+                        <div class="left"></div><div class="mid">
+                       
+                       <a href="/articles/email/earthlink-e-mail.php" target="_self" class="menulink">Email</a>
+                       
+
+
+
+</div><div class="right"></div>
+                   
+                   
+                   <ul>
+
+                    
+                       
+                        <li class="topline"><a href="http://support.earthlink.net/articles/email/earthlink-email-and-server-settings-by-domain-name.php" target="_blank">Server Settings</a></li>
+                       
+                        
+                       
+                        <li><a href="/articles/email/earthlink-email-faq.php">EarthLink Email FAQ</a></li>
+                       
+                        
+                       
+                        <li><a href="http://support.earthlink.net/articles/email/email-answer-wizard-v.2/" target="_blank">Email Answer Wizard</a></li>
+                       
+                        
+                       
+                        <li><a href="http://csupdate.earthlink.net/win/mailsetup/EarthLinkMailSetup.exe" target="_blank">Email configuration tool (Outlook & Outlook Express)</a></li>
+                       
+                        
+                       
+                        <li><a href="/articles/email/e-mail-setup-configuration.php">Setup/Configuration</a></li>
+                       
+                        
+                       
+                        <li><a href="/articles/email/e-mail-abuse.php">Email Abuse</a></li>
+                       
+                        
+                       
+                        <li><a href="http://webmail.earthlink.net" target="_blank">EarthLink Web Mail</a></li>
+                       
+                        
+                    </ul>
+                   
+                </li>
+               </li>
+                
+                <li><!-- Nav 5 -->
+				
+                    <li class="nonactive">
+                        
+                       
+                       <a href="/articles/dsl/earthlink-dsl.php" target="_self" class="menulink">High Speed</a>
+                       
+
+
+
+
+                   
+                   
+                   <ul>
+
+                    
+                       
+                        <li class="topline"><a href="http://orderstatus.earthlink.net" target="_blank">Get the Status of your New Order</a></li>
+                       
+                        
+                       
+                        <li><a href="/articles/dsl/earthlink-dsl.php">DSL Support</a></li>
+                       
+                        
+                       
+                        <li><a href="/articles/cable/welcome-to-earthlink-cable.php">Cable Support</a></li>
+                       
+                        
+                       
+                        <li><a href="/articles/vas/home-networking.php">Home Networking Support</a></li>
+                       
+                        
+                       
+                        <li><a href="/videos/dsl/parent.html">DSL Hardware Setup Tutorial</a></li>
+                       
+                        
+                       
+                        <li><a href="/articles/dsl/earthlink-dsl-and-home-phone-services.php">DSL and Home Phone Service Support</a></li>
+                       
+                        
+                    </ul>
+                   
+                </li>
+               </li>
+                
+                <li><!-- Nav 6 -->
+				
+                    <li class="nonactive">
+                        
+                       
+                       <a href="/articles/dialup/earthlink-dial-up.php" target="_self" class="menulink">Dial-up</a>
+                       
+
+
+
+
+                   
+                   
+                   <ul>
+
+                    
+                       
+                        <li class="topline"><a href="/access-numbers/index.php">Find an EarthLink Access Number</a></li>
+                       
+                        
+                       
+                        <li><a href="/articles/vas/creating-a-manual-dialup-connection-to-earthlink.php">How to create a manual dial-up connection to EarthLink</a></li>
+                       
+                        
+                    </ul>
+                   
+                </li>
+               </li>
+                
+                <li><!-- Nav 7 -->
+				
+                    <li class="nonactive">
+                        
+                       
+                       <a href="/articles/web-hosting/the-new-earthlink-web-hosting-control-center.php" target="_self" class="menulink">Web Hosting</a>
+                       
+
+
+
+
+                   
+                   
+                   <ul>
+
+                    
+                       
+                        <li class="topline"><a href="https://cc.earthlink.net" target="_blank">Web Hosting Control Center</a></li>
+                       
+                        
+                       
+                        <li><a href="https://control.earthlink.net" target="_blank">The New EarthLink Web Hosting Control Center</a></li>
+                       
+                        
+                       
+                        <li><a href="https://myaccount.earthlink.net/cam/whlogin.jsp" target="_blank">Web Hosting MyAccount</a></li>
+                       
+                        
+                       
+                        <li><a href="https://webmail.hosting.earthlink.net/" target="_blank">Web Hosting Web Mail</a></li>
+                       
+                        
+                       
+                        <li><a href="http://www.earthlink.net/#ui-tabs-5" target="_blank">EarthLink Sitebilder (Trellix)</a></li>
+                       
+                        
+                    </ul>
+                   
+                </li>
+               </li>
+                
+                <li><!-- Nav 8 -->
+				
+                    <li class="nonactive">
+                        
+                       
+                       <a href="/contact/contact.php" target="_self" class="menulink">Contact Us</a>
+                       
+
+
+
+
+                   
+                   
+                   <ul>
+
+                    
+                       
+                        <li class="topline"><a href="http://support.earthlink.net/chat" target="_blank">Get Live Chat help now</a></li>
+                       
+                        
+                       
+                        <li><a href="/contact/outages.php">Known Outages</a></li>
+                       
+                        
+                       
+                        <li><a href="/contact/contact.php">More Contact Info</a></li>
+                       
+                        
+                    </ul>
+                   
+                </li>
+               </li>
+                
+                <li><!-- Nav 9 -->
+				
+                    <li class="nonactive">
+                        
+                       
+                       <a href="/contact/outages.php" target="_self" class="menulink">Known Outages</a>
+                       
+
+
+
+
+                   
+                   
+                   <ul>
+
+                    
+                       
+                        <li class="topline"><a href="/contact/outages.php">Known Outages</a></li>
+                       
+                        
+                    </ul>
+                   
+                </li>
+               </li>
+                
+
+                
+            </ul>
+        
+        </div>
+        <!-- END #nav_menu-->
+    </div>
+    <!-- END #main_nav-->
+    <!-- END MAIN NAV -->
+
+
+    <!-- START CONTENT -->
+    
+    
+
+
+<div id="main_content">
+    <!-- MAIN CONTENT AREA UNDER NAVIGATION -->
+    
+    <div id="one_col">
+    
+        
+<span class='st_email_hcount' st_image="https://support.earthlink.net/images/earthlink_email_supportcenter.gif"></span>
+        <div style="float:right;">
+ <a href="/articles/email/earthlink-email-faq.php?bmurl=%2Farticles%2Femail%2Fearthlink%2Demail%2Dfaq%2Ephp&bmtitle=" class="darkblue_text font_11 default">Save to Favorites</a> 
+    | <a href="#" onclick="printContent();" class="darkblue_text font_11 default">Print Page</a>
+    | <a href="http://www.web2pdfconvert.com/convert" class="darkblue_text font_11 default">Save as PDF</a>
+</div>
+
+        
+<br/>
+ 
+        
+        
+        <br/><br/>
+        <div style="clear:both;" />  
+               
+        <!-- title -->
+        <div class="subtitle">EarthLink Email FAQ</div>
+            
+            <!-- EarthLink tag Set Here -->
+            <div id="tagsetBox">
+                <div class="tagset">
+                    <div class="tagset_title">EarthLink Email FAQ</div>
+                    <ul class="tagset_list">
+
+<!-- Added by Todd Jun 28 2010-->
+
+    
+<!-- 
+   -->   
+
+                        <li>Article ID:  35746</li>
+                        <li>Last modified date: January 26, 2016 16:01</li>
+
+                     
+
+                        <!-- EarthLink Tags -->
+
+<!-- 4G-->
+
+<!-- ER-->
+
+<!-- Email -->
+
+
+
+
+	
+
+	
+
+	<li>Email Operating System(s): 	        </li>
+			
+	
+	
+	
+		
+	
+	
+
+
+<!-- Browsers -->
+
+
+<!-- Dialup -->
+
+
+<!-- DSL -->
+
+
+<!-- Cable -->
+
+
+<!-- SAT -->
+
+
+<!-- Web Hosting  -->
+
+
+<!-- VAS -->
+
+
+<!-- CS -->
+
+
+<!-- Sales -->
+
+<!-- Tools -->
+
+
+<!-- Policy/Procedures -->
+
+
+<!-- Saves -->
+
+                        
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- WYSIWYG -->
+
+            <!-- KB FAQ HERE -->
+            <!-- title -->
+         <div class="subtitle">Summary </div>
+            
+              
+              <div class="tagset"><p style=" text-align: left;"><strong>Answers to common EarthLink e-mail questions</strong><br/>
+&#160;</p>
+
+<p style=" text-align: center;">&#160;</p></div>
+            
+
+
+            
+            <div class="subtitle">EarthLink Email FAQ</div>
+            
+            <!-- FAQ -->
+
+            <div id="faqbox">
+
+                
+                
+                    <div class="faqtitle">Frequently Asked Questions about EarthLink Email</div>   
+                    <ul class="faq">
+                        
+                        
+                            <li><a href="#1-1">What are EarthLink's IMAP email settings?</a></li>                        
+                        
+                            <li><a href="#1-2">What are EarthLink's incoming (POP3) and outgoing (SMTP) email server settings?</a></li>                        
+                        
+                            <li><a href="#1-3">What options do I have for setting up a new password?</a></li>                        
+                        
+                            <li><a href="#1-4">I can receive email, but not send it. What should I do?</a></li>                        
+                        
+                            <li><a href="#1-5">Where can I check my EarthLink email online?</a></li>                        
+                        
+                            <li><a href="#1-6">Can I check my EarthLink email both online and in an email program?</a></li>                        
+                        
+                            <li><a href="#1-7">Why does my email disappear off the server when I use an email program?</a></li>                        
+                        
+                            <li><a href="#1-8">How much storage do I have online?</a></li>                        
+                        
+                            <li><a href="#1-9">How big of an email attachment am I allowed to send?</a></li>                        
+                        
+                            <li><a href="#1-10">How many email addresses can I have with my EarthLink account?</a></li>                        
+                        
+                            <li><a href="#1-11">How can I block spam?</a></li>                        
+                        
+                            <li><a href="#1-12">My friend says their domain is being blocked by EarthLink, how do I get their domain unblocked?</a></li>                        
+                        
+                    </ul>  
+                
+
+            
+                
+                
+                    <div class="subtitle_blue">Frequently Asked Questions about EarthLink Email</div>
+                 
+                    <!-- FAQ Answer -->
+                    
+                    
+                        <a name="1-1"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">What are EarthLink's IMAP email settings?</div>
+                            <div class="answer">
+<p>Details on configuring different programs or devices to use IMAP can be found at the following article.</p>
+
+<p><a href="https://support.earthlink.net/articles/email/imap-email.php">https://support.earthlink.net/articles/email/imap-email.php</a></p>
+</div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                        <a name="1-2"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">What are EarthLink's incoming (POP3) and outgoing (SMTP) email server settings?</div>
+                            <div class="answer"><p>For step-by-step help setting up your email program, visit our <a href="/articles/email/setting-up-your-email-program.php">Setting Up Your Email Program</a> page.</p>
+
+<table cellpadding="2" border="1" style=" width: 622px;">
+<tr>
+<th scope="row" style=" width: 67px;"><strong>Domain</strong></th>
+<td style=" width: 111px;">
+<div align="center"><strong>earthlink.net</strong></div>
+</td>
+<td style=" width: 117px;">
+<div align="center" style=" width: 130px;"><strong>mindspring.com</strong></div>
+</td>
+<td style=" width: 129px;">
+<div align="center"><strong>onemain.com</strong></div>
+</td>
+</tr>
+
+<tr>
+<th scope="row" style=" width: 67px;"><strong>POP Server</strong></th>
+<td style=" text-align: center; width: 111px;">pop.earthlink.net</td>
+<td style=" text-align: center; width: 117px;">pop.mindspring.com</td>
+<td style=" text-align: center; width: 129px;">pop.onemain.com</td>
+</tr>
+
+<tr>
+<th scope="row" style=" width: 67px;"><strong>SMTP Server</strong></th>
+<td style=" text-align: center; width: 111px;">smtpauth.earthlink.net</td>
+<td style=" text-align: center; width: 117px;">smtpauth.earthlink.net</td>
+<td style=" text-align: center; width: 129px;">smtpauth.earthlink.net</td>
+</tr>
+
+<tr>
+<th scope="row" style=" width: 67px;"><strong>SMTP requires authentication</strong></th>
+<td style=" width: 111px;">
+<div align="center">YES: Complete EarthLink email address and password</div>
+</td>
+<td style=" width: 117px;">
+<div align="center">YES: Complete MindSpring email address and password</div>
+</td>
+<td style=" width: 129px;">
+<div align="center">YES: Complete OneMain email address and password</div>
+</td>
+</tr>
+
+<tr>
+<th scope="row" style=" width: 67px;"><strong>SMTP Port</strong></th>
+<td style=" width: 111px;">
+<div align="center">587</div>
+</td>
+<td style=" width: 117px;">
+<div align="center">587</div>
+</td>
+<td style=" width: 129px;">
+<div align="center">587</div>
+</td>
+</tr>
+</table>
+
+<p>&#160;</p>
+
+<p>EarthLink&#8217;s incoming (POP3) email server is based on your email address.</p>
+
+<p>EarthLink&#8217;s outgoing (SMTP) email server is the same, regardless of your email address.&#160;The outgoing mail server is smtpauth.earthlink.net and it always requires authentication.</p>
+
+<p>Most email programs have an option for outgoing email that says &#8220;My outgoing server requires authentication&#8221;. Check that option and then enter in your entire email address and password.</p>
+
+<p>You may also have to change your email program&#8217;s outgoing SMTP port to 587. The option to change your outbound port number can usually be found under the Advanced tab in your email program&#8217;s account section.</p></div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                        <a name="1-3"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">What options do I have for setting up a new password?</div>
+                            <div class="answer"><p>You can change your password with us anytime you like. &#160;We recommend frequently changing passwords to prevent your account being compromised by guessing your existing password. &#160;The more complex you make your password, the harder it will be to guess.</p>
+
+<p><strong>Minimum Number of Characters</strong>: &#160;8 (We recommend 8. &#160;While you can use as few as 6, EarthLink highly recommends using at least 8 characters.)</p>
+
+<p><strong>Maximum Number of Characters:</strong> 12</p>
+
+<p>The following letters, numbers and special characters are available.</p>
+
+<p><strong>Letters: </strong>&#160;A - Z</p>
+
+<p><strong>Numbers:</strong> &#160;0 - 9</p>
+
+<p><strong>Special Characters: </strong>&#160;! @ # $ % ^ ( ) + = . &#160;, - _</p>
+
+<p>Using Special Characters is highly recommended as it adds an additional layer of security to someone randomly guessing your password.</p>
+
+<p>Additionally, passwords are Case Sensitive. &#160;You can add Upper and lowercase characters to make your password even more secure.</p>
+
+<p>You can change your password on your EarthLink MyAccount page at <a href="http://myaccount.earthlink.net">http://myaccount.earthlink.net</a>. &#160;After you change your password, It will take a few minutes for your password to reset in our system. &#160;Generally this will happen in 5 minutes or less,</p></div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                        <a name="1-4"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">I can receive email, but not send it. What should I do?</div>
+                            <div class="answer"><p>Check to make sure that your email program has the outgoing (SMTP) sever set up correctly.</p>
+
+<ul>
+<li>The Outgoing SMTP server should be smtpauth.earthlink.net (same for all email addresses)</li>
+
+<li>Put a check in the box for &#8220;My Outgoing SMTP server requires authentication&#8221; (or something similar) and enter your entire email address and password for authentication.</li>
+
+<li>Set the Outgoing SMTP port number to 587.&#160;This is usually found under your email software&#8217;s Advanced Account settings section.</li>
+</ul></div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                        <a name="1-5"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">Where can I check my EarthLink email online?</div>
+                            <div class="answer"><p>Check your EarthLink email at <a href="http://webmail.earthlink.net">http://webmail.earthlink.net</a></p>
+
+<p>Sign in with your full email address and password.&#160;</p></div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                        <a name="1-6"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">Can I check my EarthLink email both online and in an email program?</div>
+                            <div class="answer">
+<p>Yes. To download email messages to your email program and also leave them on Web Mail, set your program&#8217;s Advanced Account settings to &#8220;Leave a copy of messages on the server" (or something similar).</p>
+
+<p><strong>Note:</strong> Doing this may leave email messages on Web Mail until you delete them from Web Mail. EarthLink members are entitled to a lot of space on Web Mail, but it's not unlimited.&#160;</p>
+
+<p>Make sure that you occasionally delete some messages from Web Mail, or your mailbox will become full and stop receiving emails. (We'll let you know before this happens.)</p>
+
+<p><strong>SPECIAL NOTE FOR IMAP USERS</strong>: &#160;If you are using IMAP to check your email, make sure all of your devices and email programs checking that address are also set to use IMAP. &#160;Having different devices using POP and IMAP on the same email address can cause messages to not be saved when you view them in IMAP. &#160;If you must use POP, make sure it is set to leave a copy on the server if you want to see those messages with IMAP on another device.</p>
+</div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                        <a name="1-7"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">Why does my email disappear off the server when I use an email program?</div>
+                            <div class="answer">
+<p>By default most email programs configured to use POP settings automatically download and delete emails from the server, so that they're not in Web Mail anymore.</p>
+
+<p>To change this, set your email program&#8217;s Advanced Account settings to &#8220;Leave a copy of messages on the server" (or something similar).</p>
+
+<p>If you use IMAP settings, mail will stay on the server until &#160;you intentionally delete it.</p>
+</div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                        <a name="1-8"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">How much storage do I have online?</div>
+                            <div class="answer"><p>EarthLink currently offers 100MB of storage per email address.</p></div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                        <a name="1-9"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">How big of an email attachment am I allowed to send?</div>
+                            <div class="answer">
+<p>Email attachments are limited to 20 MB. &#160;As a general safety precaution, we recommend you try and keep attachments under 10 MB, but you can send attachments as large as 20 MB. &#160;Keep in mind, some third party domains may not accept attachments that large.</p>
+</div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                        <a name="1-10"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">How many email addresses can I have with my EarthLink account?</div>
+                            <div class="answer"><p>Most EarthLink access accounts offer 8 email addresses.&#160;Some email-only accounts offer fewer.</p>
+
+<p>To see how many addresses you have available with your account visit My Account page at <a href="http://myaccount.earthlink.net">http://myaccount.earthlink.net</a>.</p></div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                        <a name="1-11"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">How can I block spam?</div>
+                            <div class="answer"><p>EarthLink&#8217;s spamBlocker automatically blocks a lot of spam, and offers different levels of spam protection.&#160;</p>
+
+<p>spamBlocker&#8217;s Medium setting (on by default) blocks most known spam, while the High setting only allows email from senders in your Address Book.</p>
+
+<p>When spamBlocker is set to High, you'll be alerted when someone emails you who is not in your Address Book. You can then approve the message (and optionally automatically add them to the Address Book).</p>
+
+<p>To adjust your spamBlocker settings:</p>
+
+<ol>
+<li>Sign in to Web Mail: <a href="http://webmail.earthlink.net">http://webmail.earthlink.net</a></li>
+
+<li>Click the <strong>Edit</strong> link next to spamBlocker in the column on the left of the screen.</li>
+</ol>
+
+<p>&#160;</p></div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                        <a name="1-12"></a>
+                        <div class="answerbox">
+                            <div class="faqtitle">My friend says their domain is being blocked by EarthLink, how do I get their domain unblocked?</div>
+                            <div class="answer"><p>EarthLink does not block based on a domain name, but on various methods to reduce spam.</p>
+
+<p>For more information on this process and for instructions on how to remove the block <a href="/articles/email/email-blocked-by-earthlink.php">Click Here</a></p></div>
+                            <div class="gotop"><a href="#">Top</a></div>  
+                        </div>                     
+                    
+                
+
+            </div>
+            
+
+            <!-- end #faqbox -->
+          
+
+            <!-- FEEDBACK SECTION -->
+            <!-- cp:11 -->
+
+<link rel="stylesheet" href="/css/popup.css" type="text/css"/>
+<script type="text/javascript" src="//jqueryjs.googlecode.com/files/jquery-1.3.2.min.js"></script>
+<script type="text/javascript">
+
+	function launchWindow(id) {
+
+		//Get the screen height and width
+		var maskHeight = $(document).height();
+		var maskWidth = $(window).width();
+
+		//Set heigth and width to mask to fill up the whole screen
+		$('#mask').css({'width':maskWidth,'height':maskHeight});
+
+		//transition effect 
+		$('#mask').fadeIn(500); 
+		$('#mask').fadeTo("fast",0.8); 
+
+		// calculate the values for center alignment
+		var dialogTop =  (maskHeight  - $(id).height())/2;  
+		var dialogLeft = (maskWidth - $(id).width())/2; 
+
+
+		// assign values to the overlay and dialog box
+		$('#mask').css({height:maskHeight, width:maskWidth}).show();
+		$(id).css({top:dialogTop, left:dialogLeft}).show();
+
+		//Get the window height and width
+		var winH = $(window).height();
+		var winW = $(window).width();
+		  
+		//Set the popup window to center
+		$(id).css('top',  winH/2-$(id).height()/2);
+		$(id).css('left', winW/2-$(id).width()/2);
+
+		//transition effect
+		$(id).fadeIn(1000); 
+
+	}
+
+	$(document).ready(function(){
+
+		//if close button is clicked
+		$('.window .closebtn').click(function (e) {
+			//Cancel the link behavior
+			e.preventDefault();
+
+			$('#mask').hide();
+			$('.window').hide();
+			$('form')[0].reset();
+		}); 
+
+		//if mask is clicked
+		$('#mask').click(function () {
+			$(this).hide();
+			$('.window').hide();
+			$('form')[0].reset();
+		}); 
+
+		if (false) 
+		{
+			launchWindow('#ty_page');
+		}
+
+	});
+</script>
+
+
+
+<div id="mask"></div>
+<div id="ty_page" class="window" style="display:none">
+	<p class="closewrap"><span>Close <a href="#" class="closebtn" />
+	<img src="/images/close2.png"/></a></span></p>
+	<!-- thank you page -->
+	<div class="ty_container subtitle_blue">
+		<p class="ty_text">Thanks for your feedback!</p>
+	</div>
+</div>
+    <div id="feedbackbox">
+        <div class="background">
+            <div class="fb_title">Was this article helpful to you?</div>
+            <form action="/articles/email/earthlink-email-faq.php" method="post" name="feedbackform">					
+                <div class="starbutton">
+                    <table border="0" cellpadding="0" cellspacing="2">
+                        <tr>							                                          							
+                            <td>
+                                <span id="rateStatus"></span> 
+                                <span id="ratingSaved">Your rating</span>
+                                <div id="rateMe">
+                                    <input type="hidden" name="feedback_rating" value=""/>
+                                    <a onclick="rateIt(this)" class="" id="_1" title="1" onmouseover="rating(this)" onmouseout="off(this)"></a>
+                                    <a onclick="rateIt(this)" class="" id="_2" title="2" onmouseover="rating(this)" onmouseout="off(this)"></a>
+                                    <a onclick="rateIt(this)" class="" id="_3" title="3" onmouseover="rating(this)" onmouseout="off(this)"></a>
+                                    <a onclick="rateIt(this)" class="" id="_4" title="4" onmouseover="rating(this)" onmouseout="off(this)"></a>
+                                    <a onclick="rateIt(this)" class="" id="_5" title="5" onmouseover="rating(this)" onmouseout="off(this)"></a>
+                                </div>
+                        </tr>
+                  </table>
+                </div>
+                    
+                <div class="commenttext">If any information was unclear, or the information you were seeking was not provided, please let us know! Your feedback will help us improve this service.</div>
+                <input type="hidden" name="commenter_email" value=""/>
+                <input type="hidden" name="cms_id" value="35746"/>
+                <input type="hidden" name="commenter_name" value=""/>
+                <textarea name="feedback_text" cols="80" rows="5"></textarea>
+                
+                <div class="commenttext">
+                    <span class="red">NOTE:</span> This form is for feedback only to help us improve our support site.  Changes, additions or the cancellation of products cannot be processed via the feedback form. Comments entered here will <b> NOT </b> receive a personal email response. If you have a technical or account issue that needs immediate attention, please <div id="lpButDivID-1299001221224"></div>
+                    <script type="text/javascript" charset="UTF-8" src="https://sales.liveperson.net/hc/LPearthlink_elink1/?cmd=mTagRepstate&site=LPearthlink_elink1&buttonID=13&divID=lpButDivID-1299001221224&bt=3&c=1"></script>
+                </div>
+                
+                <input type="hidden" name="action" value="submitted"/>
+                <div style="padding-top: 10px; padding-bottom: 10px;">
+                    <script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k=6LePi9USAAAAAI9Y1EaQuyGwVj33a7CpuV3vjlTi"></script>
+
+	<noscript>
+  		<iframe src="https://www.google.com/recaptcha/api/noscript?k=6LePi9USAAAAAI9Y1EaQuyGwVj33a7CpuV3vjlTi" height="300" width="500" frameborder="0"></iframe><br/>
+  		<textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
+  		<input type="hidden" name="recaptcha_response_field" value="manual_challenge"/>
+	</noscript>                </div>
+                <input type="image" value="submit" src="/images/fb_submit.jpg" id="Submit" onclick=""/>
+            </form>
+        </div>
+    </div><!-- end #feedbackbox-->
+
+               
+            <!-- end FEEDBACK SECTION -->    
+            
+        </div>
+        <!-- end #one_col -->
+
+    </div>
+    <!-- END #main_content -->
+
+<script type="text/javascript">var switchTo5x=true;</script>
+<script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script>
+<script type="text/javascript">stLight.options({publisher: "d1410d8c-503f-45e8-8826-beef8ae261cc", shorten:false, doNotHash: true, doNotCopy: true, hashAddressBar: false});</script>
+
+</div>
+<!-- END #main_container -->
+    
+
+
+    
+    <!-- END CONTENT -->
+    
+    
+    <img src="/images/container_bottom.gif"/>
+</div>
+
+<!-- BOTTOM FOOTER LINKS & COPYRIGHT -->
+<div id="footer" class="font_10">
+
+<a href='/index.php' target='' class="default font_10 grey_text">Home</a>
+<br/><br/>   
+	<p>Copyright &copy;
+<script type="text/javascript">// <![CDATA[
+var clientDate = new Date();document.write(clientDate.getFullYear());
+// ]]></script>
+EarthLink, Inc. All rights reserved.<br/> Members and visitors to the EarthLink Web site agree to abide by our <a href="http://www.earthlink.net/about/policies/" target="_blank">Policies and Agreements</a><br/> <a href="https://www.windstream.com/About-Us/Privacy-Policy-page/">Windstream Privacy Policy</a></p>
+<style><!--
+#transparent_white { display: none !important }
+--></style>
+</div>
+
+<!-- DropDown Do Not Remove-->
+<script type="text/javascript">
+
+
+
+    var navmenu = new navmenu.dd("navmenu");
+navmenu.init("navmenu","menuhover");
+
+</script>
+
+
+<script type="text/javascript">
+var clicky = { log: function(){ return; }, goal: function(){ return; }};
+var clicky_site_id = 104014;
+(function() {
+  var s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.async = true;
+  s.src = ( document.location.protocol == 'https:' ? 'https://static.getclicky.com' : 'http://static.getclicky.com' ) + '/js';
+  ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+})();
+</script>
+<noscript><p><img alt="Clicky" width="1" height="1" src="http://in.getclicky.com/104014ns.gif"/></p></noscript>
+
+<script type="text/javascript">
+var clicky = { log: function(){ return; }, goal: function(){ return; }};
+var clicky_site_id = 126362;
+(function() {
+  var s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.async = true;
+  s.src = ( document.location.protocol == 'https:' ? 'https://static.getclicky.com' : 'http://static.getclicky.com' ) + '/js';
+  ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+})();
+</script>
+<noscript><p><img alt="Clicky" width="1" height="1" src="http://in.getclicky.com/126362ns.gif"/></p></noscript>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-2626596-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script> 
+
+
+</body>
+
+</html>
+

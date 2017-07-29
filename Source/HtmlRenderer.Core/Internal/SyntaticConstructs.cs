@@ -62,7 +62,7 @@ namespace Scientia.HtmlRenderer.Internal
         public static bool IsQName(this string str)
         {
             // See: http://www.w3.org/TR/xml-names/#NT-QName
-            // TODO
+            // TO-DO
             return str.IsName();
         }
     }

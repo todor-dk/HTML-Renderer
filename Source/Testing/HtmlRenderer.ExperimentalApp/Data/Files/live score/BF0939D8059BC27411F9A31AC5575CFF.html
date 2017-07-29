@@ -1,0 +1,4765 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en" dir="ltr"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8" lang="en" dir="ltr"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9" lang="en" dir="ltr"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" dir="ltr"> <!--<![endif]-->
+<head>
+<script>
+(function () {
+function setCookie(name, value, expiresMs, params) {
+var arr = [];
+var now = new Date()
+params = params || {};
+now.setTime(now.getTime() + expiresMs);
+params['expires'] = now.toUTCString();
+arr = [name + '=' + value];
+
+arr = arr.concat(
+Object.keys(params)
+.map(function (key) {
+return '' + key + '=' + params[key];
+})
+);
+
+document.cookie = arr.join(';');
+}
+
+var chosenCookieName = 'betaRedirectChosen'
+var redirectCookieName = 'beta';
+var isChosen = false;
+var cookieComponents = [];
+var isGbot = [
+'Googlebot',
+'Mediapartners-Google',
+'AdsBot-Google',
+]
+.filter(function (el) {
+return navigator.userAgent.indexOf(el) !== -1;
+})
+.length > 0;
+
+if (isGbot) {
+return;
+}
+
+if (document.cookie.indexOf(chosenCookieName) === -1) {
+isChosen = (Math.floor((Math.random() * 100) + 1)) <= 20;
+
+setCookie(chosenCookieName,
+isChosen ? 'true' : 'false',
+365 * 24 * 3600 * 1000,
+{
+domain: '.goal.com',
+path: '/',
+}
+);
+}
+
+if (isChosen) {
+
+if (window.stop) {
+window.stop();
+}
+
+setCookie(redirectCookieName, 'opt-in', 365 * 24 * 3600 * 1000, {
+domain: '.goal.com',
+path: '/',
+});
+
+window.location.reload();
+}
+}());
+</script>
+<meta charset="utf-8">
+<meta http-equiv="content-language" content="en">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"Vg8AVFJTGwcFVlhQDwQ="};window.NREUM||(NREUM={}),__nr_require=function(t,n,e){function r(e){if(!n[e]){var o=n[e]={exports:{}};t[e][0].call(o.exports,function(n){var o=t[e][1][n];return r(o||n)},o,o.exports)}return n[e].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<e.length;o++)r(e[o]);return r}({1:[function(t,n,e){function r(t){try{s.console&&console.log(t)}catch(n){}}var o,i=t("ee"),a=t(15),s={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(s.console=!0,o.indexOf("dev")!==-1&&(s.dev=!0),o.indexOf("nr_dev")!==-1&&(s.nrDev=!0))}catch(c){}s.nrDev&&i.on("internal-error",function(t){r(t.stack)}),s.dev&&i.on("fn-err",function(t,n,e){r(e.stack)}),s.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(s,function(t,n){return t}).join(", ")))},{}],2:[function(t,n,e){function r(t,n,e,r,o){try{d?d-=1:i("err",[o||new UncaughtException(t,n,e)])}catch(s){try{i("ierr",[s,c.now(),!0])}catch(u){}}return"function"==typeof f&&f.apply(this,a(arguments))}function UncaughtException(t,n,e){this.message=t||"Uncaught error with no additional information",this.sourceURL=n,this.line=e}function o(t){i("err",[t,c.now()])}var i=t("handle"),a=t(16),s=t("ee"),c=t("loader"),f=window.onerror,u=!1,d=0;c.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(l){"stack"in l&&(t(8),t(7),"addEventListener"in window&&t(5),c.xhrWrappable&&t(9),u=!0)}s.on("fn-start",function(t,n,e){u&&(d+=1)}),s.on("fn-err",function(t,n,e){u&&(this.thrown=!0,o(e))}),s.on("fn-end",function(){u&&!this.thrown&&d>0&&(d-=1)}),s.on("internal-error",function(t){i("ierr",[t,c.now(),!0])})},{}],3:[function(t,n,e){t("loader").features.ins=!0},{}],4:[function(t,n,e){function r(t){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var o=t("ee"),i=t("handle"),a=t(8),s=t(7),c="learResourceTimings",f="addEventListener",u="resourcetimingbufferfull",d="bstResource",l="resource",p="-start",h="-end",m="fn"+p,w="fn"+h,v="bstTimer",y="pushState",g=t("loader");g.features.stn=!0,t(6);var b=NREUM.o.EV;o.on(m,function(t,n){var e=t[0];e instanceof b&&(this.bstStart=g.now())}),o.on(w,function(t,n){var e=t[0];e instanceof b&&i("bst",[e,n,this.bstStart,g.now()])}),a.on(m,function(t,n,e){this.bstStart=g.now(),this.bstType=e}),a.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),this.bstType])}),s.on(m,function(){this.bstStart=g.now()}),s.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),"requestAnimationFrame"])}),o.on(y+p,function(t){this.time=g.now(),this.startPath=location.pathname+location.hash}),o.on(y+h,function(t){i("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),f in window.performance&&(window.performance["c"+c]?window.performance[f](u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["c"+c]()},!1):window.performance[f]("webkit"+u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["webkitC"+c]()},!1)),document[f]("scroll",r,{passive:!0}),document[f]("keypress",r,!1),document[f]("click",r,!1)}},{}],5:[function(t,n,e){function r(t){for(var n=t;n&&!n.hasOwnProperty(u);)n=Object.getPrototypeOf(n);n&&o(n)}function o(t){s.inPlace(t,[u,d],"-",i)}function i(t,n){return t[1]}var a=t("ee").get("events"),s=t(18)(a,!0),c=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";n.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,n){var e=t[1],r=c(e,"nr@wrapped",function(){function t(){if("function"==typeof e.handleEvent)return e.handleEvent.apply(e,arguments)}var n={object:t,"function":e}[typeof e];return n?s(n,"fn-",null,n.name||"anonymous"):e});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],6:[function(t,n,e){var r=t("ee").get("history"),o=t(18)(r);n.exports=r,o.inPlace(window.history,["pushState","replaceState"],"-")},{}],7:[function(t,n,e){var r=t("ee").get("raf"),o=t(18)(r),i="equestAnimationFrame";n.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],8:[function(t,n,e){function r(t,n,e){t[0]=a(t[0],"fn-",null,e)}function o(t,n,e){this.method=e,this.timerDuration="number"==typeof t[1]?t[1]:0,t[0]=a(t[0],"fn-",this,e)}var i=t("ee").get("timer"),a=t(18)(i),s="setTimeout",c="setInterval",f="clearTimeout",u="-start",d="-";n.exports=i,a.inPlace(window,[s,"setImmediate"],s+d),a.inPlace(window,[c],c+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(c+u,r),i.on(s+u,o)},{}],9:[function(t,n,e){function r(t,n){d.inPlace(n,["onreadystatechange"],"fn-",s)}function o(){var t=this,n=u.context(t);t.readyState>3&&!n.resolved&&(n.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,w,"fn-",s)}function i(t){v.push(t),h&&(g=-g,b.data=g)}function a(){for(var t=0;t<v.length;t++)r([],v[t]);v.length&&(v=[])}function s(t,n){return n}function c(t,n){for(var e in t)n[e]=t[e];return n}t(5);var f=t("ee"),u=f.get("xhr"),d=t(18)(u),l=NREUM.o,p=l.XHR,h=l.MO,m="readystatechange",w=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],v=[];n.exports=u;var y=window.XMLHttpRequest=function(t){var n=new p(t);try{u.emit("new-xhr",[n],n),n.addEventListener(m,o,!1)}catch(e){try{u.emit("internal-error",[e])}catch(r){}}return n};if(c(p,y),y.prototype=p.prototype,d.inPlace(y.prototype,["open","send"],"-xhr-",s),u.on("send-xhr-start",function(t,n){r(t,n),i(n)}),u.on("open-xhr-start",r),h){var g=1,b=document.createTextNode(g);new h(a).observe(b,{characterData:!0})}else f.on("fn-end",function(t){t[0]&&t[0].type===m||a()})},{}],10:[function(t,n,e){function r(t){var n=this.params,e=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<d;r++)t.removeEventListener(u[r],this.listener,!1);if(!n.aborted){if(e.duration=a.now()-this.startTime,4===t.readyState){n.status=t.status;var i=o(t,this.lastSize);if(i&&(e.rxSize=i),this.sameOrigin){var c=t.getResponseHeader("X-NewRelic-App-Data");c&&(n.cat=c.split(", ").pop())}}else n.status=0;e.cbTime=this.cbTime,f.emit("xhr-done",[t],t),s("xhr",[n,e,this.startTime])}}}function o(t,n){var e=t.responseType;if("json"===e&&null!==n)return n;var r="arraybuffer"===e||"blob"===e||"json"===e?t.response:t.responseText;return h(r)}function i(t,n){var e=c(n),r=t.params;r.host=e.hostname+":"+e.port,r.pathname=e.pathname,t.sameOrigin=e.sameOrigin}var a=t("loader");if(a.xhrWrappable){var s=t("handle"),c=t(11),f=t("ee"),u=["load","error","abort","timeout"],d=u.length,l=t("id"),p=t(14),h=t(13),m=window.XMLHttpRequest;a.features.xhr=!0,t(9),f.on("new-xhr",function(t){var n=this;n.totalCbs=0,n.called=0,n.cbTime=0,n.end=r,n.ended=!1,n.xhrGuids={},n.lastSize=null,p&&(p>34||p<10)||window.opera||t.addEventListener("progress",function(t){n.lastSize=t.loaded},!1)}),f.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),f.on("open-xhr-end",function(t,n){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&n.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),f.on("send-xhr-start",function(t,n){var e=this.metrics,r=t[0],o=this;if(e&&r){var i=h(r);i&&(e.txSize=i)}this.startTime=a.now(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof n.onload))&&o.end(n)}catch(e){try{f.emit("internal-error",[e])}catch(r){}}};for(var s=0;s<d;s++)n.addEventListener(u[s],this.listener,!1)}),f.on("xhr-cb-time",function(t,n,e){this.cbTime+=t,n?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof e.onload||this.end(e)}),f.on("xhr-load-added",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&!this.xhrGuids[e]&&(this.xhrGuids[e]=!0,this.totalCbs+=1)}),f.on("xhr-load-removed",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&this.xhrGuids[e]&&(delete this.xhrGuids[e],this.totalCbs-=1)}),f.on("addEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-added",[t[1],t[2]],n)}),f.on("removeEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-removed",[t[1],t[2]],n)}),f.on("fn-start",function(t,n,e){n instanceof m&&("onload"===e&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=a.now()))}),f.on("fn-end",function(t,n){this.xhrCbStart&&f.emit("xhr-cb-time",[a.now()-this.xhrCbStart,this.onload,n],n)})}},{}],11:[function(t,n,e){n.exports=function(t){var n=document.createElement("a"),e=window.location,r={};n.href=t,r.port=n.port;var o=n.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=n.hostname||e.hostname,r.pathname=n.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!n.protocol||":"===n.protocol||n.protocol===e.protocol,a=n.hostname===document.domain&&n.port===e.port;return r.sameOrigin=i&&(!n.hostname||a),r}},{}],12:[function(t,n,e){function r(){}function o(t,n,e){return function(){return i(t,[f.now()].concat(s(arguments)),n?null:this,e),n?void 0:this}}var i=t("handle"),a=t(15),s=t(16),c=t("ee").get("tracer"),f=t("loader"),u=NREUM;"undefined"==typeof window.newrelic&&(newrelic=u);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],l="api-",p=l+"ixn-";a(d,function(t,n){u[n]=o(l+n,!0,"api")}),u.addPageAction=o(l+"addPageAction",!0),u.setCurrentRouteName=o(l+"routeName",!0),n.exports=newrelic,u.interaction=function(){return(new r).get()};var h=r.prototype={createTracer:function(t,n){var e={},r=this,o="function"==typeof n;return i(p+"tracer",[f.now(),t,e],r),function(){if(c.emit((o?"":"no-")+"fn-start",[f.now(),r,o],e),o)try{return n.apply(this,arguments)}finally{c.emit("fn-end",[f.now()],e)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,n){h[n]=o(p+n)}),newrelic.noticeError=function(t){"string"==typeof t&&(t=new Error(t)),i("err",[t,f.now()])}},{}],13:[function(t,n,e){n.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(n){return}}}},{}],14:[function(t,n,e){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),n.exports=r},{}],15:[function(t,n,e){function r(t,n){var e=[],r="",i=0;for(r in t)o.call(t,r)&&(e[i]=n(r,t[r]),i+=1);return e}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],16:[function(t,n,e){function r(t,n,e){n||(n=0),"undefined"==typeof e&&(e=t?t.length:0);for(var r=-1,o=e-n||0,i=Array(o<0?0:o);++r<o;)i[r]=t[n+r];return i}n.exports=r},{}],17:[function(t,n,e){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],18:[function(t,n,e){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(16),a="nr@original",s=Object.prototype.hasOwnProperty,c=!1;n.exports=function(t,n){function e(t,n,e,o){function nrWrapper(){var r,a,s,c;try{a=this,r=i(arguments),s="function"==typeof e?e(r,a):e||{}}catch(f){l([f,"",[r,a,o],s])}u(n+"start",[r,a,o],s);try{return c=t.apply(a,r)}catch(d){throw u(n+"err",[r,a,d],s),d}finally{u(n+"end",[r,a,c],s)}}return r(t)?t:(n||(n=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,n,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<n.length;c++)s=n[c],a=t[s],r(a)||(t[s]=e(a,f?s+o:o,i,s))}function u(e,r,o){if(!c||n){var i=c;c=!0;try{t.emit(e,r,o,n)}catch(a){l([a,e,r,o])}c=i}}function d(t,n){if(Object.defineProperty&&Object.keys)try{var e=Object.keys(t);return e.forEach(function(e){Object.defineProperty(n,e,{get:function(){return t[e]},set:function(n){return t[e]=n,n}})}),n}catch(r){l([r])}for(var o in t)s.call(t,o)&&(n[o]=t[o]);return n}function l(n){try{t.emit("internal-error",n)}catch(e){}}return t||(t=o),e.inPlace=f,e.flag=a,e}},{}],ee:[function(t,n,e){function r(){}function o(t){function n(t){return t&&t instanceof r?t:t?c(t,s,i):i()}function e(e,r,o,i){if(!l.aborted||i){t&&t(e,r,o);for(var a=n(o),s=h(e),c=s.length,f=0;f<c;f++)s[f].apply(a,r);var d=u[y[e]];return d&&d.push([g,e,r,a]),a}}function p(t,n){v[t]=h(t).concat(n)}function h(t){return v[t]||[]}function m(t){return d[t]=d[t]||o(e)}function w(t,n){f(t,function(t,e){n=n||"feature",y[e]=n,n in u||(u[n]=[])})}var v={},y={},g={on:p,emit:e,get:m,listeners:h,context:n,buffer:w,abort:a,aborted:!1};return g}function i(){return new r}function a(){(u.api||u.feature)&&(l.aborted=!0,u=l.backlog={})}var s="nr@context",c=t("gos"),f=t(15),u={},d={},l=n.exports=o();l.backlog=u},{}],gos:[function(t,n,e){function r(t,n,e){if(o.call(t,n))return t[n];var r=e();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(t,n,e){function r(t,n,e,r){o.buffer([t],r),o.emit(t,n,e)}var o=t("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(t,n,e){function r(t){var n=typeof t;return!t||"object"!==n&&"function"!==n?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");n.exports=r},{}],loader:[function(t,n,e){function r(){if(!x++){var t=b.info=NREUM.info,n=l.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&n))return u.abort();f(y,function(n,e){t[n]||(t[n]=e)}),c("mark",["onload",a()+b.offset],null,"api");var e=l.createElement("script");e.src="https://"+t.agent,n.parentNode.insertBefore(e,n)}}function o(){"complete"===l.readyState&&i()}function i(){c("mark",["domContent",a()+b.offset],null,"api")}function a(){return E.exists&&performance.now?Math.round(performance.now()):(s=Math.max((new Date).getTime(),s))-b.offset}var s=(new Date).getTime(),c=t("handle"),f=t(15),u=t("ee"),d=window,l=d.document,p="addEventListener",h="attachEvent",m=d.XMLHttpRequest,w=m&&m.prototype;NREUM.o={ST:setTimeout,CT:clearTimeout,XHR:m,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var v=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1026.min.js"},g=m&&w&&w[p]&&!/CriOS/.test(navigator.userAgent),b=n.exports={offset:s,now:a,origin:v,features:{},xhrWrappable:g};t(12),l[p]?(l[p]("DOMContentLoaded",i,!1),d[p]("load",r,!1)):(l[h]("onreadystatechange",o),d[h]("onload",r)),c("mark",["firstbyte",s],null,"api");var x=0,E=t(17)},{}]},{},["loader",2,10,4,3]);</script>
+<meta name="google-site-verification" content="XbHDFDo9cDSfBkKb6vVXSEJq8eSKgKuYBgWbA7YLI5A" >
+<meta property="wb: webmaster" content="a0659333f7c4b1fb" />
+<meta name="msvalidate.01" content="7943642544D92DAFD05F9E185EC93924" />
+<meta property="fb:pages" content="25427813597" />
+<meta name="context" content="live-scores" />
+<link rel="publisher" href="https://plus.google.com/103293707757222394794/"/>
+<title>Live Football Scores, Fixtures &amp; Match information - Goal.com</title><meta name="page" content="livescores" >
+<meta name="description" content="Get the latest live Football scores and fixtures from all of the major leagues across the world, powered by Goal.com" ><link rel="alternate" href="http://m.goal.com/s/en/live-scores" media="only screen and (max-device-width: 660px)"/>
+<link rel="canonical" href="http://www.goal.com/en/live-scores" />
+
+<script src="/static/js?files=%2Fjs%2Fredirects.js&version=2017.06.07-v1"></script><meta name="viewport" content="width=device-width, minimum-scale=0.1, initial-scale=1.0">
+
+<link rel="stylesheet" href="/static/css?files=%2Fcss%2Fbase.css&version=2017.06.07-v1" type="text/css">
+<link rel="stylesheet" href="/static/css?files=%2Fcss%2Fmodule.css&version=2017.06.07-v1" type="text/css">
+<link rel="stylesheet" href="/static/css?files=%2Fcss%2Fpage.css&version=2017.06.07-v1" type="text/css">
+<link rel="stylesheet" href="/static/css?files=%2Fcss%2Fsnippets.css&version=2017.06.07-v1" type="text/css">
+<link rel="stylesheet" href="/static/css?files=%2Fcss%2Fbranding.css&version=2017.06.07-v1" type="text/css">
+<link rel="stylesheet" href="/static/css?files=%2Fcss%2Fmodule%2Fsmartbanner%2Fdesktop.css&version=2017.06.07-v1" type="text/css">
+<link rel="stylesheet" href="/static/css?files=%2Fcss%2Fdefault%2Flayout%2Fmodal.css%2C%2Fcss%2Fdefault%2Flayout%2Flogin.css%2C%2Fcss%2Fdefault%2Flayout%2Fgigyalogin.css%2C%2Fcss%2Fdefault%2Flayout%2Falert_message.css%2C%2Fcss%2Fdefault%2Frebrand-registration.css&version=2017.06.07-v1" type="text/css">
+<link rel="stylesheet" href="/static/css?files=%2Fcss%2Fbase%2Fcompetitions.css&version=2017.06.07-v1" type="text/css"><script type='text/javascript' src='http://c.amazon-adsystem.com/aax2/amzn_ads.js'></script>
+<script type='text/javascript'>
+try {
+amznads.getAds('3117');
+} catch(e) {
+
+}
+</script>
+<script type='text/javascript'>
+var key='amznslots';
+window.amzValues="" + amznads.getTokens().join(':');
+</script>
+<script>
+var s_account="goalglobal";</script>
+
+<script src="/static/js?files=%2Fjs%2Fnormalize.js%2C%2Fjs%2Fexternal%2Fmodernizr.min.js%2C%2Fjs%2Fexternal%2Fjquery.min.js%2C%2Fjs%2Fjquery%2Fheader%2C%2Fjs%2Fomniture-icid.js%2C%2Fjs%2Fuser-country-code.js%2C%2Fjs%2Fs_code.js&version=2017.06.07-v1"></script><script type="text/javascript" src="http://cdns.gigya.com/JS/socialize.js?apikey=3_wCLJT75ffirrzBqqAJaHe1zYGgdpb9XFkjxEQfrxraM-xO_if-uM1uVBZZ5r4naE">
+{
+connectWithoutLoginBehavior: 'alwaysLogin',
+enabledProviders: 'facebook,google,yahoo,twitter',
+lang: 'en',
+cid: 'en'
+}
+</script>
+<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+<!-- SiteCatalyst code version: H.25. Copyright 1996-2012 Adobe, Inc. All Rights Reserved More info available at http://www.omniture.com -->
+<script language="JavaScript" type="text/javascript"><!--
+s.pageName="Live Scores : Live Football Scores, Fixtures &amp; Match information"
+s.channel="Live Scores"
+s.prop1="Live Scores"
+s.prop2="Live Scores"
+s.prop3="Live Scores"
+s.hier1="Live Scores"
+s.prop4="livescores page"
+s.prop5="Live Football Scores, Fixtures &amp; Match information"
+s.prop6=s.eVar10=""
+s.server=""
+s.pageType=""
+s.prop11=
+s.prop12="Desktop"
+s.prop13="goalglobal,goalinternational"
+s.prop14=""
+s.prop15=s.eVar6="http://www.goal.com/en/live-scores"
+s.prop16=s.eVar5=""
+s.prop18=""
+s.prop19="N"
+s.prop21=""
+s.prop22=""
+s.prop23=""
+s.prop28=""
+s.prop29=""
+s.prop30=""
+s.prop31=""
+s.prop32=""
+s.prop33=""
+s.prop34=""
+s.prop40=""
+s.prop41=""
+s.prop43=""
+s.prop44=""
+s.prop45=""
+s.prop46=""
+s.prop47=""
+s.prop48=""
+s.prop51=""
+s.eVar15=""
+s.events="event13"
+//--></script>
+<script language="JavaScript" type="text/javascript"><!--
+if(navigator.appVersion.indexOf('MSIE')>=0)document.write(unescape('%3C')+'\!-'+'-')
+//--></script> <script language="JavaScript" type="text/javascript">
+if(navigator.appVersion.indexOf('Opera Mini')>=0) {
+document.write('<img src="http://premiumtv.122.2o7.net/b/ss/goalglobal/1/H.25--NS/0?pageName=Live+Scores+%3A+Live+Football+Scores%2C+Fixtures+%26+Match+information&g=%2Fen%2Flive-scores&ch=Live+Scores&c1=Live+Scores&c2=Live+Scores&c3=Live+Scores&c4=livescores+page&c5=Live+Football+Scores%2C+Fixtures+%26+Match+information&c6=&c12=Desktop&c13=goalglobal%2Cgoalinternational&c14=&c15=http%3A%2F%2Fwww.goal.com%2Fen%2Flive-scores&c16=&v5=&c19=N&c21=&c22=&c23=&c28=&c29=&c30=&c31=&c32=&c33=&c34=&c51=&v15=" height="1" width="1" border="0" alt="" />');
+}
+</script>
+<noscript><img src="http://premiumtv.122.2o7.net/b/ss/goalglobal/1/H.25--NS/0?pageName=Live+Scores+%3A+Live+Football+Scores%2C+Fixtures+%26+Match+information&g=%2Fen%2Flive-scores&ch=Live+Scores&c1=Live+Scores&c2=Live+Scores&c3=Live+Scores&c4=livescores+page&c5=Live+Football+Scores%2C+Fixtures+%26+Match+information&c6=&c12=Desktop&c13=goalglobal%2Cgoalinternational&c14=&c15=http%3A%2F%2Fwww.goal.com%2Fen%2Flive-scores&c16=&v5=&c19=N&c21=&c22=&c23=&c28=&c29=&c30=&c31=&c32=&c33=&c34=&c51=&v15=" height="1" width="1" border="0" alt="" /></noscript><!-- End SiteCatalyst code version: H.25. -->
+<!-- Begin: Google Analytics analytics.js --><script>
+var browserVersion = window.navigator.userAgent.match(/(opera\smini|UCBrowser)\/([\w\.-]+)/i);
+if (browserVersion) {
+
+var currentDate = new Date();
+var currentTime = currentDate.getTime();
+var cookieExpireDays = 730;
+var generateUUID = function () {
+var d = currentTime;
+var uuid = 'xxxxxxxx-xxxx-yxxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+var r = (d + Math.random() * 16) % 16 | 0;
+d = Math.floor(d / 16);
+return (c == 'x' ? r : (r&0x3|0x8)).toString(16);
+});
+return uuid;
+};
+var gaTrackingPixel = document.createElement('img');
+var gaTrackingPixelUrl = 'http://gaproxy.goal.com/collect?v=1&tid=UA-62411523-1&cid=7c3c4f83-3b11-4055-9c80-a4a51335f3b6&t=pageview&dh=www.goal.com&dp=%2Fen%2Flive-scores&cd1=soccer&cd2=Desktop&cd10=International&cd9=live+scores&cd25=Opera+Mini';
+var gaTrackingPixelUUID = '';
+if (document.cookie.indexOf('_gaproxy') === -1) {
+gaTrackingPixelUUID = generateUUID();
+currentDate.setTime(currentTime + cookieExpireDays * 24 * 3600 * 1000);
+document.cookie = '_gaproxy=' + gaTrackingPixelUUID + '; expires=' + currentDate.toGMTString() + '; path=/';
+} else {
+var cookie = document.cookie.split('; ')
+.filter(function (value) {
+return value.indexOf('_gaproxy') !== -1;
+});
+gaTrackingPixelUUID = cookie[0].split('=')[1];
+}
+gaTrackingPixelUrl = gaTrackingPixelUrl.replace(/(opera\+mini)/i, browserVersion[1].replace(/(\s)/g, '+'));
+gaTrackingPixelUrl += '&uuid=' + gaTrackingPixelUUID;
+gaTrackingPixel.setAttribute('src', gaTrackingPixelUrl);
+document.onload = function() {
+document.getElementsByTagName('body')[0].appendChild(gaTrackingPixel);
+};
+} else {
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-62411523-1', 'auto', {'legacyHistoryImport': false});
+if (typeof Google_Analytics === 'undefined') {
+var Google_Analytics = {};
+Google_Analytics.pageviewExecute = function() {
+ga('set', 'dimension1', "soccer");
+ga('set', 'dimension2', "Desktop");
+ga('set', 'dimension9', "live scores");
+ga('set', 'dimension10', "International");
+ga('send', 'pageview');
+}
+}
+Google_Analytics.pageviewExecute();}</script> <!-- End: New Google Analytics analytics.js --><!-- Hotjar Tracking Code for www.goal.com -->
+<script>
+(function(h,o,t,j,a,r){
+h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+h._hjSettings={hjid:71354,hjsv:5};
+a=o.getElementsByTagName('head')[0];
+r=o.createElement('script');r.async=1;
+r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+a.appendChild(r);
+})(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+<!-- Begin: MoreVisibleAds -->
+<script type="text/javascript"
+src="//wfpscripts.webspectator.com/bootstrap/ws-B112A62E.js">
+</script>
+<!-- End: MoreVisibleAds -->
+<!-- BEGIN: Chartbeat tracking code header -->
+<script type='text/javascript'>var _sf_startpt=(new Date()).getTime()</script>
+<!-- END: Chartbeat tracking code header -->
+<!-- Facebook SDK -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+var js, fjs = d.getElementsByTagName(s)[0];
+if (d.getElementById(id)) return;
+js = d.createElement(s); js.id = id;
+js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.3";
+fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<!-- Facebook SDK -->
+
+
+<!-- Begin: Google Dfp head --><script type="text/javascript" src=" https://www.googletagservices.com/tag/js/gpt.js"></script><!-- End: Google Dfp head -->
+<!-- Begin: Google Dfp initialize slots -->
+
+<script id="dfpHeadScript" data-dfp='{"ads":[{"isOneToOne":false,"isOutOfPageSlot":false,"getAdUnitPath":"\/67970281\/DISPLAY_OWNED_GBL\/goalcom_responsive\/fixtures_results\/navbar","getSlotSizes":[[940,40],[620,40]],"getHtmlId":"div-gpt-ad-navbar-0","getResolutionMappings":[[[1021,40],[940,40]],[[620,40],[620,40]],[[0,0],[]]],"additionalData":[],"keys":{"Display_Ad_Size":"Strip","Display_Ad_Position":"ATF"}},{"isOneToOne":false,"isOutOfPageSlot":false,"getAdUnitPath":"\/67970281\/DISPLAY_OWNED_GBL\/goalcom_responsive\/fixtures_results\/topmpu","getSlotSizes":[[300,600],[300,250]],"getHtmlId":"div-gpt-ad-topmpu-1","getResolutionMappings":[[[300,600],[[300,600],[300,250]]],[[300,250],[300,250]],[[0,0],[]]],"additionalData":[],"keys":{"Display_Ad_Size":"Top_MPU","Display_Ad_Position":"ATF"}},{"isOneToOne":false,"isOutOfPageSlot":false,"getAdUnitPath":"\/67970281\/DISPLAY_OWNED_GBL\/goalcom_responsive\/fixtures_results\/bottommpu","getSlotSizes":[[300,600],[300,250]],"getHtmlId":"div-gpt-ad-bottommpu-2","getResolutionMappings":[[[300,600],[[300,600],[300,250]]],[[300,250],[300,250]],[[0,0],[]]],"additionalData":[],"keys":{"Display_Ad_Size":"Bottom_MPU","Display_Ad_Position":"BTF"}},{"isOneToOne":false,"isOutOfPageSlot":false,"getAdUnitPath":"\/67970281\/DISPLAY_OWNED_GBL\/goalcom_responsive\/fixtures_results\/topbanner","getSlotSizes":[[970,250],[970,90],[728,90]],"getHtmlId":"div-gpt-ad-topbanner-3","getResolutionMappings":[[[1021,90],[[970,250],[970,90],[728,90]]],[[660,90],[728,90]],[[0,0],[]]],"additionalData":[],"keys":{"Display_Ad_Size":"Top_Banner","Display_Ad_Position":"ATF"}},{"isOneToOne":false,"isOutOfPageSlot":true,"getAdUnitPath":"\/67970281\/DISPLAY_OWNED_GBL\/goalcom_responsive\/fixtures_results\/highimpact","getSlotSizes":null,"getHtmlId":"div-gpt-ad-highimpact-4","getResolutionMappings":[],"additionalData":[],"keys":{"Display_Ad_Position":"ATF","Display_Ad_Size":"Skin"}}],"keys":{"pageType":"fixtures_results","goalversion":"legacy","edition":"en","environment":"production","language":"en"},"activeKeys":{"goal_layout":"(($(window).width() > 1020) ? \"desktop\" : \"tablet\")","amznslots":"(window.amzValues || \"\")"},"resizeBreakpoints":[300,320,620,728,940,970,1020]}'></script>
+
+<script>
+
+(function () {
+'use strict';
+var headScript = document.getElementById('dfpHeadScript');
+var dfpData = JSON.parse(headScript.getAttribute('data-dfp'));
+var outOfPage = false;
+var outOfPageId = '';
+var currentDevice = (window.innerWidth > 1020 ? 'desktop' : 'tablet');
+
+window.googletag = window.googletag || {};
+window.movedByJsGoogleSlots = [];
+window.googletag.cmd = window.googletag.cmd || [];
+var googleConfig = {
+gptAdSlots: [],
+outOfPageSlot: [],
+noRefreshableSlots: [],
+currentWidth: window.innerWidth,
+currentGoogleTagDfpBreak: -1,
+googleTagDfpBreakpoints: dfpData.resizeBreakpoints,
+screenGoogleTagDfpBreak: 0,
+
+sizeGoogleTagDfpCheck: function () {
+var screenGoogleTagDfpW = window.innerWidth;
+var googleTagDfpBreakpointsCount = googleConfig.googleTagDfpBreakpoints.length;
+for (var i = 0; i < googleTagDfpBreakpointsCount; i++) {
+if (googleConfig.googleTagDfpBreakpoints[i] > screenGoogleTagDfpW) {
+break;
+}
+googleConfig.screenGoogleTagDfpBreak = i;
+}
+
+if (googleConfig.screenGoogleTagDfpBreak != googleConfig.currentGoogleTagDfpBreak) {
+googleConfig.currentGoogleTagDfpBreak = googleConfig.screenGoogleTagDfpBreak;
+
+window.googletag.cmd.push(function () {
+window.googletag.pubads().refresh(googleConfig.gptAdSlots);
+});
+}
+},
+heightIframeAd: 0,
+widthIframeAd: 0,
+timeToHide: 0,
+closeIframeAd: false,
+iframe: {}
+};
+
+window.googletag.cmd.push(function () {
+for (var keys in dfpData.keys) {
+window.googletag.pubads().setTargeting(keys, dfpData.keys[keys]);
+}
+
+for (var activeKeys in dfpData.activeKeys) {
+window.googletag.pubads().setTargeting(activeKeys, eval(dfpData.activeKeys[activeKeys]));
+}
+
+for (var ad in dfpData.ads) {
+
+var adSpecificDevice = dfpData.ads[ad].additionalData.specificDevice !== 'undefined' ? dfpData.ads[ad].additionalData.specificDevice : false;
+if (adSpecificDevice && currentDevice !== adSpecificDevice) {
+continue;
+}
+
+var movedByJs = dfpData.ads[ad].additionalData.movedByJs !== 'undefined' ? dfpData.ads[ad].additionalData.movedByJs : false;
+
+if (!dfpData.ads[ad].isOutOfPageSlot) {
+
+var adMappingSlot = googletag.sizeMapping();
+
+for(var addResolutions in dfpData.ads[ad].getResolutionMappings){
+var addResolution=dfpData.ads[ad].getResolutionMappings[addResolutions];
+adMappingSlot = adMappingSlot.addSize(addResolution[0], addResolution[1]);
+}
+
+adMappingSlot = adMappingSlot.build();
+
+
+if (!dfpData.ads[ad].isOneToOne) {
+googleConfig.gptAdSlots.push(
+window.googletag.defineSlot(dfpData.ads[ad].getAdUnitPath, dfpData.ads[ad].getSlotSizes, dfpData.ads[ad].getHtmlId)
+.defineSizeMapping(adMappingSlot)
+.addService(window.googletag.pubads())
+.setCollapseEmptyDiv(true)
+);
+
+for (var slotTargeting in dfpData.ads[ad].keys) {
+googleConfig.gptAdSlots[googleConfig.gptAdSlots.length-1].setTargeting(slotTargeting, dfpData.ads[ad].keys[slotTargeting]);
+}
+
+
+if(movedByJs){
+window.movedByJsGoogleSlots.push(googleConfig[googleConfig.gptAdSlots.length-1]);
+}
+
+}
+else {
+googleConfig.noRefreshableSlots.push(
+window.googletag.defineSlot(dfpData.ads[ad].getAdUnitPath, eval(dfpData.ads[ad].getSlotSizes), dfpData.ads[ad].getHtmlId)
+.addService(window.googletag.pubads())
+.setCollapseEmptyDiv(true)
+);
+
+for (var slotTargeting in dfpData.ads[ad].keys) {
+googleConfig.noRefreshableSlots[googleConfig.noRefreshableSlots.length-1].setTargeting(slotTargeting, dfpData.ads[ad].keys[slotTargeting]);
+}
+
+if(movedByJs){
+window.movedByJsGoogleSlots.push(googleConfig[googleConfig.noRefreshableSlots.length-1]);
+}
+}
+}
+else {
+outOfPage = true;
+outOfPageId = dfpData.ads[ad].getHtmlId;
+googleConfig.outOfPageSlot.push(
+window.googletag.defineOutOfPageSlot(dfpData.ads[ad].getAdUnitPath, dfpData.ads[ad].getHtmlId)
+.addService(window.googletag.pubads())
+);
+
+for (var slotTargeting in dfpData.ads[ad].keys) {
+googleConfig.outOfPageSlot[googleConfig.outOfPageSlot.length-1].setTargeting(slotTargeting, dfpData.ads[ad].keys[slotTargeting]);
+}
+}
+}
+
+window.googletag.pubads().enableSingleRequest();
+window.googletag.enableServices();
+});
+
+if (outOfPage) {
+window.addEventListener('message', function (event) {
+googleConfig.heightIframeAd = event.data['height'];
+googleConfig.widthIframeAd = event.data['width'];
+googleConfig.timeToHide = event.data['timeToHide'] * 1000;
+googleConfig.closeIframeAd = event.data['close'];
+googleConfig.iframe = $('#' + outOfPageId + ' > div iframe');
+
+if (googleConfig.heightIframeAd) {
+googleConfig.iframe.css({
+'height': googleConfig.heightIframeAd,
+'width': googleConfig.widthIframeAd,
+'display': 'block',
+'position': 'fixed',
+'top': '0',
+'z-index': '100'
+});
+setTimeout(function () {
+googleConfig.iframe.css({'display': 'none'});
+}, googleConfig.timeToHide);
+}
+if (googleConfig.closeIframeAd) {
+googleConfig.iframe.css({'display': 'none'});
+}
+});
+}
+
+window.addEventListener("load", function () {
+window.addEventListener("resize", _.throttle(function () {
+if (googleConfig.currentWidth != window.innerWidth) {
+googleConfig.currentWidth = window.innerWidth;
+googleConfig.sizeGoogleTagDfpCheck();
+}
+}, 200), false);
+
+window.addEventListener("orientationchange", _.throttle(function () {
+googleConfig.sizeGoogleTagDfpCheck();
+}, 200), false);
+});
+})();
+</script>
+
+<!-- END: Google Dfp initialize slots -->
+
+</head>
+<body class="page-livescores dir-ltr lang-en en lang-code-en context-undefined hour-format-24" data-omniture-icid="LS" data-user-country-code="">
+<script type="text/javascript">
+$.omnitureIcid({
+domain: 'goal.com'
+});
+</script>
+<!-- Begin: Lotame start tag -->
+<script type="text/javascript">
+var cc_client_id = 3376;
+
+document.write('<scr'+'ipt type="text/javascript" src="http://ad.crwdcntrl.net/5/c='+cc_client_id.toString()+'/pe=y/callback=processauds"></scr'+'ipt>');
+
+var adtechCCvals = "";
+function processauds(adtechccauds) {
+if (typeof(adtechccauds) != 'undefined') {
+for (var cci = 0; cci < adtechccauds.Profile.Audiences.Audience.length; cci++) {
+if (cci > 0) adtechCCvals += ":";
+adtechCCvals += adtechccauds.Profile.Audiences.Audience[cci].abbr;
+}
+}
+}
+</script>
+<!-- End: Lotame start tag -->
+<div class="page-wrapper">
+<div class="module module-cookie-info hidden" data-country-code="GB,UK" data-allowed-edition="en-gb">
+<div class="wrapper">
+<div class="message"></div>
+</div>
+<div class="cookie-content">
+<!--
+<span class="close img-rep"></span>
+<p>We use cookies on this web site... To find out more about cookies, please see our <a href="/en/legal/privacy-policy">Privacy Policy</a>. If you continue using our website, we will assume that you consent to the cookies we set.</p>
+-->
+</div>
+</div>
+<div class="module-outdated-browsers hidden">
+<!--
+<div class="container">
+<p class="ob-msie-6 hidden">
+This website does not support Internet Explorer 6. To get the best experience when using Goal, please update your browser.<span class="ob-nl">Click <a href="http://www.whatbrowser.com/intl/en/" target="_blank">here</a> to update your browser</span>
+</p>
+<p class="ob-msie-7 hidden">
+This website does not support Internet Explorer 7. To get the best experience when using Goal, please update your browser.<span class="ob-nl">Click <a href="http://www.whatbrowser.com/intl/en/" target="_blank">here</a> to update your browser</span>
+</p>
+<p class="ob-msie-8 hidden">
+This website does not support Internet Explorer 8. To get the best experience when using Goal, please update your browser.<span class="ob-nl">Click <a href="http://www.whatbrowser.com/intl/en/" target="_blank">here</a> to update your browser</span>
+</p>
+<p class="ob-msie-9 hidden">
+You are using an outdated browser. To get the best experience when using Goal, please update your browser.<span class="ob-nl">Click <a href="http://www.whatbrowser.com/intl/en/" target="_blank">here</a> to update your browser</span>
+</p>
+<p class="ob-msie-other hidden">
+You are using an outdated browser. To get the best experience when using Goal, please update your browser.<span class="ob-nl">Click <a href="http://www.whatbrowser.com/intl/en/" target="_blank">here</a> to update your browser</span>
+</p>
+<span class="close-button"></span>
+</div>
+-->
+</div>
+<div class="module module-ad dfp-ad dfp-top-banner"
+data-position=""
+data-placement="layout"
+>
+<!-- Begin: Google Dfp ad placement--><div id="div-gpt-ad-topbanner-3"></div><!-- End: Google Dfp ad placement--></div>
+
+<div class="module-edition-picker" data-module="editionpicker">
+<div class="clearfix">
+<ul>
+<li><a href="/en" class="flag-en">International</a></li>
+<li><a href="/en-us" class="flag-en-us">America</a></li>
+<li><a href="/es-ar" class="flag-es-ar">Argentina</a></li>
+<li><a href="/en-au" class="flag-en-au">Australia</a></li>
+<li><a href="/ba" class="flag-ba">Bosna i Hercegovina</a></li>
+<li><a href="/br" class="flag-br">Brasil</a></li>
+<li><a href="/en-ca" class="flag-en-ca">Canada</a></li>
+</ul>
+<ul>
+<li><a href="/es-cl" class="flag-es-cl">Chile</a></li>
+<li><a href="/es-co" class="flag-es-co">Colombia</a></li>
+<li><a href="/de" class="flag-de">Deutsch</a></li>
+<li><a href="/es" class="flag-es">España</a></li>
+<li><a href="/fr" class="flag-fr">Français</a></li>
+<li><a href="/en-gh" class="flag-en-gh">Ghana</a></li>
+<li><a href="/hr" class="flag-hr">Hrvatska</a></li>
+</ul>
+<ul>
+<li><a href="/en-india" class="flag-en-india">India</a></li>
+<li><a href="/id-ID" class="flag-id-ID">Indonesia</a></li>
+<li><a href="/en-ie" class="flag-en-ie">Ireland</a></li>
+<li><a href="/it" class="flag-it">Italia</a></li>
+<li><a href="/en-ke" class="flag-en-ke">Kenya</a></li>
+<li><a href="/en-my" class="flag-en-my">Malaysia</a></li>
+<li><a href="/es-mx" class="flag-es-mx">México</a></li>
+</ul>
+<ul>
+<li><a href="/nl" class="flag-nl">Nederlands</a></li>
+<li><a href="/en-ng" class="flag-en-ng">Nigeria</a></li>
+<li><a href="/en-sg" class="flag-en-sg">Singapore</a></li>
+<li><a href="/en-za" class="flag-en-za">South Africa</a></li>
+<li><a href="/en-tz" class="flag-en-tz">Tanzania</a></li>
+<li><a href="/tr" class="flag-tr">Türkçe</a></li>
+<li><a href="/en-gb" class="flag-en-gb">UK</a></li>
+</ul>
+<ul>
+<li><a href="/cn" class="flag-cn">简体中文</a></li>
+<li><a href="/hk" class="flag-hk">繁體中文</a></li>
+<li><a href="/kr" class="flag-kr">한국어</a></li>
+<li><a href="/jp" class="flag-jp">日本語</a></li>
+<li><a href="/th" class="flag-th">ภาษาไทย</a></li>
+<li><a href="/ar" class="flag-ar">العربية</a></li>
+<li><a href="/ar-eg" class="flag-ar-eg">المصرية</a></li>
+</ul>
+<ul>
+<li><a href="/ar-sa" class="flag-ar-sa">السعودية</a></li>
+<li><a href="/en-ar" class="flag-en-ar">Gulf English</a></li>
+<li><a href="/hu" class="flag-hu">Magyarország</a></li>
+</ul>
+</div>
+</div>
+<header class="module-header clearfix" data-module="header">
+<ul>
+<li class="edition-picker-trigger">
+<a href="#" class="flag-en" data-role="edition-picker-opener"> <b>Edition</b>: International</a>
+</li>
+<li>
+<div id="gigya-register-login-buttons" data-gigya-api-key="3_wCLJT75ffirrzBqqAJaHe1zYGgdpb9XFkjxEQfrxraM-xO_if-uM1uVBZZ5r4naE" data-gigya-screen-set-code="Default">
+<span class="gigya-register-login">
+<a class="gigya-account-register" href="#">Register</a>
+<span>/</span>
+<a class="gigya-account-login" href="#">Login</a>
+</span>
+<a href="#" class="gigya-account-logout">Sign out</a>
+<a class="gigya-account-icon"><span></span></a>
+</div>
+</li>
+<li class="social">
+<span>Follow us on</span>
+<a href="https://www.facebook.com/Goal" class="facebook img-rep" target="_blank">Facebook</a>
+<a href="http://twitter.com/goal" class="twitter img-rep" target="_blank">Twitter</a>
+<a href="http://www.youtube.com/goal" class="youtube img-rep" target="_blank">YouTube</a>
+<a href="http://www.instagram.com/goalglobal" class="instagram img-rep" target="_blank">instagram</a>
+<a href="https://plus.google.com/+Goal" class="googleplus img-rep" target="_blank">Google+</a>
+<a href="/en/feeds/news?fmt=rss" class="rss img-rep" target="_blank">RSS</a>
+</li>
+</ul>
+<div class="main-logo"><a href="/en" class="img-rep">Goal.com - Home</a></div>
+<div class="user" data-user-state="logged-in">
+<a href="https://secure.goal.com/en/account">
+<img data-user="thumbnail" src="" height="23" width="23" alt="thumbnail">
+</a>
+<span class="greeting">Hello,</span>
+<a href="https://secure.goal.com/en/account" data-user="nickname"></a>
+</div>
+</header>
+
+<div class="module-navigation" data-module="navigation" data-omniture-icid="TN">
+<div>
+<ul class="main clearfix" data-navigation>
+<li data-omniture-icid="1">
+<a href="/en/">Home</a>
+</li>
+<li data-omniture-icid="2">
+<a href="/en/news/archive/1">News</a>
+<ul class="sub">
+<li>
+<span>News</span>
+<ul data-omniture-icid="1">
+<li><a href="/en/news/archive/1">All news</a></li>
+<li><a href="/en/news/596/exclusive/archive/">Exclusives</a></li>
+<li><a href="/en/news/1785/fifa-ballon-dor">Ballon d'Or</a></li>
+<li><a href="/en/news/1715/previews">Previews</a></li>
+</ul>
+</li>
+<li>
+<span>Europe</span>
+<ul data-omniture-icid="2">
+<li><a href="/en/news/9/english-football">England</a></li>
+<li><a href="/en/news/12/spanish-football">Spain</a></li>
+<li><a href="/en/news/10/italian-football">Italy</a></li>
+<li><a href="/en/news/15/german-football">Germany</a></li>
+<li><a href="/en/news/755/europe">Europe</a></li>
+</ul>
+</li>
+<li>
+<span>Rest of the World</span>
+<ul data-omniture-icid="3">
+<li><a href="/en/news/60/south-america/archive/1">South America</a></li>
+<li><a href="/en/news/1884/north-america">North America</a></li>
+<li><a href="/en/news/89/africa/archive/1">Africa</a></li>
+<li><a href="/en/news/14/asia/archive/1">Asia</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-omniture-icid="3">
+<a href="#">Competitions</a>
+<ul class="sub">
+<li>
+<a href="/en/news/1716/champions-league">Champions League</a>
+</li>
+<li>
+<a href="/en/news/24092/icc-2016">ICC 2016</a>
+</li>
+<li>
+<a href="/euro2016/en">Euro 2016</a>
+</li>
+<li>
+<a href="/en/news/1862/premier-league">Premier League</a>
+</li>
+<li>
+<a href="/en/news/722/la-liga">La Liga</a>
+</li>
+<li>
+<a href="/en/news/723/serie-a">Serie A</a>
+</li>
+<li>
+<a href="/en/news/725/bundesliga">Bundesliga</a>
+</li>
+<li>
+<a href="/en/news/1722/ligue-1">Ligue 1</a>
+</li>
+<li>
+<a href="/en/news/166/europa-league">Europa League</a>
+</li>
+<li>
+<a href="/brasilglobaltour/en" target="_blank">Brasil Global Tour</a>
+</li>
+</ul>
+</li>
+<li data-omniture-icid="4">
+<a href="#">Clubs</a>
+<ul class="sub">
+<li>
+<span>England</span>
+<ul data-omniture-icid="1">
+<li><a href="/en/teams/england/arsenal/660">Arsenal</a></li>
+<li><a href="/en/teams/england/chelsea/661">Chelsea</a></li>
+<li><a href="/en/teams/england/liverpool/663">Liverpool</a></li>
+<li><a href="/en/teams/england/manchester-city/676">Manchester City</a></li>
+<li><a href="/en/teams/england/manchester-united/662">Manchester United</a></li>
+<li><a href="/en/teams/england/tottenham-hotspur/675">Tottenham</a></li>
+</ul>
+</li>
+<li>
+<span>Spain</span>
+<ul data-omniture-icid="2">
+<li><a href="/en/teams/spain/barcelona/2017">Barcelona</a></li>
+<li><a href="/en/teams/spain/real-madrid/2016">Real Madrid</a></li>
+<li><a href="/en/teams/spain/atl%C3%A9tico-madrid/2020">Atletico Madrid</a></li>
+<li><a href="/en/teams/spain/real-sociedad/2028">Real Sociedad</a></li>
+<li><a href="/en/teams/spain/sevilla/2021">Sevilla</a></li>
+<li><a href="/en/teams/spain/valencia/2015">Valencia</a></li>
+</ul>
+</li>
+<li>
+<span>Italy</span>
+<ul data-omniture-icid="3">
+<li><a href="/en/teams/italy/milan/1240">AC Milan</a></li>
+<li><a href="/en/teams/italy/juventus/1242">Juventus</a></li>
+<li><a href="/en/teams/italy/fiorentina/1259">Fiorentina</a></li>
+<li><a href="/en/teams/italy/internazionale/1244">Inter</a></li>
+<li><a href="/en/teams/italy/napoli/1270">Napoli</a></li>
+<li><a href="/en/teams/italy/roma/1241">Roma</a></li>
+</ul>
+</li>
+<li>
+<span>Germany</span>
+<ul data-omniture-icid="4">
+<li><a href="/en/teams/germany/bayern-m%C3%BCnchen/961">Bayern Munich</a></li>
+<li><a href="/en/teams/germany/borussia-dortmund/964">Borussia Dortmund</a></li>
+<li><a href="/en/teams/germany/bayer-leverkusen/963">Leverkusen</a></li>
+<li><a href="/en/teams/germany/wolfsburg/968">Wolfsburg</a></li>
+</ul>
+</li>
+<li>
+<span>France</span>
+<ul data-omniture-icid="5">
+<li><a href="/en/teams/france/psg/886">Paris Saint-Germain</a></li>
+<li><a href="/en/teams/monaco/monaco/885">Monaco</a></li>
+<li><a href="/en/teams/france/olympique-lyonnais/884">Olympique Lyonnais</a></li>
+<li><a href="/en/teams/france/olympique-marseille/890">Olympique de Marseille</a></li>
+</ul>
+</li>
+<li>
+<span>Rest of Europe</span>
+<ul data-omniture-icid="6">
+<li><a href="/en/teams/netherlands/ajax/1515">Ajax</a></li>
+<li><a href="/en/teams/scotland/celtic/1898">Celtic</a></li>
+<li><a href="/en/teams/turkey/galatasaray/2217">Galatasaray</a></li>
+<li><a href="/en/teams/portugal/porto/1678">Porto</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-omniture-icid="5">
+<a href="/en/live-scores">LIVE</a>
+<ul class="sub">
+<li>
+<a href="/en/live-scores">Live Football Scores</a>
+</li>
+<li>
+<a href="/en/news/5312/featured-story/2013/10/25/4356045/new-the-ultimate-app-for-live-scores">Goal Live Scores Mobile App</a>
+</li>
+</ul>
+</li>
+<li data-omniture-icid="6">
+<a href="/en/news/11/transfer-zone">Transfers</a>
+<ul class="sub">
+<li>
+<a href="/en/news/11/transfer-zone/archive/1">Latest News</a>
+</li>
+<li>
+<a href="/en/scores/transfer-zone">Done Deals</a>
+</li>
+</ul>
+</li>
+<li data-omniture-icid="7">
+<a href="/en/news/14312/features">Features</a>
+<ul class="sub">
+<li>
+<a href="/en/news/14312/features">All Features</a>
+</li>
+<li>
+<a href="/en/news/14302/comment">Comment</a>
+</li>
+<li>
+<a href="/en/news/7180/galleries">Galleries</a>
+</li>
+<li>
+<a href="/en/news/1127/player-ratings/archive/1">Player Ratings</a>
+</li>
+<li>
+<a href="/en/news/8/main/2017/06/20/36492962/goals-cartoon-corner-the-best-football-sketches-from-omar">Cartoon of the Day</a>
+</li>
+<li>
+<a href="/en/news/13452/opta">Opta</a>
+</li>
+<li>
+<a href="/en/news/1688/gaming">Goal Gaming</a>
+</li>
+<li>
+<a href="http://starstrikers.goal.com/">Goal Star Strikers</a>
+</li>
+</ul>
+</li>
+<li data-omniture-icid="8">
+<a href="/en/news/2994/goal-com-betting">Bet</a>
+<ul class="sub">
+<li>
+<a href="/en/news/2994/goal-com-betting">Betting Home</a>
+</li>
+</ul>
+</li>
+<li class="more"><a href="#">More</a></li>
+</ul>
+<div class="submenu-wrapper">
+<ul class="submenu clearfix" data-subnavigation>
+<li class="disabled">Quick Links</li>
+<li><a href="/en/fixtures">Fixtures</a></li>
+<li><a href="/en/results">Results</a></li>
+<li><a href="/en/tables">Tables</a></li>
+</ul>
+</div>
+
+<div class="submenu-inner-module">
+</div>
+<span class="slide-left" data-role="submenu-slider"></span>
+<span class="slide-right" data-role="submenu-slider"></span>
+</div>
+<form action="/en/search" method="get" class="form-search">
+<input type="search" name="q" placeholder="Search for team or player" class="keyword" required="required">
+<input type="submit" value="" class="submit">
+</form>
+</div>
+
+<div class="main-section">
+<div class="main-content clearfix" role="main">
+<header>
+<h1><span>Live</span><span>scores</span></h1>
+</header>
+<div class="module module-ad dfp-ad dfp-navbar"
+data-position=""
+data-placement="liveScoresView"
+>
+<!-- Begin: Google Dfp ad placement--><div id="div-gpt-ad-navbar-0"></div><!-- End: Google Dfp ad placement--></div>
+<section data-translation-ht="HT"data-translation-ft="FT"data-translation-pen="PEN"data-translation-aet="AET"data-translation-odds="Odds"data-tip="Go To Match Centre"data-fake-status-overlap="300"
+data-broken-suspended-status-overlap="10800"
+data-today-overlap="3600"
+data-bookmakers-ids="[]"
+data-omnituresection="Livescores"
+>
+<script class="bet-row-tmpl" type="text/template">
+<tr class="bet-row hidden" data-match-id="<%= matchId %>">
+<td colspan="5">
+<span class="match-odds">Match Odds</span>
+<a href="<%= betLinkHome %>" class="wrapper" target="_blank" data-omnitureevent>1<span class="btn"><%= home %></span></a>
+<a href="<%= betLinkDraw %>" class="wrapper" target="_blank" data-omnitureevent>X<span class="btn"><%= draw %></span></a>
+<a href="<%= betLinkAway %>" class="wrapper" target="_blank" data-omnitureevent>2<span class="btn"><%= away %></span></a>
+<span class="logo"><a href="<%= betLinkHome %>" target="_blank" data-omnitureevent><img src="<%= logo.url %>" alt="<%= logo.alt %>" width="64" height="22" /></a></span>
+</td>
+</tr>
+</script>
+
+<script class="inline-odds-tmpl" type="text/template">
+<div class="inline-odds">
+<span data-name="<%= typeHome %>" class="btn" data-omnitureevent><a href="<%= betLinkHome %>" target="_blank"><%= home %></a></span>
+<span data-name="<%= typeDraw %>" class="btn" data-omnitureevent><a href="<%= betLinkDraw %>" target="_blank"><%= draw %></a></span>
+<span data-name="<%= typeAway %>" class="btn" data-omnitureevent><a href="<%= betLinkAway %>" target="_blank"><%= away %></a></span>
+</div>
+</script>
+
+<script class="bet-button-tmpl" type="text/template">
+<a class="btn btn-bet" href="#"><%= text %></a>
+</script>
+
+
+<section class="my-scores">
+<header class="info-header">
+<h3>My Scores</h3>
+<div class="toolbar">
+<button class="btn btn-show-odds" data-omnitureevent data-hidden="Hide odds">Show odds</button>
+<button class="btn btn-reload btn-icon" data-omnitureevent="Refresh button"></button>
+<span>Page updates automatically</span>
+</div>
+</header>
+<div class="instructions">
+<span>
+To add games to My Scores click the <span class="star">star</span> icon</span>
+<a class="clear-all" href="#clear-all">Clear All</a>
+</div>
+<div class="matchdays">
+<section
+class="matchday hidden"
+data-day="2017-07-11"
+>
+<header class="info-header">
+<h3>Tuesday, July 11, 2017</h3>
+<span class="bookmaker-logo"><img src="" alt=""/></span>
+</header>
+<table class="matches"></table>
+</section>
+<section
+class="matchday hidden"
+data-day="2017-07-12"
+>
+<header class="info-header">
+<h3>Wednesday, July 12, 2017</h3>
+<span class="bookmaker-logo"><img src="" alt=""/></span>
+</header>
+<table class="matches"></table>
+</section>
+<section
+class="matchday hidden"
+data-day="2017-07-13"
+>
+<header class="info-header">
+<h3>Thursday, July 13, 2017</h3>
+<span class="bookmaker-logo"><img src="" alt=""/></span>
+</header>
+<table class="matches"></table>
+</section>
+</div>
+</section>
+
+<section class="matchdays-wrapper">
+<header class="clearfix">
+<h3>Show games from</h3>
+<div class="countries-filter">
+<select class="hidden">
+<option value="" data-omnitureevent>All Countries</option>
+<option
+value="16"
+data-text-no-today="There are no Argentina fixtures on this day"data-text-no-live="There are no Argentina fixtures on this day"data-text-no-comingup="There are no Argentina games coming up today or tomorrow"data-text-no-finished="There are no Argentina results for today or yesterday">
+Argentina</option>
+<option
+value="35"
+data-text-no-today="There are no Brazil fixtures on this day"data-text-no-live="There are no Brazil fixtures on this day"data-text-no-comingup="There are no Brazil games coming up today or tomorrow"data-text-no-finished="There are no Brazil results for today or yesterday">
+Brazil</option>
+<option
+value="51"
+data-text-no-today="There are no Colombia fixtures on this day"data-text-no-live="There are no Colombia fixtures on this day"data-text-no-comingup="There are no Colombia games coming up today or tomorrow"data-text-no-finished="There are no Colombia results for today or yesterday">
+Colombia</option>
+<option
+value="7"
+data-text-no-today="There are no Europe fixtures on this day"data-text-no-live="There are no Europe fixtures on this day"data-text-no-comingup="There are no Europe games coming up today or tomorrow"data-text-no-finished="There are no Europe results for today or yesterday">
+Europe</option>
+<option
+value="95"
+data-text-no-today="There are no Indonesia fixtures on this day"data-text-no-live="There are no Indonesia fixtures on this day"data-text-no-comingup="There are no Indonesia games coming up today or tomorrow"data-text-no-finished="There are no Indonesia results for today or yesterday">
+Indonesia</option>
+<option
+value="107"
+data-text-no-today="There are no Korea Republic fixtures on this day"data-text-no-live="There are no Korea Republic fixtures on this day"data-text-no-comingup="There are no Korea Republic games coming up today or tomorrow"data-text-no-finished="There are no Korea Republic results for today or yesterday">
+Korea Republic</option>
+<option
+value="4"
+data-text-no-today="There are no N/C America fixtures on this day"data-text-no-live="There are no N/C America fixtures on this day"data-text-no-comingup="There are no N/C America games coming up today or tomorrow"data-text-no-finished="There are no N/C America results for today or yesterday">
+N/C America</option>
+<option
+value="170"
+data-text-no-today="There are no Singapore fixtures on this day"data-text-no-live="There are no Singapore fixtures on this day"data-text-no-comingup="There are no Singapore games coming up today or tomorrow"data-text-no-finished="There are no Singapore results for today or yesterday">
+Singapore</option>
+<option
+value="5"
+data-text-no-today="There are no South America fixtures on this day"data-text-no-live="There are no South America fixtures on this day"data-text-no-comingup="There are no South America games coming up today or tomorrow"data-text-no-finished="There are no South America results for today or yesterday">
+South America</option>
+<option
+value="203"
+data-text-no-today="There are no USA fixtures on this day"data-text-no-live="There are no USA fixtures on this day"data-text-no-comingup="There are no USA games coming up today or tomorrow"data-text-no-finished="There are no USA results for today or yesterday">
+USA</option>
+<option
+value="1"
+data-text-no-today="There are no World fixtures on this day"data-text-no-live="There are no World fixtures on this day"data-text-no-comingup="There are no World games coming up today or tomorrow"data-text-no-finished="There are no World results for today or yesterday">
+World</option>
+</select>
+</div>
+</header>
+<ul class="tabs">
+<li class="tab active" data-tab="today" data-omnitureevent="tab today">Today</li>
+<li class="tab" data-tab="live" data-omnitureevent="tab live">Live</li>
+<li class="tab" data-tab="comingup" data-omnitureevent="tab coming up">Coming up</li>
+<li class="tab" data-tab="finished" data-omnitureevent="tab finished">Finished</li>
+</ul>
+<div class="matchdays"
+data-filter-tab="today"
+data-text-no-live="There are no live games in progress"data-text-no-comingup="There are no games coming up today or tomorrow"data-text-no-finished="There are no results for today or yesterday ">
+<section
+class="matchday hidden"
+data-day="2017-07-11"
+>
+<header class="info-header">
+<h3>Tuesday, July 11, 2017</h3>
+<span class="bookmaker-logo"><img src="" alt=""/></span>
+</header>
+<table
+class="matches"
+data-area-id="7"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/news/1716/champions-league" class="underlined">
+<span class="area-flag-18-7"></span>
+<span class="comp-title">UEFA Champions League</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2466291"
+data-match-time="1499798700"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1943.png" alt="Partizan">
+<span>Partizan</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1953.png" alt="Budućnost">
+<span>Budućnost</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/partizan-vs-budu%C4%87nost/2466291" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466276"
+data-match-time="1499798700"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/480.png" alt="Rijeka">
+<span>Rijeka</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/6787.png" alt="The New Saints">
+<span>The New Saints</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/rijeka-vs-the-new-saints/2466276" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466264"
+data-match-time="1499797800"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1447.png" alt="Hibernians">
+<span>Hibernians</span>
+</div>
+</td>
+<td class="vs">
+<div>
+0 - 3</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/165.png" alt="Salzburg">
+<span>Salzburg</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/hibernians-vs-salzburg/2466264" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466262"
+data-match-time="1499792400"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/180.png" alt="Qarabağ">
+<span>Qarabağ</span>
+</div>
+</td>
+<td class="vs">
+<div>
+5 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7415.png" alt="Samtredia">
+<span>Samtredia</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/qaraba%C4%9F-vs-samtredia/2466262" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="1"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a >
+<span class="area-flag-18-1"></span>
+<span class="comp-title">Club Friendlies</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2487984"
+data-match-time="1499792400"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/2951.png" alt="Lugano">
+<span>Lugano</span>
+</div>
+</td>
+<td class="vs">
+<div>
+0 - 4</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1240.png" alt="Milan">
+<span>Milan</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/lugano-vs-milan/2487984" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466916"
+data-match-time="1499792400"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/994.png" alt="Rot-Weiss Essen">
+<span>Rot-Weiss Essen</span>
+</div>
+</td>
+<td class="vs">
+<div>
+3 - 2</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/964.png" alt="Borussia Dortmund">
+<span>Borussia Dortmund</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/rot-weiss-essen-vs-borussia-dortmund/2466916" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2500182"
+data-match-time="1499785200"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/36790.png" alt="Pinzolo Campiglio">
+<span>Pinzolo Campiglio</span>
+</div>
+</td>
+<td class="vs">
+<div>
+0 - 8</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1241.png" alt="Roma">
+<span>Roma</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/pinzolo-campiglio-vs-roma/2500182" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="5"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a >
+<span class="area-flag-18-5"></span>
+<span class="comp-title">Copa Sudamericana</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2463847"
+data-match-time="1499811300"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/123.png" alt="Huracán">
+<span>Huracán</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 5</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1621.png" alt="Libertad">
+<span>Libertad</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/hurac%C3%A1n-vs-libertad/2463847" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="170"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/league-cup/729" class="underlined">
+<span class="area-flag-18-170"></span>
+<span class="comp-title">League Cup</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2484636"
+data-match-time="1499772600"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/13060.png" alt="DPMM">
+<span>DPMM</span>
+</div>
+</td>
+<td class="vs">
+<div>
+3 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1968.png" alt="Balestier Khalsa">
+<span>Balestier Khalsa</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/dpmm-vs-balestier-khalsa/2484636" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2484635"
+data-match-time="1499772600"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1965.png" alt="Tampines Rovers">
+<span>Tampines Rovers</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 4</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1967.png" alt="Geylang International">
+<span>Geylang International</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/tampines-rovers-vs-geylang-international/2484635" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="16"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/prim-b-nacional/88" class="underlined">
+<span class="area-flag-18-16"></span>
+<span class="comp-title">Prim B Nacional</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2343687"
+data-match-time="1499797800"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/112.png" alt="Almagro">
+<span>Almagro</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7029.png" alt="Brown de Adrogué">
+<span>Brown de Adrogué</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/almagro-vs-brown-de-adrogu%C3%A9/2343687" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="35"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/serie-b/89" class="underlined">
+<span class="area-flag-18-35"></span>
+<span class="comp-title">Serie B</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2420010"
+data-match-time="1499811300"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/6205.png" alt="Brasil de Pelotas">
+<span>Brasil de Pelotas</span>
+</div>
+</td>
+<td class="vs">
+<div>
+3 - 1</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/10309.png" alt="Oeste">
+<span>Oeste</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/brasil-de-pelotas-vs-oeste/2420010" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2420007"
+data-match-time="1499811300"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/305.png" alt="Criciúma">
+<span>Criciúma</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 1</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/322.png" alt="Paysandu">
+<span>Paysandu</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/crici%C3%BAma-vs-paysandu/2420007" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2420011"
+data-match-time="1499811300"
+data-match-status="played"
+data-match-fake-status="played"
+>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/346.png" alt="Londrina">
+<span>Londrina</span>
+</div>
+</td>
+<td class="vs">
+<div>
+3 - 1</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/5112.png" alt="ABC">
+<span>ABC</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/londrina-vs-abc/2420011" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section
+class="matchday"
+data-day="2017-07-12"
+data-today>
+<header class="info-header">
+<h3>Wednesday, July 12, 2017</h3>
+<span class="bookmaker-logo"><img src="" alt=""/></span>
+</header>
+<table
+class="matches"
+data-area-id="7"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/news/1716/champions-league" class="underlined">
+<span class="area-flag-18-7"></span>
+<span class="comp-title">UEFA Champions League</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2466268"
+data-match-time="1499875200"
+data-match-status="playing"
+data-match-fake-status="playing"
+data-today>
+<tr>
+<td class="status">
+<span>
+HT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/8509.png" alt="Spartaks Jūrmala">
+<span>Spartaks Jūrmala</span>
+</div>
+</td>
+<td class="vs">
+<div>
+0 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/13104.png" alt="Astana">
+<span>Astana</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/spartaks-j%C5%ABrmala-vs-astana/2466268" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466258"
+data-match-time="1499878800"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+18:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/516.png" alt="APOEL">
+<span>APOEL</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1413.png" alt="F91 Dudelange">
+<span>F91 Dudelange</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/apoel-vs-f91-dudelange/2466258" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466274"
+data-match-time="1499878800"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+18:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1205.png" alt="Hapoel Be'er Sheva">
+<span>Hapoel Be'er Sheva</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1113.png" alt="Honvéd">
+<span>Honvéd</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/hapoel-beer-sheva-vs-honv%C3%A9d/2466274" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466289"
+data-match-time="1499878800"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+18:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/2146.png" alt="Malmö FF">
+<span>Malmö FF</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1436.png" alt="Vardar">
+<span>Vardar</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/malm%C3%B6-ff-vs-vardar/2466289" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466266"
+data-match-time="1499878800"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+18:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1498.png" alt="Sheriff">
+<span>Sheriff</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/12573.png" alt="Kukësi">
+<span>Kukësi</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/sheriff-vs-kuk%C3%ABsi/2466266" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466278"
+data-match-time="1499878800"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+18:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/2705.png" alt="Zrinjski">
+<span>Zrinjski</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/2001.png" alt="Maribor">
+<span>Maribor</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/zrinjski-vs-maribor/2466278" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466270"
+data-match-time="1499880600"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+18:30</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/200.png" alt="BATE">
+<span>BATE</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/21301.png" alt="Alashkert">
+<span>Alashkert</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/bate-vs-alashkert/2466270" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466286"
+data-match-time="1499882400"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+19:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/826.png" alt="Mariehamn">
+<span>Mariehamn</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1648.png" alt="Legia Warszawa">
+<span>Legia Warszawa</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/mariehamn-vs-legia-warszawa/2466286" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466260"
+data-match-time="1499882400"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+19:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1406.png" alt="Žalgiris">
+<span>Žalgiris</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/12387.png" alt="Ludogorets">
+<span>Ludogorets</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/%C5%BEalgiris-vs-ludogorets/2466260" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466272"
+data-match-time="1499883300"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+19:15</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1973.png" alt="Žilina">
+<span>Žilina</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/600.png" alt="København">
+<span>København</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/%C5%BEilina-vs-k%C3%B8benhavn/2466272" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466280"
+data-match-time="1499885100"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+19:45</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1196.png" alt="Dundalk">
+<span>Dundalk</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1587.png" alt="Rosenborg">
+<span>Rosenborg</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/dundalk-vs-rosenborg/2466280" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2466282"
+data-match-time="1499886900"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+20:15</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1141.png" alt="FH">
+<span>FH</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/10596.png" alt="Víkingur">
+<span>Víkingur</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/fh-vs-v%C3%ADkingur/2466282" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="7"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/news/166/europa-league" class="underlined">
+<span class="area-flag-18-7"></span>
+<span class="comp-title">UEFA Europa League</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2466467"
+data-match-time="1499875200"
+data-match-status="playing"
+data-match-fake-status="playing"
+data-today>
+<tr>
+<td class="status">
+<span>
+HT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/3070.png" alt="İnter Bakı">
+<span>İnter Bakı</span>
+</div>
+</td>
+<td class="vs">
+<div>
+0 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7681.png" alt="Fola Esch">
+<span>Fola Esch</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/inter-bak%C4%B1-vs-fola-esch/2466467" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="4"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/concacaf-gold-cup/247" class="underlined">
+<span class="area-flag-18-4"></span>
+<span class="comp-title">CONCACAF Gold Cup</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2424659"
+data-match-time="1499898600"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+23:30</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1618.png" alt="Panama">
+<span>Panama</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1565.png" alt="Nicaragua">
+<span>Nicaragua</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/panama-vs-nicaragua/2424659" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2424365"
+data-match-time="1499824800"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1099.png" alt="Honduras">
+<span>Honduras</span>
+</div>
+</td>
+<td class="vs">
+<div>
+0 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7982.png" alt="French Guyana">
+<span>French Guyana</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/honduras-vs-french-guyana/2424365" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2424364"
+data-match-time="1499815800"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/477.png" alt="Costa Rica">
+<span>Costa Rica</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 1</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/401.png" alt="Canada">
+<span>Canada</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/costa-rica-vs-canada/2424364" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="1"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a >
+<span class="area-flag-18-1"></span>
+<span class="comp-title">Club Friendlies</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2464072"
+data-match-time="1499885100"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+19:45</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/713.png" alt="Tranmere Rovers">
+<span>Tranmere Rovers</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/663.png" alt="Liverpool">
+<span>Liverpool</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/tranmere-rovers-vs-liverpool/2464072" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="51"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/copa-colombia/613" class="underlined">
+<span class="area-flag-18-51"></span>
+<span class="comp-title">Copa Colombia</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2481169"
+data-match-time="1499891400"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+21:30</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/472.png" alt="Unión Magdalena">
+<span>Unión Magdalena</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/6932.png" alt="Patriotas Boyacá">
+<span>Patriotas Boyacá</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/uni%C3%B3n-magdalena-vs-patriotas-boyac%C3%A1/2481169" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="5"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a >
+<span class="area-flag-18-5"></span>
+<span class="comp-title">Copa Sudamericana</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2463844"
+data-match-time="1499897700"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+23:15</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/291.png" alt="Bolívar">
+<span>Bolívar</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/647.png" alt="LDU Quito">
+<span>LDU Quito</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/bol%C3%ADvar-vs-ldu-quito/2463844" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2463853"
+data-match-time="1499820300"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1620.png" alt="Cerro Porteño">
+<span>Cerro Porteño</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 1</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/9325.png" alt="Boston River">
+<span>Boston River</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/cerro-porte%C3%B1o-vs-boston-river/2463853" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2463850"
+data-match-time="1499820300"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/290.png" alt="Oriente Petrolero">
+<span>Oriente Petrolero</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 3</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7064.png" alt="Atlético Tucumán">
+<span>Atlético Tucumán</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/oriente-petrolero-vs-atl%C3%A9tico-tucum%C3%A1n/2463850" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="107"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/k-league-classic/136" class="underlined">
+<span class="area-flag-18-107"></span>
+<span class="comp-title">K League Classic</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2396631"
+data-match-time="1499857200"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/6564.png" alt="Jeju United">
+<span>Jeju United</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 1</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1377.png" alt="Jeonbuk Motors">
+<span>Jeonbuk Motors</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/jeju-united-vs-jeonbuk-motors/2396631" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2396630"
+data-match-time="1499855400"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1373.png" alt="Daegu">
+<span>Daegu</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 3</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1374.png" alt="Ulsan">
+<span>Ulsan</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/daegu-vs-ulsan/2396630" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2396628"
+data-match-time="1499855400"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/12907.png" alt="Gangwon">
+<span>Gangwon</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 2</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1376.png" alt="Jeonnam Dragons">
+<span>Jeonnam Dragons</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/gangwon-vs-jeonnam-dragons/2396628" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2396629"
+data-match-time="1499855400"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1381.png" alt="Seoul">
+<span>Seoul</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1372.png" alt="Pohang Steelers">
+<span>Pohang Steelers</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/seoul-vs-pohang-steelers/2396629" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2396627"
+data-match-time="1499855400"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1382.png" alt="Suwon Bluewings">
+<span>Suwon Bluewings</span>
+</div>
+</td>
+<td class="vs">
+<div>
+3 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1380.png" alt="Incheon United">
+<span>Incheon United</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/suwon-bluewings-vs-incheon-united/2396627" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2396626"
+data-match-time="1499853600"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/18351.png" alt="Gwangju">
+<span>Gwangju</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 2</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1378.png" alt="Sangju Sangmu">
+<span>Sangju Sangmu</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/gwangju-vs-sangju-sangmu/2396626" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="95"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/liga-1/629" class="underlined">
+<span class="area-flag-18-95"></span>
+<span class="comp-title">Liga 1</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2435668"
+data-match-time="1499859000"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/6712.png" alt="Gresik United">
+<span>Gresik United</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 3</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/20751.png" alt="Arema">
+<span>Arema</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/gresik-united-vs-arema/2435668" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2435667"
+data-match-time="1499859000"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1150.png" alt="Persib">
+<span>Persib</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 1</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1155.png" alt="Persela">
+<span>Persela</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/persib-vs-persela/2435667" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2435669"
+data-match-time="1499846400"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1161.png" alt="Semen Padang">
+<span>Semen Padang</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 1</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/20754.png" alt="Persija">
+<span>Persija</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/semen-padang-vs-persija/2435669" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2435666"
+data-match-time="1499841000"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1149.png" alt="Persipura">
+<span>Persipura</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 2</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/17310.png" alt="Perseru Serui">
+<span>Perseru Serui</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/persipura-vs-perseru-serui/2435666" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="16"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/prim-b-nacional/88" class="underlined">
+<span class="area-flag-18-16"></span>
+<span class="comp-title">Prim B Nacional</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2343692"
+data-match-time="1499882400"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+19:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7036.png" alt="Flandria">
+<span>Flandria</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7788.png" alt="Crucero del Norte">
+<span>Crucero del Norte</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/flandria-vs-crucero-del-norte/2343692" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2343696"
+data-match-time="1499884500"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+19:35</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/103.png" alt="Nueva Chicago">
+<span>Nueva Chicago</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/113.png" alt="Argentinos Juniors">
+<span>Argentinos Juniors</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/nueva-chicago-vs-argentinos-juniors/2343696" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="51"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/primera-b/448" class="underlined">
+<span class="area-flag-18-51"></span>
+<span class="comp-title">Primera B</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2476201"
+data-match-time="1499820300"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/6934.png" alt="Atlético">
+<span>Atlético</span>
+</div>
+</td>
+<td class="vs">
+<div>
+0 - 4</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/460.png" alt="Deportivo Pereira">
+<span>Deportivo Pereira</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/atl%C3%A9tico-vs-deportivo-pereira/2476201" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="35"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/serie-a/26" class="underlined">
+<span class="area-flag-18-35"></span>
+<span class="comp-title">Serie A</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2419090"
+data-match-time="1499898600"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+23:30</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/317.png" alt="Atlético Mineiro">
+<span>Atlético Mineiro</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/319.png" alt="Santos">
+<span>Santos</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/atl%C3%A9tico-mineiro-vs-santos/2419090" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2419094"
+data-match-time="1499898600"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+data-today>
+<tr>
+<td class="status">
+<span>
+23:30</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/301.png" alt="Ponte Preta">
+<span>Ponte Preta</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/341.png" alt="Bahia">
+<span>Bahia</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/ponte-preta-vs-bahia/2419094" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="35"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/serie-b/89" class="underlined">
+<span class="area-flag-18-35"></span>
+<span class="comp-title">Serie B</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2420014"
+data-match-time="1499819400"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/344.png" alt="CRB">
+<span>CRB</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 1</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/303.png" alt="Figueirense">
+<span>Figueirense</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/crb-vs-figueirense/2420014" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2420013"
+data-match-time="1499819400"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/5130.png" alt="Luverdense">
+<span>Luverdense</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 2</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/325.png" alt="Santa Cruz">
+<span>Santa Cruz</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/luverdense-vs-santa-cruz/2420013" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2420006"
+data-match-time="1499819400"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/326.png" alt="Náutico">
+<span>Náutico</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 1</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/314.png" alt="Juventude">
+<span>Juventude</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/n%C3%A1utico-vs-juventude/2420006" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2420012"
+data-match-time="1499815800"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/337.png" alt="América Mineiro">
+<span>América Mineiro</span>
+</div>
+</td>
+<td class="vs">
+<div>
+2 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/5127.png" alt="Boa">
+<span>Boa</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/am%C3%A9rica-mineiro-vs-boa/2420012" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2420005"
+data-match-time="1499815800"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/333.png" alt="Ceará">
+<span>Ceará</span>
+</div>
+</td>
+<td class="vs">
+<div>
+0 - 2</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/308.png" alt="Internacional">
+<span>Internacional</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/cear%C3%A1-vs-internacional/2420005" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2420009"
+data-match-time="1499815800"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/316.png" alt="Guarani">
+<span>Guarani</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/307.png" alt="Goiás">
+<span>Goiás</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/guarani-vs-goi%C3%A1s/2420009" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2420008"
+data-match-time="1499815800"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/329.png" alt="Vila Nova">
+<span>Vila Nova</span>
+</div>
+</td>
+<td class="vs">
+<div>
+3 - 2</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/309.png" alt="Paraná">
+<span>Paraná</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/vila-nova-vs-paran%C3%A1/2420008" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="7"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/uefa-u19-championship/819" class="underlined">
+<span class="area-flag-18-7"></span>
+<span class="comp-title">UEFA U19 Championship</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2484193"
+data-match-time="1499875200"
+data-match-status="playing"
+data-match-fake-status="playing"
+data-today>
+<tr>
+<td class="status">
+<span>
+HT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/15378.png" alt="England U19">
+<span>England U19</span>
+</div>
+</td>
+<td class="vs">
+<div>
+0 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/15411.png" alt="Czech Republic U19">
+<span>Czech Republic U19</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/england-u19-vs-czech-republic-u19/2484193" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2484192"
+data-match-time="1499864400"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+FT</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/15402.png" alt="Portugal U19">
+<span>Portugal U19</span>
+</div>
+</td>
+<td class="vs">
+<div>
+1 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/15410.png" alt="Netherlands U19">
+<span>Netherlands U19</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/portugal-u19-vs-netherlands-u19/2484192" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="203"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a >
+<span class="area-flag-18-203"></span>
+<span class="comp-title">US Open Cup</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2466028"
+data-match-time="1499819400"
+data-match-status="played"
+data-match-fake-status="played"
+data-today>
+<tr>
+<td class="status">
+<span>
+AET</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/2274.png" alt="Sporting KC">
+<span>Sporting KC</span>
+</div>
+</td>
+<td class="vs">
+<div>
+3 - 0</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/3841.png" alt="Dallas">
+<span>Dallas</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/sporting-kc-vs-dallas/2466028" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section
+class="matchday hidden"
+data-day="2017-07-13"
+>
+<header class="info-header">
+<h3>Thursday, July 13, 2017</h3>
+<span class="bookmaker-logo"><img src="" alt=""/></span>
+</header>
+<table
+class="matches"
+data-area-id="4"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/concacaf-gold-cup/247" class="underlined">
+<span class="area-flag-18-4"></span>
+<span class="comp-title">CONCACAF Gold Cup</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2424369"
+data-match-time="1499907600"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+02:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/2281.png" alt="United States">
+<span>United States</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7978.png" alt="Martinique">
+<span>Martinique</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/united-states-vs-martinique/2424369" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="1"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a >
+<span class="area-flag-18-1"></span>
+<span class="comp-title">Club Friendlies</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2233935"
+data-match-time="1499938200"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+10:30</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/4295.png" alt="Sydney">
+<span>Sydney</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/660.png" alt="Arsenal">
+<span>Arsenal</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/sydney-vs-arsenal/2233935" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="51"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/copa-colombia/613" class="underlined">
+<span class="area-flag-18-51"></span>
+<span class="comp-title">Copa Colombia</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2481170"
+data-match-time="1499905800"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:30</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/464.png" alt="Medellín">
+<span>Medellín</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/462.png" alt="Deportivo Pasto">
+<span>Deportivo Pasto</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/medell%C3%ADn-vs-deportivo-pasto/2481170" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2481166"
+data-match-time="1499905800"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:30</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/469.png" alt="Santa Fe">
+<span>Santa Fe</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/6922.png" alt="La Equidad">
+<span>La Equidad</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/santa-fe-vs-la-equidad/2481166" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2481168"
+data-match-time="1499906700"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:45</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/455.png" alt="América de Cali">
+<span>América de Cali</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/6924.png" alt="Rionegro Águilas">
+<span>Rionegro Águilas</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/am%C3%A9rica-de-cali-vs-rionegro-%C3%A1guilas/2481168" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="5"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a >
+<span class="area-flag-18-5"></span>
+<span class="comp-title">Copa Sudamericana</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2463843"
+data-match-time="1499906700"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:45</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/100.png" alt="Independiente">
+<span>Independiente</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/8240.png" alt="Deportes Iquique">
+<span>Deportes Iquique</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/independiente-vs-deportes-iquique/2463843" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2463851"
+data-match-time="1499906700"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:45</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1627.png" alt="Nacional Asunción">
+<span>Nacional Asunción</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/1624.png" alt="Olimpia">
+<span>Olimpia</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/nacional-asunci%C3%B3n-vs-olimpia/2463851" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="203"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/nasl/917" class="underlined">
+<span class="area-flag-18-203"></span>
+<span class="comp-title">NASL</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2411983"
+data-match-time="1499904000"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/25675.png" alt="Jacksonville Armada">
+<span>Jacksonville Armada</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/35584.png" alt="Puerto Rico">
+<span>Puerto Rico</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/jacksonville-armada-vs-puerto-rico/2411983" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="16"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/prim-b-nacional/88" class="underlined">
+<span class="area-flag-18-16"></span>
+<span class="comp-title">Prim B Nacional</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2343686"
+data-match-time="1499900700"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+00:05</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/119.png" alt="Ferro Carril Oeste">
+<span>Ferro Carril Oeste</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7054.png" alt="Guillermo Brown">
+<span>Guillermo Brown</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/ferro-carril-oeste-vs-guillermo-brown/2343686" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2343690"
+data-match-time="1499900700"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+00:05</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7060.png" alt="Independiente Rivadavia">
+<span>Independiente Rivadavia</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7044.png" alt="Douglas Haig">
+<span>Douglas Haig</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/independiente-rivadavia-vs-douglas-haig/2343690" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2343691"
+data-match-time="1499902200"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+00:30</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7053.png" alt="Deportivo Santamarina">
+<span>Deportivo Santamarina</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/21812.png" alt="Estudiantes de San Luis">
+<span>Estudiantes de San Luis</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/deportivo-santamarina-vs-estudiantes-de-san-luis/2343691" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2343689"
+data-match-time="1499904000"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/8018.png" alt="Boca Unidos">
+<span>Boca Unidos</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7458.png" alt="Villa Dálmine">
+<span>Villa Dálmine</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/boca-unidos-vs-villa-d%C3%A1lmine/2343689" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2343688"
+data-match-time="1499904000"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/7787.png" alt="Central Córdoba SdE">
+<span>Central Córdoba SdE</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/16676.png" alt="Atlético Paraná">
+<span>Atlético Paraná</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/central-c%C3%B3rdoba-sde-vs-atl%C3%A9tico-paran%C3%A1/2343688" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2343695"
+data-match-time="1499905800"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:30</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/121.png" alt="Gimnasia Jujuy">
+<span>Gimnasia Jujuy</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/125.png" alt="Instituto">
+<span>Instituto</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/gimnasia-jujuy-vs-instituto/2343695" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="35"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a href="/en/tables/serie-a/26" class="underlined">
+<span class="area-flag-18-35"></span>
+<span class="comp-title">Serie A</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2419086"
+data-match-time="1499904000"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:00</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/312.png" alt="Fluminense">
+<span>Fluminense</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/323.png" alt="Botafogo">
+<span>Botafogo</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/fluminense-vs-botafogo/2419086" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2419091"
+data-match-time="1499906700"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:45</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/315.png" alt="Atlético PR">
+<span>Atlético PR</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/304.png" alt="Cruzeiro">
+<span>Cruzeiro</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/atl%C3%A9tico-pr-vs-cruzeiro/2419091" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2419088"
+data-match-time="1499906700"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:45</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/310.png" alt="Palmeiras">
+<span>Palmeiras</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/320.png" alt="Corinthians">
+<span>Corinthians</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/palmeiras-vs-corinthians/2419088" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+<tbody class="match clickable "
+data-match-id="2419093"
+data-match-time="1499906700"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+01:45</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/306.png" alt="Vitória">
+<span>Vitória</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/321.png" alt="Vasco da Gama">
+<span>Vasco da Gama</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/vit%C3%B3ria-vs-vasco-da-gama/2419093" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+<table
+class="matches"
+data-area-id="203"
+>
+<thead>
+<tr class="subheader">
+<th colspan="7" class="comp-date">
+<a >
+<span class="area-flag-18-203"></span>
+<span class="comp-title">US Open Cup</span>
+</a>
+</th>
+</tr>
+</thead>
+<tbody class="match clickable "
+data-match-id="2466027"
+data-match-time="1499902200"
+data-match-status="fixture"
+data-match-fake-status="fixture"
+>
+<tr>
+<td class="status">
+<span>
+00:30</span>
+</td>
+<td class="team">
+<div class="module module-team simple home">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/35583.png" alt="Miami">
+<span>Miami</span>
+</div>
+</td>
+<td class="vs">
+<div>
+v</div>
+</td>
+<td class="team">
+<div class="module module-team simple away">
+<img data-competitionId="" src="http://secure.cache.images.core.optasports.com/soccer/teams/150x150/35679.png" alt="Cincinnati">
+<span>Cincinnati</span>
+</div>
+</td>
+<td class="match-centre">
+<a href="/en/match/miami-vs-cincinnati/2466027" class="btn match-btn"></a>
+<span class="btn btn-star btn-myscores" data-omnitureevent="my scores"></span>
+</td>
+</tr>
+<tr class="score-details">
+<td colspan="5" class="hidden"></td>
+</tr>
+</tbody>
+</table>
+</section>
+<div class="no-matches hidden">
+<header class="info-header">
+<h3>Wednesday, July 12, 2017</h3>
+</header>
+<div class="message"></div>
+</div>
+</div>
+</section>
+</section>
+<aside>
+<div class="module module-promo-goal fixtures">
+<a href="/en/fixtures">
+<div class="arrow"></div>
+<div class="text-wrapper">
+<h3>Fixtures</h3>
+<p>View all up and coming fixtures for your favourite competitions and teams</p>
+</div>
+</a>
+</div><div class="module module-promo-goal results">
+<a href="/en/results">
+<div class="arrow"></div>
+<div class="text-wrapper">
+<h3>Results</h3>
+<p>View all previous results for your favourite competitions and teams</p>
+</div>
+</a>
+</div><div class="module module-ad dfp-ad dfp-top-mpu"
+data-position=""
+data-placement="liveScoresView"
+>
+<!-- Begin: Google Dfp ad placement--><div id="div-gpt-ad-topmpu-1"></div><!-- End: Google Dfp ad placement--></div>
+<section class="module module-bet-combo">
+<header class="widget-header">
+<h2>Goal Betting</h2>
+</header>
+<ul class="tabs">
+<li class="tab" data-tab="offers"><a href="#">Offers</a></li>
+<li class="tab" data-tab="news"><a href="#">News</a></li>
+</ul>
+<div class="tab-content offers" data-tabcontent="offers">
+
+<ul>
+<li>
+<a href="http://www.bet365.com/home/?affiliate=365_076057" class="btn">Go</a>
+<div class="offer">
+<a href="http://www.bet365.com/home/?affiliate=365_076057">bet365: Up to &pound;200 Deposit Bonus</a>
+</div>
+</li>
+<li>
+<a href="http://content.paddypower.com/ppc-pages/enhanced-campaign/affiliates/sportsbook/standard/bet-10-get-30.html?AFF_ID=10092763" class="btn">Go</a>
+<div class="offer">
+<a href="http://content.paddypower.com/ppc-pages/enhanced-campaign/affiliates/sportsbook/standard/bet-10-get-30.html?AFF_ID=10092763">Paddy Power: BET &pound;10 &amp; GET &pound;30</a>
+</div>
+</li>
+<li>
+<a href="https://betway.com/?s=bw39142&a=bwadid61752" class="btn">Go</a>
+<div class="offer">
+<a href="https://betway.com/?s=bw39142&a=bwadid61752">Betway: Up to £30 Matched Bet</a>
+</div>
+</li>
+<li>
+<a href="https://banners.livepartners.com/click.php?z=12694" class="btn">Go</a>
+<div class="offer">
+<a href="https://banners.livepartners.com/click.php?z=12694">NetBet 50€ Free</a>
+</div>
+</li>
+</ul>
+</div>
+<div class="tab-content news" data-tabcontent="news">
+<article>
+<a href="/en/news/2994/betting/2017/05/04/33110762/what-to-expect-from-soccerways-weekly-betting-guide" class="image"><img src="http://static.goal.com/4832800/4832802_tsasaw.jpg" height="70" width="70" alt="Register for your Soccerway betting guide"></a>
+<h3><a href="/en/news/2994/betting/2017/05/04/33110762/what-to-expect-from-soccerways-weekly-betting-guide">Register for your Soccerway betting guide</a></h3>
+<p><a href="/en/news/2994/betting/2017/05/04/33110762/what-to-expect-from-soccerways-weekly-betting-guide">Are you a regular bettor looking for a helping hand with your weekend research? If so then Soccerway’s free betting guide could be the ideal companion</a></p>
+</article>
+<ul>
+<li>
+<a href="/en/news/2994/betting/2017/07/12/37013972/betting-diego-costa-odds-on-to-leave-chelsea-despite"><span>Betting: Costa odds on for Atleti move</span></a>
+</li>
+<li>
+<a href="/en/news/2994/betting/2017/07/12/37008512/sydney-fc-v-arsenal-betting-gunners-to-prove-scoring-mettle-down-"><span>Betting: Sydney FC vs Arsenal</span></a>
+</li>
+</ul>
+</div>
+</section>
+<div class="module module-ad dfp-ad dfp-bottom-mpu"
+data-position=""
+data-placement="liveScoresView"
+>
+<!-- Begin: Google Dfp ad placement--><div id="div-gpt-ad-bottommpu-2"></div><!-- End: Google Dfp ad placement--></div>
+</aside>
+</div>
+</div>
+<div class="clearfix module module-footer" data-module="footer">
+<nav class="navigation">
+<header class="widget-header">
+<h2>Goal <span class="current-edition">International</span></h2>
+</header>
+<ul class="common-links">
+<li><a href="/en/legal/privacy-policy">Privacy Policy</a></li>
+<li><a href="/en/legal/terms-conditions">Terms of Service</a></li>
+<li><a href="/en/contact/about">About Us</a></li>
+<li class="line-spacer"><a href="/en/contact">Contact Us</a></li>
+<li>
+<a href="/en/news/2994/goal-com-betting">Betting</a>
+</li>
+<li>
+<a href="/en/news/13792/commercial/2016/01/01/24330992/new-goal-app">Goal App</a>
+</li>
+<li>
+<a href="/en/news/1688/gaming/2016/04/02/22517672/goal-live-scores">Goal Live Scores</a>
+</li>
+<li>
+<a href="/en/news/755/europe/2015/07/01/13209142/play-the-new-goal-fantasy-football-game?ICID=HP_BN_8">Fantasy Football</a>
+</li>
+</ul>
+</nav>
+<section class="editions">
+<header class="widget-header">
+<h2>Editions</h2>
+</header>
+
+<ul>
+<li><a href="/en/" class="flag-en">International</a></li>
+<li><a href="/en-us/" class="flag-en-us">America</a></li>
+<li><a href="/es-ar/" class="flag-es-ar">Argentina</a></li>
+<li><a href="/en-au/" class="flag-en-au">Australia</a></li>
+<li><a href="/ba/" class="flag-ba">Bosna i Hercegovina</a></li>
+<li><a href="/br/" class="flag-br">Brasil</a></li>
+<li><a href="/en-ca/" class="flag-en-ca">Canada</a></li>
+<li><a href="/es-cl/" class="flag-es-cl">Chile</a></li>
+<li><a href="/es-co/" class="flag-es-co">Colombia</a></li>
+<li><a href="/de/" class="flag-de">Deutsch</a></li>
+<li><a href="/es/" class="flag-es">España</a></li>
+<li><a href="/fr/" class="flag-fr">Français</a></li>
+<li><a href="/en-gh/" class="flag-en-gh">Ghana</a></li>
+</ul>
+<ul>
+<li><a href="/hr/" class="flag-hr">Hrvatska</a></li>
+<li><a href="/en-india/" class="flag-en-india">India</a></li>
+<li><a href="/id-ID/" class="flag-id-ID">Indonesia</a></li>
+<li><a href="/en-ie/" class="flag-en-ie">Ireland</a></li>
+<li><a href="/it/" class="flag-it">Italia</a></li>
+<li><a href="/en-ke/" class="flag-en-ke">Kenya</a></li>
+<li><a href="/en-my/" class="flag-en-my">Malaysia</a></li>
+<li><a href="/es-mx/" class="flag-es-mx">México</a></li>
+<li><a href="/nl/" class="flag-nl">Nederlands</a></li>
+<li><a href="/en-ng/" class="flag-en-ng">Nigeria</a></li>
+<li><a href="/en-sg/" class="flag-en-sg">Singapore</a></li>
+<li><a href="/en-za/" class="flag-en-za">South Africa</a></li>
+<li><a href="/en-tz/" class="flag-en-tz">Tanzania</a></li>
+</ul>
+<ul>
+<li><a href="/tr/" class="flag-tr">Türkçe</a></li>
+<li><a href="/en-gb/" class="flag-en-gb">UK</a></li>
+<li><a href="/cn/" class="flag-cn">简体中文</a></li>
+<li><a href="/hk/" class="flag-hk">繁體中文</a></li>
+<li><a href="/kr/" class="flag-kr">한국어</a></li>
+<li><a href="/jp/" class="flag-jp">日本語</a></li>
+<li><a href="/th/" class="flag-th">ภาษาไทย</a></li>
+<li><a href="/ar/" class="flag-ar">العربية</a></li>
+<li><a href="/ar-eg/" class="flag-ar-eg">المصرية</a></li>
+<li><a href="/ar-sa/" class="flag-ar-sa">السعودية</a></li>
+<li><a href="/en-ar/" class="flag-en-ar">Gulf English</a></li>
+<li><a href="/hu/" class="flag-hu">Magyarország</a></li>
+</ul>
+
+</section>
+<footer itemscope itemtype="http://schema.org/WPFooter">
+<small>Copyright &copy; <span itemprop="copyrightYear">2017</span> <span itemprop="copyrightHolder" itemscope itemtype="http://schema.org/Organization"><span itemprop="name">Goal.com</span></span> All rights reserved. The information contained in Goal.com may not be published, broadcast, rewritten, or redistributed without the prior written authority of Goal.com</small>
+</footer>
+</div>
+</div>
+<!--[if IE]>
+
+<script src="/static/js?files=%2Fjs%2Fexternal%2Fplugins%2Fexcanvas.compiled.js&version=2017.06.07-v1"></script><![endif]-->
+
+
+<script src="/static/js?files=%2Fjs%2Fexternal%2Flodash.min.js%2C%2Fjs%2Fexternal%2Funderscore.string.min.js%2C%2Fjs%2Fexternal%2Fcallbacks.lodash.js%2C%2Fjs%2Fexternal%2Fjstorage.js%2C%2Fjs%2Fglobals.js%2C%2Fjs%2Fhelpers.js%2C%2Fjs%2Fevents.js%2C%2Fjs%2Fexternal%2Fplugins%2C%2Fjs%2Finternal%2Fplugins%2C%2Fjs%2Finternal%2Flibraries%2C%2Fjs%2Fjquery%2Ffooter%2C%2Fjs%2Fexternal%2Fmoments.js&version=2017.06.07-v1"></script>
+<script src="/static/js?files=%2Fjs%2Fsettings.js%2C%2Fjs%2Fapplication.js&locale=en&version=2017.06.07-v1"></script>
+<script src="/static/js?files=%2Fjs%2Finternal%2Fplugins%2Fsmartbanner%2Fjquery.smartbanner.js&version=2017.06.07-v1"></script><script type="text/javascript">
+/*global namespace, Goal, jQuery, _*/
+(function (window, document, $, _, undefined) {
+'use strict';
+
+var pluginNamespace = 'smartbanner';
+
+namespace(Goal.fmt('Goal.settings.%@', pluginNamespace));
+namespace(Goal.fmt('Goal.events.%@', pluginNamespace));
+
+Goal.settings[pluginNamespace] = {"GoalLiveScores":{"author":" ","title":"Goal Live Scores","id":{"iOS":"687276446","Android":"com.kokteyl.goal"},"url":{"iOS":"http:\/\/m.onelink.me\/503f5b30","android":"http:\/\/m.onelink.me\/10da9da4"},"price":"FREE","appStoreLanguage":"us","layer":"absolute","icon":"\/images\/module\/live-scores\/gls-curved-57x57.png","daysHidden":2,"daysReminder":2,"button":"INSTALL","iconGloss":false}};
+Goal.events[pluginNamespace] = {
+init: function () {
+Goal.log(Goal.fmt('Goal:events:%@:init ', pluginNamespace));
+var $head = $('head'),
+$meta = $('<meta>'),
+appCookies = {
+closed : $.cookie('sb-closed-apps') ? $.cookie('sb-closed-apps').split(',') : [],
+installed : $.cookie('sb-installed-apps') ? $.cookie('sb-installed-apps').split(',') : []
+},
+config = Goal.settings.smartbanner,
+args = Object.keys(config).map(function (key) {return config[key];}),
+UA = window.navigator.userAgent;
+
+if(!$.fn.on) {
+$.fn.on = $.fn.bind;
+}
+
+args = args.filter(function (arg) {
+return ( ( -1 === appCookies.closed.indexOf(arg.id.Android) ) || ( -1 === appCookies.closed.indexOf(arg.id.iOS) ) ) &&
+( ( -1 === appCookies.installed.indexOf(arg.id.Android) ) || ( -1 === appCookies.installed.indexOf(arg.id.iOS) ) );
+});
+
+config = args[ Math.floor( Math.random() * args.length ) ];
+
+if (config && $.smartbanner) {
+if (config.id.iOS) {
+$head.append($meta.clone()
+.attr('name', 'apple-itunes-app-smart')
+.attr('content', 'app-id=' + config.id.iOS)
+);
+}
+
+if (config.id.Android && !($head.find('[name="google-play-app"]').length)) {
+$head.append($meta.clone()
+.attr('name', 'google-play-app')
+.attr('content', 'app-id=' + config.id.Android)
+);
+}
+
+if (window.navigator.userAgent.match(/iPhone|iPod|iPad/i) ) {
+config.url = config.url.iOS;
+} else {
+config.url = config.url.android;
+}
+
+$.cookie('sb-closed', null, {path: '/'});
+$.cookie('sb-installed', null, {path: '/'});
+
+if ( UA.match(/iPhone|iPod|iPad/i) ) {
+config.force = 'ios';
+}
+
+
+if (UA.toLowerCase().indexOf('ucbrowser') < 0) {
+$.smartbanner(config);
+}
+
+$('.sb-close', '#smartbanner').on('click', function() {
+appCookies.closed.push(config.id.Android);
+appCookies.closed.push(config.id.iOS);
+$.cookie('sb-closed-apps', appCookies.closed.join(','), {expires: config.daysHidden ,path: '/'});
+});
+
+$('.sb-button', '#smartbanner').on('click', function() {
+appCookies.installed.push(config.id.Android);
+appCookies.installed.push(config.id.iOS);
+$.cookie('sb-installed-apps', appCookies.installed.join(','), {expires: config.daysReminder ,path: '/'});
+});
+}
+}
+};
+}(window, document, jQuery, _));
+</script>
+
+<script src="/static/js?files=%2Fjs%2Fslimcut.js&version=2017.06.07-v1"></script><div class="module module-ad dfp-ad dfp-high-impact"
+data-position=""
+data-placement="layout"
+>
+<!-- Begin: Google Dfp ad placement--><div id="div-gpt-ad-highimpact-4"></div><!-- End: Google Dfp ad placement--></div>
+<div class="tracking-codes">
+<!-- Begin: Google Analytics dc.js -->
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-3459197-19']);
+_gaq.push(['_setDomainName', '.goal.com']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(ga, s);
+})();
+</script>
+<!-- End: Google Analytics dc.js --><!-- BEGIN EFFECTIVE MEASURE CODE -->
+<!-- COPYRIGHT EFFECTIVE MEASURE -->
+<script type="text/javascript">
+var _em_survey_rate = 0;
+</script>
+<script type="text/javascript">
+(function() {
+var em = document.createElement('script'); em.type = 'text/javascript'; em.async = true;
+em.src = ('https:' == document.location.protocol ? 'https://za-ssl' : 'http://za-cdn') + '.effectivemeasure.net/em.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(em, s);
+})();
+</script>
+<noscript>
+<img src="https://s.effectivemeasure.net/d/6/i?pu=http%3A%2F%2Fwww.goal.com%2Fnoscript" alt="" style="position:absolute; left:-5px;" />
+</noscript>
+<!--END EFFECTIVE MEASURE CODE --><!-- Begin: William Hill -->
+<img src="http://serve.williamhill.com/promoLoadDisplay?member=goalcom&amp;campaign=DEFAULT&amp;channel=widget&amp;zone=593986973&amp;lp=0" height="1" width="1" style="width:1px;height:1px" />
+<!-- End: William Hill --><!-- Begin: Tribes Tag -->
+<script type="text/javascript">
+_qoptions={
+qacct:"p-94wNw88f65Rhk",
+labels:"MTVN Digital Tribes"
+};
+</script>
+<script type="text/javascript" src="http://edge.quantserve.com/quant.js"></script>
+<noscript>
+<img src="http://pixel.quantserve.com/pixel/p-94wNw88f65Rhk.gif?labels=MTVN%20Digital%20Tribes" style="display: none;" height="1" width="1" alt="Quantcast"/>
+</noscript>
+<!-- End: Tribes Tag --><!-- Begin: Comscore Beacon -->
+<img id="comscore-beacon-img" height="1" width="1" alt="">
+<script type="text/javascript">
+var randnum = Math.floor(Math.random()*99999999);
+var p_url = escape(window.location.href);
+var p_title = escape(document.title);
+document.getElementById("comscore-beacon-img").src="http://beacon.securestudies.com/scripts/beacon.dll?C1=2&C2=6153249&C3=6153249&C4=www.goal.com&C5=Sports-Soccer&C6=Sports-Soccer&C7=" + p_url + "&C8=" + p_title + "&rn=" + randnum;
+</script>
+<!-- End: Comscore Beacon --><!-- Begin: Nielsen Tag -->
+<script type="text/javascript">
+var _nol = { pvar: { cid: 'sportal-goal', content: "0", server: 'secure-au'} };
+(function () {
+var s = document.createElement('script');
+s.type = 'text/javascript';
+s.async = true;
+s.src = '//secure-au.imrworldwide.com/v60a.js';
+var x = document.getElementsByTagName('script')[0];
+x.parentNode.insertBefore(s, x);
+})();
+</script>
+<noscript>
+<div>
+<img src="//secure-au.imrworldwide.com/cgi-bin/m?ci=sportal-goal&amp;cg=0&amp;cc=1&amp;ts=noscript" width="1" height="1" alt="" />
+</div>
+</noscript>
+<!-- End: Nielsen Tag --><!-- Begin: Lotame SmartTag audience-extraction.js -->
+<script type="text/javascript">
+// Lotame Solutions, Inc. JavaScript snippet for making audience extraction
+// calls using SmartTag and/or first party domains.
+// By: Ryan Chapin
+// Since: 2013-11-08
+var cc_client_id = 3376;
+
+// Callback method that will be invoked and passed the JSON payload from the
+// JSONP extraction call.
+var cc_extr_callback = 'ccauds';
+
+// Optional port number. If calls are being made to the Lotame servers on
+// a custom port, uncomment and set.
+// var portNumber = '8080';
+
+/**
+* Will generate the proper audience extraction URL to be used in a
+* JSONP call on the client page.
+*/
+function get_cc_extr_url() {
+var domain = '.crwdcntrl.net';
+
+// Look for a domain cookie first
+
+var noDomainCookie = true;
+var start = document.cookie.indexOf('_cc_domain');
+if (start > -1) {
+var valStartDc = document.cookie.indexOf('=', start);
+if (valStartDc > 0) {
+noDomainCookie = false;
+valStartDc++;
+var valEndDc = document.cookie.indexOf(';', valStartDc);
+valEndDc = valEndDc > 0 ? valEndDc : document.cookie.length;
+domain = document.cookie.slice(valStartDc, valEndDc);
+}
+}
+
+// If there was no domain cookie then check to see if there is an id cookie.
+
+var idCookie = false;
+if (noDomainCookie) {
+var id;
+start = document.cookie.indexOf('_cc_id');
+if (start > -1) {
+var valStartId = document.cookie.indexOf('=', start);
+if (valStartId > 0) {
+idCookie = true;
+valStartId++;
+var valEndId = document.cookie.indexOf(';', valStartId);
+valEndId = valEndId > 0 ? valEndId : document.cookie.length;
+id = document.cookie.slice(valStartId, valEndId);
+}
+}
+}
+var cc_url = 'http://ad' + domain;
+if (typeof(portNumber) != 'undefined' && portNumber != null) {
+cc_url = cc_url + ':' + portNumber;
+}
+cc_url = cc_url + '/5/c=' + cc_client_id + '/pe=y/callback=' + cc_extr_callback;
+if(idCookie) {
+cc_url = cc_url + '/pid=' + id;
+}
+return cc_url;
+}
+
+function ccauds(data) {
+var audiencesString = JSON.stringify(data, undefined, 2);
+
+// Do something with the audiences. This just prints it out in the DOM.
+var divTag = document.createElement('div');
+divTag.style.display = 'none';
+divTag.innerHTML = '<strong>Audiences:</strong> ' + audiencesString + '<br/><br/>';
+document.body.appendChild(divTag);
+}
+
+(function () {
+// get the correct URL to call based on the existing cookies
+var url = get_cc_extr_url();
+
+// Make the JSONP call
+var divTag = document.createElement('div');
+divTag.style.display = 'none';
+divTag.innerHTML = '<strong>Loading audience extraction url:</strong> ' + url +'<br/><br/>';
+document.body.appendChild(divTag);
+
+var tempScriptTag = document.createElement('script');
+tempScriptTag.type = 'text/javascript';
+tempScriptTag.src = url;
+document.body.appendChild(tempScriptTag);
+})();
+</script>
+<!-- End: Lotame SmartTag audience-extraction.js -->
+<!-- Begin: Lotame end tag -->
+<script type="text/javascript" src="http://tags.crwdcntrl.net/c/3376/cc.js?ns=_cc3376" id="LOTCC_3376"></script>
+<script type="text/javascript" language="javascript">_cc3376.bcp();</script>
+<!-- End: Lotame end tag -->
+<script language="javascript" type="text/javascript" src="//js.revsci.net/gateway/gw.js?csid=F09828&auto=t&bpid=performgroup"></script>
+<!-- Begin: Sentinel -->
+<script async="async" type="text/javascript" src="http://d3avqv6zaxegeu.cloudfront.net/sentinel.js" data-client-id="tBdOzZizJrxtncD"></script>
+<!-- End: Sentinel --><!-- BEGIN: Chartbeat tracking code -->
+<script type='text/javascript'>
+var _sf_async_config = _sf_async_config || {};
+/** CONFIGURATION START **/
+_sf_async_config.uid = 22788;
+_sf_async_config.domain = 'goal.com';
+_sf_async_config.useCanonical = true;
+_sf_async_config.sections = '';
+_sf_async_config.authors = '';
+/** CONFIGURATION END **/
+(function() {
+function loadChartbeat() {
+window._sf_endpt = (new Date()).getTime();
+var e = document.createElement('script');
+e.setAttribute('language', 'javascript');
+e.setAttribute('type', 'text/javascript');
+e.setAttribute('src', '//static.chartbeat.com/js/chartbeat.js');
+document.body.appendChild(e);
+}
+var oldonload = window.onload;
+window.onload = (typeof window.onload != 'function') ?
+loadChartbeat : function() {
+oldonload();
+loadChartbeat();
+};
+})();
+</script>
+<!-- END: Chartbeat tracking code -->
+<!-- Begin: PostaffiliatePro Tag -->
+<script type="text/javascript" id="pap_x2s6df8d" src="https://goal.postaffiliatepro.com/scripts/lan6okjewuq"></script>
+<script type="text/javascript">
+PostAffTracker.setAccountId('default1');
+try {
+PostAffTracker.track();
+} catch (err) { }
+</script>
+<!-- End: PostaffiliatePro Tag --></div>
+
+<div class="module module-ad floatingbar" data-adtech="adtech-floating">
+<div class="floatingbar-wrapper desktop">
+<script language="javascript">
+(function(){
+var cookieName = 'goal_no_ad_floating_bar';
+if (!$.cookie(cookieName) && Goal.is('desktop')) {
+}
+})();
+</script>
+<span class="close">&nbsp;</span>
+</div>
+<div class="floatingbar-wrapper tablet">
+<script language="javascript">
+(function(){
+var cookieName = 'goal_no_ad_floating_bar';
+if (!$.cookie(cookieName) && Goal.is('tablet')) {
+}
+})();
+</script>
+<span class="close">&nbsp;</span>
+</div>
+</div><!-- Begin: Google Dfp end of body -->
+<script>
+(function () {
+'use strict';
+var headScript = document.getElementById('dfpHeadScript');
+var dfpData = JSON.parse(headScript.getAttribute('data-dfp'));
+var currentDevice = ($(window).width() > 1020 ? 'desktop' : 'tablet');
+
+window.googletag.cmd.push(function () {
+for (var ad in dfpData.ads) {
+var adSpecificDevice = dfpData.ads[ad].additionalData.specificDevice !== 'undefined' ? dfpData.ads[ad].additionalData.specificDevice : false;
+if (adSpecificDevice && currentDevice !== adSpecificDevice) {
+continue;
+}
+window.googletag.display(dfpData.ads[ad].getHtmlId);
+}
+});
+})();
+</script>
+<!-- end: Google Dfp end of body -->
+
+<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","licenseKey":"dddd82eb94","applicationID":"4529285","transactionName":"MQEBYhRVXkAEVEJZDghLIlUSXV9dSlNTVgATCBcZCl1GVkhEVV8TAxdMXwhQVUs=","queueTime":0,"applicationTime":581,"atts":"HUYCFFxPTU4=","errorBeacon":"bam.nr-data.net","agent":""}</script></body>
+</html>

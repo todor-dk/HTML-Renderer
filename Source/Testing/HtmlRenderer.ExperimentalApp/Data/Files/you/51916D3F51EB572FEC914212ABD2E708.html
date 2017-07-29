@@ -1,0 +1,558 @@
+
+<!doctype html>
+<html lang="en-us">
+<head>
+    <title>My.UTEP</title>
+    <link rel="icon" href="//cdn.utep.edu/images/favicon.ico" type="image/x-icon" />
+    <meta name="application-name" content="my.UTEP" />
+    <meta name="msapplication-config" content="none" />
+    <meta name="msapplication-TileColor" content="#002147" />
+    <meta name="msapplication-square70x70logo" content="/Content/icons/utep_icon-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="/Content/icons/utep_icon-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="/Content/icons/utep_icon-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="/Content/icons/utep_icon-310x310.png" />
+    <link rel="apple-touch-icon-precomposed" href="/Content/icons/utep_icon-70x70.png">
+    <link rel="apple-touch-icon" href="/Content/icons/utep_icon-70x70.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/Content/icons/utep_icon-70x70.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/Content/icons/utep_icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/Content/icons/utep_icon-152x152.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link href="/Content/static636276990429101729-myutepcustom.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/Content/static635808434260000000-owl.carousel.css">
+    <link rel="stylesheet" type="text/css" href="/Content/static636263115530448936-style.css">
+    <script src="//cdn.utep.edu/scripts/jquery-2.1.3.min.js"></script>
+    <script src="/Content/js/static635857012720000000-owl.carousel.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script src="/Content/js/static635808434260000000-index.js"></script>
+    <script src="/Content/js/static635808434260000000-DashboardWidget.js"></script>
+    <script src="/Content/js/static635808434260000000-jquery.leanModal.min.js"></script>
+    <script src="/Content/js/static635808434260000000-jPages.min.js"></script>
+</head>
+<body>
+    <!-- Google Tag Manager -->
+    <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-TDKZV9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <script>
+    (function (w, d, s, l, i) {
+    w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); var f = d.getElementsByTagName(s)[0],
+    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-TDKZV9');</script>
+    <!-- End Google Tag Manager -->
+    
+<div id="alerts-wrap"></div>
+<script type="text/javascript">
+$(function () {
+    $.get("/alerts", function (data, status) {
+        if ($(data).filter('#miner-alerts-bar').data('hasalerts') === true) {
+            $("#alerts-wrap").html(data);
+            $("body").toggleClass("miner-alerts-bar-engaged");
+        }
+    });
+});
+</script>
+
+    <header>
+    <div id="search-bar">
+        <form action="/Search" id="myutep-search" role="search">
+            <div class="container">
+                <input autocomplete="off" id="search-query" type="search" name="q">
+                <label for="search-query">
+                    Search pages and people
+                </label>
+            </div>
+        </form>
+    </div>
+    <div class="header-bg">
+        <div class="container">
+    <a href="/My" id="myutep-logo">
+        <div class="logo">
+            <h1 class="off-screen">My UTEP</h1>
+        </div>
+    </a>
+    <div class="header-buttons">
+        <ul id="header-nav">
+            <li>
+                <a href="https://www.utep.edu" id="home-link">
+                    <i class="icon-home" aria-hidden="true"></i>
+                    <span>
+                        Home
+                    </span>
+                </a>
+            </li>
+                <li>
+                    <a href="/My/SignIn" id="header-sign-in">
+                        Sign In
+                    </a>
+                </li>
+            <li>
+                <a href="#" id="search-trigger">
+                    <i class="icon-search-find" aria-hidden="true"></i>
+                    <span class="off-screen">
+                        Search
+                    </span>
+                </a>
+            </li>
+        </ul>
+        <script type="text/javascript">
+            $(function () {
+
+                
+
+                var $body;
+                $body = $('body');
+                window.searching = false;
+
+                $('#search-trigger').on('click', function (e) {
+                    if ($('#myutep-search').is(':hidden')) {
+                        $body.addClass('search-engaged');
+                        $('#myutep-search').slideDown(200);
+                        $('#search-query').focus()
+                    }
+
+                    else {
+                        $('#search-query').blur();
+                    }
+
+                    e.preventDefault();
+                });
+
+
+                $('#search-query').on('focus', function () {
+                    return window.searching = true;
+                }).on('blur', function () {
+                    $('#myutep-search').slideUp();
+                    $body.removeClass('search-engaged');
+                    return window.searching = false;
+                });
+
+                function updateText(event) {
+                    var input = $(this);
+                    setTimeout(function () {
+                        var val = input.val();
+                        if (val != "")
+                            input.parent().addClass('floating-label');
+
+                        else
+                            input.parent().removeClass('floating-label');
+
+                    }, 100);
+                }
+                $('#myutep-search input').keydown(updateText);
+                $('#myutep-search input').change(updateText);
+                $('#dashboard-space').on('keydown', 'input.portlet-search', updateText);
+                $('#dashboard-space').on('change', 'input.portlet-search', updateText);
+                $('#dashboard-secondary-space').on('keydown', 'input.portlet-search', updateText);
+                $('#dashboard-secondary-space').on('change', 'input.portlet-search', updateText);
+            });
+        </script>
+    </div>
+</div>
+    </div>
+</header>
+
+<div id="miner-alerts-registration-modal" class="modal">
+    <div class="modal-header">
+        <h4>Miner Alerts Registration</h4>
+        <div class="close-modal">
+            <i class="icon-remove"></i>
+            <span class="off-screen">Close modal window</span>
+        </div>
+    </div>
+    <div tabindex="11000" class="modal-content" id="miner-alerts-registration-modal-content"></div>
+    <div class="modal-footer">
+        <p>
+            To receive emergency alerts via Miner Alert activate your Miner Alert profile, fill in the appropriate fields above. Any information submitted is strictly used by the UTEP emergency Office of Emergency Management and will not be shared in any manner.
+        </p>
+        <p>
+            <a href="mailto:oem@utep.edu">oem@utep.edu</a>
+        </p>
+    </div>
+</div>
+    
+<section class="banner">
+    <div class="container">
+        <div id="banner-text">
+                <h2>
+                    Sign in to view your finances, grades, classes, and more
+                </h2>
+                <a href="/My/SignIn" id="banner-sign-in" class="button orange-gradient">Sign In</a>
+            
+        </div>
+        <div id="banner-illustration">
+            <i class="main-header-icon open-envelope"></i>
+            <i class="main-header-icon cap-tassel"></i>
+            <i class="main-header-icon certified-document"></i>
+            <i class="main-header-icon desktop-screen"></i>
+            <i class="main-header-icon payment-card"></i>
+            <i class="main-header-icon pencil-ruler"></i>
+            <i class="main-header-icon textbook"></i>
+        </div>
+    </div>
+</section>
+
+<script>$(function () { $("#for-students").Dashboard({ staticColumnsID: "col_", staticWidgetID: "wid_", connectedWith: "none", drag: "false", Type: "links",  url: "/My/Dashboard/for-students"     , order: "BOTTOM" }) });</script>
+<script>$(function () { $("#for-facultyandstaff").Dashboard({ staticColumnsID: "col2_", staticWidgetID: "wid2_", connectedWith: "none", drag: "false", Type: "links",  url: "/My/Dashboard/for-faculty-staff"  , order: "BOTTOM" }) });</script>
+
+<div id="resources" class="container">
+    <ul class="tabs">
+        <li class="tab">
+            <a id="students-tab" class="active-tab" href="#for-students">
+                For Students
+            </a>
+        </li><li class="tab">
+            <a id="faculty-tab" href="#for-facultyandstaff">
+                For Faculty &amp; Staff
+            </a> 
+        </li>
+    </ul>
+    <script>
+        $(function(){
+            var setToolTipOffset = function() {
+                var list = $(".for-lnk-list:visible");
+                var offset = list.find("li:first").width() + 20;
+                $(".app-tooltip-2").css("left", offset);
+            };
+            var loadedDashboards = { "for-students": false, "for-facultyandstaff": false };
+            $(window).on("dashboard-loaded", function(e, dashboardId) {
+                loadedDashboards[dashboardId] = true;
+                if(loadedDashboards["for-students"] && loadedDashboards["for-facultyandstaff"]) {
+                    $(window).resize(function(){
+                        setToolTipOffset();
+                    });
+                    setToolTipOffset();
+                }
+            });
+        });
+    </script>
+    <div class="resources-wrapper">
+        <section class="content" id="for-students">
+            <div class="top-resources" id="col_7">
+            </div>
+            <div class="link-resources">
+                <ul class="links-list clearleft">
+                    <li class="category-links first-list" id="col_1">
+                        <h4>Campus Resources<i class="icon-plus"></i></h4>
+                    </li>
+                    <li class="category-links second-list" id="col_2">
+                        <h4>Academics<i class="icon-plus"></i></h4>
+                    </li>
+                    <li class="category-links third-list" id="col_3">
+                        <h4>Health & Safety<i class="icon-plus"></i></h4>
+                    </li>
+                    <li class="category-links fourth-list" id="col_4">
+                        <h4>Finances<i class="icon-plus"></i></h4>
+                    </li>
+                    <li class="category-links fifth-list" id="col_5">
+                        <h4>Employment<i class="icon-plus"></i></h4>
+                    </li>
+                    <li class="category-links sixth-list" id="col_6">
+                        <h4>Technology<i class="icon-plus"></i></h4>
+                    </li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        </section>
+        <section class="content" id="for-facultyandstaff">
+            <div class="top-resources" id="col2_7">
+            </div>
+            <div class="link-resources">
+                <ul class="links-list clearleft">
+                    <li class="category-links first-list" id="col2_1">
+                        <h4>Campus Resources<i class="icon-plus"></i></h4>
+                    </li>
+                    <li class="category-links second-list" id="col2_2">
+                        <h4>Technology<i class="icon-plus"></i></h4>
+                    </li>
+                    <li class="category-links third-list" id="col2_3">
+                        <h4>Health &amp; Safety<i class="icon-plus"></i></h4>
+                    </li>
+                    <li class="category-links fourth-list" id="col2_4">
+                        <h4>Training<i class="icon-plus"></i></h4>
+                    </li>
+                    <li class="category-links fifth-list" id="col2_5">
+                        <h4>For Faculty<i class="icon-plus"></i></h4>
+                    </li>
+                    <li class="category-links sixth-list" id="col2_6">
+                        <h4>Employees<i class="icon-plus"></i></h4>
+                    </li>
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        </section>
+    </div>
+</div>
+
+<div id="dates-events-container" class="container">
+    <section id="featured-items" class="msnry">
+        <h3>Featured</h3>
+        <div id="featured-slides" class="featured-slider">           
+        </div>
+        <div id="slider-nav" aria=""></div>
+        <div id="slider-dots"></div>
+        <script type="text/javascript">
+            $(function () {
+                var ret = [];
+                ret.push($.get("/Cascade/NewsContent", function(data, status){
+                        $("#featured-slides").html(data)
+                    }).fail(function(){
+                        $("#featured-slides").append("<div class=\"unavailable-text\"><a class=\"error-info\" href=\"http://admin.utep.edu/Default.aspx?tabid=53654\" target=\"_blank\">content is currently unavailable</a></div>");
+                    }));
+                $.when.apply($, ret).then(function () {
+                    $('.featured-slider').owlCarousel({
+                        loop: true,
+                        video:true,
+                        responsiveClass: true,
+                        dots: true,
+                        autoplay: true,
+                        nav: true,
+                        animateOut: 'fadeOut',
+                        margin: .6,
+                        autoplayHoverPause: true,
+                        navContainer: '#slider-nav',
+                        dotsContainer: '#slider-dots',
+                        navText: ['<span  class=\"icon-caret-left\"><span class=\"off-screen\">Previous Slides</span></span>', '<span class=\"icon-caret-right\"><span class=\"off-screen\">Next Slides</span></span>'],
+                        responsive: {
+                            0: {
+                                items: 1,
+                                nav: true
+                            },
+                            600: {
+                                items: 1,
+                                nav: true
+                            },
+                            1000: {
+                                items: 1,
+                                nav: true
+                            }
+                        }
+                    });
+                });
+            });
+</script>
+    </section> 
+
+    <div id="calendar-events" class="msnry">
+
+        <ul class="tabs">
+            <li class="tab">
+                <a id="important-dates-tab" class="active-tab" href="#important-dates">
+                    Important Dates
+                </a>
+            </li><li class="tab">
+                <a id="upcoming-events-tab" href="#upcoming-events">
+                    Upcoming Events
+                </a>
+            </li>
+        </ul>
+        <section class="content active-content" id="important-dates">
+            <div class="calendar-buttons">
+                <div id="imp-unav" class="unavailable-marker" style="display:none">
+                    <div class="unavailable-text">
+                        <a class="error-info" href="http://admin.utep.edu/Default.aspx?tabid=53654" target="_blank">content is currently unavailable</a>
+                    </div>
+                </div>
+                <div id="imp-ldr" class="preloader">
+                    <div class="scroll_cir">
+                        <span>Loading</span>
+                        <div class="cir0"></div><div class="cir1"></div><div class="cir2"></div>
+                        <div class="cir3"></div><div class="cir4"></div>
+                    </div>
+                </div>
+                <div id="calendar-btn-lst"></div>
+            </div>
+        </section>
+        <section class="content" id="upcoming-events">
+            <div class="calendar-buttons">
+                <div id="up-unav" class="unavailable-marker" style="display:none">
+                    <div class="unavailable-text">
+                        <a class="error-info" href="http://admin.utep.edu/Default.aspx?tabid=53654" target="_blank">content is currently unavailable</a>
+                    </div>
+                </div>
+                <div id="up-ldr" class="preloader">
+                    <div class="scroll_cir">
+                        <span>Loading</span>
+                        <div class="cir0"></div><div class="cir1"></div><div class="cir2"></div>
+                        <div class="cir3"></div><div class="cir4"></div>
+                    </div>
+                </div>
+                <div id="upcm-btn-lst"></div>
+            </div>
+        </section>
+        <script type="text/javascript">
+            $(function () {
+                var loadLnksFor = function(mid, ulid, ldrid, unavid) {
+                    $.get("/Cascade/MainLinks/asjson?page=" + mid, function(lnks, status){
+                        var cl = $(ulid);
+                        $(ldrid).hide();
+                        cl.append(lnks);
+                    }).fail(function(){
+                        $(ldrid).hide();
+                        $(unavid).show();
+                    });
+                }
+                var important_mid = "\\MainLinks\\ImportantDates.html";
+                loadLnksFor(important_mid, "#calendar-btn-lst", "#imp-ldr", "#imp-unav");
+
+                var upcoming_mid =  "\\MainLinks\\UpcomingEvents.html";
+                loadLnksFor(upcoming_mid, "#upcm-btn-lst", "#up-ldr", "#up-unav");
+            });
+        </script>
+    </div>
+    <script type="text/javascript">
+    var newsBaseUrl = "https://my.utep.edu/news";
+
+    $.get(newsBaseUrl + "/home/getsources", function (sources, status) {
+		var counter = 0;
+		
+        $.each(sources, function (i) {
+			$.get(newsBaseUrl + "?source=" + sources[i], function (data, st) {
+                $("#news-list").append(data);
+				counter++;
+				
+				if (counter == sources.length)
+				{
+					newDisplayOrFail();
+				}
+				
+            }).fail(function() { 
+				console.log ("news failed getting: " + sources[i]);
+				counter++;
+				
+				if (counter == sources.length)
+				{
+					newDisplayOrFail();
+				}
+			});
+		
+        });
+	
+    }).fail(function() {
+		newsUnavailable();
+    });
+	
+	var newDisplayOrFail = function ()
+	{
+		if ($("#news-list").children().length === 0)
+		{
+			newsUnavailable();
+		}
+		else
+		{
+			showNews();
+		}
+	}
+	
+	var newsUnavailable = function () 
+	{
+		$("#news-loader").hide();       
+        $("#news-unavailable").show()
+	};
+	
+	var showNews = function()
+	{
+		$("#news-loader").hide();
+		$("#news-list").show();
+		$(".news-navigation").jPages({
+			containerID: "news-list",
+			first: false,
+			last: false,
+			previous: "span.prev",
+			next: "span.next",
+			perPage: 5
+		});
+	}
+	
+    </script>
+
+    <section id="news-feed" class="msnry">
+        <div id="news-feed-title">
+            <h3>Campus News</h3>
+            <div id="custom-nav">
+                <span class="prev icon-caret-left"><span class="off-screen">Previous</span></span>
+                <span class="next icon-caret-right"><span class="off-screen">Next</span></span>
+            </div>
+        </div>
+        <div id="news-list-container">
+            <div id="news-unavailable" class="unavailable-marker" style="display:none">
+                <div class="unavailable-text">
+                    <a class="error-info" href="http://admin.utep.edu/Default.aspx?tabid=53654" target="_blank">content is currently unavailable</a>
+                </div>
+            </div>
+            <div id="news-loader" style="height:200px">
+                <div class="preloader">
+                    <div class="scroll_cir">
+                        <span>Loading</span>
+                        <div class="cir0"></div><div class="cir1"></div><div class="cir2"></div>
+                        <div class="cir3"></div><div class="cir4"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="news-list" class="news-items" style="display:none">
+            </div>
+            <div class="news-navigation">
+            </div>
+        </div>
+    </section>
+    <div class="clearfix"></div>
+
+</div>
+        
+<footer>
+    <div class="container">
+        <div class="footer-wrapper">
+
+            
+            <a href="http://www.utep.edu" target="_blank">
+                <div id="utep-logo">
+                    <span class="off-screen">
+                        UTEP
+                    </span>
+                </div>
+            </a>
+
+            
+            <div class="footer-links">
+                <ul>
+                    <li>
+                        <a href="http://admin.utep.edu/Default.aspx?tabid=49976" target="_blank">
+                            State Reports
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.utsystem.edu/" target="_blank">
+                            UT System
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.utep.edu/customerservice/" target="_blank">
+                            Customer Service Statement
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.utep.edu/titleix/" target="_blank">
+                            Title IX 
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://www.admin.utep.edu/Default.aspx?tabid=54275" target="_blank">
+                            Required Links
+                        </a>
+                    </li>
+                </ul>
+
+                <p>
+                    The University of Texas at El Paso | 500 West University Avenue | El Paso, Texas 79968 | (915) 747-5000
+                </p>
+
+            </div> 
+
+            <div class="clearfix"></div>
+
+        </div> 
+    </div> 
+
+</footer>
+
+</body>
+</html>

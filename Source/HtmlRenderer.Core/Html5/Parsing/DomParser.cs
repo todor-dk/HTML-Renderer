@@ -25,7 +25,7 @@ using Scientia.HtmlRenderer.Dom;
 
 namespace Scientia.HtmlRenderer.Html5.Parsing
 {
-    public class DomParser
+    internal class DomParser
     {
         private readonly ParsingContext ParsingContext;
 
@@ -35,20 +35,22 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
         private readonly Tokenizer Tokenizer;
 
-        public static Document ParseDocument(ParsingContext parsingContext, HtmlStream html)
+        /// <summary>
+        /// Internal entry point into the HTML parser for parsing an HTML contents stream into a DOM document.
+        /// </summary>
+        /// <param name="document">An empty DOM document to parse the HTML into.</param>
+        /// <param name="parsingContext">Tells us why we are parsing and what kind of parsing to perform.</param>
+        /// <param name="domFactory">Helper class to abstract some DOM manipulations.</param>
+        /// <param name="html">The HTML contents.</param>
+        public static void ParseDocument(Document document, DocumentParsingContext parsingContext, DomFactory domFactory, HtmlStream html)
         {
+            Contract.RequiresNotNull(document, nameof(document));
             Contract.RequiresNotNull(parsingContext, nameof(parsingContext));
+            Contract.RequiresNotNull(domFactory, nameof(domFactory));
             Contract.RequiresNotNull(html, nameof(html));
-
-            DomFactory domFactory = parsingContext.GetDomFactory();
-
-            // TODO: Charset is hard-coded.
-            Document document = domFactory.CreateDocument(parsingContext.Url, "windows-1252");
-
+                        
             DomParser parser = new DomParser(parsingContext, document, domFactory, html);
             parser.Parse();
-
-            return document;
         }
 
         private DomParser(ParsingContext parsingContext, Document document, DomFactory domFactory, HtmlStream html)
@@ -63,7 +65,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             this.Document = document;
             this.DomFactory = domFactory;
             this.Tokenizer = new Tokenizer(html);
-            this.Tokenizer.ParseError += (s, e) => this.InformParseError(e.ParseError);
+            this.Tokenizer.ParseError += (s, e) => this.ParsingContext.OnParseError(e.ParseError);
         }
 
         #region Tokanization
@@ -665,8 +667,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             {
                 Tags.Applet, Tags.Caption, Tags.Html, Tags.Table, Tags.Td, Tags.Th, Tags.Marquee, Tags.Object, Tags.Template
 
-                // MathML_TODO ... MathML Tags
-                // SVG_TODO ... SVG Tags
+                // MathML_TO-DO ... MathML Tags
+                // SVG_TO-DO ... SVG Tags
             };
 
             internal static readonly string[] ListItemScopeTags = ScopeTags.FailIfNull().With(Tags.Ol, Tags.Ul);
@@ -1162,9 +1164,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
         #region Tree Construction Helpers
 
-        private void InformParseError(ParseError error)
+        private void InformParseError(Parsing.ParseError error)
         {
-            throw new NotImplementedException();
+            this.ParsingContext.OnParseError(error);
         }
 
         #endregion
@@ -1313,7 +1315,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     this.HandleTokenInAfterAfterFramesetMode();
                     break;
                 default:
-                    throw new NotImplementedException();
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -1409,7 +1411,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             // 3. If the *adjusted insertion location* is inside a *template* element, let it instead be inside
             // the <template> element’s template contents, after its last child (if any).
             if (adjustedInsertLocationElement.Is(Tags.Template))
-                throw new NotImplementedException();
+                FutureVersions.TemplatesNotImplemented();
 
             // 4. Return the *adjusted insertion location*.
             return new AdjustedInsertLocation(adjustedInsertLocationElement, adjustedInsertLocationBeforeSibling);
@@ -1463,11 +1465,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             // that is a parse error.
             string attribValue = elem.GetAttribute(Attributes.Xmlns);
             if ((attribValue != null) && (attribValue != elem.NamespaceUri))
-                this.InformParseError(ParseError.WrongNamespace);
+                this.InformParseError(Parsing.ParseError.WrongNamespace);
 
             attribValue = elem.GetAttribute(Attributes.XmlnsXlink);
             if ((attribValue != null) && (attribValue != Namespaces.Xlink))
-                this.InformParseError(ParseError.WrongNamespace);
+                this.InformParseError(Parsing.ParseError.WrongNamespace);
 
             // 3. If the newly created element is a resettable element, invoke its reset algorithm. (This initializes the
             // element’s value and checkedness based on the element’s attributes.)
@@ -1486,7 +1488,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             {
                 this.DomFactory.AssociateWithForm(elem, this.Form);
 
-                // TODO: suppress the running of the reset the form owner algorithm
+                // TO-DO: suppress the running of the reset the form owner algorithm
             }
 
             // 5. Return the newly created element.
@@ -1554,7 +1556,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             AdjustedInsertLocation adjustedInsertionLocation = this.AppropriatePlaceForInsertingNode();
 
             // 3. If the adjusted insertion location is in a Document node, then abort these steps.
-            // ISSUE - BUG - TODO: ParentElement is an Element and never a Document! Do we have a bug in the implementation?
+            // ISSUE - BUG - TO-DO: ParentElement is an Element and never a Document! Do we have a bug in the implementation?
             // NOTE: The DOM will not let Document nodes have Text node children, so they are dropped on the floor.
             if (adjustedInsertionLocation.ParentElement is Document)
                 return;
@@ -1576,7 +1578,14 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
         }
 
-        private void InsertComment(string data)
+        private enum CommentInsertPosition
+        {
+            Default,
+            LastChildOfDocument,
+            LastChildOfFirstElement
+        }
+
+        private void InsertComment(string data, CommentInsertPosition position = CommentInsertPosition.Default)
         {
             // See: http://www.w3.org/TR/html51/syntax.html#insert-a-comment
 
@@ -1592,7 +1601,19 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             //    same as that of the node in which the adjusted insertion location finds itself.
 
             // 4. Insert the newly created node at the adjusted insertion location.
-            throw new NotImplementedException();
+            if (position == CommentInsertPosition.LastChildOfDocument)
+            {
+                this.DomFactory.CreateAndAppendComment(this.Document, data);
+            }
+            else if (position == CommentInsertPosition.LastChildOfFirstElement)
+            {
+                this.DomFactory.CreateAndAppendComment(this.OpenElements.Top, null, data);
+            }
+            else
+            {
+                AdjustedInsertLocation adjustedInsertLocation = this.AppropriatePlaceForInsertingNode();
+                this.DomFactory.CreateAndAppendComment(adjustedInsertLocation.ParentElement, adjustedInsertLocation.BeforeSibling, data);
+            }
         }
 
         #endregion
@@ -1709,7 +1730,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment as the last child of the Document object.
-                throw new NotImplementedException();
+                this.InsertComment(this.Token.CommentData, CommentInsertPosition.LastChildOfDocument);
             }
 
             // A DOCTYPE token
@@ -2128,7 +2149,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment as the last child of the Document object.
-                throw new NotImplementedException();
+                this.InsertComment(this.Token.CommentData, CommentInsertPosition.LastChildOfDocument);
             }
 
             // A character token that is one of U+0009 CHARACTER TABULATION, "LF" (U+000A),
@@ -2366,7 +2387,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // a supported ASCII-compatible character encoding or a UTF-16 encoding, and the confidence is currently
                 // tentative, then change the encoding to the extracted encoding.
 
-                // ISSUE. TODO. Handle encoding.
+                // ISSUE. TO-DO. Handle encoding.
             }
 
             // A start tag whose tag name is "title"
@@ -2398,21 +2419,38 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Script))
             {
                 // Run these steps:
-                //        1. Let the adjusted insertion location be the appropriate place for inserting a node.
-                //        2. Create an element for the token in the HTML namespace, with the intended parent being
-                //           the element in which the adjusted insertion location finds itself.
-                //        3. Mark the element as being "parser-inserted" and unset the element's "force-async" flag.
-                //            NOTE: This ensures that, if the script is external, any document.write() calls in the
-                //            script will execute in-line, instead of blowing the document away, as would happen in
-                //            most other cases. It also prevents the script from executing until the end tag is seen.
-                //        4. If the parser was originally created for the HTML fragment parsing algorithm, then mark the
-                //           script element as "already started". (fragment case)
-                //        5. Insert the newly created element at the adjusted insertion location.
-                //        6. Push the element onto the stack of open elements so that it is the new current node.
-                //        7. Switch the tokenizer to the script data state.
-                //        8. Let the original insertion mode be the current insertion mode.
-                //        9. Switch the insertion mode to "text".
-                throw new NotImplementedException();
+                // 1. Let the adjusted insertion location be the appropriate place for inserting a node.
+                AdjustedInsertLocation adjustedInsertLocation = this.AppropriatePlaceForInsertingNode();
+
+                // 2. Create an element for the token in the HTML namespace, with the intended parent being
+                //    the element in which the adjusted insertion location finds itself.
+                Element script = this.CreateElement(adjustedInsertLocation.ParentElement, Namespaces.Html, this.Token.TagName, this.Token.TagAttributes);
+
+                // 3. Mark the element as being "parser-inserted" and unset the element's "force-async" flag.
+                //    NOTE: This ensures that, if the script is external, any document.write() calls in the
+                //          script will execute in-line, instead of blowing the document away, as would happen in
+                //          most other cases. It also prevents the script from executing until the end tag is seen.
+                FutureVersions.ScriptingNotImplemented();
+
+                // 4. If the parser was originally created for the HTML fragment parsing algorithm, then mark the
+                //    script element as "already started". (fragment case)
+                if (this.ParsingContext.IsFragmentParsing)
+                    FutureVersions.ScriptingNotImplemented();
+
+                // 5. Insert the newly created element at the adjusted insertion location.
+                this.DomFactory.InsertElementBefore(adjustedInsertLocation.ParentElement, script, adjustedInsertLocation.BeforeSibling);
+
+                // 6. Push the element onto the stack of open elements so that it is the new current node.
+                this.OpenElements.Push(script);
+
+                // 7. Switch the tokenizer to the script data state.
+                this.Tokenizer.SwitchTo(Tokenizer.StateEnum.ScriptData);
+
+                // 8. Let the original insertion mode be the current insertion mode.
+                this.OriginalInsertionMode = this.InsertionMode;
+
+                // 9. Switch the insertion mode to "text".
+                this.Switch(InsertionModeEnum.Text);
             }
 
             // An end tag whose tag name is "head"
@@ -2446,7 +2484,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                 // Push "in template" onto the stack of template insertion modes so that it is the new
                 // current template insertion mode.
-                throw new NotImplementedException();
+                FutureVersions.TemplatesNotImplemented();
             }
 
             // An end tag whose tag name is "template"
@@ -2461,7 +2499,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 //        4. Clear the list of active formatting elements up to the last marker.
                 //        5. Pop the current template insertion mode off the stack of template insertion modes.
                 //        6. Reset the insertion mode appropriately.
-                throw new NotImplementedException();
+                FutureVersions.TemplatesNotImplemented();
             }
 
             // A start tag whose tag name is "head"
@@ -2832,7 +2870,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // Parse error.
                 this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
-                throw new NotImplementedException();
+                FutureVersions.FramesetsNotImplemented();
 
                 // If the stack of open elements has only one node on it, or if the second element on the stack of open
                 // elements is not a body element, then ignore the token. (fragment case)
@@ -2989,7 +3027,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // then this is a parse error; ignore the token.
                 if ((this.Form != null) && !this.OpenElements.Contains(Tags.Template))
                 {
-                    this.InformParseError(ParseError.UnexpectedStartTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
                     return;
                 }
 
@@ -3027,7 +3065,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                         // 2. If the current node is not an li element, then this is a parse error.
                         if (!this.CurrentNode.Is(Tags.Li))
-                            this.InformParseError(ParseError.UnexpectedTag);
+                            this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
                         // 3. Pop elements from the stack of open elements until an li element has been popped from the stack.
                         this.OpenElements.PopUntil(Tags.Li);
@@ -3076,7 +3114,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                         // 2. If the current node is not a dd element, then this is a parse error.
                         if (!this.CurrentNode.Is(Tags.Dd))
-                            this.InformParseError(ParseError.UnexpectedTag);
+                            this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
                         // 3. Pop elements from the stack of open elements until a dd element has been popped from the stack.
                         this.OpenElements.PopUntil(Tags.Dd);
@@ -3093,7 +3131,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                         // 2. If the current node is not a dt element, then this is a parse error.
                         if (!this.CurrentNode.Is(Tags.Dt))
-                            this.InformParseError(ParseError.UnexpectedTag);
+                            this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
                         // 3. Pop elements from the stack of open elements until a dt element has been popped from the stack.
                         this.OpenElements.PopUntil(Tags.Dt);
@@ -3145,7 +3183,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 if (this.OpenElements.HasElementInScope(Tags.Button))
                 {
                     // 1. Parse error.
-                    this.InformParseError(ParseError.UnexpectedStartTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
                     // 2. Generate implied end tags.
                     this.GenerateImpliedEndTag();
@@ -3176,7 +3214,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // tag name as that of the token, then this is a parse error; ignore the token.
                 if (!this.OpenElements.HasElementInScope(node => node.IsHtmlElement() && node.Is(this.Token.TagName)))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -3187,7 +3225,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // 2. If the current node is not an HTML element with the same tag name as that of the token,
                 // then this is a parse error.
                 if (!(this.CurrentNode.IsHtmlElement() && this.CurrentNode.Is(this.Token.TagName)))
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                 // 3. Pop elements from the stack of open elements until an HTML element with the same tag name
                 // as the token has been popped from the stack.
@@ -3215,7 +3253,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     // abort these steps and ignore the token.
                     if ((node == null) || !this.OpenElements.HasElementInScope(n => n == node))
                     {
-                        this.InformParseError(ParseError.UnexpectedEndTag);
+                        this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                         return;
                     }
 
@@ -3224,7 +3262,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                     // 5. If the current node is not node, then this is a parse error.
                     if (this.CurrentNode != node)
-                        this.InformParseError(ParseError.UnexpectedEndTag);
+                        this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                     // 6. Remove node from the stack of open elements.
                     this.OpenElements.Remove(node);
@@ -3237,7 +3275,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     // abort these steps and ignore the token.
                     if (!this.OpenElements.HasElementInScope(Tags.Form))
                     {
-                        this.InformParseError(ParseError.UnexpectedEndTag);
+                        this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                         return;
                     }
 
@@ -3246,7 +3284,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                     // 3. If the current node is not a form element, then this is a parse error.
                     if (!this.CurrentNode.Is(Tags.Form))
-                        this.InformParseError(ParseError.UnexpectedEndTag);
+                        this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                     // 4. Pop elements from the stack of open elements until a form element has been popped from the stack.
                     this.OpenElements.PopUntil(Tags.Form);
@@ -3260,7 +3298,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // insert an HTML element for a "p" start tag token with no attributes.
                 if (!this.OpenElements.HasElementInButtonScope(Tags.P))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     this.InsertHtmlElement(Tags.P, Attribute.None);
                 }
 
@@ -3275,7 +3313,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // then this is a parse error; ignore the token.
                 if (!this.OpenElements.HasElementInListItemScope(Tags.Li))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -3285,7 +3323,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                 // 2. If the current node is not an li element, then this is a parse error.
                 if (!this.CurrentNode.Is(Tags.Li))
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                 // 3. Pop elements from the stack of open elements until an li element has been popped from the stack.
                 this.OpenElements.PopUntil(Tags.Li);
@@ -3298,7 +3336,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // same tag name as that of the token, then this is a parse error; ignore the token.
                 if (!this.OpenElements.HasElementInScope(node => node.IsHtmlElement() && node.Is(this.Token.TagName)))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -3309,7 +3347,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // 2. If the current node is not an HTML element with the same tag name as that of the token,
                 // then this is a parse error.
                 if (!(this.CurrentNode.IsHtmlElement() && this.CurrentNode.Is(this.CurrentNode.GetTagName())))
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                 // 3. Pop elements from the stack of open elements until an HTML element with the same tag name
                 // as the token has been popped from the stack.
@@ -3328,7 +3366,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // name is one of "h1", "h2", "h3", "h4", "h5", or "h6", then this is a parse error; ignore the token.
                 if (!this.OpenElements.Any(node => node.IsHtmlElement() && node.Is(Tags.H1, Tags.H2, Tags.H3, Tags.H4, Tags.H5, Tags.H6)))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -3339,7 +3377,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // 2. If the current node is not an HTML element with the same tag name as that of the token, then this
                 // is a parse error.
                 if (!(this.CurrentNode.IsHtmlElement() && this.CurrentNode.Is(this.Token.TagName)))
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                 // 3. Pop elements from the stack of open elements until an HTML element whose tag name is one of
                 // "h1", "h2", "h3", "h4", "h5", or "h6" has been popped from the stack.
@@ -3368,7 +3406,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // algorithm didn't already remove it (it might not have if the element is not in table scope).
                 if (this.ActiveFormattingElements.ContainsUpToLastMarker(Tags.A))
                 {
-                    this.InformParseError(ParseError.UnexpectedStartTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
                     bool removed = this.RunAdoptionAgencyAlgorithm(Tags.A, ref anyOtherEndTag);
 
                     // ISSUE: If the RunAdoptionAgencyAlgorithm told us to "act as anyOtherEndTag", should we run the stuff below?
@@ -3420,7 +3458,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // agency algorithm for the tag name "nobr", then once again reconstruct the active formatting elements, if any.
                 if (this.OpenElements.HasElementInScope(Tags.Nobr))
                 {
-                    this.InformParseError(ParseError.UnexpectedStartTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
                     this.RunAdoptionAgencyAlgorithm(Tags.Nobr, ref anyOtherEndTag);
 
                     // ISSUE: If the RunAdoptionAgencyAlgorithm told us to "act as anyOtherEndTag", should we run the stuff below?
@@ -3465,7 +3503,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // same tag name as that of the token, then this is a parse error; ignore the token.
                 if (!this.OpenElements.Any(node => node.IsHtmlElement() && node.Is(this.Token.TagName)))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -3476,7 +3514,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // 2. If the current node is not an HTML element with the same tag name as that of the token, then this
                 // is a parse error.
                 if (!(this.CurrentNode.IsHtmlElement() && this.CurrentNode.Is(this.Token.TagName)))
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                 // 3. Pop elements from the stack of open elements until an HTML element with the same tag name as the
                 // token has been popped from the stack.
@@ -3514,7 +3552,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             {
                 // Parse error. Act as described in the next entry, as if this
                 // was a "br" start tag token, rather than an end tag token.
-                this.InformParseError(ParseError.UnexpectedEndTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                 // Reconstruct the active formatting elements, if any.
                 this.ActiveFormattingElements.ReconstructFormattingElements();
@@ -3603,7 +3641,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Image))
             {
                 // Parse error.
-                this.InformParseError(ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
                 // Change the token's tag name to "img" and reprocess it. (Don't ask.)
                 this.Token.SetStartTag(Tags.Img, this.Token.TagIsSelfClosing, this.Token.TagAttributes);
@@ -3726,7 +3764,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                 // If the current node is not then a ruby element, this is a parse error.
                 if (!this.CurrentNode.Is(Tags.Ruby))
-                    this.InformParseError(ParseError.UnexpectedTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
                 // Insert an HTML element for the token.
                 this.InsertHtmlElementForToken();
@@ -3742,7 +3780,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                 // If the current node is not then a ruby element or an rtc element, this is a parse error.
                 if (!this.CurrentNode.Is(Tags.Ruby))
-                    this.InformParseError(ParseError.UnexpectedTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
                 // Insert an HTML element for the token.
                 this.InsertHtmlElementForToken();
@@ -3754,8 +3792,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // Reconstruct the active formatting elements, if any.
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
-                // MathML_TODO ... MathML Tags
-                throw new NotImplementedException();
+                FutureVersions.MathmlNotImplemented();
 
                 // Adjust MathML attributes for the token. (This fixes the case of MathML attributes that are not all lowercase.)
 
@@ -3773,8 +3810,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // Reconstruct the active formatting elements, if any.
                 this.ActiveFormattingElements.ReconstructFormattingElements();
 
-                // SVG_TODO ... SVG Tags
-                throw new NotImplementedException();
+                // SVG_TO-DO ... SVG Tags
+                FutureVersions.SvgNotImplemented();
 
                 // Adjust SVG attributes for the token. (This fixes the case of SVG attributes that are not all lowercase.)
 
@@ -3793,7 +3830,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 Tags.Th, Tags.THead, Tags.Tr))
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedStartTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
             }
 
             // Any other start tag
@@ -3832,7 +3869,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                         // 2. If node is not the current node, then this is a parse error.
                         if (this.CurrentNode != node)
-                            this.InformParseError(ParseError.UnexpectedTag);
+                            this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
                         // 3. Pop all the nodes from the current node up to node, including node, then stop these steps.
                         System.Diagnostics.Debug.Assert(this.OpenElements.Contains(node), "Broken algorithm? Are we suppose to pop everything?");
@@ -3843,7 +3880,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     // 3. Otherwise, if node is in the special category, then this is a parse error; ignore the token, and abort these steps.
                     else if (node.IsSpecial())
                     {
-                        this.InformParseError(ParseError.UnexpectedTag);
+                        this.InformParseError(Parsing.ParseError.UnexpectedTag);
                         return; // Abort these steps.
                     }
 
@@ -3946,13 +3983,13 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 //    then this is a parse error; abort these steps.
                 if (!this.OpenElements.HasElementInScope(elem => elem == formattingElement))
                 {
-                    this.InformParseError(ParseError.UnexpectedTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedTag);
                     return elementRemoved;
                 }
 
                 // 8. If formatting element is not the current node, this is a parse error. (But do not abort these steps.)
                 if (formattingElement != this.CurrentNode)
-                    this.InformParseError(ParseError.UnexpectedTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
                 // 9. Let furthest block be the topmost node in the stack of open elements that is lower in the stack
                 //    than formatting element, and is an element in the special category. There might not be one.
@@ -4124,7 +4161,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.EndOfFile)
             {
                 // Parse error.
-                this.InformParseError(ParseError.PrematureEndOfFile);
+                this.InformParseError(Parsing.ParseError.PrematureEndOfFile);
 
                 // If the current node is a script element, mark the script element as "already started".
                 if (this.CurrentNode.Is(Tags.Script))
@@ -4141,17 +4178,20 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             // An end tag whose tag name is "script"
             else if (this.Token.IsEndTagNamed(Tags.Script))
             {
-                throw new NotImplementedException();
-
-                // Perform a microtask checkpoint.
-
-                // Provide a stable state.
+                // If the JavaScript execution context stack is empty, perform a microtask checkpoint.
+                FutureVersions.ScriptingNotImplemented();
 
                 // Let script be the current node (which will be a script element).
+                Element script = this.CurrentNode;
 
                 // Pop the current node off the stack of open elements.
+                this.OpenElements.Pop();
 
                 // Switch the insertion mode to the original insertion mode.
+                this.Switch(this.OriginalInsertionMode);
+
+                // THE REMAINING PART EXECUTES THE SCRIPTS - NOT IMPLEMENTED
+                FutureVersions.ScriptingNotImplemented();
 
                 // Let the old insertion point have the same value as the current insertion point. Let the insertion
                 // point be just before the next input character.
@@ -4253,7 +4293,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedDocType);
+                this.InformParseError(Parsing.ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "caption"
@@ -4326,7 +4366,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Table))
             {
                 // Parse error.
-                this.InformParseError(ParseError.UnexpectedStartTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
                 // If the stack of open elements does not have a table element in table scope, ignore the token.
                 if (!this.OpenElements.HasElementInTableScope(Tags.Table))
@@ -4350,7 +4390,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // ignore the token.
                 if (!this.OpenElements.HasElementInTableScope(Tags.Table))
                 {
-                    this.InformParseError(ParseError.PrematureEndOfFile);
+                    this.InformParseError(Parsing.ParseError.PrematureEndOfFile);
                     return;
                 }
 
@@ -4369,7 +4409,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 Tags.TFoot, Tags.Th, Tags.THead, Tags.Tr))
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.PrematureEndOfFile);
+                this.InformParseError(Parsing.ParseError.PrematureEndOfFile);
             }
 
             // A start tag whose tag name is one of: "style", "script", "template"
@@ -4395,7 +4435,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 else
                 {
                     // Parse error.
-                    this.InformParseError(ParseError.UnexpectedStartTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
                     // Insert an HTML element for the token.
                     this.InsertHtmlElementForToken();
@@ -4413,7 +4453,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Form))
             {
                 // Parse error.
-                this.InformParseError(ParseError.UnexpectedStartTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
                 // If there is a template element on the stack of open elements, or if the form element pointer
                 // is not null, ignore the token.
@@ -4481,7 +4521,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             if (this.Token.IsCharacterNull())
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.NullCharacter);
+                this.InformParseError(Parsing.ParseError.NullCharacter);
                 return;
             }
 
@@ -4540,7 +4580,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // this is a parse error; ignore the token. (fragment case)
                 if (!this.OpenElements.HasElementInTableScope(Tags.Caption))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -4550,7 +4590,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                 // Now, if the current node is not a caption element, then this is a parse error.
                 if (!this.CurrentNode.Is(Tags.Caption))
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                 // Pop elements from this stack until a caption element has been popped from the stack.
                 this.OpenElements.PopUntil(Tags.Caption);
@@ -4570,9 +4610,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             {
                 // Parse error.
                 if (this.Token.Type == TokenType.StartTag)
-                    this.InformParseError(ParseError.UnexpectedStartTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
                 else
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                 // If the stack of open elements does not have a caption element in table scope, ignore the token. (fragment case)
                 if (!this.OpenElements.HasElementInTableScope(Tags.Caption))
@@ -4596,7 +4636,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsEndTagNamed(Tags.Body, Tags.Col, Tags.ColGroup, Tags.Html, Tags.TBody, Tags.Td, Tags.TFoot, Tags.Th, Tags.THead, Tags.Tr))
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedEndTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // Anything else
@@ -4636,7 +4676,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedDocType);
+                this.InformParseError(Parsing.ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
@@ -4664,7 +4704,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // If the current node is not a colgroup element, then this is a parse error; ignore the token.
                 if (!this.CurrentNode.Is(Tags.ColGroup))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -4677,7 +4717,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsEndTagNamed(Tags.Col))
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedEndTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // A start tag whose tag name is "template"
@@ -4701,7 +4741,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // If the current node is not a colgroup element, then this is a parse error; ignore the token.
                 if (!this.CurrentNode.Is(Tags.ColGroup))
                 {
-                    this.InformParseError(ParseError.UnexpectedTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedTag);
                     return;
                 }
 
@@ -4741,7 +4781,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Th, Tags.Td))
             {
                 // Parse error.
-                this.InformParseError(ParseError.UnexpectedStartTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
                 // Clear the stack back to a table body context. (See below.)
                 this.ClearStackBackToTableBodyContext();
@@ -4761,7 +4801,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // and with the same tag name as the token, this is a parse error; ignore the token.
                 if (!this.OpenElements.HasElementInTableScope(this.Token.TagName))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -4785,9 +4825,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 if (!this.OpenElements.HasElementInTableScope(elem => elem.Is(Tags.TBody, Tags.THead, Tags.TFoot)))
                 {
                     if (this.Token.Type == TokenType.StartTag)
-                        this.InformParseError(ParseError.UnexpectedStartTag);
+                        this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
                     else
-                        this.InformParseError(ParseError.UnexpectedEndTag);
+                        this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -4807,7 +4847,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsEndTagNamed(Tags.Body, Tags.Caption, Tags.Col, Tags.ColGroup, Tags.Html, Tags.Td, Tags.Th, Tags.Tr))
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedEndTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // Anything else
@@ -4863,7 +4903,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // If the stack of open elements does not have a tr element in table scope, this is a parse error; ignore the token.
                 if (!this.OpenElements.HasElementInTableScope(Tags.Tr))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -4888,9 +4928,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 if (!this.OpenElements.HasElementInTableScope(Tags.Tr))
                 {
                     if (this.Token.Type == TokenType.StartTag)
-                        this.InformParseError(ParseError.UnexpectedStartTag);
+                        this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
                     else
-                        this.InformParseError(ParseError.UnexpectedEndTag);
+                        this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -4915,7 +4955,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // and with the same tag name as the token, this is a parse error; ignore the token.
                 if (!this.OpenElements.HasElementInTableScope(this.Token.TagName))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -4941,7 +4981,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsEndTagNamed(Tags.Body, Tags.Caption, Tags.Col, Tags.ColGroup, Tags.Html, Tags.Td, Tags.Th))
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedEndTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // Anything else
@@ -4983,7 +5023,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // with the same tag name as that of the token, then this is a parse error; ignore the token.
                 if (!this.OpenElements.HasElementInTableScope(this.Token.TagName))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -4994,7 +5034,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // Now, if the current node is not an HTML element with the same tag name as the token,
                 // then this is a parse error.
                 if (!this.CurrentNode.Is(this.Token.TagName))
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                 // Pop elements from the stack of open elements stack until an HTML element with the same
                 // tag name as the token has been popped from the stack.
@@ -5014,7 +5054,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // ignore the token. (fragment case)
                 if (!this.OpenElements.HasElementInTableScope(elem => elem.Is(Tags.Td, Tags.Th)))
                 {
-                    this.InformParseError(ParseError.UnexpectedStartTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
                     return;
                 }
 
@@ -5027,7 +5067,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsEndTagNamed(Tags.Body, Tags.Caption, Tags.Col, Tags.ColGroup, Tags.Html))
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedEndTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // An end tag whose tag name is one of: "table", "tbody", "tfoot", "thead", "tr"
@@ -5037,7 +5077,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // and with the same tag name as that of the token, then this is a parse error; ignore the token.
                 if (!this.OpenElements.HasElementInTableScope(this.Token.TagName))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -5062,7 +5102,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
             // 2. If the current node is not now a td element or a th element, then this is a parse error.
             if (!this.CurrentNode.Is(Tags.Td, Tags.Th))
-                this.InformParseError(ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
 
             // 3. Pop elements from the stack of open elements stack until a td element or a th element has been popped from the stack.
             this.OpenElements.PopUntil(Tags.Td, Tags.Th);
@@ -5091,7 +5131,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             if (this.Token.IsCharacterNull())
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.NullCharacter);
+                this.InformParseError(Parsing.ParseError.NullCharacter);
             }
 
             // Any other character token
@@ -5112,7 +5152,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedDocType);
+                this.InformParseError(Parsing.ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
@@ -5161,7 +5201,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 if (this.CurrentNode.Is(Tags.OptGroup))
                     this.OpenElements.Pop();
                 else
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // An end tag whose tag name is "option"
@@ -5172,7 +5212,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 if (this.CurrentNode.Is(Tags.Option))
                     this.OpenElements.Pop();
                 else
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // An end tag whose tag name is "select"
@@ -5182,7 +5222,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // ignore the token. (fragment case)
                 if (!this.OpenElements.HasElementInTableScope(Tags.Select))
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -5198,7 +5238,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Select))
             {
                 // Parse error.
-                this.InformParseError(ParseError.UnexpectedStartTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
                 // Pop elements from the stack of open elements until a select element has been popped from the stack.
                 this.OpenElements.PopUntil(Tags.Select);
@@ -5213,7 +5253,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsStartTagNamed(Tags.Input, Tags.KeyGen, Tags.TextArea))
             {
                 // Parse error.
-                this.InformParseError(ParseError.UnexpectedStartTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
                 // If the stack of open elements does not have a select element in select scope, ignore the token. (fragment case)
                 if (!this.OpenElements.HasElementInSelectScope(Tags.Select))
@@ -5248,7 +5288,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
             }
         }
 
@@ -5266,7 +5306,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             if (this.Token.IsStartTagNamed(Tags.Caption, Tags.Table, Tags.TBody, Tags.TFoot, Tags.THead, Tags.Tr, Tags.Td, Tags.Th))
             {
                 // Parse error.
-                this.InformParseError(ParseError.UnexpectedStartTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedStartTag);
 
                 // Pop elements from the stack of open elements until a select element has been popped from the stack.
                 this.OpenElements.PopUntil(Tags.Select);
@@ -5282,7 +5322,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.IsEndTagNamed(Tags.Caption, Tags.Table, Tags.TBody, Tags.TFoot, Tags.THead, Tags.Tr, Tags.Td, Tags.Th))
             {
                 // Parse error.
-                this.InformParseError(ParseError.UnexpectedEndTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
 
                 // If the stack of open elements does not have an element in table scope that is an HTML element
                 // and with the same tag name as that of the token, then ignore the token.
@@ -5416,7 +5456,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.EndTag)
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedEndTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
             }
 
             // An end-of-file token
@@ -5430,7 +5470,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 }
 
                 // Otherwise, this is a parse error.
-                this.InformParseError(ParseError.PrematureEndOfFile);
+                this.InformParseError(Parsing.ParseError.PrematureEndOfFile);
 
                 // Pop elements from the stack of open elements until a template element has been popped from the stack.
                 this.OpenElements.PopUntil(Tags.Template);
@@ -5471,14 +5511,14 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment as the last child of the first element in the stack of open elements (the html element).
-                throw new NotImplementedException();
+                this.InsertComment(this.Token.CommentData, CommentInsertPosition.LastChildOfFirstElement);
             }
 
             // A DOCTYPE token
             else if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedDocType);
+                this.InformParseError(Parsing.ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
@@ -5495,7 +5535,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // this is a parse error; ignore the token. (fragment case)
                 if (this.ParsingContext.IsFragmentParsing)
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -5514,7 +5554,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else
             {
                 // Parse error. Switch the insertion mode to "in body" and reprocess the token.
-                this.InformParseError(ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
                 this.Switch(InsertionModeEnum.InBody);
             }
         }
@@ -5548,7 +5588,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedDocType);
+                this.InformParseError(Parsing.ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
@@ -5571,7 +5611,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // If the current node is the root html element, then this is a parse error; ignore the token. (fragment case)
                 if (this.CurrentNode == this.OpenElements[0])
                 {
-                    this.InformParseError(ParseError.UnexpectedEndTag);
+                    this.InformParseError(Parsing.ParseError.UnexpectedEndTag);
                     return;
                 }
 
@@ -5608,7 +5648,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             {
                 // If the current node is not the root html element, then this is a parse error.
                 if (this.CurrentNode != this.OpenElements[0])
-                    this.InformParseError(ParseError.PrematureEndOfFile);
+                    this.InformParseError(Parsing.ParseError.PrematureEndOfFile);
 
                 // NOTE: The current node can only be the root html element in the fragment case.
 
@@ -5620,7 +5660,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
             }
         }
 
@@ -5653,7 +5693,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (this.Token.Type == TokenType.DocType)
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedDocType);
+                this.InformParseError(Parsing.ParseError.UnexpectedDocType);
             }
 
             // A start tag whose tag name is "html"
@@ -5688,7 +5728,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
             }
         }
 
@@ -5706,7 +5746,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment as the last child of the Document object.
-                throw new NotImplementedException();
+                this.InsertComment(this.Token.CommentData, CommentInsertPosition.LastChildOfDocument);
             }
 
             // A DOCTYPE token
@@ -5730,7 +5770,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else
             {
                 // Parse error. Switch the insertion mode to "in body" and reprocess the token.
-                this.InformParseError(ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
                 this.Switch(InsertionModeEnum.InBody);
                 this.ProcessToken();
             }
@@ -5750,7 +5790,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             if (this.Token.Type == TokenType.Comment)
             {
                 // Insert a comment as the last child of the Document object.
-                throw new NotImplementedException();
+                this.InsertComment(this.Token.CommentData, CommentInsertPosition.LastChildOfDocument);
             }
 
             // A DOCTYPE token
@@ -5781,7 +5821,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else
             {
                 // Parse error. Ignore the token.
-                this.InformParseError(ParseError.UnexpectedTag);
+                this.InformParseError(Parsing.ParseError.UnexpectedTag);
             }
         }
 

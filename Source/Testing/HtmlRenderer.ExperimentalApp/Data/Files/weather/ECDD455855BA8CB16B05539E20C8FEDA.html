@@ -1,0 +1,1170 @@
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head id="ctl00_ctl00_Head1"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><title>
+	Intellicast -  Local Weather Forecast, Reports and Maps
+</title><meta name="viewport" content="width=device-width,initial-scale=1" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta name="description" content="Intellicast.com: The Authority in Expert Weather" /><meta name="google-site-verification" content="Ty8E9HwyYpwnoH6SWxOoDkwWIpfXZbnXYxSKIJKinLw" /><meta name="google-site-verification" content="OwqzWim3JgPf7WONV8sYyMir93oTT-JmWDKQW-IApCI" /><meta name="verify-v1" content="bwhh8UmywoDXIeujVrNoVWPt5FmUdjfYgs0MgjMjouc=" /><meta name="msvalidate.01" content="2625493FFF704B18B25610DED3DC742E" /><meta name="y_key" content="66d7db7fca59b234" /><meta http-equiv="PICS-Label" content="(PICS-1.1 &quot;http://www.rsac.org/ratingsv01.html&quot; l gen true comment &quot;RSACi North America Server&quot; for &quot;http://www.intellicast.com&quot; on &quot;1998.08.31T21:19-0800&quot; r (n 0 s 0 v 0 l 0))&quot;" /><meta http-equiv="cache-control" content="no-cache" /><meta http-equiv="expires" content="0" /><meta http-equiv="pragma" content="no-cache" /><meta id="ctl00_ctl00_adsmetrics_zone" name="adsmetrics_zone" value="home" /><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" /><link rel="icon" href="/favicon.ico" type="image/x-icon" /><link href="http://images.intellicast.com/Styles/normalize.rexive.css" rel="stylesheet" /><link href="http://images.intellicast.com/Styles/main_20160121.css" rel="stylesheet" /><link href="http://images.intellicast.com/Styles/Stylesheet_20131220.css" rel="stylesheet" />
+
+  <script src="http://icons.wxug.com/scripts/modernizr/2.8.2/modernizr.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+  <script src="http://images.intellicast.com/Scripts/ads-sdk-full-v3.js"></script>
+  <script>
+    try { // change delimiters to mustache syntax
+      _.templateSettings.interpolate = /\{\{=([\s\S]+?)\}\}/g;
+      _.templateSettings.evaluate = /\{\{([\s\S]+?)\}\}/g;
+      _.templateSettings.escape = /\{\{-([\s\S]+?)\}\}/g;
+    } catch (e) { /*ignore*/ }
+  </script>
+  <script type="text/javascript">
+    // set global locationId
+    var locationId = '';
+	</script>
+
+	<script type="text/javascript" src="http://images.intellicast.com/Scripts/ads_20170629.js"></script>
+  
+
+	<!-- BEGIN New Ads -->
+	<script src="http://images.intellicast.com/Scripts/Vendor/twc-jquery-1.10.2.min.js"></script>
+	
+  <script src="http://images.intellicast.com/Scripts/ad-v3.js"></script>
+
+
+  <!-- Initialize PCO -->
+	<script>
+	  window.TWC.Configs = {
+	    'dsx': {
+	      'host': '//dsx.weather.com/', //'//dsx01.int.aws.weather.com/',
+	      'apiKey': '7bb1c920-7027-4289-9c96-ae5e263980bc',
+	      'locale': (TWC && TWC.Titan && TWC.Titan.locale) || 'en_US' || 'en_US',
+	      'cmsVersion': 'v1'
+	    },
+	    'image_poc': {
+	      'instart': 0,
+	      'akamai': 0
+	    },
+	    'debug': 1,
+	    'disable_lazyload': 0,
+	    'sunTurbo': {
+	      'baseUrl': 'http://devapi.weather.com',
+	      'apiKey': 'c1ea9f47f6a88b9acb43aba7faf389d4',
+	      'locale': 'en-US' || 'en-us'
+	    }
+	  };
+	  TWC.pco = TWC.initpco(
+				jQuery,
+				{
+				  'page': { locale: 'en-US' },
+				  'ad': {}
+				},
+				null,
+				null,
+				{ "error": "LOCATION_UNAVAILABLE" }
+		);
+	</script>
+
+  <!-- load Tealium -->
+	<script>
+	  // var TWC = TWC || {};
+		// TWC.Events = TWC.Events || {};
+		// TWC.Events.getEvent = TWC.Events.getEvent || function () { return { done: function () {}, resolve: function () {} }; };
+
+		var getScreenSize = function () {
+	    var browserWidth = window.innerWidth || document.body.clientWidth;
+
+	    if (browserWidth < 768) return 'mobile';
+	    if (browserWidth < 1025) return 'tablet';
+	    return 'desktop';
+	  };
+	  var getSaveZipCd = function () {
+	    var e = jQuery;
+	    var t = TWC;
+	    var n = jQuery.jStorage.get("user");
+	    var a = t && t.pco && t.pco.getNodeValue && t.pco.getNodeValue("page", "currentLocation");
+	    var r = a && a.zipCd || n && n.lastVisitedLocation && n.lastVisitedLocation.zipCd || n && n.savedLocations && jQuery.isArray(n.savedLocations) && n.savedLocations[0] && n.savedLocations[0].zipCd || n && n.recentSearchLocations && e.isArray(n.recentSearchLocations) && n.recentSearchLocations[0] && n.recentSearchLocations[0].zipCd || "";
+
+	    return r;
+	  };
+
+	  var getBrowser = function () {
+	    var userAgent = navigator && navigator.userAgent
+	    meta = userAgent && userAgent.match(/chrome|firefox|safari|trident/i);
+
+	    if (meta && jQuery.isArray(meta)) {
+	      switch (meta[0].toLowerCase()) {
+	        case "chrome":
+	          return "twcchrome";
+	        case "firefox":
+	          return "twcff";
+	        case "safari":
+	          return "twcsafari";
+	        case "trident":
+	          return "twcie";
+	        default:
+	          return "twcnative"
+	      }
+	    }
+	  };
+
+		  $(document).ready(function () {
+	      setTimeout(function () {
+	        TWC.Events.getEvent('lotameReady').resolve();
+	      }, 1000);
+
+		    TWC.Events.getEvent('utag_dataReady').done(function () {
+		      utag_data['js_page.positions'] = ['WX_Top300Variable', 'WX_WindowShade', 'WX_Mid300', 'WX_PaidSearch', 'WX_Tile1', 'WX_Tile2', 'WX_BottomLeaderboard'];
+		      // jQuery.ajax({
+		      //   'url': 'https://tags.tiqcdn.com/utag/weather/intellicast/prod/utag.js',
+		      //   'dataType': 'script',
+		      //   'success': void (0),
+		      //   'cache': true
+		      // });
+
+					window.twcMoney = window.twcMoney || {};
+					window.twcMoney.cmd = window.twcMoney.cmd || [];
+					window.twcMoney.cmd.push(function() {
+		        var locale = TWC.Configs.sunTurbo.locale;
+		        var staticAdPositions = utag_data['js_page.positions'];
+		        var zone = utag_data['js_page.zone'];
+		        var custParams = {};
+
+		        var localeA = TWC && TWC.Configs && TWC.Configs.dsx && TWC.Configs.dsx.locale
+		          , amznId = "de_DE" === localeA && "3128" || "1004";
+
+		        var thirdParties = [
+		          {
+		            id: 'amznslots',
+		            amznId: amznId,
+		            async: true,
+		            timeout: 500
+		          },
+		          {
+		            id: 'criteo',
+		            netId: 2305,
+		            timeout: 500,
+		            async: true
+		          },
+		          {
+		            id: 'wfxtg',
+		            acctid: getScreenSize() !== 'mobile' ? '4C2383' : '5B3739',
+		            timeout: 500,
+		            params: {
+		              activeLocation: window.getSaveZipCd() || '30334',
+		            },
+		            async: true,
+		          },
+		          {
+		            id: 'lotame',
+		            clientId: 2215,
+		            async: true,
+		            timeout: 500,
+		            params: {
+		              metrics: TWC.pco.getNodeValue("metrics") || '',
+		              location: {
+		                dmaCd: TWC.pco.getNodeValue("ad", "location").dmaCd || ''
+		              },
+		              adzone: zone,
+		              lang: TWC.pco.getNodeValue("page", "lang") || ''
+		            }
+		          }
+		        ];
+		        var customAdConfig = {
+		          preparePositions: function (requestObj) {
+		            var positions = [
+		              {
+		                "id": "WX_Top300Variable",
+		                "pos": "wx_300var",
+		                "sizes": [
+		                  [300, 600],
+		                  [300, 251],
+											[300, 250],
+		                  [300, 1050],
+		                  [300, 276]
+		                ]
+		              },
+		              {
+		                "id": "WX_WindowShade",
+		                "pos": "wx_ws",
+		                "sizes": [
+		                  [300, 276],
+		                  [728, 91],
+											[728, 90],
+		                  [728, 50],
+		                  [970, 250]
+		                ],
+		                "device": [ "desktop" ]
+		              },
+		              {
+		                "id": "WX_Mid300",
+		                "pos": "wx_mid300",
+		                "sizes": [[300, 251], [300, 250], [320, 300]]
+		              },
+		              {
+		                "id": "WX_PaidSearch",
+		                "pos": "wx_pds",
+		                "sizes": [[300, 251], [300, 250]]
+		              },
+		              // {
+		              //    "id": "WX_Tile1",
+		              //    "pos": "wx_t1",
+		              //    "sizes": [[125, 125]]
+		              // },
+		              // {
+		              //   "id": "WX_Tile2",
+		              //   "pos": "wx_t2",
+		              //   "sizes": [[125, 125]]
+		              // },
+		              {
+		                "id": "WX_BottomLeaderboard",
+		                "pos": "wx_botldr",
+		                "sizes": [[728, 91], [728, 90]]
+		              }
+		            ];
+
+		            console.log('========');
+		            console.log(requestObj);
+		            console.log('========');
+
+		            return positions.filter(function (item) {
+		              return requestObj.positions.indexOf(item.id) >= 0;
+		            });
+		          },
+		          getAdUnit: function (locale, deviceType) {
+		            var adUnit = null;
+		            var js_page_ad_unit = utag_data['js_page.ad_unit'].split('/');
+
+		            adUnit = {
+		              adUnit: js_page_ad_unit[2] || '',
+		              networkCode: '/' + (js_page_ad_unit[1] || '')
+		            };
+
+		            return adUnit;
+		          },
+		          getCustParams: function () {
+		            return {
+		              refurl: "intellicast",
+		              browser: getBrowser(),
+		              cc: TWC.pco.getNodeValue("user", "currentLocation").cntryCd,
+		              ct: TWC.pco.getNodeValue("user", "currentLocation").cityNm,
+		              dma: TWC.pco.getNodeValue("ad", "location").dmaCd,
+		              ent: utag_data["js_page.ent"],
+		              impression_id: TWC.pco.getNodeValue("ad", "impression_id"),
+		              intl: utag_data["js_page.gpr"],
+		              lang: TWC.pco.getNodeValue("page", "lang"),
+		              lat: TWC.pco.getNodeValue("ad", "location").lat,
+		              lon: TWC.pco.getNodeValue("ad", "location").long,
+		              loc: utag_data["js_page.locid"],
+		              ord: utag_data["js_page.ord"],
+		              plat: utag_data["js_page.plat"],
+		              refurl: utag_data["js_page.refurl"],
+		              rmid: utag_data["js_page.rmid"],
+		              st: TWC.pco.getNodeValue("user", "currentLocation").stCd,
+		              zip: utag_data["js_page.zip"],
+		              tf: utag_data["js_page.zone"]
+		            };
+		          }
+		        };
+
+		        var adLocation = TWC.pco.getNodeValue("ad", "location");
+		        var geocode = adLocation.lat + ',' + adLocation.long;//'42.36,-71.06'
+
+		        window.twcMoney.SunDataService.fetchData({ geocode: geocode })
+		          .then(function(result) {
+		            var custParams = result.custParams;
+
+		            console.log('========');
+		            console.log(result);
+		            console.log('========');
+
+		            window.twcMoney.moneyTree({ useLightSpeed: false, locale: locale })
+		              .start({
+		                adZone: zone,
+		                locale: locale,
+		                thirdParties: thirdParties,
+		                custParams: custParams,
+		                pageAdPositions: [],
+		                staticAdPositions: staticAdPositions,
+		                processStatic: true,
+
+		                adConfig: customAdConfig
+		              })
+									.then(function () {
+										window.twcMoney.moneyTree().getBidProcessPromise('lotame')
+										.then(function () {
+											var lotameData = {};
+											var jStorage = JSON.parse(localStorage
+												&& localStorage.jStorage);
+											var lotameRaw = jStorage && jStorage.lotameRaw || {};
+
+											var lot_abbr, lot_id, lotameData;
+											if (lotameData = TWC.pco.getNodeValue("user", "lotame") || {},
+											lotameData.lot_tpid = lotameRaw
+												&& lotameRaw.Profile
+												&& lotameRaw.Profile.tpid || lotameData.lot_tpid,
+											lotameData.lot_pid = lotameRaw
+												&& lotameRaw.Profile
+												&& lotameRaw.Profile.pid || lotameData.lot_pid,
+											lot_abbr = lotameData && lotameData.lot_abbr || "",
+											lot_id = lotameData && lotameData.lot_id || "",
+											audienceLength = lotameRaw
+												&& lotameRaw.Profile
+												&& lotameRaw.Profile.Audiences
+												&& lotameRaw.Profile.Audiences.Audience
+												&& lotameRaw.Profile.Audiences.Audience.length,
+											audienceLength > 0) {
+													lot_abbr = "",
+													lot_id = "";
+													for (var c = 0; c < audienceLength; c++)
+															lot_abbr += lotameRaw.Profile.Audiences.Audience[c].abbr + (c < audienceLength - 1 ? "," : ""),
+															lot_id += lotameRaw.Profile.Audiences.Audience[c].id + (c < audienceLength - 1 ? "," : "");
+
+													lotameData.lot_abbr = lot_abbr,
+													lotameData.lot_id = lot_id
+											}
+
+											TWC.pco.setNodeValue("user", "lotame", lotameData);
+										});
+									});
+		          });
+					});
+		    });
+		  });
+	</script>
+
+  <!-- Optimizely -->
+  <script src="https://cdn.optimizely.com/js/878051086.js"></script>
+
+  <!-- BEGIN Omniture -->
+
+  <script src="http://www.intellicast.com/Scripts/AppMeasurement.js"></script>
+
+  <script type="text/javascript">
+	(function () {
+		var _recentLocations = [];
+
+		_recentLocations.push(1);
+
+		_recentLocations = _recentLocations.join();
+
+		var _brdcrmb = window.location.pathname !== "/" ? window.location.pathname.substring(1).split("/") : ["Home"];
+		if (_brdcrmb.length > 1) {
+			_brdcrmb.unshift("Home");
+			_brdcrmb[_brdcrmb.length - 1] = _brdcrmb[_brdcrmb.length - 1].substring(0, _brdcrmb[_brdcrmb.length - 1].indexOf("."));
+		}
+		s.pageName = document.title;
+		s.prop2 = s.evar4 = _brdcrmb.join(" > "); // sub section e.g. home > maps > regionmap
+		s.prop6 = s.evar6 = "::"; // city:state:country
+		s.prop8 = s.evar8 = ""; // dma id
+		s.prop9 = s.evar9 = ""; // zip code
+		s.evar23 = ""; // marketing campaigns
+		s.evar24 = window.location.href; // full url
+		//SiteCatalyst Beacon Parameter: event15 Page View Event
+
+		s.prop10 = _recentLocations; // recent locations, number then location id
+		s.prop14 = ""; // intra-page actions
+		s.evar10 = _recentLocations; // saved locations, number then location id
+
+		s.evar11 = ""; // internal search term
+		s.evar12 = ""; // member type (member, non-member)
+		s.evar13 = ""; // weather map layer
+		s.evar14 = ""; // boating map layer
+		s.evar17 = ""; // search type (other or zip)
+		s.evar18 = ""; // search error message
+		/*
+			event7: Membership Signup
+			event8: Sign-Ins
+			event9: Sign-Outs
+		*/
+		var s_code = s.t();
+		if (s_code) document.write(s_code);
+	}());
+  </script>
+
+  <!-- END Omniture -->
+
+  <!-- END New Ads -->
+
+  <script src="http://images.intellicast.com/App_Scripts/icast.storage.min.js"></script>
+	<script src="http://images.intellicast.com/App_Scripts/jquery-autocomplete.min.js"></script>
+
+	
+	
+
+  <meta name="description" content="Local weather conditions and forecast report within the United States and the world.  National severe weather alerts and regional weather maps." />
+  <meta name="keywords" content="local weather, local forecast, local weather conditions, regional weather maps, national weather, global weather, international weather, local conditions" />
+  <link href="http://images.intellicast.com/Styles/Weather_20091123.css" rel="stylesheet" type="text/css" />
+  <script type="text/javascript" src="http://images.intellicast.com/Scripts/weather_20091102.js"></script>
+
+<!-- New Ads -->
+<style type="text/css">
+  .img-link{display:block;margin:10px 0;}
+  .img-link img{border:none;display:block;}
+</style>
+<!-- New Ads -->
+<script type="text/javascript">
+  jQuery(function ($) {
+    // Old Ads // *************** the 'wxmapAdTop.ClientID' part needs to be an inline C# call.  Removed at the moment - due to inability to comment out.
+    //var adFrame = document.getElementById('wxmapAdTop.ClientID');
+    // Old Ads //
+    // New Ads //
+    var adFrame = document.getElementById('wxmapAdTop');
+    // New Ads //
+    $(adFrame).load(function () {
+      setTimeout(iResize, 10);
+    });
+    function iResize() {
+      adFrame.style.height =
+          adFrame.contentWindow.document.body.offsetHeight + 'px';
+    }
+  });
+</script>
+
+	<!-- HTML5 Shim: IE8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body id="ctl00_ctl00_MasterBody">
+	
+
+	<!-- Begin comScore Tag -->
+	<script type="text/javascript">var _comscore = _comscore || []; _comscore.push({ c1: "2", c2: "9576127", c3: "", c4: window.location.href }); (function () { var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true; s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js"; el.parentNode.insertBefore(s, el); })();</script>
+	<noscript><img src="http://b.scorecardresearch.com/p?c1=2&c2=9576127&c3=&c4=www.intellicast.com/Local/Default.aspx&c5=&c6=&c15=&cv=2.0&cj=1" alt="" style="position:absolute;top:-1000px;" /></noscript>
+	<!-- End comScore Tag -->
+
+	<header id="header" class="site-header">
+		<div class="container">
+			<div class="row">
+				<div class="logo-wrapper">
+					<a href="/" class="logo">
+						<span class="sr-only">Intellicast.com</span>
+						<span class="slogan">The Authority in Expert Weather</span>
+					</a>
+				</div>
+				<div class="user-tools">
+					<div class="constants">
+						
+            <a href="/Subscriptions/Default.aspx">
+              <i style="position:relative;top:2px;left:-2px;display:inline-block;height:15px;width:16px;
+              background:no-repeat url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAuElEQVQ4jcWSsQ3CMBBFn12giAmyAQukpYIpEEU6tqBlByoWyQLZgFUoeDRHlAQkAhT5kiXLd+//s2WYW0ndApsf+Qa1UWs1f7lqtclACyyAXUrpPmUBu2DaDJBSOgNLdf9p5uhZBkPuHmOCyRgeGHwyeQe/GIRuwLpvEvt11AYaGKh1THIACvWoHoEizrqePnR6FsZFtVTLccizTz2lMLhG8uXNlV7UC1ploALyVLgXlIHq/688ux5tZJukD8upVQAAAABJRU5ErkJggg==) center center;"></i>
+              Weather Emails</a>
+						<a class="alerts" href="/Storm/Severe/Bulletins.aspx"><i class="icon"></i>Alerts</a>
+						<a class="hurricane" active-alert"" href="/Storm/Hurricane/Track.aspx"><i class="icon"></i>Hurricanes</a>
+						<a class="help" href="/Help/Default.aspx"><i class="icon"></i>Help</a>
+						
+					</div>
+					<div class="inav-flyout toggle-target">
+						
+							<a href="/Members/Login.aspx">Sign-In to Add to iNav</a>
+						
+					</div>
+					<form method="get" action="/Local/Default.aspx" class="ui-front location-search">
+						<input tabindex="1" class="blurred" id="locSearch" name="query" type="text" value="Enter City, State, Country or U.S. Zip code" autocomplete="off" />
+					</form>
+				</div>
+			</div>
+			<div class="row">
+				<div class="site-nav">
+					<ul class="nav">
+						<li><a href="/Local/Weather.aspx" class="toggle-btn">Local</a>
+							<ul>
+								<li><a href="/Local/Default.aspx">Find A Location</a></li>
+								<li><a href="/Local/Weather.aspx">Weather Report</a></li>
+								<li><a href="/Local/WxMap.aspx">Interactive Weather Map</a></li>
+								<li><a href="/Local/Forecast.aspx">Extended Forecast</a></li>
+								<li><a href="/Local/Hourly.aspx">Hourly Forecast</a></li>
+								<li><a href="/Local/Observation.aspx">Past Observations</a></li>
+								<li><a href="/Local/ObservationsSummary.aspx">Past Observations Summary</a></li>
+								<li><a href="/Local/History.aspx">Historic Averages</a></li>
+							</ul>
+						</li>
+						<li><a href="/Local/WxMap.aspx" class="toggle-btn">Interactive</a>
+							<ul>
+								<li><a href="/Video/Player.aspx">Videos</a></li>
+                <li><a href="/Local/WxMap.aspx">Interactive Weather Map</a></li>
+								
+								<li><a href="/Local/WxMapSm.aspx">Interactive Map (Small)</a></li>
+								
+							</ul>
+						</li>
+						<li><a href="/National/Default.aspx" class="toggle-btn">National</a>
+							<ul>
+								<li><a href="/National/Default.aspx">National Home</a></li>
+								<li><a href="/National/Weather.aspx">Current Weather</a></li>
+								<li><a href="/National/ForecastToday.aspx">Today's Forecast</a></li>
+								<li><a href="/National/ForecastTomorrow.aspx">Tomorrow's Forecast</a></li>
+								<li><a href="/National/Radar/Default.aspx">Radar<i class="caret"></i></a>
+									<ul>
+										<li><a href="/National/Radar/Current.aspx">Current Radar</a></li>
+										<li><a href="/National/Radar/Forecast.aspx">Forecast Radar</a></li>
+										<li><a href="/National/Radar/Summary.aspx">Radar Summary</a></li>
+										<li><a href="/National/Radar/Yesterday.aspx">Yesterday's Radar Loop</a></li>
+										<li><a href="/National/Radar/OneKM.aspx">1Km Radar</a></li>
+										<li><a href="/National/Radar/Metro.aspx">Metro Radar</a></li>
+									</ul>
+								</li>
+								<li><a href="/National/Nexrad/Default.aspx">Nexrad<i class="caret"></i></a>
+									<ul>
+										<li><a href="/National/Nexrad/BaseReflectivity.aspx">Base Reflectivity</a></li>
+										<li><a href="/National/Nexrad/RadialVelocity.aspx">Radial Velocity</a></li>
+									</ul>
+								</li>
+								<li><a href="/National/Surface/Default.aspx">Surface Analysis<i class="caret"></i></a>
+									<ul>
+										<li><a href="/National/Surface/Current.aspx">Current Surface Analysis</a></li>
+										<li><a href="/National/Surface/Mixed.aspx">Mixed Surface Analysis</a></li>
+										<li><a href="/National/Surface/Forecast12.aspx">12-Hour Surface Forecast</a></li>
+										<li><a href="/National/Surface/Forecast24.aspx">24-Hour Surface Forecast</a></li>
+										<li><a href="/National/Surface/Forecast36.aspx">36-Hour Surface Forecast</a></li>
+										<li><a href="/National/Surface/Forecast48.aspx">48-Hour Surface Forecast</a></li>
+									</ul>
+								</li>
+								<li><a href="/National/Satellite/Default.aspx">Satellite<i class="caret"></i></a>
+									<ul>
+										<li><a href="/National/Satellite/Infrared.aspx">National Infrared Satellite</a></li>
+										<li><a href="/National/Satellite/Regional.aspx">Regional Infrared Satellite</a></li>
+										<li><a href="/National/Satellite/Visible.aspx">Visible Satellite</a></li>
+										<li><a href="/National/Satellite/WaterVapor.aspx">Water Vapor</a></li>
+									</ul>
+								</li>
+								<li><a href="/National/Temperature/Default.aspx">Temperature<i class="caret"></i></a>
+									<ul>
+										<li><a href="/National/Temperature/Current.aspx">Current Temperatures</a></li>
+										<li><a href="/National/Temperature/HighToday.aspx">High Temperatures Today</a></li>
+										<li><a href="/National/Temperature/HighTomorrow.aspx">High Temperatures Tomorrow</a></li>
+										<li><a href="/National/Temperature/LowTomorrow.aspx">Low Temperatures Tomorrow</a></li>
+										<li><a href="/National/Temperature/TEMPcast.aspx">TEMPcast</a></li>
+										<li><a href="/National/Temperature/WindChill.aspx">Wind Chill</a></li>
+										<li><a href="/National/Temperature/Extreme.aspx">Feels Like Temps</a></li>
+										<li><a href="/National/Temperature/Departure.aspx">Temp Departure</a></li>
+										<li><a href="/National/Temperature/Departure10.aspx">10 Day Temp Departure</a></li>
+										<li><a href="/National/Temperature/Departure30.aspx">30 Day Temp Departure</a></li>
+										<li><a href="/National/Temperature/Departure90.aspx">90 Day Temp Departure</a></li>
+										<li><a href="/National/Temperature/FrostFreeze.aspx">Frost &amp; Freeze</a></li>
+										<li><a href="/National/Temperature/FirstLastFreeze.aspx">First &amp; Last Freeze</a></li>
+										<li><a href="/National/Temperature/Delta.aspx">24hr Deltas</a></li>
+									</ul>
+								</li>
+								<li><a href="/National/Outdoors/Default.aspx">Outdoors<i class="caret"></i></a>
+									<ul>
+										<li><a href="/National/Outdoors/SOLARcast.aspx">SOLARcast</a></li>
+										<li><a href="/National/Outdoors/Summer.aspx">Summer Fun</a></li>
+										<li><a href="/National/Outdoors/Gardening.aspx">Gardening</a></li>
+										<li><a href="/National/Outdoors/Watering.aspx">Plant Watering</a></li>
+										<li><a href="/National/Outdoors/Painting.aspx">Painting</a></li>
+										<li><a href="/National/Outdoors/Golfing.aspx">Golfing</a></li>
+										<li><a href="/National/Outdoors/Turf.aspx">Golf Turf Conditions</a></li>
+										<li><a href="/National/Outdoors/UltraViolet.aspx">UV Report</a></li>
+										<li><a href="/National/Outdoors/Sky.aspx">Sky Watch</a></li>
+									</ul>
+								</li>
+								<li><a href="/National/Precipitation/Default.aspx">Precipitation<i class="caret"></i></a>
+									<ul>
+										<li><a href="/National/Precipitation/PrecipCast.aspx">PRECIPcast</a></li>
+										<li><a href="/National/Precipitation/RainCast.aspx">RAINcast</a></li>
+										<li><a href="/National/Precipitation/PopCast.aspx">POPcast</a></li>
+										<li><a href="/National/Precipitation/Estimated.aspx">Estimated Rainfall</a></li>
+										<li><a href="/National/Precipitation/Daily.aspx">Daily Precipitation</a></li>
+										<li><a href="/National/Precipitation/Weekly.aspx">Weekly Precipitation</a></li>
+										<li><a href="/National/Precipitation/Departure10.aspx">10 Day Precip Departure</a></li>
+										<li><a href="/National/Precipitation/Departure30.aspx">30 Day Precip Departure</a></li>
+										<li><a href="/National/Precipitation/Departure90.aspx">90 Day Precip Departure</a></li>
+									</ul>
+								</li>
+								<li><a href="/National/Wind/Default.aspx">Wind<i class="caret"></i></a>
+									<ul>
+										<li><a href="/National/Wind/Current.aspx">Current Winds</a></li>
+										<li><a href="/National/Wind/WINDcast.aspx">WINDcast</a></li>
+										<li><a href="/National/Wind/JetStream.aspx">Jet Stream</a></li>
+									</ul>
+								</li>
+								<li><a href="/National/Humidity/Default.aspx">Humidity<i class="caret"></i></a>
+									<ul>
+										<li><a href="/National/Humidity/Current.aspx">Current Humidity</a></li>
+										<li><a href="/National/Humidity/IndoorRelative.aspx">Indoor Relative Humidity</a></li>
+										<li><a href="/National/Humidity/HUMIDITYcast.aspx">HUMIDITYcast</a></li>
+										<li><a href="/National/Humidity/FOGcast.aspx">FOGcast</a></li>
+										<li><a href="/National/Humidity/DewPoint.aspx">Dew Point</a></li>
+									</ul>
+								</li>
+								<li><a href="/National/Analysis/Default.aspx">Analysis Charts<i class="caret"></i></a>
+									<ul>
+										<li><a href="/National/Analysis/SuperFax.aspx">WSI SuperFax</a></li>
+										<li><a href="/National/Analysis/UpperAir300.aspx">300MB Upper Air</a></li>
+										<li><a href="/National/Analysis/UpperAir500.aspx">500MB Upper Air</a></li>
+										<li><a href="/National/Analysis/UpperAir850.aspx">850MB Upper Air</a></li>
+										<li><a href="/National/Analysis/Difax24.aspx">24hr Difax</a></li>
+										<li><a href="/National/Analysis/Difax48.aspx">48hr Difax</a></li>
+										<li><a href="/National/Analysis/Difax72.aspx">72hr Difax</a></li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li><a href="/Global/Default.aspx" class="toggle-btn">Global</a>
+							<ul>
+								<li><a href="/Global/Default.aspx">Global Home</a></li>
+								<li><a href="/Global/Humidity.aspx">Relative Humidity</a></li>
+								<li><a href="/Global/Surface.aspx">Surface Analysis</a></li>
+								<li><a href="/Global/Satellite/Default.aspx">Satellite<i class="caret"></i></a>
+									<ul>
+										<li><a href="/Global/Satellite/Current.aspx">Current Satellite</a></li>
+										<li><a href="/Global/Satellite/Infrared.aspx">Infrared Satellite</a></li>
+									</ul>
+								</li>
+								<li><a href="/Global/Temperature/Default.aspx">Temperature<i class="caret"></i></a>
+									<ul>
+										<li><a href="/Global/Temperature/Current.aspx">Current Temperatures</a></li>
+										<li><a href="/Global/Temperature/Minimum.aspx">Minimum Temperatures</a></li>
+										<li><a href="/Global/Temperature/Maximum.aspx">Maximum Temperatures</a></li>
+										<li><a href="/Global/Temperature/Sunshine.aspx">Sunshine</a></li>
+									</ul>
+								</li>
+								<li><a href="/Global/Precipitation/Default.aspx">Precipitation<i class="caret"></i></a>
+									<ul>
+										<li><a href="/Global/Precipitation/Current.aspx">Current Precipitation</a></li>
+										<li><a href="/Global/Precipitation/ForecastAM.aspx">AM Precipitation Forecast</a></li>
+										<li><a href="/Global/Precipitation/ForecastPM.aspx">PM Precipitation Forecast</a></li>
+									</ul>
+								</li>
+								<li><a href="/Global/Wind/Default.aspx">Wind<i class="caret"></i></a>
+									<ul>
+										<li><a href="/Global/Wind/Current.aspx">Current Winds</a></li>
+										<li><a href="/Global/Wind/Forecast.aspx">Forecast Winds</a></li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li><a href="/Storm/Default.aspx" class="toggle-btn">Storms</a>
+							<ul>
+								<li><a href="/Storm/Default.aspx">Storm Home</a></li>
+								<li><a href="/Storm/Severe/Default.aspx">Severe Weather<i class="caret"></i></a>
+									<ul>
+										<li><a href="/Storm/Severe/Bulletins.aspx">Weather Alerts</a></li>
+										<li><a href="/Storm/Severe/WatchesWarnings.aspx">Watches &amp; Warnings</a></li>
+										<li><a href="/Storm/Severe/OneKM.aspx">1Km Storm Watch</a></li>
+										<li><a href="/Storm/Severe/Metro.aspx">Metro Storm Watch</a></li>
+										<li><a href="/Storm/Severe/OutlookToday.aspx">Severe Outlook Today</a></li>
+										<li><a href="/Storm/Severe/OutlookTomorrow.aspx">Severe Outlook Tomorrow</a></li>
+										<li><a href="/Storm/Severe/Lightning.aspx">Lightning Strikes</a></li>
+										<li><a href="/Storm/Severe/ThunderCast.aspx">THUNDERcast</a></li>
+										<li><a href="/Storm/Severe/WaterVapor.aspx">Water Vapor</a></li>
+									</ul>
+								</li>
+								<li><a href="/Storm/Hurricane/Default.aspx">Hurricane<i class="caret"></i></a>
+									<ul>
+										<li><a href="/Storm/Hurricane/Track.aspx">Active Track</a></li>
+										<li><a href="/Storm/Hurricane/TropicalWinds24.aspx">24hr Tropical Winds</a></li>
+										<li><a href="/Storm/Hurricane/TropicalWinds48.aspx">48hr Tropical Winds</a></li>
+										<li><a href="/Storm/Hurricane/TropicalWinds72.aspx">72hr Tropical Winds</a></li>
+										<li><a href="/Storm/Hurricane/AtlanticAnalysis.aspx">Atlantic Analysis</a></li>
+										<li><a href="/Storm/Hurricane/AtlanticSatellite.aspx">Atlantic Satellite</a></li>
+										<li><a href="/Storm/Hurricane/AtlanticForecast.aspx">Atlantic Forecast</a></li>
+										<li><a href="/Storm/Hurricane/CaribbeanSatellite.aspx">Caribbean Satellite</a></li>
+										<li><a href="/Storm/Hurricane/PacificAnalysis.aspx">Pacific Analysis</a></li>
+										<li><a href="/Storm/Hurricane/PacificSatellite.aspx">Pacific Satellite</a></li>
+									</ul>
+								</li>
+								<li><a href="/Storm/Summary/Default.aspx">Season Summaries<i class="caret"></i></a>
+									<ul>
+                    <li><a href="/Storm/Summary/Hurricane2015.aspx">2015 Hurricane Summary</a></li>
+                    <li><a href="/Storm/Summary/Hurricane2014.aspx">2014 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2013.aspx">2013 Hurricane Summary</a></li>
+                    <li><a href="/Storm/Summary/Hurricane2012.aspx">2012 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2011.aspx">2011 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2010.aspx">2010 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2009.aspx">2009 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2008.aspx">2008 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2007.aspx">2007 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2006.aspx">2006 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2005.aspx">2005 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2004.aspx">2004 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2003.aspx">2003 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2002.aspx">2002 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2001.aspx">2001 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane2000.aspx">2000 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane1999.aspx">1999 Hurricane Summary</a></li>
+										<li><a href="/Storm/Summary/Hurricane1998.aspx">1998 Hurricane Summary</a></li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li><a href="/Health/Default.aspx" class="toggle-btn">Health</a>
+							<ul>
+								<li><a href="/Health/Default.aspx">Health Home</a></li>
+								<li><a href="/Health/AchesPains.aspx">Aches &amp; Pains</a></li>
+								<li><a href="/Health/Air.aspx">Air Stagnation</a></li>
+								<li><a href="/Health/Attentiveness.aspx">Attentiveness</a></li>
+								<li><a href="/Health/BadHairDay.aspx">Bad Hair Day</a></li>
+								<li><a href="/Health/Influenza.aspx">Influenza Report</a></li>
+								<li><a href="/Health/Labor.aspx">Labor Index</a></li>
+								<li><a href="/Health/Mood.aspx">Mood Index</a></li>
+								<li><a href="/Health/Reflex.aspx">Reflex Times</a></li>
+								<li><a href="/Health/Respiratory.aspx">Respiratory Distress</a></li>
+							</ul>
+						</li>
+						<li><a href="/Travel/Default.aspx" class="toggle-btn">Travel</a>
+							<ul>
+								<li><a href="/Travel/Default.aspx">Travel Home</a></li>
+								<li><a href="/Travel/Risk.aspx">Delay Risk</a></li>
+								<li><a href="/Travel/Outlook.aspx">Outlook</a></li>
+								<li><a href="/Travel/Flying/Default.aspx">Airport Delays</a></li>
+								<li><a href="/Travel/Library/Browse.aspx">Climate Guides</a></li>
+								<li><a href="/Travel/Driving/Road.aspx">Driving<i class="caret"></i></a>
+									<ul>
+										<li><a href="/Travel/Driving/Highways.aspx">Highway Conditions</a></li>
+										<li><a href="/Travel/Driving/Road.aspx">Roadway Conditions</a></li>
+										<li><a href="/Travel/Driving/TopUpTopDown.aspx">Top Up Top Down</a></li>
+									</ul>
+								</li>
+								<li><a href="/Travel/Weather/Snow/Default.aspx">Ski &amp; Snow<i class="caret"></i></a>
+									<ul>
+										<li><a href="javascript:internalPageLink('/Local/WxMap.aspx?latitude=39&longitude=-97&zoomLevel=4&opacity=1&basemap=0014&layers=0053');">Interactive Snow Cover</a></li>
+										<li><a href="/Travel/Weather/Snow/Ski.aspx">Ski Conditions</a></li>
+										<li><a href="/Travel/Weather/Snow/Cover.aspx">Snow Cover</a></li>
+										<li><a href="/Travel/Weather/Snow/SNOWcast.aspx">SNOWcast</a></li>
+										<li><a href="/Travel/Weather/Snow/Forecast.aspx">48hr Snow Forecast</a></li>
+										<li><a href="/Travel/Weather/Snow/Storm.aspx">24hr Snow Forecast</a></li>
+									</ul>
+								</li>
+								<li><a href="/Travel/Weather/Marine/Default.aspx">Boat &amp; Beach<i class="caret"></i></a>
+									<ul>
+										
+										<li><a href="/Travel/Weather/Marine/Sailing.aspx">Great Sailing</a></li>
+										<li><a href="/Travel/Weather/Marine/Water.aspx">Water Temperatures</a></li>
+										<li><a href="/Travel/Weather/Marine/Waves.aspx">Wave Heights</a></li>
+										<li><a href="/Travel/Weather/Marine/Forecast.aspx">Marine Forecast</a></li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li><a href="/National/ForecastToday.aspx" class="toggle-btn">Forecast</a>
+							<ul>
+								<li><a href="/Local/Weather.aspx">10-Day Weather Report</a></li>
+								<li><a href="/Local/Hourly.aspx">Hourly</a></li>
+								<li><a href="/National/Radar/Forecast.aspx">Radar</a></li>
+								<li><a href="/National/Surface/Forecast12.aspx">Surface</a></li>
+								<li><a href="/National/Temperature/TEMPcast.aspx">Temperature</a></li>
+								<li><a href="/National/Precipitation/PrecipCast.aspx">Precipitation</a></li>
+								<li><a href="/National/Precipitation/RainCast.aspx">Rain</a></li>
+								<li><a href="/Storm/Severe/ThunderCast.aspx">Thunder</a></li>
+								<li><a href="/National/Wind/WINDcast.aspx">Winds</a></li>
+								<li><a href="/National/Humidity/HUMIDITYcast.aspx">Humidity</a></li>
+							</ul>
+						</li>
+						<li><a href="/National/Weather.aspx" class="toggle-btn">Current</a>
+							<ul>
+								<li><a href="/National/Radar/Current.aspx">Radar</a></li>
+								<li><a href="/National/Surface/Current.aspx">Surface</a></li>
+								<li><a href="/National/Temperature/Current.aspx">Temperatures</a></li>
+								<li><a href="/National/Temperature/Delta.aspx">Temperature Changes</a></li>
+								<li><a href="/National/Precipitation/Estimated.aspx">Precipitation</a></li>
+								<li><a href="/National/Wind/Current.aspx">Winds</a></li>
+								<li><a href="/National/Humidity/Current.aspx">Humidity</a></li>
+							</ul>
+						</li>
+						<li><a href="/National/Radar/Default.aspx" class="toggle-btn">Radar</a>
+							<ul>
+								<li><a href="/Local/WxMap.aspx">Interactive Radar</a></li>
+								<li><a href="/National/Radar/Current.aspx">Current Radar</a></li>
+								<li><a href="/National/Radar/Current.aspx?animate=true">Current Loops</a></li>
+								<li><a href="/National/Radar/Forecast.aspx">Forecast</a></li>
+								<li><a href="/National/Radar/OneKM.aspx">Regional (1Km)</a></li>
+								<li><a href="/National/Radar/OneKM.aspx?animate=true">Regional (1Km) Loop</a></li>
+								<li><a href="/National/Radar/Metro.aspx">Metro</a></li>
+								<li><a href="/National/Radar/Metro.aspx?animate=true">Metro Loop</a></li>
+								<li><a href="/National/Radar/Summary.aspx">Summary</a></li>
+								<li><a href="/Local/WxMap.aspx">Java Radar Loop</a></li>
+							</ul>
+						</li>
+						<li><a href="/National/Satellite/Default.aspx" class="toggle-btn">Satellite</a>
+							<ul>
+								<li><a href="/Global/Satellite/Infrared.aspx">Global Infrared</a></li>
+								<li><a href="/National/Satellite/Infrared.aspx">US National Infrared</a></li>
+								<li><a href="/National/Satellite/Regional.aspx">US Regional Infrared</a></li>
+								<li><a href="/Storm/Hurricane/AtlanticSatellite.aspx">Atlantic Infrared Satellite</a></li>
+								<li><a href="/Storm/Hurricane/PacificSatellite.aspx">Pacific Infrared Satellite</a></li>
+								<li><a href="/Storm/Hurricane/CaribbeanSatellite.aspx">Caribbean Infrared Satellite</a></li>
+								<li><a href="/National/Satellite/Visible.aspx">Visible Satellite</a></li>
+								<li><a href="/Global/Satellite/Current.aspx">Current Satellite</a></li>
+								<li><a href="/National/Satellite/WaterVapor.aspx">Water Vapor</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<div class="social">
+					<div class="fb">
+						<iframe class="fb-btn" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2FIntellicast.weather&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&=tahomaamp;height=21" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="location-bar clearfix">
+			<div class="container">
+				<div class="row">
+					<div class="user-location">
+						<a class="current-location toggle-btn" href="/Local/Weather.aspx?location=">
+							
+						</a>
+						
+					</div>
+					<div class="uni-time">
+						<strong>Universal Time:</strong>&nbsp;Wednesday, 12 Jul 2017, 16:41
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="referral" class="referral-form">
+			<div id="referralForm" style="display:block;">
+				<strong><span style="margin-right:5px;">Send this page to a friend</span>
+        <img src="http://images.intellicast.com/App_Images/btn_close.gif" alt="Close" class="Close" onclick="javascript:$('#referral').toggle();" style="float:right;" /></strong>
+				<div>
+					Your Name:<br />
+					<input type="text" id="FromName" maxlength="50" />
+				</div>
+				<div>
+					Your E-mail Address: <br />
+					<input type="text" id="FromEmail" maxlength="256" />
+				</div>
+				<div>
+					Friend's E-mail Address: <br />
+					<input type="text" id="ToEmail" maxlength="256" />
+				</div>
+				<div>
+					<button type="button" id="ReferralSubmit" onclick="javascript: SendReferral()">Send</button>
+				</div>
+			</div>
+			<div id="referralMessage" style="display:none;">
+				<strong style="text-align:center;">Thank you!<img src="http://images.intellicast.com/App_Images/btn_close.gif" alt="Close" class="Close" onclick="javascript:$('#referral').toggle();" /></strong>
+				<br /><br />
+					Your referral has been sent.<br /><br />
+					<a href="#" onclick="javascript:$('#referralForm').show();$('#referralMessage').hide();">Click here to send another one.</a>
+			</div>
+		</div>
+	</header>
+
+	<div class="main container clearfix" id="content">
+		<form name="aspnetForm" method="post" action="./Default.aspx" id="aspnetForm">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTEyNTg0NDg4OTRkZKfpi++YE7kfP33rPhnOcoweXubi" />
+</div>
+
+<div>
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="F2E04C2B" />
+</div>
+			
+<div style="clear:both;width:970px;">
+
+<div id="winshade">
+<div id="WX_WindowShade"></div>
+</div>
+
+<div id="leftColumn">
+  
+<div class="pageHeader">
+  <div class="Primary Header" style="float: left;">Local</div>
+  <div class="breadcrumb"><a href="/">Home</a> &raquo; Local</div>
+</div>
+<!-- Check if User has a Local City -->
+
+<div id="instructions">
+  <span class="Header">
+    
+    Select a Location...
+  </span><br />
+  To view the local weather products that we have available you will need to select your city or a nearby city first.<br />
+  You can enter the location information into the Local Weather search-box above or Search by Region using the link-navigation below.<br />
+</div>
+
+<!-- Mobile App Survey -->
+
+
+
+  <table class="Container" style="width:100%;margin-top:10px;">
+    <tr style="vertical-align: top;">
+      <td style="background-color:#eee;padding:1px;width:200px;border-right:solid 1px #999;"><a href="/Global/Satellite/Current.aspx?location=default"><img src="http://images.intellicast.com/WxImages/_200w/Satellite/world.jpg" alt="Current Satellite of the World" /></a></td>
+      <td style="padding:1px;">
+        <div class="Chrome HeaderGradientDark" style="background: #383e49;">
+          <div class="Title FontWhite">Search by Region</div>
+        </div>
+        
+        <div style="padding:4px 10px;">
+          <a style="font-size:14px;text-decoration:underline;" class="Title" href="/Local/Default.aspx?country=United%20States">Search within the United States</a><br /><br />
+          <div style="border-bottom:solid 1px #E7F4FC"><strong>Search World Wide Regions</strong></div>
+          <table>
+            <tr>
+              <td>
+                <ul class="LinkList" style="padding-left:15px;">
+                  <li><a href="?region=Africa">Africa</a></li>
+                  <li><a href="?region=Asia">Asia</a></li>
+                  <li><a href="?region=Caribbean">Caribbean</a></li>
+                  <li><a href="?region=Central%20America">Central America</a></li>
+                  <li><a href="?region=Europe">Europe</a></li>
+                </ul>
+              </td>
+              <td>
+                <ul class="LinkList" style="margin-left:125px;">
+                  <li><a href="?region=Middle%20East">Middle East</a></li>
+                  <li><a href="?region=North%20America">North America</a></li>
+                  <li><a href="?region=Pacific%20Ocean">Pacific Ocean</a></li>
+                  <li><a href="?region=South%20America">South America</a></li>
+                </ul>
+              </td>
+            </tr>
+          </table>
+        </div>
+        
+      </td>
+    </tr>
+  </table>
+<div id="focus">
+  <div class="FloatLeft" style="width:145px;">
+    <div class="Container" style="height:100%;">
+      <div class="Chrome">Regional Weather</div>
+      <div id="localLeftColumn">
+        <div><a href="/National/Surface/Current.aspx"><img src="http://images.intellicast.com/WxImages/_100w/SurfaceAnalysis/usa.gif" alt="Current Surface Analysis" class="Thumbnail" /></a><br />Current Surface Analysis</div>
+        <div><a href="/National/Radar/Current.aspx"><img src="http://images.intellicast.com/WxImages/_100w/Radar/usa.gif" alt="Current Radar" class="Thumbnail" /></a><br />Current Radar</div>
+        <div><a href="/National/Radar/Summary.aspx"><img src="http://images.intellicast.com/WxImages/_100w/RadarSummary/usa.gif" alt="Radar Summary" class="Thumbnail" /></a><br />Radar Summary</div>
+        <div><a href="/National/Satellite/Infrared.aspx"><img src="http://images.intellicast.com/WxImages/_100w/Satellite/hiusa.gif" alt="Current Satellite" class="Thumbnail" /></a><br />Current Satellite</div>
+        <div><a href="/National/Temperature/Current.aspx"><img src="http://images.intellicast.com/WxImages/_100w/CurrentTemps/usa.jpg" alt="Current Temperatures" class="Thumbnail" /></a><br />Current Temperatures</div>
+        <div><a href="/National/Precipitation/PrecipCast.aspx"><img src="http://images.intellicast.com/WxImages/_100w/PRECIPcast/usa_d0_18.jpg" alt="PRECIPcast" class="Thumbnail" /></a><br />PRECIPcast</div>
+        <div><a href="/National/Precipitation/Weekly.aspx"><img src="http://images.intellicast.com/WxImages/_100w/WeeklyPrecipitation/usa.gif" alt="Weekly Precipitation" class="Thumbnail" /></a><br />Weekly Precipitation</div>
+        <div><a href="/National/Wind/Current.aspx"><img src="http://images.intellicast.com/WxImages/_100w/CurrentWinds/usa.jpg" alt="Current Winds" class="Thumbnail" /></a><br />Current Winds</div>
+        <div><a href="/National/Outdoors/SOLARcast.aspx"><img src="http://images.intellicast.com/WxImages/_100w/SOLARcast/usa_d0_18.jpg" alt="SOLARcast" class="Thumbnail" /></a><br />SOLARCast</div>
+      </div>
+    </div>
+  </div>
+  <div style="float:right;width:505px;">
+    <div class="Container">
+      <div class="Chrome">Major US Cities</div>
+      <div>
+        <img src="http://www.intellicast.com/WxImages/ForecastWeather/conus_day1.jpg" alt="Major US Cities" style="margin:6px 7px;width:490px;height:340px;" usemap="#USCitiesMap" />
+        <map id="USCitiesMap" name="USCitiesMap">
+          <area shape="poly" coords="426,52,490,52,490,118,426,118" href="/Local/Weather.aspx?location=CAXX0183" alt="Halifax" title="Halifax" />
+          <area shape="poly" coords="335,72,426,72,426,118,335,118" href="/Local/Weather.aspx?location=CAXX0343" alt="Ottawa" title="Ottawa" />
+          <area shape="poly" coords="354,118,465,118,465,182,354,182" href="/Local/Weather.aspx?location=USNY9472" alt="New York" title="New York" />
+          <area shape="poly" coords="300,182,411,182,411,243,300,243" href="/Local/Weather.aspx?location=USGA0028" alt="Atlanta" title="Atlanta" />
+          <area shape="poly" coords="345,243,433,243,433,316,345,316" href="/Local/Weather.aspx?location=USFL0316" alt="Miami" title="Miami" />
+          <area shape="poly" coords="242,126,354,126,354,182,242,182" href="/Local/Weather.aspx?location=USIL0225" alt="Chicago" title="Chicago" />
+          <area shape="poly" coords="195,194,300,194,300,256,195,256" href="/Local/Weather.aspx?location=USTX0327" alt="Dallas" title="Dallas" />
+          <area shape="poly" coords="184,43,335,43,335,126,184,126" href="/Local/Weather.aspx?location=CAXX0547" alt="Winnipeg" title="Winnipeg" />
+          <area shape="poly" coords="121,0,184,0,184,126,121,126" href="/Local/Weather.aspx?location=CAXX0126" alt="Edmonton" title="Edmonton" />
+          <area shape="poly" coords="45,33,121,33,121,126,45,126" href="/Local/Weather.aspx?location=USWA0395" alt="Seattle" title="Seattle" />
+          <area shape="poly" coords="9,126,95,126,95,182,9,182" href="/Local/Weather.aspx?location=USCA0987" alt="San Francisco" title="San Francisco" />
+          <area shape="poly" coords="9,182,95,182,95,256,9,256" href="/Local/Weather.aspx?location=USCA0638" alt="Los Angeles" title="Los Angeles" />
+          <area shape="poly" coords="95,126,157,126,157,194,95,194" href="/Local/Weather.aspx?location=USUT0225" alt="Salt Lake City" title="Salt Lake City" />
+          <area shape="poly" coords="157,126,242,126,242,194,157,194" href="/Local/Weather.aspx?location=USCO0105"  alt="Denver" title="Denver" />
+          <area shape="poly" coords="95,194,195,194,195,256,95,256" href="/Local/Weather.aspx?location=USAZ0166" alt="Phoenix" title="Phoenix" />
+          <area shape="poly" coords="121,256,242,256,242,326,121,326" href="/Local/Weather.aspx?location=MXCL0014" alt="Torreon" title="Torreon" />
+        </map>
+      </div>
+      <!-- OLD MAJOR US CITIES MAP -->
+      
+    </div>
+  </div>
+  <div style="float:right;width:505px;">
+    <div class="Container">
+      <div class="Chrome">Watches &amp; Warnings</div>
+      <div id="alerts">
+        
+        <div>
+          <div style="padding-top:4px;padding-left:11px;"><strong>Air Quality Alert</strong></div>
+          <div style="padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=CT'>CT</a> <a href='/Storm/Severe/Bulletins.aspx?state=NY'>NY</a> </div>
+        </div> 
+        
+        <div>
+          <div style="background-color: #eee;padding-top:4px;padding-left:11px;"><strong>Aviation Weather Warning</strong></div>
+          <div style="background-color: #eee;padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=TX'>TX</a> </div>
+        </div> 
+        
+        <div>
+          <div style="padding-top:4px;padding-left:11px;"><strong>Coastal Flood Warning</strong></div>
+          <div style="padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=AS'>AS</a> </div>
+        </div> 
+        
+        <div>
+          <div style="background-color: #eee;padding-top:4px;padding-left:11px;"><strong>Excessive Heat Warning</strong></div>
+          <div style="background-color: #eee;padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=DE'>DE</a> <a href='/Storm/Severe/Bulletins.aspx?state=NJ'>NJ</a> <a href='/Storm/Severe/Bulletins.aspx?state=PA'>PA</a> </div>
+        </div> 
+        
+        <div>
+          <div style="padding-top:4px;padding-left:11px;"><strong>Fire Weather Watch</strong></div>
+          <div style="padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=NV'>NV</a> </div>
+        </div> 
+        
+        <div>
+          <div style="background-color: #eee;padding-top:4px;padding-left:11px;"><strong>Flash Flood Warning</strong></div>
+          <div style="background-color: #eee;padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=IL'>IL</a> </div>
+        </div> 
+        
+        <div>
+          <div style="padding-top:4px;padding-left:11px;"><strong>Flash Flood Watch</strong></div>
+          <div style="padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=CO'>CO</a> <a href='/Storm/Severe/Bulletins.aspx?state=CT'>CT</a> <a href='/Storm/Severe/Bulletins.aspx?state=IA'>IA</a> <a href='/Storm/Severe/Bulletins.aspx?state=IL'>IL</a> <a href='/Storm/Severe/Bulletins.aspx?state=MA'>MA</a> <a href='/Storm/Severe/Bulletins.aspx?state=NY'>NY</a> <a href='/Storm/Severe/Bulletins.aspx?state=RI'>RI</a> </div>
+        </div> 
+        
+        <div>
+          <div style="background-color: #eee;padding-top:4px;padding-left:11px;"><strong>Flood Advisory</strong></div>
+          <div style="background-color: #eee;padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=CA'>CA</a> <a href='/Storm/Severe/Bulletins.aspx?state=IL'>IL</a> <a href='/Storm/Severe/Bulletins.aspx?state=MA'>MA</a> <a href='/Storm/Severe/Bulletins.aspx?state=MI'>MI</a> <a href='/Storm/Severe/Bulletins.aspx?state=NE'>NE</a> <a href='/Storm/Severe/Bulletins.aspx?state=NH'>NH</a> <a href='/Storm/Severe/Bulletins.aspx?state=NY'>NY</a> </div>
+        </div> 
+        
+        <div>
+          <div style="padding-top:4px;padding-left:11px;"><strong>Flood Warning</strong></div>
+          <div style="padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=AR'>AR</a> <a href='/Storm/Severe/Bulletins.aspx?state=CA'>CA</a> <a href='/Storm/Severe/Bulletins.aspx?state=FL'>FL</a> <a href='/Storm/Severe/Bulletins.aspx?state=IA'>IA</a> <a href='/Storm/Severe/Bulletins.aspx?state=ID'>ID</a> <a href='/Storm/Severe/Bulletins.aspx?state=IL'>IL</a> <a href='/Storm/Severe/Bulletins.aspx?state=IN'>IN</a> <a href='/Storm/Severe/Bulletins.aspx?state=NV'>NV</a> <a href='/Storm/Severe/Bulletins.aspx?state=OH'>OH</a> <a href='/Storm/Severe/Bulletins.aspx?state=WI'>WI</a> </div>
+        </div> 
+        
+        <div>
+          <div style="background-color: #eee;padding-top:4px;padding-left:11px;"><strong>Flood Watch</strong></div>
+          <div style="background-color: #eee;padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=IL'>IL</a> <a href='/Storm/Severe/Bulletins.aspx?state=IN'>IN</a> <a href='/Storm/Severe/Bulletins.aspx?state=MI'>MI</a> <a href='/Storm/Severe/Bulletins.aspx?state=OH'>OH</a> <a href='/Storm/Severe/Bulletins.aspx?state=WI'>WI</a> </div>
+        </div> 
+        
+        <div>
+          <div style="padding-top:4px;padding-left:11px;"><strong>Heat Advisory</strong></div>
+          <div style="padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=AR'>AR</a> <a href='/Storm/Severe/Bulletins.aspx?state=IA'>IA</a> <a href='/Storm/Severe/Bulletins.aspx?state=IL'>IL</a> <a href='/Storm/Severe/Bulletins.aspx?state=KS'>KS</a> <a href='/Storm/Severe/Bulletins.aspx?state=MO'>MO</a> <a href='/Storm/Severe/Bulletins.aspx?state=NC'>NC</a> <a href='/Storm/Severe/Bulletins.aspx?state=NE'>NE</a> <a href='/Storm/Severe/Bulletins.aspx?state=NJ'>NJ</a> <a href='/Storm/Severe/Bulletins.aspx?state=NY'>NY</a> <a href='/Storm/Severe/Bulletins.aspx?state=OK'>OK</a> <a href='/Storm/Severe/Bulletins.aspx?state=VA'>VA</a> </div>
+        </div> 
+        
+        <div>
+          <div style="background-color: #eee;padding-top:4px;padding-left:11px;"><strong>High Surf Advisory</strong></div>
+          <div style="background-color: #eee;padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=CA'>CA</a> </div>
+        </div> 
+        
+        <div>
+          <div style="padding-top:4px;padding-left:11px;"><strong>Hydrologic Statement</strong></div>
+          <div style="padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=WI'>WI</a> </div>
+        </div> 
+        
+        <div>
+          <div style="background-color: #eee;padding-top:4px;padding-left:11px;"><strong>Severe Thunderstorm Warning</strong></div>
+          <div style="background-color: #eee;padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=MA'>MA</a> </div>
+        </div> 
+        
+        <div>
+          <div style="padding-top:4px;padding-left:11px;"><strong>Special Weather Statement</strong></div>
+          <div style="padding-bottom:4px;padding-left:11px;"><a href='/Storm/Severe/Bulletins.aspx?state=AK'>AK</a> <a href='/Storm/Severe/Bulletins.aspx?state=CA'>CA</a> <a href='/Storm/Severe/Bulletins.aspx?state=CT'>CT</a> <a href='/Storm/Severe/Bulletins.aspx?state=IL'>IL</a> <a href='/Storm/Severe/Bulletins.aspx?state=MA'>MA</a> <a href='/Storm/Severe/Bulletins.aspx?state=MI'>MI</a> <a href='/Storm/Severe/Bulletins.aspx?state=RI'>RI</a> <a href='/Storm/Severe/Bulletins.aspx?state=TX'>TX</a> </div>
+        </div> 
+        
+      </div>
+    </div>
+  </div>
+  <div style="float:right;width: 505px;">
+    <div class="Container">
+      <div class="Chrome">Major Global Cities</div>
+      <div>
+        <img src="http://images.intellicast.com/WeatherImg/Observations/wor.jpg" alt="Major Global Cities" style="margin: 8px 50px; width: 400px; height: 230px;" usemap="#GlobalCitiesMap" />
+        <img src="http://images.intellicast.com/images/legends/RegionTemps.gif" alt="Legend" style="margin: 0px auto; width: 288px; height: 25px; display: block; padding-bottom:10px;"  />
+        <map id="GlobalCitiesMap" name="GlobalCitiesMap">
+          <area href="/Local/Weather.aspx?location=COXX0004" title="Bogota" alt="Bogota" shape="poly" coords="164,158,164,130,99,140,104,166" />
+          <area href="/Local/Weather.aspx?location=USCA0638" title="Los Angeles" alt="Los Angeles" shape="poly" coords="131,118,31,120,23,98,40,99,134,111,142,126" />
+          <area href="/Local/Weather.aspx?location=CAXX0202" title="Iqaluit" alt="Iqaluit" shape="poly" coords="130,79,-7,32,153,-3" />
+          <area href="/Local/Weather.aspx?location=SFXX0023" title="Johannesburg" alt="Johannesburg" shape="poly" coords="295,196,194,194,195,166,236,169,289,168" />
+          <area href="/Local/Weather.aspx?location=UKXX0085" title="London" alt="London" shape="poly" coords="221,91,171,92,162,85,207,68" />
+          <area href="/Local/Weather.aspx?location=RSXX0063" title="Moscow" alt="Moscow" shape="poly" coords="235,15,236,107,295,101,279,88,312,25" />
+          <area href="/Local/Weather.aspx?location=ASXX0112" title="Sydney" alt="Sydney" shape="poly" coords="313,159,314,214,397,218,394,154" />
+          <area href="/Local/Weather.aspx?location=BRXX0232" title="Sao Paulo" alt="Sao Paulo" shape="poly" coords="102,169,106,186,191,187,185,150" />
+          <area href="/Local/Weather.aspx?location=EGXX0004" title="Cairo" alt="Cairo" shape="poly" coords="170,110,176,141,235,139,230,111" />
+          <area href="/Local/Weather.aspx?location=USNY0996" title="New York" alt="New York" shape="poly" coords="106,72,103,104,157,118,161,87" />
+          <area href="/Local/Weather.aspx?location=USAK0116" title="Juneau" alt="Juneau" shape="poly" coords="76,102,4,97,6,41,80,65" />
+          <area href="/Local/Weather.aspx?location=ICXX0002" title="Reykjavik" alt="Reykjavik" shape="poly" coords="165,82,242,44,180,2,137,73" />
+          <area href="/Local/Weather.aspx?location=INXX0038" title="Delhi" alt="Delhi" shape="poly" coords="251,113,304,102,381,143,280,156" />
+          <area href="/Local/Weather.aspx?location=JAXX0085" title="Tokyo" alt="Tokyo" shape="poly" coords="384,143,394,97,352,98,339,119" />
+          <area href="/Local/Weather.aspx?location=PEXX0047" title="San Juan" alt="San Juan" shape="poly" coords="93,120,126,118,143,129,103,135" />
+          <area href="/Local/Weather.aspx?location=MXDF0132" title="Mexico City" alt="Mexico City" shape="poly" coords="52,120,90,120,100,134,67,149" />
+          <area href="/Local/Weather.aspx?location=ARBA0009" title="Buenos Aires" alt="Buenos Aires" shape="poly" coords="108,186,109,221,164,224,163,187" />
+          <area href="/Local/Weather.aspx?location=ITXX0067" title="Rome" alt="Rome" shape="poly" coords="233,109,209,108,206,94,231,92" />
+          <area href="/Local/Weather.aspx?location=SPXX0050" title="Madrid" alt="Madrid" shape="poly" coords="173,93,206,93,207,109,174,109" />
+          <area href="/Local/Weather.aspx?location=GMXX0007" title="Berlin" alt="Berlin" shape="poly" coords="208,63,221,90,234,90,232,52" />
+          <area href="/Local/Weather.aspx?location=IRXX0018" title="Tehran" alt="Tehran" shape="poly" coords="232,111,237,140,266,140,249,107" />
+          <area href="/Local/Weather.aspx?location=ETXX0001" title="Addis Ababa" alt="Addis Ababa" shape="poly" coords="190,142,197,166,286,168,266,141" />
+          <area href="/Local/Weather.aspx?location=USIL0225" title="Chicago" alt="Chicago" shape="poly" coords="81,63,102,72,102,105,76,103" />
+          <area href="/Local/Weather.aspx?location=CHXX0008" title="Beijing" alt="Beijing" shape="poly" coords="339,119,360,89,342,84,309,102" />
+          <area href="/Local/Weather.aspx?location=RSXX0038" title="Irkutsk" alt="Irkutsk" shape="poly" coords="281,90,309,26,392,60,306,102" />
+        </map>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div style="clear:both;"></div>
+
+</div>
+<div id="rightColumn">
+  <div class="adHeader">
+    <div class="title">Advertisements</div>
+    <div class="miniAd"><a href="http://www.aolnews.com/category/nation/" target="_blank" onclick="javascript:linkTracker._trackPageview('/AOL/Header/www.aolnews.com/category/nation/');"><span>National News</span></a></div>
+  </div>
+  <!-- Old Ads -->
+  
+  <!-- Old Ads -->
+  <!-- New Ads -->
+  <div id="wxmapAdTop">
+    <div id="AdPageCounterDiv">
+      <div id="WX_PageCounter"></div>
+    </div>
+    <div><div id="WX_Top300Variable"></div></div>
+    <!-- Promo ad for storm/icast mobile -->
+	<div id="promoAd" style="position:relative;">
+    <img style="display:block;" src="http://images.intellicast.com/App_Images/Storm_IntellicastHouseAd_300x125.png" alt="Track Severe Weather on mobile" />
+		<a style="position:absolute;display:block;width:138px;height:41px;top:80px;left:102px;" href="https://go.onelink.me/534401470?pid=Web_Intellicast&c=StormHouseAd" target="_blank"></a>
+	</div>
+    <div><div id="WX_Mid300"></div></div>
+    <div><div id="WX_Hidden"></div></div>
+    <div id="WX_Tiles">
+		  <div style="float:left;">
+        <div id="WX_Tile1"></div>
+		  </div>
+		  <div style="float:right;">
+        <div id="WX_Tile2"></div>
+		  </div>
+	  </div>
+    <div><div id="WX_PaidSearch"></div></div>
+  </div>
+  <!-- New Ads -->
+</div>
+</div>
+<div class="clearfix" style="clear:both;">
+<div id="WX_BottomLeaderboard"></div>
+</div>
+
+		</form>
+	</div>
+
+	
+		<footer class="site-footer">
+			<div class="help-links">
+				<div class="container">
+					<a href="/About/Default.aspx">About Us</a>
+					<a href="https://advertising.weather.com/contact/" target="_blank">Advertise with Us</a>
+					<a href="/About/Contact.aspx">Contact Us</a>
+					
+					<a href="/Help/Default.aspx">Help</a>
+					<a href="http://www.aolnews.com" target="_blank">News</a>
+					<a href="http://www.aboutads.info/choices/" target="_blank" style="background: url(http://icons.wxug.com/i/misc/adChoices.png) no-repeat right; padding-right: 20px;">Ad Choices</a>
+				</div>
+			</div>
+			<div class="legal-links">
+				<div class="container">
+					<a href="/About/Terms.aspx">Terms of Use</a>
+					<a href="/About/Privacy.aspx">Privacy Statement</a>
+					<span>&copy;Copyright 2017 The Weather Company, LLC</span>
+					
+					<span>Version 4.6.201311.1</span>
+				</div>
+				<!-- MACHINE NAME: ICAST-WEB4 -->
+			</div>
+		</footer>
+	
+
+	
+	
+	
+  
+	<script type="text/javascript" src="http://images.intellicast.com/Scripts/core_20150225.js"></script>
+
+  <script>
+    var cod = {
+      latitude: '0',
+      longitude: '0',
+      unit: 'F'
+    };
+  </script>
+  <script src="http://images.intellicast.com/Scripts/cod_20150330.js"></script>
+</body>
+</html>

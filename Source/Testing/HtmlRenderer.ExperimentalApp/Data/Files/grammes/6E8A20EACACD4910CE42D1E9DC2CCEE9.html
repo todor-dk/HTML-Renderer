@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" class="app" ng-app="app" ng-controller="AppCtrl" ng-class="{homepage : isHomePage()}">
+<head>
+    <meta charset="utf-8">
+    <title ng-bind="metadata.title"></title>
+
+    <base href="https://www.radioking.com/">
+
+    <!-- SEO Href lang -->
+    <link ng-repeat="(language, href) in config.href_lang" rel="alternate" href="{{ href + translateURL(getPathname(), language) }}" hreflang="{{ language }}">
+    <!-- /SEO Href lang -->
+
+    <meta name="description" content="{{ metadata.description }}">
+    <meta name="keywords" content="{{ metadata.keywords }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- TWITTER META -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="{{ metadata.twitter_username }}">
+    <meta name="twitter:title" content="{{ metadata.title }}">
+    <meta name="twitter:description" content="{{ metadata.description }}">
+    <meta name="twitter:creator" content="{{ metadata.twitter_username }}">
+    <meta name="twitter:image:src" content="{{ metadata.image }}">
+
+    <!--FACEBOOK/OTHER META -->
+    <meta property="fb:app_id" content="{{ config.metadata_facebook_app_id }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ metadata.title }}">
+    <meta property="og:image" content="{{ metadata.image }}">
+    <meta property="og:site_name" content="{{ config.metadata_default_title }}">
+    <meta property="og:description" content="{{ metadata.description }}">
+
+    <!-- Favicons -->
+    <link rel="icon" href="platform_assets/images/favicon/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="platform_assets/images/favicon/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="platform_assets/images/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="platform_assets/images/favicon/apple-touch-icon-114x114.png">
+    <!-- /Favicons -->
+
+    <!-- /!\ CAREFUL : IF YOU ADD A FILE BELOW ADD IT IN Grunfile.js TOO /!\ -->
+    <link rel="stylesheet" href="platform_assets/styles/vendors.css?v=b881b9e"/>
+    <!-- /!\ CAREFUL : IF YOU ADD A FILE ABOVE ADD IT IN Grunfile.js TOO /!\ -->
+
+    <link rel="stylesheet" href="bower_components/SoundManager2/demo/360-player/360player.css">
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/famfamfam_flags/famfamfam-flags.css">
+    <link rel="stylesheet" href="bower_components/flexslider/flexslider.css">
+    <link rel="stylesheet" href="platform_assets/styles/app.css?v=b881b9e">
+
+    <!--[if lt IE 9]>
+        <script src="scripts/ie/html5shiv.js"></script>
+        <script src="scripts/ie/respond.min.js"></script>
+        <script src="scripts/ie/excanvas.js"></script>
+    <![endif]-->
+
+    <!-- Google Analytics -->
+    <script type="text/javascript">
+       var _gaq = _gaq || [];
+       _gaq.push(['_setAccount', 'UA-18641818-2']);
+       _gaq.push(['_setDomainName', 'radioking.com']);
+       _gaq.push(['_trackPageview']);
+
+       (function() {
+         var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+         ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+       })();
+    </script>
+    <!-- /Google Analytics -->
+
+</head>
+<body ng-class="{'has-cookies-consent': hasConsent(), 'no-cookies-consent': !hasConsent()}">
+    <!--[if lt IE 9]>
+        <p class="browsehappy">You use an <strong>outdated browser</strong>. Please <a href="http://browsehappy.com/">update it</a> to improve your navigation.</p>
+        <p class="browsehappy">Vous utilisez un navigateur <strong>obsolète</strong>. Veuillez le <a href="http://browsehappy.com/">mettre à jour</a> pour améliorer votre navigation.</p>
+    <![endif]-->
+
+    <noscript>
+        <p class="browsehappy">
+            Javascript is disabled on your browser.
+            <br>
+            Please enable it to use Radio King.
+        </p>
+
+        <p class="browsehappy">
+            Le Javascript est désactivé sur votre navigateur.
+            <br>
+            Veuillez l'activer pour naviguer sur Radio King.
+        </p>
+    </noscript>
+
+    <section ng-include="'views/Default/resources/views/header.html?v=b881b9e'" class="navbar-content"></section>
+
+    <div class="global-content" ng-class="{'margin-global-content': !hasConsent()}" ng-controller="PlayerCtrl">
+
+        <section ng-class="{'container clearfix content-rk': !isHomePage()}">
+            <section ng-class="{'hbox stretch view-rk': !isHomePage(), 'withplayerrk': !isHomePage() && radioplayer.radio.idradio, 'no-background': !isHomePage() && isANoneBackgroundPage()}">
+                <aside ng-show="!isHomePage() && isAsidePage()" class="bg-light aside hidden-print" ng-include="'views/Default/resources/views/aside.html?v=b881b9e'">
+                </aside>
+
+                <section class="ng-view" ng-attr-id="{{ isHomePage() ? undefined : 'content' }}" ng-class="{'homePageOverflow': isHomePage()}">
+                </section>
+
+                <div ng-if="isHomePage()" class="container clearfix">
+                    <div
+                        ng-include="'views/Default/resources/views/footer.html?v=b881b9e'"
+                        ng-class="{'footerPlayer': radioplayer.radio.idradio}">
+                    </div>
+                </div>
+
+            </section>
+
+            <div ng-if="!isHomePage()" ng-include="'views/Default/resources/views/footer.html?v=b881b9e'" ng-class="{'footerPlayer': radioplayer.radio.idradio}">
+            </div>
+        </section>
+
+
+        <footer ng-class="{'show-player': radioplayer.radio.idradio}" class="footer bg-dark dker" ng-include="'views/Default/resources/views/player.html?v=b881b9e'">
+        </footer>
+
+    </div>
+
+    <toaster-container toaster-options="{'position-class': 'toast-bottom-right', 'time-out' : 3000}"></toaster-container>
+
+
+    <!-- /!\ CAREFUL : IF YOU ADD A FILE BELOW ADD IT IN Grunfile.js TOO /!\ -->
+    <script src="platform_assets/js/vendors.js?v=b881b9e"></script>
+    <!-- /!\ CAREFUL : IF YOU ADD A FILE ABOVE ADD IT IN Grunfile.js TOO /!\ -->
+
+
+    <!-- /!\ CAREFUL : IF YOU ADD A FILE BELOW ADD IT IN Grunfile.js TOO /!\ -->
+    <script src="platform_assets/js/ui.js?v=b881b9e"></script>
+    <!-- /!\ CAREFUL : IF YOU ADD A FILE ABOVE ADD IT IN Grunfile.js TOO /!\ -->
+
+
+    <script src="platform_assets/js/app.min.js?v=b881b9e"></script>
+
+    <script type="text/javascript" src="https://platform.twitter.com/widgets.js" async></script>
+
+    <!-- Perfect Audience -->
+    <script type="text/javascript">
+        if(!(navigator && navigator.userAgent && navigator.userAgent.indexOf('Prerender') > -1)) {
+            window._onload = function() {
+                window._pa = window._pa || {};
+                var pa = document.createElement('script'); pa.type = 'text/javascript'; pa.async = true;
+                pa.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + "//tag.marinsm.com/serve/5653171228e7ce3411000066.js";
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(pa, s);
+            };
+        }
+    </script>
+    <!-- /Perfect Audience -->
+</body>
+</html>

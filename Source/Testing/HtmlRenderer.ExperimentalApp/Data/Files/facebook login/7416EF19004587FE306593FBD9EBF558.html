@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html lang="en-US">
+    <head>
+        <title>Login With Facebook PHP CodeIgniter : OAuth Login | FormGet</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="dns-prefetch" href="//d13dcw7qo4xgly.cloudfront.net">
+		<style type="text/css">
+#category_list ol { 
+    color:#353535;
+    border:1px solid #F0F0F0;  }
+#category_list ol li { 
+    padding:8px; 
+    font-style:normal; 
+    font-family:Arial; 
+    font-size:16px; 
+    color:#353535;
+    border-left: 1px solid #F0F0F0; 
+  }
+#category_list ol li a{
+    color:#353535;
+    text-decoration:none !important;
+  }
+#category_list ol li a:hover{
+    color:#0c79c3;
+  }
+</style>
+
+<!-- All in One SEO Pack 2.3.13.2 by Michael Torbert of Semper Fi Web Designob_start_detected [-1,-1] -->
+<meta name="description"  content="This tutorial is regarding open authentication(OAuth) login with Facebook using PHP SDK in CodeIgniter. Add Facebook login to connect to your website for great" />
+
+<link rel="canonical" href="https://www.formget.com/codeigniter-facebook-oauth/" />
+<!-- /all in one seo pack -->
+<link rel='dns-prefetch' href='//code.ionicframework.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel='stylesheet' id='formget-bootstrap-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/css/bootstrap_1.css?ver=1489667005' type='text/css' media='all' />
+<link rel='stylesheet' id='formget-bootstrap-button-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/css/bootstrap-button.css?ver=1445586760' type='text/css' media='all' />
+<link rel='stylesheet' id='formget-fonts-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/css/fonts.css?ver=1445586766' type='text/css' media='all' />
+<link rel='stylesheet' id='formget-themecolors-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/css/theme-colors.css?ver=1445586902' type='text/css' media='all' />
+<link rel='stylesheet' id='formget-buttons-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/css/buttons.css?ver=1445586773' type='text/css' media='all' />
+<link rel='stylesheet' id='formget-style-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/css/style.1.0_6.css?ver=1493186542' type='text/css' media='all' />
+<link rel='stylesheet' id='formget-responsive-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/css/responsive.1.0_2.css?ver=1489666995' type='text/css' media='all' />
+<link rel='stylesheet' id='formget-footer-responsive-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/css/footer-responsive.css?ver=1445586798' type='text/css' media='all' />
+<link rel='stylesheet' id='formget-custom-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/css/custom.css?ver=1445586812' type='text/css' media='all' />
+<link rel='stylesheet' id='formget-custom-css-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/dynamic.css?ver=1495194404' type='text/css' media='all' />
+<link rel='stylesheet' id='formget-ifoncs-css'  href='//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css?ver=4.8' type='text/css' media='all' />
+<link rel='stylesheet' id='sh_css-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/form-coding/css/sh.css?ver=1407936004' type='text/css' media='all' />
+<link rel='stylesheet' id='dlv-latofont-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/ink-dlv-shortcode/css/fonts.css?ver=1448955312' type='text/css' media='all' />
+<link rel='stylesheet' id='dlv-css-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/ink-dlv-shortcode/css/style.css?ver=1454654858' type='text/css' media='all' />
+<link rel='stylesheet' id='inkfo-style-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/inkthemes-infobar/css/style.css?ver=1496660993' type='text/css' media='all' />
+<link rel='stylesheet' id='im-front-dark-style-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/inkthemes-infobar/template/dark-brown.css?ver=1496660929' type='text/css' media='all' />
+<link rel='stylesheet' id='wpfront-scroll-top-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/wpfront-scroll-top/css/wpfront-scroll-top.min.css?ver=1482393214' type='text/css' media='all' />
+<link rel='stylesheet' id='header-superfish-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/superfish/css/superfish.css?ver=1454044674' type='text/css' media='all' />
+<link rel='stylesheet' id='header-strip-style-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/inc/header-strip/css/strip-style2.css?ver=1495191630' type='text/css' media='all' />
+<link rel='stylesheet' id='ot-dynamic-custom_css-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/dynamic.css?ver=1495194404' type='text/css' media='all' />
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-includes/js/jquery/jquery.js?ver=1463994030'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-includes/js/jquery/jquery-migrate.min.js?ver=1463724688'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/ink-dlv-shortcode/js/jquery.fileDownload.js?ver=1442835420'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/ink-dlv-shortcode/js/jquery.cookie.js?ver=1442835420'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var dlv_script = {"url":"https:\/\/www.formget.com\/wp-admin\/admin-ajax.php","plugin_path":"https:\/\/www.formget.com\/wp-content\/plugins\/ink-dlv-shortcode\/","link_url":"https:\/\/www.formget.com\/app\/home\/?blog","post_id":"18478"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/ink-dlv-shortcode/js/custom.js?ver=1489229500'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/wpfront-scroll-top/js/wpfront-scroll-top.min.js?ver=1482393214'></script>
+<link rel='https://api.w.org/' href='https://www.formget.com/wp-json/' />
+<link rel="alternate" type="application/json+oembed" href="https://www.formget.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.formget.com%2Fcodeigniter-facebook-oauth%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://www.formget.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.formget.com%2Fcodeigniter-facebook-oauth%2F&#038;format=xml" />
+<link rel="shortcut icon" href="//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/imgs/favicon.png"/>
+<!-- Custom Styling -->
+<style type="text/css">
+/* ================ The highway-highway-timeline ================ */
+
+#highway-tl{
+    margin: 0;
+  padding: 0;
+  color: rgb(50,50,50);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 112.5%;
+  line-height: 1.6em;
+}
+#content_wrapper .page-content .normal-btn a{
+    color:#fff;
+    text-decoration:none!important;
+}
+.highway-highway-timeline {
+  position: relative;
+  width: 660px;
+  margin: 0 auto;
+  margin-top: -20px;
+  padding: 1em 0;
+  list-style-type: none;
+}
+
+.highway-highway-timeline:before {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  content: ' ';
+  display: block;
+  width: 6px;
+  height: 100%;
+  margin-left: -3px;
+  background: rgb(80,80,80);
+  background: -moz-linear-gradient(top, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(30,87,153,1)), color-stop(100%,rgba(125,185,232,1)));
+  background: -webkit-linear-gradient(top, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
+  background: -o-linear-gradient(top, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
+  background: -ms-linear-gradient(top, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
+  background: linear-gradient(to bottom, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
+
+  z-index: 5;
+}
+
+.highway-highway-timeline li {
+  padding: 1em 0;
+}
+
+.highway-highway-timeline li:after {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.highway-direction-l {
+  position: relative;
+  width: 300px;
+  float: left;
+  text-align: right;
+}
+
+.highway-direction-r {
+  position: relative;
+  width: 300px;
+  float: right;
+}
+
+.highway-flag-wrapper {
+  position: relative;
+  display: inline-block;
+
+  text-align: center;
+}
+
+.highway-flag {
+    font-family:'Open Sans', sans-serif;
+  position: relative;
+  display: inline;
+  background:#dddddd;
+  padding: 6px 10px;
+  border-radius: 5px;
+    color:rgb(50,50,50);
+  font-weight: 600;
+  text-align: left;
+}
+
+.highway-direction-l .highway-flag {
+  -webkit-box-shadow: -1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
+  -moz-box-shadow: -1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
+  box-shadow: -1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
+}
+
+.highway-direction-r .highway-flag {
+  -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
+  -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
+  box-shadow: 1px 1px 1px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.15);
+}
+
+.highway-direction-l .highway-flag:before,
+.highway-direction-r .highway-flag:before {
+  position: absolute;
+  top: 50%;
+  right: -40px;
+  content: ' ';
+  display: block;
+  width: 21px;
+  height: 21px;
+  margin-top: -10px;
+  background: #fff;
+  border-radius: 10px;
+  border: 4px solid #0e7ac4;
+  z-index: 10;
+}
+
+.highway-direction-r .highway-flag:before {
+  left: -40px;
+}
+
+.highway-direction-l .highway-flag:after {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  height: 0;
+  width: 0;
+  margin-top: -8px;
+  border: solid transparent;
+  border-left-color: rgb(248,248,248);
+  border-width: 8px;
+  pointer-events: none;
+}
+
+.highway-direction-r .highway-flag:after {
+  content: "";
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  height: 0;
+  width: 0;
+  margin-top: -8px;
+  border: solid transparent;
+  border-right-color: rgb(248,248,248);
+  border-width: 8px;
+  pointer-events: none;
+}
+
+.highway-time-wrapper {
+  display: inline;
+
+  line-height: 1em;
+  font-size: 0.66666em;
+  color: rgb(250,80,80);
+  vertical-align: middle;
+}
+
+.highway-direction-l .highway-time-wrapper {
+  float: left;
+}
+
+.highway-direction-r .highway-time-wrapper {
+  float: right;
+}
+
+.highway-time {
+  display: inline-block;
+  padding: 4px 6px;
+  background: rgb(248,248,248);
+}
+
+.highway-desc {
+  margin: 1em 0.75em 0 0 !important;
+
+  font-size: 16px !important;
+  line-height: 1.5em !important;
+}
+
+.highway-direction-r .highway-desc {
+  margin: 1em 0 0 0.75em;
+}
+
+/* ================ highway-highway-timeline Media Queries ================ */
+
+@media screen and (max-width: 660px) {
+
+.highway-highway-timeline {
+    width: 100%;
+    padding: 4em 0 1em 0;
+}
+
+.highway-highway-timeline li {
+    padding: 2em 0;
+}
+
+.highway-direction-l,
+.highway-direction-r {
+    float: none;
+    width: 100%;
+
+    text-align: center;
+}
+
+.highway-flag-wrapper {
+    text-align: center;
+}
+
+.highway-flag {
+    background: rgb(255,255,255);
+    z-index: 15;
+}
+
+.highway-direction-l .highway-flag:before,
+.highway-direction-r .highway-flag:before {
+  position: absolute;
+  top: -30px;
+    left: 50%;
+    content: ' ';
+    display: block;
+    width: 21px;
+    height: 21px;
+    margin-left: -9px;
+    background: #fff;
+    border-radius: 10px;
+    border: 4px solid rgb(255,80,80);
+    z-index: 10;
+}
+
+.highway-direction-l .highway-flag:after,
+.highway-direction-r .highway-flag:after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -8px;
+    height: 0;
+    width: 0;
+    margin-left: -8px;
+    border: solid transparent;
+    border-bottom-color: rgb(255,255,255);
+    border-width: 8px;
+    pointer-events: none;
+}
+
+.highway-time-wrapper {
+    display: block;
+    position: relative;
+    margin: 4px 0 0 0;
+    z-index: 14;
+}
+
+.highway-direction-l .highway-time-wrapper {
+    float: none;
+}
+
+.highway-direction-r .highway-time-wrapper {
+    float: none;
+}
+
+.highway-desc {
+    position: relative;
+    margin: 1em 0 0 0;
+    padding: 1em;
+    background: rgb(245,245,245);
+    -webkit-box-shadow: 0 0 1px rgba(0,0,0,0.20);
+    -moz-box-shadow: 0 0 1px rgba(0,0,0,0.20);
+    box-shadow: 0 0 1px rgba(0,0,0,0.20);
+
+  z-index: 15;
+}
+
+.highway-direction-l .highway-desc,
+.highway-direction-r .highway-desc {
+    position: relative;
+    margin: 1em 1em 0 1em;
+    padding: 1em;
+
+  z-index: 15;
+}
+
+}
+
+@media screen and (min-width: 400px ?? max-width: 660px) {
+
+.highway-direction-l .highway-desc,
+.highway-direction-r .highway-desc {
+    margin: 1em 4em 0 4em;
+}
+
+
+</style>
+<style type="text/css">.broken_link, a.broken_link {
+	text-decoration: line-through;
+}</style>		<script>
+			(function (i, s, o, g, r, a, m) {
+				i['GoogleAnalyticsObject'] = r;
+				i[r] = i[r] || function () {
+					(i[r].q = i[r].q || []).push(arguments)
+				}, i[r].l = 1 * new Date();
+				a = s.createElement(o),
+						m = s.getElementsByTagName(o)[0];
+				a.async = 1;
+				a.src = g;
+				m.parentNode.insertBefore(a, m)
+			})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+			ga('create', 'UA-43981329-1', 'auto');
+			ga('send', 'pageview');
+
+		</script>
+		    </head>
+    <body class="post-template-default single single-post postid-18478 single-format-standard">
+        <div id="main">
+			<div id="header_strip">
+    <div class="container">
+        <div class="row strip-row">
+			<div class="col-md-3 col-sm-3 col-xs-6 strip-col">
+				<ul class="header-logo">
+					<li>
+						<a href="https://www.formget.com/">
+							<!--<img src="http://www.formget.com/wp-content/uploads/2015/12/formget-chirstmas-logo.png" alt="FormGet LOgo"/>-->
+							<img src="//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/inc/header-strip/imgs/formget-logo.png" alt="Formget logo">
+						</a>
+					</li> 
+				</ul>				            
+			</div>
+			<div class="col-md-6 col-sm-6 strip-col hidden-xs">
+				<div class="product-menu">
+					<ul id="header_menu" class="sf-menu header-menu"><li id="menu-item-36056" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-36056"><a href="https://www.formget.com/formget/">Form Builder</a>
+<ul  class="sub-menu">
+	<li id="menu-item-36121" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36121"><a href="https://www.formget.com/formget/">Overview</a></li>
+	<li id="menu-item-36095" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36095"><a href="https://www.formget.com/features/custom-branding-form/">Features</a></li>
+	<li id="menu-item-36096" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36096"><a href="https://www.formget.com/app/extension/fg_extension/all-1">Pricing</a></li>
+	<li id="menu-item-36097" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36097"><a href="https://www.formget.com/forms/">Templates</a></li>
+	<li id="menu-item-36098" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36098"><a href="https://www.formget.com/online-formbuilder/">Documentation</a></li>
+</ul>
+</li>
+<li id="menu-item-36057" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-36057"><a href="https://www.formget.com/mailget-app/">MailGet Email Marketing</a>
+<ul  class="sub-menu">
+	<li id="menu-item-36122" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36122"><a href="https://www.formget.com/mailget-app/">Overview</a></li>
+	<li id="menu-item-36099" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36099"><a href="https://www.formget.com/email-template-builder/">Features</a></li>
+	<li id="menu-item-36100" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36100"><a href="https://www.formget.com/mailget-app/#pricing">Pricing</a></li>
+	<li id="menu-item-36101" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36101"><a href="https://www.formget.com/mailget-app/#about">Email Builder</a></li>
+	<li id="menu-item-36102" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36102"><a href="https://www.formget.com/mailget-app/#optin">Optin Forms</a></li>
+	<li id="menu-item-36103" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36103"><a href="https://www.formget.com/mailget-app/#responder">Autoresponder</a></li>
+	<li id="menu-item-36104" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36104"><a href="https://www.formget.com/email-builder/">Documentation</a></li>
+</ul>
+</li>
+<li id="menu-item-39684" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-39684"><a href="https://www.formget.com/mailget-bolt/">MailGet Bolt</a></li>
+<li id="menu-item-36059" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-36059"><a href="https://www.formget.com/blog/">Blog</a>
+<ul  class="sub-menu">
+	<li id="menu-item-36105" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-36105"><a href="#">Products</a>
+	<ul  class="sub-menu">
+		<li id="menu-item-36106" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36106"><a href="https://www.formget.com/cheap-email-marketing-services/">MailGet</a></li>
+		<li id="menu-item-36107" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36107"><a href="https://www.formget.com/increase-conversion-rate-with-sign-up-form/">FormGet</a></li>
+	</ul>
+</li>
+	<li id="menu-item-36108" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-36108"><a href="#">Technical</a>
+	<ul  class="sub-menu">
+		<li id="menu-item-36109" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36109"><a href="https://www.formget.com/jquery-post-data/">AJAX</a></li>
+		<li id="menu-item-36110" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36110"><a href="https://www.formget.com/what-is-angular-js/">Angular JS</a></li>
+		<li id="menu-item-36111" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36111"><a href="https://www.formget.com/introduction-to-android-and-its-installation/">Android</a></li>
+		<li id="menu-item-36112" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36112"><a href="https://www.formget.com/bootstrap-grid/">Bootstrap</a></li>
+		<li id="menu-item-36113" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36113"><a href="https://www.formget.com/codeigniter-mvc/">CodeIgniter</a></li>
+		<li id="menu-item-36114" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36114"><a href="https://www.formget.com/php-send-html-email-template/">Email</a></li>
+		<li id="menu-item-36115" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36115"><a href="https://www.formget.com/css-active/">HTML/CSS</a></li>
+		<li id="menu-item-36116" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36116"><a href="https://www.formget.com/javascript-contact-form/">JavaScript</a></li>
+		<li id="menu-item-36117" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36117"><a href="https://www.formget.com/create-form-using-jquery/">jQuery</a></li>
+		<li id="menu-item-36118" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36118"><a href="https://www.formget.com/phonegap/">PhoneGap</a></li>
+		<li id="menu-item-36119" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36119"><a href="https://www.formget.com/php-post-get/">PHP</a></li>
+		<li id="menu-item-36120" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-36120"><a href="https://www.formget.com/free-premium-wordpress-themes/">WordPress</a></li>
+	</ul>
+</li>
+</ul>
+</li>
+</ul>					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="col-md-3 col-sm-3 col-xs-6 top_rigt_button strip-col">
+				<ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a id="drop1" href="#" class="dropdown-toggle"  aria-haspopup="true" role="button" aria-expanded="false">Sign Up For Free</a>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="drop1">
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.formget.com/app/login/?p=popup">FormGet</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.formget.com/mailget/builder_login/new_user">MailGet</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.formget.com/mailget/builder_login/trial_user/486">MailGet Bolt</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a id="drop2" href="#" class="dropdown-toggle" aria-haspopup="true" role="button" aria-expanded="false">Sign In</a>
+						<ul class="dropdown-menu signin" role="menu" aria-labelledby="drop2">
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.formget.com/app/login/">FormGet</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.formget.com/mailget/builder_login/">MailGet</a></li>
+							<li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.formget.com/mailget/builder_login/">MailGet Bolt</a></li>
+						</ul>
+					</li>
+				</ul>               
+			</div>
+        </div>
+    </div>
+</div>
+  
+            <!--Header-->
+            <header id="header">                             
+                <span class="clear"></span>	</header>
+	<!--/Header-->
+	<!--Content Wrapper-->
+	<div id="content_wrapper" class="content single">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3">
+					<div id="sidebar" class="sidebar side-blog">
+						<div class="sidebar-page rmm taxlist graphite">
+							<span class="sidebar-title" style="display: block;">CodeIgniter</span>
+							<ul id="menu-codeigniter" class="menu"><li id="menu-item-30902" class="feature-heading menu-item menu-item-type-custom menu-item-object-custom menu-item-30902"><a href="#">Basics &#038; Installation</a></li>
+<li id="menu-item-30903" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30903"><a href="https://www.formget.com/codeigniter-mvc/">Getting Started With MVC</a></li>
+<li id="menu-item-30904" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30904"><a href="https://www.formget.com/codeigniter-installation-and-configuration/">Installation</a></li>
+<li id="menu-item-30905" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30905"><a href="https://www.formget.com/codeigniter-form-input-setting/">Basic Configuration Setting</a></li>
+<li id="menu-item-30906" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30906"><a href="https://www.formget.com/codeigniter-htaccess-remove-index-php/">Remove index.php</a></li>
+<li id="menu-item-30907" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30907"><a href="https://www.formget.com/codeigniter-global-variable/">Global Variable</a></li>
+<li id="menu-item-30908" class="feature-heading menu-item menu-item-type-custom menu-item-object-custom menu-item-30908"><a href="#">Helper &#038; Libraries</a></li>
+<li id="menu-item-30909" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30909"><a href="https://www.formget.com/routes-in-codeigniter/">URL Routing, Suffix &#038; Query String</a></li>
+<li id="menu-item-30910" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30910"><a href="https://www.formget.com/codeigniter-url-helper/">URL Helper</a></li>
+<li id="menu-item-30911" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30911"><a href="https://www.formget.com/codeigniter-uri-segment/">URI Segment</a></li>
+<li id="menu-item-30912" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30912"><a href="https://www.formget.com/codeigniter-form-helper/">Form Helper</a></li>
+<li id="menu-item-30913" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30913"><a href="https://www.formget.com/codeigniter-form-input/">GET And POST</a></li>
+<li id="menu-item-30914" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30914"><a href="https://www.formget.com/codeigniter-create-helper/">Create Own Helper</a></li>
+<li id="menu-item-30915" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30915"><a href="https://www.formget.com/codeigniter-xss-clean/">XSS_CLEAN</a></li>
+<li id="menu-item-30916" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30916"><a href="https://www.formget.com/codeigniter-javascript/">JavaScript Class</a></li>
+<li id="menu-item-30917" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30917"><a href="https://www.formget.com/codeigniter-loading-css-and-javascript-file/">Loading CSS and Javascript</a></li>
+<li id="menu-item-30918" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30918"><a href="https://www.formget.com/codeigniter-image-library/">Image Library</a></li>
+<li id="menu-item-30919" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30919"><a href="https://www.formget.com/codeigniter-table/">HTML Table</a></li>
+<li id="menu-item-30920" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30920"><a href="https://www.formget.com/codeigniter-calendar/">Calendar</a></li>
+<li id="menu-item-30921" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30921"><a href="https://www.formget.com/codeigniter-language/">Language Class</a></li>
+<li id="menu-item-30922" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30922"><a href="https://www.formget.com/pagination-in-codeigniter/">Pagination</a></li>
+<li id="menu-item-30923" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30923"><a href="https://www.formget.com/codeigniter-encrypt/">Encryption and Decryption</a></li>
+<li id="menu-item-30924" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30924"><a href="https://www.formget.com/codeigniter-captcha-helper/">Captcha Helper</a></li>
+<li id="menu-item-30925" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30925"><a href="https://www.formget.com/curl-library-codeigniter/">Curl library with SSL</a></li>
+<li id="menu-item-30926" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30926"><a href="https://www.formget.com/codeigniter-third-party-libraries-folder/">Third Party Libraries</a></li>
+<li id="menu-item-30927" class="feature-heading menu-item menu-item-type-custom menu-item-object-custom menu-item-30927"><a href="#">Forms</a></li>
+<li id="menu-item-30928" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30928"><a href="https://www.formget.com/create-a-form-in-codeigniter/">Create a Contact Form</a></li>
+<li id="menu-item-30929" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30929"><a href="https://www.formget.com/form-login-codeigniter/">Login Form</a></li>
+<li id="menu-item-30930" class="feature-heading menu-item menu-item-type-custom menu-item-object-custom menu-item-30930"><a href="#">Validation</a></li>
+<li id="menu-item-30931" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30931"><a href="https://www.formget.com/form-validation-using-codeigniter/">Form Validation</a></li>
+<li id="menu-item-30932" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30932"><a href="https://www.formget.com/codeigniter-form-validation-date/">Date Field</a></li>
+<li id="menu-item-30933" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30933"><a href="https://www.formget.com/how-to-create-and-validate-select-option-field-using-for-each-loop-in-codeigniter/">Select Option Field</a></li>
+<li id="menu-item-30934" class="feature-heading menu-item menu-item-type-custom menu-item-object-custom menu-item-30934"><a href="#">Databases</a></li>
+<li id="menu-item-30936" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30936"><a href="https://www.formget.com/insert-data-into-database-using-codeigniter/">Insert Data</a></li>
+<li id="menu-item-30937" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30937"><a href="https://www.formget.com/update-data-in-database-using-codeigniter/">Update Data</a></li>
+<li id="menu-item-30938" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30938"><a href="https://www.formget.com/delete-data-from-database-using-codeigniter/">Delete Data</a></li>
+<li id="menu-item-30939" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30939"><a href="https://www.formget.com/codeigniter-json/">Convert Query to Json &#038; Insert Into Database</a></li>
+<li id="menu-item-30940" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30940"><a href="https://www.formget.com/codeigniter-form-dropdown/">Form Dropdown</a></li>
+<li id="menu-item-30941" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30941"><a href="https://www.formget.com/codeigniter-select-by-id-and-date-range/">Select By ID and Date Range</a></li>
+<li id="menu-item-30942" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30942"><a href="https://www.formget.com/codeigniter-database-connection/">Resolve “MySQL Too Many Connection Errors”</a></li>
+<li id="menu-item-30943" class="feature-heading menu-item menu-item-type-custom menu-item-object-custom menu-item-30943"><a href="#">Session</a></li>
+<li id="menu-item-30944" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30944"><a href="https://www.formget.com/codeigniter-session/">Session In CodeIgniter</a></li>
+<li id="menu-item-30945" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30945"><a href="https://www.formget.com/codeigniter-remember-me-checkbox/">Remember Me</a></li>
+<li id="menu-item-30946" class="feature-heading menu-item menu-item-type-custom menu-item-object-custom menu-item-30946"><a href="#">jQuery Ajax</a></li>
+<li id="menu-item-30947" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30947"><a href="https://www.formget.com/codeigniter-jquery-ajax-post/">jQuery Ajax Post Data</a></li>
+<li id="menu-item-30948" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30948"><a href="https://www.formget.com/codeigniter-form-submission-using-jquery/">Form Submission Using jQuery</a></li>
+<li id="menu-item-30949" class="feature-heading menu-item menu-item-type-custom menu-item-object-custom menu-item-30949"><a href="#">Sending Emails</a></li>
+<li id="menu-item-30950" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30950"><a href="https://www.formget.com/codeigniter-gmail-smtp/">Email via Gmail Using SMTP Protocol</a></li>
+<li id="menu-item-30951" class="feature-heading menu-item menu-item-type-custom menu-item-object-custom menu-item-30951"><a href="#">Oauth</a></li>
+<li id="menu-item-30952" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30952"><a href="https://www.formget.com/codeigniter-google-oauth-php/">Login Google OAuth</a></li>
+<li id="menu-item-30953" class="menu-item menu-item-type-custom menu-item-object-custom current-menu-item menu-item-30953"><a href="https://www.formget.com/codeigniter-facebook-oauth/">Login Facebook OAuth</a></li>
+<li id="menu-item-30954" class="feature-heading menu-item menu-item-type-custom menu-item-object-custom menu-item-30954"><a href="#">Shopping Carts</a></li>
+<li id="menu-item-30955" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30955"><a href="https://www.formget.com/codeigniter-paypal-checkout/">PayPal Checkout</a></li>
+<li id="menu-item-30956" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-30956"><a href="https://www.formget.com/codeigniter-shopping-cart/">Shopping Cart</a></li>
+</ul>						</div>
+						<div class="sidebar-banner">
+							<a id="mailget-banner" href="https://www.formget.com/mailget/"><img src="//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/banner-img/mailget-banner.png" alt="Mailget"/></a>
+						</div>
+						<div class="sidebar-banner heap-banner">
+							<a id="heap-banner" target="_new" target="_blank" rel="nofollow" href="https://heapanalytics.com/?utm_source=formget&utm_medium=banner&utm_campaign=formgetbanner"><img src="//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/banner-img/heapad.png" alt="Heap"/></a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-9">
+					<!--Blog-->
+					<div class="blog">
+						<div class="blog-content">
+																<!--Post-->
+<div class="post">
+	<h1 class="post-title">Login With Facebook PHP CodeIgniter : OAuth Login</h1>
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- Link Ads on Top - 468x15 -->
+		<ins class="adsbygoogle"
+			 style="display:inline-block;width:468px;height:15px"
+			 data-ad-client="ca-pub-0315271913543563"
+			 data-ad-slot="8293145896"></ins>
+		<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- Rectangle Left -->
+		<ins class="adsbygoogle"
+			 style="display:inline-block;width:300px;height:250px;margin-right: 50px;"
+			 data-ad-client="ca-pub-0315271913543563"
+			 data-ad-slot="7374815899"></ins>
+		<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<!-- Rectangle Right -->
+		<ins class="adsbygoogle"
+			 style="display:inline-block;width:300px;height:250px"
+			 data-ad-client="ca-pub-0315271913543563"
+			 data-ad-slot="8851549095"></ins>
+		<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+		<ul class="post-meta">
+		<li class="posted-by">BY<a href="https://www.formget.com/author/admin/" title="Posts by Neeraj Agarwal" rel="author">Neeraj Agarwal</a></li>
+		<li class="post-comment"><a href="https://www.formget.com/codeigniter-facebook-oauth/#comments">17 Comments</a></li>
+	</ul>
+	<div class="author-avatar">
+		<img alt='user-1' src='https://secure.gravatar.com/avatar/469a80d00585cee0793097f4944b6480?s=81&amp;d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D81&amp;r=G' class='avatar avatar-81 photo' height='81' width='81' /><br/>
+		<span class="author-name">Neeraj Agarwal</span>
+	</div>
+	<div class="post-content">
+		<p>OAuth is simply an open authentication that is used for providing access to the server data after authorizing a user via third party services.</p>
+<p>In this tutorial, we are going to explain how you can implement Facebook login via open authentication to connect with your website using CodeIgniter.</p>
+<p>You can achieve this login mechanism using Facebook  PHP SDK.</p>
+<p><span style="color: #000000;">To start with, first</span> <a rel="nofollow" href="https://github.com/facebookarchive/facebook-php-sdk" target="_blank">Download</a> the Facebook PHP SDK and save it in your CodeIgniter&#8217;s <strong>libraries</strong> folder.</p>
+<p>Before running script, generate your Facebook app id and Facebook app secret key, for this follow up the below given steps:</p>
+<hr />
+<p>&nbsp;</p>
+<p style="text-align: center;"><strong>You can also refer our live demo or download the Script file. Extract the downloaded files and run it on your Local server.</strong></p>
+<p><a href="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Blog-content-1.png"><img class="aligncenter wp-image-18534 size-full" title="CodeIgniter : Login Facebook Via Oauth 2.0" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Blog-content-1.png" alt="CodeIgniter-facebook-connect" width="736" height="770" srcset="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Blog-content-1.png 736w,  //d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Blog-content-1-286x300.png 286w" sizes="(max-width: 736px) 100vw, 736px" /></a><div class="dlv_container"><a class="dlv_download" href="https://www.formget.com/product/codeigniter-social-login/"  onClick="_gaq.push(['_trackEvent', 'Live Demo Via Blog Post', 'Onclick']);" >Download script</a>&nbsp;&nbsp;&nbsp;<script type="text/javascript" src="https://gumroad.com/js/gumroad.js"></script><a class="lv_demo" target="_new" data-download="https://downloads.wordpress.org/theme/one-page.zip"  target="_blank" rel="nofollow" href="http://www.aorank.com/tutorial/fb_oauth/" onClick="_gaq.push(['_trackEvent', 'Live Demo Via Blog Post', 'Onclick']);" >LIVE DEMO & GET WP THEME</a><div id="abc"></div><div id="popupContact"></div></div><script type="text/javascript">var dl_script_content = "<a target='new' href='http://www.formget.com/mailget/'><img style='margin-bottom:12px;width: 195px;margin-left: auto;margin-right: auto;' src='http://www.formget.com/mailget/images/logo.png' ></a><hr/><div class='dl-info'><p class='prev-first'><img class='loader-small' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/ink-dlv-shortcode/images/loader-small.gif' > Send Email Via Amazon SES<br/>$29 Special Offer</p><p class='pinfo'>This usually takes about 60 seconds for collecting your files and to send email.</p><p class='prev-second'>10k Emails for just $29 - Special Offer<br/>Limited Time, High Delivery Rate, No Download Required.</p><p class='note'><a class='link' href='http://www.formget.com/mailget/' target='_tab'>Start Email Marketing</a> (opens in a new window)</p></div>";var dl_email_content = '';var dlv_loadeer = '<p style="visibility: hidden;margin-top: 20px;" class="loaderwrap"><img class="loader" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/ink-dlv-shortcode/images/loader-small.gif"><span></span></p>';var dl_domain = "mailget";var dlv_close = '<img src = "//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/ink-dlv-shortcode/images/close.png\" onclick="dlv_close_popup(jQuery(this));" id ="close" / >';function create_popup() {output = "";output += '<div class="meter">';output += '<span style = "width: 100%"></span></div><div id="loading_submit"></div><form method="post" id="form">';output += '<label for="name">Your Name</label><span class="input_wrapper"><input type="text" name="name" id="name"/></span>';output += '<input type ="hidden" name="download" id="download" value="/wp-content/uploads/2014/12/fb_oauth_download.zip"/>';output += '<label for="email">Your Email Address</label><span class="input_wrapper"><input onclick="dlv_email_validate(jQuery(this));" placeholder="joie@example.com" type ="text" required="" value="" name="email" id="email"/></span>';output += '<input type ="button" id="popup_submit" name="submit" value="Download File" />';output += '<p> Download link will be send to your Email.';output += '</form>';return output;}</script></p>
+<h3><strong>Steps for Getting Facebook App ID and Facebook App secret key :</strong></h3>
+<hr />
+<h3></h3>
+<p>If you are looking for <a title="codeigniter facebook and google login" href="https://www.formget.com/product/codeigniter-social-login/">Codeigniter login script with facebook and google</a> built in ready script, then you can try this.</p>
+<p>In Facebook open authentication, App Id and the  App secret key are required for authenticating a valid Facebook account.</p>
+<p>For getting this you have to do the following steps :</p>
+<p><strong>Step 1 : </strong>Go to <a rel="nofollow" href="https://developers.facebook.com/" target="_blank">https://developers.facebook.com</a> and sign in by an existing <span id="GingerWidget-correction-0" class="correction alternate">Facebook</span> username or password.</p>
+<p><a href="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-1.png"><img class="aligncenter wp-image-18489 size-full" title="Login To Your Facebook Account" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-1.png" alt="CodeIgniter Login Facebook via OAuth" width="736" height="382" srcset="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-1.png 736w,  //d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-1-300x155.png 300w" sizes="(max-width: 736px) 100vw, 736px" /></a></p>
+<p><strong>Step 2 :</strong> After <span id="GingerWidget-correction-0" class="correction alternate">login</span> click on to <strong>Apps</strong> tab.</p>
+<p><strong><a href="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-2.png"><img class="aligncenter wp-image-18490 size-full" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-2.png" alt="CodeIgniter-Facebook-Integration" width="736" height="293" srcset="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-2.png 736w,  //d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-2-300x119.png 300w" sizes="(max-width: 736px) 100vw, 736px" /></a></strong></p>
+<p><strong>Step 3 :</strong> When you will click on to <strong>Apps</strong> button o<span id="GingerWidget-correction-1" class="correction alternate">ne</span> drop down list will appear that will contain your previous added Apps<span id="GingerWidget-correction-2" class="correction alternate">. </span>Now click on <strong>Add a New App.</strong></p>
+<p><strong><a href="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-3.png"><img class="aligncenter wp-image-18491 size-full" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-3.png" alt="CodeIgniter Facebook app" width="736" height="291" srcset="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-3.png 736w,  //d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-3-300x118.png 300w" sizes="(max-width: 736px) 100vw, 736px" /></a></strong></p>
+<p><strong>Step 4 : </strong>After clicking on it one popup window will appear here you have to select a platform for which type of app you are creating, platform may be ios, android, any Facebook app or for any website, here we are creating apps for website.</p>
+<p><strong><a href="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-4.png"><img class="aligncenter wp-image-18482 size-full" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-4.png" alt="Facebook website app" width="736" height="402" srcset="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-4.png 736w,  //d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-4-300x163.png 300w" sizes="(max-width: 736px) 100vw, 736px" /></a></strong></p>
+<p><strong>Step 5 : </strong>Here you have to write your application name based upon your choice and click on C<strong>reate New Facebook App Id.</strong></p>
+<p><strong><a href="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-5.png"><img class="aligncenter wp-image-18483 size-full" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-5.png" alt="create Facebook app id" width="736" height="236" srcset="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-5.png 736w,  //d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-5-300x96.png 300w" sizes="(max-width: 736px) 100vw, 736px" /></a></strong></p>
+<p><strong>Step 6 : </strong>In this window, choose a category and then click on <strong>Create App ID</strong> button. Here, you will have two steps, in first steps you can create a test version of another app and in second step you have to choose a category for which type of apps you are creating.</p>
+<p><strong><a href="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-6.png"><img class="aligncenter wp-image-18484 size-full" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-6.png" alt="type of Facebook app id" width="736" height="554" srcset="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-6.png 736w,  //d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-6-300x225.png 300w" sizes="(max-width: 736px) 100vw, 736px" /></a></strong></p>
+<p><strong>Step 7 : </strong><span id="GingerWidget-correction-0" class="correction alternate">For</span> going to <span id="GingerWidget-correction-1" class="correction alternate">dashboard, click</span> on <strong>Skip Quick start.</strong></p>
+<p><strong><a href="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-7.png"><img class="aligncenter wp-image-18485 size-full" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-7.png" alt="CodeIgniter Facebook SDK" width="736" height="242" srcset="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-7.png 736w,  //d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-7-300x98.png 300w" sizes="(max-width: 736px) 100vw, 736px" /></a></strong></p>
+<p><strong>Step 8 : </strong><span id="GingerWidget-correction-0" class="correction alternate">In</span> Dashboard you will see your <strong>App ID</strong> and<strong> App Secret</strong>.Where App ID is visible and App Secret key is hidden, to see this click on show button, n<span id="GingerWidget-correction-0" class="correction alternate">ow</span> that App ID and App Secret Key you have to add into your application code as shown below:</p>
+<div class="syntax-highlighter"PHP>
+<pre><code class="language-php">// Load facebook library and pass associative array which contains appId and secret key
+$this-&gt;load-&gt;library('facebook', array('appId' =&gt; '&lt;Your Facebook appId&gt;', 'secret' =&gt; '&lt;Generated Secret Key&gt;'));</code></pre>
+</div>
+<p>This App ID and App Secret  is only accessible by your own Facebook account, by default it is available for private, but for making public, click on settings link and follow step 9 &amp; 10.</p>
+<p><strong><a href="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-81.png"><img class="aligncenter wp-image-18606 size-full" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-81.png" alt="Facebook OAuth 2.0 login" width="736" height="270" srcset="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-81.png 736w,  //d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-81-300x110.png 300w" sizes="(max-width: 736px) 100vw, 736px" /></a></strong></p>
+<p><strong>Step 9 :</strong> In setting ,write your app domain name,  your email id and then click on<strong> </strong>+<strong> Add Platform</strong> &gt; <strong>Website</strong> to add Site URL. This will be used by the FB server on authentication to hand back control to your application.</p>
+<p><strong><a href="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-9.png"><img class="aligncenter wp-image-18487 size-full" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-9.png" alt="Facebook OAuth settings" width="736" height="486" srcset="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-9.png 736w,  //d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-9-300x198.png 300w" sizes="(max-width: 736px) 100vw, 736px" /></a></strong></p>
+<p><strong>Step 10 : </strong>Now go to <strong>Status &amp; Review</strong><span id="GingerWidget-correction-0" class="correction alternate">,</span> set<strong> YES</strong>  for your app features available to public.</p>
+<p><strong><a href="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-10.png"><img class="aligncenter wp-image-18488 size-full" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-10.png" alt="Facebook OAuth status" width="736" height="600" srcset="//d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-10.png 736w,  //d13dcw7qo4xgly.cloudfront.net/wp-content/uploads/2014/12/Cont-10-300x244.png 300w" sizes="(max-width: 736px) 100vw, 736px" /></a></strong></p>
+<p><strong><br />
+</strong></p>
+<p>As now since you have generated your app Id and app secret key, now you are ready to integrate and connect to your Facebook login account.</p>
+<h2>CodeIgniter Facebook OAuth login Flow:</h2>
+<ul>
+<li>On accessing a website page the Facebook login button is shown. The user will click the FB button to login into the codeIgniter application.</li>
+<li>After clicking on that button a Facebook URL will be invoked that will contain App Id and App Secret Key.</li>
+<li>Now Facebook will validate the application ID and then will redirect to its login page.</li>
+<li>User will enter the FB login credentials and submit the form.</li>
+<li>In Facebook when validation will be success it will respond back with access_token that will contain the user’s detail.</li>
+<li>Redirect URL page will forward to a page showing user data in the client browser.</li>
+</ul>
+<p>We have created a CodeIgniter login example in that we have explain how you can connect your Facebook account via OAuth. You can create similar files as mentioned below and can copy the code. If you like you can even download the files.</p>
+<h3>Below is our complete code with short explanation :</h3>
+<hr />
+<h3></h3>
+<p><strong>Controllers : oauth_login.php</strong></p>
+<p>Copy the below code in your controller. <span id="GingerWidget-correction-0" class="correction alternate">When</span> you <span id="GingerWidget-correction-1" class="correction alternate">load</span> <span id="GingerWidget-correction-2" class="correction alternate">Facebook</span> library in your <span id="GingerWidget-correction-3" class="correction alternate">controller&#8217;s constructor  </span><span id="GingerWidget-correction-5" class="correction alternate">writes</span> your Facebook App Id and Facebook Secret Key.</p>
+<div class="syntax-highlighter"PHP>
+<pre><code class="language-php">&lt;?php
+
+class Oauth_Login extends CI_Controller {
+
+public $user = "";
+
+public function __construct() {
+parent::__construct();
+
+// Load facebook library and pass associative array which contains appId and secret key
+$this-&gt;load-&gt;library('facebook', array('appId' =&gt; '&lt;Your Facebook appId&gt;', 'secret' =&gt; '&lt;Generated Secret Key&gt;'));
+
+// Get user's login information
+$this-&gt;user = $this-&gt;facebook-&gt;getUser();
+}
+
+// Store user information and send to profile page
+public function index() {
+if ($this-&gt;user) {
+$data['user_profile'] = $this-&gt;facebook-&gt;api('/me/');
+
+// Get logout url of facebook
+$data['logout_url'] = $this-&gt;facebook-&gt;getLogoutUrl(array('next' =&gt; base_url() . 'index.php/oauth_login/logout'));
+
+// Send data to profile page
+$this-&gt;load-&gt;view('profile', $data);
+} else {
+
+// Store users facebook login url
+$data['login_url'] = $this-&gt;facebook-&gt;getLoginUrl();
+$this-&gt;load-&gt;view('login', $data);
+}
+}
+
+// Logout from facebook
+public function logout() {
+
+// Destroy session
+session_destroy();
+
+// Redirect to baseurl
+redirect(base_url());
+}
+
+}
+?&gt;</code></pre>
+</div>
+<p><strong>Views : login.php</strong></p>
+<p>Copy the below code in your view and save as login.php. This will be the first page to be shown which will contain <strong>Sign in with facebook</strong> option.</p>
+<div class="syntax-highlighter"PHP>
+<pre><code class="language-php">&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;CodeIgniter : Login Facebook via Oauth 2.0&lt;/title&gt;
+&lt;link rel="stylesheet" type="text/css" href="&lt;?php echo base_url(); ?&gt;css/style.css"&gt;
+&lt;link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro|Open+Sans+Condensed:300|Raleway' rel='stylesheet' type='text/css'&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="main"&gt;
+&lt;div id="login"&gt;
+&lt;h2&gt;CodeIgniter : Login Facebook via Oauth 2.0&lt;/h2&gt;
+&lt;?php echo "&lt;a href='$login_url'&gt;&lt;img class='fb' src=".base_url()."images/fb.png"."&gt;&lt;/a&gt;"; ?&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+<p><strong>Views : profile.php</strong></p>
+<p>Copy the below code in your view and save as profile.php. As anyone will login with the facebook he/she will see this page that will contain logged in user details.</p>
+<div class="syntax-highlighter"PHP>
+<pre><code class="language-php">&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;CodeIgniter : Login Facebook via Oauth 2.0&lt;/title&gt;
+&lt;link rel="stylesheet" type="text/css" href="&lt;?php echo base_url(); ?&gt;css/style.css"&gt;
+&lt;link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro|Open+Sans+Condensed:300|Raleway' rel='stylesheet' type='text/css'&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="main"&gt;
+&lt;div id="login"&gt;
+&lt;h2&gt; &lt;?php echo "&lt;a href=".$user_profile['link']." target='_blank' &gt;&lt;img class='fb_profile' src="."https://graph.facebook.com/".$user_profile['id']."/picture"."&gt;"."&lt;/a&gt;"."&lt;p class='profile_name'&gt;Welcome ! &lt;em&gt;".$user_profile['name']."&lt;/em&gt;&lt;/p&gt;";
+echo "&lt;a class='logout' href='$logout_url'&gt;Logout&lt;/a&gt;";
+?&gt;&lt;/h2&gt;
+&lt;hr/&gt;
+&lt;h3&gt;&lt;u&gt;Profile&lt;/u&gt;&lt;/h3&gt;
+&lt;?php
+echo "&lt;p&gt;First Name : ".$user_profile['first_name']."&lt;/p&gt;";
+echo "&lt;p&gt;Last Name : ".$user_profile['last_name']."&lt;/p&gt;";
+echo "&lt;p&gt;Gender : ".$user_profile['gender']."&lt;/p&gt;";
+echo "&lt;p&gt;Facebook URL : "."&lt;a href=".$user_profile['link']." target='_blank'"."&gt; https://www.facebook.com/".$user_profile['id']."&lt;/a&gt;&lt;/p&gt;";
+?&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+<p><strong>CSS : style.css</strong></p>
+<p>Styling HTML Elements.</p>
+<div class="syntax-highlighter"CSS>
+<pre><code class="language-css">#main{
+width:960px;
+margin:50px auto;
+font-family:raleway;
+}
+h2{
+position: relative;
+background-color: #26c489;
+text-align:center;
+border-radius: 10px 10px 0 0;
+margin: -10px -40px;
+padding: 30px;
+color:white;
+}
+hr{
+border:0;
+border-bottom:1px solid #ccc;
+margin: 10px -40px;
+margin-bottom: 30px;
+}
+#login{
+width:462px;
+float: left;
+border-radius: 10px;
+font-family:raleway;
+border: 2px solid #ccc;
+padding: 10px 40px 34px;
+margin-top: 0;
+margin-left: -70px;;
+background-color: #DBF6ED;
+}
+img.fb{
+height: 50px;
+padding-left: 90px;
+}
+img.fb_profile{
+height: 50px;
+padding-right: 20px;
+margin-left: -410px;
+}
+p.profile_name{
+font-size: 16px;
+margin-top: -19px;
+margin-left: -148px;
+}
+a.logout{
+position: absolute;
+font-size: 18px;
+text-decoration: none;
+top: 46px;
+right: 45px;
+}</code></pre>
+</div>
+<p><strong>Conclusion:</strong></p>
+<p>This was all about how we can implement Facebook open authentication with our website using CodeIgniter. Hope you like it, keep reading our other blogs</p>
+	</div>
+	<div class="clear"></div>
+		<!--Comments-->
+	<div id="commentsbox">
+		<span class="comments-heading"><span>Comments and Responses</span></span>
+		<!--<h3 id="comments"></h3>-->
+		<div id="comment-form">
+			<div id="respond" class="rounded">
+				<div class="cancel-comment-reply"> <small>
+						<a rel="nofollow" id="cancel-comment-reply-link" href="/codeigniter-facebook-oauth/#respond" style="display:none;">Click here to cancel reply.</a>					</small> </div>
+																			
+					<p>Your email address will not be published. Required fields are marked *</p>
+
+					<form action="https://www.formget.com/wp-comments-post.php" method="post" id="commentform">
+
+						  
+							<div id="comment-author" class="form-row">
+								<input type="text" placeholder="Name (required)" name="author" id="author" value="" size="22" tabindex="1" aria-required='true' />
+							</div>
+							<div id="comment-email" class="form-row"> 
+								<input type="text" placeholder="Mail (will not be published) (required)"  name="email" id="email" value="" size="22" tabindex="2" aria-required='true' />
+							</div>
+
+							<div id="comment-url" class="form-row">
+								<input type="text" placeholder="Website" name="url" id="url" value="" size="22" tabindex="3" />
+							</div>
+
+												<div id="comment-message" class="form-row">
+							<textarea name="comment" placeholder="Message" id="comment" cols="100%" rows="10" tabindex="4"></textarea>
+						</div>
+						<input class="fbtn bright-blue" name="submit" type="submit" id="commentSubmit" tabindex="5" value="Submit Comment">             
+						<input type='hidden' name='comment_post_ID' value='18478' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+						<p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="6cf1cd63c8" /></p><p style="display: none;"><input type="hidden" id="ak_js" name="ak_js" value="67"/></p>
+					</form>
+							</div>
+		</div>                                                                          
+	</div>
+  
+</div>
+<!--/Post-->
+<!--Comment List-->
+<div id="comment_list">
+			<div class="comments-heading"><span>Leave a Reply</span></div>
+		<ol class="commentlist">
+				<li class="comment even thread-even depth-1" id="comment-184363">
+			<div id="div-comment-184363" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Muhammad Imran</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-184363">
+				March 11, 2015 at 4:00 pm</a>		</div>
+
+		<p>Hi,<br />
+I am working on a project using CI where I need to integrate Facebook / Gmail login and your script is perfect choice. I want to buy this but it only shows the US states. I am at Malaysia (Kuala Lumpur). How do I purchase it?<br />
+Waiting for your kind reply.</p>
+<p>Thanks</p>
+<p>Imran</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=184363#respond' onclick='return addComment.moveForm( "div-comment-184363", "184363", "respond", "18478" )' aria-label='Reply to Muhammad Imran'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1 parent" id="comment-201578">
+			<div id="div-comment-201578" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Hetal Tarsaria</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-201578">
+				April 7, 2015 at 11:28 am</a>		</div>
+
+		<p>hi very nice article. me used this all code. But my project all time redirect  login page how to solved this problem . All time $this-&gt;user value is zero. So. the web page redirected the login page .<br />
+How to solved this problem. please reply me.<br />
+Thanks in Advanced.</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=201578#respond' onclick='return addComment.moveForm( "div-comment-201578", "201578", "respond", "18478" )' aria-label='Reply to Hetal Tarsaria'>Reply</a>		</div>
+				</div>
+		<ul class="children">
+	<li class="comment even depth-2" id="comment-206445">
+			<div id="div-comment-206445" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Micheal</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-206445">
+				April 22, 2015 at 11:55 am</a>		</div>
+
+		<p>You can use Facebook Javascript SDK, it will not redirect login page.</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=206445#respond' onclick='return addComment.moveForm( "div-comment-206445", "206445", "respond", "18478" )' aria-label='Reply to Micheal'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="comment-204889">
+			<div id="div-comment-204889" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Malik</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-204889">
+				April 15, 2015 at 1:28 pm</a>		</div>
+
+		<p>Same error . Page redirected to login view when it gets authenticated from Facebook. Any idea?</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=204889#respond' onclick='return addComment.moveForm( "div-comment-204889", "204889", "respond", "18478" )' aria-label='Reply to Malik'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="comment-217650">
+			<div id="div-comment-217650" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Indrasis</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-217650">
+				July 7, 2015 at 4:11 am</a>		</div>
+
+		<p>Thank you&#8230;&#8230;&#8230;&#8230;. Its working!!!!!!!!!!!</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=217650#respond' onclick='return addComment.moveForm( "div-comment-217650", "217650", "respond", "18478" )' aria-label='Reply to Indrasis'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="comment-217802">
+			<div id="div-comment-217802" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">danial</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-217802">
+				July 8, 2015 at 1:00 pm</a>		</div>
+
+		<p>Above used library link is dead. update the tutorial. it is useless now</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=217802#respond' onclick='return addComment.moveForm( "div-comment-217802", "217802", "respond", "18478" )' aria-label='Reply to danial'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="comment-218624">
+			<div id="div-comment-218624" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Hermes</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-218624">
+				July 17, 2015 at 6:31 pm</a>		</div>
+
+		<p>Hello, amazing login code&#8230; but and for storing the data of the users in my database? I need store data like name, bio maybe, etc</p>
+<p>How i can do?</p>
+<p>Thank you in advance</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=218624#respond' onclick='return addComment.moveForm( "div-comment-218624", "218624", "respond", "18478" )' aria-label='Reply to Hermes'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="comment-219357">
+			<div id="div-comment-219357" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Mradul Jain</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-219357">
+				July 24, 2015 at 4:32 pm</a>		</div>
+
+		<p>Hi, I am using these code in my codeigniter, but it gives the error &#8220;Unable to load the requested class: Facebook&#8221;.<br />
+so, How can I solve it?</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=219357#respond' onclick='return addComment.moveForm( "div-comment-219357", "219357", "respond", "18478" )' aria-label='Reply to Mradul Jain'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="comment-223970">
+			<div id="div-comment-223970" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Freddy</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-223970">
+				September 7, 2015 at 8:41 am</a>		</div>
+
+		<p>why when i was typing app domains localhost give me errors, what should i do when i testing for localhost during develop this projects ! thanks</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=223970#respond' onclick='return addComment.moveForm( "div-comment-223970", "223970", "respond", "18478" )' aria-label='Reply to Freddy'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="comment-224295">
+			<div id="div-comment-224295" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Sebastian</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-224295">
+				September 10, 2015 at 4:32 pm</a>		</div>
+
+		<p>Hello, thanks for the integration explanation. Could you please upload this basic, but entire Codeigniter folder/files to see how did you structure the Facebook library? When I download the Facebook SDK I can make it work using a script that &#8220;includes&#8221; the autoload (in the traditional PHP include way), but when I try to use the $this-&gt;load-&gt;library from Codeigniter, it&#8217;s not working very well. If you could please provide the files so I can take a look, that would be amazing. Thanks!</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=224295#respond' onclick='return addComment.moveForm( "div-comment-224295", "224295", "respond", "18478" )' aria-label='Reply to Sebastian'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="comment-225002">
+			<div id="div-comment-225002" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Avesh</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-225002">
+				September 17, 2015 at 10:27 am</a>		</div>
+
+		<p>HOw to get facebook  email, login with facebook in codeigniter</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=225002#respond' onclick='return addComment.moveForm( "div-comment-225002", "225002", "respond", "18478" )' aria-label='Reply to Avesh'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="comment-232055">
+			<div id="div-comment-232055" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Kishan</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-232055">
+				November 21, 2015 at 5:24 am</a>		</div>
+
+		<p>hi very nice article. me used this all code. But my project all time redirect login page how to solved this problem . All time $this-&gt;user value is zero. So. the web page redirected the login page .<br />
+How to solved this problem. please reply me.<br />
+Thanks in Advanced.</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=232055#respond' onclick='return addComment.moveForm( "div-comment-232055", "232055", "respond", "18478" )' aria-label='Reply to Kishan'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="comment-235006">
+			<div id="div-comment-235006" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">prabakaran</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-235006">
+				December 22, 2015 at 7:07 am</a>		</div>
+
+		<p>nice tutorial</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=235006#respond' onclick='return addComment.moveForm( "div-comment-235006", "235006", "respond", "18478" )' aria-label='Reply to prabakaran'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="comment-240110">
+			<div id="div-comment-240110" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">prateek</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-240110">
+				January 27, 2016 at 4:50 am</a>		</div>
+
+		<p>i am not getting all the information in my $data array.</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=240110#respond' onclick='return addComment.moveForm( "div-comment-240110", "240110", "respond", "18478" )' aria-label='Reply to prateek'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="comment-246320">
+			<div id="div-comment-246320" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">gnana sundar</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-246320">
+				March 8, 2016 at 9:13 am</a>		</div>
+
+		<p>facebook login working but it not fetch user details.how to fetch user in facebook.</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=246320#respond' onclick='return addComment.moveForm( "div-comment-246320", "246320", "respond", "18478" )' aria-label='Reply to gnana sundar'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="comment-246342">
+			<div id="div-comment-246342" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">gnana sundar</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-246342">
+				March 8, 2016 at 12:55 pm</a>		</div>
+
+		<p>how to get $user_profile[&#8216;first_name&#8217;],$user_profile[&#8216;last_name&#8217;]</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=246342#respond' onclick='return addComment.moveForm( "div-comment-246342", "246342", "respond", "18478" )' aria-label='Reply to gnana sundar'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="comment-246789">
+			<div id="div-comment-246789" class="comment-body">
+				<div class="comment-author vcard">
+						<cite class="fn">Ravindra</cite> <span class="says">says:</span>		</div>
+		
+		<div class="comment-meta commentmetadata">
+			<a href="https://www.formget.com/codeigniter-facebook-oauth/#comment-246789">
+				March 11, 2016 at 7:37 am</a>		</div>
+
+		<p>not redirecting to profile.php after login in facebook can any1 help me? thanku</p>
+
+		<div class="reply">
+			<a rel='nofollow' class='comment-reply-link' href='https://www.formget.com/codeigniter-facebook-oauth/?replytocom=246789#respond' onclick='return addComment.moveForm( "div-comment-246789", "246789", "respond", "18478" )' aria-label='Reply to Ravindra'>Reply</a>		</div>
+				</div>
+		</li><!-- #comment-## -->
+		</ol>
+		<div class="comment-nav">
+			<div class="alignleft">
+							</div>
+			<div class="alignright">
+							</div>
+		</div>
+		<!--/Comment List--> 
+</div>															</div>
+					</div>
+					<!--/Blog-->
+				</div>
+			</div>
+		</div>
+	</div>
+		<div style="background-color: #373e86; text-align: center;">
+		<a href="https://www.formget.com/mailget-app/?utm_source=formget&utm_medium=footer-big-banner&utm_campaign=formget-footer-banner">
+			<img style="max-width: 100%; height: auto;" src="//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/banner-img/formget-form.jpg" alt="formget form"/>
+		</a>
+	</div>
+	<!--Footer-->
+<div id="footer" class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+				<div class="rmm"><ul id="menu-main-footer-menu" class=""><li id="menu-item-21089" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-21089"><a href="https://www.formget.com/">Home</a></li>
+<li id="menu-item-21090" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21090"><a href="https://www.formget.com/about-us/">About Us</a></li>
+<li id="menu-item-37510" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-37510"><a href="https://www.formget.com/affiliate/">Affiliate</a></li>
+<li id="menu-item-21091" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-21091"><a href="https://www.formget.com/mailget-terms-conditions/">Terms &#038; Conditions</a></li>
+<li id="menu-item-23411" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-23411"><a href="https://www.formget.com/privacy-policy/">Privacy Policy</a></li>
+<li id="menu-item-21098" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-21098"><a href="https://www.formget.com/contact-us/">Contact Us</a></li>
+</ul></div>            </div>
+        </div>
+    </div>
+</div>
+<!--/Footer-->
+<!--Footer Bottom-->
+<div id="footer_bottom" class="footer-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="copyright">&copy; 2017 MagnetBrains LLC. All rights reserved.</div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Footer Bottom-->
+</div>
+
+
+
+    <div id="wpfront-scroll-top-container"><img src="//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/wpfront-scroll-top/images/icons/1.png" alt="" /></div>
+    <script type="text/javascript">function wpfront_scroll_top_init() {if(typeof wpfront_scroll_top == "function" && typeof jQuery !== "undefined") {wpfront_scroll_top({"scroll_offset":100,"button_width":0,"button_height":0,"button_opacity":0.8,"button_fade_duration":200,"scroll_duration":400,"location":1,"marginX":20,"marginY":20,"hide_iframe":false,"auto_hide":false,"auto_hide_after":2});} else {setTimeout(wpfront_scroll_top_init, 100);}}wpfront_scroll_top_init();</script>	<script>
+		(function (i, s, o, g, r, a, m) {
+			i['ProfitWellObject'] = r;
+			i[r] = i[r] || function () {
+
+				(i[r].q = i[r].q || []).push(arguments)
+			}, i[r].l = 1 * new Date();
+			a = s.createElement(o),
+					m = s.getElementsByTagName(o)[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore(a, m);
+
+		})(window, document, 'script', 'https://dna8twue3dlxq.cloudfront.net/js/profitwell.js', 'profitwell');
+
+		profitwell('auth_token', '2f70f40618780ecde16afd9f3acfec90'); // Your unique Profitwell public API token
+
+	</script>
+	<script type="text/javascript">
+		window.heap = window.heap || [], heap.load = function (e, t) {
+			window.heap.appid = e, window.heap.config = t = t || {};
+			var r = t.forceSSL || "https:" === document.location.protocol, a = document.createElement("script");
+			a.type = "text/javascript", a.async = !0, a.src = (r ? "https:" : "http:") + "//cdn.heapanalytics.com/js/heap-" + e + ".js";
+			var n = document.getElementsByTagName("script")[0];
+			n.parentNode.insertBefore(a, n);
+			for (var o = function (e) {
+				return function () {
+					heap.push([e].concat(Array.prototype.slice.call(arguments, 0)))
+				}
+			}, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], c = 0; c < p.length; c++)
+				heap[p[c]] = o(p[c])
+		};
+		heap.load("490363613");
+	</script>
+	<!-- Facebook Pixel Code -->
+	<script>
+		!function (f, b, e, v, n, t, s) {
+			if (f.fbq)
+				return;
+			n = f.fbq = function () {
+				n.callMethod ?
+						n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+			};
+			if (!f._fbq)
+				f._fbq = n;
+			n.push = n;
+			n.loaded = !0;
+			n.version = '2.0';
+			n.queue = [];
+			t = b.createElement(e);
+			t.async = !0;
+			t.src = v;
+			s = b.getElementsByTagName(e)[0];
+			s.parentNode.insertBefore(t, s)
+		}(window,
+				document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+
+		fbq('init', '338458722986297');
+	        fbq('track', "PageView");</script>
+	<noscript><img height="1" width="1" style="display:none"
+				   src="https://www.facebook.com/tr?id=338458722986297&ev=PageView&noscript=1"
+				   /></noscript>
+	<!-- End Facebook Pixel Code -->
+	<!-- Custom Javascript -->
+<script type="text/javascript">
+(function(s) {var head = document.getElementsByTagName('HEAD').item(0);var s= document.createElement('script');s.type = 'text/javascript';s.src='//s3-us-west-2.amazonaws.com/formget/js/popup.js';head.appendChild(s); var options = {'tabKey': 'jpR3-108158/t','tabtext':'Got Questions? Ask Here','height': '463','width': '350','tabPosition':'right','textColor': 'ffffff','tabBackground': 'e74a4a','fontSize': '16','tabbed':''};s.onload = s.onreadystatechange = function() {var rs = this.readyState;if (rs)if (rs != 'complete')if (rs != 'loaded')return;try {sideBar = new buildTabbed();sideBar.initializeOption(options);sideBar.loadContent();sideBar.buildHtml();} catch (e) {}  };var scr = document.getElementsByTagName(s)[0];})(document, 'script');
+</script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/akismet/_inc/form.js?ver=1494570030'></script>
+<link rel='stylesheet' id='shortcodebutton-css-css'  href='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/inkshortcode-buttons/css/btn-style.css?ver=1449128821' type='text/css' media='all' />
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/js/mobile-menu.js?ver=1448954557'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/js/jquery.cookie.js?ver=1475040313'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/js/scripts.1.0.js?ver=1489488013'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/js/init.1.0.js?ver=1489488011'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-includes/js/comment-reply.min.js?ver=1447874128'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/plugins/form-coding/js/sh.js?ver=1407919481'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/assets/superfish/js/superfish.min.js?ver=1453968077'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/inc/header-strip/js/jquery.meanmenu.js?ver=1453968161'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-content/themes/formget/inc/header-strip/js/js_init.js?ver=1476251328'></script>
+<script type='text/javascript' src='//d13dcw7qo4xgly.cloudfront.net/wp-includes/js/wp-embed.min.js?ver=1481624915'></script>
+</body>
+</html>
+

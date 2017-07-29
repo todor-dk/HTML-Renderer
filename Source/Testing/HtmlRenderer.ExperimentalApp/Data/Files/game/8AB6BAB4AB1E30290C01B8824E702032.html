@@ -1,0 +1,534 @@
+
+<html>
+
+<head><script type="text/javascript" src="/CFIDE/scripts/cfform.js"></script>
+<script type="text/javascript" src="/CFIDE/scripts/masks.js"></script>
+
+<title>G a m e O f f i c i a l s . n e t - Home</title>
+<link rel=stylesheet href="/appcss_public.css" type="text/css">
+<script language=javascript src="/mainScript.js"></script>
+
+<meta name="description" content="Complete online assigning solution used to
+assign officials for team sports - for recreational, high school,
+intramural, and college (collegiate) levels.
+Designed for Soccer, Baseball, Softball, Football, Basketball,
+Volleyball, Tennis, Lacrosse, Rugby, and Hockey.
+Assignor software will benefit the assignor, league,
+team, and officials/referees.">
+<script language=javascript src="/utility/jquery/plugin/jquery.cycle.all.min.js"></script>
+<script language=javascript src="/utility/jquery/plugin/jquery.corner.js"></script>
+
+<meta name="WebsiteSpark" content="qiXbgW5fco" />
+<script language=javascript>
+var strSrc = new Array(2);
+var iObjCount = new Array(2);
+var iPrevObj = new Array(2);
+var iCurImg = new Array(2);
+var iImgCount = new Array(2);
+
+strSrc[0] = "/images/collage_single_XX.jpg";
+strSrc[1] = "/images/collage_multiple_XX.jpg";
+iObjCount[0] = 1;
+iObjCount[1] = 1;
+iPrevObj[0] = iObjCount[0];
+iPrevObj[1] = iObjCount[1];
+iCurImg[0] = iObjCount[0];
+iCurImg[1] = iObjCount[1];
+iImgCount[0] = 9;
+iImgCount[1] = 5;
+
+function RandomizeImages(iType) {
+	var i, iLen, iCurObj, strObjName;
+	var strImgPath, listCurImg, strImgNum, strCurImgNum;
+
+	// Set image object name
+	if (iType == 0) {
+		strObjName = "img_collageSingle";
+	} else {
+		strObjName = "img_collageMultiple";
+	}
+
+	if (!document.getElementsByName) {
+		return;
+	}
+
+
+	iCurObj = 0;
+
+	// Get currently used images to avoid duplication
+	listCurImg = "";
+
+	for (i=0;i<iObjCount[iType];i++) {
+		strCurImgNum = document.getElementsByName(strObjName)[i].src;
+		iLen = strCurImgNum.length;
+		strCurImgNum = strCurImgNum.substr((iLen - 6), 2);
+		listCurImg = listCurImg + "[" + strCurImgNum + "]";
+	}
+
+	// Get next image number (avoid duplicating listed images)
+	do
+	{
+		if (iCurImg[iType] >= iImgCount[iType]) {
+			iCurImg[iType] = 1;
+		} else {
+			iCurImg[iType]++;
+		}
+
+		// Format numbers as 2 digits
+		strImgNum = "00" + iCurImg[iType];
+		iLen = strImgNum.length;
+		strImgNum = strImgNum.substr((iLen - 2), 2);
+	}
+	while (listCurImg.indexOf("[" + strImgNum + "]") >= 0);
+
+	// Change "src" attribute of image object
+	if (!document.getElementsByName(strObjName)[iCurObj].filters) {
+		document.getElementsByName(strObjName)[iCurObj].src = strSrc[iType].replace("XX", strImgNum);
+	} else {
+		document.getElementsByName(strObjName)[iCurObj].filters.blendTrans.Apply();
+		document.getElementsByName(strObjName)[iCurObj].src = strSrc[iType].replace("XX", strImgNum);
+		document.getElementsByName(strObjName)[iCurObj].filters.blendTrans.Play();
+	}
+
+	// Set prev values for next time through loop
+	iPrevObj[iType] = iCurObj;
+	// Set single to multiple, etc
+	iType = 1 - iType;
+
+	setTimeout("RandomizeImages(" + iType + ")", 4000);
+}
+
+function SetInputFocus () {
+
+	if ((document.getElementById('username').value ==
+	GetAttributeValue(document.getElementById('username'), 'default'))
+	&& (document.getElementById('password').value ==
+	GetAttributeValue(document.getElementById('password'), 'default'))) {
+		if (js_Trim(document.getElementById('username').value) == "") {
+			document.getElementById('username').focus();
+		} else {
+			document.getElementById('password').focus();
+		}
+	}
+
+}
+
+$(document).ready(function() {
+	$('#Quotes')
+	.after('<div id="quoteNav"></div>') 
+	.cycle({ 
+		fx: 'fade',
+		timeout: 6000, // Control the amount of time in between transitions
+		speed: 500,
+		pager: '#quoteNav'
+	});
+	$('#LoginShell').corner("5px");
+});
+</script>
+<style type="text/css">
+.TransitionImage
+	{
+	filter:blendTrans(duration=1);
+	border-top:1px solid silver;
+	border-right:2px solid dimgray;
+	border-bottom:2px solid dimgray;
+	border-left:1px solid silver;
+	}
+
+.BlockOut
+	{
+	margin:0 auto;
+	padding:15px 0px;
+	}
+
+#LoginShell
+	{
+	margin-bottom:15px;
+	
+	}
+
+
+
+.LoginRow
+	{
+/*
+	background: url(/images/public/public_bg_140.gif) repeat-y top left #F4F4F4;
+*/
+	text-align:center;
+	vertical-align:top;
+	padding:0;
+	margin:0px auto 15px auto;
+	border:0;
+	width:145px;
+	font-size:1px;
+	}
+
+.LoginRow img
+	{
+	padding:0;
+	margin:0;
+	border:0;
+	background:#F4F4F4;
+	}
+
+.LoginRow table
+	{
+	background:transparent;
+	border:0;
+	margin:0 auto;
+	width:98%;
+	}
+
+#QuoteShell
+	{
+	width:99%;
+	margin:0 auto;
+	border:0;
+	background:transparent;
+	}
+
+.qtop,
+.qbottom
+	{
+	display:block;
+	background:white;
+	}
+
+.qtop *,
+.qbottom *
+	{
+	display: block;
+	height: 1px;
+	overflow: hidden;
+	background:#FFFFFF;
+	}
+
+.qtop { margin-bottom:0; }
+.qbottom { margin-top:5px; }
+
+.q1{margin: 0 5px}
+.q2{margin: 0 3px}
+.q3{margin: 0 2px}
+.q4{margin: 0 1px; height: 2px}
+
+.QuoteRowShell td
+	{
+/*
+		font-weight:bold;
+	border-top:1px solid #DDDDFF;
+	border-bottom:1px solid #DDDDFF;
+*/
+	}
+
+.QuoteRow
+	{
+/*
+	background: url(/images/public/public_bg_450.gif) repeat-y top left #F4F4F4;
+*/
+	text-align:center;
+	vertical-align:top;
+	padding:0;
+	margin:0px auto;
+	border:0;
+	font-size:1px;
+	}
+
+#quoteNav
+	{
+	margin: 10px 0 5px 0px;
+	text-align:left;
+	}
+
+#quoteNav a
+	{
+	border: 1px solid #ccc;
+	background: whitesmoke;
+	color:navy;
+	text-decoration: none;
+	margin: 0 5px;
+	padding:2px 5px;
+	font-size:10px;
+	}
+
+#quoteNav a.activeSlide { background: #fed86b }
+#quoteNav a:focus { outline: none; }
+#quoteNav a:hover { background: orange; }
+
+.QuoteRow img
+	{
+	padding:0;
+	margin:0;
+	border:0;
+	float:left;
+	}
+
+#Quotes
+	{
+	width:99%;
+	margin:0 auto;
+	text-align:center;
+	vertical-align:top;
+	}
+
+#Quotes blockquote
+	{
+	width:100%;
+	margin:0 auto;
+	padding:5px;
+	font-family:Verdana, Arial, sans-serif;
+	font-size:13px;
+	border:0;
+	text-align:left;
+	vertical-align:middle;
+	height:65px;
+	color:Navy;
+    white-space:normal;
+	}
+
+#Quotes blockquote *
+	{
+	vertical-align:middle;
+	}
+</style>
+
+<script type="text/javascript">/* <![CDATA[ */
+	if (window.ColdFusion) ColdFusion.required['username']=true;
+/* ]]> */</script>
+
+<script type="text/javascript">/* <![CDATA[ */
+	if (window.ColdFusion) ColdFusion.required['password']=true;
+/* ]]> */</script>
+<script type="text/javascript">
+<!--
+    _CF_checkLoginForm = function(_CF_this)
+    {
+        //reset on submit
+        _CF_error_exists = false;
+        _CF_error_messages = new Array();
+        _CF_error_fields = new Object();
+        _CF_FirstErrorField = null;
+
+        //form element username required check
+        if( !_CF_hasValue(_CF_this['username'], "TEXT", false ) )
+        {
+            _CF_onError(_CF_this, "username", _CF_this['username'].value, "Username is required");
+            _CF_error_exists = true;
+        }
+
+        //form element password required check
+        if( !_CF_hasValue(_CF_this['password'], "PASSWORD", false ) )
+        {
+            _CF_onError(_CF_this, "password", _CF_this['password'].value, "Password is required");
+            _CF_error_exists = true;
+        }
+
+
+        //display error messages and return success
+        if( _CF_error_exists )
+        {
+            if( _CF_error_messages.length > 0 )
+            {
+                // show alert() message
+                _CF_onErrorAlert(_CF_error_messages);
+                // set focus to first form error, if the field supports js focus().
+                if( _CF_this[_CF_FirstErrorField].type == "text" )
+                { _CF_this[_CF_FirstErrorField].focus(); }
+
+            }
+            return false;
+        }else {
+            return true;
+        }
+    }
+//-->
+</script>
+</head>
+
+<body onload="SetInputFocus();setTimeout('RandomizeImages(0)', 4000);">
+
+<script language=javascript>
+$(document).ready(function() {
+	$('#PublicShell').corner();
+	$('#TOCShell').corner("5px");
+});
+</script>
+
+<div id=PublicShell>
+
+<!-- Courtesy of SimplytheBest.net http://simplythebest.net/scripts/ -->
+<link rel=stylesheet href="/utility/searchBox/searchBox.css" type="text/css">
+<script language=javascript src="/utility/searchBox/searchBox.js"></script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<table id=MainPageHeader class=NoBorder style="width:98%;margin:0px auto;"
+cellpadding=0 cellspacing=0> 
+	<tr>
+		<td class="NoBorder" style="text-align:center;padding:0 1px;" nowrap>
+			<table class="Object3D" style="margin:0 auto; border-bottom-color:black;border-right-color:black;	color:navy;" cellspacing="0" cellpadding="0">
+				<tr>
+					<td style="vertical-align:top;text-align:left;padding:0;height:48px;width:228px;" background="https://www.gameofficials.net/images/GOnet-mainbanner-repeatYellow.png" nowrap>
+						<img border="0" src="https://www.gameofficials.net/images/GOnet-mainbanner-left.png" alt="GameOfficials.net - Faster, Easier, Smarter" style="vertical-align:top;margin:0;border:0;height:48px;" width="228" height="48">
+					</td>
+					<td style="vertical-align:top;padding:0;height:48px;width:100%;" background="https://www.gameofficials.net/images/GOnet-mainbanner-repeatYellow.png" nowrap>
+						<img border="0" src="https://www.gameofficials.net/images/GOnet-mainbanner-repeatYellow.png" style="vertical-align:top;margin:0;border:0;height:48px;" width="100%" height="48">
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+
+</table>
+
+<div id=objMainPageContainer style="width:100%;text-align:center;margin:0px auto;
+padding:0;top:0;bottom:0;position:relative;">
+
+<table class=NoBorder style="width:95%;margin:15px auto 0px auto;border:0;" cellspacing=0 cellpadding=0>
+	<tr>
+		<td class="VTop" style="width:125px;padding:0;" nowrap>
+		<div id=TOCShell>
+		<div class=TOCRow>
+		
+	<div class=TOCMenuItemSpacer style="border-top:0;font-size:4px;">&nbsp;</div>
+	<a class="toc" target=_top href="/public/default.cfm">
+	<div class="TOCMenuItemSelected" onmouseover="SetHover(this, true);" onmouseout="SetHover(this, false);"
+	nowrap>Home</div></a>
+	<a class="toc" target=_top href="/login.cfm">
+	<div class="TOCMenuItemHoverOff" onmouseover="SetHover(this, true);" onmouseout="SetHover(this, false);"
+	nowrap>Login</div></a>
+	<a class="toc" target=_top href="/public/newOfficialConfirm.cfm">
+	<div class="TOCMenuItemNewHoverOff" onmouseover="SetHover(this, true);" onmouseout="SetHover(this, false);"
+	nowrap>New Official?</div></a>
+	<a class="toc" target=_top href="/public/schedules/">
+	<div class="TOCMenuItemHoverOff" onmouseover="SetHover(this, true);" onmouseout="SetHover(this, false);"
+	nowrap>Schedules</div></a>
+	<div class=TOCMenuItemSpacer style="">&nbsp;</div>
+	<a class="toc" target=_top href="/public/ussfInfo/ussfInfo.cfm">
+	<div class="TOCMenuItemHoverOff" onmouseover="SetHover(this, true);" onmouseout="SetHover(this, false);"
+	nowrap>USSF Info</div></a>
+	<div class=TOCMenuItemSpacer style="">&nbsp;</div>
+	<a class="toc" target=_top href="/public/supportOverview.cfm">
+	<div class="TOCMenuItemHoverOff" onmouseover="SetHover(this, true);" onmouseout="SetHover(this, false);"
+	nowrap>Support</div></a>
+	<a class="toc" target=_top href="/public/contact.cfm">
+	<div class="TOCMenuItemHoverOff" onmouseover="SetHover(this, true);" onmouseout="SetHover(this, false);"
+	nowrap>Contact</div></a>
+	<div class=TOCMenuItemSpacer style="border-bottom:0;font-size:4px;">&nbsp;</div></div>
+		</div>
+		</td>
+		<td style="text-align:center;vertical-align:center;padding:0 0 10px 20px;"><form name="LoginForm" id="LoginForm" action="https://www.gameofficials.net/validate.cfm" method="post" target="_top" onsubmit="return _CF_checkLoginForm(this)">
+		<table class="NoBorder" cellspacing=0 cellpadding=0>
+			<tr>
+				<td>	
+					<img src="/images/public/contantimage2.png" alt="Soccer Official" style="width:100%">
+				</td>
+			<td style="text-align:center;padding:0;width:165px;vertical-align:top;">
+				<div id=LoginShell>
+				<div class=LoginRow> 
+					<table class="Center Font8">
+						<tr>
+							<td class="clNavy" nowrap><b>Username / Password</b>
+							<br> <input name="username" type="text" maxlength="75"  style="width:135px;"  onfocus="this.select();"  id="username"  class="Font8"  onkeypress="SubmitFormOnEnter(event);EventCancelBubble(event);" noUCase=1 tabIndex=1 default="" /> </td>
+						</tr>
+						<tr>
+							<td nowrap> <input name="password" type="password" maxlength="75"  style="width:135px;"  onfocus="this.select();"  id="password"  class="Font8"  onkeypress="SubmitFormOnEnter(event);EventCancelBubble(event);" noUCase=1 tabIndex=2 default="" /> </td>
+						</tr>
+						<tr>
+							<td class=PaddingB5><button type=button class="Font8 Bold clBlue"
+							onclick="ManualFormSubmit(document.getElementById('LoginForm'));"
+							tabIndex=3>Log In</button></td>
+						</tr>
+						<tr>
+							<td class="BorderTS Padding5"><a
+							href="/public/lostPassword.cfm">Forgot Username or Password?</a></td>
+						</tr> 
+					</table> </div>
+				</div> 
+
+				<img src="/images/collage_single_01.jpg" class=TransitionImage 
+				name=img_collageSingle id=img_collageSingle
+				width=120 height=80 border=0 align=middle>
+				<hr style="width:100px;color:black;margin-top:10px;margin-bottom:10px;">
+				<img src="/images/collage_multiple_01.jpg" class=TransitionImage 
+				name=img_collageMultiple id=img_collageMultiple
+				width=120 height=80 border=0 align=middle>
+
+			</td>
+		</tr>
+	</table>
+</form>
+</td>
+	</tr>
+</table>
+
+
+	<div class="PageFooter" style="width:98%;" nowrap>
+		&bull;&nbsp;&nbsp; &copy 2003-2017
+		<a target="pas" href="http://www.gobonzi.com">
+			Bonzi Technology, Inc
+		</a>
+		&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+		<a target="privacy" href="/public/privacyPolicy.cfm">
+			Privacy Policy
+		</a>
+		&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+		<a target="terms" href="/public/termsOfService.cfm">
+			Terms of Service
+		</a>
+		&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+		<a href="#" id="changeLanguage" onclick="changeLanguage();return false;">
+			Change Language
+		</a>
+		<span id="google_translate_element"></span>
+
+</div>
+
+</div>
+
+<script type="text/javascript">
+  var _gaq = _gaq || []; 
+  _gaq.push(['_setAccount', 'UA-6181324-1']);
+  _gaq.push(['_setDomainName', 'gameofficials.net']);
+  _gaq.push(['_trackPageview']);
+  (function() { 
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; 
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; 
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga); 
+  })(); 
+</script>
+
+</div>
+<div id="ciHYHM" style="z-index:100;position:absolute"></div><div id="sdHYHM" style="display:none"></div><script type="text/javascript">var seHYHM=document.createElement("script");seHYHM.type="text/javascript";var seHYHMs=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/1p18yo0wwzvj90uimksuyeakjf/safe-monitor.js?ps_h=HYHM&ps_t="+new Date().getTime()+"&User=PUBLIC%20VISITOR";setTimeout("seHYHM.src=seHYHMs;document.getElementById('sdHYHM').appendChild(seHYHM)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?monitor=1p18yo0wwzvj90uimksuyeakjf"><img src="http://image.providesupport.com/image/1p18yo0wwzvj90uimksuyeakjf.gif" border="0"></a></div></noscript>
+
+<div style="display:none;">
+<img src="/images/collage_single_01.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_single_02.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_single_03.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_single_04.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_single_05.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_single_06.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_single_07.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_single_08.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_single_09.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_multiple_01.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_multiple_02.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_multiple_03.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_multiple_04.jpg"
+height=1 width=1 border=0>
+<img src="/images/collage_multiple_05.jpg"
+height=1 width=1 border=0>
+</div>
+
+</body>
+</html>

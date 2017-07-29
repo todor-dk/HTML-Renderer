@@ -71,7 +71,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
 
             // 1. Queue a mutation record of "attributes" for element with name attribute's local name,
             //    namespace attribute's namespace, and oldValue attribute's value.
-            // TODO: Implement observers
+            FutureVersions.ImplementDomObservers();
 
             // 2. Set attribute's value to value.
             this._Value = value;

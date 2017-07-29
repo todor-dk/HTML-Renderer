@@ -711,7 +711,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     this.HandleStateCDataSection();
                     break;
                 default:
-                    throw new NotImplementedException();
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -880,7 +880,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
         private void InformParseError(ParseError error)
         {
-            this.ParseError?.Invoke(this, new Parsing.ParseErrorEventArgs(error));
+            this.ParseError?.Invoke(this, new ParseErrorEventArgs(error));
         }
 
         #endregion

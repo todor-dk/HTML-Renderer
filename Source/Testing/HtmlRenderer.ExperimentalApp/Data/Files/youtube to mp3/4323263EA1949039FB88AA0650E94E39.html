@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="description" content="Fastest Youtube to Mp3 Converter, download and convert your favorite videos to MP3, MP4, WEBM, F4V, and 3GP formats for free! Available MP3 bitrates are 320 kbps 256 kbps and 128 kbps." />
+<meta name="keywords" content="youtube, download, mp3, convert youtube, video to mp3" />
+<meta property="og:image" content="http://listenvid.com/css/images/share.jpg" />
+<title>YouTube to MP3 Converter - ListenVid.com</title>
+<link rel="canonical" href="http://listenvid.com" />
+	<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+	    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/media-icons.css" />
+    <link rel="stylesheet" type="text/css" href="css/flag-icon.css" />
+		<link rel="stylesheet" type="text/css" href="css/custom.css">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/js/jquery.ui.touch-punch.min.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		
+	
+								<script type="text/javascript">
+		var conversionLogLength = 0;
+		var conversionInProgress = false;
+		var failedAjaxRequests = 0;
+		var maxAjaxRequestTries = 20;
+		var conversionStopping = false;
+		var timer;
+
+		function updateVideoDownloadProgress(percentage, isRealTime)
+		{
+			percentage = parseInt(percentage);
+			if (isRealTime)
+			{
+				$("#progress").css("width", percentage + "%").html(percentage + "%");
+			}
+			else
+			{
+				$("#progress").addClass("progress-striped").css("width", percentage + "%").html("&nbsp;");
+			}
+		}
+
+		function updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle)
+		{
+			conversionInProgress = true;
+			var progress = document.getElementById('progress');
+			document.getElementById('conversion-status').innerHTML = "Converting file. . .";
+			$.ajax({
+				type : "POST",
+				url : "ffmpeg_progress.php",
+				data : "uniqueId=1499877694_5966513e0bf179.62289733&logLength=" + conversionLogLength + "&convertedFile=" + encodeURI(convertedFile) + "&tempFileType=" + encodeURI(tempFileType),
+				success : function(retVal, status, xhr) {
+					var retVals = retVal.split('|');
+					if (retVals[3] == 2)
+					{
+						progress.style.width = progress.innerHTML = parseInt(retVals[1]) + '%';
+						if (parseInt(retVals[1]) < 100)
+						{
+							conversionLogLength = parseInt(retVals[0]);
+							if (!conversionStopping)
+							{
+								timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 500);
+							}
+						}
+						else
+						{
+							conversionInProgress = false;
+							validateConvertedFile(convertedFile, convertedFileNiceName, vidTitle, retVals[2]);
+						}
+					}
+					else
+					{
+						if (++failedAjaxRequests < maxAjaxRequestTries && !conversionStopping)
+						{
+							timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 100);
+						}
+						else
+						{
+							conversionInProgress = false;
+							validateConvertedFile(convertedFile, convertedFileNiceName, vidTitle, 2);
+						}
+					}
+				},
+				error : function(xhr, status, ex) {
+					if (++failedAjaxRequests < maxAjaxRequestTries && !conversionStopping)
+					{
+						timer = setTimeout(function(){updateConversionProgress(convertedFile, convertedFileNiceName, tempFileType, vidTitle);}, 100);
+					}
+					else
+					{
+						conversionInProgress = false;
+						validateConvertedFile(convertedFile, convertedFileNiceName, vidTitle, 2);
+					}
+				}
+			});
+		}
+
+		function showConversionResult(convertedFile, convertedFileNiceName, vidTitle, success)
+		{
+			$("#preview").css("display", "none");
+			var convertSuccessMsg = '';
+			if (success == 1)
+			{
+				var isEditableRegex = new RegExp('(\.(webm|mp4|mp3|aac|m4a|f4v))$', 'i');
+				var isEditable = isEditableRegex.test(convertedFile);
+								/* EKLENDI */ /* EKLENDI */
+        		convertSuccessMsg += '<p class="bg-success padding-msg"><b><i class="fa fa-thumbs-up"></i> Success!</b></p>';
+				convertSuccessMsg += '<p><img src="" alt="preview image" style="width:150px" /></p>';
+				convertSuccessMsg += '<p dir="ltr"><b></b></p>';
+				convertSuccessMsg += '<h4 style="margin-bottom:15px;text-transform:uppercase;"><span class="label label-default"></span></h4>';
+				convertSuccessMsg += '<p><a class="btn btn-success download-buttons" href="//listenvid.com/index.php?output=' + (encodeURI(convertedFile)).replace(/~/g, "%7e") + '"><i class="fa fa-download"></i> Download your converted file</a></p>';
+												convertSuccessMsg += (isEditable) ? '<p><a id="editFurtherButton" class="btn btn-warning download-buttons" href="edit.php?vid_name=' + encodeURI(convertedFile) + '&vid_title=' + encodeURI(vidTitle) + '&vid_id=&vid_image=&vid_host=" title="Crop file and/or Edit file info (i.e., title, artist, etc.)."><i class="fa fa-scissors"></i> Edit file further</a></p>' : '';
+        		convertSuccessMsg += '<p><a class="btn btn-danger download-buttons" href="http://listenvid.com/"><i class="fa fa-reply"></i> Return to homepage.</a></p>';
+				/* EKLENDI */ convertSuccessMsg += '<p>Get our browser plugin to convert videos without copy/paste:<br> <a href="http://listenvid.com/plugin.php"><b>GET BROWSER PLUGIN</b></a></p>';
+				/* EKLENDI */ /* EKLENDI */
+			}
+			else
+			{
+        		convertSuccessMsg = '<p class="bg-danger padding-msg"><i class="fa fa-exclamation-triangle"></i> Error generating converted file!<br /><br /><a href="http://listenvid.com/">Please, try again</a><br>Try a lower quality!</p>';
+			}
+			$("#conversionSuccess").html(convertSuccessMsg).find("#dropboxLink, #onedriveLink, #editFurtherButton").each(function(){
+				if ($(this).attr("id") == "editFurtherButton")
+				{
+					$(this).tooltip();
+				}
+				else
+				{
+										
+					$(this).click(function() {
+						saveToCloud($(this), convertedFileNiceName);
+						return false;
+					});
+				}
+			});
+		}
+
+		function validateConvertedFile(convertedFile, convertedFileNiceName, vidTitle, succeeded)
+		{
+			$.ajax({
+				type : "POST",
+				url : "ffmpeg_validate.php",
+				data : "convertedFile=" + encodeURI(convertedFile) + "&duration=&succeeded=" + encodeURI(succeeded),
+				success : function(retVal, status, xhr) {
+					succeeded = parseInt(retVal);
+					showConversionResult(convertedFile, convertedFileNiceName, vidTitle, succeeded);
+				},
+				error : function(xhr, status, ex) {
+					showConversionResult(convertedFile, convertedFileNiceName, vidTitle, succeeded);
+				}
+			});		
+		}
+
+		function saveToCloud(buttonObj, convertedFileNiceName)
+		{
+			var options = {
+				success: function() {
+					// Indicate to the user that the file has been saved.
+					buttonObj.html('<span class="fa fa-check" style="color:#fff"></span> ' + buttonObj.text());
+				},
+				progress: function(progress) {
+					buttonObj.html('<span class="fa fa-refresh fa-spin" style="color:#fff"></span> ' + buttonObj.text());
+				},
+				error: function(errorMessage) {
+					buttonObj.html('<span class="fa fa-exclamation-triangle" style="color:red"></span> ' + buttonObj.text());
+				}
+			};
+			switch (buttonObj.attr("id"))
+			{
+				case "dropboxLink":
+					Dropbox.save(buttonObj.attr("href"), convertedFileNiceName, options);
+					break;
+				case "onedriveLink":
+					options.file = buttonObj.attr("href");
+					options.fileName = convertedFileNiceName;
+					OneDrive.save(options);
+					break;
+			}
+		}
+
+		function stopConversion()
+		{
+			var redirectUrl = 'http://listenvid.com/index.php';
+			if (!conversionStopping)
+			{
+				failedAjaxRequests = 0;
+				clearTimeout(timer);
+				conversionStopping = true;
+			}
+			if (conversionInProgress)
+			{
+				$.ajax({
+					type : "POST",
+					url : "ffmpeg_stop.php",
+					data : "token=1499877694_5966513e0bf179.62289733",
+					success : function(retVal, status, xhr) {
+						window.location.href = redirectUrl;
+					},
+					error : function(xhr, status, ex) {
+						if (++failedAjaxRequests < maxAjaxRequestTries)
+						{
+							timer = setTimeout(function(){stopConversion();}, 100);
+						}
+					}
+				});
+			}
+			else
+			{
+				window.location.href = redirectUrl;
+			}
+		}
+
+		// If this is iframe, and parent receives URL-initiated conversion request, forward request to iframe
+		if (window.location != window.parent.location)
+		{
+			if (parent.location.search != "")
+			{
+				var queryStrParams = [];
+				var queryStrParts = parent.location.search.replace(/\?/, "").split("&");
+				for (var i=0; i<queryStrParts.length; i++)
+				{
+					queryStrParams.push(queryStrParts[i].split("=")[0]);
+				}
+				if (($.inArray('vidHost', queryStrParams) != -1 && $.inArray('vidID', queryStrParams) != -1) || $.inArray('url', queryStrParams) != -1)
+				{
+					var iframeQueryStr = parent.location.search;
+					parent.history.replaceState("object or string", "Title", "/");
+					window.location.href = window.location.href.replace(/\?.*/, "") + iframeQueryStr;
+				}
+			}
+		}
+
+		$(document).ready(function(){
+			$(function(){
+				$('[data-toggle="tooltip"]').tooltip();
+			});
+			$("#volumeSlider").slider({
+				range: "min",
+				min: 0,
+				max: 1024,
+				value: 256,
+				slide: function(event, ui) {
+					var percent = Math.floor((ui.value / 256) * 100);
+					$("#volumeVal").html(percent + '%');
+					$("input[name='volume']").val(ui.value);
+				}
+			});
+			$("#toggleOptionsDisplay span").click(function(){
+				$("#moreOptions").toggle('fast', function(){
+					var linkText = ($(this).css('display') == 'none') ? "Show more options &#187;" : "Hide more options &#171;";
+					$("#toggleOptionsDisplay span").html(linkText);
+				});
+			});
+			(function(){
+				var siteNames = $(".siteNames");
+				var examples = $("#examples span");
+				var exampleIndex = -1;
+				function animateIt(elementGroup){
+					var nextFuncCall = (elementGroup != examples) ? showNextExample : null;
+					elementGroup.eq(exampleIndex)
+						.fadeIn({
+							duration: 700
+						})
+						.delay(6000)
+						/*CIKTI*///.fadeOut(700, nextFuncCall);
+						/*EKLENDI*/.fadeOut(700, showNextExample);
+				}
+				function showNextExample(){
+					exampleIndex = (++exampleIndex > examples.length - 1) ? 0 : exampleIndex;
+					/*CIKTI*///animateIt(siteNames);
+					animateIt(examples);
+				}
+				showNextExample();
+			})();
+			if (typeof stLight != "undefined")
+			{
+				stLight.options({publisher: "INSERT_PUBLIC_KEY_HERE", doNotHash: true, doNotCopy: false, hashAddressBar: false});
+			}
+			if (!document.getElementById('preview'))
+			{
+				$("#conversionForm").css("display", "block");
+			}
+			$("#videoURL").focus();
+		});
+	</script>
+	
+	
+		</head>
+<body dir="ltr">
+
+
+
+	<center>
+	<div style="margin:15px 0 10px 0;text-align:center;max-width:700px;width:100%;">
+		<a href="/"><img src="/css/images/logo.png" alt="ListenVid"></a>
+		<h1>YouTube to MP3 Converter</h1>
+		<h2>Convert <span style="color:#0033cc;">YouTube</span>, <span style="color:#0033cc;">Dailymotion</span>, <span style="color:#0033cc;">Vimeo</span>, <span style="color:#0033cc;">Facebook</span>, <span style="color:#0033cc;">Metacafe</span>, <span style="color:#0033cc;">VK</span>, <span style="color:#0033cc;">SoundCloud</span>, <span style="color:#0033cc;">Instagram</span>, and <span style="color:#0033cc;">Vevo</span> videos to <span style="color:#cc0066;">webm</span>, <span style="color:#cc0066;">mp4</span>, <span style="color:#cc0066;">mp3</span>, <span style="color:#cc0066;">aac</span>, <span style="color:#cc0066;">m4a</span>, <span style="color:#cc0066;">f4v</span>, or <span style="color:#cc0066;">3gp</span> formats!</h2>
+		All vid to mp3 conversion in 320 kbps, 256 kbps and 128 kbps | Fastest youtube to 320 kbps mp3 conversion | Youtube downloader and video converter that enables editing, cropping, renaming converted files.	</div>
+		</center>
+
+
+
+	<div class="container">
+		<!-- Converter Box -->
+		<div class="row">			<div class="col-lg-8 col-lg-offset-2">				<div class="converter-box text-center bg-white">
+					<div class="converter converter2 text-center">
+												<form action="/?ref=listenvid" method="post" id="conversionForm" style="display:none">
+																												<div class="supported-portals" dir="ltr">
+							<div><i class="fa fa-youtube" id="youtube" data-toggle="tooltip" data-placement="top" title="YouTube"></i></div><div><i class="icon icon-dailymotion" id="dailymotion" data-toggle="tooltip" data-placement="top" title="Dailymotion"></i></div><div><i class="fa fa-vimeo-square" id="vimeo" data-toggle="tooltip" data-placement="top" title="Vimeo"></i></div><div><i class="fa fa-facebook-square" id="facebook" data-toggle="tooltip" data-placement="top" title="Facebook"></i></div><div><i class="icon icon-metacafe" id="metacafe" data-toggle="tooltip" data-placement="top" title="Metacafe"></i></div><div><i class="fa fa-vk" id="vk" data-toggle="tooltip" data-placement="top" title="VK"></i></div><div><i class="fa fa-soundcloud" id="soundcloud" data-toggle="tooltip" data-placement="top" title="SoundCloud"></i></div><div><i class="fa fa-instagram" id="instagram" data-toggle="tooltip" data-placement="top" title="Instagram"></i></div><div><i class="icon icon-vevo" id="vevo" data-toggle="tooltip" data-placement="top" title="Vevo"></i></div>							</div>
+							<div class="input-group">
+								<span class="input-group-addon" style="border-color:#ccc"><i class="fa fa-globe fa-fw"></i></span>
+								<input type="text" class="form-control input-lg bg-light-gray" id="videoURL" name="videoURL" placeholder="Enter a valid URL:" dir="ltr" />
+							</div>
+							<p class="example-urls" id="examples">
+							(i.e., "<span class="urls" style="display:inline">http://www.youtube.com/watch?v=HMpmI2F2cMs</span><span class="urls" style="display:none">http://www.dailymotion.com/video/x31j7ik_chapman-stick_music</span><span class="urls" style="display:none">http://vimeo.com/72695254</span><span class="urls" style="display:none">http://www.facebook.com/photo.php?v=10151848825508876</span><span class="urls" style="display:none">http://www.metacafe.com/watch/10856331/fart_attack/</span><span class="urls" style="display:none">http://new.vk.com/video4643923_163339118</span><span class="urls" style="display:none">http://soundcloud.com/foolsgoldrecs/funkin-matt-america</span><span class="urls" style="display:none">http://instagram.com/p/vIyKcyNdV-</span><span class="urls" style="display:none">http://www.vevo.com/watch/taylor-swift/Wildest-Dreams/USCJY1531576</span>")							</p>
+							<p class="file-type-text">Choose file type to convert to:</p>
+							<select class="form-control input-lg bg-light-gray" name="ftype" id="ftype">
+							<optgroup dir="ltr" label="audio"><option dir="ltr" value="6">.aac</option><option dir="ltr" value="7">.m4a</option><option dir="ltr" value="4">.mp3 (256kb)</option><option dir="ltr" value="5">.mp3 (320kb)</option><option dir="ltr" value="3" selected="selected">.mp3 (128kb)</option></optgroup><optgroup dir="ltr" label="video"><option dir="ltr" value="9">.3gp</option><option dir="ltr" value="8">.f4v</option><option dir="ltr" value="2">.mp4</option><option dir="ltr" value="1">.webm</option></optgroup>							</select>
+							<div id="moreOptions" class="margin-top-10" style="display:none" align="center">
+								<p>Volume control: (<span id="volumeVal">100%</span>)</p>
+								<p id="volumeSlider"></p>
+								<input type="hidden" name="volume" />
+							</div>
+							<div id="toggleOptionsDisplay"><span>Show more options &#187;</span></div>
+							<button type="submit" name="submitForm" class="btn btn-success btn-lg"><i class="fa fa-cogs"></i> Convert It!</button><input type="hidden" name="formToken" value="1499877694_5966513e0bf179.62289733" />
+						</form>
+											</div>
+				</div>			</div>		</div>
+	</div>
+		
+		
+	<center>
+	<div style='max-width:750px;width:100%;'>
+		<div style='display:inline-block;float:left;'>
+				<a href="/">Home</a> |
+				<a href="/faq.php">FAQ</a> |
+				<a href="/about.php">About</a> |
+				<a href="/terms.php">Terms</a> |
+				<a href="/api.php">API</a> |
+				<a href="/plugin.php">Get Plugin</a> |
+				<a href="/contact.php">Contact</a>
+		</div>
+		
+		<div style='display:inline-block;float:right;'>
+
+
+				<div class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="flag-icon flag-icon-us"></span> US<span class="caret"></span></a>					<ul class="dropdown-menu" role="menu">
+					<li><a dir="ltr" href="http://listenvid.com/index.php?ccode=DE"><span class="flag-icon flag-icon-de"></span>&nbsp;&nbsp;Deutsch</a></li><li><a dir="ltr" href="http://listenvid.com/index.php?ccode=US"><span class="flag-icon flag-icon-us"></span>&nbsp;&nbsp;English (US)</a></li><li><a dir="ltr" href="http://listenvid.com/index.php?ccode=ES"><span class="flag-icon flag-icon-es"></span>&nbsp;&nbsp;Español</a></li><li><a dir="ltr" href="http://listenvid.com/index.php?ccode=FR"><span class="flag-icon flag-icon-fr"></span>&nbsp;&nbsp;Français</a></li><li><a dir="ltr" href="http://listenvid.com/index.php?ccode=IT"><span class="flag-icon flag-icon-it"></span>&nbsp;&nbsp;Italiano</a></li><li><a dir="ltr" href="http://listenvid.com/index.php?ccode=RU"><span class="flag-icon flag-icon-ru"></span>&nbsp;&nbsp;Pусский</a></li><li><a dir="ltr" href="http://listenvid.com/index.php?ccode=TR"><span class="flag-icon flag-icon-tr"></span>&nbsp;&nbsp;Türkçe</a></li>					</ul>
+				</div>
+
+		
+		
+		</div>
+		
+		<div style="clear:both;"></div>
+		
+	</div>
+	
+	<div id="socialButtons"><script>var shar_url='http://listenvid.com';var shar_title='ListenVid+-+Youtube+to+Mp3+Converter';var shar_img='http://listenvid.com/css/images/share.jpg';</script>
+	<a class='fbs' href="javascript:;" title="Facebook Like" rel='nofollow'><img src='/css/images/facebook.png' alt='facebook' /></a><a 
+	class='tws' href="javascript:;" title="Tweet" rel='nofollow'><img src='/css/images/twitter.png' alt='twitter' /></a><a 
+	class='gps' href="javascript:;" title="Share on Google+" rel='nofollow'><img src='/css/images/google+.png' alt='google+' /></a><a class='lis' href="javascript:;" title="Share on Linkedin" rel='nofollow'><img src='/css/images/linkedin.png' alt='linkedin' /></a><a 
+	class='pis' href="javascript:;" title="Pin It" rel='nofollow'><img src='/css/images/pinterest.png' alt='pinterest' /></a><a 
+	class='ems' href="javascript:;" title="Email to a friend" rel='nofollow'><img src='/css/images/email.png' alt='email' /></a>
+	</div>
+		
+	
+	
+	
+	</center>
+	
+	<div style='text-align:center;color:#BBC9DB;font-size:10px;'>0.015</div>	
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-1022817-33', 'auto');
+		ga('send', 'pageview');
+	
+		$('#socialButtons a').on('click',function()
+		{
+			var shareP = $(this).attr('class');
+			if(shareP=='fbs'){var clientShare='facebook';}else if(shareP=='tws'){var clientShare='twitter';}
+			else if(shareP=='gps'){var clientShare='googleplus';}else if(shareP=='ems'){var clientShare='email';}
+			else if(shareP=='pis'){var clientShare='pinterest';}else if(shareP=='lis'){var clientShare='linkedin';}
+			else if(shareP=='res'){var clientShare='reddit';}else if(shareP=='whs'){var clientShare='whatsapp';}
+			var url2share = 'http://burkul.com/sharer.php?client='+clientShare+'&ref=listenvid&u='+shar_url+'&img='+shar_img+'&t='+shar_title;
+			window.open(url2share, '_blank');
+		});
+	</script>
+	
+	
+
+	
+</body>
+</html>

@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+
+<html lang="en" class="application">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="keywords" content="translate, translator, translation, translation online, online translator, machine translation">
+        <meta name="viewport" content="width=device-width, maximum-scale=1, initial-scale=1, user-scalable=0">
+        <meta name="description" content="Free online translation from English and other languages into Russian and back. The translator works with words, texts, web pages, and text in photos. Contains a dictionary with examples of usage.">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="format-detection" content="address=no">
+        <meta name="google" content="notranslate">
+
+        <meta name="application-name" content="Yandex.Translate">
+        <meta name="mobile-web-app-capable" content="yes">
+
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="apple-mobile-web-app-title" content="Yandex.Translate">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+
+        <link rel="icon" sizes="192x192" href="/icons/chrome-touch-icon.png">
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+        <meta name="msapplication-TileImage" content="/icons/ms-touch-icon.png">
+        <meta name="msapplication-TileColor" content="#dbdbdb">
+
+        <meta name="theme-color" content="#dbdbdb">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://mc.yandex.com.tr https://avatars-fast.yandex.net https://favicon.yandex.net blob: data: https://*.yandex.net:* https://*.gemius.pl https://yandex.com https://yandex.com.tr https://yandex.ru https://*.yandex.ru https://*.tns-counter.ru; font-src https://*.yandex.net:*; child-src blob:; frame-src https://awaps.yandex.ru https://awaps.yandex.net https://yandexadexchange.net https://*.yandexadexchange.net https://*.yandex.ru https://yastatic.net https://z5h64q92x9.net https://*.z5h64q92x9.net:*; media-src data: https://yandex.st https://yastatic.net https://*.yandex.net; style-src 'unsafe-inline' 'unsafe-eval' 'nonce-CvI8E6nNSs' https://yandex.st https://*.yandex.net:*; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'nonce-CvI8E6nNSs' https://an.yandex.ru https://yandex.st https://*.yandex.net:* https://mc.yandex.ru https://yastatic.net; connect-src 'self' wss://*.yandex.net https://mc.yandex.ru https://yandex.st https://yastatic.net https://*.yandex.by https://*.yandex.com https://*.yandex.com.tr https://*.yandex.ru https://*.yandex.kz https://*.yandex.ua https://*.yandex.net:*;">
+
+
+        <title>Yandex.Translate – dictionary and online translation between English and over 80 other languages.</title>
+        <style nonce="CvI8E6nNSs">
+            .spinner {
+                visibility: hidden;
+            }
+            .state-hidden {
+                display: none;
+            }
+        </style>
+        <link rel="stylesheet" href="https://translate.yandex.net/v2.159.1499683941/css/main.css" type="text/css">
+        <link rel="stylesheet" href="https://translate.yandex.net/v2.159.1499683941/css/m_touch.css" type="text/css">
+        
+    </head>
+
+    <body>
+        
+        <script id="ocrTemplate" type="text/template"><span class="image-lang image-lang_src" data-lang="{{srcLang}}" data-lang-name="{{srcLangName}}" data-action="openOcrSrcLangs" data-active-target="true"></span><span class="icon icon_type_{{^swap}}dir{{/swap}}{{#swap}}swap2{{/swap}}"{{#swap}} data-action="swapOcrLangs" data-active-target="true"{{/swap}}>&nbsp;</span><span class="image-lang image-lang_dst" data-lang="{{dstLang}}" data-lang-name="{{dstLangName}}" data-action="openOcrDstLangs" data-active-target="true"></span></script>
+
+        <script id="favTemplate" type="text/template">
+            {{^items}}
+                <li class="listbox__placeholder{{#filtered}} listbox__placeholder_type_filtered{{/filtered}}" data-text="No translations in Favorites" data-text-filtered="No matches were found"></li>
+            {{/items}}
+            {{#items}}
+                <li role="option" class="listbox__option{{#ignored}} state-ignored{{/ignored}}" data-active-target="true">
+                    <div class="icon icon_type_favourite{{^deleted}} state-favourite{{/deleted}}" data-index="{{index}}" data-action="toggleFav" data-active-target="true"></div>
+                    <div class="fav-value" data-value="{{index}}">
+                        <div class="fav-value__direction">{{srcLang}}&thinsp;&ndash;&thinsp;{{dstLang}}</div>
+                        <div class="fav-value__text" dir="{{srcDir}}" lang="{{srcLang}}">{{text}}</div>
+                        <div class="fav-value__translation" dir="{{dstDir}}" lang="{{dstLang}}">{{translation}}</div>
+                    </div>
+                    <div class="icon icon_type_alert" data-action="showSyncAlert" data-active-target="true"></div>
+                </li>
+            {{/items}}
+        </script>
+
+        <script id="cardsTemplate" type="text/template">
+            {{#cards}}
+                <div class="card" data-item-id="{{id}}" data-card-element="true">
+                    <div class="card-item card-item_type_text" data-text-element="true"><span lang="{{srcLang}}" data-text-content="true">{{text}}</span></div>
+                    <div class="card-item card-item_type_translation" data-translation-element="true"><span lang="{{dstLang}}" data-translation-content="true">{{translation}}</span></div>
+                </div>
+            {{/cards}}
+        </script>
+
+        <script id="trainingResultTemplate" type="text/template">
+            <svg class="cards-progress" xmlns="http://www.w3.org/2000/svg">
+                <text x="50%" y="50%" dy="0.3em">{{score}} / {{limit}}</text>
+                <circle r="{{r}}" cx="64" cy="64" transform="rotate(-89.9 64 64)" stroke-dasharray="{{dasharray}}" stroke-dashoffset="{{dashoffset}}"/>
+            </svg>
+        </script>
+
+        <script id="smartBannerTemplate" type="text/template">
+            <a class="teaser-link" href="{{url}}" target="_top" data-tracker-goal="TOUCH_SMARTBANNER_CLICK">
+                <img src="{{imgUrl}}" width="57" height="57" class="teaser-image">
+                <div class="teaser-body">
+                    <div class="teaser-text"><div class="teaser-text-header">Translate</div>Offline translation for when you're traveling</div>
+                </div>
+                <div class="layout layout_name_smart_banner">
+                    <span role="button" class="button button_type_yellow" data-active-target="true">Install app</span>
+                </div>
+            </a>
+            <span class="icon icon_type_clear" data-action="closeSmartBanner" data-active-target="true" data-tracker-goal="TOUCH_SMARTBANNER_CLOSE"></span>
+        </script>
+
+        <script id="listboxTemplate" type="text/template">
+            {{#items}}
+                <li role="option" class="listbox__option{{#selected}} state-selected{{/selected}}" data-value="{{{value}}}" data-active-target="true">{{text}}</li>
+            {{/items}}
+        </script>
+
+        <script id="tumblerTemplate" type="text/template"><span class="tumbler__item tumbler__item_type_on">{{textOn}}</span><span class="tumbler__item tumbler__item_type_off">{{textOff}}</span></script>
+
+        <script id="predictorTemplate" type="text/template">{{#items}}<li class="predictor__item" data-value="{{{value}}}" data-active-target="true">{{value}}</li>{{/items}}</script>
+
+        <script id="translatorTemplate" type="text/template"><span data-complaint-type="fullTextTranslation">{{translation}}</span></script>
+
+        <script id="dictionaryTemplate" type="text/template">
+            {{#items}}
+                <li class="dictionary-item">
+                    {{#title}}
+                        <div class="dictionary-title">
+                            {{title}}
+                            {{#transcription}}<span class="dictionary-transcription">[{{transcription}}]</span>{{/transcription}}
+                            {{#getMarks}}<span class="dictionary-marks">{{getMarks}}</span>{{/getMarks}}
+                            {{#fl}}<span class="dictionary-marks_fl">{{fl}}</span>{{/fl}}
+                        </div>
+                    {{/title}}
+
+                    {{#partOfSpeech}}<div class="dictionary-pos">{{partOfSpeech}}</div>{{/partOfSpeech}}
+
+                    <ol class="dictionary-meanings{{#isOne}} dictionary-meanings-one{{/isOne}}{{#isLong}} dictionary-meanings-long{{/isLong}}">
+                        {{#meanings}}
+                            <li class="dictionary-meanings-item">
+                                <div class="dictionary-meanings-value">{{#meaningVals}}<span class="dictionary-meaning" data-complaint-type="tr" data-value="tr:{{{value}}}" data-title="{{{title}}}" data-part-of-speech="{{{partOfSpeech}}" data-group-index="{{{groupIndex}}" data-active-target="true">{{value}}</span>{{#getMarks}} <span class="dictionary-marks">{{getMarks}}</span>{{/getMarks}}{{^isLast}}, {{/isLast}}{{/meaningVals}}</div>
+
+                                {{#hasTranslations}}<div class="dictionary-meanings-trs">({{#meaningTrs}}<span data-complaint-type="mean" data-value="mean:{{{value}}}" data-title="{{{title}}}" data-part-of-speech="{{{partOfSpeech}}" data-group-index="{{{groupIndex}}">{{value}}</span>{{^isLast}}, {{/isLast}}{{/meaningTrs}})</div>{{/hasTranslations}}
+
+                                {{#hasExamples}}
+                                    <ul class="dictionary-examples">
+                                        {{#examples}}
+                                            <li><span data-complaint-type="ex" data-title="{{{title}}}" data-part-of-speech="{{{partOfSpeech}}" data-group-index="{{{groupIndex}}">{{exampleVal}}{{#exampleTrs}} &ndash; {{exampleTrs}}{{/exampleTrs}}</span></li>
+                                        {{/examples}}
+                                    </ul>
+                                {{/hasExamples}}
+                            </li>
+                        {{/meanings}}
+                    </ol>
+                </li>
+            {{/items}}
+        </script>
+
+        <script id="imageRectTemplate" type="text/template">
+            {{#href}}<image width="{{width}}" height="{{height}}" xlink:href="{{href}}" transform="{{transform}}"/>{{/href}}
+            {{#items}}
+                <rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}"{{#selected}} class="state-selected"{{/selected}}></rect>
+            {{/items}}
+        </script>
+
+        <script id="imageTextTemplate" type="text/template">
+            {{#items}}<rect x="{{x}}" y="{{y}}" width="{{w}}" height="{{h}}"></rect>{{/items}}
+            {{#items}}
+                <g transform="translate({{x}}, {{y}})">
+                    {{#texts}}
+                        <text y="{{y}}.5em" dy="0.375em" font-size="{{h}}" textLength="{{w}}" lengthAdjust="spacingAndGlyphs">{{text}}</text>
+                    {{/texts}}
+                </g>
+            {{/items}}
+        </script>
+        
+
+        <div id="main" class="main-wrapper state-scrollable-y" data-text="" data-lang="" data-siteurl="">
+            <div id="smartBanner" class="teaser teaser_type_top state-hidden state-unselectable" data-active-target="true"></div>
+            <div class="header">
+                <a class="logo" href="//yandex.com/">Yandex</a><span class="name state-unselectable">Translate</span>
+                <ul class="panel panel_mode_horizontal">
+                    <li class="panel__item panel__item_star"><span class="star" data-action="openFav" data-active-target="true"></span></li>
+                    
+                    <li class="panel__item"><a class="enter" href="//pda-passport.yandex.com/passport?mode=auth&amp;retpath=https%3A%2F%2Ftranslate.yandex.com" data-active-target="true"></a></li>
+                    
+                </ul>
+            </div>
+            <div class="body">
+                <div class="langs">
+                    <div class="control control_type_src">
+                        <span id="srcListboxButton" role="button" class="button button_type_select state-unselectable" data-active-target="true">&mdash;</span>
+                    </div>
+                    <span class="icon icon_type_swap state-unselectable" data-action="swapLang" data-tracker-goal="TOUCH_LANGSELECT_FLIP" data-active-target="true">&mdash;</span>
+                    <div class="control control_type_dst">
+                        <span id="dstListboxButton" role="button" class="button button_type_select state-unselectable" data-active-target="true">&mdash;</span>
+                    </div>
+                </div>
+                <div class="workarea">
+                    <div class="workarea__item">
+                        <div id="textbox" class="textbox textbox_name_source textbox_type_extended state-empty" tabindex="-1">
+                            <div id="swipeContainer" class="textbox-body">
+                                <textarea id="textarea" class="textinput textinput_type_area state-scrollable-y" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off"></textarea>
+                                <ul class="panel panel_mode_vertical">
+                                    <li class="panel__item panel__item_type_microphone">
+                                        <i id="microphone" class="icon icon_type_microphone"></i>
+                                    </li>
+                                    <li class="panel__item panel__item_type_camera">
+                                        <i id="imageButton" class="icon icon_type_camera state-hidden" data-active-target="true"></i>
+                                    </li>
+                                    <li class="panel__item">
+                                        <i class="icon icon_type_clear" data-action="clearText" data-active-target="true"></i>
+                                    </li>
+                                    <li class="panel__item">
+                                        <i id="textNativeSpeaker" class="icon icon_type_speaker state-disabled"></i>
+                                        <i id="textSpeaker" class="icon icon_type_speaker state-disabled"></i>
+                                    </li>
+                                </ul>
+                            </div>
+                            <ul id="predictor" class="predictor state-hidden state-disabled state-animatable state-unselectable state-scrollable-x" tabindex="-1"></ul>
+                        </div>
+                    </div>
+                    <div class="workarea__item">
+                        <div class="content">
+                            <div id="translator" class="translator state-hidden">
+                                <div id="translation" class="translation"></div>
+                                <div id="dictionary" class="dictionary state-hidden">
+                                    <ul id="dictionaryContent" class="dictionary-list"></ul>
+                                </div>
+                                <ul class="panel panel_mode_vertical">
+                                    <li class="panel__item">
+                                        <i id="translatorNativeSpeaker" class="icon icon_type_speaker state-disabled"></i>
+                                        <i id="translatorSpeaker" class="icon icon_type_speaker state-disabled"></i>
+                                    </li>
+                                    <li class="panel__item">
+                                        <i id="favouritesButton" class="icon icon_type_favourite"></i>
+                                    </li>
+                                    <li class="panel__item">
+                                        <i class="icon icon_type_share" data-action="openShare" data-tracker-goal="TOUCH_SHARING_OPEN" data-active-target="true"></i>
+                                    </li>
+                                    <li class="panel__item">
+                                        <i class="icon icon_type_fullscreen" data-action="startFullscreen" data-tracker-goal="TOUCH_FULLSCREEN_CLICK" data-active-target="true"></i>
+                                    </li>
+                                    <li class="panel__item panel__item_type_complaint">
+                                        <i class="icon icon_type_complaint" data-action="toggleComplaintMode" data-active-target="true"></i>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="spinner state-unselectable"></div>
+                            <div class="message message_type_error state-unselectable">
+                                <div class="message-body">
+                                    <div class="message-body__title" data-inner-text="Error"></div>
+                                    <div class="message-body__text" data-inner-text="Not possible to complete translation"></div>
+                                    <span role="button" class="button" data-action="retry" data-active-target="true" data-inner-text="Try again"></span>
+                                </div>
+                            </div>
+                            <div class="layout layout_name_url layout_type_center state-unselectable"><span role="button" class="button button_type_yellow" data-action="translateUrl" data-active-target="true">Translate page</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="layout">
+                    <ul class="footer-menu">
+                        <li>&copy; <a href="//yandex.com/" data-tracker-goal="TOUCH_FOOTER_LINK_NAVIGATE_YANDEX">Yandex</a></li>
+                        <li><a href="//yandex.com/support/translate/troubleshooting.xml" data-tracker-goal="TOUCH_FOOTER_LINK_NAVIGATE_FEEDBACK">Contact us</a></li>
+                        <li><a href="//legal.yandex.com/translate_termsofuse/" data-tracker-goal="TOUCH_FOOTER_LINK_NAVIGATE_TERMS">User Agreement</a></li>
+                        <li><a href="//tune.yandex.com/api/my/v1.1/my.xml?param=1&block=44&retpath=https%3A%2F%2Ftranslate.yandex.com&sk=y22a62afa3329360f7c0ae7f229bf4375" data-tracker-goal="TOUCH_FOOTER_LINK_NAVIGATE_DESKTOP">Full version</a></li>
+                    </ul>
+                    <ul class="panel panel_mode_horizontal">
+                        
+                        <li class="panel__item"><span class="rating" data-action="openRating" data-active-target="true"></span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="share" class="page page_type_sheet state-hidden state-animatable state-unselectable" data-action="closeView">
+            <div class="action-sheet action-sheet_type_social state-scrollable-y" data-action="preventClose">
+                <div class="action-sheet__title">Share translation</div>
+                <ul role="listbox" class="listbox">
+                    <li role="option" class="listbox__option listbox__option_type_link"><a id="shareLink" data-action="preventLeaving"></a></li>
+                    <li role="option" class="listbox__option" data-action="mail" data-active-target="true">Send by e-mail</li>
+                    <li><ul id="shareList"></ul></li>
+                </ul>
+                <div class="action-sheet__close" data-action="closeView" data-active-target="true">Cancel</div>
+            </div>
+        </div>
+
+        <div id="complaintPopup" class="page page_type_sheet state-hidden state-animatable state-unselectable" data-action="cancelComplaintMode">
+            <div class="action-sheet action-sheet_type_complaint state-scrollable-y" data-action="preventClose">
+                <div class="action-sheet__title">Report error</div>
+                <div id="complaintPopupComment" class="textbox state-empty" tabindex="-1">
+                    <div class="textbox-body">
+                        <textarea id="complaintPopupInput" class="textinput textinput_type_area state-scrollable-y" maxlength="200" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" placeholder="Comments (optional)"></textarea>
+                    </div>
+                    <ul class="panel panel_mode_vertical">
+                        <li class="panel__item"><i class="icon icon_type_clear" data-action="clearComplaintPopup" data-active-target="true"></i></li>
+                    </ul>
+                </div>
+                <div class="button" data-action="cancelComplaintMode" data-active-target="true">Cancel</div>
+                <div class="button button_type_yellow" data-action="sendComplaint" data-active-target="true">Report</div>
+            </div>
+        </div>
+
+        <div id="frameView" class="page state-hidden state-hidden2 state-animatable state-unselectable">
+            <div class="page__header">
+                <span class="icon icon_type_back" data-action="closeView" data-active-target="true"></span>
+                <span id="frameProgress" class="page__title"></span>
+                <span id="tumbler" class="tumbler"></span>
+            </div>
+            <div id="framePage" class="page__content state-scrollable"><iframe id="pageFrame" src="about:blank"></iframe></div>
+        </div>
+
+        <div id="ocr" class="page page_type_image state-empty state-hidden state-hidden2 state-animatable state-unselectable">
+            <div class="page__header">
+                <span class="icon icon_type_back" data-action="closeView" data-active-target="true"></span>
+                <span id="ocrDir" class="page__title"></span>
+                <ul class="panel panel_mode_horizontal">
+                    <li class="panel__item"><span class="icon icon_type_paste" data-action="pasteImageText" data-active-target="true"></span></li>
+                    <li class="panel__item"><span id="imageUploader" class="icon icon_type_camera" data-active-target="true"><input id="imageUploaderInput" type="file" accept="image/*" required="required"></span></li>
+                </ul>
+            </div>
+            <div class="page__content">
+                <svg id="imageCanvas" class="image-canvas state-scalable" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 0 0">
+                    <g id="imageRectGroup" class="image-group image-group_type_yellow"></g>
+                    <g id="imageTextGroup" class="image-group image-group_type_result"></g>
+                </svg>
+                <div class="ocr-button ocr-button_type_mode" data-action="openModeList" data-active-target="true">
+                    <span class="icon icon_type_words"></span>
+                    <span class="icon icon_type_lines"></span>
+                    <span class="icon icon_type_blocks"></span>
+                </div>
+                <div class="spinner state-unselectable"></div>
+                <div class="message message_type_error message_mode_filled state-unselectable">
+                    <div class="message-body">
+                        <div class="message-body__title" data-inner-text="Error"></div>
+                        <div class="message-body__text" data-inner-text="Unable to recognize text"></div>
+                        <span role="button" class="button" data-action="reScan" data-active-target="true" data-inner-text="Try again"></span>
+                    </div>
+                </div>
+                <div class="message message_type_empty message_mode_filled state-unselectable">
+                    <div class="message-body">
+                        <div class="message-body__title" data-inner-text="Text could not be recognized"></div>
+                        <div class="message-body__text" data-inner-text="Please upload a bigger and clearer image, and check the translation pair languages"></div>
+                        <span role="button" class="button" data-action="reUpload" data-active-target="true" data-inner-text="Try again"></span>
+                    </div>
+                </div>
+                <div class="ocr-button ocr-button_type_apply" data-action="applyRotation" data-active-target="true">
+                    <span class="icon icon_type_check"></span>
+                </div>
+                <div class="ocr-button ocr-button_type_rotate" data-action="rotateImage" data-active-target="true">
+                    <span class="icon icon_type_rotate"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="imageMode" class="page page_type_sheet state-hidden state-animatable state-unselectable" data-action="closeModeList">
+            <div class="action-sheet action-sheet_type_recognizer state-scrollable-y">
+                <div class="action-sheet__title">Translation mode</div>
+                <ul id="imageModeList" role="listbox" class="listbox"></ul>
+                <div class="action-sheet__close" data-action="closeModeList" data-active-target="true">Cancel</div>
+            </div>
+        </div>
+
+        <div id="fullscreen" class="page page_type_fullscreen state-hidden state-animatable state-unselectable">
+            <span class="icon icon_type_clear" data-active-target="true"></span><span id="fullscreenContent" class="page__content"></span>
+        </div>
+
+        <div id="favourites" class="page page_type_fav state-hidden state-hidden2 state-animatable state-unselectable">
+            <div class="page__header">
+                <span class="icon icon_type_back" data-action="closeView" data-active-target="true"></span>
+                <span class="page__title">Favorites</span>
+                <ul class="panel panel_mode_horizontal">
+                    <li class="panel__item panel__item_type_cards"><span class="icon icon_type_cards" data-action="toggleTraining" data-active-target="true"></span></li>
+                    <li class="panel__item panel__item_type_settings"><span class="icon icon_type_settings" data-action="openTrainingSettings" data-active-target="true"></span></li>
+                    <li class="panel__item panel__item_type_sync"><span class="icon icon_type_sync" data-action="syncFav" data-active-target="true" data-tracker-goal="TOUCH_FAVOURITES_SYNC"></span></li>
+                    <li class="panel__item panel__item_type_more"><span class="icon icon_type_more" data-action="openFavMenu" data-active-target="true"></span></li>
+                </ul>
+                <div class="tooltip" data-action="toggleTraining">
+                    <span>Learn vocabulary with flash cards</span>
+                    <span class="icon icon_type_clear2" data-action="closeTrainingTooltip" data-active-target="true"></span>
+                </div>
+            </div>
+            <div class="page__content page__content_type_main">
+                <div class="fav-banner">
+                    <div class="fav-banner__title">Sync</div>
+                    <div class="fav-banner__text">
+                        
+                        To sync your favorites, please log in
+                        
+                    </div>
+                    
+                    <a class="button" href="//pda-passport.yandex.com/passport?mode=auth&amp;retpath=https%3A%2F%2Ftranslate.yandex.com" data-active-target="true" data-tracker-goal="TOUCH_FAVOURITES_SYNC_BANNER_AUTH">Log in</a>
+                    
+                    <span class="icon icon_type_clear" data-action="closeSyncBanner" data-active-target="true"></span>
+                </div>
+                <div id="favFilter" class="fav-filter state-empty">
+                    <span class="icon icon_type_loupe"></span>
+                    <input id="favFilterInput" type="text" class="textinput" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" placeholder="Search in Favorites">
+                    <span class="icon icon_type_clear" data-action="clearFavFilter" data-active-target="true"></span>
+                </div>
+                <div class="listbox-wrapper">
+                    <ul id="favItems" role="listbox" class="listbox state-scrollable-y"></ul>
+                </div>
+            </div>
+            <div class="page__content page__content_type_extra">
+                <div id="cards" class="cards state-empty state-hidden">
+                    <div id="cardsContent"></div>
+                    <div class="cards-controls">
+                        <div class="cards-control cards-control_direction_left" data-action="swipeCardLeft">
+                            <svg xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13 4l-8 8 8 8"/>
+                                <path d="M29 20c0-4.4183-3.5817-8-8-8H5"/>
+                            </svg>
+                            <span>Don't know</span>
+                        </div>
+                        <div class="cards-control cards-control_direction_right" data-action="swipeCardRight">
+                            <svg xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21 4l8 8-8 8"/>
+                                <path d="M5 20c0-4.4183 3.5817-8 8-8h16"/>
+                            </svg>
+                            <span>Got it</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="message message_type_success message_mode_filled state-unselectable">
+                    <div class="message-body">
+                        <div class="message-body__title" data-inner-text="You've memorized everything!"></div>
+                        <div class="message-body__text" data-inner-text="Add new words and phrases to your Favorites. To go through the material you've already learned, press on the gear and select &quot;Reset progress&quot;."></div>
+                    </div>
+                </div>
+                <div class="message message_mode_filled message_type_result state-unselectable state-scrollable-y">
+                    <div class="message-body">
+                        <div class="message-body__title" data-inner-text="Your result"></div>
+                        <div id="trainingResult" class="message-body__text"></div>
+                        <span role="button" class="button button_type_yellow" data-action="toggleTraining" data-inner-text="Back to Favorites" data-active-target="true"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="favMenu" class="page page_type_sheet state-hidden state-animatable state-unselectable" data-action="closeFavMenu">
+            <div class="action-sheet action-sheet_type_simple state-scrollable-y" data-action="preventClose">
+                <div class="action-sheet__title">Favorites</div>
+                <ul role="listbox" class="listbox">
+                    <li role="option" class="listbox__option" data-action="exportFav" data-active-target="true">Export to CSV</li>
+                    <li role="option" class="listbox__option" data-action="clearFavList" data-active-target="true">Clear</li>
+                </ul>
+                <div class="action-sheet__close" data-action="closeFavMenu" data-active-target="true">Cancel</div>
+            </div>
+        </div>
+
+        <div id="trainingSettings" class="page page_type_sheet state-hidden state-animatable state-unselectable" data-action="closeTrainingSettings">
+            <div class="action-sheet action-sheet_type_simple state-scrollable-y" data-action="preventClose">
+                <div class="action-sheet__title">Settings</div>
+                <ul role="listbox" class="listbox">
+                    <li role="option" class="listbox__option">
+                        <span class="counter-block">
+                            <span class="icon icon_type_minus counter-control" data-action="decreaseCardsCounter" data-active-target="true"></span>
+                            <span id="cardsCounter" class="counter">0</span>
+                            <span class="icon icon_type_plus counter-control" data-action="increaseCardsCounter" data-active-target="true"></span>
+                        </span>
+                        <span class="counter-title">Cards per session</span>
+                    </li>
+                    <li role="option" class="listbox__option">
+                        <span class="counter-block">
+                            <span class="icon icon_type_minus counter-control" data-action="decreaseScoreCounter" data-active-target="true"></span>
+                            <span id="scoreCounter" class="counter">0</span>
+                            <span class="icon icon_type_plus counter-control" data-action="increaseScoreCounter" data-active-target="true"></span>
+                        </span>
+                        <span class="counter-title">Repetitions per word</span>
+                    </li>
+                    <li role="option" class="listbox__option listbox__option_type_reset" data-action="resetTrainingProgress" data-active-target="true">Reset progress</li>
+                </ul>
+                <div class="action-sheet__close" data-action="closeTrainingSettings" data-active-target="true">Done</div>
+            </div>
+        </div>
+
+        <div id="srcListbox" class="page state-hidden state-extended state-animatable state-unselectable">
+            <div class="page__header">
+                <span class="icon icon_type_back" data-action="closeView" data-active-target="true"></span>
+                <span class="page__title">Source language</span>
+            </div>
+            <ul role="listbox" class="listbox"><li id="auto" class="listbox__option listbox__option_type_auto" data-active-target="true">Detect automatically</li></ul>
+            <div id="srcListboxContent" class="page__content state-scrollable-y">
+                <ul id="srcHistory" role="listbox" class="listbox state-hidden">
+                    <li class="listbox__label">Recently used</li>
+                    <li><ul id="srcHistoryContent"></ul></li>
+                </ul>
+                <ul id="srcLanguages" role="listbox" class="listbox">
+                    <li class="listbox__label">All languages</li>
+                    <li><ul id="srcLanguagesContent"></ul></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="dstListbox" class="page state-hidden state-animatable state-unselectable">
+            <div class="page__header">
+                <span class="icon icon_type_back" data-action="closeView" data-active-target="true"></span>
+                <span class="page__title">Target language</span>
+            </div>
+            <div id="dstListboxContent" class="page__content state-scrollable-y">
+                <ul id="dstHistory" role="listbox" class="listbox state-hidden">
+                    <li class="listbox__label">Recently used</li>
+                    <li><ul id="dstHistoryContent"></ul></li>
+                </ul>
+                <ul id="dstLanguages" role="listbox" class="listbox">
+                    <li class="listbox__label">All languages</li>
+                    <li><ul id="dstLanguagesContent"></ul></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="ocrSrcListbox" class="page state-hidden state-animatable state-unselectable">
+            <div class="page__header">
+                <span class="icon icon_type_back" data-action="closeOcrLangs" data-active-target="true"></span>
+                <span class="page__title">Source language</span>
+            </div>
+            <ul id="ocrSrcListboxContent" role="listbox" class="listbox page__content state-scrollable-y"></ul>
+        </div>
+
+        <div id="ocrDstListbox" class="page state-hidden state-animatable state-unselectable">
+            <div class="page__header">
+                <span class="icon icon_type_back" data-action="closeOcrLangs" data-active-target="true"></span>
+                <span class="page__title">Target language</span>
+            </div>
+            <ul id="ocrDstListboxContent" role="listbox" class="listbox page__content state-scrollable-y"></ul>
+        </div>
+
+        <div id="rating" class="page page_type_rating state-hidden state-animatable state-unselectable">
+            <div class="page__header">
+                <span class="icon icon_type_back" data-action="closeView" data-active-target="true"></span>
+            </div>
+            <div class="page__content">
+                <div id="ratingForm" class="rating-form state-invalid state-scrollable-y">
+                    <div class="layout layout_type_center">Rate Yandex.Translate</div>
+                    <ul id="ratingStars" role="listbox" class="listbox listbox_type_stars"></ul>
+                    <div id="ratingText" class="textbox state-empty" tabindex="-1">
+                        <div class="textbox-body">
+                            <textarea id="ratingTextarea" class="textinput textinput_type_area state-scrollable-y" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" placeholder="Add a comment"></textarea>
+                        </div>
+                        <ul class="panel panel_mode_vertical">
+                            <li class="panel__item"><i class="icon icon_type_clear" data-action="clearRatingText" data-active-target="true"></i></li>
+                        </ul>
+                    </div>
+                    <div class="layout layout_type_center state-unselectable"><span role="button" class="button button_type_yellow" data-action="submitRating" data-active-target="true">Send</span></div>
+                </div>
+                <div class="message message_type_sending message_mode_filled state-unselectable">
+                    <div class="message-body">
+                        <div class="spinner"></div>
+                        <div class="message-body__title" data-inner-text="Sending..."></div>
+                        <div class="message-body__text" data-inner-text="This may take a few seconds"></div>
+                        <span role="button" class="button" data-action="cancelRating" data-active-target="true" data-inner-text="Don't send"></span>
+                    </div>
+                </div>
+                <div class="message message_type_error message_mode_filled state-unselectable">
+                    <div class="message-body">
+                        <div class="message-body__title" data-inner-text="Something\'s not right"></div>
+                        <div class="message-body__text" data-inner-text="Your rating could not be sent"></div>
+                        <span role="button" class="button" data-action="retryRating" data-active-target="true" data-inner-text="Try again"></span>
+                    </div>
+                </div>
+                <div class="message message_type_success message_mode_filled state-unselectable">
+                    <div class="message-body">
+                        <div class="message-body__title" data-inner-text="Thanks!"></div>
+                        <div class="message-body__text" data-inner-text="Your rating will help us improve."></div>
+                        <span role="button" class="button" data-action="changeRating" data-active-target="true" data-inner-text="Change rating"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="toast" class="page page_type_toast state-hidden state-animatable state-unselectable"></div>
+
+        <div class="overlay overlay_fixed overlay_expired state-fadeaway state-unselectable">
+            <div class="overlay-content">
+                <div class="overlay-content__title">Session timeout</div>
+                <div class="overlay-content__text">Please refresh the page. The source text and translation will be saved.</div>
+                <div class="button button_refresh" data-action="expiredRefresh" data-tracker-goal="TOUCH_REFRESH_ALERT_CLICK">Refresh the page</div>
+            </div>
+        </div>
+
+        <div class="overlay overlay_fixed overlay_expired overlay_expired_recognize state-fadeaway state-unselectable">
+            <div class="overlay-content">
+                <div class="overlay-content__title">Session timeout</div>
+                <div class="overlay-content__text">Please refresh the page.</div>
+                <div class="button button_refresh" data-action="expiredRefreshRecognize" data-tracker-goal="TOUCH_OCR_REFRESH_ALERT_CLICK">Refresh the page</div>
+            </div>
+        </div>
+
+        <!-- Yandex.Metrika counter -->
+        <script nonce="CvI8E6nNSs">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function () {
+            var deviceType = 'desktop',
+                localStorageAvailable = true;
+            if (deviceType === 'mobile') {
+                deviceType = 'mobile_old';
+            } else if (!deviceType) {
+                deviceType = 'none';
+            }
+
+            try {
+                w.localStorage.setItem('localStorage', 1);
+                w.localStorage.removeItem('localStorage');
+            } catch (error) {
+                localStorageAvailable = false;
+            }
+
+            var mParams = {
+                webvisor: true,
+                clickmap: true,
+                trackLinks: true,
+                accurateTrackBounce: true,
+                trackHash: true,
+                params: {
+                    ui: 'en',
+                    domain: 'com',
+                    experiment: false,
+                    loggedIn: !!'',
+                    view: 'mobile_touch' || 'none',
+                    isFirstVisit: true,
+                    firstVisitSrc: 'organic' || 'none',
+                    deviceType: deviceType,
+                    localStorageAvailable: localStorageAvailable
+                }
+            };
+
+            try {
+                
+                mParams.id = 17740411;
+                w['yaCounter' + mParams.id] = new Ya.Metrika(mParams);
+                
+                mParams.id = 28584306;
+                w['yaCounter' + mParams.id] = new Ya.Metrika(mParams);
+            } catch (e) {}
+        });
+
+        var n = d.getElementsByTagName('script')[0],
+            s = d.createElement('script'),
+            f = function () {
+                n.parentNode.insertBefore(s, n);
+            };
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'https://mc.yandex.ru/metrika/watch.js';
+
+        if (w.opera == '[object Opera]') {
+            d.addEventListener('DOMContentLoaded', f, false);
+        } else { f(); }
+    })(document, window, 'yandex_metrika_callbacks');
+</script>
+
+<noscript><img src="//mc.yandex.ru/watch/17740411"></noscript>
+
+<noscript><img src="//mc.yandex.ru/watch/28584306"></noscript>
+
+        <!-- /Yandex.Metrika counter -->
+
+        <script type="text/javascript" src="https://translate.yandex.net/v2.159.1499683941/js/main.js" charset="UTF-8"></script>
+        <script type="text/javascript" src="https://translate.yandex.net/v2.159.1499683941/js/extra.js" charset="UTF-8"></script>
+        <script type="text/javascript" src="https://translate.yandex.net/v2.159.1499683941/js/m_touch.js" charset="UTF-8"></script>
+        <script nonce="CvI8E6nNSs">
+            (function (win, doc, config, namespace) {
+                'use strict';
+
+                var util = namespace.util;
+
+                var application,
+                    contentElement = doc.getElementById('main'),
+                    sendClientGoal = function (data) {
+                        var img = new Image(),
+                            url = 'https://translate.yandex.net/cs?';
+
+                        data = data || {};
+
+                        img.src = url + util.toQueryString(data);
+                    },
+                    sendMetrikaGoal = win.sendMetrikaGoal = function (goal, data) {
+                        try {
+                            
+                            win['yaCounter17740411'].reachGoal(goal, data);
+                            
+                            win['yaCounter28584306'].reachGoal(goal, data);
+                        } catch (error) {}
+                    },
+                    defaultDirection = contentElement.getAttribute('data-lang').split('-'),
+                    tempDictionaryData = {};
+
+                (function (a, b, c, d) {
+                    var e = c(a),
+                        f = c.apply(d, b);
+                    config[f] = config[f].split(e).map(function (a) {
+                        return a.split('').reverse().join('');
+                    }).join(e);
+                })(46, [83, 73, 68], win.String.fromCharCode);
+
+                config.TTS_RATE = util.iOS && util.iOS < 9 ? 0.4 : 1;
+
+                config.ELEMENTS = {
+                    ocr: doc.getElementById('ocr'),
+                    ocrContent: doc.getElementById('ocrDir'),
+                    ocrSrcListbox: doc.getElementById('ocrSrcListbox'),
+                    ocrSrcListboxContent: doc.getElementById('ocrSrcListboxContent'),
+                    ocrDstListbox: doc.getElementById('ocrDstListbox'),
+                    ocrDstListboxContent: doc.getElementById('ocrDstListboxContent'),
+                    auto: doc.getElementById('auto'),
+                    share: doc.getElementById('share'),
+                    shareLink: doc.getElementById('shareLink'),
+                    shareList: doc.getElementById('shareList'),
+                    cards: doc.getElementById('cards'),
+                    cardsContent: doc.getElementById('cardsContent'),
+                    toast: doc.getElementById('toast'),
+                    rating: doc.getElementById('rating'),
+                    ratingForm: doc.getElementById('ratingForm'),
+                    ratingText: doc.getElementById('ratingText'),
+                    ratingListbox: doc.getElementById('ratingStars'),
+                    ratingTextarea: doc.getElementById('ratingTextarea'),
+                    favMenu: doc.getElementById('favMenu'),
+                    textbox: doc.getElementById('textbox'),
+                    tumbler: doc.getElementById('tumbler'),
+                    textarea: doc.getElementById('textarea'),
+                    frameView: doc.getElementById('frameView'),
+                    frameViewContent: doc.getElementById('frameProgress'),
+                    imageMode: doc.getElementById('imageMode'),
+                    imageModeList: doc.getElementById('imageModeList'),
+                    predictor: doc.getElementById('predictor'),
+                    dictionary: doc.getElementById('dictionary'),
+                    dictionaryContent: doc.getElementById('dictionaryContent'),
+                    favourites: doc.getElementById('favourites'),
+                    favouritesInput: doc.getElementById('favFilterInput'),
+                    favouritesButton: doc.getElementById('favouritesButton'),
+                    favouritesFilter: doc.getElementById('favFilter'),
+                    favouritesContent: doc.getElementById('favItems'),
+                    fullscreen: doc.getElementById('fullscreen'),
+                    fullscreenContent: doc.getElementById('fullscreenContent'),
+                    microphone: doc.getElementById('microphone'),
+                    translator: doc.getElementById('translator'),
+                    srcHistory: doc.getElementById('srcHistory'),
+                    srcHistoryContent: doc.getElementById('srcHistoryContent'),
+                    dstHistory: doc.getElementById('dstHistory'),
+                    dstHistoryContent: doc.getElementById('dstHistoryContent'),
+                    srcListbox: doc.getElementById('srcListbox'),
+                    srcListboxContent: doc.getElementById('srcListboxContent'),
+                    dstListbox: doc.getElementById('dstListbox'),
+                    dstListboxContent: doc.getElementById('dstListboxContent'),
+                    textSpeaker: doc.getElementById('textSpeaker'),
+                    textNativeSpeaker: doc.getElementById('textNativeSpeaker'),
+                    translatorSpeaker: doc.getElementById('translatorSpeaker'),
+                    translatorNativeSpeaker: doc.getElementById('translatorNativeSpeaker'),
+                    imageButton: doc.getElementById('imageButton'),
+                    imageCanvas: doc.getElementById('imageCanvas'),
+                    imageCanvasContent: doc.getElementById('imageRectGroup'),
+                    smartBanner: doc.getElementById('smartBanner'),
+                    translation: doc.getElementById('translation'),
+                    srcLanguages: doc.getElementById('srcLanguages'),
+                    srcLanguagesContent: doc.getElementById('srcLanguagesContent'),
+                    dstLanguages: doc.getElementById('dstLanguages'),
+                    dstLanguagesContent: doc.getElementById('dstLanguagesContent'),
+                    cardsCounter: doc.getElementById('cardsCounter'),
+                    scoreCounter: doc.getElementById('scoreCounter'),
+                    imageUploader: doc.getElementById('imageUploader'),
+                    imageUploaderInput: doc.getElementById('imageUploaderInput'),
+                    pageTranslator: doc.getElementById('framePage'),
+                    pageTranslatorContent: doc.getElementById('pageFrame'),
+                    swipeContainer: doc.getElementById('swipeContainer'),
+                    trainingResult: doc.getElementById('trainingResult'),
+                    imageTranslator: doc.getElementById('imageTextGroup'),
+                    srcListboxButton: doc.getElementById('srcListboxButton'),
+                    dstListboxButton: doc.getElementById('dstListboxButton'),
+                    complaintPopup: doc.getElementById('complaintPopup'),
+                    complaintPopupInput: doc.getElementById('complaintPopupInput'),
+                    complaintPopupComment: doc.getElementById('complaintPopupComment'),
+                    trainingSettings: doc.getElementById('trainingSettings')
+                };
+
+                config.TEMPLATES = {
+                    ocr: doc.getElementById('ocrTemplate').innerHTML,
+                    cards: doc.getElementById('cardsTemplate').innerHTML,
+                    banner: doc.getElementById('smartBannerTemplate').innerHTML,
+                    tumbler: doc.getElementById('tumblerTemplate').innerHTML,
+                    listbox: doc.getElementById('listboxTemplate').innerHTML,
+                    predictor: doc.getElementById('predictorTemplate').innerHTML,
+                    imageRect: doc.getElementById('imageRectTemplate').innerHTML,
+                    imageText: doc.getElementById('imageTextTemplate').innerHTML,
+                    translator: doc.getElementById('translatorTemplate').innerHTML,
+                    dictionary: doc.getElementById('dictionaryTemplate').innerHTML,
+                    favourites: doc.getElementById('favTemplate').innerHTML,
+                    trainingResult: doc.getElementById('trainingResultTemplate').innerHTML
+                };
+
+                config.SHARE_TITLE = doc.title;
+
+                config.SITEURL = win.decodeURIComponent(contentElement.getAttribute('data-siteurl'));
+                config.DEFAULT_TEXT = contentElement.getAttribute('data-text');
+                config.DEFAULT_SRC_LANG = defaultDirection[0];
+                config.DEFAULT_DST_LANG = defaultDirection[1];
+
+                
+
+                application = new win.TranslateApplication({
+                    view: new namespace.TouchView({
+                        element: doc.documentElement,
+                        contentElement: contentElement,
+                        delegateActiveState: true
+                    }),
+                    model: new namespace.Model({
+                        text: '',
+                        srcLang: '',
+                        dstLang: '',
+                        translation: ''
+                    }, {
+                        validators: {
+                            srcLang: function (srcLang) {
+                                return util.hasProperty(config.TRANSLATOR_LANGS, srcLang);
+                            },
+                            dstLang: function (dstLang) {
+                                return util.hasProperty(config.TRANSLATOR_LANGS, dstLang);
+                            }
+                        }
+                    })
+                });
+
+                application
+                    .on('track', function (goal) {
+                        sendMetrikaGoal(goal);
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: goal.replace('TOUCH_', '').toLowerCase()
+                        });
+                    })
+                    .on('pageLoaded', function () {
+                        var mainView = this.getView(),
+                            settings = this._settings;
+
+                        if (mainView.hasState('allowed_smart-banner')) {
+                            sendMetrikaGoal('TOUCH_SMARTBANNER_SHOW');
+
+                            sendClientGoal({
+                                sid: config.SID,
+                                srv: config.SRV,
+                                view: config.PAGEVIEW,
+                                event: 'smartbanner_show'
+                            });
+                        }
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'options',
+                            dir: settings.getProperty('auto') ? 1 : 0,
+                            favourites_count: win.Object.keys(this.getFavItems()).length,
+                            training_settings_cards: settings.getProperty('maxTrainingCards'),
+                            training_settings_repeats: settings.getProperty('maxTrainingScore')
+                        });
+                    })
+                    .on('translateQuery', function () {
+                        sendMetrikaGoal('TOUCH_TEXT_TRANSLATE');
+                    })
+                    .on('predict', function (props) {
+                        var error;
+
+                        if (props.pos < 0) {
+                            error = (props.text.slice(props.pos) !== props.value.substr(0, Math.abs(props.pos)));
+                        }
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            src: props.text,
+                            pos: props.pos,
+                            eow: props.endOfWord ? 1 : 0,
+                            view: config.PAGEVIEW,
+                            lang: props.srcLang,
+                            event: 'predictor_apply',
+                            error: error ? 1 : 0,
+                            reason: props.reason,
+                            suggest: props.value
+                        });
+
+                        sendMetrikaGoal('TOUCH_PREDICTOR_APPLY');
+                    })
+                    .on('predictorReady', function (props) {
+                        var error,
+                            items = props.items.slice(0, 3);
+
+                        if (props.pos < 0) {
+                            error = (props.text.slice(props.pos) !== items[0].substr(0, Math.abs(props.pos)));
+                        }
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            src: props.text,
+                            pos: props.pos,
+                            eow: props.endOfWord ? 1 : 0,
+                            view: config.PAGEVIEW,
+                            lang: props.srcLang,
+                            event: 'predictor_show',
+                            error: error ? 1 : 0,
+                            reason: props.reason,
+                            suggest: items.join(';')
+                        });
+                    })
+                    .on('shareData', function (props) {
+                        var appData = this.toJSON();
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            view: config.PAGEVIEW,
+                            type: props.service,
+                            event: 'sharing_share',
+                            src: appData.text,
+                            dst: appData.translation
+                        });
+
+                        sendMetrikaGoal('TOUCH_SHARING_SHARE_' + props.service.toUpperCase());
+                    })
+                    .on('writeMail', function (props) {
+                        var appData = this.toJSON();
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            view: config.PAGEVIEW,
+                            type: 'email',
+                            event: 'sharing_share',
+                            src: appData.text,
+                            dst: appData.translation
+                        });
+
+                        sendMetrikaGoal('TOUCH_SHARING_SHARE_MAIL');
+                    })
+                    .on('speak', function (props) {
+                        var appData = this.toJSON(),
+                            ttsLang = '',
+                            ttsType = '';
+
+                        if (config.SPEAKER_LANGS[appData.srcLang] === props.lang) {
+                            ttsLang = appData.srcLang;
+                            ttsType = 'source';
+                        } else if (config.SPEAKER_LANGS[appData.dstLang] === props.lang) {
+                            ttsLang = appData.dstLang;
+                            ttsType = 'target';
+                        }
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            lang: ttsLang,
+                            type: ttsType,
+                            event: 'tts_play',
+                            engine: 'yandex',
+                            text: props.text
+                        });
+
+                        sendMetrikaGoal('TOUCH_TTS_PLAY');
+                    })
+                    .on('nativeSpeak', function (props) {
+                        var appData = this.toJSON(),
+                            ttsType = appData.srcLang === props.voice ? 'source' :
+                                      appData.dstLang === props.voice ? 'target' : '';
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            lang: props.voice,
+                            type: ttsType,
+                            event: 'tts_play',
+                            engine: 'native',
+                            text: props.text
+                        });
+
+                        sendMetrikaGoal('TOUCH_TTS_NATIVE_PLAY');
+                    })
+                    .on('action:translateUrl', function () {
+                        var appData = this.toJSON();
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            view: config.PAGEVIEW,
+                            event: 'url_translate',
+                            url: appData.text
+                        });
+
+                        sendMetrikaGoal('TOUCH_URL_TRANSLATE');
+                    })
+                    .on('favCleared', function () {
+                        sendMetrikaGoal('TOUCH_FAVOURITES_CLEAR');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'favourites_clear'
+                        });
+                    })
+                    .on('action:exportFav', function () {
+                        sendMetrikaGoal('TOUCH_FAVOURITES_EXPORT');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'favourites_export'
+                        });
+                    })
+                    .on('action:openFav', function () {
+                        sendMetrikaGoal('TOUCH_FAVOURITES_OPEN');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'favourites_open'
+                        });
+                    })
+                    .on('action:toggleFav', function () {
+                        sendMetrikaGoal('TOUCH_FAVOURITES_TOGGLE');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'favourites_toggle'
+                        });
+                    })
+                    .on('favFilterActivate', function () {
+                        sendMetrikaGoal('TOUCH_FAVOURITES_SEARCH');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'favourites_search'
+                        });
+                    })
+                    .on('favToggle', function (favourite) {
+                        var eventName = 'favourites_' + (favourite ? 'add' : 'delete');
+
+                        sendMetrikaGoal('TOUCH_' + eventName.toUpperCase());
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: eventName
+                        });
+                    })
+                    .on('favPaste', function () {
+                        sendMetrikaGoal('TOUCH_FAVOURITES_INSERT');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'favourites_insert'
+                        });
+                    })
+                    .on('action:openFavMenu', function () {
+                        sendMetrikaGoal('FAVOURITES_MENU_OPEN');
+
+                        sendClientGoal({
+                            event: 'favourites_menu_open',
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW
+                        });
+                    })
+                    .on('toggleTraining', function (training) {
+                        var event = 'training_' + (training ? 'open' : 'close');
+
+                        sendMetrikaGoal(event.toUpperCase());
+
+                        sendClientGoal({
+                            event: event,
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            login: config.UID ? 1 : 0
+                        });
+                    })
+                    .on('action:openTrainingSettings', function () {
+                        sendMetrikaGoal('TRAINING_SETTINGS_OPEN');
+
+                        sendClientGoal({
+                            event: 'training_settings_open',
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            login: config.UID ? 1 : 0
+                        });
+                    })
+                    .on('resetTrainingProgress', function () {
+                        sendMetrikaGoal('TRAINING_PROGRESS_RESET');
+
+                        sendClientGoal({
+                            event: 'training_progress_reset',
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            login: config.UID ? 1 : 0
+                        });
+                    })
+                    .on('trainingSwipe', function (direction) {
+                        sendMetrikaGoal('TRAINING_SWIPE');
+
+                        sendClientGoal({
+                            event: 'training_swipe',
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            login: config.UID ? 1 : 0,
+                            memorised: direction === namespace.SwipableView.directions.LEFT ? 0 : 1
+                        });
+                    })
+                    .on('action:closeSyncBanner', function () {
+                        sendMetrikaGoal('TOUCH_FAVOURITES_SYNC_BANNER_CLOSE');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            login: config.UID ? 1 : 0,
+                            event: 'favourites_sync_banner_close'
+                        });
+                    })
+                    .on('favSyncBannerShown', function () {
+                        sendMetrikaGoal('TOUCH_FAVOURITES_SYNC_BANNER_SHOW');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            login: config.UID ? 1 : 0,
+                            event: 'favourites_sync_banner_show'
+                        });
+                    })
+                    .on('favSyncConfirm', function (confirm) {
+                        var event = 'favourites_sync_confirm';
+
+                        sendMetrikaGoal('TOUCH_' + event.toUpperCase() + (confirm ? '_YES' : '_NO'));
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: event,
+                            confirm: confirm ? 1 : 0
+                        });
+                    })
+                    .on('favSync', function (error) {
+                        var event = 'favourites_sync_' + (error ? 'error' : 'success');
+
+                        sendMetrikaGoal('TOUCH_' + event.toUpperCase());
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: event
+                        });
+                    })
+                    .on('action:showSyncAlert', function () {
+                        sendMetrikaGoal('TOUCH_FAVOURITES_SYNC_ELEMENT_ERROR');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            login: config.UID ? 1 : 0,
+                            event: 'favourites_sync_element_error',
+                            favourites_count: Object.keys(this.getFavItems()).length
+                        });
+                    })
+                    .on('asrStart', function () {
+                        var appData = this.toJSON();
+
+                        sendMetrikaGoal('TOUCH_ASR_NATIVE_START');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            lang: appData.srcLang,
+                            event: 'asr_start',
+                            engine: 'native'
+                        });
+                    })
+                    .on('asrEnd', function (params) {
+                        var appData = this.toJSON();
+
+                        if (params.error === 'aborted') return;
+
+                        if (params.error) {
+                            sendMetrikaGoal('TOUCH_ASR_NATIVE_ERROR');
+
+                            sendClientGoal({
+                                sid: config.SID,
+                                srv: config.SRV,
+                                view: config.PAGEVIEW,
+                                lang: appData.srcLang,
+                                event: 'asr_error',
+                                error: params.error.replace(/-/g, '_'),
+                                asr_id: [config.SID, params.index].join('-'),
+                                engine: 'native'
+                            });
+                        } else {
+                            sendMetrikaGoal('TOUCH_ASR_NATIVE_STOP');
+
+                            sendClientGoal({
+                                sid: config.SID,
+                                srv: config.SRV,
+                                view: config.PAGEVIEW,
+                                lang: appData.srcLang,
+                                event: 'asr_stop',
+                                asr_id: [config.SID, params.index].join('-'),
+                                engine: 'native'
+                            });
+                        }
+                    })
+                    .on('asrResult', function (params) {
+                        var appData = this.toJSON();
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            text: params.value,
+                            lang: appData.srcLang,
+                            event: 'asr_recognize',
+                            asr_id: [config.SID, params.index, params.resultIndex].join('-'),
+                            engine: 'native'
+                        });
+                    })
+                    .on('ocrOpen', function () {
+                        var appData = this.toJSON();
+
+                        sendMetrikaGoal('TOUCH_OCR_OPEN');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            view: config.PAGEVIEW,
+                            event: 'ocr_open'
+                        });
+                    })
+                    .on('ocrSwapDir', function () {
+                        var appData = this.toJSON();
+
+                        sendMetrikaGoal('TOUCH_OCR_FLIP');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            view: config.PAGEVIEW,
+                            event: 'ocr_langselect_flip'
+                        });
+                    })
+                    .on('ocrLoadImage', function (file) {
+                        var appData = this.toJSON();
+
+                        sendMetrikaGoal('TOUCH_OCR_LOAD_IMAGE');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            view: config.PAGEVIEW,
+                            event: 'ocr_load_image'
+                        });
+                    })
+                    .on('ocrRecognize', function (error, response) {
+                        var appData = this.toJSON(),
+                            time = response ? (+new Date() - response.requestTimestamp) : 0;
+
+                        sendMetrikaGoal('TOUCH_OCR_RECOGNIZE');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            view: config.PAGEVIEW,
+                            time: time,
+                            event: 'ocr_recognize',
+                            failed: error ? 1 : 0
+                        });
+                    })
+                    .on('ocrSwitchMode', function (mode) {
+                        var appData = this.toJSON();
+
+                        sendMetrikaGoal('TOUCH_OCR_SWITCH_MODE');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            view: config.PAGEVIEW,
+                            mode: mode,
+                            event: 'ocr_switch_mode'
+                        });
+                    })
+                    .on('ocrSelectText', function (selectionRect) {
+                        var appData = this.toJSON(),
+                            action = (
+                                selectionRect.w === 1 &&
+                                selectionRect.h === 1
+                            ) ? 'box_tap' : 'select_area';
+
+                        sendMetrikaGoal('TOUCH_OCR_' + action.toUpperCase());
+
+                        sendClientGoal({
+                            x: selectionRect.x,
+                            y: selectionRect.y,
+                            w: selectionRect.w,
+                            h: selectionRect.h,
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            view: config.PAGEVIEW,
+                            event: 'ocr_' + action
+                        });
+                    })
+                    .on('ocrPasteText', function () {
+                        var appData = this.toJSON();
+
+                        sendMetrikaGoal('TOUCH_OCR_TRANSLATION_NAVIGATE');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            view: config.PAGEVIEW,
+                            event: 'ocr_translation_navigate'
+                        });
+                    })
+                    .on('ocrLangSelectOpen', function (id) {
+                        var select = id.indexOf('Src') !== -1 ? 'src' : 'dst';
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            type: select,
+                            event: 'ocr_langselect_open'
+                        });
+
+                        sendMetrikaGoal('TOUCH_OCR_LANGSELECT_OPEN_' + select.toUpperCase());
+                    })
+                    .on('ocrLangChanged', function (name) {
+                        var select = name === 'srcLang' ? 'src' : 'dst';
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            type: select,
+                            event: 'ocr_langselect_select'
+                        });
+
+                        sendMetrikaGoal('TOUCH_OCR_LANGSELECT_SELECT_' + select.toUpperCase());
+                    })
+                    .on('langSelectOpen', function (id) {
+                        var select = id.slice(0, 3);
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            type: select,
+                            event: 'langselect_open'
+                        });
+
+                        sendMetrikaGoal('TOUCH_LANGSELECT_OPEN_' + select.toUpperCase());
+                    })
+                    .on('langChanged', function (name, options) {
+                        var select = name === 'srcLang' ? 'src' : 'dst',
+                            recent = options.sender === 'langHistory' ? 'RECENT_' : '';
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            type: select,
+                            event: 'langselect_select',
+                            recent: recent ? 1 : 0
+                        });
+
+                        sendMetrikaGoal('TOUCH_LANGSELECT_' + recent + 'SELECT_' + select.toUpperCase());
+                    })
+                    .on('ratingSubmit', function (props) {
+                        sendMetrikaGoal('TOUCH_RATING_SEND');
+
+                        sendClientGoal({
+                            ui: props.ui,
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            text: props.text,
+                            event: 'rating_rate',
+                            rating: props.rating
+                        });
+                    })
+                    .on('action:openRating', function () {
+                        sendMetrikaGoal('TOUCH_RATING_OPEN');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'rating_open'
+                        });
+                    })
+                    .on('action:cancelRating', function () {
+                        sendMetrikaGoal('TOUCH_RATING_CANCEL');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'rating_cancel'
+                        });
+                    })
+                    .on('dictRendered', function (options) {
+                        var appData = this.toJSON();
+
+                        if (tempDictionaryData.trText !== appData.trText ||
+                            tempDictionaryData.srcLang !== appData.srcLang ||
+                            tempDictionaryData.dstLang !== appData.dstLang
+                        ) {
+                            sendMetrikaGoal('TOUCH_DICT_SHOW');
+
+                            sendClientGoal({
+                                sid: config.SID,
+                                srv: config.SRV,
+                                dir: appData.srcLang + '-' + appData.dstLang,
+                                src: appData.trText,
+                                view: config.PAGEVIEW,
+                                event: 'dict_show',
+                                has_more: options.more ? 1 : 0
+                            });
+
+                            tempDictionaryData.trText = appData.trText;
+                            tempDictionaryData.srcLang = appData.srcLang;
+                            tempDictionaryData.dstLang = appData.dstLang;
+                        }
+                    })
+                    .on('complaintSend', function (props) {
+                        var self = this,
+                            appData = this.toJSON(),
+                            request = new namespace.HTTPRequest(config.COMPLAINT_URL);
+
+                        if (props.type === 'fullTextTranslation') {
+                            sendClientGoal({
+                                sid: config.SID,
+                                srv: config.SRV,
+                                dir: appData.srcLang + '-' + appData.dstLang,
+                                src: appData.trText,
+                                dst: props.value,
+                                view: config.PAGEVIEW,
+                                event: 'translation_complain',
+                                comment: props.comment
+                            });
+
+                            sendMetrikaGoal('TOUCH_TRANSLATION_COMPLAIN');
+
+                            return self.emit('complaintStatus');
+                        }
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            src: appData.trText,
+                            dst: props.value,
+                            dict: appData.srcLang + '-' + appData.dstLang,
+                            type: props.type,
+                            view: config.PAGEVIEW,
+                            event: 'dict_complain',
+                            block: 'dict',
+                            title: props.title,
+                            number: props.groupNumber,
+                            comment: props.comment,
+                            selection: 0,
+                            part_of_speech: props.partOfSpeech
+                        });
+
+                        sendMetrikaGoal('TOUCH_DICT_COMPLAIN');
+
+                        request
+                            .setType(namespace.HTTPRequest.types.JSON)
+                            .setData({
+                                uid: config.UID,
+                                lang: appData.srcLang + '-' + appData.dstLang,
+                                text: appData.trText,
+                                title: props.title,
+                                family: !!config.FAMILY_MODE,
+                                element: props.value,
+                                comment: props.comment,
+                                dictType: 'regular',
+                                indexNumber: props.groupNumber,
+                                elementType: props.type,
+                                partOfSpeech: props.partOfSpeech,
+                                clientService: config.SRV
+                            })
+                            .setParams({
+                                sid: config.SID,
+                                uid: config.UID
+                            })
+                            .setHeader('X-CSRF-Token', config.CSRF_TOKEN)
+                            .setMethod('POST')
+                            .send(function (error, response) {
+                                if (response && (
+                                    response.code !== namespace.HTTPRequest.codes.OK &&
+                                    response.code !== namespace.HTTPRequest.codes.CREATED
+                                )) {
+                                    error = new win.Error(response.message);
+                                }
+
+                                self.emit('complaintStatus', error);
+
+                                if (error) {
+                                    sendClientGoal({
+                                        sid: config.SID,
+                                        srv: config.SRV,
+                                        dir: appData.srcLang + '-' + appData.dstLang,
+                                        src: appData.trText,
+                                        dst: props.value,
+                                        dict: appData.srcLang + '-' + appData.dstLang,
+                                        type: props.type,
+                                        view: config.PAGEVIEW,
+                                        event: 'dict_complain_error',
+                                        block: 'dict',
+                                        title: props.title,
+                                        number: props.groupNumber,
+                                        comment: props.comment,
+                                        message: error.body.description,
+                                        selection: 0,
+                                        part_of_speech: props.partOfSpeech
+                                    });
+                                }
+                            });
+                    })
+                    .on('dictLinkClick', function (value, options) {
+                        sendMetrikaGoal('DICT_LINK_CLICK');
+
+                        sendClientGoal({
+                            event: 'dict_link_click',
+                            sid: config.SID,
+                            srv: config.SRV,
+                            type: options.type,
+                            view: config.PAGEVIEW,
+                            value: value
+                        });
+                    })
+                    .on('complaintToggle', function (props) {
+                        var appData = this.toJSON(),
+                            eventName = 'dict_complain_' + (props.open ? 'open' : 'close');
+
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            dir: appData.srcLang + '-' + appData.dstLang,
+                            src: appData.trText,
+                            view: config.PAGEVIEW,
+                            dict: appData.srcLang + '-' + appData.dstLang,
+                            type: props.type,
+                            event: eventName,
+                            block: 'dict',
+                            selection: 0
+                        });
+
+                        sendMetrikaGoal('TOUCH_' + eventName.toUpperCase());
+                    })
+                    .on('translationError', function (error) {
+                        if (win.navigator.onLine) {
+                            error = error.body || error;
+
+                            sendClientGoal({
+                                sid: config.SID,
+                                srv: config.SRV,
+                                view: config.PAGEVIEW,
+                                event: 'translation_error',
+                                error: error.code,
+                                message: error.message
+                            });
+                        }
+                    })
+                    .on('refreshAlertShow', function (code) {
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'refresh_alert_show',
+                            error_code: code
+                        });
+
+                        sendMetrikaGoal('TOUCH_REFRESH_ALERT_SHOW');
+                    })
+                    .on('refreshAlertOcrShow', function () {
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'ocr_refresh_alert_show'
+                        });
+
+                        sendMetrikaGoal('TOUCH_OCR_REFRESH_ALERT_SHOW');
+                    })
+                    .on('localStorageError', function (error) {
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            event: 'storage_error',
+                            error_code: error.code
+                        });
+                    })
+                    .on('clearText', function () {
+                        sendClientGoal({
+                            sid: config.SID,
+                            srv: config.SRV,
+                            view: config.PAGEVIEW,
+                            type: 'x',
+                            event: 'text_delete'
+                        });
+
+                        sendMetrikaGoal('TOUCH_TEXT_DELETE');
+                    })
+                    .on('textSwiped', function () {
+                        var appData = this.toJSON();
+
+                        if (appData.text) {
+                            sendClientGoal({
+                                sid: config.SID,
+                                srv: config.SRV,
+                                view: config.PAGEVIEW,
+                                type: 'swipe',
+                                event: 'text_delete'
+                            });
+
+                            sendMetrikaGoal('TOUCH_TEXT_DELETE');
+                        }
+                    })
+                    .start(config);
+
+                
+            })(this, this.document, {
+                SRV: 'tr-touch',
+                SID: '01919f74.b8456695.66025833',
+                UID: null,
+                VER: 'v2.159.1499683941',
+                STOKEN: 'b558c171.75979bc7',
+                CSRF_TOKEN: '3c15f23336d302b1165baf5d90d76197fb528579:5966548b',
+
+                OCR_URL: 'https://translate.yandex.net/ocr/v1.0/recognize',
+                SHARE_URL: '//share.yandex.ru/go.xml',
+                RATING_URL: '/user/feedback/rate',
+                DETECT_URL: 'https://translate.yandex.net/api/v1/tr.json/detect',
+                TRSTART_URL: 'https://z5h64q92x9.net/tr-start',
+                SPEAKER_URL: '//tts.voicetech.yandex.net/tts',
+                COMPLAINT_URL: '/community/api/projects/574d59cb253352f1c33c704e/contribs',
+                PREDICTOR_URL: 'https://predictor.yandex.net/suggest.json/complete',
+                DICTIONARY_URL: 'https://dictionary.yandex.net/dicservice.json/lookupMultiple',
+                TRANSLATOR_URL: 'https://translate.yandex.net/api/v1/tr.json/translate',
+
+                DEFAULT_RATING: '0',
+                DEFAULT_OCR_MODE: 'lines',
+
+                OCR_MODES: {
+                    words: 'Words',
+                    lines: 'Lines',
+                    blocks: 'Blocks'
+                },
+                OCR_TIMEOUT: 30000,
+
+                RATING_ITEMS: ['5', '4', '3', '2', '1'],
+
+                SHARE_SERVICES: {
+                    facebook: 'Facebook'
+                },
+
+                OCR_LANGS: (function (langList) {
+                    var langHash = {};
+
+                    langList.forEach(function (lang) {
+                        langHash[lang] = true;
+                    });
+
+                    return langHash;
+                })(["cs","de","en","es","fr","it","pl","pt","ru","tr","uk","zh"]),
+
+                INVALID_URL_LANGS: {
+                    sjn: true
+                },
+
+                SPEAKER_LANGS: {
+                    en: 'en_GB',
+                    ru: 'ru_RU',
+                    tr: 'tr_TR',
+                    it: 'it_IT',
+                    fr: 'fr_FR',
+                    es: 'es_ES',
+                    de: 'de_DE',
+                    pl: 'pl_PL',
+                    cs: 'cs_CZ',
+                    sv: 'sv_SE',
+                    pt: 'pt_PT',
+                    fi: 'fi_FI',
+                    ar: 'ar_AE',
+                    ca: 'ca_ES',
+                    da: 'da_DK',
+                    nl: 'nl_NL',
+                    el: 'el_GR',
+                    no: 'no_NO'
+                },
+
+                PREDICTOR_LANGS: (function (langList) {
+                    var langHash = {};
+
+                    langList.forEach(function (lang) {
+                        langHash[lang] = true;
+                    });
+
+                    return langHash;
+                })(["af","ar","az","ba","be","bg","bs","ca","cs","cy","da","de","el","en","es","et","eu","fi","fr","ga","gl","he","hr","ht","hu","hy","id","is","it","ka","kk","ky","la","lb","lt","lv","mg","mhr","mk","mn","mrj","ms","mt","nl","no","pl","pt","ro","ru","sk","sl","sq","sr","sv","sw","tg","tl","tr","tt","udm","uk","uz","vi"]),
+
+                DICTIONARY_LANGS: (function (langList) {
+                    var langHash = {};
+
+                    langList.forEach(function (lang) {
+                        langHash[lang] = true;
+                    });
+
+                    return langHash;
+                })(["be-be","be-ru","bg-ru","cs-en","cs-ru","da-en","da-ru","de-de","de-en","de-ru","de-tr","el-en","el-ru","en-cs","en-da","en-de","en-el","en-en","en-es","en-et","en-fi","en-fr","en-it","en-lt","en-lv","en-nl","en-no","en-pt","en-ru","en-sk","en-sv","en-tr","en-uk","es-en","es-es","es-ru","et-en","et-ru","fi-en","fi-fi","fi-ru","fr-en","fr-fr","fr-ru","hu-hu","hu-ru","it-en","it-it","it-ru","lt-en","lt-lt","lt-ru","lv-en","lv-ru","mhr-ru","mrj-ru","nl-en","nl-ru","no-en","no-ru","pl-ru","pt-en","pt-ru","ru-be","ru-bg","ru-cs","ru-da","ru-de","ru-el","ru-en","ru-es","ru-et","ru-fi","ru-fr","ru-hu","ru-it","ru-lt","ru-lv","ru-mhr","ru-mrj","ru-nl","ru-no","ru-pl","ru-pt","ru-ru","ru-sk","ru-sv","ru-tr","ru-tt","ru-uk","sk-en","sk-ru","sv-en","sv-ru","tr-de","tr-en","tr-ru","tt-ru","uk-en","uk-ru","uk-uk"]),
+
+                TRANSLATOR_LANGS: {"af":"Afrikaans","sq":"Albanian","am":"Amharic","ar":"Arabic","hy":"Armenian","az":"Azerbaijani","ba":"Bashkir","eu":"Basque","be":"Belarusian","bn":"Bengali","bs":"Bosnian","bg":"Bulgarian","my":"Burmese","ca":"Catalan","ceb":"Cebuano","zh":"Chinese","hr":"Croatian","cs":"Czech","da":"Danish","nl":"Dutch","sjn":"Elvish (Sindarin)","en":"English","eo":"Esperanto","et":"Estonian","fi":"Finnish","fr":"French","gl":"Galician","ka":"Georgian","de":"German","el":"Greek","gu":"Gujarati","ht":"Haitian","he":"Hebrew","mrj":"Hill Mari","hi":"Hindi","hu":"Hungarian","is":"Icelandic","id":"Indonesian","ga":"Irish","it":"Italian","jv":"Javanese","ja":"Japanese","kn":"Kannada","kk":"Kazakh","km":"Khmer","ko":"Korean","ky":"Kyrgyz","lo":"Lao","la":"Latin","lv":"Latvian","lt":"Lithuanian","lb":"Luxembourgish","mk":"Macedonian","mg":"Malagasy","ms":"Malay","ml":"Malayalam","mt":"Maltese","mi":"Maori","mr":"Marathi","mhr":"Mari","mn":"Mongolian","ne":"Nepali","no":"Norwegian","pap":"Papiamento","fa":"Persian","pl":"Polish","pt":"Portuguese","pa":"Punjabi","ro":"Romanian","ru":"Russian","gd":"Scottish Gaelic","sr":"Serbian","si":"Sinhalese","sk":"Slovak","sl":"Slovenian","es":"Spanish","su":"Sundanese","sw":"Swahili","sv":"Swedish","tl":"Tagalog","tg":"Tajik","ta":"Tamil","tt":"Tatar","te":"Telugu","th":"Thai","tr":"Turkish","udm":"Udmurt","uk":"Ukrainian","ur":"Urdu","uz":"Uzbek","vi":"Vietnamese","cy":"Welsh","xh":"Xhosa","yi":"Yiddish"},
+
+                CARD_THRESHOLD: 0.4,
+                CARD_MIN_FONTSIZE: 20,
+                CARD_MAX_FONTSIZE: 48,
+                CARD_MAX_TEXTLENGTH: 80,
+                CARD_ROTATION_ANGLE: 25,
+                TRAINING_RESULT_RADIUS: 60,
+
+                UI_LANG: 'en',
+                PAGEVIEW: 'mobile_touch',
+                TTS_FORMAT: 'mp3',
+                TTS_QUALITY: 'hi',
+                TOAST_DELAY: 1000,
+                FAMILY_MODE: 1,
+                FAV_URL: '/user/tr',
+                FAV_URL2: '/props/api/users/None/favorites',
+                FAV_FILENAME: 'yandexFav',
+                MAX_TTS_LENGTH: 75,
+                MAX_DICT_QUERY: 100,
+                BANNER_IMG_URL: 'https://translate.yandex.net/v2.159.1499683941/i/teaser_image_windows.png',
+                SCROLLTOP_VALUE: 50,
+                SHORT_MODE_LENGTH: 50,
+                MAX_DICT_WORD_COUNT: 3,
+                MAX_FAV_ITEMS: 2500,
+                MAX_TRAINING_SCORE: 3,
+                MAX_TRAINING_CARDS: 10,
+                MAX_FAV_TEXT_LENGTH: 300,
+                MIN_PREDICTOR_WORDS: 5,
+                MAX_PREDICTOR_WORDS: 20,
+                MAX_PREDICTOR_ITEMS: 20,
+                MAX_PREDICTOR_QUERY: 1000,
+                MAX_SHARE_TEXTLENGTH: 200,
+                MAX_RECENT_LANGUAGES: 3,
+                MAX_TRANSLATOR_QUERY: 10000,
+                MAX_NATIVE_TTS_LENGTH: 250,
+                MAX_RATING_TEXT_LENGTH: 1000,
+                MIN_FULLSCREEN_FONTSIZE: 18,
+                MAX_FULLSCREEN_FONTSIZE: 300,
+                FAV_SYNC_TOAST_DELAY: 1500,
+                FAV_SYNC_ERROR_TOAST_DELAY: 5000,
+                COMPLAINT_TOAST_DELAY: 1500,
+                TEXTLIMIT_TOAST_DELAY: 3000,
+
+                MESSAGES: {
+                    copy: 'Translation copied',
+                    error: 'Error',
+                    loading: 'Loading...',
+                    progress: '{0}%',
+                    textLimit: 'Text is too long. The first 10\u00a0000 characters have been translated.',
+                    complaint: 'Click on erroneous fragment',
+                    complaintError: 'Something\'s not right',
+                    complaintSuccess: 'Thanks for the feedback!',
+                    favClear: 'Clear Favorites?',
+                    favExport: 'Save the CSV file as::',
+                    favSyncError: 'Error syncing favorites',
+                    favSyncAlert: 'Too many entries to sync. Delete some and try again.',
+                    favSyncAllow: 'Sync favorites?',
+                    favSyncSuccess: 'Favorites synced',
+                    favTrainingReset: 'Reset your progress?',
+                    micNetError: 'Connection error',
+                    micNotAllowed: 'Allow the browser to use your microphone',
+                    textPlaceholder: 'Type text or a site address',
+                    speechPlaceholder: 'Speak...'
+                },
+
+                BANNER_DOWNLOAD_URL: '//appmetrika.yandex.ru/serve/'
+            }, this.yandexTranslate);
+        </script>
+        
+        <script nonce="CvI8E6nNSs">
+            (function (win, doc) {
+                var script = doc.createElement('script');
+                win.Atom = {
+                    initCallbacks: [],
+                    whenInited: function (a) {
+                        this.initCallbacks.push(a);
+                    }
+                };
+                win.Atom.whenInited(function () {
+                    (new Atom.SmartBanner())
+                    .init()
+                    .on('show', function () {
+                        win.sendMetrikaGoal('DAAS_SHOW');
+                    })
+                    .on('close', function () {
+                        win.sendMetrikaGoal('DAAS_HIDE');
+                    })
+                    .on('click', function () {
+                        win.sendMetrikaGoal('DAAS_INSTALL');
+                    });
+                });
+                script.async = true;
+                script.src = '//yastatic.net/daas/atom.js';
+                doc.head.appendChild(script);
+            })(this, this.document);
+        </script>
+        
+    </body>
+</html>

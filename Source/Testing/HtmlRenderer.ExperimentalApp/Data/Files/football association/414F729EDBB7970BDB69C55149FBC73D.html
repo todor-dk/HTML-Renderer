@@ -1,0 +1,2816 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+           
+<!-- <!DOCTYPE html> -->
+
+<html>
+
+<head>
+<title>Chaska Chanhassen Football Association</title>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/Feeds/News/?org=CHASKAFOOTBALL.COM" />
+
+
+
+<script LANGUAGE="JavaScript" type="text/javascript">
+engine = null;
+if (window.navigator.appName == "Microsoft Internet Explorer")
+{
+   // This is an IE browser. What mode is the engine in?
+   if (document.documentMode) // IE8 or later
+      engine = document.documentMode;
+   else // IE 5-7
+   {
+      engine = 5; // Assume quirks mode unless proven otherwise
+      if (document.compatMode)
+      {
+         if (document.compatMode == "CSS1Compat")
+            engine = 7; // standards mode
+      }
+      // There is no test for IE6 standards mode because that mode  
+      // was replaced by IE7 standards mode; there is no emulation.
+   }
+   // the engine variable now contains the document compatibility mode.
+}
+
+
+
+
+var wInst = window
+var bOpen = false
+
+var imgPlay = new Image();
+imgPlay.src = "https://s3.amazonaws.com/la-web-assets/public/images/buttons/play.gif"
+var imgPause = new Image();
+imgPause.src = "https://s3.amazonaws.com/la-web-assets/public/images/buttons/stop.gif"
+
+
+// Set slideShowSpeed (milliseconds)
+var slideShowSpeed = 5000
+
+// Duration of crossfade (seconds)
+var crossFadeDuration = 3
+</script> 
+
+<link rel="stylesheet" type="text/css" href="css/widgets_headlines.css" />
+
+
+
+
+<style type="text/css">
+ .galleria-height {
+        height: 390px;
+        overflow: hidden;   
+    }
+.slideshow-div { margin-bottom: 10px; }
+
+
+.article700282 {
+	background-color: #FFFFFF;
+	color: #000000;	
+}
+
+.article700282 a {
+	color: #800080;
+	text-decoration: none; 
+	font-family: Verdana; 
+	font-weight: bolder;
+}
+
+.article700282 a:hover {
+	text-decoration: underline; 
+	color: #800080;
+}	
+
+
+.article699837 {
+	background-color: #FFFFFF;
+	color: #000000;	
+}
+
+.article699837 a {
+	color: #800080;
+	text-decoration: none; 
+	font-family: Verdana; 
+	font-weight: bolder;
+}
+
+.article699837 a:hover {
+	text-decoration: underline; 
+	color: #800080;
+}	
+
+
+
+.centered { 
+	margin: 0 auto; 
+}
+
+
+.News {
+	width: 100%;
+}
+
+
+</style>
+
+
+
+<link href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="/js/jquery-1.10.2.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="/js/jquery.timepicker_old.min.js"></script>
+<script src="/js/bootstrap23.min.js"></script>
+<script src="/js/jquery.cookie.js"></script>
+<!-- bxSlider Javascript file -->
+<script src="/js/bxSlider/jquery.bxslider.js"></script>
+
+<!--Color Picker-->
+<script src="/js/colpick-jQuery-Color-Picker-master/js/colpick.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".colpick-input").focus(function(event) {
+            var input = $(this);
+            var initValue = input.val();
+            if (initValue){
+                initValue = initValue.replace("#", "");
+            }
+            input.colpick({
+                color: initValue,
+                submit: false,
+                colorScheme:'dark',
+                layout:'hex',
+                onChange: function(hsb, hex){
+                    input.val("#"+hex);
+                    colpickCallback();
+                }
+            });
+        });
+    })
+</script>
+
+<!--Date picker-->
+<script type="text/ecmascript">
+    $(function () {
+        $(".jq_ui_date").datepicker({
+            showButtonPanel: true,
+            changeMonth: true,
+            changeYear: true,
+ 
+            dateFormat: "mm/dd/yy"
+        });
+    });
+</script>
+
+<!--Admin/public view toggle-->
+<script type="text/javascript">
+    $(function(){
+        var admin = $("#admin-view");
+        var pub = $("#public-view");
+        if (typeof(CKEDITOR) != "undefined"){
+            var instances = [];
+            for (i in CKEDITOR.instances){
+                var inst = CKEDITOR.instances[i].name;
+                instances.push(inst);
+            }
+        }
+
+        admin.on("click", function(){
+            if (!$(this).hasClass("active")){
+                $(this).addClass("btn-primary");
+                pub.removeClass("btn-primary");
+            }
+            $(".admin-ctrl").show();
+            $("#navlist > ul > li > a > strike").parent("a").show();
+            $("a.expired").show();
+            $("strike.expired-article").parents("div[class*='article']").show();
+            $("strike.expired-headline").parents("table.headline-table").show();
+            $("strike.expired-article-newspage").parents("div.glasstop").show();
+            $("strike.expired-headline-newspage").parents("div[class*='art']").show();
+            $("td.news_headline_text_cell > a > strike").parents("div.listitem").show();
+            if (typeof(CKEDITOR) != "undefined"){
+                for (i=0; i<instances.length; i++){
+                    var inst = instances[i];
+                    div = $("#"+inst);
+                    div.attr("contenteditable", true);
+                    CKEDITOR.inline(inst);
+                }
+            }
+        });
+
+        pub.on("click", function(){
+            if (!$(this).hasClass("active")){
+                $(this).addClass("btn-primary");
+                admin.removeClass("btn-primary");
+            }
+            $(".admin-ctrl").hide();
+            $("#navlist > ul > li > a > strike").parent("a").hide();
+            $("a.expired").hide();
+            $("strike.expired-article").parents("div[class*='article']").hide();
+            $("strike.expired-headline").parents("table.headline-table").hide();
+            $("strike.expired-article-newspage").parents("div.glasstop").hide();
+            $("strike.expired-headline-newspage").parents("div[class*='art']").hide();
+            $("td.news_headline_text_cell > a > strike").parents("div.listitem").hide();
+            if (typeof(CKEDITOR) != "undefined"){
+                for (i=0; i<instances.length; i++){
+                    var inst = instances[i];
+                    div = $("#"+inst);
+                    CKEDITOR.instances[inst].destroy();
+                    div.attr("contenteditable", false);
+                }
+            }
+        });
+    });
+</script>
+<script src="/js/jquery.bootstrap-growl.min.js"></script>
+
+<!--Login bar admin controls-->
+<script type="text/javascript">
+  $(function(){
+
+    $("#login-link").click(function(){
+      setTimeout(function(){
+        $('#UserName').focus();
+      }, 0);
+    });
+    
+    $("#admin-tools").click(function(){
+      $("#admin-tray").slideToggle("fast", function(){
+        if ($("#admin-tray").is(":visible")){
+          $("#admin-caret").attr('class', 'fa fa-caret-down');
+        }else{
+          $("#admin-caret").attr('class', 'fa fa-caret-right');
+        }
+      });
+    });
+
+    $("td.admin-tool-cell").hover(function() {
+      $(this).children('.dropdown').toggleClass('open');
+    }, function() {
+      $(this).children('.dropdown').toggleClass('open');
+    });
+
+  });
+
+  function auth(){
+    $("#login-button").addClass('disabled').text("Authenticating...");
+  }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $("#nag").popover();
+
+        if(typeof String.prototype.trim !== 'function') {
+            String.prototype.trim = function() {
+                return this.replace(/^\s+|\s+$/g, '');
+            };
+        };
+    });//end function
+
+    function nagPopover(){}
+
+
+</script>
+
+<!--Appearance Panel Script-->
+<script type="text/javascript">
+    $(function(){
+        var btn = $("#appearance_panel_btn");
+        var icon = $("#appearance_panel_btn>i");
+        var panel_spans = $("ul.appearance_panel li span");
+        btn.on("click", function(){
+            icon.toggleClass("fa-caret-left fa-caret-right");
+            panel_spans.toggle();
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    /*!
+ * jQuery-ajaxTransport-XDomainRequest - v1.0.2 - 2014-05-02
+ * https://github.com/MoonScript/jQuery-ajaxTransport-XDomainRequest
+ * Copyright (c) 2014 Jason Moon (@JSONMOON)
+ * Licensed MIT (/blob/master/LICENSE.txt)
+ */
+    (function(a){if(typeof define==='function'&&define.amd){define(['jquery'],a)}else{a(jQuery)}}(function($){if($.support.cors||!$.ajaxTransport||!window.XDomainRequest){return}var n=/^https?:\/\//i;var o=/^get|post$/i;var p=new RegExp('^'+location.protocol,'i');$.ajaxTransport('* text html xml json',function(j,k,l){if(!j.crossDomain||!j.async||!o.test(j.type)||!n.test(j.url)||!p.test(j.url)){return}var m=null;return{send:function(f,g){var h='';var i=(k.dataType||'').toLowerCase();m=new XDomainRequest();if(/^\d+$/.test(k.timeout)){m.timeout=k.timeout}m.ontimeout=function(){g(500,'timeout')};m.onload=function(){var a='Content-Length: '+m.responseText.length+'\r\nContent-Type: '+m.contentType;var b={code:200,message:'success'};var c={text:m.responseText};try{if(i==='html'||/text\/html/i.test(m.contentType)){c.html=m.responseText}else if(i==='json'||(i!=='text'&&/\/json/i.test(m.contentType))){try{c.json=$.parseJSON(m.responseText)}catch(e){b.code=500;b.message='parseerror'}}else if(i==='xml'||(i!=='text'&&/\/xml/i.test(m.contentType))){var d=new ActiveXObject('Microsoft.XMLDOM');d.async=false;try{d.loadXML(m.responseText)}catch(e){d=undefined}if(!d||!d.documentElement||d.getElementsByTagName('parsererror').length){b.code=500;b.message='parseerror';throw'Invalid XML: '+m.responseText;}c.xml=d}}catch(parseMessage){throw parseMessage;}finally{g(b.code,b.message,c,a)}};m.onprogress=function(){};m.onerror=function(){g(500,'error',{text:m.responseText})};if(k.data){h=($.type(k.data)==='string')?k.data:$.param(k.data)}m.open(j.type,j.url);m.send(h)},abort:function(){if(m){m.abort()}}}})}));
+</script>
+
+
+<script type="text/javascript">
+
+
+</script>
+
+<!--Tracking-->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-2070627-2', 'auto');
+  ga('send', 'pageview');
+
+    var trackOutboundLink = function(url, campaign) {
+       ga('send', 'event', campaign, 'click', url, {
+         'transport': 'beacon',
+         //'hitCallback': function(){document.location = url;}
+       });
+    }
+</script>
+
+<!--apiLoader-->
+<script type="text/javascript">
+    function apiLoader(view){
+        if (view == "hide"){
+            $("#loader_").addClass('zoomOut').removeClass('zoomIn').hide();
+        }else{
+            $("#loader_").addClass('zoomIn').show();
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    // $(function(){
+    //     $( ".sortable" ).sortable({
+    //       handle: ".panel-body",
+    //       placeholder: "panel-placeholder"
+    //     });
+    // });
+</script>
+
+
+
+<script type="text/javascript" src="/js/moment.js"></script>
+<script src="/Tools/Masonary/jquery.masonry.min.js"></script>
+<script src="/Tools/Masonary/js/modernizr-transitions.js"></script>
+<link href="//leagueathletics.com/js/galleria/themes/classic/galleria.classic.css" rel="stylesheet" />
+<script src="//leagueathletics.com/js/galleria/galleria-1.2.9.min.js"></script>
+<script src="//leagueathletics.com/js/galleria/themes/classic/galleria.classic.min.js"></script>
+
+<script>
+    $(function(){
+       $(".carousel-control").hide();    
+       $("#myCarousel").hover(
+            function(){
+                $(".carousel-control").fadeIn();    
+            },
+            function(){
+                $(".carousel-control").hide();
+            }
+        );
+    });
+</script>
+
+
+<link href="https://s3.amazonaws.com/la-web-assets/public/images/fonts/oswald-font.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/js/jquery.marquee/css/jquery.marquee.min.css">
+<!-- Copyright (c) 2000-2017 by LeagueAthletics.com, LLC. Tel: (877) 932-6747, email: info@LeagueAthletics.com -->
+<!-- No portion of this web site may be used without written permission -->
+
+
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<!-- Custom meta tags -->
+
+	<meta name="description" content="Serving 3rd-8th grade football players attending any school in District 112 area and the Communities of Chaska, Chanhassen, Carver, Victoria & East Union">
+	<meta name="keywords" content="Football, CCFA, Chaska Chanhassen Football Association, Chaska, MN, 55318, Goal, athletic, league, association, team, sports, website, coach, schedule, scores, messages, player statistics">
+
+<link rel="shortcut icon" type="image/ico" href="https://s3.amazonaws.com/la-web-assets/public/images/favicon/football/favicon.ico" />	
+
+
+
+<!-- styles -->
+<link href="/css/jquery.timepicker.css" rel="stylesheet" />
+<link href="/css/datepicker.css" rel="stylesheet" />
+<link href="/css/bootstrap23.min.css" rel="stylesheet">
+<!--<link href="/css/FontAwesome4/css/font-awesome.min.css" rel="stylesheet">
+<style type="text/css">@import url("/mobile/assets/css/font-awesome.css");</style>-->
+<link href="/css/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- Scoreslider CSS file -->
+<link href="/js/bxSlider/jquery.bxslider.css" rel="stylesheet" />
+
+<!--Color Picker Css-->
+<link rel="stylesheet" href="/js/colpick-jQuery-Color-Picker-master/css/colpick.css" />
+<style type="text/css">
+	div.colpick{
+		z-index: 1;
+		-webkit-border-radius: 0;
+		-moz-border-radius: 0;
+		border-radius: 0;
+	}
+
+	.colpick_dark{
+		background-color: rgba(0,0,0,0.6);
+	}
+
+	.colpick_hex_field input{
+		right: 0;
+	}
+</style>
+
+
+<!-- 1 -->
+
+<!--Includes standard CSS as well as base styles-->
+<style type="text/css">
+	/* Standard Styles */
+	@import url(//fonts.googleapis.com/css?family=Open+Sans:400,300,700);
+	@import url(//fonts.googleapis.com/css?family=Oswald:400,300,700);
+	@import url(//fonts.googleapis.com/css?family=Roboto:400,300,700);
+	@import url(//fonts.googleapis.com/css?family=Exo:300,400,700|Titillium+Web:400,300,700);    
+
+	
+
+	
+</style>
+
+
+
+<link rel="stylesheet" type="text/css" href="/Framework/Basestyles.css">
+<link rel="stylesheet" type="text/css"  href="https://s3.amazonaws.com/files.leagueathletics.com/Text/CSS/2602_Custom.css">
+
+<style type="text/css">
+
+</style>
+
+
+
+<!--Stock Theme CSS files-->
+<style type="text/css">
+/* Pueblo */
+table.dialog {
+	background-color: #ffffff;
+	border: 1px solid #BBB; 
+	padding: 5px;
+	-moz-border-radius: 5px; 
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	overflow:hidden;
+}
+
+
+div.PopupTitle {
+	padding: 2px 6px 0px;
+	color: #FFFFFF;
+	font-size: 14px;
+	font-weight: bolder;
+	height: 21px;	
+}
+
+div.popUpDiv {
+	position: absolute;
+	background-color: #EEE;
+	background-image: url('https://s3.amazonaws.com/la-web-assets/public/images/dialogback.png');	
+	background-position: top left; 
+	background-repeat: repeat-x;
+	border: 1px solid #333333; 
+	-moz-border-radius: 8px; 
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	height: 100%;
+	overflow:hidden;
+	z-index: 90010;
+	visibility: hidden;
+}
+
+
+div.shadowDiv {
+	position: absolute;
+	background-color: #333333; 
+	-moz-border-radius: 8px; 
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+}
+
+a.menu, a.menudown, a.menudown:visited, a.menu:visited { 
+	display: block;
+	height: 100%;
+	padding: 4px; 
+	font-family: arial; 
+	font-size: 11px; 
+	font-weight: bold; 
+	text-decoration: none; 
+	text-align: center;
+	border: 1px solid; 
+}
+
+/*************************************************************/
+
+/* Verticle Menu Definitions */
+#navlist{
+	padding: 0;
+}
+
+#navlist ul {
+	padding: 5px; /*removes indent Mozilla and NN7*/
+}
+
+#navlist a, #navlist a:visited, #navlist h2 {
+	padding: 5px;
+}
+
+
+/* admin left vert menu */
+#navlist h2 {
+	background-color: #ff9900;
+	padding:5px;
+	cursor: default;
+	border-radius: 5px;
+}
+
+#navlist h2 a:hover {
+	background-color: #ff6600;
+	padding:5px;
+	cursor: default;
+	border-radius:5px;
+}
+
+#navlist h2.X {
+	padding: 5px;
+	background-image: url('https://s3.amazonaws.com/la-web-assets/public/images/menumoreblack.png');
+	background-repeat: no-repeat;
+	background-position: right;
+	background-origin: content-box;
+}
+/* end admin vert menu */
+
+div#navlist ul ul {
+	position: absolute;
+	top: 0;
+	left: 100%; /* to position them to the right of their containing block */
+	width: 100%; /* width is based on the containing block */
+	z-index: 400; 
+    padding: 5px;
+    border-radius: 8px;
+	box-shadow: 1px 1px 10px 2px #333;
+}
+/* End Verticle Menu Definitions */
+
+
+
+
+
+/* Horizontal Menu Definitions */
+#navdropdown{
+	margin-top: 5px;
+}
+
+#navdropdown ul {
+	padding: 5px; /*removes indent Mozilla and NN7*/
+}
+
+#navdropdown a.menutab, #navdropdown a.menutab:visited {
+	padding: 5px; 
+	font-size: 12px; 
+	background-color: #333333;
+	border: 1px solid #333333;
+}
+
+a.menutab, a.menutab:visited, a.menutab:hover {
+	font-size: 12px; 
+	border-radius: 5px;
+}
+
+
+#navdropdown a.tabselect, #navdropdown a.tabselect:visited, #navdropdown a.tabselect:hover {
+	font-size: 12px;
+	text-shadow: 0 0 0;
+}
+
+
+#navdropdown a, #navdropdown a:visited, #navdropdown h2 {
+	font-size: 12px; 
+}
+
+#navdropdown a, #navdropdown a:visited{
+	color: #DCDCDC;
+}
+
+/* admin vertical drop menu top */
+#navdropdown h2 {
+	background-color: #ff9900;
+	color: #000000;
+	margin:2px 0 0 0;
+	padding:2px;
+	cursor: default;
+	border-radius:5px;
+}
+
+#navdropdown h2.X, #navdropdown h2.X:visited {
+	padding: 2px;
+}
+
+#navdropdown h2.XLeft, #navdropdown h2.XLeft:visited {
+	padding: 5px 6px;
+}
+
+div#navdropdownAdmin li {
+	/* make the list elements a containing block for the nested lists */
+	margin:0 5px 0 3px; 
+} 
+
+div#navdropdown ul ul {
+	left: auto;
+	width: 146px;   /* Had been 146px or 100% */ 
+	padding: 5px;
+    border-radius: 8px;
+	box-shadow: 1px 1px 10px 2px #333;
+}
+
+div#navdropdownAdmin ul ul {
+	border-radius: 5px;
+}
+
+div#navdropdown ul ul ul.FlyLeft {
+	position: absolute;
+	top: 0;
+	left: -155px;
+	width: 100%; /* width is based on the containing block */
+}
+/* End Verticle Menu Definitions */
+
+
+
+
+div.MenuX{
+	width: 100%;
+	padding:0;
+	background-image: url('https://s3.amazonaws.com/la-web-assets/public/images/MenuMoreWhite.png');
+	background-repeat: no-repeat;
+	background-position: right;
+	background-origin:content-box;
+}
+
+div.MenuXLeft{
+	width: 100%;
+	padding: 0;
+	background-image: url('https://s3.amazonaws.com/la-web-assets/public/images/MenuMoreWhiteLeft.png');
+	background-repeat: no-repeat;
+	background-position: left;
+	background-origin:content-box;
+}
+
+#navdropdown li:hover a.menutab{
+	color: #DCDCDC;
+	background-color: #000000;
+    border: 1px solid #333333;
+    padding: 5px;
+    text-shadow: 0 0 0;
+}
+
+#navdropdown a.tabselect,
+#navdropdown a.tabselect:visited,
+#navdropdown a.tabselect:hover{
+	padding: 5px;
+	background-color: #000000;
+	color: #DCDCDC;
+	border: 1px solid #333333;
+	border-radius:5px;
+}
+
+#navdropdown ul ul li a,
+#navdropdown ul ul li a:hover,
+#navdropdown ul ul li a:visited{
+	padding: 5px;
+	margin:2px 0 2px 0;
+	border-radius: 5px;
+}
+
+#navdropdown ul ul li a:hover{
+	background-color: #333333 !important;
+}
+
+#navlist a,
+#navlist a:visited{
+	padding:5px;
+	color: #DCDCDC;
+	background-color: #000000;		
+	margin: 2px 0 2px 0;
+	border-radius: 5px;
+	border: 0;
+}
+
+#navlist a:hover{
+	background-color: #333333;
+	/*color: #FFFFFF;*/
+	border: 0;
+}
+
+#navlist .select,
+#navlist .select:visited,
+#navlist .select:hover{
+	background-color: #333333;
+	color: #DCDCDC; 
+	/*border-color: #800080 #800080 #000000 #800080;*/
+}
+
+#navlist .X,
+#navlist .X:visited{
+	padding: 5px;
+	margin: 4px 2px 2px 0;
+    background-origin: content-box;
+}
+
+div#navlist ul ul{
+	background-color: #333333;
+}
+
+#navlist h2,
+#navdropdown h2{
+	background-color:#d9f3ff;
+	color: #000;
+}
+
+#navdropdown a,
+#navdropdown a:visited{
+	border: none;
+    color: ;
+    border-color: #505050 #000 #000 #505050;
+}
+
+#navdropdown a:hover{
+	color: ;
+	background-color: ;
+}
+
+#navdropdown ul {
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+}
+
+div#navdropdown ul:hover,
+#navdropdown ul ul li a{
+	background-color: #000000;
+}
+
+div#navdropdown ul ul,
+div#navdropdown ul ul:hover,
+div#navdropdown ul ul ul{
+	background-color: #333333;
+}
+
+div#navdropdownAdmin ul ul {
+	position: absolute;
+	top: 100%;
+	right: 5px;
+	left: -100%;
+	text-align: left;
+	width: 100%;   /* Had been 100% */
+	z-index: 1200; 
+	border: none;
+	border-radius: 5px;
+	padding: 5px;
+	background-color: #333333;
+}
+
+td.LAPageContent {
+	margin-left:5px;
+	border-radius:8px;
+	/*width:84%;*/
+}
+
+#schedule_slider_wrapper .slider_prev,
+#schedule_slider_wrapper .slider_next{
+	width: 37px;
+}
+
+.bodyTable{
+	padding: 10px 0px !important;
+	background-color: transparent !important;
+}
+
+#leftNavCell{
+	padding: 5px;
+	background-color: #000000;
+	border-radius: 8px;
+}
+
+#PageBody{
+	border-radius: 8px;
+	
+	background-color: ;
+	
+}
+
+#topnav{
+	padding: 0px;
+	border-radius: 8px;
+}
+
+#oBanner{
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+#Container{
+	box-shadow: 0 0 0 !important;
+}
+
+.leftNavLogo{
+	border-radius: 8px;
+}
+
+.firstdiv .navbar-inner .brand,
+.firstdiv .navbar-inner .nav .dropdown-toggle{
+    color: #333;
+}
+</style>
+
+<!--Remove border radii if not using a rounded style-->
+
+
+<!--Custom Advanced CSS styles-->
+<style type="text/css">
+	
+</style>
+
+<!--Set the sessionID for the user-->
+<script LANGUAGE="JavaScript" type="text/javascript">
+	var assocID = 2602;
+	var sessionID = "5DCFFCCB%2DF567%2D4DA0%2D90E1%2D3A1206C33620";
+
+	function menuOn(ctrl) {
+		if (ctrl.style.backgroundColor != "#000000") {
+			ctrl.style.backgroundColor = "#333333";
+			ctrl.style.cursor="hand";
+		}
+	}
+
+	function menuOff(ctrl) {
+		ctrl.style.backgroundColor = "";
+		ctrl.style.cursor="auto";
+	}
+</script>
+
+<!--[if lt IE 9]>
+    <script src="/mobile/assets/dist/html5shiv.js"></script>  
+<![endif]-->
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<link rel="stylesheet" href="/css/animate.css">
+
+
+<style type="text/css">
+    .firstdiv{
+        min-width: auto;
+    }
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+
+<style type="text/css">
+a.carousel-control,
+a.carousel-control:hover,
+a.carousel-control:active {
+    text-decoration:none;
+    background: #000000;
+    color:#DCDCDC;
+    top: 50%;
+    border:none;
+    font-weight: normal;
+    opacity: 1;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    font-family: Arial;
+}
+
+.carousel-indicators li {
+    background-color: #000000;
+    opacity: 0.75;
+}
+
+.carousel-indicators .active {
+    background-color: #800080;
+}
+
+body {
+    line-height: normal;
+}
+
+.LAPageContent { 
+	background-color: ; 
+}
+
+
+</style>
+
+<!--inits the score slider-->
+
+</head>
+
+  
+
+<body onUnload="closeCommentary();">
+<!--Start Navigation-->
+
+
+
+<script type="text/javascript">
+
+  var logedIn = 0;
+  if (document.getElementById("oMissionStatement")) {
+    if (logedIn == 0) document.getElementById("oMissionStatement").style.display = "none"
+  }
+
+function closeCommentary() {}
+  
+function setCookie(cookieName, cookieValue, nDays) {
+  var today = new Date();
+  var expire = new Date();
+  if (nDays == null || nDays == 0) nDays = 0;
+
+  expire.setTime(today.getTime() + (3600000 * 24 * nDays));
+
+  document.cookie = cookieName + "=" + encodeURIComponent(cookieValue)
+          + ";expires=" + expire.toGMTString()
+          + ";path=/"; //;HttpOnly;secure;";
+}
+
+//When the form is submitted, pass the info to ajax
+function loginGo(){
+
+    var user = $("#UserName").val();
+    if (user == 'User Name / Email' || user == '') {
+        document.location.href = "/CPanel/Password.asp?user=" + encodeURIComponent(user) + "&org=CHASKAFOOTBALL.COM"
+    } else {
+
+        var password = $("#TheKey").val();
+        if (password == 'Password') 
+            password = "";
+
+        login(user, password);
+    }
+
+}
+
+    //Login script moved to included scripts
+function login(user, key) {
+    
+    auth();
+
+    //var service = "https://api.leagueathletics.com/api/login?user=" + encodeURIComponent(user) + "&key=" + encodeURIComponent(key) + "&n=true&associd=2602"
+    var service = "https://api.leagueathletics.com/api/login?user=" + encodeURIComponent(user) + "&key=" + encodeURIComponent(key) + "&n=true&associd=2602"
+    //var service = "https://api.leagueathletics.com/api/login?user=" + encodeURIComponent(user) + "&key=" + encodeURIComponent(key) + "&n=true&org=CHASKAFOOTBALL.COM"
+    
+    $.ajax({
+        url: service,
+        global: true,
+        dataType: "jsonp",
+        cache: false,
+        jsonpCallback: "callback",
+        success: function(x) {
+
+            $("#login-button").text("Transferring...");
+            $("#UserName, #TheKey").val("");
+
+            var sRole = "";
+            if (x.rights) sRole = x.rights.ARole2602;
+
+            if (key.length == 0 && x.error.length == 0 && x.msg.length > 0 ) {
+
+                document.location.href = "/CPanel/Password.asp?org=CHASKAFOOTBALL.COM&msg=" + x.msg;
+
+            } else if (x.sessionID && (sRole || x.rights.TargetPage)) { 
+                
+                var loc = location.href.toLowerCase();
+                var domain = "https://LeagueAthletics.com";
+                if (loc.indexOf("dev.leagueathletics.com") > -1) 
+                    domain = "https://dev.LeagueAthletics.com";
+
+                if (x.rights.TargetPage && !sRole) {
+                    return location.href = domain + x.rights.TargetPage;
+                };//end if
+
+                if (sRole == "Member" || sRole == "BoardForum" || !sRole) {
+                    
+                    if (loc.indexOf("/roster.asp") == -1) {
+                        //location.href = domain + "/Registration/Family.asp?edit=1&AdultID=" + x.rights.MemberID2602 + "&org=CHASKAFOOTBALL.COM"
+                        
+                        location.href = domain + "/Registration/FamilyAccounts.asp?snid=" + x.sessionID + "&org=CHASKAFOOTBALL.COM"
+                        
+
+                        var test = '';
+                    } else {
+                        gotoSecureURL(x.sessionID);
+                    }
+
+                } else if (sRole == "Official") {
+                    location.href = domain + "/OfficialsHome.asp?snid=" + x.sessionID + "&org=CHASKAFOOTBALL.COM";
+
+                } else {
+                    gotoSecureURL(x.sessionID);
+                }                
+            } else {
+
+                document.location.href = "/CPanel/Password.asp?org=CHASKAFOOTBALL.COM&msg=" + x.error;
+                
+            }
+        },
+        error: function(x, error, message) {
+          
+            $("#UserName, #TheKey").val("");
+            document.location.href = "/CPanel/Password.asp?org=CHASKAFOOTBALL.COM&msg=" + x.error;
+
+        }
+    });
+}
+
+
+// Redirects to a secure LA address version of the current page.
+function gotoSecureURL(sessionID) {
+
+    // Get their currrent URL
+    var loc = location.href;
+    
+    //If they login from the Password page, take them to the homepage.
+    if (loc.toLowerCase().indexOf("/cpanel/password.asp") != -1){
+    	loc = loc.toLowerCase().replace("/cpanel/password.asp", "/default.asp");
+    }
+
+    //If they login from SecretWord.asp, take them to the selected page
+    if (loc.toLowerCase().indexOf("/secretword.asp?file=teamdocs.asp") != -1){
+        loc = loc.toLowerCase().replace("/secretword.asp?file=teamdocs.asp&", "/teamdocs.asp?");
+    }else if (loc.toLowerCase().indexOf("/secretword.asp?file=schedule.asp") != -1){
+        loc = loc.toLowerCase().replace("/secretword.asp?file=schedule.asp&", "/schedule.asp?");
+    }else if (loc.toLowerCase().indexOf("/secretword.asp?file=pictures.asp") != -1){
+        loc = loc.toLowerCase().replace("/secretword.asp?file=pictures.asp", "/pictures.asp");
+    }else if (loc.toLowerCase().indexOf("/secretword.asp") != -1){
+        loc = loc.toLowerCase().replace("/secretword.asp", "/roster.asp");
+    }
+    // Replace the host name portion with LeagueAthletics.com
+    var host = location.hostname.toLowerCase();
+    if (host.indexOf("dev.leagueathletics.com") == -1)
+        loc = loc.replace(host, "LeagueAthletics.com");
+
+    // Change protocal to https or add it if not present.
+    loc = loc.replace("http://", "https://");                
+    if (loc.indexOf("https://") == -1 )
+        loc = "https://" + loc;    
+                
+    // Add org= parameter if not already there.
+    if (loc.indexOf("org=") == -1) {
+        if (loc.indexOf("?") == -1) {
+            loc += "?";
+        } else {
+            loc += "&";
+        }               
+
+        loc += "org=CHASKAFOOTBALL.COM";
+    }
+
+    // Strip off any existing snid= values.
+    var iSnid = loc.indexOf("snid=");
+    if (iSnid >= 0) {
+        var iNd = loc.indexOf("&", iSnid + 1)
+        if (iNd == -1) iNd = loc.length - 1;
+        loc = loc.substr(0, iSnid) + loc.substr(iNd);
+    }
+
+    // Redirect to secure version of the page.
+    var aLoc = loc.split("#");
+    var hashLocation = aLoc[1] || '';
+    if (hashLocation) hashLocation = '#' + hashLocation;
+    var tempLoc = aLoc[0] + "&snid=" + sessionID + hashLocation;
+    location.href = tempLoc;
+    //location.href = loc + "&snid=" + sessionID;
+}
+
+
+//Growl at them
+function growl(msg, status) {
+    var msg = msg;
+    $.bootstrapGrowl(msg, {
+        ele: 'body', // which element to append to
+        type: status, // (null, 'info', 'error', 'success')
+        offset: { from: 'top', amount: 40 }, // 'top', or 'bottom'
+        align: 'right', // ('left', 'right', or 'center')
+        width: 320, // (integer, or 'auto')
+        delay: 10000,
+        allow_dismiss: true,
+        stackup_spacing: 10 // spacing between consecutively stacked growls.
+    });
+}
+</script>
+
+<!--Misson statement-->
+
+<div id="oMissionStatement">Serving 3rd-8th grade football players attending any school in District 112 area and the Communities of Chaska, Chanhassen, Carver, Victoria & East Union</div>
+
+<!-- Static navbar -->
+<div id="login-bar" class="navbar navbar-static-top">
+  <div id="login-bar-inner" class="navbar-inner">
+    <div class="container" style="width: 1000px;">
+      <ul class="nav">
+        
+        <li style="background-color:#222;">
+          <a href="http://LeagueAthletics.com" target="_blank" title="Powered by LeagueAthletics.com">
+            <img border="0" src="https://s3.amazonaws.com/la-web-assets/public/images/la_adminbar_logo_co.png" alt="LeagueAthletics.com - Sports Websites" style="height:20px;" />
+          </a>
+        </li>
+        
+        <li>
+          <a href="mailto:henrywhitneylax@gmail.com" title="Send us an email">
+          <i class="fa fa-envelope"></i>&nbsp;</a>
+        </li>
+
+        <li>
+          <a href="https://www.facebook.com/ccfafootball" target="_blank" title="Facebook">
+          <i class="fa fa-facebook-square"></i>&nbsp;</a>
+        </li>
+
+        <li>
+          <a href="http://twitter.com/ccfafb" target="_blank" title="Twitter">
+          <i class="fa fa-twitter"></i>&nbsp;</a>
+        </li>
+
+        <li>
+          <a href="http://instagram.com/ccfafootball" target="_blank" title="Instagram">
+          <i class="fa fa-instagram"></i>&nbsp;</a>
+        </li>
+ 
+        <li><a href="tel:+1952-210-7582">952-210-7582</a></li>
+
+
+      </ul>
+      <ul class="nav pull-right">
+
+
+        <li class="dropdown">
+            <a href="https://LeagueAthletics.com/CPanel/Password.asp?org=CHASKAFOOTBALL.COM" id="login-link">Sign in</a>
+          <!--<a href="javascript:void(0);" id="login-link" class="dropdown-toggle" data-toggle="dropdown">Sign in</a>
+          <ul id="login-form" class="dropdown-menu">
+            <li>
+              <div style="padding: 5px 10px;">
+          
+          <form class="form" id="LogIn"
+          name="LogIn"
+          method="post"          
+          action="javascript:loginGo();"
+          accept-charset="utf-8"
+          style="margin: 0px; padding: 0px;">
+
+
+                  <input type="hidden" name="TargetPage" value="/Default.asp">
+                  <input name="Time" type="hidden" value="60474.51">
+
+                  <input class="input-block-level" type="text" name="UserName" id="UserName" title="Enter your user name or email address to log in" placeholder="Email" />
+          
+                  <input class="input-block-level" type="password" name="TheKey" title="Enter an administration password or your personal password to log in as a member." id="TheKey" placeholder="Password" size="12" autocomplete="off" />
+
+                  <input type="hidden" name="Password" id="Password" title="Enter an administration password or your personal password to log in as a member." value="Password" size="12" autocomplete="off" />
+        
+                  <input type="text" name="LAClubID" id="LAClubID" class="LAfly" size="12">
+          
+                  <button id="login-button" class="btn btn-block btn-primary" type="submit">
+                    Sign In
+                  </button>
+                  <a class="btn btn-block btn-link" style="color: #fff; text-shadow: 0 0 0; text-decoration: none;" href="/CPanel/PasswordReset.asp?org=CHASKAFOOTBALL.COM">Forgot Password?</a>
+                </form>  
+              </div>
+            </li>
+          </ul>-->
+        </li><!--Login dropdown-->
+        
+	        <li>
+	        	<a href="/Registration/Default.asp?org=CHASKAFOOTBALL.COM">Register</a>
+	        </li>
+        
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div id="admin-tray">
+  <div style="width:1000px; margin: auto;">
+    <table style="width:100%;">
+      <tr>
+        <td class="admin-tool-cell">
+          <a id="admin-home" href="/cpanel/?org=CHASKAFOOTBALL.COM" style="color: #fff; font-weight: normal;">
+            <i class="fa fa-home admin-icon"></i><br> 
+            Home
+          </a>
+        </td>
+
+        <!--Config-->
+
+        <td class="admin-tool-cell admin-tool-cell-disabled">
+          <div class="dropdown">
+            <i class="fa fa-cog admin-icon"></i><br>
+            Configuration
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              
+            </ul>
+          </div>
+        </td>
+
+
+
+
+        <td class="admin-tool-cell">
+          <div class="dropdown">
+            <i class="fa fa-pie-chart admin-icon"></i><br>
+              Reports
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <li><a tabindex='-1' href=/Reports/?org=CHASKAFOOTBALL.COM>Dashboard</a></li>
+            </ul>
+          </div>
+        </td>
+
+        <!--Messaging-->
+
+        <td class="admin-tool-cell admin-tool-cell-disabled">
+          <div class="dropdown">
+            <i class="fa fa-comment admin-icon"></i><br>
+            Messaging
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              
+            </ul>
+          </div>
+        </td>
+        
+        <!--Members-->
+
+
+        <td class="admin-tool-cell admin-tool-cell-disabled">
+          <div class="dropdown">
+            <i class="fa fa-user admin-icon"></i><br>
+            Members
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              
+            </ul>
+          </div>
+        </td>
+
+        <!-- Teams -->
+
+        <td class="admin-tool-cell admin-tool-cell-disabled">
+          <div class="dropdown">
+            <i class="fa fa-flag admin-icon"></i><br>
+            Teams
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              
+            </ul>
+          </div>
+        </td>
+
+
+        <!-- Facilities -->
+
+        <td class="admin-tool-cell">
+          <div class="dropdown">
+            <i class="fa fa-map-marker admin-icon"></i><br>
+            Facilities
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <li><a tabindex='-1' href=/Cpanel/FacilityManager.asp?org=CHASKAFOOTBALL.COM>Facility Manager</a></li>
+            </ul>
+          </div>
+        </td>
+
+        <!-- Scheduling -->
+
+        <td class="admin-tool-cell">
+          <div class="dropdown">
+            <i class="fa fa-calendar admin-icon"></i><br>
+            Scheduling
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <li><a tabindex='-1' href=/Cpanel/GameCalendar.asp?org=CHASKAFOOTBALL.COM>Master Calendar</a></li>
+            </ul>
+          </div>
+        </td>
+
+        <!-- Tools -->
+
+        <td class="admin-tool-cell admin-tool-cell-disabled">
+          <div class="dropdown">
+            <i class="fa fa-wrench admin-icon"></i><br>
+            Tools
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              
+            </ul>
+          </div>
+        </td>
+
+        <!-- Support -->
+
+        <td class="admin-tool-cell">
+          <div class="dropdown">
+            <i class="fa fa-life-ring admin-icon"></i><br> 
+            Support
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+              <li><a tabindex='-1' href=http://tech.leagueathletics.com target='_blank'>Changelog</a></li><li><a tabindex='-1' href=/Help/index.shtml target='_blank'>Help Docs</a></li><li><a tabindex='-1' href=http://faq.leagueathletics.com target='_blank'>FAQs & Tutorials</a></li><li><a tabindex='-1' href=/Help/coach-guide/index.shtml target='_blank'>Coaches Help</a></li><li><a tabindex='-1' href=http://www.youtube.com/LeagueAthletics target='_blank'>Video Help</a></li><li><a tabindex='-1' href=/Forum/Default.asp?topic=2&amp;org=CHASKAFOOTBALL.COM>Help Forums</a></li><li><a tabindex='-1' href=http://leagueathletics.com/Help/marketplace.shtml target='_blank'>Marketplace</a></li><li class='divider' style='margin: 0; background-color: #000; border-bottom: 1px solid #333;'></li><li><a style='color: #ee6622;' tabindex='-1' href=mailto:support@leagueathletics.com>Contact Support</a></li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<!--End New login bar elements-->
+
+
+
+<!-- Start Appearance Panel -->
+
+<!-- End Appearance Panel -->
+
+
+<table class="LASponsorArea" border="0" align="center" cellspacing="0" cellpadding="0">
+
+
+
+  <tr>    
+    <td align="center" valign="middle" height="88" style="min-height:88px;">
+      <table class="LATextSponsorBanner" border="0" cellpadding="0" cellspacing="0" height="55" style="color: #FFFFFF; background-color: #000000;">
+      <tr><td align="center">
+      Sponsored By:&nbsp;
+      <a href='/Goto.asp?URL=http%3A%2F%2Flinhoff%2Ecom%2F&AssocID=2602' target='new'><span class="head" style="color: #FFFFFF; text-decoration:none">&nbsp;<strong><i>Linhoff Photo & Digital Imaging</i></strong></a></span>
+      </td></tr>
+      </table>
+    </td>
+    <td></td>
+  </tr>
+  <tr>
+    <td colspan="2" height="2">
+    <img border="0" src="https://s3.amazonaws.com/la-web-assets/public/images/c.gif" alt="Chaska, MN"></td>
+  </tr>  
+
+</table>
+
+
+<div id="LAPageBackground">
+
+
+
+<table id="Container" align="center" border="0" cellpadding="0" cellspacing="0" width="1000" style="position: relative; clear: both; z-index: 1;"> 
+
+  <tr>
+    <td valign="top">
+      
+<script language="javascript" type=text/javascript>
+function searchFocus(obj) {
+	gTopBarHasFocus = true;
+	
+	if (obj.value == "Site Search") {
+		obj.value = "";
+		obj.style.color = "#000000";
+//		obj.style.fontWeight = "bold";
+	}
+}
+</script>
+
+<!--MenuBar.asp Start-->
+
+<a NAME="Page_Top"></a>
+
+
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+		<td valign="top" height="100%">
+
+
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="height: 100%; ">
+				<tr>
+					<td valign="top">
+
+
+						<table width='100%' border='0' cellpadding='0' cellspacing='0'>
+							<tr>
+								<td>
+									<!--This is where the banner and horiz nav start-->
+									<table border="0" cellpadding="0" cellspacing="0" style="width:100%; padding-top:0;" >
+	
+		<!--Banner Start-->
+		<tr>
+		<td id="oBanner" bgcolor='transparent' align='Center' valign="middle" style="z-index: 0;"      
+				onmouseover="document.getElementById('oTopBar').style.visibility='visible';  return true;"        
+				onmouseout="if (!gTopBarHasFocus) document.getElementById('oTopBar').style.visibility='hidden';">
+			<div id="menuBarPageBanner" style="position: relative; z-index: 0;">
+				
+				<img id="menuBarPageBannerImg" src='http://files.LeagueAthletics.com/Images/Logos/2602_banner.png' border="0" alt='Chaska Chanhassen Football Association, Football, Goal, Field'>
+			
+		<!--  -->
+
+		
+
+		<script type="text/javascript">
+		var gTopBarHasFocus = false;
+		</script>
+
+		
+		<div id="oTopBar" style="display: none;"></div>
+		
+
+
+
+
+
+      
+			</div>
+		</td>
+		</tr>
+
+  <tr>
+
+	<!--TopNav.asp Start-->    
+    <td>
+
+    <div id='navdropdown'>
+
+      <table id="topnav" border='0' cellpadding='0' cellspacing='0' >
+
+        <tr>
+
+          <td nowrap >
+            <ul>
+              <li style='z-index: 1000;'>
+
+                <a class='tabselect' href='/Default.asp?org=CHASKAFOOTBALL.COM'>&nbsp;Association&nbsp;</a>
+<ul><li><a id='News' class='select' href="/Default.asp?org=CHASKAFOOTBALL.COM">Home</a></li><li><a id='116300' href='/Page.asp?n=116300&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Camps</a>
+</li>
+<li><a id='78458' href='/HeyCoach.asp?n=78458&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Chanhassen Coaches&nbsp;<i class='icon-lock' style='color:#FFFFFF; line-height:12px;'></i></a>
+</li>
+<li><a id='78134' href='/CalendarOfEvents.asp?n=78134&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Events Calendar</a>
+</li>
+<li><a id='78135' href='/MasterGameSchedule.asp?n=78135&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Master Schedule</a>
+</li>
+<li><a id='16380' href='/Page.asp?n=16380&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Weight Restriction</a>
+</li>
+<li><a id='78133' href='/Store/Default.asp?n=78133&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Online Store</a>
+</li>
+<li><a id='15639' href='/Page.asp?n=15639&amp;org=CHASKAFOOTBALL.COM'  title=''>
+FAQ</a>
+</li>
+<li><a id='51061' href='/Documents.asp?n=51061&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Documents</a>
+</li>
+<li><a id='Registration' href="/Registration/Default.asp?org=CHASKAFOOTBALL.COM">Register Online</a></li><li><a id='Ref' href="/HeyCoach.asp?type=reff&amp;org=CHASKAFOOTBALL.COM">Officials Area</a></li><li><a id='Donate' href="/UserForm.asp?RegID=132543&amp;org=CHASKAFOOTBALL.COM">Donate</a></li><li><a id='Links' href="/Links.asp?org=CHASKAFOOTBALL.COM">Links</a></li><li><a id='Pictures' href="/Pictures.asp?org=CHASKAFOOTBALL.COM">Pictures</a></li><li><a id='MyAccount' href="/Registration/Signin.asp?edit=1&amp;org=CHASKAFOOTBALL.COM">Edit My Account</a></li>
+
+
+  </ul>
+  
+
+              </li>
+            </ul>
+          </td>
+    <td nowrap>
+      <ul>
+        <li style='z-index: 998;'>
+          <a class='menutab' href='/Bulletins.asp?org=CHASKAFOOTBALL.COM'>
+          &nbsp;Team&nbsp;</a>
+
+    <ul>
+      <!--<li class="seperator">&nbsp;</li>-->
+      <li>
+        <a  href="/Bulletins.asp?org=CHASKAFOOTBALL.COM"><div class='MenuX'>
+        Choose a&nbsp;Team</div></a>
+<ul ><li><a href='/Bulletins.asp?MyTeam=643136&amp;org=CHASKAFOOTBALL.COM'>Winter HS Session</a></li>
+<li><a href='/Bulletins.asp?MyTeam=643135&amp;org=CHASKAFOOTBALL.COM'>Winter Youth Session</a></li>
+<li><a href='/Bulletins.asp?MyTeam=643137&amp;org=CHASKAFOOTBALL.COM'>Spring HS Session</a></li>
+<li><a href='/Bulletins.asp?MyTeam=643138&amp;org=CHASKAFOOTBALL.COM'>Spring Youth Session</a></li>
+<li><a href='/Bulletins.asp?MyTeam=643139&amp;org=CHASKAFOOTBALL.COM'>Summer Academy</a></li>
+</ul>
+      </li>
+      
+
+
+      <li>
+        <a  href="/Schedule.asp?org=CHASKAFOOTBALL.COM">
+        Schedule</a>
+      </li>
+  
+
+
+      <!--<li class="seperator">&nbsp;</li>-->
+
+
+      <li>
+        <a  href="/Standings.asp?org=CHASKAFOOTBALL.COM" title="Click to view league standings">
+         Standings</a>
+      </li>
+
+      <li>
+        <a  href="/TeamsSelect.asp?org=CHASKAFOOTBALL.COM" title="Click to create a schedule for multiple teams">
+        Multi-Schedule</a>
+      </li>
+
+
+    </ul>
+        </li>
+      </ul>
+    </td>
+    <td nowrap>
+      <ul>
+        <li style='z-index: 997;'>
+          <a  class='menutab' href='/Page.asp?n=78466&org=CHASKAFOOTBALL.COM' >
+          &nbsp;&nbsp;About Us&nbsp;&nbsp;</a>
+    <ul><li><a id='78466' href='/FacilityList.asp?n=78466&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Fields</a>
+</li>
+<li><a id='78916' href='/Page.asp?n=78916&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Weather Guidelines</a>
+</li>
+<li><a id='78470' href='/Page.asp?n=78470&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Camps/Clinics</a>
+</li>
+<li><a id='78469' href='/Page.asp?n=78469&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Philosophy</a>
+</li>
+<li><a id='78465' href='/Page.asp?n=78465&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Concussion Info</a>
+</li>
+</ul>        </li>
+      </ul>
+    </td>
+    <td nowrap>
+      <ul>
+        <li style='z-index: 996;'>
+          <a  class='menutab' href='/Page.asp?n=78020&org=CHASKAFOOTBALL.COM' >
+          &nbsp;&nbsp;Volunteer Info&nbsp;&nbsp;</a>
+    <ul><li><a id='78020' href='/Page.asp?n=78020&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Volunteer</a>
+</li>
+<li><a id='155037' href='/Volunteer/VolAlertCalendar.asp?n=155037&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Volunteer Opportunities</a>
+</li>
+</ul>        </li>
+      </ul>
+    </td>
+    <td nowrap>
+      <ul>
+        <li style='z-index: 995;'>
+          <a  class='menutab' href='/Page.asp?n=78022&org=CHASKAFOOTBALL.COM' >
+          &nbsp;&nbsp;Contacts&nbsp;&nbsp;</a>
+    <ul><li><a id='78022' href='/Contacts.asp?n=78022&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Contacts</a>
+</li>
+<li><a id='78917' href='/Page.asp?n=78917&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Mailing Address</a>
+</li>
+</ul>        </li>
+      </ul>
+    </td>
+    <td nowrap>
+      <ul>
+        <li style='z-index: 994;'>
+          <a  class='menutab' href='/Page.asp?n=116161&org=CHASKAFOOTBALL.COM' >
+          &nbsp;&nbsp;Sponsorship&nbsp;&nbsp;</a>
+    <ul class='lastTab'><li><a id='116161' href='/Page.asp?n=116161&amp;org=CHASKAFOOTBALL.COM'  title=''>
+CCFA Sponsorship</a>
+</li>
+<li><a id='116163' href='/Sponsors.asp?n=116163&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Our Sponsors</a>
+</li>
+      <li>        <a  href='/UserForm.asp?RegID=131498&amp;org=CHASKAFOOTBALL.COM'>        CCFA Sponsorship Form</a>      </li>      <li>        <a  href='/UserForm.asp?RegID=132655&amp;org=CHASKAFOOTBALL.COM'>        Golf Sponsorship Form</a>      </li></ul>        </li>
+      </ul>
+    </td>
+</tr></table></div>
+
+    </td>
+  </tr>
+
+
+</table>
+
+</td></tr>
+</table>
+
+
+    <table class="bodyTable" border="0" cellpadding="0" cellspacing="0" width="100%" bordercolor="#800080" style="background-color: #E3E3E3; padding: 10px 8px;">
+        
+  <tr>
+        
+  </tr>
+  
+  <tr>
+
+
+      <td id="leftNavCell" width="150" valign="top" nowrap  style="min-width: 150px;">
+    <script LANGUAGE="JavaScript" type="text/javascript">
+/*
+var wHelpInst = window
+var bHelpOpen = false
+
+function showHelp(bookMark) {
+	closeHelp();
+	wHelpInst = window.open('/Help/MessageDisplay.asp#' + bookMark, 'Help', config='height=300,width=500,resizable=yes,scrollbars=yes');	
+	bHelpOpen = true;
+	return false;
+}
+
+function closeHelp() {
+	if (bHelpOpen == true) wHelpInst.close();
+}
+*/
+</script>
+
+  
+
+<div id="navlist">
+
+<ul><li><a id='News' class='select' href="/Default.asp?org=CHASKAFOOTBALL.COM">Home</a></li><li><a id='116300' href='/Page.asp?n=116300&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Camps</a>
+</li>
+<li><a id='78458' href='/HeyCoach.asp?n=78458&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Chanhassen Coaches&nbsp;<i class='icon-lock' style='color:#FFFFFF; line-height:12px;'></i></a>
+</li>
+<li><a id='78134' href='/CalendarOfEvents.asp?n=78134&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Events Calendar</a>
+</li>
+<li><a id='78135' href='/MasterGameSchedule.asp?n=78135&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Master Schedule</a>
+</li>
+<li><a id='16380' href='/Page.asp?n=16380&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Weight Restriction</a>
+</li>
+<li><a id='78133' href='/Store/Default.asp?n=78133&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Online Store</a>
+</li>
+<li><a id='15639' href='/Page.asp?n=15639&amp;org=CHASKAFOOTBALL.COM'  title=''>
+FAQ</a>
+</li>
+<li><a id='51061' href='/Documents.asp?n=51061&amp;org=CHASKAFOOTBALL.COM'  title=''>
+Documents</a>
+</li>
+<li><a id='Registration' href="/Registration/Default.asp?org=CHASKAFOOTBALL.COM">Register Online</a></li><li><a id='Ref' href="/HeyCoach.asp?type=reff&amp;org=CHASKAFOOTBALL.COM">Officials Area</a></li><li><a id='Donate' href="/UserForm.asp?RegID=132543&amp;org=CHASKAFOOTBALL.COM">Donate</a></li><li><a id='Links' href="/Links.asp?org=CHASKAFOOTBALL.COM">Links</a></li><li><a id='Pictures' href="/Pictures.asp?org=CHASKAFOOTBALL.COM">Pictures</a></li><li><a id='MyAccount' href="/Registration/Signin.asp?edit=1&amp;org=CHASKAFOOTBALL.COM">Edit My Account</a></li>
+
+
+  </ul>
+  
+
+
+</div>
+
+
+
+
+<table border="0" cellpadding="2" cellspacing="0" width="100%">
+
+
+  <!-- <tr>
+    <td align="center">&nbsp;
+   
+    </td>
+  </tr> -->
+
+<script type="text/javascript">
+
+function setDropdowns(ctl) {
+	var cookieName = "Dropdowns2602";
+	
+	if (ctl.checked == true) {
+		setCookie(cookieName, "", 365);
+	} else {
+		setCookie(cookieName, "Disable", 365);
+	}
+	
+	window.location.href = window.location.href;
+}
+
+</script>
+
+
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+
+  <!--<tr>
+    <td align="center">
+    <div id="VisitorCounterLeft">
+    <br />
+      <span style="font-family: arial; font-size: 10px; color: #FFFFFF;">
+      Visitor:</span>
+      <span style="font-family: arial; font-size: 11px; font-weight: bolder; color: #FFCC00; background-color: #000; border: 1px inset #999; padding-left: 6px; padding-right: 4px;">
+      6,629</span>
+      </div>
+    </td>
+  </tr> -->  
+  
+  
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>
+      <a href="/HP.asp" class="HoneyPot">My my</a>
+      <a href="/Fly/" class="HoneyPot">My my</a>      
+    </td>
+  </tr>
+
+
+  <tr>
+      <td>
+          <a href="http://on.si.com/awesometeamo" target="_blank">
+              <img src="https://s3.amazonaws.com/la-web-assets/public/images/capri/website-sponsor-banner.png" />
+          </a>
+      </td>
+  </tr>
+
+
+  <tr>
+    <td>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+
+
+
+
+
+  <tr>
+    <td>&nbsp;</td>
+  </tr> 
+  <tr>
+    <td>&nbsp;</td>
+  </tr> 
+  <tr>
+    <td>&nbsp;</td>
+  </tr> 
+
+
+
+
+
+  <tr>
+    <td align=center>&nbsp;</td>
+  </tr>
+</table>
+      
+    </td>
+
+
+    <td valign="top" nowrap style="background-color:transparent; width:8px;">&nbsp;</td>
+    
+    <!--<td></td>-->
+    
+
+  
+<script type="text/javascript">
+  var logedIn = 0;
+  if (document.getElementById("ClientClubs")) {
+    if (logedIn == 0) document.getElementById("ClientClubs").style.display = "none"
+  }
+  
+  if (document.getElementById("oMissionStatement")) {
+    if (logedIn == 0) document.getElementById("oMissionStatement").style.display = "none"
+  }
+  
+  if (document.getElementById("ClientClubsByState")) {
+    if (logedIn == 0) document.getElementById("ClientClubsByState").style.display = "none"
+  }
+  
+  
+  
+</script>    
+
+  <td id="PageBody"  valign="top" bordercolor="#FFFFFF" class="LAPageContent" style="min-height: 700px; height: 700px;">
+
+
+<noscript>
+    <div id="scriptWarning" class="scriptWarning">
+         For full functionality of this site it is necessary to enable JavaScript.
+         Here are the <a class="scriptWarning" href="http://www.enable-javascript.com/" target="_blank">
+         instructions how to enable JavaScript in your web browser</a>.
+    </div>
+</noscript>
+
+
+<!--End Navigation-->
+ 
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #E3E3E3; min-height: 100%;">
+        
+                             
+        <tr>
+          <td valign="top" align="center" style="padding-top: 0px;">          
+          
+          <div 
+            style="position: relative;" 
+            
+            onmouseover="//document.getElementById('HomePageAppearanceX').style.display='block';"
+            onmouseout="//document.getElementById('HomePageAppearanceX').style.display='none';"
+            
+          >
+        
+
+        <table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+		  <div align="left">
+		   <div class="NewsMargin">
+		    <table id="NewsTable" border="0" cellpadding="0" cellspacing="0" width="100%" align="left">
+<tr><td><div class='article700282' style='position: relative; overflow: hidden; margin: 0px 0px 10px 0px; '>   <div class='NewsTitleBar Headline8'>     <a name='700282'></a><b>       Dicks Sporting Good CCFA Weekend July 29th & 30th   </b></div><div style='padding: 8px; '><p>&nbsp;</p>
+
+<p style="text-align: center;"><span style="font-size:24px;">Dicks Sporting Goods CCFA Weekend July 29th &amp; 30th&nbsp;</span></p>
+
+<p style="text-align: center;"><span style="font-size:24px;">More Information to follow</span></p>
+<br><div style='height: 14px;'><div class='pull-left'><span style='font-size:x-small;'>by 
+<SCRIPT TYPE='text/javascript'>
+    em="gmail.com";
+    em="henrywhitneylax" + '&#64;' + em;
+    ename="";
+    ename="Master Admin" + '' + ename;
+    document.write('<' + 'a href="mai' + 'lto:' + em + "?subject=Dicks Sporting Good CCFA Weekend July 29th & 30th " + '" title="Click to email this person">' + ename + '<' + '/a>');
+</SCRIPT> posted 07/06/2017</span></div><script type='text/javascript'>var addthis_pub='donmalin';</script><script type='text/javascript'>var addthis_share = {url_transforms : { shorten: { twitter: 'bitly', facebook: 'bitly' } } }</script><div class='pull-right'><a href='https://www.addthis.com/bookmark.php?v=20' onmouseover="return addthis_open(this, '', 'https://LeagueAthletics.com/Default.asp?org=CHASKAFOOTBALL.COM#700282', 'Dicks Sporting Good CCFA Weekend July 29th & 30th')" onmouseout='addthis_close()' onclick='return addthis_sendto()' style='color:#000; text-decoration:none;'>Share <i class='fa fa-share-square-o'></i></a><script type='text/javascript' src='https://s7.addthis.com/js/200/addthis_widget.js'></script></div></div></td></tr><tr><td><div class='article699837' style='position: relative; overflow: hidden; margin: 0px 0px 10px 0px; '>   <div class='NewsTitleBar Headline8'>     <a name='699837'></a><b>       Equipment Handout Dates   </b></div><div style='padding: 8px; '><p>&nbsp;</p>
+
+<p style="text-align: center;"><span style="font-size:22px;">CCFA Equipment Handout Dates</span></p>
+
+<p style="text-align: center;">&nbsp;</p>
+
+<div font-size:="" helvetica="" style="color: rgb(34, 34, 34); font-family: " text-align:=""><span style="font-size:22px;"><span style="color: rgb(38, 40, 42);"><span class="aBn" data-term="goog_841072266" style="border-bottom: 1px dashed rgb(204, 204, 204); position: relative; top: -2px; z-index: 0;" tabindex="0"><span class="aQJ" style="position: relative; top: 2px; z-index: -1;">Sunday 7/23</span></span>: &nbsp;7th and 8th Grade 6-7:30 PM</span></span></div>
+
+<div font-size:="" helvetica="" style="color: rgb(34, 34, 34); font-family: " text-align:="">&nbsp;</div>
+
+<div helvetica="" style="color: rgb(34, 34, 34); font-family: ">
+<div style="font-size: small; color: rgb(38, 40, 42); text-align: center;"><span style="font-size:22px;"><span class="aBn" data-term="goog_841072267" style="border-bottom: 1px dashed rgb(204, 204, 204); position: relative; top: -2px; z-index: 0;" tabindex="0"><span class="aQJ" style="position: relative; top: 2px; z-index: -1;">Monday 7/24</span></span>: &nbsp;6th Grade 7-8:30 PM</span></div>
+
+<div style="font-size: small; color: rgb(38, 40, 42); text-align: center;">&nbsp;</div>
+
+<div style="font-size: small; color: rgb(38, 40, 42); text-align: center;"><span style="font-size:22px;"><span class="aBn" data-term="goog_841072268" style="border-bottom: 1px dashed rgb(204, 204, 204); position: relative; top: -2px; z-index: 0;" tabindex="0"><span class="aQJ" style="position: relative; top: 2px; z-index: -1;">Tuesday 7/25</span></span>: &nbsp;5th Grade&nbsp;<span background-color:="" font-size:="" helvetica="" style="color: rgb(38, 40, 42); font-family: " text-align:="">7-8:30 PM</span></span></div>
+
+<div style="font-size: small; color: rgb(38, 40, 42); text-align: center;">&nbsp;</div>
+
+<div style="color: rgb(38, 40, 42);">
+<div style="font-size: small; text-align: center;"><span style="font-size:22px;"><span class="aBn" data-term="goog_841072269" style="border-bottom: 1px solid rgb(100, 100, 100); position: relative; top: -2px; z-index: 0; cursor: pointer;" tabindex="0"><span class="aQJ" style="position: relative; top: 2px; z-index: -1;">Thursday 7/27</span></span>: &nbsp;4th Grade&nbsp;<span font-size:="" helvetica="" style="color: rgb(38, 40, 42); font-family: " text-align:="">7-8:30 PM</span></span></div>
+
+<div style="font-size: small; text-align: center;">&nbsp;</div>
+
+<div>
+<div style="font-size: small; text-align: center;"><span style="font-size:22px;"><span class="aBn" data-term="goog_841072270" style="border-bottom: 1px dashed rgb(204, 204, 204); position: relative; top: -2px; z-index: 0;" tabindex="0"><span class="aQJ" style="position: relative; top: 2px; z-index: -1;">Sunday 7/30</span></span>: &nbsp;3rd Grade 6<span font-size:="" helvetica="" style="color: rgb(38, 40, 42); font-family: " text-align:="">-7:30 PM</span></span></div>
+
+<div style="font-size: small; text-align: center;">&nbsp;</div>
+
+<div style="font-size: small; text-align: center;"><span style="font-size:22px;"><span class="aBn" data-term="goog_841072271" style="border-bottom: 1px dashed rgb(204, 204, 204); position: relative; top: -2px; z-index: 0;" tabindex="0"><span class="aQJ" style="position: relative; top: 2px; z-index: -1;">Sunday 8/6</span></span>: &nbsp; All Grades 6<span font-size:="" helvetica="" style="color: rgb(38, 40, 42); font-family: " text-align:="">-7:30 PM</span></span></div>
+
+<div style="font-size: small; text-align: center;">&nbsp;</div>
+
+<div style="font-size: small; text-align: center;"><span style="color:#FF0000;"><span font-size:="" helvetica="" text-align:=""><span style="font-size:22px;">Player needs to be there to be weighed in. &nbsp;</span></span></span></div>
+
+<div style="font-size: small; text-align: center;">&nbsp;</div>
+
+<div style="font-size: small; text-align: center;"><span style="color:#FF0000;"><span style="font-size:22px;"><span font-size:="" helvetica="" text-align:="">You will also need your $200 equipment deposit check along with</span></span></span></div>
+
+<div style="text-align: center;"><span style="color:#FF0000;"><span style="font-size: 22px;">$100 per player volunteer fee check to get your equipment</span></span></div>
+</div>
+</div>
+</div>
+<br><div style='height: 14px;'><div class='pull-left'><span style='font-size:x-small;'>by 
+<SCRIPT TYPE='text/javascript'>
+    em="gmail.com";
+    em="henrywhitneylax" + '&#64;' + em;
+    ename="";
+    ename="Master Admin" + '' + ename;
+    document.write('<' + 'a href="mai' + 'lto:' + em + "?subject=Equipment Handout Dates" + '" title="Click to email this person">' + ename + '<' + '/a>');
+</SCRIPT> posted 06/30/2017</span></div><script type='text/javascript'>var addthis_pub='donmalin';</script><script type='text/javascript'>var addthis_share = {url_transforms : { shorten: { twitter: 'bitly', facebook: 'bitly' } } }</script><div class='pull-right'><a href='https://www.addthis.com/bookmark.php?v=20' onmouseover="return addthis_open(this, '', 'https://LeagueAthletics.com/Default.asp?org=CHASKAFOOTBALL.COM#699837', 'Equipment Handout Dates')" onmouseout='addthis_close()' onclick='return addthis_sendto()' style='color:#000; text-decoration:none;'>Share <i class='fa fa-share-square-o'></i></a><script type='text/javascript' src='https://s7.addthis.com/js/200/addthis_widget.js'></script></div></div></td></tr>           
+          </table>
+          </div>
+          
+       
+          
+
+         </div></td></tr></table></td><td valign="top" style="width:250px;">
+
+             <div class="widget">
+                 <a href="http://on.si.com/awesometeamn" target="_blank">
+                    <img src="https://s3.amazonaws.com/la-web-assets/public/images/capri/web-banner.png" />
+                 </a>
+             </div>
+
+        <!--HTML has to be formatted this way for Safari! -->
+        <div style="width:246px;" class="widget">
+		<div class="btn-group" style="width: 250px; text-align:center;"> 
+			
+				<a class="btn btn-club" href="https://www.facebook.com/ccfafootball" target="_blank" title="Find us on Facebook" style="background-color:#800080; border-bottom-color:#800080; width:14.8%;">
+				&nbsp;<i class="fa fa-facebook-official" style="color:#FFFFFF;"></i>&nbsp;
+				</a><a href="http://twitter.com/ccfafb" title="Follow us on Twitter" target="_blank" class="btn btn-club" style="background-color:#800080; border-bottom-color:#800080; width:14.8%;">
+				&nbsp;<i class="fa fa-twitter-square" style="color:#FFFFFF;"></i>&nbsp;
+				</a><a href="http://instagram.com/ccfafootball" title="View our pictures on Instagram" target="_blank" class="btn btn-club" style="background-color:#800080; border-bottom-color:#800080; width:14.8%;">
+				&nbsp;<i class="fa fa-instagram" style="color:#FFFFFF;"></i>&nbsp;
+				</a><a href="Support/BF6.asp?org=CHASKAFOOTBALL.COM&public=henrywhitneylax@gmail.com" title="Email Chaska Chanhassen Football Association" class="btn btn-club" style="background-color:#800080; border-bottom-color:#800080; width:14.8%;">
+				&nbsp;<i class="fa fa-envelope" style="color:#FFFFFF;"></i>&nbsp;
+				</a>			
+		</div>                  
+        </div>
+
+
+              <div class="widget">
+                  <!--<a class="btn btn-club" style="text-decoration:none; background-color: #d8be67; border-bottom-color: #d8be67; color:#000000; width:223px; height:40px; font-size:18px; line-height:40px;" href="/Registration/Default.asp?org=CHASKAFOOTBALL.COM" title="Online registration is now open!">
+                    Register Now
+                   </a>-->
+                   <a style="text-decoration:none; color:#000000;" href="/Registration/Default.asp?org=CHASKAFOOTBALL.COM" title="Online registration is now open!  Click here to sign up right away.">
+                        <div class="RegNowBtn" style="background-color:#d8be67;">
+                            <div class="RegNowText">
+                                Register Now
+                            </div>
+
+                        </div>
+                   </a>
+               </div>
+
+
+              <div class="widget">
+                   <a style="text-decoration:none; color:#FFFFFF;" href="https://leagueathletics.com/UserForm.asp?RegID=132543&org=chaskafootball.com">
+                        <div class="RegNowBtn" style="background-color:#000000;">
+                            <div class="RegNowText">
+                                DONATE
+                            </div>
+
+                        </div>
+                   </a>
+               </div>
+
+
+              <div class="widget">
+                <table border="0" cellpadding="0" width="250">
+               
+               <tr>
+                 <td>
+                   <table style="width:100%;">
+                    <tr>               
+                        <td style="background-color:#800080; height:3px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="
+                            color:#DCDCDC;
+                            background-color:#000000;
+                            font-family: Arial;
+                            height: 30px;
+                            vertical-align:middle;
+                            padding-left:8px;
+                            padding-right:8px;
+                            font-weight:bold;
+                            text-transform:uppercase;
+                            ">
+                            <b><a class='UElink' style='color:#DCDCDC;' href='AlertCalendar.asp?org=CHASKAFOOTBALL.COM' title='Click to go to the Events Calendar page'><span class='pull-left'><b>Upcoming Events</b></span></a><a href='AlertCalendar.asp?org=CHASKAFOOTBALL.COM' class='btn btn-mini pull-right'>View</a></b>
+                        </td>
+                    </tr>               
+                   </table>
+                 </td>
+               </tr>
+
+
+
+               <tr>
+                 <td class="RightColWidget" style='color:#000000; background-color:#FFFFFF;'>
+
+                    <table class="UE_SingleEvent">
+                        <tr>
+                            <td class="UE_CalendarCell">
+                                <a class="UE_MiniCalendar_link" href="/AlertCalendar.asp?org=CHASKAFOOTBALL.COM#237896">
+                                <div class="UE_MiniCalendar">
+                                    <div class="row">
+                                        <div class="closed UE_MiniCalendar_Month">
+                                            Jul
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="UE_MiniCalendar_Day">
+                                            12
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </td>
+                            <td class="UE_Details">
+                                <a class='contents UE_Details_link' href="/AlertCalendar.asp?org=CHASKAFOOTBALL.COM#237896" title="Click for further details">
+                         <b>July Board Meeting</b></a><br>
+                                Wed 6:30p to 8:00p
+                            </td>
+                        </tr>
+                    </table>
+                     
+
+                    <table class="UE_SingleEvent">
+                        <tr>
+                            <td class="UE_CalendarCell">
+                                <a class="UE_MiniCalendar_link" href="/AlertCalendar.asp?org=CHASKAFOOTBALL.COM#245472">
+                                <div class="UE_MiniCalendar">
+                                    <div class="row">
+                                        <div class="closed UE_MiniCalendar_Month">
+                                            Jul
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="UE_MiniCalendar_Day">
+                                            23
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </td>
+                            <td class="UE_Details">
+                                <a class='contents UE_Details_link' href="/AlertCalendar.asp?org=CHASKAFOOTBALL.COM#245472" title="Click for further details">
+                         <b>7th and 8th Grade Equipment Handout</b></a><br>
+                                Sun 6:00p to 7:30p
+                            </td>
+                        </tr>
+                    </table>
+                     
+
+                    <table class="UE_SingleEvent">
+                        <tr>
+                            <td class="UE_CalendarCell">
+                                <a class="UE_MiniCalendar_link" href="/AlertCalendar.asp?org=CHASKAFOOTBALL.COM#245473">
+                                <div class="UE_MiniCalendar">
+                                    <div class="row">
+                                        <div class="closed UE_MiniCalendar_Month">
+                                            Jul
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="UE_MiniCalendar_Day">
+                                            24
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </td>
+                            <td class="UE_Details">
+                                <a class='contents UE_Details_link' href="/AlertCalendar.asp?org=CHASKAFOOTBALL.COM#245473" title="Click for further details">
+                         <b>6th Grade Equipment Handout</b></a><br>
+                                Mon 7:00p to 8:30p
+                            </td>
+                        </tr>
+                    </table>
+                     
+
+                    <table class="UE_SingleEvent">
+                        <tr>
+                            <td class="UE_CalendarCell">
+                                <a class="UE_MiniCalendar_link" href="/AlertCalendar.asp?org=CHASKAFOOTBALL.COM#245474">
+                                <div class="UE_MiniCalendar">
+                                    <div class="row">
+                                        <div class="closed UE_MiniCalendar_Month">
+                                            Jul
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="UE_MiniCalendar_Day">
+                                            25
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </td>
+                            <td class="UE_Details">
+                                <a class='contents UE_Details_link' href="/AlertCalendar.asp?org=CHASKAFOOTBALL.COM#245474" title="Click for further details">
+                         <b>5th Grade Equipment Handout</b></a><br>
+                                Tue 7:00p to 8:30p
+                            </td>
+                        </tr>
+                    </table>
+                     
+
+                    <table class="UE_SingleEvent">
+                        <tr>
+                            <td class="UE_CalendarCell">
+                                <a class="UE_MiniCalendar_link" href="/AlertCalendar.asp?org=CHASKAFOOTBALL.COM#245475">
+                                <div class="UE_MiniCalendar">
+                                    <div class="row">
+                                        <div class="closed UE_MiniCalendar_Month">
+                                            Jul
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="UE_MiniCalendar_Day">
+                                            27
+                                        </div>
+                                    </div>
+                                </div>
+                                </a>
+                            </td>
+                            <td class="UE_Details">
+                                <a class='contents UE_Details_link' href="/AlertCalendar.asp?org=CHASKAFOOTBALL.COM#245475" title="Click for further details">
+                         <b>4th Grade Equipment Handout</b></a><br>
+                                Thu 7:00p to 8:30p
+                            </td>
+                        </tr>
+                    </table>
+                     
+
+                     <!--<div class="UE_more">
+                        <a href='AlertCalendar.asp?org=CHASKAFOOTBALL.COM'>More <i class="icon-calendar"></i></a>
+                     </div>-->
+
+                 </td>
+               </tr>
+               </table>
+               </div>
+
+              <div class="widget">
+                <table border="0" cellpadding="0" width="250">
+		
+               <tr>
+                 <td>
+                   <div class="galleria-widget"></div>
+                 </td>
+               </tr>
+             </table>
+           </div>
+               
+<style type="text/css">
+	.galleria-widget .galleria-container{
+		background: #FFFFFF;
+	}
+
+	.galleria-widget{
+		height: 250px;
+	}
+  
+</style>               
+<script type="text/javascript">
+	$(function(){
+		var promise = getPictures();
+		promise.success(function(data){
+			var path = data.path;
+			var pictures = data.pictures;
+			var array = [];
+			$.each(pictures, function(i){
+				var obj = {};
+				obj.image = path + pictures[i].web;
+				obj.description = pictures[i].caption;
+				obj.link = "/Picture.asp?id="+pictures[i].id+"&org=CHASKAFOOTBALL.COM";
+				array.push(obj);
+			});
+
+			Galleria.run('.galleria-widget', {
+			    dataSource: array,
+			    autoplay: true,
+			    height: 250,
+			    carousel: false,
+			    thumbnails: false,
+			    showInfo: false,
+			    showCounter: false,
+			    pause: 3000,
+			    autoHover: true,
+			    pauseOnInteraction: false,
+			    transition: "fadeslide"
+			});
+		})
+	})
+
+	function getPictures(){
+		return $.ajax({
+		    url: 'https://api.leagueathletics.com/api/pictures/',
+			data: {associd: 2602}
+		});
+	}
+</script>
+
+              <div class="widget">
+                <table border="0" cellpadding="0" width="250">
+
+
+               <tr>
+                 <td>
+                   <table style="width:100%;">
+                    <tr>               
+                        <td style="background-color:#800080; height:3px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="
+                            color:#DCDCDC;
+                            background-color:#000000;
+                            font-family: Arial;
+                            height: 30px;
+                            vertical-align:middle;
+                            padding-left:8px;
+                            padding-right:8px;
+                            font-weight:bold;
+                            text-transform:uppercase;
+                            ">
+                            <b>Sponsored By</b>
+                        </td>
+                    </tr>               
+                   </table>
+                 </td>
+               </tr>
+
+
+
+               <tr>
+                 <td class="RightColWidget Sponsorslide" id="sponsorImg2"    
+                       style='color: #000000; background-color:#FFFFFF;' 
+                      onMouseover="document.getElementById('oControls2').style.display = 'block';"
+                      onMouseout="document.getElementById('oControls2').style.display = 'none';"
+                      onclick="linkSponSlideShow2(event); return false;"
+                 >
+                   <div class="btn-group" id="oControls2" style="display: none">&nbsp;
+                   <a class="btn btn-small" href="#" onClick="reverseSpon2(event); return false;">
+                   <i class="fa fa-step-backward"></i></a>&nbsp;
+                   
+                   <a class="btn btn-small" href="#" onClick="pauseSpon2(event); return false;">
+                   <i class="fa fa-pause" id="i1"></i></a>&nbsp;
+                   
+                   <a class="btn btn-small" href="#" onClick="forwardSpon2(event); return false;">
+                   <i class="fa fa-step-forward"></i></a>&nbsp;
+                   </div>
+                 </td>
+               </tr>
+               </table>
+               </div>
+               
+<script language=javascript>
+    var bPaused2 = false;
+    var rotationSpeed2 = 4000;
+    var timerSpon2 = 0;
+    var imageNoSpon2 = -1;
+    var drawingImgSpon2 = false;
+    var noImagesSpon2 = 12;
+
+    var sponImg2 = new Array();
+    var sponLink2 = new Array();
+    var sponID2 = new Array();
+
+    sponImg2[0] = new Image();
+sponImg2[0].src = '/2e5ca83d-a7fd-45d1-95f7-8735947a7429/Images/SponsorLogos/2602/7792_logo.png';
+sponLink2[0] = "/Goto.asp?URL=http%3A%2F%2Fwww%2Elifetimefitness%2Ecom%2Findex%5Flow%2Ehtml&AssocID=2602";
+sponID2[0] = 7792;
+
+sponImg2[1] = new Image();
+sponImg2[1].src = '/2e5ca83d-a7fd-45d1-95f7-8735947a7429/Images/SponsorLogos/2602/7819_logo.png';
+sponLink2[1] = "/Goto.asp?URL=http%3A%2F%2Fwww%2Eoprosko%2Ecom&AssocID=2602";
+sponID2[1] = 7819;
+
+sponImg2[2] = new Image();
+sponImg2[2].src = 'http://files.LeagueAthletics.com/Images/SponsorLogos/2602/7820_logo.jpg';
+sponLink2[2] = "Sponsors.asp?org=CHASKAFOOTBALL.COM";
+sponID2[2] = 7820;
+
+sponImg2[3] = new Image();
+sponImg2[3].src = '/2e5ca83d-a7fd-45d1-95f7-8735947a7429/Images/SponsorLogos/2602/19702_logo.png';
+sponLink2[3] = "/Goto.asp?URL=http%3A%2F%2Flinhoff%2Ecom%2F&AssocID=2602";
+sponID2[3] = 19702;
+
+sponImg2[4] = new Image();
+sponImg2[4].src = '/2e5ca83d-a7fd-45d1-95f7-8735947a7429/Images/SponsorLogos/2602/20976_logo.png';
+sponLink2[4] = "/Goto.asp?URL=http%3A%2F%2Fwww%2Ecaptureathletics%2Ecom%2Fshop&AssocID=2602";
+sponID2[4] = 20976;
+
+sponImg2[5] = new Image();
+sponImg2[5].src = '/2e5ca83d-a7fd-45d1-95f7-8735947a7429/Images/SponsorLogos/2602/22180_logo.png';
+sponLink2[5] = "Sponsors.asp?org=CHASKAFOOTBALL.COM";
+sponID2[5] = 22180;
+
+sponImg2[6] = new Image();
+sponImg2[6].src = 'http://files.LeagueAthletics.com/Images/SponsorLogos/2602/30476_logo.jpg';
+sponLink2[6] = "/Goto.asp?URL=http%3A%2F%2Fwww%2Erobbselectricinc%2Ecom%2F&AssocID=2602";
+sponID2[6] = 30476;
+
+sponImg2[7] = new Image();
+sponImg2[7].src = 'http://files.LeagueAthletics.com/Images/SponsorLogos/2602/30555_logo.jpg';
+sponLink2[7] = "/Goto.asp?URL=http%3A%2F%2Fwww%2Emoderndesigncabinetry%2Ecom%2F&AssocID=2602";
+sponID2[7] = 30555;
+
+sponImg2[8] = new Image();
+sponImg2[8].src = 'http://files.LeagueAthletics.com/Images/SponsorLogos/2602/35950_logo.jpg';
+sponLink2[8] = "/Goto.asp?URL=http%3A%2F%2Fwww%2Edickssportinggoods%2Ecom%2Fhome%2Findex%2Ejsp&AssocID=2602";
+sponID2[8] = 35950;
+
+sponImg2[9] = new Image();
+sponImg2[9].src = '/2e5ca83d-a7fd-45d1-95f7-8735947a7429/Images/SponsorLogos/2602/4071_logo.png';
+sponLink2[9] = "/Goto.asp?URL=http%3A%2F%2Fchs%2Edistrict112%2Eorg&AssocID=2602";
+sponID2[9] = 4071;
+
+sponImg2[10] = new Image();
+sponImg2[10].src = 'http://files.LeagueAthletics.com/Images/SponsorLogos/2602/4438_logo.jpeg';
+sponLink2[10] = "/Goto.asp?URL=http%3A%2F%2Fwww%2Emetroathletic%2Ecom&AssocID=2602";
+sponID2[10] = 4438;
+
+sponImg2[11] = new Image();
+sponImg2[11].src = '/2e5ca83d-a7fd-45d1-95f7-8735947a7429/Images/SponsorLogos/2602/7752_logo.png';
+sponLink2[11] = "/Goto.asp?URL=http%3A%2F%2Fcns%2Edistrict112%2Eorg&AssocID=2602";
+sponID2[11] = 7752;
+
+
+
+    runSponSlideShow2();
+	
+    function runSponSlideShow2(){	
+        if (timerSpon2 != 0) window.clearInterval(timerSpon2);
+
+        imageNoSpon2++;
+        if (imageNoSpon2 > (noImagesSpon2 - 1)) imageNoSpon2 = 0;
+
+        showSponImage2();
+
+        if (!bPaused2) 
+            timerSpon2 = setInterval('runSponSlideShow2()', rotationSpeed2)	
+}	
+
+
+    function showSponImage2() {
+
+        var oSponsorImg = document.getElementById("sponsorImg2");
+        var oSponsorLink = document.getElementById("sponsorLink2");
+
+
+        
+
+            oSponsorImg.style.backgroundImage = "url(" + sponImg2[imageNoSpon2].src + ")"
+
+        
+        }
+
+    function linkSponSlideShow2(e) {
+
+        if (navigator.appName == "Microsoft Internet Explorer")
+            var sTarget = window.event.srcElement.id;
+        else 
+            var sTarget = e.currentTarget.id;
+
+
+        if (sTarget == 'sponsorImg2') {
+            window.open(sponLink2[imageNoSpon2]);
+        }
+    }
+
+    function pauseSponSlideShow2(){
+        window.clearInterval(timerSpon2); 
+        timerSpon2 = setInterval('', 0);
+	
+    }
+
+
+    function reverseSpon2(e) {
+        if (!e) var e = window.event;
+        e.cancelBubble = true;
+
+        pauseSponSlideShow2();
+
+        imageNoSpon2--;
+        if (imageNoSpon2 < 0) imageNoSpon2 = noImagesSpon2 - 1;
+	
+        imageNoSpon2--;
+        if (imageNoSpon2 < 0) imageNoSpon2 = noImagesSpon2 - 1;
+
+        runSponSlideShow2();
+    }
+
+    function pauseSpon2(e) {
+        if (!e) var e = window.event;
+        e.cancelBubble = true;
+
+        if (bPaused2) {
+            bPaused2 = false;
+            runSponSlideShow2();
+        document.getElementById("imgPlayPause2").className = "fa fa-pause";	
+    } else {
+		bPaused2 = true;
+    pauseSponSlideShow2();
+    document.getElementById("imgPlayPause2").className = "fa fa-play";
+    }
+    }
+
+    function forwardSpon2(e) {
+        if (!e) var e = window.event;
+        e.cancelBubble = true;
+	
+        runSponSlideShow2();
+    }
+
+</script>
+
+              <div class="widget">
+                <table border="0" cellpadding="0" width="250">
+               
+               <tr>
+                 <td>
+                   <table style="width:100%;">
+                    <tr>               
+                        <td style="background-color:#800080; height:3px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="
+                            color:#DCDCDC;
+                            background-color:#000000;
+                            font-family: Arial;
+                            height: 30px;
+                            vertical-align:middle;
+                            padding-left:8px;
+                            padding-right:8px;
+                            font-weight:bold;
+                            text-transform:uppercase;
+                            ">
+                            <b><a class='Storelink' href='/Store/Store.asp?id=6190&org=CHASKAFOOTBALL.COM'><b><span style='color:#DCDCDC;'>In the Online Store</b></a></span></b>
+                        </td>
+                    </tr>               
+                   </table>
+                 </td>
+               </tr>
+
+
+
+
+               <tr>
+                 <td class="RightColWidget" style="background-color:#FFFFFF;">
+                   <table border="0" cellpadding="0" width="100%">
+                       <tr>
+                            <td class="StoreItemName">
+                                <a href='/Store/Item.asp?id=5366&org=CHASKAFOOTBALL.COM'>CCFA Long Sleeve </a>
+                            </td>
+                       </tr>
+                       <tr>
+                           <td class="StoreItemImg">
+                               <a href='/Store/Item.asp?id=5366&org=CHASKAFOOTBALL.COM'><img src='/2e5ca83d-a7fd-45d1-95f7-8735947a7429/Images/StoreItems/2602/5366Med.png' border=1></a><br>
+                           </td>
+                       </tr>
+                       <tr>
+                           <td class="StoreItemDescrip">
+                               CCFA Black Long Sleeve Shirt
+                           </td>
+                       </tr>
+                   </table>
+                 </td>
+               </tr>
+               </table>
+               </div>
+
+
+
+
+               <div class="widget">
+               <table border="0" cellspacing="0" cellpadding="0" width="100%">
+               <tr>
+
+                 <td align=center height="100%"> <!-- bordercolor='#000000' style='height: 100%; border-top-style: solid; border-top-width: 1px;border-left-style: solid; border-left-width: 1px;'>&nbsp; -->
+
+
+                 </td>
+               </tr>
+               </table>
+               </div>
+               
+             
+               
+       
+             <!--</div>  Container -->
+             
+             </td></tr></table>
+             
+                        </td>
+                        <!--PageBody-->
+                      </tr>
+                    </table>
+                    <!--BodyTable-->
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <!--Start .footer -->
+
+
+
+    <tr>
+      <td>
+        <div class="footer" style="display:block;">
+          <div class="footer-inner">
+
+      	 
+              <div class="footer-logo">
+                <a href="http://LeagueAthletics.com" target="_blank">
+                   <img src="https://s3.amazonaws.com/la-web-assets/public/images/logospacer.png" alt="" style="float:left" border="0"></a>
+                
+ 
+     			
+            
+
+      <!--
+      -->    
+        </div>
+<!--10.142.1.87-->
+      	 
+              
+          <div class="footer-text">
+            &copy; 2017 LeagueAthletics.com, LLC.
+            
+      	          
+              and <strong>Chaska Chanhassen Football Association (2602)</strong>. 
+             
+
+            All rights reserved.&nbsp;&nbsp;
+            <span class="footer-text" style="float:none;"><strong>Visitor #</strong></span>&nbsp;<span class="footer-servertype"><strong>6,629</strong></span>
+            <br/>Server<strong>&nbsp;<span class="footer-servertype">1:</span></strong> in <strong><span class="footer-servertype">0.44</span>s</strong>.&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;
+              
+              <a class="footer-a" href="https://subscription.timeinc.com/storefront/privacy/siplay/generic_privacy_new.html"target="_blank">Privacy</a>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;
+              
+              <a class="footer-a" href="https://subscription.timeinc.com/storefront/privacy/siplay/privacy_terms_service.html" target="_blank">Terms</a>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;
+              <a class="footer-a" href="../Help/user-guide/index.shtml" target="_new">User Guide</a>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;
+              <a class="footer-a" href="../licenses.asp?org=CHASKAFOOTBALL.COM">Legal</a>&nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp;
+              
+
+              <a href="../mobile_promo.asp?org=CHASKAFOOTBALL.COM" style="color: #FF6600; font-weight: bolder;"> 
+                
+                Get the Mobile App&nbsp;
+                  <i class="fa fa-mobile-phone" style='display: inline;'></i>&nbsp;
+              </a>
+
+
+                  <img src="https://t.sportstechinfo.com/visitors/logo.php?domain=leagueathletics.com" width="1" height="1"/>
+              
+
+                    
+              <br />
+                
+            <br />
+
+          </div>
+          
+          <div class="footer-text" style="text-align:right; float:right; padding-top:0px" nowrap>
+            
+            <a href="http://siplay.com" target="_blank" title="powered by Sports Illustrated Play">
+            <img src="https://s3.amazonaws.com/la-web-assets/public/images/logos/siplay/siplay_logo_over_black.png" border="0" alt="powered by Sports Illustrated Play" style="height: 45px; padding-top: 5px;"></a>
+          </div>
+
+      	<script type="text/javascript">
+              var logedIn = 0;
+              if (document.getElementById("ClientClubs")) {
+                  if (logedIn == 0) document.getElementById("ClientClubs").style.display = "none";
+              }
+          
+              if (document.getElementById("ClientClubsByState")) {
+                  if (logedIn == 0) document.getElementById("ClientClubsByState").style.display = "none";
+              }
+          </script>  
+                    
+         
+          
+          
+         </div>
+        </div>
+      </td>
+    </tr>
+    <!--.footer-->
+  </table>
+  <!--table#Container-->
+</div>
+<!--div#LAPageBackground-->
+
+<!---Promo Modal ---> 
+
+
+
+            
+    <div id="newPrivacy" class="modal hide fade" role="dialog" aria-labelledby="newPrivacyLabel" aria-hidden="true" style="width:360px; height: 116px; top: 75%; left: 300px;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-header" style="height: 14px;">
+                <button id="privacyDismiss" type="button" class="close" data-dismiss="modal" aria-hidden="true" style="margin-top: -4px;">x</button>
+                <p id="newPrivacyLabel"><b>New Privacy Policy</b></p>
+            </div>
+            <div class="modal-body" style="margin-top: -4px;">   
+                We have made changes to our 
+                <a id="privacyLink1" href="https://subscription.timeinc.com/storefront/privacy/siplay/generic_privacy_new.html" target="_blank">Privacy Policy</a>.  
+                By using this site you agree to the 
+                <a id="privacyLink2" href="https://subscription.timeinc.com/storefront/privacy/siplay/generic_privacy_new.html" target="_blank">Privacy Policy</a>                  
+                and 
+                <a id="termsLink" href="https://subscription.timeinc.com/storefront/privacy/siplay/privacy_terms_service.html" target="_blank">Terms of Service</a>.  
+            </div>
+        </div>
+    </div>
+
+
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Check cookie to see if they've seen this before.
+
+        });
+
+        // Handle clicks to the privacy policy page
+        $("a#privacyLink1").click(function () { dismisPrivacy() });
+        $("a#privacyLink2").click(function () { dismisPrivacy() });
+        $("a#termsLink").click(function () { dismisPrivacy() });
+
+        function dismisPrivacy() {
+
+            // Hide the modal
+            $('#newPrivacy').modal('hide');
+
+            // Set the cookie
+            $.cookie("readSIPPrivacy", "Done", { path: '/', expires: 365 });
+
+            return true;
+        };
+
+        // Handle dismissal of the modal
+        $("button#privacyDismiss").click(function() {
+            // Set the cookie
+            $.cookie("readSIPPrivacy", "Done", { path: '/', expires: 365 });
+        });
+    </script>
+
+<!---end promo modal --->
+
+
+             </div>
+        </tr>
+      </table>
+
+
+<!--Results Modal-->
+<div id="resultModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 id="resultDate">Event Result</h3>
+  </div>
+  <div class="modal-body">
+        <table style="width:100%;">
+            <tr>
+                <td id="resultHome" class="subhead"></td>
+                <td id="resultHomeScore" class="subhead"></td>
+            </tr>
+            <tr>
+                <td id="resultAway" class="subhead"></td>
+                <td id="resultAwayScore" class="subhead"></td>
+            </tr>
+        </table>
+        <hr>
+        <span id="resultCommentary"></span>
+  </div>
+</div>
+<!--End Result Modal-->
+ 
+
+<script type="text/javascript">
+
+    var loadMasonry = function () {
+        var columWidth = 273;
+        if (engine != 5 && engine != 8) {
+            var $widgetContainer = $('#widgetContainer');
+		
+            $widgetContainer.imagesLoaded( function(){
+
+                $widgetContainer.masonry({		  
+                    itemSelector : '.widget',
+                    columnWidth : columWidth,
+                    isAnimated: !Modernizr.csstransitions,
+                    isFitWidth: false 
+                });
+            });
+        };
+    };
+    
+    
+</script>
+<script type="text/javascript">
+    $('.to-top').click(function(){
+        $("html, body").animate({ scrollTop: 0 }, 750);
+    });
+</script>
+<script type="text/javascript">
+    function showResult(id){
+        $.ajax({
+            url: "/app/GetEvent/default.asp?eventid=" + id + "&org=CHASKAFOOTBALL.COM",
+            dataType: "xml",
+            success: function(x){
+                var event = x.getElementsByTagName("Event");
+                event = event[0];
+                date = event.childNodes[3].childNodes[0].nodeValue;
+                $("#resultDate").text(date);
+                home_name = event.childNodes[21].childNodes[3].childNodes[0].nodeValue;
+                $("#resultHome").text(home_name);
+                if (event.childNodes[21].childNodes[11].hasChildNodes()) {
+                    home_score = event.childNodes[21].childNodes[11].childNodes[0].nodeValue;
+                } else {
+                    home_score = "";
+                }
+                $("#resultHomeScore").text(home_score);
+                away_name = event.childNodes[23].childNodes[3].childNodes[0].nodeValue;
+                $("#resultAway").text(away_name);
+                if (event.childNodes[23].childNodes[11].hasChildNodes()) {
+                    away_score = event.childNodes[23].childNodes[11].childNodes[0].nodeValue;
+                } else {
+                    away_score = "";
+                }
+                $("#resultAwayScore").text(away_score);
+                if (event.childNodes[17].hasChildNodes()){
+                    commentary = event.childNodes[17].childNodes[0].nodeValue;
+                }else{
+                    commentary = "";
+                }
+                $("#resultCommentary").html(commentary);
+                $("#resultModal").modal("show");
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
+
+<script type="text/javascript">
+// Module level flag that tells us if XMLPosts are happening
+var ajaxBusy = false;
+
+
+
+function xmlhttpPost(strURL, obj) {
+	var xmlHttpReq = false;
+	var self = this;
+	var status = "NA";
+
+	// Set busy flag so no one else calls us till we? done.
+	ajaxBusy = true;
+
+	// Mozilla/Safari
+	if (window.XMLHttpRequest) {
+		self.xmlHttpReq = new XMLHttpRequest();
+	}
+	// IE
+	else if (window.ActiveXObject) {
+		self.xmlHttpReq = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+    
+	var randNum = Math.floor(Math.random() * 1001);
+	strURL = strURL + '&ajax=True&rnd=' + randNum;
+
+	self.xmlHttpReq.open('GET', strURL, true);
+	self.xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+	self.xmlHttpReq.onreadystatechange = function() {
+		if (self.xmlHttpReq.readyState == 4) {
+			// Firefox throws an error on status code 401 - timeout.  Catch it!
+			try{status = self.xmlHttpReq.status;}catch(e){}			
+
+			if (status == 200) {
+				obj.innerHTML = self.xmlHttpReq.responseText;
+			} else {
+				//alert(self.xmlHttpReq.responseText)
+			}
+
+			self.xmlHttpReq = null;
+			ajaxBusy = false;	// We? done!
+		}
+	}
+ 
+	self.xmlHttpReq.send(null);
+}
+
+	
+	try{window.top.location.href != window.location.href;} 
+	catch(e){
+		setCloaked();
+	}
+
+function setCloaked() {
+	var xmlHttpReq = false;
+	
+	// Mozilla/Safari
+	if (window.XMLHttpRequest) {
+		self.xmlHttpReq = new XMLHttpRequest();
+	}
+	// IE
+	else if (window.ActiveXObject) {
+		self.xmlHttpReq = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+
+	var randNum = Math.floor(Math.random() * 1001);
+	var strURL = '/CPanel/SetCloaked.asp?rnd=' + randNum + "&n=2602"
+
+	self.xmlHttpReq.open('GET', strURL, false);
+	self.xmlHttpReq.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  
+	self.xmlHttpReq.send(null);
+}
+
+$(function(){
+
+//    var pageBodyWidth = $("#PageBody").width();
+//    $("#PageBody").width(pageBodyWidth);
+    
+//    var widgetCols = Math.floor(width / 260);    
+//    var newsWidth = widgetCols * 260 - 260;
+//    
+//    var width = $("#widgetContainer").css('width')
+//alert(width)
+//    $(".News").css('width', width);
+
+
+    //alert($("#widgetContainer").css('width'));
+});
+</script>
+
+
+<!-- Exec Time: 0.4023438 URL='/Default.asp|' -->

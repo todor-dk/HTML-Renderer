@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 namespace Scientia.HtmlRenderer.Html5.Parsing
 {
     /// <summary>
-    /// Indicates the typeof token that <see cref="TokenData"/> contains.
+    /// Indicates the type of token that <see cref="TokenData"/> contains.
     /// </summary>
     public enum TokenType : byte
     {

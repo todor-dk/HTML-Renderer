@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Security-Related Changes Required to Avoid Service Disruption | PayPal &amp; Braintree |  Developer - Blog</title>
+<!-- Platform WordPress Framework By PageLines - www.PageLines.com -->
+<link rel="shortcut icon" href="https://devblog.paypal.com/wp-content/uploads/2015/06/favicon.ico" type="image/x-icon" />
+<link rel="profile" href="http://gmpg.org/xfn/11" />
+<link rel='dns-prefetch' href='//s0.wp.com' />
+<link rel='dns-prefetch' href='//secure.gravatar.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="PayPal &amp; Braintree |  Developer - Blog &raquo; Feed" href="https://devblog.paypal.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="PayPal &amp; Braintree |  Developer - Blog &raquo; Comments Feed" href="https://devblog.paypal.com/comments/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/devblog.paypal.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.7.5"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),!(j.toDataURL().length<3e3)&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,65039,8205,55356,57096),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,55356,57096),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55357,56425,55356,57341,8205,55357,56507),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55357,56425,55356,57341,55357,56507),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='pagelines-stylesheet-css'  href='https://devblog.paypal.com/wp-content/themes/platform/style.css?ver=144-071117202934' type='text/css' media='all' />
+<!--[if IE 7]>
+<link rel='stylesheet' id='ie7-style-css'  href='https://devblog.paypal.com/wp-content/themes/platform/css/ie7.css?ver=1.4.4' type='text/css' media='all' />
+<![endif]-->
+<link rel='stylesheet' id='wp-biographia-bio-css'  href='https://devblog.paypal.com/wp-content/plugins/wp-biographia/css/wp-biographia.min.css?ver=4.7.5' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-markdown-prettify-css'  href='https://devblog.paypal.com/wp-content/plugins/wp-markdown/css/prettify.css?ver=1.5.1' type='text/css' media='all' />
+<link rel='stylesheet' id='social-logos-css'  href='https://devblog.paypal.com/wp-content/plugins/jetpack/_inc/social-logos/social-logos.min.css?ver=1' type='text/css' media='all' />
+<link rel='stylesheet' id='jetpack_css-css'  href='https://devblog.paypal.com/wp-content/plugins/jetpack/css/jetpack.css?ver=4.9' type='text/css' media='all' />
+<!-- This site uses the Google Analytics by MonsterInsights plugin v6.1.9 - Using Analytics tracking - https://www.monsterinsights.com/ -->
+<script type="text/javascript" data-cfasync="false">
+	/* Function to detect opted out users */
+	function __gaTrackerIsOptedOut() {
+		return document.cookie.indexOf(disableStr + '=true') > -1;
+	}
+
+	/* Disable tracking if the opt-out cookie exists. */
+	var disableStr = 'ga-disable-UA-37159521-5';
+	if ( __gaTrackerIsOptedOut() ) {
+		window[disableStr] = true;
+	}
+
+	/* Opt-out function */
+	function __gaTrackerOptout() {
+	  document.cookie = disableStr + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+	  window[disableStr] = true;
+	}
+
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','__gaTracker');
+
+	__gaTracker('create', 'UA-37159521-5', 'auto');
+	__gaTracker('set', 'forceSSL', true);
+	__gaTracker('send','pageview');
+</script>
+<!-- / Google Analytics by MonsterInsights -->
+<script type='text/javascript' src='https://devblog.paypal.com/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/plugins/jetpack/modules/related-posts/related-posts.js?ver=20150408'></script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/plugins/stop-user-enumeration/js/commentauthor.js?ver=4.7.5'></script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/plugins/wp-markdown/js/prettify.min.js?ver=1.5.1'></script>
+<link rel='https://api.w.org/' href='https://devblog.paypal.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://devblog.paypal.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://devblog.paypal.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Sandbox Account Linking' href='https://devblog.paypal.com/sandbox-account-linking/' />
+<link rel='next' title='Dates Revised for Security-Related Changes' href='https://devblog.paypal.com/dates-revised-for-security-related-changes/' />
+<meta name="generator" content="WordPress 4.7.5" />
+<link rel="canonical" href="https://devblog.paypal.com/upcoming-security-changes-notice/" />
+<link rel='shortlink' href='https://wp.me/p8bBOd-hD' />
+<link rel="alternate" type="application/json+oembed" href="https://devblog.paypal.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fdevblog.paypal.com%2Fupcoming-security-changes-notice%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://devblog.paypal.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fdevblog.paypal.com%2Fupcoming-security-changes-notice%2F&#038;format=xml" />
+
+<link rel='dns-prefetch' href='//v0.wordpress.com'>
+<link rel='dns-prefetch' href='//i0.wp.com'>
+<link rel='dns-prefetch' href='//i1.wp.com'>
+<link rel='dns-prefetch' href='//i2.wp.com'>
+<style type='text/css'>img#wpstats{display:none}</style><link rel="stylesheet" id="dynamic-css" href="https://devblog.paypal.com/wp-content/themes/platform/css/dynamic.css?ver=144-071117202934" type="text/css" media="all" />
+<meta name="title" content="Security-Related Changes Required to Avoid Service Disruption | PayPal &amp; Braintree |  Developer - Blog" />
+<meta name="description" content="REVISED May 12, 2016 - Please note that some of the deadlines have changed since this post was originally published. This post reflects the latest deadline dates for security updates. Beginning in early 2016, PayPal will introduce a number of security-related product updates. These updates are part of an industry-wide initiative to improve security standards.&hellip;" />
+
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Security-Related Changes Required to Avoid Service Disruption" />
+<meta property="og:url" content="https://devblog.paypal.com/upcoming-security-changes-notice/" />
+<meta property="og:description" content="REVISED May 12, 2016 &#8211; Please note that some of the deadlines have changed since this post was originally published. This post reflects the latest deadline dates for security updates. Beginni…" />
+<meta property="article:published_time" content="2016-05-12T00:00:26+00:00" />
+<meta property="article:modified_time" content="2016-05-17T17:59:01+00:00" />
+<meta property="og:site_name" content="PayPal &amp; Braintree |  Developer - Blog" />
+<meta property="og:image" content="https://devblog.paypal.com/wp-content/uploads/2015/12/bio_adam_colson.jpeg" />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary" />
+			<style type="text/css" id="wp-custom-css">
+				/*
+Welcome to Custom CSS!
+
+To learn how this works, see http://wp.me/PEmnE-Bt
+*/			</style>
+		</head>
+<body class="post-template-default single single-post postid-1093 single-format-standard full_width ttype-single tmain-single">
+<div id="site" class="one-sidebar-right"> <!-- #site // Wraps #header, #page-main, #footer - closed in footer -->
+	<div id="page"> <!-- #page // Wraps #header, #page-main - closed in footer -->
+		<div id="page-canvas">
+						<div id="header" class="container-group fix">
+				<div class="outline">
+					<div id="branding" class="container fix">
+	<div class="texture">
+		<div class="content">
+			<div class="content-pad">
+<div class="branding_wrap">
+	<a class="mainlogo-link" href="https://devblog.paypal.com" title="PayPal &amp; Braintree |  Developer - Blog"><img class="mainlogo-img" src="https://devblog.paypal.com/wp-content/uploads/2015/04/pp_developer_h_rgb.png" alt="PayPal &amp; Braintree |  Developer - Blog" /></a>		
+	
+	<div class="icons" style="bottom: 0px; right: px;">
+
+				<a target="_blank" href="https://devblog.paypal.com/feed/" class="rsslink"></a>
+		
+									<a target="_blank" href="http://twitter.com/PayPalDev" class="twitterlink"></a>
+																</div>
+</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="primary-nav" class="container fix">
+	<div class="texture">
+		<div class="content">
+			<div class="content-pad">
+	<div id="nav_row" class="main_nav fix">
+<ul id="menu-topnav" class="main-nav"><li id="menu-item-12" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-12"><a href="https://developer.paypal.com" onclick="__gaTracker('send', 'event', 'outbound-menu', 'https://developer.paypal.com', 'Go to PayPal Developer Website');" title="Go to PayPal Developer Website">Go to PayPal Developer Website</a></li>
+</ul><form method="get" class="searchform" action="https://devblog.paypal.com/" onsubmit="this.submit();return false;">
+	<fieldset>
+		<input type="text" value="Search" name="s" class="searchfield" onfocus="if (this.value == 'Search') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search';}" />
+
+		<input type="image" class="submit btn" name="submit" src="https://devblog.paypal.com/wp-content/themes/platform/images/search-btn.png" alt="Go" />
+	</fieldset>
+</form>
+	</div>
+
+				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+</div>
+				</div>
+			</div>
+						<div id="page-main" class="container-group fix"> <!-- #page-main // closed in footer -->
+				<div id="dynamic-content" class="outline fix">
+					<div id="maincontent" class="container fix">
+	<div class="texture">
+		<div class="content">
+			<div class="content-pad">
+<div id="pagelines_content" class="one-sidebar-right fix">
+	
+		<div id="column-wrap" class="fix">
+		
+				<div id="column-main" class="mcolumn fix">
+			<div class="mcolumn-pad" >
+				<div id="postnav" class="copy fix">
+	<div class="copy-pad">
+   			<div class="post-nav fix"> 
+			<span class="previous"><a href="https://devblog.paypal.com/sandbox-account-linking/" rel="prev">Sandbox Account Linking</a></span> 
+			<span class="next"><a href="https://devblog.paypal.com/dates-revised-for-security-related-changes/" rel="next">Dates Revised for Security-Related Changes</a></span>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+<div id="theloop" class="copy fix">
+	<div class="copy-pad">
+<div class="fpost post-1093 post type-post status-publish format-standard hentry category-announcements category-security tag-announcements-2 tag-product-updates tag-security" id="post-1093">
+				
+				
+					
+						<div class="post-meta fix">	
+							
+							<div class="post-header fix post-nothumb" style="" >
+																<div class="post-title-section fix">
+
+									<div class="post-title fix">
+										
+										<h1 class="entry-title">Security-Related Changes Required to Avoid Service Disruption</h1>
+<div class="metabar"><em><span class="sword">By</span> <span class="author vcard"><span class="fn"><a href="https://devblog.paypal.com/author/acolson/" title="Posts by Adam Colson" rel="author">Adam Colson</a></span></span> <span class="sword">On</span> <span class="date time published" title="2016-05-12T00:00:26+0000">May 12, 2016</span>   </em></div>										
+									</div>
+
+
+								</div>
+															</div>				
+						</div>
+					
+					  	
+						<div class="entry_wrap fix">
+						
+							<div class="entry_content">
+								<p><strong>REVISED May 12, 2016</strong> &#8211; <font color="red">Please note that some of the deadlines have changed since this post was originally published. This post reflects the latest deadline dates for security updates.</font></p>
+<p>Beginning in early 2016, PayPal will introduce a number of security-related product updates.</p>
+<p>These updates are part of an industry-wide initiative to improve security standards. Some of these updates, like the TLS upgrade, are mandated by the PCI Security Council and are required by every website that transmits or processes cardholder data.</p>
+<p>Merchants and developers may have to update their integrations in order to be in compliance and ensure that their applications continue to function as expected.</p>
+<p>For PayPal customers, these updates include:</p>
+<ul>
+<li><a href="#tls">TLS 1.2 upgrade (support for TLS 1.0 will be retired)</a></li>
+<li><a href="#ip">IP Address Update for PayPal SFTP</a></li>
+<li><a href="#ipn">IPN Verification Postback to HTTPS (HTTP will no longer be supported)</a></li>
+<li><a href="#creds">Merchant API Credential Upgrade (to SHA-256 2048-bit credentials)</a></li>
+<li><a href="#ssl">SSL Certificate Upgrade</a></li>
+<li><a href="#sdk">PayPal SDK Updates</a></li>
+</ul>
+<p><a name="tls"></a></p>
+<h3>TLS 1.2 Upgrade</h3>
+<p>The most secure protocol for sharing information on the web today is Transport Layer Security (TLS) version 1.2. PayPal is enabling support for TLS 1.2 for all secure connections and in 2016 will start requiring its use. You will need to verify that your environment supports TLS 1.2 and if necessary make appropriate updates. <strong>PayPal is updating its services to require TLS v1.2 for all HTTPS connections in June of 2017. After that time, all TLS v1.0 and TLS v1.1 API connections will be refused.</strong></p>
+<p><a href="https://www.paypal-knowledge.com/infocenter/index?page=content&amp;widgetview=true&amp;id=FAQ1914&amp;viewlocale=en_US">Learn more</a></p>
+<p><a name="ip"></a></p>
+<h3>IP Address Update for PayPal SFTP</h3>
+<p>If your integration is set-up to systematically exchange files with PayPal’s Secure FTP Reporting / Batch Servers, please note that the IP addresses for these servers are changing. If your integration is hardcoded to the current IP addresses, you will need to upgrade accordingly. <strong>You must act by April 14, 2016.</strong></p>
+<p><a href="https://www.paypal-knowledge.com/infocenter/index?page=content&amp;widgetview=true&amp;id=FAQ1912&amp;viewlocale=en_US">Learn more</a></p>
+<p><a name="ipn"></a></p>
+<h3>IPN Verification Postback to HTTPS</h3>
+<p>If you are using PayPal’s Instant Payment Notification (IPN) service, you will need to ensure that HTTPS is used when posting the message back to PayPal for verification. <strong>After June of 2017 HTTP postbacks will no longer be supported.</strong></p>
+<p><a href="https://www.paypal-knowledge.com/infocenter/index?page=content&amp;widgetview=true&amp;id=FAQ1916&amp;viewlocale=en_US">Learn more</a></p>
+<p><a name="creds"></a></p>
+<h3>Merchant API Credential Upgrade</h3>
+<p>The certificates issued by PayPal as API Credentials for use with the Classic API are being upgraded to SHA-256 signed 2048-bit certificates. If you currently connect to PayPal using Certificate API Credentials, you will need to have a new certificate issued and start using it for all API requests. <strong>Depending on when your certificate expires, you will have to upgrade between Jan 31, 2016 and Jan 1, 2018.</strong></p>
+<p><a href="https://www.paypal-knowledge.com/infocenter/index?page=content&amp;widgetview=true&amp;id=FAQ1915&amp;viewlocale=en_US">Learn more</a></p>
+<p><a name="ssl"></a></p>
+<h3>SSL Certificate Upgrade</h3>
+<p>PayPal is in the process of upgrading the SSL certificates used to secure our web sites and API endpoints. These new certificates will be signed using the SHA-256 algorithm and VeriSign&#8217;s 2048-bit G5 Root Certificate. You will need to ensure that your environment supports the use of the SHA-256 signing algorithm and discontinue the use of SSL connections that rely on the VeriSign G2 Root Certificate. <strong>This action must be taken by June 17, 2016 in order to avoid any disruption of service.</strong></p>
+<p><a href="https://www.paypal-knowledge.com/infocenter/index?page=content&amp;widgetview=true&amp;id=FAQ1766&amp;viewlocale=en_US">Learn more</a> <a name="sdk"></a></p>
+<h3>PayPal SDK Updates</h3>
+<p>For developers using one of PayPal’s SDK libraries, depending on the runtime environment and version your application uses, a code change or SDK update may be required in order to enable TLS v1.2. <strong>Java 6 u115 b32, Java 7 or Java 8 (preferred) and Android 4.x environments require TLS v1.2 to be enabled in order to maintain functionality.</strong></p>
+<p>If you’re using one of PayPal’s REST SDKs, the best practice is to stay up to date with the latest SDK version and latest versions of the code libraries required by the PayPal SDK. PayPal provides server and client SDKs for Java, .Net, PHP, Python, Ruby, Node.js, Android, and iOS. Detailed test instructions can also be found at <a href="https://github.com/paypal/TLS-update">https://github.com/paypal/TLS-update</a>.</p>
+<p>Developers should reference the <a href="https://www.paypal-knowledge.com/infocenter/index?page=content&amp;id=FAQ1913&amp;expand=true&amp;locale=en_US">2016-2017 Merchant Security Roadmap microsite</a> for all the details and up-to-date information regarding these security changes. You can also visit the PayPal Developer site for more information on <a href="https://developer.paypal.com/docs/classic/lifecycle/info-security-guidelines/">PayPal security guidelines and best practices</a>.</p>
+<div style="background-color:#eee;padding:10px;border:1px solid #ddd; min-height:110px; margin-bottom:10px;">
+  <img src="https://i2.wp.com/devblog.paypal.com/wp-content/uploads/2015/12/bio_adam_colson.jpeg?w=595&#038;ssl=1" alt="Adam Colson" style="float:left; margin-right:20px; width:170px; border:2px solid #ccc;" data-recalc-dims="1" /> </p>
+<div style="margin-left:180px;display:table-cell;">
+    <b>Author:</b> Adam Colson</p>
+<p> <b>About the author: </b> Adam is a Product Manager at Braintree | PayPal, focusing on the PayPal developer experience since August 2015. When Adam isn’t helping to enable global e-commerce through APIs, he can also be found hacking away at the Internet of Things or tinkering in his garage.</p>
+<p> <a href="https://twitter.com/adamc">@adamc</a> | <a href="https://www.linkedin.com/in/acolson">LinkedIn</a>
+  </div>
+</div>
+<div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-twitter"><a href="https://devblog.paypal.com/upcoming-security-changes-notice/?share=twitter" onclick="__gaTracker('send', 'event', 'outbound-article', 'https://devblog.paypal.com/upcoming-security-changes-notice/?share=twitter', 'Click to share on Twitter (Opens in new window)');" rel="nofollow" data-shared="sharing-twitter-1093" class="share-twitter sd-button share-icon no-text"  target="_blank" title="Click to share on Twitter"><span></span><span class="sharing-screen-reader-text">Click to share on Twitter (Opens in new window)</span></a></li><li class="share-facebook"><a href="https://devblog.paypal.com/upcoming-security-changes-notice/?share=facebook" onclick="__gaTracker('send', 'event', 'outbound-article', 'https://devblog.paypal.com/upcoming-security-changes-notice/?share=facebook', 'Click to share on Facebook (Opens in new window)');" rel="nofollow" data-shared="sharing-facebook-1093" class="share-facebook sd-button share-icon no-text"  target="_blank" title="Click to share on Facebook"><span></span><span class="sharing-screen-reader-text">Click to share on Facebook (Opens in new window)</span></a></li><li class="share-google-plus-1"><a href="https://devblog.paypal.com/upcoming-security-changes-notice/?share=google-plus-1" onclick="__gaTracker('send', 'event', 'outbound-article', 'https://devblog.paypal.com/upcoming-security-changes-notice/?share=google-plus-1', 'Click to share on Google+ (Opens in new window)');" rel="nofollow" data-shared="sharing-google-1093" class="share-google-plus-1 sd-button share-icon no-text"  target="_blank" title="Click to share on Google+"><span></span><span class="sharing-screen-reader-text">Click to share on Google+ (Opens in new window)</span></a></li><li class="share-reddit"><a href="https://devblog.paypal.com/upcoming-security-changes-notice/?share=reddit" onclick="__gaTracker('send', 'event', 'outbound-article', 'https://devblog.paypal.com/upcoming-security-changes-notice/?share=reddit', 'Click to share on Reddit (Opens in new window)');" rel="nofollow" data-shared="" class="share-reddit sd-button share-icon no-text"  target="_blank" title="Click to share on Reddit"><span></span><span class="sharing-screen-reader-text">Click to share on Reddit (Opens in new window)</span></a></li><li class="share-tumblr"><a href="https://devblog.paypal.com/upcoming-security-changes-notice/?share=tumblr" onclick="__gaTracker('send', 'event', 'outbound-article', 'https://devblog.paypal.com/upcoming-security-changes-notice/?share=tumblr', 'Click to share on Tumblr (Opens in new window)');" rel="nofollow" data-shared="" class="share-tumblr sd-button share-icon no-text"  target="_blank" title="Click to share on Tumblr"><span></span><span class="sharing-screen-reader-text">Click to share on Tumblr (Opens in new window)</span></a></li><li class="share-linkedin"><a href="https://devblog.paypal.com/upcoming-security-changes-notice/?share=linkedin" onclick="__gaTracker('send', 'event', 'outbound-article', 'https://devblog.paypal.com/upcoming-security-changes-notice/?share=linkedin', 'Click to share on LinkedIn (Opens in new window)');" rel="nofollow" data-shared="sharing-linkedin-1093" class="share-linkedin sd-button share-icon no-text"  target="_blank" title="Click to share on LinkedIn"><span></span><span class="sharing-screen-reader-text">Click to share on LinkedIn (Opens in new window)</span></a></li><li class="share-end"></li></ul></div></div></div>
+<div id='jp-relatedposts' class='jp-relatedposts' >
+	
+</div>									<div class="clear"></div> 
+																</div>	
+							<div class="tags">
+								Tagged with: <a href="https://devblog.paypal.com/tag/announcements-2/" rel="tag">announcements</a> &bull; <a href="https://devblog.paypal.com/tag/product-updates/" rel="tag">product updates</a> &bull; <a href="https://devblog.paypal.com/tag/security/" rel="tag">security</a><br />&nbsp;
+							</div>
+						</div>
+								</div>
+
+	<div class="clear"></div>
+	</div>
+</div>
+<div id="sharebar" class="copy fix">
+	<div class="copy-pad">
+			<div class="post-footer">
+
+					<div class="left">
+							
+					</div>
+					<div class="right">
+																				
+							 
+
+							 
+
+														
+														
+														
+												</div>
+				<div class="clear"></div>
+			</div>
+	
+	<div class="clear"></div>
+	</div>
+</div>
+<div id="pl_comments" class="copy fix">
+	<div class="copy-pad">
+
+<div id="comments">
+				<p class="nocomments">Comments are closed.</p>
+		
+</div>
+	<div class="clear"></div>
+	</div>
+</div>
+<div id="pagination" class="copy fix">
+	<div class="copy-pad">
+				
+		<div class="clear"></div>
+	</div>
+</div>
+			</div>
+		</div>
+		
+				
+	</div>	
+	
+	
+	<div id="sidebar-wrap" class="fix">
+			<div id="sidebar1" class="scolumn fix" >
+				<div class="scolumn-pad">
+					<div id="sidebar_primary" class="copy fix">
+	<div class="copy-pad">
+	<ul id="list_sidebar_primary" class="sidebar_widgets fix">
+		<li id="categories-2" class="widget_categories widget fix"><div class="widget-pad"><h3 class="widget-title">Categories</h3>		<ul>
+	<li class="cat-item cat-item-3"><a href="https://devblog.paypal.com/category/announcements/" >Announcements</a> (36)
+</li>
+	<li class="cat-item cat-item-4"><a href="https://devblog.paypal.com/category/api/" >API</a> (23)
+</li>
+	<li class="cat-item cat-item-5"><a href="https://devblog.paypal.com/category/bugs/" >Bugs</a> (1)
+</li>
+	<li class="cat-item cat-item-94"><a href="https://devblog.paypal.com/category/carts/" >Carts</a> (2)
+<ul class='children'>
+	<li class="cat-item cat-item-95"><a href="https://devblog.paypal.com/category/carts/woocommerce/" >WooCommerce</a> (2)
+</li>
+</ul>
+</li>
+	<li class="cat-item cat-item-6"><a href="https://devblog.paypal.com/category/case-studies/" >Case Studies</a> (2)
+</li>
+	<li class="cat-item cat-item-89"><a href="https://devblog.paypal.com/category/documentation/" >Documentation</a> (1)
+</li>
+	<li class="cat-item cat-item-8"><a href="https://devblog.paypal.com/category/engineering/" >Engineering</a> (7)
+</li>
+	<li class="cat-item cat-item-9"><a href="https://devblog.paypal.com/category/events/" >Events</a> (7)
+</li>
+	<li class="cat-item cat-item-10"><a href="https://devblog.paypal.com/category/libraries-sdks/" >Libraries &amp; SDKs</a> (19)
+</li>
+	<li class="cat-item cat-item-11"><a href="https://devblog.paypal.com/category/log-in-with-paypal/" >Log in with PayPal</a> (5)
+</li>
+	<li class="cat-item cat-item-93"><a href="https://devblog.paypal.com/category/partners/" >Partners</a> (2)
+</li>
+	<li class="cat-item cat-item-12"><a href="https://devblog.paypal.com/category/samples/" >Samples</a> (8)
+</li>
+	<li class="cat-item cat-item-81"><a href="https://devblog.paypal.com/category/sandbox/" >Sandbox</a> (1)
+</li>
+	<li class="cat-item cat-item-79"><a href="https://devblog.paypal.com/category/security/" >Security</a> (3)
+</li>
+	<li class="cat-item cat-item-54"><a href="https://devblog.paypal.com/category/start-ups/" >Start Ups</a> (1)
+</li>
+	<li class="cat-item cat-item-53"><a href="https://devblog.paypal.com/category/tutorials/" >Tutorials</a> (12)
+</li>
+	<li class="cat-item cat-item-1"><a href="https://devblog.paypal.com/category/uncategorized/" >Uncategorized</a> (1)
+</li>
+	<li class="cat-item cat-item-47"><a href="https://devblog.paypal.com/category/videos-2/" >Videos</a> (2)
+</li>
+	<li class="cat-item cat-item-73"><a href="https://devblog.paypal.com/category/webhooks/" >Webhooks</a> (2)
+</li>
+		</ul>
+</div></li><li id="nav_menu-2" class="widget_nav_menu widget fix"><div class="widget-pad"><h3 class="widget-title">Links</h3><div class="menu-developer-resources-container"><ul id="menu-developer-resources" class="menu"><li id="menu-item-54" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-54"><a href="https://developer.paypal.com/docs/">Developer Docs</a></li>
+<li id="menu-item-14" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-14"><a href="https://developer.paypal.com/support/">Developer Support</a></li>
+<li id="menu-item-1170" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1170"><a href="https://www.braintreepayments.com/blog/">Braintree Payments Blog</a></li>
+<li id="menu-item-1171" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1171"><a href="https://www.paypal.com/stories/us?categoryId=developer">PayPal Stories</a></li>
+</ul></div></div></li>		<li id="recent-posts-2" class="widget_recent_entries widget fix"><div class="widget-pad">		<h3 class="widget-title">Recent Posts</h3>		<ul>
+					<li>
+				<a href="https://devblog.paypal.com/design-thinking-pm/">Design Thinking: Out of the Classroom, Into the Fire</a>
+						</li>
+					<li>
+				<a href="https://devblog.paypal.com/how-woocommerce-and-developer-agencies-optimize-payments-for-small-businesses-with-paypal/">How WooCommerce and Developer Agencies Optimize Payments for Small Businesses with PayPal</a>
+						</li>
+					<li>
+				<a href="https://devblog.paypal.com/setting-payee/">New REST API Feature: Setting a Receiver for Payments</a>
+						</li>
+					<li>
+				<a href="https://devblog.paypal.com/integrate-our-new-javascript-sdk-for-payments/">Integrate our new JavaScript SDK for Payments</a>
+						</li>
+					<li>
+				<a href="https://devblog.paypal.com/paypal-is-now-available-through-woocommerce-2-6-onboarding-wizard/">PayPal is Now Available Through WooCommerce 2.6 Onboarding Wizard</a>
+						</li>
+				</ul>
+		</div></li>		<li id="text-2" class="widget_text widget fix"><div class="widget-pad"><h3 class="widget-title">Connect with us!</h3>			<div class="textwidget"><a href="https://twitter.com/paypaldev" onclick="__gaTracker('send', 'event', 'outbound-widget', 'https://twitter.com/paypaldev', 'Tweets by @paypaldev');" class="twitter-timeline"  data-widget-id="720280893114286082">Tweets by @paypaldev</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</div>
+		</div></li><li id="archives-2" class="widget_archive widget fix"><div class="widget-pad"><h3 class="widget-title">Archives</h3>		<ul>
+			<li><a href='https://devblog.paypal.com/2017/04/'>April 2017</a></li>
+	<li><a href='https://devblog.paypal.com/2017/03/'>March 2017</a></li>
+	<li><a href='https://devblog.paypal.com/2017/01/'>January 2017</a></li>
+	<li><a href='https://devblog.paypal.com/2016/12/'>December 2016</a></li>
+	<li><a href='https://devblog.paypal.com/2016/10/'>October 2016</a></li>
+	<li><a href='https://devblog.paypal.com/2016/09/'>September 2016</a></li>
+	<li><a href='https://devblog.paypal.com/2016/07/'>July 2016</a></li>
+	<li><a href='https://devblog.paypal.com/2016/05/'>May 2016</a></li>
+	<li><a href='https://devblog.paypal.com/2016/03/'>March 2016</a></li>
+	<li><a href='https://devblog.paypal.com/2015/11/'>November 2015</a></li>
+	<li><a href='https://devblog.paypal.com/2015/09/'>September 2015</a></li>
+	<li><a href='https://devblog.paypal.com/2015/08/'>August 2015</a></li>
+	<li><a href='https://devblog.paypal.com/2015/06/'>June 2015</a></li>
+	<li><a href='https://devblog.paypal.com/2015/04/'>April 2015</a></li>
+	<li><a href='https://devblog.paypal.com/2015/03/'>March 2015</a></li>
+	<li><a href='https://devblog.paypal.com/2014/11/'>November 2014</a></li>
+	<li><a href='https://devblog.paypal.com/2014/10/'>October 2014</a></li>
+	<li><a href='https://devblog.paypal.com/2014/08/'>August 2014</a></li>
+	<li><a href='https://devblog.paypal.com/2014/07/'>July 2014</a></li>
+	<li><a href='https://devblog.paypal.com/2014/03/'>March 2014</a></li>
+	<li><a href='https://devblog.paypal.com/2014/02/'>February 2014</a></li>
+	<li><a href='https://devblog.paypal.com/2014/01/'>January 2014</a></li>
+	<li><a href='https://devblog.paypal.com/2013/12/'>December 2013</a></li>
+	<li><a href='https://devblog.paypal.com/2013/10/'>October 2013</a></li>
+	<li><a href='https://devblog.paypal.com/2013/09/'>September 2013</a></li>
+	<li><a href='https://devblog.paypal.com/2013/08/'>August 2013</a></li>
+	<li><a href='https://devblog.paypal.com/2013/07/'>July 2013</a></li>
+	<li><a href='https://devblog.paypal.com/2013/06/'>June 2013</a></li>
+	<li><a href='https://devblog.paypal.com/2013/05/'>May 2013</a></li>
+	<li><a href='https://devblog.paypal.com/2013/04/'>April 2013</a></li>
+	<li><a href='https://devblog.paypal.com/2013/03/'>March 2013</a></li>
+		</ul>
+		</div></li>	</ul>
+	<div class="clear"></div>
+	</div>
+</div>
+	
+				</div>
+			</div>
+			</div>		
+
+</div>				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</div> <!-- END #dynamic-content -->
+
+<div id="morefoot_area"><div id="morefoot" class="container fix">
+	<div class="texture">
+		<div class="content">
+			<div class="content-pad">
+								<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<div class="clear"></div>
+				
+</div> <!-- END #page-main from header -->
+</div> <!-- END #page-canvas from header -->
+</div> <!-- END #page from header -->
+
+<div  id="footer">
+	<div class="outline fix"><div id="simple_footer_nav" class="container fix">
+	<div class="texture">
+		<div class="content">
+			<div class="content-pad">
+	<div id="logo">
+					<h1 class="site-title">
+				<a class="home" href="https://devblog.paypal.com" title="Home">
+					PayPal &amp; Braintree |  Developer &#8211; Blog				</a>
+			</h1>
+			</div>
+	
+	<div class="menu-developer-resources-container"><ul id="menu-developer-resources-1" class="menu"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-54"><a href="https://developer.paypal.com/docs/">Developer Docs</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-14"><a href="https://developer.paypal.com/support/">Developer Support</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1170"><a href="https://www.braintreepayments.com/blog/">Braintree Payments Blog</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1171"><a href="https://www.paypal.com/stories/us?categoryId=developer">PayPal Stories</a></li>
+</ul></div>	
+	<span class="terms">
+		© 2017 PayPal | Developer	</span>	
+
+				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="cred" class="pagelines"><a class="plimage" target="_blank" href="http://www.pagelines.com/" title="PageLines"><img src="https://devblog.paypal.com/wp-content/themes/platform/images/pagelines.png" alt="Platform by PageLines" /></a></div><div class="clear"></div></div>
+</div>
+</div>
+<style>
+pre.prettyprint {
+  margin-bottom: 14px;
+}
+.gist .gist-file .gist-data .line-pre {
+  text-align: left;
+}
+
+.gist {
+  font-size: 0.8em;
+  line-height: 1.3em;
+}
+
+.gist table {
+  margin-bottom: 0px;
+}
+</style>	<div style="display:none">
+	<div class="grofile-hash-map-50b60da8c63e92bb28e800d38bbc0323">
+	</div>
+	</div>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/themes/platform/sections/nav/superfish.js?ver=1.0'></script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/themes/platform/sections/nav/jquery.bgiframe.min.js?ver=1.0'></script>
+
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/devblog.paypal.com\/upcoming-security-changes-notice\/":1093};
+	</script>
+<!--[if lte IE 8]>
+<link rel='stylesheet' id='jetpack-carousel-ie8fix-css'  href='https://devblog.paypal.com/wp-content/plugins/jetpack/modules/carousel/jetpack-carousel-ie8fix.css?ver=20121024' type='text/css' media='all' />
+<![endif]-->
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/plugins/jetpack/modules/photon/photon.js?ver=20130122'></script>
+<script type='text/javascript' src='https://s0.wp.com/wp-content/js/devicepx-jetpack.js?ver=201728'></script>
+<script type='text/javascript' src='https://secure.gravatar.com/js/gprofiles.js?ver=2017Julaa'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/plugins/jetpack/modules/wpgroho.js?ver=4.7.5'></script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-includes/js/comment-reply.min.js?ver=4.7.5'></script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-includes/js/wp-embed.min.js?ver=4.7.5'></script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/plugins/wp-markdown/js/markdown.min.js?ver=1.5.1'></script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/plugins/jetpack/_inc/spin.js?ver=1.3'></script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/plugins/jetpack/_inc/jquery.spin.js?ver=1.3'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var jetpackCarouselStrings = {"widths":[370,700,1000,1200,1400,2000],"is_logged_in":"","lang":"en","ajaxurl":"https:\/\/devblog.paypal.com\/wp-admin\/admin-ajax.php","nonce":"99fd06369e","display_exif":"1","display_geo":"1","single_image_gallery":"1","single_image_gallery_media_file":"","background_color":"black","comment":"Comment","post_comment":"Post Comment","write_comment":"Write a Comment...","loading_comments":"Loading Comments...","download_original":"View full size <span class=\"photo-size\">{0}<span class=\"photo-size-times\">\u00d7<\/span>{1}<\/span>","no_comment_text":"Please be sure to submit some text with your comment.","no_comment_email":"Please provide an email address to comment.","no_comment_author":"Please provide your name to comment.","comment_post_error":"Sorry, but there was an error posting your comment. Please try again later.","comment_approved":"Your comment was approved.","comment_unapproved":"Your comment is in moderation.","camera":"Camera","aperture":"Aperture","shutter_speed":"Shutter Speed","focal_length":"Focal Length","copyright":"Copyright","comment_registration":"1","require_name_email":"0","login_url":"https:\/\/devblog.paypal.com\/wp-login.php?redirect_to=https%3A%2F%2Fdevblog.paypal.com%2Fupcoming-security-changes-notice%2F","blog_id":"1","meta_data":["camera","aperture","shutter_speed","focal_length","copyright"],"local_comments_commenting_as":"<p id=\"jp-carousel-commenting-as\">You must be <a href=\"#\" class=\"jp-carousel-comment-login\">logged in<\/a> to post a comment.<\/p>"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/plugins/jetpack/modules/carousel/jetpack-carousel.js?ver=20170209'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://devblog.paypal.com/wp-content/plugins/jetpack/modules/sharedaddy/sharing.js?ver=4.9'></script>
+<script type='text/javascript'>
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-twitter', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-facebook', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-google-plus-1', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomgoogle-plus-1', 'menubar=1,resizable=1,width=480,height=550' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-tumblr', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomtumblr', 'menubar=1,resizable=1,width=450,height=450' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-linkedin', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomlinkedin', 'menubar=1,resizable=1,width=580,height=450' );
+				return false;
+			});
+</script>
+<script type='text/javascript' src='https://stats.wp.com/e-201728.js' async defer></script>
+<script type='text/javascript'>
+	_stq = window._stq || [];
+	_stq.push([ 'view', {v:'ext',j:'1:4.9',blog:'120977637',post:'1093',tz:'0',srv:'devblog.paypal.com'} ]);
+	_stq.push([ 'clickTrackerInit', '120977637', '1093' ]);
+</script>
+</body>
+</html>

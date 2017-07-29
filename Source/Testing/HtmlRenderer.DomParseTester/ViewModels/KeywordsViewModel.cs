@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,11 +23,14 @@ namespace HtmlRenderer.DomParseTester.ViewModels
 
         public GenericCommand FindUrlsCommand { get; private set; }
 
+        public GenericCommand DownloadUrlsCommand { get; private set; }
+
         public KeywordsViewModel()
         {
             this.OpenCommand = new GenericCommand(this.Open_Execute);
             this.SaveCommand = new GenericCommand(this.Save_Execute, this.Save_CanExecute);
             this.FindUrlsCommand = new GenericCommand(this.FindUrls_Execute, this.FindUrls_CanExecute);
+            this.DownloadUrlsCommand = new GenericCommand(this.DownloadUrls_Execute, this.DownloadUrls_CanExecute);
         }
 
         private void Open_Execute()
@@ -110,6 +115,86 @@ namespace HtmlRenderer.DomParseTester.ViewModels
             return urls.OrderBy(e => e).ToArray();
         }
 
+        private bool DownloadUrls_CanExecute()
+        {
+            return (this.SelectedKeywords != null) && this.SelectedKeywords.Any();
+        }
+
+        private void DownloadUrls_Execute()
+        {
+            if (this.SelectedKeywords == null)
+                return;
+            Keyword[] words = this.SelectedKeywords.ToArray();
+            if (words.Length == 0)
+                return;
+
+            string basePath = Path.GetDirectoryName(this.Keywords.Path);
+            basePath = Path.Combine(basePath, "Files");
+
+            Tuple<string, string>[] urls = words.SelectMany(word => word.Urls.Select(url => new Tuple<string, string>(word.Text, url))).ToArray();
+            Task.Run(() => this.DownloadUrls(urls, basePath));
+        }
+
+        private void DownloadUrls(Tuple<string, string>[] urls, string basePath)
+        {
+            int i = 0;
+            Parallel.ForEach(urls, url =>
+            {
+                this.DownloadUrl(url.Item1, url.Item2, basePath);
+                this.Dispatcher.InvokeAsync(() => this.Progress = (i++ + 1.0) / urls.Length);
+            });
+            this.Dispatcher.InvokeAsync(() => this.Progress = 0);
+        }
+
+        private readonly char[] InvalidChars = Path.GetInvalidPathChars().Concat(Path.GetInvalidFileNameChars()).Distinct().ToArray();
+
+        private void DownloadUrl(string keyword, string url, string basePath)
+        {
+            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(url);
+            buffer = MD5.Create().ComputeHash(buffer);
+            string hash = String.Join("", buffer.Select(b => String.Format("{0:X2}", b)));
+
+            string safeKeyword = new string(keyword.Select(ch => InvalidChars.Contains(ch) ? '_' : ch).ToArray());
+            string path = Path.Combine(basePath, safeKeyword);
+            Directory.CreateDirectory(path);
+
+            path = Path.Combine(path, hash);
+            if (File.Exists(path + ".html"))
+                return;
+
+            try
+            {    
+                string fullUrl = url;
+                if ((url.IndexOf("http://", StringComparison.OrdinalIgnoreCase) != 0) && (url.IndexOf("https://", StringComparison.OrdinalIgnoreCase) != 0))
+                    fullUrl = "http://" + fullUrl;
+                WebClient client = new MyWebClient();
+                client.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+                client.DownloadFile(fullUrl, path + ".html");
+                File.WriteAllText(path + ".txt", String.Format("Keyword: {0}\r\nUrl: {1}", keyword, url));
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    File.WriteAllText(path + ".txt", String.Format("Keyword: {0}\r\nUrl: {1}\r\nERROR: {2}", keyword, url, ex.Message));
+                }
+                catch (Exception ex2)
+                {
+                    Console.WriteLine(ex2.Message);
+                }
+            }
+        }
+
+        private class MyWebClient : WebClient
+        {
+            protected override WebRequest GetWebRequest(Uri address)
+            {
+                WebRequest request = base.GetWebRequest(address);
+                if (request != null)
+                    request.Timeout = 10000;
+                return request;
+            }
+        }
 
         /// <summary>
         /// 
@@ -147,6 +232,7 @@ namespace HtmlRenderer.DomParseTester.ViewModels
         {
             this.SaveCommand.OnCanExecuteChanged();
             this.FindUrlsCommand.OnCanExecuteChanged();
+            this.DownloadUrlsCommand.OnCanExecuteChanged();
         }
 
 
@@ -185,6 +271,7 @@ namespace HtmlRenderer.DomParseTester.ViewModels
         private void SelectedKeywordsChanged(IEnumerable<Keyword> oldValue, IEnumerable<Keyword> newValue)
         {
             this.FindUrlsCommand.OnCanExecuteChanged();
+            this.DownloadUrlsCommand.OnCanExecuteChanged();
         }
 
 

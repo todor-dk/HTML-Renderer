@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Temperature Converter - Fahrenheit, Celsius (Centigrade), and Kelvin</title>
+<meta name="description" content="A temperature converter that uses significant figures and can display scientific notation when converting between the three major scales: kelvin, fahrenheit, and celcius.">
+<meta name="keywords" content="temperature converter, temperature calculator, calculate temperature in javascript, degree conversion, javascript temperature calculator">
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+<meta name=viewport content="width=device-width, initial-scale=1">
+
+<script language=javascript type="text/javascript">
+<!--
+var lastChanged;
+var lastDone;
+var lastString;
+var canAlert = true;
+
+function setLastChanged(field){
+    lastChanged = field;
+    lastDone = null;
+    canAlert=true;
+}
+
+function calcTemps(){
+    var last = lastDone;
+    if (last == null){
+        last = lastChanged;
+    }     
+    lastDone = last;
+    if (last.value == ""){
+        document.temperature.fahrenheit.value = "";
+        document.temperature.celsius.value = "";
+        document.temperature.kelvin.value = "";
+        return;
+    }
+    var thisFloat = parseFloat(last.value);
+    if ("" + thisFloat == "NaN"){
+        if (canAlert){
+        	alert("That's not a number!");
+        }
+        canAlert = false;
+        last.focus();
+        last.select();
+        return;
+    }
+    var sigfig = new SignificantFigures(last.value);
+    var FFloat;
+    var CFloat;
+    var KFloat;
+    var FSigFig;
+    var CSigFig;
+    var KSigFig;
+    var sigDec = sigfig.sigDecs;
+    var t;
+    if (last == document.temperature.fahrenheit){
+        FFloat = thisFloat;
+        FSigFig = sigfig.sigFigs;
+        CFloat = FtoC(FFloat);
+        KFloat = CtoK(CFloat);
+        t = new SignificantFigures(displaySigFigs(
+            CFloat,
+            FSigFig,
+            sigDec,
+            document.temperature.scinotation.checked
+        ));
+        CSigFig = FSigFig + t.sigDecs - sigDec;
+        t = new SignificantFigures(displaySigFigs(
+            KFloat,
+            FSigFig,
+            sigDec,
+            document.temperature.scinotation.checked
+        ));
+        KSigFig = FSigFig + t.sigDecs - sigDec;
+    } else if (last == document.temperature.celsius){
+        CFloat = thisFloat;
+		CSigFig = sigfig.sigFigs;
+        FFloat = CtoF(CFloat);
+        KFloat = CtoK(CFloat);
+        t = new SignificantFigures(displaySigFigs(
+            FFloat,
+            CSigFig,
+            sigDec,
+            document.temperature.scinotation.checked
+        ));
+        FSigFig = CSigFig + t.sigDecs - sigDec;
+        t = new SignificantFigures(displaySigFigs(
+            KFloat,
+            CSigFig,
+            sigDec,
+            document.temperature.scinotation.checked
+        ));
+        KSigFig = CSigFig + t.sigDecs - sigDec;
+    } else if (last == document.temperature.kelvin){
+        KFloat = thisFloat;
+        KSigFig = sigfig.sigFigs;
+        CFloat = KtoC(KFloat);
+        FFloat = CtoF(CFloat);
+        t = new SignificantFigures(displaySigFigs(
+            CFloat,
+            KSigFig,
+            sigDec,
+            document.temperature.scinotation.checked
+        ));
+        CSigFig = KSigFig + t.sigDecs - sigDec;
+        t = new SignificantFigures(displaySigFigs(
+            FFloat,
+            KSigFig,
+            sigDec,
+            document.temperature.scinotation.checked
+        ));
+        FSigFig = KSigFig + t.sigDecs - sigDec;
+    } else {
+        alert(last);
+        return;
+    }
+    document.temperature.fahrenheit.value = displaySigFigs(
+        FFloat,
+        FSigFig,
+        sigDec,
+        document.temperature.scinotation.checked
+    );
+	document.temperature.celsius.value = displaySigFigs(
+        CFloat,
+        CSigFig,
+        sigDec,
+        document.temperature.scinotation.checked
+    );
+    document.temperature.kelvin.value = displaySigFigs(
+        KFloat,
+        KSigFig,
+        sigDec,
+        document.temperature.scinotation.checked
+    );
+}
+
+function set(field, text){
+    (eval(field)).value = text;
+    setLastChanged(eval(field));
+    calcTemps();
+    window.scroll(0,0);
+}
+
+function FtoC(f){
+    return ((f - 32) * 5 / 9);
+}
+
+function CtoF(f){
+    return ((f * 1.8) + 32);
+}
+
+function CtoK(f){
+    return (f + 273.15);
+}
+
+function KtoC(f){
+    return(f - 273.15);
+}
+//-->
+</script>
+<script src="SignificantFigures.js" language=javascript type="text/javascript"></script>
+<map name="thermometermap">
+<script language=javascript type="text/javascript"><!--
+for (var i=0; i<225; i++){
+    document.write('<area shape="rect" coords="0,' + i + ',110,' + i + '" href="javascript:set(\'document.temperature.fahrenheit\',\'' + (169-i) + '.\');">');
+}
+--></script>
+</map>
+</head>
+
+</head>
+<body>
+
+<h1>Temperature Conversion: Convert between Celsius, Kelvin, and Fahrenheit</h1>
+<table border=0 summary="" cellpadding=10 width="100%">
+<tr><td>
+<h2>Clickable<br> Temperature<br> Thermometer</h2>
+<img src="temperature.png" alt="clickable thermometer" width="110" height="225" border="0" usemap="#thermometermap">
+</td><td>
+<h2>Online Temperature Converter</h2>
+<form name=temperature>
+<input type=text name=fahrenheit onChange="setLastChanged(this);calcTemps()"> &deg;F (degrees Fahrenheit)<br>
+<input type=text name=celsius onChange="setLastChanged(this);calcTemps()"> &deg;C (degrees Celsius or Centigrade)<br>
+<input type=text name=kelvin onChange="setLastChanged(this);calcTemps()"> K (Kelvins)<br>
+<input type=button value=Convert onClick="calcTemps()">
+<input type=checkbox name=scinotation onChange="calcTemps()"> Always display scientific notation.<br>
+</form>
+</td></tr>
+</table>
+
+<div style="position:relative;float:right;width:200;padding-left:1cm;padding-bottom:2cm;">
+<h4>Understanding Celsius</h4>
+<ul>
+<li><a href="javascript:set('document.temperature.celsius','0.')">0&deg;</a> - Freezing</li>
+<li><a href="javascript:set('document.temperature.celsius','10.')">10&deg;</a> - Cold</li>
+<li><a href="javascript:set('document.temperature.celsius','20.')">20&deg;</a> - Room Temperature</li>
+<li><a href="javascript:set('document.temperature.celsius','30.')">30&deg;</a> - Hot</li>
+<li><a href="javascript:set('document.temperature.celsius','40.')">40&deg;</a> - Sweltering</li>
+</ul>
+
+<h4>Temperature Fun Facts</h4>
+<ul>
+<li><a href="javascript:set('document.temperature.fahrenheit','1.000e10')">At high temperatures</a>, 
+degrees Celsius and Kelvins become equal as the difference of 273.15 between them gets lost in the noise.</li>
+<li><a href="javascript:set('document.temperature.celsius','-40.')">-40&deg; Celsius</a> and 
+<a href="javascript:set('document.temperature.fahrenheit','-40.')">-40&deg; Fahrenheit</a> are equal.</li>
+<li><a href="javascript:set('document.temperature.kelvin','0.00')">Zero Kelvins</a> is absolute zero.</li>
+<li><a href="javascript:set('document.temperature.fahrenheit','98.6')">Body temperature</a>.</li>
+<li><a href="javascript:set('document.temperature.celsius','100.')">Boiling point of water</a>.</li>
+<li><a href="javascript:set('document.temperature.celsius','0.')">Freezing point of water</a>.</li>
+</ul>
+</div>
+
+<h3>Temperature Conversion Instructions</h3>
+
+<p>Enter a value for any one of the three temperature scales and the others will
+automatically be calculated.  Javascript must be enabled in your web browser for
+calculations to occur.</p>
+
+<p>Significant figures are used.  Results are shown only with as many significant
+figures as the quantity that was entered.  Scientific notation may be used for
+large results or if the number of significant digits would be ambiguous otherwise.
+The calculator follows proper rounding rules for scientific purposes.</p>
+
+<p>The formulas used to convert between temperatures are as follows:
+<ul>
+<li>&deg;C = (&deg;F - 32) * 5 / 9</li>
+<li>&deg;F = (&deg;C * 1.8) + 32</li>
+<li>K = &deg;C + 273.15</li>
+<li>&deg;C = K - 273.15</li>
+</ul></p>
+
+<hr>
+
+<h3>Temperature Converter License</h3>
+
+<p>This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the Free
+Software Foundation; either version 2 of the License, or (at your option)
+any later version.</p>
+
+<p>This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+or FITNESS FOR A PARTICULAR PURPOSE. See the
+<a href="http://www.gnu.org/copyleft/gpl.html">GNU
+General Public License</a> for more details.</p>
+
+<hr>
+
+<h3>About Temperature Conversion</h3>
+<p>The fahrenheit was proposed by Daniel Gabriel Fahrenheit.  The scale is often mispelled as "farhenheit", "farenheit", "farhenhiet", or "farenhiet".</p>
+<p>The Celcius scale is still sometimes called the "centigrade" scale because it is divided into 100 divisions.  It was devised by Andres Celsius.</p>
+
+
+
+<div style="padding:0.2cm;"><a href="http://ostermiller.org/calc/">More converters, calculators, and other JavaScript goodies</a></div>
+<div style="padding:0.2cm;text-align:right;"><a href="http://ostermiller.org/">ostermiller.org</a> (<a href="http://ostermiller.org/siteindex.html">site index</a>)</div>
+<div style="padding:0.2cm;"><p>Copyright <a href="http://ostermiller.org/contact.pl?regarding=JavaScript+Temperature" class=mail>Stephen Ostermiller</a> 2001-2014</p></div>
+</body>
+</html>

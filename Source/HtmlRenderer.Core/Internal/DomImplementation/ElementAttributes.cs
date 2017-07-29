@@ -96,7 +96,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
 
             // 1. Queue a mutation record of "attributes" for element with name attribute's local name,
             //    namespace attribute's namespace, and oldValue null.
-            // TODO: Implement observers
+            FutureVersions.ImplementDomObservers();
 
             // 2. Append the attribute to the element's attribute list.
             attribute.OwnerElement = ownerElement;
@@ -152,7 +152,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
                         {
                             newContents[0] = existingAttrs[0];
                             newContents[1] = attribute;
-                            Array.Copy(existingAttrs, 1, newContents, 2, existingAttrs.Length);
+                            Array.Copy(existingAttrs, 1, newContents, 2, existingAttrs.Length - 1);
                         }
                         else
                         {

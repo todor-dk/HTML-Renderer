@@ -1,0 +1,894 @@
+<!doctype html>
+<html>
+<head>
+<title>[OFFICIAL] KeepVid: Download YouTube Videos, Facebook, Vimeo, Twitch.Tv, Dailymotion, Youku, Tudou, Metacafe and more!</title>
+<meta name="description" content="The #1 Free Online Video Downloader allows you to download videos from YouTube, Facebook, Vimeo, Twitch.Tv, Dailymotion, Youku, Tudou, Metacafe and heaps more!">
+<meta name="keywords" content="download youtube videos, keepvid, youtube downloader, download online videos, download streaming videos">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta name="robots" content="All,index,follow"><meta name="revisit-after" content="7 days">
+<meta itemprop="image" content="https://pro.keepvid.com/images/keepvid-logo.png">
+<link rel="shortcut icon" href="http://keepvid.com/favicon.ico" />
+<link rel="canonical" href="http://keepvid.com/?url=" />
+<link rel="alternate" hreflang="en" href="http://keepvid.com/?url=" />
+<link rel="alternate" hreflang="ar" href="http://ar.keepvid.com/?url=" />
+<link rel="alternate" hreflang="pt" href="http://br.keepvid.com/?url=" />
+<link rel="alternate" hreflang="cs" href="http://cs.keepvid.com/?url=" />
+<link rel="alternate" hreflang="da" href="http://da.keepvid.com/?url=" />
+<link rel="alternate" hreflang="de" href="http://de.keepvid.com/?url=" />
+<link rel="alternate" hreflang="el" href="http://el.keepvid.com/?url=" />
+<link rel="alternate" hreflang="es" href="http://es.keepvid.com/?url=" />
+<link rel="alternate" hreflang="fi" href="http://fi.keepvid.com/?url=" />
+<link rel="alternate" hreflang="fr" href="http://fr.keepvid.com/?url=" />
+<link rel="alternate" hreflang="ga" href="http://ga.keepvid.com/?url=" />
+<link rel="alternate" hreflang="hu" href="http://hu.keepvid.com/?url=" />
+<link rel="alternate" hreflang="it" href="http://it.keepvid.com/?url=" />
+<link rel="alternate" hreflang="ms" href="http://ms.keepvid.com/?url=" />
+<link rel="alternate" hreflang="nl" href="http://nl.keepvid.com/?url=" />
+<link rel="alternate" hreflang="no" href="http://no.keepvid.com/?url=" />
+<link rel="alternate" hreflang="pl" href="http://pl.keepvid.com/?url=" />
+<link rel="alternate" hreflang="sv" href="http://sv.keepvid.com/?url=" />
+<link rel="alternate" hreflang="th" href="http://th.keepvid.com/?url=" />
+<link rel="alternate" hreflang="tr" href="http://tr.keepvid.com/?url=" />
+<link rel="alternate" hreflang="vi" href="http://vi.keepvid.com/?url=" />
+<link rel="alternate" hreflang="zh-cn" href="http://zh.keepvid.com/?url=" />
+<link rel="stylesheet" type="text/css" href="new-style/global_fonts.css?nv=1.0">
+<link rel="stylesheet" type="text/css" href="new-style/global.css?nv=1.08">
+<link rel="stylesheet" type="text/css" href="new-style/download.css?nv=1.07">
+<script type="text/javascript" src="new-script/jquery-1.9.1.min.js"></script>
+<!--[if lt IE 9]>
+	<script src="new-script/html5shiv.min.js"></script>
+	<script src="new-script/respond.min.js"></script>
+	<style type="text/css">
+		 .btn,.btn.btn-outline,.shadow-confirm .content{min-height:0px;}
+	</style>
+<![endif]-->
+<script type="text/javascript">
+if (parent.frames.length > 0) {window.top.location.href = location.href;};
+var ipurl='http://keepvid.com/webmasters/getip.php';
+var d=document;
+var sa="Save link as...";
+var ua="Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
+var jc="Run";
+var jd="Cancel";
+var ja="Do not show this again for apps from the publisher and location above";
+var jar="kv.96.jar";
+var jarpre="KeepVidDownloader";
+var jarcls=jarpre+".class"
+var jaa=new Array();
+var jaaid=1;
+var mp3ft=""; //mp3 stored full title
+var mp3isdl=false; //mp3 toggle (if currently downloading, set to 'true')
+window.onbeforeunload = function(){if(mp3isdl==true) return "There are still downloads in progress.\r\nAre you sure you want to cancel them?";}
+function i(id){return d.getElementById(id)}
+function contains(a,obj){var i=a.length;while (i--){if(a[i]===obj){return true;}}return false;}
+function inbtwn(a,b,c){try{var a1 = a.split(b);var a2 = a1[1].split(c);return a2[0];}catch(err){return '';}}
+function hd(input){
+	var e = document.createElement('div');
+	e.innerHTML = input;
+	return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+}
+function hj(){if(navigator.userAgent.indexOf('MSIE')>-1){try{var a=new ActiveXObject('JavaWebStart.isInstalled');return true}catch(e){return false}}var b=navigator.mimeTypes&&navigator.mimeTypes.length&&(navigator.mimeTypes['application/x-java-jnlp-file']!=null||navigator.mimeTypes['application/x-java-vm']!=null);var c=navigator.javaEnabled();if(c==false)return c;else return b}
+function jl(){
+	try{d.getElementById("nl").innerHTML='<img src=\"images/ajax-loader.gif\" class=\"ld\" />Java Applet Loaded. Fetching links...';log("Java applet loaded and jl() function sent")}catch(e){}
+}
+function jn(){
+	try{d.getElementById("nl").innerHTML='<b>Error:</b> You clicked "<b>'+jd+'</b>". Please <b>restart</b> your browser and click "<b>'+jc+'</b>".';}catch(e){}
+}
+//alert for right-click, save as... (title incorrect|attachment header not set)
+function rs(w,t){
+	if(w.getAttribute("download")==undefined){
+		//alert("Right-Click this download link and choose \""+sa+"\"");
+		//window.prompt("Right-Click the download link and choose \""+sa+"\", then rename the file to this:", unescape(t).replace(/\+/g," "));
+		message = '';
+		message += 'Right-Click the download link and choose "';
+		message += 'Save link as...';
+		message += '",then rename the file to this:';
+		window.prompt(message, unescape(t).replace(/\+/g," "));
+		//if(window.prompt("Right-Click the download link and choose \""+sa+"\", then rename the file to this:", unescape(t).replace(/\+/g," "))){
+			//window.open(w.getAttribute("href"));
+		//}
+		return false;
+	}else{
+		return true;
+	}
+}
+//alert for links that have referer checks
+function rd(){alert("Drag this link to a new tab and press Ctrl+S");return false;}
+var pw_secs;
+function pleasewait(secs){
+	pw_secs = secs;
+	var countdown = setInterval(function(){
+		if(pw_secs<=0){
+			document.getElementById("nl").style.display="none";
+			clearInterval(countdown);
+		}else{
+			document.getElementById("nl").style.display="block";
+			var is1;
+			if(pw_secs!=1) is1 = "s";
+			document.getElementById("nl").innerHTML='<img src=\"images/ajax-loader.gif\" class=\"ld\" />Please wait '+pw_secs+' second'+is1+'...';
+			pw_secs = pw_secs - 1;
+		}
+	},1000);
+}
+
+//display info function
+function di(obj){
+	var output="";
+	try{d.getElementById("instructs").style.display="none";}catch(ex){};
+	var e=d.getElementById("dl");
+	e.innerHTML='';
+	var nd=d.createElement("div");nd.setAttribute("class","j");nd.setAttribute("id","info");
+	try{obj.title=decodeURIComponent(escape(obj.title))}catch(e){try{obj.title=decodeURIComponent(unescape(obj.title))}catch(e){}}
+	if(obj.image!=undefined) output+='<a href="'+obj.url+'" target="_blank" rel="nofollow"><img src="'+obj.image+'" class="m" /></a>';
+	output+='<a href="'+obj.url+'" class="n" target="_blank" rel="nofollow">'+obj.title+'</a><br />';
+	output+='<span class="p">'+obj.domain;
+	if(obj.user!=undefined){
+		try{obj.user=decodeURIComponent(escape(obj.user))}catch(e){try{obj.user=decodeURIComponent(unescape(obj.user))}catch(e){}}
+		output+=' / '+obj.user;
+	}
+	output+='</span><br />';
+	if(obj.duration!=undefined) output+='<span class="q">'+obj.duration+'</span>';
+	output+='<br clear="both" /><br />';
+	nd.innerHTML=output;
+	e.appendChild(nd);
+}
+//display download link function
+function dl(obj){
+	if(obj.title!=undefined) try{obj.title=decodeURIComponent(escape(obj.title))}catch(e){try{obj.title=decodeURIComponent(unescape(obj.title))}catch(e){}}
+	var output="";
+	var e=d.getElementById("dl");
+	var nd=d.createElement("div");
+	var cc="";
+	var colors={
+		"3GP": "2EADC9",
+		"FLV": "BF6D1B",
+		"MP4": "436DBA",
+		"WEBM": "52B27F",
+		"M4A": "87273A",
+		"MP3": "AF43B5",
+		"SRT": "B74B4B",
+		"F4V": "338F46"
+	};
+	if(colors[obj.type]!="") cc+=' style="color:#'+colors[obj.type]+';"';
+
+	if(obj.newtab==1) cc+=' target="_blank"';
+
+	if(obj.saveas==1 && obj.noref==1){
+		if(navigator.userAgent.match(/webkit/i)!=null) cc+=' rel="noreferrer"';
+		cc+=' onclick="return rd(this);"';
+	}else if(obj.saveas!=1 && obj.noref==1){
+		if(navigator.userAgent.match(/webkit/i)!=null) cc+=' rel="noreferrer"';
+		else cc+=' onclick="return rd(this);"';
+	}else if(obj.saveas==1){
+		cc+=' onclick="return rs(this,\''+escape(obj.title)+' '+obj.quality+'.'+obj.type.toLowerCase()+'\');"';
+	}
+
+	if(obj.saveas!=1 && obj.newtab!=1 && obj.title!=undefined && typeof(document.createElement('a')).download!=undefined) cc+=' download="'+obj.title+' '+obj.quality+'.'+obj.type.toLowerCase()+'"';
+
+	if(obj.fixedp==1) output+='<b style="color:#436DBA;">*FIXED*</b> ';
+	if(obj.newp==1) output+='<b style="color:#e01b3c;">*NEW*</b> ';
+
+	output+='<a';
+	if(obj.url!=undefined) output+=' href="'+obj.url+'"';
+	output+=' class="l"'+cc+'>&raquo; ';
+	output+='Download';
+	output+=' '+obj.type+' &laquo;</a>';
+
+	if(obj.quality!=undefined){
+		var tempqual = obj.quality;
+		output+=' - <b>'+tempqual+'</b>';
+	}
+	if(obj.more!=undefined) output+=' - '+obj.more+'';
+
+	if(!isNaN(obj.size) && obj.size!=null) output+='<span id="fs'+jaaid+'"> - '+(obj.size/1024/1024).toFixed(1).toString()+' MB</span>';
+	//if(obj.title!=undefined) output+='<button data-clipboard-text="'+obj.title+' '+obj.quality+'.'+obj.type.toLowerCase()+'">copy filename</button>';
+
+	if(obj.showsize==1 && document.cookie.match(/showsize=y/g)){
+		output+='<span id="fs'+jaaid+'"></span>';
+		dja({
+		params: {
+				"u": obj.url,
+				"method": "HEAD"
+				},
+		"dispose": 1,
+		"callback": function(da){
+				var fs;
+				try{
+					fstemp = da.headers.match(/Content-Length: ([0-9]+)/g);
+					fs = fstemp[fstemp.length-1].match(/Content-Length: ([0-9]+)/i)[1];
+				}catch(e){
+					fs=0;
+				}
+				d.getElementById('fs'+da.jaaid).innerHTML=" - "+(fs/1024/1024).toFixed(1).toString()+" MB";
+			}
+		});
+	}
+
+	nd.innerHTML=output;
+	e.appendChild(nd);
+}
+//function: convert seconds to 1:11 readable format
+function duration(secs){
+    hours = parseInt(secs / 3600) % 24;
+	minutes = parseInt(secs / 60) % 60;
+	seconds = secs % 60;
+    return (hours < 1 ? "" : hours+":")+((minutes < 10 && hours > 0) ? "0" + minutes : minutes)+":"+(seconds < 10 ? "0" + seconds : seconds);
+}
+
+//function[test]: bypass referral checks
+function dr(u){
+	(i = d.createElement("iframe")).setAttribute("id","fr");
+	d.body.appendChild(i);
+	window.frames["fr"].document.body.innerHTML='<form method="get" action="'+u+'"></form>';
+	window.frames["fr"].document.forms[0].submit();
+	return false;
+}
+
+var jaa=new Array(); //still used in kvh
+var jaaid=1; //still used in kvh
+
+//old java applet code (obsolete) - START
+function dja(obj){
+	if(d.getElementById("jp"+jaaid) == undefined){
+		(i = d.createElement("div")).setAttribute("id","jp"+jaaid);
+		d.getElementById('applets').appendChild(i);
+	}
+	var apple;
+	//default params that never change
+	obj.params['mayscript']="true";
+	obj.params['initial_focus']="true";
+	obj.params['archive']=jar;
+	obj.params['cache_archive']=jar;
+	obj.params['code']=jarcls;
+	obj.params['codebase']="/";
+	obj.params['jaaid']=jaaid;
+	//obj.params['ua']=ua;
+	//document.getElementById('applets').innerHTML += '<div id="'+obj.id+'"></div>';
+	apple = '<object id="'+jarpre+'" height="1" width="1" codetype="application/x-java-applet" type="application/x-java-applet" classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93">';
+		for(var param in obj.params){
+			apple += '<param name="'+param+'" value="'+obj.params[param]+'" />';
+		}
+	apple += '<comment><embed id="'+jarpre+'" height="1" width="1" codetype="application/x-java-applet" type="application/x-java-applet" classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93"';
+		for(var param in obj.params){
+			apple += ' '+param+'="'+obj.params[param]+'"';
+		}
+	apple += '></comment></object>';
+	document.getElementById("jp"+jaaid).innerHTML = apple;
+
+	jaa[jaaid] = new Object();
+	jaa[jaaid].id = jaaid;
+	jaa[jaaid].dispose = obj.dispose;
+	jaa[jaaid].callback = obj.callback;
+	jaa[jaaid].it = setInterval((function(self){return function(){
+		if(self.response!=undefined){
+			clearInterval(self.it);
+			if(self.dispose==1) setTimeout(function(){d.getElementById('applets').removeChild(d.getElementById('jp'+self.id));},(Math.floor(Math.random() * (30000 - 1000 + 1)) + 1000));
+			d.getElementById('nl').style.display="none";
+			self.callback(self.response);
+		}
+	}})(this.jaa[jaaid]),1);
+	jaaid++;
+}
+function ap(obj){
+	if(typeof kvh_ext !== 'undefined'){
+		document.getElementById("nl").innerHTML='<img src=\"images/ajax-loader.gif\" class=\"ld\" />KeepVid Helper detected. Fetching links...';
+		document.getElementById("kvh_obj").innerHTML = JSON.stringify(obj);
+		document.getElementById("instructs").style.display="none";
+
+		jaa[jaaid] = new Object();
+		jaa[jaaid].id = jaaid;
+		jaa[jaaid].dispose = obj.dispose;
+		jaa[jaaid].callback = obj.callback;
+		jaa[jaaid].it = setInterval((function(self){return function(){
+			if(document.getElementById("kvh_data").innerHTML!="~kv"){
+				var xhr_resp = document.getElementById("kvh_data").innerHTML;
+				//clean up xhr_resp
+				xhr_resp = xhr_resp.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&amp;/g,"&");
+				self.response={body: xhr_resp}
+				document.getElementById("kvh_data").innerHTML="~kv"; //ditch data
+				clearInterval(self.it); //finally ditch this interval
+				d.getElementById("nl").style.display="none";
+				self.callback(self.response);
+			}
+		}})(this.jaa[jaaid]),1000);
+
+		jaaid++;
+	}else{
+
+		log("Java applet file: "+jar);
+		if(hj()==false) try{d.getElementById("tip-java").style.display="block";log('Error: Java not installed/disabled');}catch(e){}
+		else try{d.getElementById("nl").innerHTML='<img src="images/ajax-loader.gif" class="ld" />Loading Java Applet...';}catch(e){}
+		log('Deploying Java applet...');
+		dja(obj);
+		log('Java applet deployed. Waiting for applet to run...');
+
+	}
+}
+//old java applet code (obsolete) - END
+
+function xhr(obj){
+	var xmlhttp;
+	try{
+		xmlhttp=new XMLHttpRequest();
+	}catch(e){
+		var xmlhttp_ids=new Array(
+			'MSXML2.XMLHTTP.5.0',
+			'MSXML2.XMLHTTP.4.0',
+			'MSXML2.XMLHTTP.3.0',
+			'MSXML2.XMLHTTP',
+			'MSXML3.XMLHTTP',
+			'Microsoft.XMLHTTP'
+		);
+		var success=false;
+		for(var i=0;i < xmlhttp_ids.length && !success;i++){
+			try {
+				xmlhttp=new ActiveXObject(xmlhttp_ids[i]);
+				success=true;
+			}catch(e){success=false;}
+		}
+	}
+	if(obj.data) obj.method = "POST";
+	if(obj.method==undefined) obj.method = "GET";
+	xmlhttp.open(obj.method,obj.url,true);
+    if(obj.data) xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+    xmlhttp.onreadystatechange=function(){
+        if(xmlhttp.readyState==4) obj.callback(xmlhttp.responseText);
+    }
+    if(obj.data) xmlhttp.send(obj.data);
+    else xmlhttp.send();
+	return true;
+}
+function error(msg){
+	try{d.getElementById("instructs").style.display="none";}catch(ex){};
+	var e=d.getElementById("msg-error");
+	var nd=d.createElement("div");
+	nd.innerHTML="<b>Error: </b> "+msg;
+	e.appendChild(nd);
+}
+function ckswitch(opt,swi){
+	var expires = new Date();
+	expires.setTime(expires.getTime()+(1000*24*60*60*1000));
+	d.getElementById(opt+swi).style.display="inline";
+	if(swi=="on"){
+		document.cookie=opt+"=y; expires="+expires.toGMTString();
+		d.getElementById(opt+"off").style.display="none";
+	}else{
+		document.cookie=opt+"=n; expires="+expires.toGMTString();
+		d.getElementById(opt+"on").style.display="none";
+	}
+	window.location.reload();return false;
+}
+</script>
+</head>
+<body><a name="toTop"></a>
+<header>
+	<div class="container">
+		<h1>
+			<a href="/" class="logo" title="KeepVid: Download YouTube Videos, Facebook, Vimeo, Twitch.Tv, Dailymotion, Youku, Tudou, Metacafe and more!">KeepVid: Download YouTube Videos, Facebook, Vimeo, Twitch.Tv, Dailymotion, Youku, Tudou, Metacafe and more!</a>
+		</h1>
+		<ul class="navs clear-both">
+			<li class="curr"><a href="/">Online</a></li>
+			<li><a href="https://pro.keepvid.com/">Desktop</a></li>
+			<li ><a href="/keepvid-android">Mobile</a></li>
+			<li ><a href="/extensions">Extensions</a></li>
+			<li ><a href="/webmasters">Webmasters</a></li>
+			<li id="dropdown" class="dropdown">
+				<a href="javascript:;">More<i class="icon-down si si-arrow-drop-down"></i><i class="icon-up si si-arrow-drop-up"></i></a>
+				<ul class="hidden" >
+					<li><a href="/programs">Programs</a></li>
+					<li><a href="/updates">Updates</a></li>
+					<li><a href="/sites">Sites</a></li>
+					<li><a href="/help">Help</a></li>
+				</ul>
+			</li>
+		</ul>
+				<div class="dropdown-menu">
+			<i class="icon si si-menu"></i>
+			<i class="icon si si-close" style="display: none;"></i>
+			<div class="header_pro">
+				<ul>
+					<li class="curr"><a href="/">Online</a></li>
+					<li><a href="https://pro.keepvid.com/">Desktop</a></li>
+					<li ><a href="/keepvid-android">Mobile</a></li>
+					<li ><a href="/extensions">Extensions</a></li>
+					<li ><a href="/webmasters_test">Webmasters</a></li>
+					<li id="dropdown-pro" class="dropdown">
+						<a href="javascript:;">More<i class="icon-down si si-arrow-drop-down"></i><i class="icon-up si si-arrow-drop-up"></i></a>
+						<ul class="hidden">
+							<li><a href="/programs">Programs</a></li>
+							<li><a href="/updates">Updates</a></li>
+							<li><a href="/sites">Sites</a></li>
+							<li><a href="/help">Help</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</header>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.dropdown-menu > .icon').click(function(){
+			$(this).hide().siblings('.icon').show();
+			$('.header_pro').slideToggle('fast');
+			$('html').toggleClass('alpha');
+		});
+		$('#dropdown a').click(function(e){
+			var theEvent = window.event || e;
+			if(document.all){  //ie识别
+		        theEvent.cancelBubble=true;
+		    }else{
+		        theEvent.stopPropagation();
+		    }
+			$('#dropdown').toggleClass('actived');
+			$('#dropdown').find('ul').slideToggle('fast');
+		});
+		$('#dropdown-pro a').click(function(){
+			$('#dropdown-pro').toggleClass('actived');
+			$('#dropdown-pro').find('ul').slideToggle('fast');
+		});
+		$('body').click(function(){
+			if($('#dropdown').hasClass('actived')){
+				$('#dropdown').removeClass('actived');
+				$('#dropdown').find('ul').slideUp('fast');
+			}
+		});
+	});
+	function submitFrom(){
+		var value = document.getElementById("url").value;
+		value = value.replace(/(^\s+)|(\s+$)/g, "");
+		if(value!="")
+			document.getElementById("url").value = value
+		else
+			document.getElementById("url").value = "Enter the link of the video you want to download: e.g. https://www.youtube.com/watch?v=bMUxpTb_wWc"
+		document.getElementById('download-form').submit();
+	}
+</script>
+
+<div class="banner">
+	<div class="container">
+	  <form method="get" id="download-form" action="/">
+		<h2 class="title">Free Download Videos by Pasting Video URL</h2>
+		<div class="form-group clear-both">
+			<input class="fl" type="text" id="url" name="url" value="" placeholder="Enter the link of the video you want to download: e.g. https://www.youtube.com/watch?v=bMUxpTb_wWc">
+			<a class="fl" href="javascript:void(0);" onclick="submitFrom();">Download</a>
+		</div>
+	  </form>
+	</div>
+</div>
+<a name="adContent"></a>
+<div class="ad-content">
+  <div class="add" >
+	<div id="advert">
+		</div>
+  </div>
+</div>
+<script type="text/javascript">
+	var isAndroid = navigator.userAgent.toLowerCase().match(/android/i) == "android";
+	var isIphone = navigator.userAgent.toLowerCase().match(/iphone os/i) == "iphone os";
+	var isIpad = navigator.userAgent.toLowerCase().match(/ipad/i) == "ipad";
+	var isWinPhone = navigator.userAgent.toLowerCase().match(/windows phone/i) == "windows phone";
+	var isMac = (navigator.platform == "Mac68K") || (navigator.platform == "MacPPC") || (navigator.platform == "Macintosh") || (navigator.platform == "MacIntel"); 
+	$(function(){
+		if(isMac){
+			$(".if_btnMac").show();
+			$(".if_btnWin").hide();
+			$(".if_gotoMac").addClass("curr");
+			$(".if_gotoWin").removeClass("curr");
+		}else{
+			$(".if_btnWin").show();
+			$(".if_btnMac").hide();
+			$(".if_gotoWin").addClass("curr");
+			$(".if_gotoMac").removeClass("curr");
+		}
+		$(".if_gotoWin").click(function(){
+			$('.if_btnMac').hide();
+			$('.if_btnWin').show();
+			$(".if_gotoWin").addClass("curr");
+			$(".if_gotoMac").removeClass("curr");
+		});
+		$(".if_gotoMac").click(function(){
+			$('.if_btnMac').show();
+			$('.if_btnWin').hide();
+			$(".if_gotoMac").addClass("curr");
+			$(".if_gotoWin").removeClass("curr");
+		});
+	})
+</script>
+<div class="search-result-content">
+	<!-- search error -->
+	<div class="search-error-content">
+		<div class="container-sm">
+			<p class="title">Error：It can be caused by 2 reasons below</p>
+			<div class="row">
+				<div class="item-6">
+					<div class="error-box">
+						<i class="icon">1</i>
+						<p class="text1">Invalid URL</p>
+						<p>Pleas check the URL and try it again</p>
+					</div>
+				</div>
+				<div class="item-6">
+					<div class="error-box">
+						<i class="icon">2</i>
+						<p class="text1">Host Couldn't be Recognized</p>
+						<p>KeepVid Online doesn't support the host. Tell us which website you want to support <a href="#feedback" class="more">here >></a></p>
+					</div>
+				</div>
+			</div>
+						<div class="next">
+				<div class="subtitle">You can also try KeepVid Desktop now!</div>
+				<i class="icon-down si si-angle-down"></i>
+			</div>
+					</div>
+	</div>
+	<!-- search error end -->
+	<!-- scene-1 -->
+	<div class="scene1-content">
+		<div class="container">
+			<div class="row">
+				<div class="item-7">
+					<div class="text-box">
+						<h2 class="title">Download Videos from 10,000+ Video Sharing Sites 3X Faster on Your Desktop</h2>
+					</div>
+					<div class="btn-content">
+						<a href="http://download.keepvid.com/keepvid-pro-desktop_full2957.exe" onclick="javascript:ga('send', {hitType: 'event',eventCategory:this.href,eventAction: 'Download-nofound-win-pro',eventLabel: document.location.pathname});" class="btn">Try It Free <i class="icon si si-windows"></i></a>
+						<a href="http://download.keepvid.com/keepvid-pro-mac-desktop_full2958.dmg" onclick="javascript:ga('send', {hitType: 'event',eventCategory:this.href,eventAction: 'Download-nofound-mac-pro',eventLabel: document.location.pathname});" class="btn btn-white">Try It Free <i class="icon si si-mac"></i></a>
+					</div>
+				</div>
+				<div class="item-5">
+					<img src="http://images.keepvid.com/images/download.png">
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- scene-1 end -->
+</div>
+<script>
+	var isMobile = "";
+	if(isMobile)
+		location.hash="#adContent";  
+</script>
+<!-- shadow-confirm -->
+<div id="shadow-confirm-video" class="shadow-confirm">
+	<div class="content">
+		<div class="row">
+			<div class="item-7">
+				<p class="dd1">Install KeepVid Pro on Computer to Download HD Videos</p>
+				<p class="dd2">Download this desktop program and save videos for offline enjoyment fast and easy.</p>
+				<ul class="clear-both">
+					<li>Download 1080P to 4K Videos</li>
+					<li>YouTube to MP3 directly</li>
+					<li>Download YouTube/Lynda playlist</li>
+					<li>Support 10000+ video sites</li>
+				</ul>
+				<div class="btn-content">
+					<a href="http://download.keepvid.com/keepvid-pro-desktop_full2957.exe" onclick="javascript:ga('send', {hitType: 'event',eventCategory:this.href,eventAction: 'Download-inpage-win-pro',eventLabel: document.location.pathname});" class="btn-win" style="margin-right:20px;">Try It Free</a>
+					<a href="http://download.keepvid.com/keepvid-pro-mac-desktop_full2958.dmg" onclick="javascript:ga('send', {hitType: 'event',eventCategory:this.href,eventAction: 'Download-inpage-mac-pro',eventLabel: document.location.pathname});" class="btn-mac">Try It Free</a>
+				</div>	
+			</div>
+		</div>
+		<i class="icon si si-close"></i>
+	</div>
+</div>
+<div id="shadow-confirm-music" class="shadow-confirm">
+	<div class="content">
+		<p class="dd1">Install KeepVid Music on Computer to Get Music Easily</p>
+		<p class="dd2">Discover, record and download music from the music sites to your computer with high quality</p>
+		<ul class="clear-both">
+			<li>Download MP3 audio up to 320Kbps</li>
+			<li>Download entire music playlist</li>
+			<li>Record streaming music in high quality</li>
+			<li>Discover music with built-in platform</li>
+		</ul>
+		<div class="btn-content">
+			<a href="http://download.keepvid.com/keepvid-music-desktop_full2959.exe" onclick="javascript:ga('send', {hitType: 'event',eventCategory:this.href,eventAction: 'Download-inpage-win-music',eventLabel: document.location.pathname});" class="btn-win" style="margin-right:20px;">Try It Free</a>
+			<a href="http://download.keepvid.com/keepvid-music-mac-desktop_full2960.dmg" onclick="javascript:ga('send', {hitType: 'event',eventCategory:this.href,eventAction: 'Download-inpage-mac-music',eventLabel: document.location.pathname});" class="btn-mac">Try It Free</a>
+		</div>
+		<i class="icon si si-close"></i>
+	</div>
+</div>
+<!-- shadow-confirm end -->
+<script type="text/javascript">
+	$('.more-resolutions').click(function(){
+		$(this).toggleClass('curr');
+		$('.video-only').slideToggle('fast');
+		if($("#more-resolutions").attr("class")=="more-resolutions"){
+			$("#more").html("More resolutions");
+		}
+		else{
+			$("#more").html("Less resolutions");
+		}
+	});
+	
+	$('.result-table').on({
+		'mouseover':function(e){
+			var theEvent = window.event || e;
+			var xx = theEvent.clientX;
+			var yy = theEvent.clientY;
+			var str = '<div class="new_title_text" style="position:absolute;background-color:#fff;padding:4px 10px;box-shadow: 10px 10px 5px #888888;left:'+parseFloat(xx+10)+'px;top:'+ parseFloat(yy+$(window).scrollTop()+10)+'px">'+$(this).attr('new_title')+'</div>';
+			if($('.new_title_text').length == 0 && $(window).width()>979){
+				$('body').append(str);
+			}
+		},
+		'mouseout':function(){
+			$('.new_title_text').remove();
+		}
+	},'a[new_title]');
+
+	function downloadConfirm(e,obj){
+		var e = window.event || e;
+		if(document.all){  //ie识别
+	        e.cancelBubble=true;
+	    }else{
+	        e.stopPropagation();
+	    }
+		if(obj == 'video'){
+			$('#shadow-confirm-video').show();
+			setTimeout(function(){
+				$('#shadow-confirm-video').addClass('curr');
+			},100);
+		}else if(obj == 'music'){
+			$('#shadow-confirm-music').show();
+			setTimeout(function(){
+				$('#shadow-confirm-music').addClass('curr');
+			},100);
+		}
+	}
+	$('.shadow-confirm .content').click(function(e){
+		var e = window.event || e;
+		if(document.all){  //ie识别
+	        e.cancelBubble=true;
+	    }else{
+	        e.stopPropagation();
+	    }
+	});
+	$('.shadow-confirm .content .icon').click(function(){
+		$('.shadow-confirm').removeClass('curr');
+			setTimeout(function(){
+				$('.shadow-confirm').css('display','none');
+			},200);
+	})
+	$('body').click(function(){
+		if($('.shadow-confirm').hasClass('curr')){
+			$('.shadow-confirm').removeClass('curr');
+			setTimeout(function(){
+				$('.shadow-confirm').css('display','none');
+			},200);
+		}
+	});
+	function openPopUp(){
+		if(navigator.userAgent.match(/Chrome/i)==null)
+		    window.open('/pop-up');
+		else
+			setTimeout("window.location.href='/pop-up';",1000);
+		return true;
+	}
+</script>
+<!-- search success end -->
+<div class="expecting-content">
+	<div class="container-sm">
+		<div class="row">
+			<div class="item-7">
+				<a name="feedback"></a>
+				<p class="title">What you're expecting about KeepVid:</p>
+				<div class="form-group">
+					<form>
+						<label style="width: 100%;">
+							<textarea type="textarea" rows="4" name="download_from" placeholder="Write down your feedback here:"></textarea>
+						</label>
+						<label>
+							<input type="text" name="name" placeholder="What your name is:">
+						</label>
+						<label>
+							<input type="text" name="email" placeholder="Your Email Address:">
+						</label>
+						<a href="javascript:;" class="btn" id="expecting-submit">Submit</a>
+					</form>
+					<p class="share">Share with Friends: 
+						<a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fkeepvid.com%2F" target="_blank"><i class="icon si si-facebook"></i></a>
+						<a href="https://twitter.com/intent/tweet?text=[OFFICIAL]%20KeepVid:%20Download%20YouTube%20Videos,%20Facebook,%20Vimeo,%20Twitch.Tv,%20Dailymotion,%20Youku,%20Tudou,%20Metacafe%20and%20more!%20-%20http://keepvid.com&related=AddToAny,micropat" target="_blank"><i class="icon si si-twitter"></i></a>
+						<!-- <a href=""><i class="icon si si-google-plus"></i></a> -->
+					</p>
+				</div>
+			</div>
+			<div class="item-1"></div>
+			<div class="item-4">
+						<div>
+		<script src='//t.mdn2015x4.com/build/fd5cd5ab/v1/'></script>
+						<script src='//t.mdn2015x4.com/build/9cda5bcf/v1/'></script>
+			</div>
+				</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#expecting-submit').click(function(){
+			var site = $('.form-group textarea[name="download_from"]');
+			var name= $('.form-group input[name="name"]');
+			var email = $('.form-group input[name="email"]');
+			if(site.val() == ''){
+				alertError(site,'Write down your feedback here:');
+				return false;
+			}else if (name.val() == ''){
+				alertError(name,'What your name is:');
+				return false;
+			}else if(email.val() == '' || !isEmail(email.val())){
+				alertError(email,'Your Email Address:');
+				return false;
+			}
+			$.ajax({
+				async:false,
+				url: 'https://pro.keepvid.com/servers/public/',
+				type: "GET",
+					data: { c: "savedata", a: "keepvid", site: site.val(), name: name.val(), email: email.val() },
+					dataType: "jsonp",
+					//jsonp: "callback",
+					jsonpCallback: "OnPostMessSuccessByjsonp"
+			});
+		});
+		$('.form-group label textarea,.form-group label input').focus(function(){
+			$(this).next('.error-tips').remove();
+		});
+	});
+	function alertError(ele,obj){
+		var str = '<div class="error-tips">'+obj+'</div>';
+		ele.after(str);
+		setTimeout(function(){
+			$('.error-tips').css({'opacity':1,'top':'-24px'});
+		},100);
+	}
+	function isEmail(str){
+		var reg = /^([a-zA-Z0-9]+[_|.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|.]?)*[a-zA-Z0-9]+.[a-zA-Z]{2,3}$/;
+		return reg.test(str);
+	}
+	function OnPostMessSuccessByjsonp($m) {
+		if($m.stauts == 'y'){
+			alert('Your request has been submitted successfully. Thanks!');
+			window.location.reload();
+		}else{
+			alert('Your request wasn’t submitted successfully. Please try again.');
+		}
+	}
+</script>
+<div class="safe-content">
+	<div class="container-sm">
+		<p class="title">100% Safe &amp; Privacy Protected</p>
+		<div class="row">
+			<div class="item-6 al border-right">
+				<img class="mb20" src="http://images.keepvid.com/images/webhorde.png">
+				<br/>
+				<img src="http://images.keepvid.com/images/icon3.png">
+			</div>
+			<div class="item-6">
+				<img class="mt30" src="http://images.keepvid.com/images/mc-afee.png">
+			</div>
+		</div>
+	</div>
+</div><script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-80717639-3', 'auto');
+	ga('send', 'pageview');
+
+</script>
+<div class="expand-content">
+	<div class="container-sm">
+		<p class="title">Expand Your Video Collection</p>
+		<div class="row">
+		  <a href="/">
+			<div class="item-4">
+				<img src="http://images.keepvid.com/images/online.png">
+				<p class="dd">Online</p>
+			</div>
+		  </a>
+		  <a href="https://pro.keepvid.com/" target="_blank;">
+			<div class="item-4">
+				<img src="http://images.keepvid.com/images/keep-vid-pro.png">
+				<p class="dd">KeepVid Pro</p>
+			</div>
+		  </a>
+		  <a href="https://pro.keepvid.com/keepvid-music/" target="_blank;">
+			<div class="item-4">
+				<img src="http://images.keepvid.com/images/keep-vid-music.png">
+				<p class="dd">KeepVid Music</p>
+			</div>
+		  </a>
+		</div>
+	</div>
+</div>
+<div class="about-content">
+  <div class="container">
+	<h3 class="title">About</h3>
+	<p style="padding:20px 0;">KeepVid Video Downloader is a free web application that allows you to download videos from sites like YouTube, Facebook, Twitch.Tv, Vimeo, Dailymotion and many more. All you need is the URL of the page that has the video you want to download. Enter it in the textbox above and simply click 'Download'. KeepVid will then fetch download links in all possible formats that the particular site provides.</p>
+  </div>
+</div>
+<div class="footer1">
+  <div class="container">
+    <div class="row">
+      <div class="item-6">
+        <div class="footer-left">
+          <h3 class="dd">The Best Free Online Video Downloader</h3>
+          <div class="language-list fl">
+            <ul class="hidden">
+              				<li><a href="http://keepvid.com/">English</a></li>
+			  				<li><a href="http://zh.keepvid.com/">简体中文</a></li>
+			  				<li><a href="https://ar.keepvid.com/">العربية</a></li>
+			  				<li><a href="https://br.keepvid.com/">Português</a></li>
+			  				<li><a href="https://cs.keepvid.com/">Czech</a></li>
+			  				<li><a href="https://da.keepvid.com/">Dansk</a></li>
+			  				<li><a href="https://de.keepvid.com/">Deutsch</a></li>
+			  				<li><a href="https://el.keepvid.com/">Ελληνικά</a></li>
+			  				<li><a href="https://es.keepvid.com/">Español</a></li>
+			  				<li><a href="https://fi.keepvid.com/">Suomi</a></li>
+			  				<li><a href="https://fr.keepvid.com/">Français</a></li>
+			  				<li><a href="https://ga.keepvid.com/">Gaeilge</a></li>
+			  				<li><a href="https://hu.keepvid.com/">Magyar</a></li>
+			  				<li><a href="https://it.keepvid.com/">Italiano</a></li>
+			  				<li><a href="https://ms.keepvid.com/">Bahasa Melayu</a></li>
+			  				<li><a href="https://nl.keepvid.com/">Nederlands</a></li>
+			  				<li><a href="https://no.keepvid.com/">Norway</a></li>
+			  				<li><a href="https://pl.keepvid.com/">Polski</a></li>
+			  				<li><a href="https://sv.keepvid.com/">Svenska</a></li>
+			  				<li><a href="https://th.keepvid.com/">ไทย</a></li>
+			  				<li><a href="https://tr.keepvid.com/">Türkçe</a></li>
+			  				<li><a href="https://vi.keepvid.com/">Tiếng Việt</a></li>
+			  				<li><a href="https://www.keepvid.jp/">日本語</a></li>
+			              </ul>
+            <p class="language-btn">EN<i class="icon-up si si-angle-up"></i><i class="icon-down si si-angle-down"></i></p>
+          </div>
+          <p class="follow fl">Follow us :
+          	<a href="https://www.facebook.com/KeepVidOfficial" target="_blank"><i class="icon si si-facebook"></i></a>
+          	<a href="https://twitter.com/KeepVidOfficial" target="_blank"><i class="icon si si-twitter"></i></a>
+          </p>
+        </div>
+      </div>
+      <div class="item-6">
+        <ul class="footer-navs">
+          <li class="curr"><a href="/">KeepVid</a></li>
+		  <li><a href="https://pro.keepvid.com">KeepVid Pro</a></li>
+		  <li><a href="https://pro.keepvid.com/keepvid-music/">KeepVid Music</a></li>
+		  <li><a href="/sites/download-youtube-video.html">Download YouTube Videos</a></li>
+		  <li><a href="/sites/download-facebook-video.html">Download Facebook Videos</a></li>
+		  <li><a href="/sites/download-dailymotion-video.html">Download Dailymotion Videos</a></li>
+        </ul>
+        <ul class="footer-navs">
+          <li class="curr"><span>Support</span></li>
+          <li><a href="http://support.keepvid.com/">FAQs</a></li>
+          <li><a href="https://pro.keepvid.com/guide.html">Guide</a></li>
+          <li><a href="https://pro.keepvid.com/reviews/index.html">Reviews</a></li>
+          <li><a href="/contact">Contact us</a></li>
+          <li><a href="https://pro.keepvid.com/resource/">Tips &amp; Tricks</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	$('.language-btn').click(function(){
+		$(this).toggleClass('curr');
+		$('.language-list ul').slideToggle('fast');
+	});
+</script>
+<div class="footer2">
+  <div class="container">
+    <p>Copyright©2017 KeepVid. All Rights Reserved. <a href="/contact" style="color: #f8f8f8;">Contact Us</a> | <a href="/terms" style="color: #f8f8f8;">Privacy & Terms</a> | <a href="/official-keepvid-domains.html" style="color: #f8f8f8;">Official Domains</a></p>
+  </div>
+</div>
+<div style="display:none;" id="advert-load">
+				<script src='//t.mdn2015x4.com/build/7fcf959c/v1/'></script>
+	</div>
+<script>
+	$(function(){ 
+		var html = $("#advert-load").html();
+		$("#advert-load").html("");
+		$("#advert").html(html);
+	});  
+</script>
+</body>
+		</html>

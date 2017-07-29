@@ -1,0 +1,5013 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge; charset=utf-8" />
+	
+
+
+
+
+<script title="Google analytics">
+
+    window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};
+    ga.l=+new Date;
+
+    var pogo = pogo || {};
+    pogo.ga = pogo.ga || {};
+    pogo.ga.ec = pogo.ga.ec || {};
+
+
+    pogo.ga.create = function(account, fields) {
+        ga('create', account, 'auto', fields);
+    };
+
+    pogo.ga.require = function(plugin) {
+        ga('require', plugin);
+    };
+
+    pogo.ga.setPage = function(page) {
+        ga('set', 'page', page);
+    };
+
+    pogo.ga.setCustomDimension = function(key, value) {
+        ga('set', key, value);
+    };
+
+    pogo.ga.sendEvent = function(category, action, label, value, fields) {
+        ga('send', 'event', category, action, label, value, fields);
+    };
+
+    pogo.ga.sendPageView = function(pageName) {
+        if(pageName )
+        {
+            ga('set', 'page', pageName);
+        }
+        ga('send', 'pageview');
+    };
+
+    pogo.ga.sendSocial = function(category, action, label) {
+        ga('send', 'social', category, action, label);
+    };
+
+    pogo.ga.ec.addToCart = function (data) {
+        if(data.products)
+        {
+            var products = data.products;
+
+            products.forEach(function(product){
+                ga('ec:addProduct', {
+                'id': product.productId,
+                'name': product.productName,
+                'category': data.flow,
+                'price': product.price,
+                'quantity': 1
+                });
+            });
+            ga('ec:setAction', 'add');
+
+            pogo.ga.sendEvent(data.flow,'add product','add to cart');
+        }
+    };
+
+    pogo.ga.ec.payment = function (data)
+    {
+        pogo.ga.ec.send(data);
+    };
+    
+    pogo.ga.ec.review = function (data)
+    {
+         pogo.ga.ec.send(data);
+    };
+    
+    pogo.ga.ec.confirm = function (data)
+    {
+        if(data.payment && data.products)
+        {
+            var payment = data.payment;
+            var products = data.products;
+            var totalPrice=0;
+            ga('set', '&cu', payment.currency);
+            if(payment.type) {
+                pogo.ga.setCustomDimension('dimension5',payment.type );
+            }
+
+            products.forEach(function(product){
+                ga('ec:addProduct', {
+                'id': product.productId,
+                'name': product.productName,
+                'category': data.flow,
+                'price': product.price,
+                'quantity': 1
+                });
+            });
+
+            ga('ec:setAction', 'purchase', {
+                'id': data.transactionId,
+                'revenue': payment.revenue,
+                'tax': payment.tax,
+            });
+            pogo.ga.ec.send(data);
+        }
+    };
+
+    pogo.ga.ec.send = function (data)
+    {
+        var pageName;
+        if(data.pageName && data.step){
+            pageName = data.pageName + "/" + data.step;
+        }
+        pogo.ga.sendPageView(pageName);
+    };
+    
+    (function() {
+        
+        var fields = {
+            userId: '6804340593476954'
+        };
+
+        var clientId = getParameterByName('clientId', location.href);
+
+        if (clientId) {
+            fields.clientId = clientId;
+        }
+
+        pogo.ga.create('UA-37502549-1', fields);
+
+        
+        pogo.ga.require('displayfeatures');
+
+        
+        pogo.ga.require('ec');
+
+        
+        
+
+        
+        pogo.ga.setCustomDimension('dimension1', 'GUEST');
+        
+        pogo.ga.setCustomDimension('dimension3', 'desktop');
+        
+        pogo.ga.setCustomDimension('dimension6', '6804340593476954');
+        
+        pogo.ga.setCustomDimension('dimension7', 'whomp2');
+        
+
+        
+        
+
+        
+        var intcmp = getParameterByName('intcmp', location.href);
+
+        if (intcmp) {
+            ga('ec:addPromo', {
+                'id': intcmp,
+                'name': intcmp
+            });
+            ga('ec:setAction', 'promo_click');
+        }
+        
+        	pogo.ga.sendPageView();
+        
+
+        
+        
+
+        if (document.readyState === 'complete' ||
+            (document.readyState !== 'loading' && !document.documentElement.doScroll)) {
+            postInit();
+        } else {
+            window.addEventListener('DOMContentLoaded', postInit);
+        }
+
+
+        function postInit()
+        {
+            sendIntcmpImpressions();
+            attachClientIdToExternalLines();
+        }
+        
+        function sendIntcmpImpressions() {
+            var forEach = function (array, callback, scope) {
+                for (var i = 0; i < array.length; i++) {
+                    callback.call(scope, array[i], i);
+                }
+            };
+            var intcmps = {};
+            var intcmpLinks = document.querySelectorAll('a[href*=intcmp]');
+            if(intcmpLinks.length) {
+                forEach(intcmpLinks, function (el) {
+                    var intcmp = getParameterByName('intcmp', el.href);
+                    if (!intcmps[intcmp]) {
+                        intcmps[intcmp] = true;
+                        ga('ec:addPromo', {
+                            'id': intcmp,
+                            'name': intcmp
+                        });
+                    }
+                });
+                //pogo.ga.sendEvent('internal promotions', 'impression');
+            }
+            
+        }
+        
+        function attachClientIdToExternalLines()
+        {
+            ga(function(tracker){
+                var clientId = tracker.get('clientId');
+                if(clientId) {
+                    document.querySelectorAll('a[href*="/action/pogop/pogogems/fund.do"]').forEach(
+                            function (link) {
+                                var  hl = link.href;
+                                if(hl && hl.indexOf('http') == 0)
+                                {
+                                    var clid = getParameterByName('clientId',hl);
+                                    if(!clid) {
+                                        if(link.href.indexOf("?") == -1) {
+                                           link.href += '?clientId=' + clientId;
+                                        } else {
+                                            link.href += '&clientId=' + clientId;
+                                        }
+                                    }
+                                }
+                            }
+                        );
+                    }   
+                }
+            );
+        }
+        
+        function getParameterByName(name, url) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
+                results = regex.exec(url);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+    })();
+
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+	
+	
+
+	<script src="/v/G31y2g/js/errors.js" type="text/javascript" charset="utf-8" ></script>
+	
+	
+		
+			<script src="/v/IDINnQ/js/featuretest.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/GIv25Q/include/js/shared/RequireJS.js" type="text/javascript" charset="utf-8" ></script>
+		
+	
+
+	
+		
+			
+
+
+
+
+<title>
+	Word Whomp | Pogo.com&reg; Free Online Games
+</title>
+
+
+	<meta name="description" content='Play Word Whomp and other free online word games at Pogo.com.'>
+
+
+
+	<meta name="keywords" content='word whomp, online word games, free online word games, word games, word games online'>
+
+
+
+	<link rel="StyleSheet" href="/v/IOrKAA/include/styles/pages/embedded/embedded-game-page.css"/>
+
+	<link rel="StyleSheet" href="/v/FXnGxw/include/css/fbconnect/fbconnect.css"/>
+
+	<link rel="StyleSheet" href="/v/FljhSw/include/css/fbconnect/jqfbConnect.css"/>
+
+	<link rel="StyleSheet" href="/v/IOrKGA/include/styles/pages/tournaments/tournaments.css"/>
+
+	<link rel="StyleSheet" href="/hotdeploy/us/promotions/view/reg/popup/css/styles.css?1.0.0.0"/>
+
+
+
+
+
+	
+	
+		
+		
+		
+			<script src="/v/HGS21A/include/js/libraries/jquery.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/F3L44Q/include/js/libraries/jquery-onhashchange.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/HGS0iA/include/js/libraries/jqueryui.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/Fcq89g/include/js/plugins/jquery.tmpl.min.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/GyfYxw/include/js/plugins/pogoFeeds.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/FOuuMQ/include/js/libraries/jquery.tablesorter.min.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/H37PTw/include/js/tool/ajaxPopup.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/Fc0pPg/include/js/header/balance-data.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/HjJLDQ/include/js/category/gamesearchJQ.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/GIv2YA/include/js/shared/markup2.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/HIrTBw/js/rooms2.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/IJNiIQ/include/js/game/genius-sdk-interface.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="https://connect.facebook.net/en_US/sdk.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/IBsriQ/include/js/game/new-landingJQ.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/HbM2ZQ/include/js/plugins/igp-helper.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/HQK-gQ/include/js/plugins/pogoHybridUser.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/FiF6oA/include/js/plugins/modal.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/GBFqlg/include/js/plugins/favoriteButtons.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/Fz8pgA/include/js/plugins/jquery.ThreeDots.min.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/IJOnHw/include/js/game/embeddedGamePage.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/IBsrig/include/js/game/embeddedGameChallengeTab.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/HryDQA/include/js/game/embeddedGameTournamentTab.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/ICctEg/include/js/game/embeddedGameRoomselTab.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/IHSpDw/include/js/shared/flash_detection.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/HlmUiA/include/js/game/egpBindings.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/fbconnect/js.do" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/H9yTtA/include/js/fbconnect/jqfbConnect.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/F3FOeg/include/js/shared/shared.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/F3L5JQ/include/js/plugins/tooltip.js" type="text/javascript" charset="utf-8" ></script>
+		
+			<script src="/v/GLFdqA/include/js/reg/popover.js" type="text/javascript" charset="utf-8" ></script>
+		
+							
+	
+
+
+
+
+
+
+	
+        
+            
+                 
+            
+            
+                
+	    
+	    
+	    <meta property="og:title" content="Word Whomp&trade;">
+	    <meta property="og:site_name" content="Pogo.com">
+	    <meta property="og:image" content="http://cdn.pogo.com/v/D-W5og/img/game-thumbs/tn-whomp2.gif">
+	    <meta property="fb:app_id" content="294400680281">
+	    <meta property="og:type" content="game">
+	    <meta property="og:url" content="http://www.pogo.com/gamelanding/whomp2?sourceid=fbc_userfeed_whomp2_like">
+	    <meta property="og:description" content="Play Word Whomp and other free online word games at Pogo.com.">
+	
+
+<!--[if lt IE 9]>
+	<link rel="StyleSheet" href="/v/GX_YUg/include/css/game/embedded/ie.css"/>
+<![endif]-->
+
+
+		
+		
+	
+	<script type="text/javascript" src="/v/GyfXLQ/js/std.js"> </script>
+<script type="text/javascript" src="/v/CjsBMQ/js/ad.js"> </script>
+<script language="Javascript">
+setWindowName("EmbeddedGameWindow");
+</script>
+
+	
+	
+	
+		
+
+	
+
+
+	
+	<meta name="msvalidate.01" content="F6F676EB374D905262C4FF19D14E715D" />
+	
+		
+			
+
+
+    
+        
+            
+            
+			
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                <link rel="canonical" href="http://www.pogo.com/games/word-whomp"/>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        
+    
+
+		
+		
+		
+	
+	
+	
+	
+	<!--[if gte IE 9]>
+	<style type="text/css">
+		.gradient {
+			filter: none;
+		}
+	</style>
+	<![endif]-->
+	
+
+
+
+</head>
+<body onLoad="if (window.setupPage) {setupPage();} if (window.Markup ) Markup.initMarkup();">
+
+
+
+<!-- Begin comScore Tag -->
+<script>
+  var _comscore = _comscore || [];
+  _comscore.push({ c1: "2", c2: "6035165" });
+  (function() {
+    var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
+    s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+    el.parentNode.insertBefore(s, el);
+  })();
+</script>
+<noscript>
+  <img src="http://b.scorecardresearch.com/p?c1=2&c2=6035165&cv=2.0&cj=1" />
+</noscript>
+<!-- End comScore Tag -->
+
+
+<div style="position:absolute; visibility:hidden;">
+	
+</div>
+<div id="master" align="center">
+	
+	
+	
+		
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+	
+		
+		
+	
+
+
+
+	
+	
+		<link rel="StyleSheet" href="/v/IOrJ9A/include/styles/global.css"/>
+	
+
+
+
+
+
+
+
+
+	
+		
+		
+			
+		
+	
+
+	
+		
+		
+			
+		
+	
+
+	
+		
+		
+			<script src="/v/Ho00CA/include/js/header/header-2013.js" type="text/javascript" charset="utf-8" ></script>
+		
+	
+
+
+<!--[if lte IE 9]>
+<style type="text/css">
+@import "/include/styles/navigation/header-ie.css";
+</style>
+<![endif]-->
+
+
+
+
+
+
+
+
+
+
+<div id="pogo-header" class="wide pogo guest">
+		<div class="header">
+		
+			
+			
+			
+			
+				
+				
+						<a href="http://www.pogo.com/?pageSection=guest_header_logo" id="pogo-logo">
+							<img src="http://cdn.pogo.com/v/GLSU3A/img/header/new/logo.png" alt="Pogo.com, Free Online Games" width="128" height="48"  />
+						</a>
+				
+			
+			
+				
+				
+					
+					
+					
+						<h1>
+							
+									
+									
+									
+							
+
+
+
+
+
+
+
+
+
+	
+		
+			
+			
+			
+        
+
+ 
+
+Play Word Whomp Online For Free!
+		
+	
+
+						</h1>
+					
+					
+					
+				
+			
+			
+			
+
+			
+				
+				<div class="playerCard-guest">
+					
+					<div id="empty-info" class="utility-links">
+						<a href="http://www.pogo.com/action/pogo/createAccount.do" id="player-card-mini">
+							<span class="guestIcon"></span>
+						</a>
+						<div id="player-links">
+							<div id="name-auth"><a href="http://www.pogo.com/action/pogo/createAccount.do">Guest</a></div>
+						</div>
+                        <div class="badges">
+                            <span class="hdr-badgeIcon"></span>
+                            <span id="badgeCount">0</span>
+                        </div>
+						<div class="tokens">
+							<span class="tokenIcon"></span>
+							<span id="tokenBalance">0</span>
+						</div>
+						<div class="gems">
+							<span class="gemIcon"></span>
+							<span id="gemBalance">0</span>
+						</div>
+					</div>
+					
+					<div id="register-login">
+							
+							<a href="http://www.pogo.com/action/pogo/createAccount.do?pageSection=guest_pro_reg" id="register-link" title="Register">Register</a>
+							or
+							
+							<a href="https://www.pogo.com/action/pogo/signin.do?pageSection=guest_pro_signin" id="sign-in-link" title="Sign In">Sign In</a>  
+					</div>
+				</div>
+			
+
+			
+			<div id="nav">
+				<ul>
+					<li id="tn-home" class=""><a class="navlink" href="http://www.pogo.com/?pageSection=guest_header_home">Home</a></li>
+					
+				
+				
+					
+					
+							<li id="tn-friends" class="">	<a class="navlink" href="http://www.pogo.com/benefits?pageSection=guest_friends">Friends</a></li>
+					
+						
+					
+						
+					
+					
+						
+						
+							
+						
+					
+					<li id="tn-badges"  class=""><a class="navlink" href="http://www.pogo.com/challenge/badge-central.do?pageSection=guest_header_badges">Badges</a></li>
+					
+						
+					
+
+
+	<li id="tn-tournament" class="">
+		<a class="navlink" href="http://www.pogo.com/tournament.do">Tournament 
+				<span id="tournamentNotificationsCount" style="display: none;" class="notification-count"></span>
+		</a>
+	</li>
+
+
+					<li id="tn-miniMall"  class=""><a class="navlink" href="http://www.pogo.com/benefits?pageSection=guest_header_mini_mall">Minis</a></li>
+					
+					
+						
+							<li id="tn-prizes"  class=""><a class="navlink" href="http://www.pogo.com/prize/prize.do?pageSection=guest_header_prizes">Prizes</a></li>
+						
+						<li id="tn-news"  class=""><a class="navlink" href="http://news.pogo.com/?site=pogo">News</a></li>
+					
+					
+					
+						<li id="tn-register"  class=""><a class="navlink" href="http://www.pogo.com/benefits?pageSection=guest_header_whyreg">Why Register?</a></li>
+					
+					
+					
+				</ul>
+			</div>
+
+						
+			
+				
+			
+
+
+
+
+
+
+
+
+
+<div id="game-finder-unauth" title="Search Game">
+	
+	<form name="gameSearchForm" method="post" action="/misc/gamesearch/gamesearch.do?pageSection=guest-game_search" onsubmit="GameSearch.clearInputText()" id="searchBoxForm">
+		
+		
+			
+			
+			
+			
+			<input type="text" name="pogoword" maxlength="60" size="24" tabindex="1" value="Find a game!" onblur="GameSearch.updateInputText()" onfocus="GameSearch.clearInputText()" class="finder-field" id="gameFinderInput" alt="Find a game!">
+			<input type="image" value="SEARCH" src="/img/gamesearch/common/search-icon.png" var="searchButton" class="search-button"/>
+		
+		
+		
+	</form>
+</div>
+			
+
+			
+			
+									
+				
+				
+			
+
+
+
+
+
+
+
+
+
+
+<div id="catBelt">
+	<ul id="catList" class="items10">		
+	
+		
+			
+			
+			
+				
+			
+			<li id="allgames" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/all-games?pageSection=guest_categorybar_allgames">
+					All Games
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="puzzle" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/puzzle-games?pageSection=guest_categorybar_puzzle">
+					Puzzle
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="card" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/card-games?pageSection=guest_categorybar_card">
+					Card
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="board" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/board-games?pageSection=guest_categorybar_board">
+					Board
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="word" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/word-games?pageSection=guest_categorybar_word">
+					Word
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="downloads" class="">
+			
+				
+					
+				
+				
+						
+				<a href="http://downloadgames.pogo.com/?refid=10&pageSection=guest_categorybar_downloads">
+					Downloads
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="puzzle.hidden" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/hidden-object-games?pageSection=guest_categorybar_puzzle.hidden">
+					Hidden Object
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="casino.bingo" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/bingo-games?pageSection=guest_categorybar_casino.bingo">
+					Bingo
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="casino" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/casino-games?pageSection=guest_categorybar_casino">
+					Casino
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="casino.slots" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/slots-games?pageSection=guest_categorybar_casino.slots">
+					Slots
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="puzzle.mahjong" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/mahjong-games?pageSection=guest_categorybar_puzzle.mahjong">
+					Mahjong
+				</a>					
+			</li>
+			
+		
+			
+			
+			
+				
+			
+			<li id="clubpogo" class="">
+			
+				
+				
+					
+				
+						
+				<a href="http://www.pogo.com/clubpogo-games?pageSection=guest_categorybar_clubpogo">
+					Club
+				</a>					
+			</li>
+			
+		
+		
+			<li id="more">
+				<a href="#tn-more" title="">
+					More<span></span>
+				</a>
+			</li>
+		
+	</ul>
+</div>
+
+
+	
+	<div id="subCategory">
+		<h3>Genres</h3>
+		<ul id="subCatGenres">
+			
+						
+			
+				<li>
+					
+					<a href="http://www.pogo.com/strategy-games?pageSection=guest_subcategory_genres_strategy">Strategy</a>
+				</li>
+			
+				<li>
+					
+					<a href="http://www.pogo.com/brain-games?pageSection=guest_subcategory_genres_brain">Brain</a>
+				</li>
+			
+				<li>
+					
+					<a href="http://www.pogo.com/classic-games?pageSection=guest_subcategory_genres_classic">Classic</a>
+				</li>
+			
+				<li>
+					
+					<a href="http://www.pogo.com/family-games?pageSection=guest_subcategory_genres_family">Family</a>
+				</li>
+			
+				<li>
+					
+					<a href="http://www.pogo.com/multiplayer-games?pageSection=guest_subcategory_genres_multiplayer">Multiplayer</a>
+				</li>
+			
+		</ul>
+		<h3 class="second-heading">More Games Categories</h3>
+		<ul id="subCatMoreGames">
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/arcade-games?pageSection=guest_subcategory_more_arcade">Arcade</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/sports-games?pageSection=guest_subcategory_more_sports">Sports</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/match-3-games?pageSection=guest_subcategory_more_puzzle.match3">Match-3</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/solitaire-games?pageSection=guest_subcategory_more_card.solitaire">Solitaire</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/poker-games?pageSection=guest_subcategory_more_casino.poker">Poker</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/java-games?pageSection=guest_subcategory_more_java">Java Games</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/free-game-events?intcmp=category_nav&pageSection=guest_subcategory_more_sponsored">Sponsored</a>
+				</li>
+			
+			
+			
+				<li>
+					
+					<a href="http://www.pogo.com/coincasino-games?pageSection=guest_subcategory_more_coincasino">Coin Casino</a>
+				</li>
+			
+						
+		</ul>	
+	</div>
+
+	
+						
+						
+		</div>
+	</div>
+
+
+	
+
+<!--[if gte IE 9]>
+  <style type="text/css">
+    .gradient {
+       filter: none !important;
+    }
+  </style>
+<![endif]-->
+<div id="page-wrapper" class="clearfix">
+	
+		
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	<link rel="StyleSheet" href="/v/HNoJFw/hotdeploy/us/homepage/include/css/system-status-redesign.css"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+	var GLOBAL_VARS = GLOBAL_VARS || {};
+	if( GLOBAL_VARS['IS_FGF']==null ) {
+		GLOBAL_VARS['IS_FGF'] = 'true';
+		if( GLOBAL_VARS['IS_FGF']==null ) {
+			GLOBAL_VARS['IS_FGF'] = "true";
+		}
+	}
+</script>
+
+
+
+
+
+
+
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	
+	GLOBAL_VARS = {
+    	'USE_GAME_POPUP'  : false,
+    	'IS_GAME_POPUP'   : false,
+        'GAME_CODE'       : 'whomp2',
+        'FUNDING_URL'     : 'https://www.pogo.com/action/pogop/pogogems/fund.do?returnType=game&returnValue=whomp2&intcmp=whomp2_ingame_gem_fund',
+        'COIN_FUNDING_URL': 'https://www.pogo.com/action/pogo/coins/entry.do?returnType=game&returnValue=whomp2&intcmp=whomp2_ingame_coin_fund',
+        'ROOM_SEL_URL'    : 'http://www.pogo.com/games/word-whomp',
+		'SITE'            : 'pogo',
+        'LOBBY_WINDOW_WIDTH': '',
+        'LOBBY_WINDOW_HEIGHT': '',
+        'CONNECT_URL'     : '/game/embedgame.do?game=whomp2&site=pogo',
+        'LAUNCH_URL'      : '/room/game/framesetcntr.jsp?game=whomp2',
+		'IS_FGF'          : 'true',
+        'AD_DELAY'        : parseInt('30000'),
+        'OMNT_PREF'       : '',
+        'USER_ID'         : '',
+        'GAME_WIDTH'      : parseInt('760'),
+        'GAME_HEIGHT'     : parseInt('569'),
+		'AUTH_LEVEL'        : 'guest',
+        'IS_GUEST'        : true,
+        'IS_TABLE_GAME'   : false,
+		'IS_MY_TOURNAMENT_TEAM_PLAYS_GAME' : false,
+        'IS_EMBEDDED_LOBBY'   : false,
+        'FB_APP_ID'       : '294400680281',
+        'SHOW_FRIENDS'    : true,
+        'SHOW_LEADERBOARD' : true,
+		'SHOW_FLASH_LEADERBOARD' : false,
+        'FB_CONNECTED'    : false,
+        'AD_DISABLED_FOR_VISITED_GUEST':false,
+        'VISITED_GUEST':false,
+        'HIDE_CLUB_SIDE_PANEL':false
+	};
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/v/Hd9alA/include/js/offers.js" type="text/javascript" charset="utf-8" ></script>
+<div id="game-page-wrapper">
+	<div class="middle clearfix" id="middle">
+		
+			
+				
+			
+
+
+	
+	
+	
+<script type="text/javascript">
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+(function() {
+var gads = document.createElement('script');
+gads.async = true;
+gads.type = 'text/javascript';
+var useSSL = 'https:' == document.location.protocol; 
+gads.src = (useSSL ? 'https:' : 'http:') + 
+'//www.googletagservices.com/tag/js/gpt.js';
+var node = document.getElementsByTagName('script')[0]; 
+node.parentNode.insertBefore(gads, node); 
+})(); 
+</script>
+<script type="text/javascript">
+googletag.cmd.push(function() {
+var slots = [];slots.push(googletag.defineSlot('/220/whomp2.pogo/room', [160, 600], 'div-gpt-ad-1424484083140-0').addService(googletag.pubads()));
+googletag.pubads().enableSingleRequest();
+googletag.enableServices();
+setInterval(function(){googletag.pubads().refresh(slots);}, 120000);;
+}); 
+</script>
+
+
+<div id="skyscrapper-ad" class="skyscraper">
+	<div class="hideableAd">
+		<span class="refreshAds">A D V E R T I S E M E N T</span>
+		<div class="refreshableAd" refreshSrc="/game/ad/skyscrapper.do?adsTileOffset=1&game=whomp2" frameWidth="160" frameHeight="600">
+			<!-- game.pogo/room -->
+			<div id='div-gpt-ad-1424484083140-0'>
+				<script type='text/javascript'>
+				googletag.cmd.push(function() { googletag.display('div-gpt-ad-1424484083140-0'); });
+				</script>
+			</div>
+		</div>
+        <script></script>
+	</div>
+</div>
+		
+		
+		
+		 
+		
+		<div id="game-wrapper" class="skyscrapper">
+			<div id="game-wrapper-center">
+				
+					
+						
+					
+
+	
+	
+	
+<script type="text/javascript">
+var googletag = googletag || {};
+googletag.cmd = googletag.cmd || [];
+(function() {
+var gads = document.createElement('script');
+gads.async = true;
+gads.type = 'text/javascript';
+var useSSL = 'https:' == document.location.protocol; 
+gads.src = (useSSL ? 'https:' : 'http:') + 
+'//www.googletagservices.com/tag/js/gpt.js';
+var node = document.getElementsByTagName('script')[0]; 
+node.parentNode.insertBefore(gads, node); 
+})(); 
+</script>
+<script type="text/javascript">
+googletag.cmd.push(function() {
+var slots = [];slots.push(googletag.defineSlot('/220/whomp2.pogo/room', [728, 90], 'div-gpt-ad-1424484083140-1').addService(googletag.pubads()));
+googletag.pubads().enableSingleRequest();
+googletag.enableServices();
+setInterval(function(){googletag.pubads().refresh(slots);}, 120000);;
+}); 
+</script>
+
+
+<div id="leaderboard-ad">
+	<table cellspacing="0" cellpadding="0" border="0" class="hideableAd">
+		<tr>
+			<td class="refreshAds">
+				<img src="http://cdn.pogo.com/v/FU0nRQ/img/roomsel/en_US/leaderboard-title.gif" alt="" width="14" height="90"  />
+			</td>
+			<td>
+				<div class="refreshableAd" refreshSrc="/game/ad/leaderboard.do?game=whomp2" frameWidth="728" frameHeight="90">
+					<!-- game.pogo/room -->
+					<div id='div-gpt-ad-1424484083140-1'>
+						<script type='text/javascript'>
+							googletag.cmd.push(function() { googletag.display('div-gpt-ad-1424484083140-1'); });
+						</script>
+					</div>
+				</div>
+                <script></script>
+			</td>
+		</tr>
+	</table>
+</div>
+
+				
+			    
+	    			
+	    		
+
+
+
+
+
+
+<div id="embeddedGameOverview" style="">
+	
+
+
+
+
+	
+	
+	
+	
+	
+	
+		
+	
+
+
+<div id="pregameWrapper" class="">
+		<div id="pregameBlock" class="clearfix">
+			
+
+
+
+
+
+
+
+
+<div id="gameArea">
+	
+	<img src="http://cdn.pogo.com/v/Fifgeg/img/game/embedded/pregame/whomp2-pregame.jpg" width="730" height="250"  />
+	
+	<div id="gameLogo">
+		<img src="http://cdn.pogo.com/v/FBhzNw/img/game-thumbs/en/tn-huge-whomp2.png" width="200" height="150"  />
+		<div id="playingNow">
+			
+			1,732 playing now!
+		</div>
+	</div>
+
+
+
+	
+  
+    
+  
+  
+  
+
+ 
+  
+	<div id="gameButtons">
+		
+			<a href="#game" id="startEmbeddedGameBtn" class="btn gradient" onClick="pogo.ga.sendEvent('game page', 'click on start game', '');">
+				Start Game
+			</a>
+		
+		
+			
+			
+				
+				<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=u_egp_reg_btn_fp_whomp2&pageSection=u_egp_reg_btn_fp_whomp2" class="btn sign registerLink gradient" onClick=";	pogo.ga.sendEvent('game page', 'open register popup');" pageSection="u_egp_reg_btn_fp_whomp2">
+					Register Free
+				</a>
+			
+		
+	</div>
+  
+
+	
+	
+		
+		
+		
+	
+
+
+
+
+
+
+
+
+
+	
+		
+			
+			
+			
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+		<div id="gamePromo">
+			<div id="promoCopy">
+				<div>
+					Upgrade to Club Pogo and play ad-free!  Includes a 1 week trial for first time members.
+					
+						<a href="http://www.pogo.com/club-pogo?intcmp=a_bb_cp_generic_0814_top20" target="_blank">
+							Learn More. 
+						</a>
+					
+				</div>
+			</div>
+			<div id="promoImage">
+				<a href="http://www.pogo.com/club-pogo?intcmp=a_bb_cp_generic_0814_top20&amp;pageSection=_sponsorbox_promo_whomp2" target="_blank"><img src="/hotdeploy/us/promotions/img/homepage/EGP/other/clubegp_80x120.png" /></a>
+			</div>
+		</div>
+	
+
+
+
+		
+	
+
+
+	
+	
+
+
+<script type="text/javascript">
+	function showStarterDisclaimer() {
+		var pregameStarterChallenge = $('#preGameChallenge').find('.violator');
+		
+		console.log('============================ ' + pregameStarterChallenge.length);
+
+		if(pregameStarterChallenge.length) {
+			alert('Detected pregame starter challenge');
+		}
+	}
+</script>
+<script id="challengeTemplate" club="false" type="text/x-jquery-tmpl" replaces="#challengeArea" data="/feed/challenge/active.do?game=whomp2&tournamentUpsell=true" error="#challengeAreaError">
+
+
+
+
+
+
+
+
+		{{if (typeof tournamentUpsell!= 'undefined')}}
+			<div id="preGameChallenge" class="challengeWrapper">
+				<div class="tournamentUpsellHead">
+          <h3>Welcome to Club Pogo Team Tournaments!</h3>
+					<img src="/img/tournaments/logo_small.jpg" />
+					<p>Join or start a team, then play your way to a Gold Ribbon. Compete in up to 9 different games, playing together or alone to contribute to your team's score.</p>
+					<a href="#tournaments" class="btn gradient" onClick="triggerTournamentTab();return false;">Open Tab</a>
+				</div>
+				<div class="challengeMain"></div>
+			</div
+		{{/if}}
+
+	{{each(i, challenge) challenges}}
+		<div id="preGameChallenge" class="challengeWrapper">
+			<div class="challengeHead">
+					{{if challenge.starter && true }}
+						<div class="violator">Try Free</div>
+						<div class="typeChallenge guest">Personal Challenge</div>
+						<script type="text/javascript">
+								/* Detect for starter challenge violator and show disclaimer */
+								var pregameStarterChallenge = $('#preGameChallenge').find('.violator');
+								if(pregameStarterChallenge.length) {
+									$('div.starterChallengeDisclaimer').show();
+								}
+						{{html "</sc"+"ript>"}}
+
+					{{else type=='ds'}}
+						<div class="typeChallenge">Daily Challenge</div>
+					{{else type=='weekly'}}
+						<div class="typeChallenge">Wednesday Challenge</div>
+					{{else type=='pers'}}
+						<div class="typeChallenge">Personal Challenge</div>
+					{{else type=='mnm' && typeof badge.flash != 'undefined'}}
+						<div class="typeChallenge">Limited Edition Challenge</div>
+					{{else type=='mnm'}}
+						{{if challenge.isInOneOfMixAndMagicDecks && (typeof challenge.itemPrice == 'undefined' || itemPrice.price <0)}}
+							<div class="typeChallenge">Mix-n-Magic Challenge</div>
+						{{else}}
+							<div class="typeChallenge">Mix-n-Match Challenge</div>
+				    {{/if}}
+					{{else type=='pba'}}
+						<div class="typeChallenge">Premium Album Challenge</div>
+					{{else}}
+						<div class="typeChallenge">${type} Challenge</div>
+					{{/if}}
+				{{if timeFormated}}
+                
+                    {{if (type=='mnm' || type=='pba') && challenge.isActive}}
+                            
+                            <a onClick="pogo.ga.sendEvent('badgeExtension', 'click', '${challenge.type}/${challenge.id}/game_challenge_area');" class="addTime" id="gameArea_${challenge.id}" href="#" popupid="badgeTimeExtensionPopup" />
+                             <script type="text/javascript">
+                                 $('#gameArea_${challenge.id}').popup({url: "http://www.pogo.com/challenge/ajaxpopup/badgeExtensionTime.do?pageEntry=gameChallengeArea&action=view&challengeId=${challenge.id}" });
+                            {{html "</sc"+"ript>"}}
+                            <div class="extensionTab">
+                                {{if (typeof timeLeft!='undefined' && timeLeft<1000*60*60*24)}}
+                                    <div class="timeLimit red extension_${challenge.id}">${timeFormated}</div>
+                                    <div class="clockIconRed"></div>
+                                {{else}}
+                                    <div class="timeLimit grn  extension_${challenge.id}">${timeFormated}</div>
+                                    <div class="clockIcon"></div>
+                                {{/if}}
+
+                            </div>
+                            {{if showBadgeExtensionTooltip}}
+                                <div id="isBadgeExtensionTooltipVisibleId" class="tooltip notification extensionTip">
+                                    <div class="tooltip-top"></div>
+                                        <div class="tooltip-body">
+                                         <div class="close"></div>
+                                            Add extra time to complete your challenge.
+                                        </div>
+                                    <div class="tooltip-bottom"></div>
+                                </div>
+                                <script type="text/javascript">
+                                    $( document ).ready(function() {
+                                        $.ajax({url:'/game/egp/preferences.do?var=isBadgeExtensionTooltipVisible'});
+                                        $("div#isBadgeExtensionTooltipVisibleId div.tooltip-body div.close").click(function() {
+                                            $('div#isBadgeExtensionTooltipVisibleId').css('display','none');
+                                        });
+                                    });
+                                {{html "</sc"+"ript>"}}
+                        {{else}}
+                            <div id="isBadgeExtensionTooltipVisibleId" class="tooltip notification extensionTip" style="display: none">
+                                <div class="tooltip-top"></div>
+                                <div class="tooltip-body">
+                                    <div class="close"></div>
+                                    Add extra time to complete your challenge.
+                                </div>
+                                <div class="tooltip-bottom"></div>
+                            </div>
+                            <script type="text/javascript">
+                                $( document ).ready(function() {
+                                    $('#gameArea_${challenge.id}')
+                                      .mouseout(function() {
+                                        document.getElementById('isBadgeExtensionTooltipVisibleId').style.display = "none";
+                                      })
+                                      .mouseover(function() {
+                                        document.getElementById('isBadgeExtensionTooltipVisibleId').style.display = "block";
+                                      });
+                                });
+                            {{html "</sc"+"ript>"}}
+                        {{/if}}
+                    {{else}}
+                    
+                        {{if timeLeft<1000*60*60*24}}
+                            <div class="timeLimit red">${timeFormated}</div>
+                        {{else}}
+                            <div class="timeLimit grn">${timeFormated}</div>
+                        {{/if}}
+                    
+                        {{/if}}
+                    
+				{{/if}}
+				{{if (typeof duration!= 'undefined')}}
+					<div class="timeLimit grn duration ${id}" style="display:none;">${duration}</div>
+				{{/if}}
+			</div>
+			<div class="challengeMain">
+				
+					
+					
+						<div class="badge">
+							{{if challenge.badge}}
+								<img src="${challenge.badge.image}"/>
+							{{else}}
+								<img src="/img/game/embedded/pregame/locked-tokens.gif"/>
+							{{/if}}
+							<div class="gameTag">+ ${challenge.token} tokens</div>
+						</div>
+						<div class="badgeCopy">
+							${description}
+							<div class="starterUpsell">
+								{{if challenge.badge}}
+									Earn ${challenge.badge.name}, plus ${challenge.token} tokens.
+								{{else}}
+									Earn ${token} tokens.
+								{{/if}}
+							</div>
+							
+								
+								
+							
+
+
+
+<div class="challenge-cta btn-grp ${idClass} ${book}" challengeId="${id}" bookId="${book}" type="${type}">
+	{{if typeof isInOneOfMixAndMagicDecks!='undefined' && isInOneOfMixAndMagicDecks && (typeof owned=='undefined') && (typeof itemPrice == 'undefined' || itemPrice.price <0)}}
+		
+			
+			
+				<a href="/challenge/badge-magic.do" class="btn b_green mnm-unlock gradient">Unlock</a>
+			
+		
+		<div class="red limited">Limited Time!</div>
+	{{else (typeof itemPrice != 'undefined')}}
+		
+			
+				<div class="purchase {{if itemPrice.isCanGift}}giftable{{/if}} {{if type == 'pba' }}pba-purchase{{/if}}" {{if typeof owned!='undefined' || itemPrice.inCart}}style="display:none;"{{/if}}>
+					
+					<div class="add-or-gift">
+						{{if typeof tag!='undefined' && tag=='tag.onsale'}}
+							<strong class="gems sale">${itemPrice.price} Gems</strong>
+						{{else}}
+							<strong class="gems">${itemPrice.price} Gems</strong>
+						{{/if}}
+						
+							
+							
+	 							<a href="/challenge/addDOCart.do?simple&id=${itemPrice.DOID}&fromAddToCart=true&pageSectionPrefix=egpPregame&isGiftItem=false" class="btn purchase green cart">
+									Add
+								</a>
+								{{if itemPrice.isCanGift}}
+									<span>or</span>
+									<a href="/challenge/addDOCart.do?simple&id=${itemPrice.DOID}&fromAddToCart=true&pageSectionPrefix=egpPregame&isGiftItem=true" class="purchase gift">
+										Give gift
+									</a>
+								{{/if}}
+							
+						
+						<div class="doid" style="display:none;">${itemPrice.DOID}</div>
+					</div>
+				</div>
+				<div class="checkout {{if type == 'pba' }}pba-purchase{{/if}}" {{if typeof owned!='undefined' || !itemPrice.inCart}}style="display:none;"{{/if}}>
+					
+					
+                    
+                        
+                        
+                        <div class="added-to-cart">
+                            <span>Added to Cart!</span><a href="https://www.pogo.com/store/challenge/purchase.do?pageSection=egpPregameCheckout" class="btn green checkout">Checkout</a>
+                        </div>
+                        
+                    
+				</div>
+			
+			
+		
+		<div class="purchaseError" style="display:none;">
+			Error adding to cart!
+		</div>
+		<div class="checkoutError" style="display:none;">
+			Error checking out!
+		</div>
+	{{/if}}
+	{{if ((typeof canActivate=='undefined') || canActivate)}}
+		<div class="activate 
+			{{if ((typeof badge!='undefined') && (typeof badge.winCount!='undefined') && badge.winCount!=0) || 
+			      (typeof progress!='undefined' && progress.completed)}}
+				again
+			{{else}}
+				first
+				
+				guest
+				
+				
+			{{/if}}"
+			{{if ((typeof itemPrice!='undefined') && (typeof owned=='undefined')) || 
+			     ((typeof progress !='undefined') && !progress.completed && timeLeft>0) ||
+			     (type=='weekly' && (((typeof progress !='undefined') && progress.completed) || timeLeft==0))}}
+				style="display:none;"
+			{{/if}}
+		>
+
+			
+
+			
+				
+				
+				
+					<span>Activate Challenge</span>
+				
+			
+			
+				
+				
+					{{if 'true'=='true'}}
+						
+							
+							
+								
+								<a class="btn gradient" href="https://www.pogo.com/action/pogop/welcome.do?pageSection=u_egp_dchallenge_fp_whomp2">
+									Register Free
+								</a>
+							
+						
+					{{/if}}
+				
+			
+		</div>
+		<div class="error" style="display:none;">
+			Error activating challenge.
+		</div>
+	{{/if}}
+	{{if (typeof progress!='undefined') && !progress.completed && (typeof timeLeft=='undefined' || timeLeft>0)}}
+		<div class="progress" {{if (typeof itemPrice != 'undefined') && (typeof owned=='undefined')}}style="display:none;"{{/if}}>
+			<div class="progressInner">
+				<div class="progressText"><span class="egpChalProgress ${id}">${progress.count}</span> of ${total}</div>
+				<div class="progressBar" style="width:${(100*progress.count)/total}%"></div>
+			</div>
+		</div>
+	{{else typeof progress!='undefined' && (typeof timeLeft=='undefined' || timeLeft>0) && 'true'=='true'}}
+		<div class="progress" {{if (typeof itemPrice != 'undefined') || (typeof progress=='undefined') || (typeof progress.completed=='undefined')}}style="display:none;"{{/if}}>
+			<div class="progressInner">
+				<div class="progressText">You earned ${token} tokens</div>
+				<div class="progressBar" style="width:100%"></div>
+			</div>
+		</div>
+	{{else}}
+		<div class="progress" {{if (typeof itemPrice != 'undefined') || (typeof progress=='undefined') || (typeof progress.completed=='undefined') || progress.completed || (typeof timeLeft!='undefined' && timeLeft<=0) }}
+				style="display:none;"{{/if}}>
+			<div class="progressInner">
+				<div class="progressText">0 of ${total}</div>
+			</div>
+		</div>
+	{{/if}}
+</div>
+
+						</div>
+					
+				
+			</div>
+			<div class="foot">
+				{{if activated>1}}
+					<div class="moreActive">
+						${activated} active challenges <a class="openChallengeTab" href="#challenge">see all</a>
+					<div>
+				{{/if}}
+			</div>
+		</div>
+	{{/each}}
+
+</script>
+<div id="challengeAreaError" style="display:none;"></div>
+<div id="challengeArea"></div>
+
+		
+	<div id="pregameFooter"></div>
+</div>
+
+            
+                
+                    
+
+<script>
+    function activeInviteFriends() {
+        window.location.hash = "loc-inviteFriendsPage";
+//		$("#invite-friends").tabs("option", "active", 1);
+    }
+</script>
+
+
+<script>
+    $.ajax("/feed/v2/friends.do?game=whomp2&numFriends=2&page=1", {
+        success: function (data) {
+            $("body").find("#friendsTemplate").tmpl(data).appendTo("#egpFriend");
+            var currentCount = parseInt($("#currentCount").val());
+            var friendsCount = parseInt($("#friendsCount").val());
+
+            if (currentCount == 0) {
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            } else if (currentCount == 1){
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            }  else if (currentCount == 2){
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            }
+
+            if (friendsCount < 3) {
+                $("#friendScrollingNextImg").attr("src","/img/game/embedded/arrow-right-gray.png");
+            }
+        },
+        error: function () {
+            $("#egpFriendError").empty();
+            $("body").find("#friendsTemplate").tmpl(data).appendTo("#egpFriendError");
+        }
+    });
+    var inProgress = false;
+    var lastPage = false;
+    var leftItemId;
+    var rightItemId;
+	function goNextPageOfFriendBar(){
+        if(inProgress || lastPage){
+            return;
+        }
+
+        var currentPage = parseInt($("#currentPage").val());
+        var friendsCount = parseInt($("#friendsCount").val());
+        if(currentPage * 3 > friendsCount){
+            return;
+        }
+
+        if (friendsCount > 0 && friendsCount % 3 == 0 && currentPage * 3 > friendsCount - 3) {
+
+            $("#egpFriend").find(".friendModule.onlineFriend").each(function (index) {
+                $(this).hide();
+            });
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            $("#friendScrollingNextImg").attr("src","/img/game/embedded/arrow-right-gray.png");
+            $("#friendScrollingNext").css("padding","13px 8px 0 15px");
+            $("#friendScrollingPreviousImg").attr("src","/img/game/embedded/arrow-left.png");
+            $("#currentPage").val(currentPage +1) ;
+
+            lastPage = true;
+            return;
+        }
+
+        $("#egpFriend").find(".friendModule.onlineFriend").each(function (index) {
+            if($(this).is(":visible") && !$(this).hasClass("selected")){
+                $(this).hide();
+                if ($(this).nextAll(":eq(2)").length) {
+                    $(this).nextAll(":eq(2)").show();
+                    $(this).nextAll(":eq(2)").addClass("selected");
+                }
+            }
+        });
+        $("#egpFriend").find(".friendModule.onlineFriend").removeClass("selected");
+        leftItemId = $("#egpFriend").find("div:visible.friendModule.onlineFriend").first().attr("id");
+        rightItemId = $("#egpFriend").find("div:visible.friendModule.onlineFriend").last().attr("id");
+        $("#egpFriend").find(".friendModule.addFriend").remove();
+
+        if(friendsCount==0){
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+
+        }
+
+        if ((currentPage + 1) * 3 >= friendsCount && friendsCount % 3 != 0) {
+            $("#friendScrollingNextImg").attr("src","/img/game/embedded/arrow-right-gray.png");
+            $("#friendScrollingNext").css("padding","13px 8px 0 15px");
+
+
+            if(friendsCount%3==1){
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            }
+            if(friendsCount%3==2){
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+                $("#friendScrollingNext").before($("#egpAddFriend").find(".addFriend").clone());
+            }
+        }else{
+            $("#friendScrollingNextImg").attr("src","/img/game/embedded/arrow-right-over.png");
+            $("#friendScrollingNext").css("padding","13px 8px 0 13px");
+        }
+
+        $("#friendScrollingPreviousImg").attr("src","/img/game/embedded/arrow-left.png");
+
+        if((currentPage+1) * 3 < friendsCount){
+            updateFriendsData(currentPage +1, "next");
+        }
+
+        $("#currentPage").val(currentPage +1) ;
+	}
+    function goPreviousPageOfFriendBar(){
+        if(inProgress){
+            return;
+        }
+
+        var currentPage = parseInt($("#currentPage").val());
+        if(currentPage==1){
+            return;
+        }
+
+
+        $("#egpFriend").find(".addFriend").hide();
+
+        if($("#egpFriend").find(".addFriend").size()==6){
+            $("#egpFriend").find(".addFriend").remove();
+            $("#egpFriend").find(".friendModule.onlineFriend").last().show();
+            $("#egpFriend").find(".friendModule.onlineFriend").last().prevAll(":lt(2)").show()
+            $("#friendScrollingPreviousImg").attr("src","/img/game/embedded/arrow-left-gray.png");
+            $("#friendScrollingNextImg").attr("src","/img/game/embedded/arrow-right.png");
+            $("#friendScrollingNext").css("padding","13px 8px 0 13px");
+            lastPage = false;
+            if (currentPage==2) {
+                $("#friendScrollingPreviousImg").attr("src","/img/game/embedded/arrow-left-gray.png");
+                $("#friendScrollingNextImg").attr("<img src='/img/game/embedded/arrow-right.png' />");
+                $("#friendScrollingNext").css("padding","13px 8px 0 13px");
+            }else{
+                $("#friendScrollingPreviousImg").attr("src","/img/game/embedded/arrow-left-over.png");
+                $("#friendScrollingNextImg").attr("src","/img/game/embedded/arrow-right.png");
+                $("#friendScrollingNext").css("padding","13px 8px 0 13px");
+            }
+            $("#currentPage").val(currentPage-1) ;
+            return;
+        }
+
+        $("#egpFriend").find("div:visible.friendModule.onlineFriend").addClass("oldSelected");
+        $("#egpFriend").find("div:visible.friendModule.onlineFriend").first().prevAll(":lt(3)").show();
+        $("#egpFriend").find("div:visible.friendModule.onlineFriend.oldSelected").hide();
+
+        $("#egpFriend").find(".friendModule.onlineFriend").removeClass("oldSelected");
+
+        leftItemId = $("#egpFriend").find("div:visible.friendModule.onlineFriend").first().attr("id");
+        rightItemId = $("#egpFriend").find("div:visible.friendModule.onlineFriend").last().attr("id");
+
+        if (currentPage==2) {
+            $("#friendScrollingPreviousImg").attr("src","/img/game/embedded/arrow-left-gray.png");
+            $("#friendScrollingNextImg").attr("src","/img/game/embedded/arrow-right.png");
+            $("#friendScrollingNext").css("padding","13px 8px 0 13px");
+        }else{
+            $("#friendScrollingPreviousImg").attr("src","/img/game/embedded/arrow-left-over.png");
+            $("#friendScrollingNextImg").attr("src","/img/game/embedded/arrow-right.png");
+            $("#friendScrollingNext").css("padding","13px 8px 0 13px");
+        }
+
+        if(currentPage!=2){
+            updateFriendsData(currentPage-1, "previous");
+        }
+
+        $("#currentPage").val(currentPage-1) ;
+    }
+
+    function updateFriendsData(pageNumber, action) {
+        inProgress = true;
+        $.ajax("/feed/v2/friends.do?game=whomp2&numFriends=2&page=" + pageNumber, {
+            success: function (data) {
+                $("body").find("#friendsTemplate").tmpl(data).appendTo("#egpFriendWrapper");
+
+                $("#egpFriendWrapper").find(".friendModule.onlineFriend").each(function (index) {
+                    if ($(this).attr("id")== leftItemId) {
+                        $("#egpFriend").find("#"+leftItemId).prevAll(".friendModule.onlineFriend").remove();
+                        $("#egpFriend").find("#"+leftItemId).before($(this).prevAll(".friendModule.onlineFriend").get().reverse());
+                        $("#egpFriend").find("#"+leftItemId).prevAll(".friendModule.onlineFriend").hide();
+                    } else if ($(this).attr("id") == rightItemId) {
+                        $("#egpFriend").find("#"+rightItemId).nextAll(".friendModule.onlineFriend").remove();
+                        $("#egpFriend").find("#"+rightItemId).after($(this).nextAll(".friendModule.onlineFriend"));
+                        $("#egpFriend").find("#"+rightItemId).nextAll(".friendModule.onlineFriend").hide();
+                    }
+                });
+
+                $("#egpFriend").find("#friendsCount").val($("#egpFriendWrapper").find("#friendsCount").val());
+                $("#egpFriend").find(".addFriend").remove();
+
+                $("#friendScrollingNext").before($("#egpFriendWrapper").find(".addFriend"));
+
+                var friendsCount = parseInt($("#friendsCount").val());
+
+                if (pageNumber * 3 >= friendsCount) {
+                    $("#friendScrollingNextImg").attr("src","/img/game/embedded/arrow-right-gray.png");
+                }else{
+                    $("#egpFriend").find(".addFriend").hide();
+                }
+                $("#egpFriendWrapper").empty();
+                inProgress = false;
+
+            },
+            error: function () {
+                $("#egpFriendError").empty();
+                $("body").find("#friendsTemplate").tmpl(data).appendTo("#egpFriendError");
+            }
+        });
+    }
+</script>
+
+<div id="playerArea">
+	<div id="egpFriendError" style="display:none;">
+		Whoops sorry there appears to have been an error retrieving your friends.
+	</div>
+	<div id="egpFriend">
+		
+			<div id="unauthPlayerArea">
+				
+				<div id="regUpsell" class="friendModule">
+					
+					<p><strong><a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=u_egp_lefttxtbox_fp_whomp2&pageSection=u_egp_lefttxtbox_fp_whomp2" class="registerLink" onClick="" pageSection="u_egp_lefttxtbox_fp_whomp2">Register to Play With Your Friends</a></strong></p>
+					<ul>
+						<li><span class="arrowIcon"></span>Earn and Keep Tokens</li>
+						<li><span class="arrowIcon"></span>Win Prizes</li>
+						<li><span class="arrowIcon"></span>Create your Amazing Mini</li>
+					</ul>
+				</div>
+			
+				<div class="friendModule yourUnauthInfo">
+					<div class="violator"><img src="/img/game/embedded/vio-you.png" width="40" height="40" /></div>
+					<div class="userName">
+						
+						<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=u_egp_guestbox_fp_whomp2&pageSection=u_egp_guestbox_fp_whomp2" target="_top" class="registerLink" onClick="" pageSection="u_egp_guestbox_fp_whomp2">Guest Player</a>
+					</div>
+					<div class="miniArea">
+						<div class="miniPic">
+							
+							<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=u_egp_guestbox_fp_whomp2&pageSection=u_egp_guestbox_fp_whomp2" class="registerLink" onClick="" pageSection="u_egp_guestbox_fp_whomp2"><img src="/img/global/avatar-guest.png" border="0"/></a>
+						</div>
+						<div class="addContent">
+							
+							<a href="https://www.pogo.com/action/pogo/signin.do?pageSection=u_egp_guestbox_login_whomp2" class="signinLink" pageSection="u_egp_guestbox_login_whomp2">Sign In</a>
+						</div>
+					</div>
+				</div>
+				<!--[if lte IE 7]>
+				  <script>OLD_IE_VERSION_NO_IGP=true</script>
+				<![endif]-->
+				
+				
+
+
+
+
+
+	
+	
+
+
+<div class="friendModule addFriend ">
+	<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=_friendbox_add_whomp2&pageSection=_friendbox_add_whomp2" url=""  popupId="inviteFriendsPage" class="add" pageSection="_friendbox_add_whomp2">Add a Friend</a>
+	<div class="miniArea">
+		<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=_friendbox_add_whomp2&pageSection=_friendbox_add_whomp2"  url="" popupId="inviteFriendsPage" pageSection="_friendbox_add_whomp2">
+			<img src="/img/global/avatar-guest.png" border="0"/>
+		</a>
+	</div>
+</div>
+
+				
+					
+						
+					
+
+
+
+
+
+	
+	
+
+
+<div class="friendModule addFriend nonFacebookEGPFriends">
+	<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=_friendbox_add_whomp2&pageSection=_friendbox_add_whomp2" url=""  popupId="inviteFriendsPage" class="add" pageSection="_friendbox_add_whomp2">Add a Friend</a>
+	<div class="miniArea">
+		<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=_friendbox_add_whomp2&pageSection=_friendbox_add_whomp2"  url="" popupId="inviteFriendsPage" pageSection="_friendbox_add_whomp2">
+			<img src="/img/global/avatar-guest.png" border="0"/>
+		</a>
+	</div>
+</div>
+
+				
+					
+						
+					
+
+
+
+
+
+	
+	
+
+
+<div class="friendModule addFriend nonFacebookEGPFriends">
+	<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=_friendbox_add_whomp2&pageSection=_friendbox_add_whomp2" url=""  popupId="inviteFriendsPage" class="add" pageSection="_friendbox_add_whomp2">Add a Friend</a>
+	<div class="miniArea">
+		<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=_friendbox_add_whomp2&pageSection=_friendbox_add_whomp2"  url="" popupId="inviteFriendsPage" pageSection="_friendbox_add_whomp2">
+			<img src="/img/global/avatar-guest.png" border="0"/>
+		</a>
+	</div>
+</div>
+
+				
+					
+						
+					
+
+
+
+
+
+	
+	
+
+
+<div class="friendModule addFriend nonFacebookEGPFriends">
+	<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=_friendbox_add_whomp2&pageSection=_friendbox_add_whomp2" url=""  popupId="inviteFriendsPage" class="add" pageSection="_friendbox_add_whomp2">Add a Friend</a>
+	<div class="miniArea">
+		<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=_friendbox_add_whomp2&pageSection=_friendbox_add_whomp2"  url="" popupId="inviteFriendsPage" pageSection="_friendbox_add_whomp2">
+			<img src="/img/global/avatar-guest.png" border="0"/>
+		</a>
+	</div>
+</div>
+
+				
+				<div id="facebookEGPFriends" style="display:none;" class="friendModule fbFrinds facebookEGPFriends"></div>
+			</div>
+		
+	</div>
+    <div id="egpFriendWrapper"></div>
+    <div id="egpAddFriend" style="display:none;">
+        
+
+
+
+
+
+	
+	
+
+
+<div class="friendModule addFriend ">
+	<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=_friendbox_add_whomp2&pageSection=_friendbox_add_whomp2" url=""  popupId="inviteFriendsPage" class="add" pageSection="_friendbox_add_whomp2">Add a Friend</a>
+	<div class="miniArea">
+		<a href="http://www.pogo.com/action/pogo/createAccount.do?intcmp=_friendbox_add_whomp2&pageSection=_friendbox_add_whomp2"  url="" popupId="inviteFriendsPage" pageSection="_friendbox_add_whomp2">
+			<img src="/img/global/avatar-guest.png" border="0"/>
+		</a>
+	</div>
+</div>
+
+    </div>
+</div>
+
+
+                
+                
+            
+
+			
+			<div id="crossSellArea">
+				<div id="crossSell">
+					<ul>
+				
+				
+					
+					
+					
+				
+
+
+
+
+
+
+
+
+
+	
+		
+			
+			
+			
+        
+
+
+
+
+
+
+		
+			<li><a href="http://downloadgames.pogo.com/games/word-whomp-underground?intcmp=a_dl_egp_wordwhomp_wwu&utm_source=pogo&utm_medium=cross_sell_egp&utm_campaign=wordwhomp">Download Word Whomp™ Underground ($)</a></li>
+		
+		
+			<li><a href="/action/pogop/welcome.do?intcmp=a_rs_cpu_adfree_text" target="_blank">Join Club Pogo to play ad-free!</a></li>
+		
+
+
+		
+	
+
+	
+		
+			
+			
+			
+        
+
+
+
+
+
+
+		
+			<li><a href="http://www.pogo.com/mobile?intcmp=android_gptxtlnk">Play this game FREE on your mobile device!</a></li>
+		
+		
+
+
+		
+	
+
+						
+
+
+
+
+					</ul>
+				</div>
+			</div>
+			
+				<div id="fbLike">
+					
+					
+					
+						
+						
+						
+						
+						
+						
+					
+
+
+
+
+
+
+
+<div id="fb-root" style="display:none;"></div>
+<script>
+	jQuery(window).on('load',function(){
+		if(typeof FB != "undefined"){
+			FB._initialized=true;
+		}
+  		(function(d, s, id){
+    		var js, fjs = d.getElementsByTagName(s)[0];
+     		if (d.getElementById(id)) {return;}
+     		js = d.createElement(s); js.id = id;
+     		js.src = "//connect.facebook.net/en_US/sdk.js";
+     		fjs.parentNode.insertBefore(js, fjs);
+   		}(document, 'script', 'facebook-jssdk')); 		
+   	});
+</script>
+<div class="like-button-container">
+	<iframe src="//www.facebook.com/v2.0/plugins/like.php?href=http%3A%2F%2Fwww.pogo.com%2Fgamelanding%2Fwhomp2%3Fsourceid%3Dfbc_userfeed_whomp2_like&amp;send=false&amp;layout=button_count&amp;width=450&amp;show_faces=false&amp;font&amp;colorscheme=light&amp;action=like&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:340px; height:21px;" allowTransparency="true"></iframe>
+</div>
+
+
+				</div>
+			
+		</div>
+</div>
+
+</div>
+<div id="embeddedGame" style="display:none;">
+	
+<script src="/include/js/libraries/zeroclipboard/ZeroClipboard.js" type="text/javascript" charset="utf-8"></script>
+
+
+<iframe style="overflow:hidden;" src="/blank.html" id="egpGameFrame" allowtransparency="true" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" 
+	    height="449" gameHeight="449" width="760" >
+	<p>Your browser does not support iframes.</p>
+</iframe>
+
+
+
+	
+	
+		
+			
+			
+			
+		
+
+
+
+
+
+
+
+
+
+	
+		
+			
+			
+			
+        
+
+
+
+
+
+
+
+
+
+
+
+<div id="games-belt">
+	
+		
+		<div class="smallGame recoGames">
+			<div class="desc">
+				Recommended Games
+			</div>
+		</div>
+	
+	
+		
+			
+			
+			
+				
+				
+				
+				
+			
+		
+		
+			
+				
+				
+			
+			
+			
+			
+		
+		
+		
+		
+		
+			
+		
+		
+		
+		
+		<div class="smallGame  favoriteNoFav ">
+			
+			<div class=" favoriteNoFav tpsolitairegardens" game="tpsolitairegardens"></div>
+			<a href="http://www.pogo.com/games/solitairegardens?pageSection=_gamebar_whomp2_1_tpsolitairegardens" class="" onclick="">
+				<img src="http://cdn.pogo.com/v/HkOAAA/img/game-thumbs/tn-tpsolitairegardens.gif"  />
+			</a>
+			<div class="tinyName"><a href="http://www.pogo.com/games/solitairegardens?pageSection=_gamebar_whomp2_1_tpsolitairegardens" class="" onclick="">
+				Solitaire Gardens
+			</a></div>
+			
+			
+			
+			
+			
+			
+		</div>
+		
+			<div class="space"></div>
+		
+	
+		
+			
+			
+			
+				
+				
+				
+				
+			
+		
+		
+			
+				
+				
+			
+			
+			
+			
+		
+		
+		
+		
+		
+			
+		
+		
+		
+		
+		<div class="smallGame  favoriteNoFav ">
+			
+			<div class=" favoriteNoFav tpmjescape" game="tpmjescape"></div>
+			<a href="http://www.pogo.com/games/mjescape?pageSection=_gamebar_whomp2_2_tpmjescape" class="" onclick="">
+				<img src="http://cdn.pogo.com/v/G9gfdQ/img/game-thumbs/tn-tpmjescape.gif"  />
+			</a>
+			<div class="tinyName"><a href="http://www.pogo.com/games/mjescape?pageSection=_gamebar_whomp2_2_tpmjescape" class="" onclick="">
+				Mahjong Escape
+			</a></div>
+			
+			
+			
+			
+			
+			
+				<span class="gamenote ">New!</span>
+			
+		</div>
+		
+			<div class="space"></div>
+		
+	
+		
+			
+			
+			
+				
+				
+				
+				
+			
+		
+		
+			
+				
+				
+			
+			
+			
+			
+		
+		
+		
+		
+		
+			
+		
+		
+		
+		
+		<div class="smallGame  favoriteNoFav ">
+			
+			<div class=" favoriteNoFav scrabble" game="scrabble"></div>
+			<a href="http://www.pogo.com/games/scrabble?pageSection=_gamebar_whomp2_3_scrabble" class="" onclick="">
+				<img src="http://cdn.pogo.com/v/D_ECGA/img/game-thumbs/tn-scrabble.gif"  />
+			</a>
+			<div class="tinyName"><a href="http://www.pogo.com/games/scrabble?pageSection=_gamebar_whomp2_3_scrabble" class="" onclick="">
+				SCRABBLE
+			</a></div>
+			
+			
+			
+			
+			
+			
+				<span class="gamenote ">America's Favorite</span>
+			
+		</div>
+		
+			<div class="space"></div>
+		
+	
+		
+			
+			
+			
+				
+				
+				
+				
+			
+		
+		
+			
+				
+				
+			
+			
+			
+			
+		
+		
+		
+		
+		
+			
+		
+		
+		
+		
+		<div class="smallGame  favoriteNoFav ">
+			
+			<div class=" favoriteNoFav monopolyclassic" game="monopolyclassic"></div>
+			<a href="http://www.pogo.com/games/monopolyclassic?pageSection=_gamebar_whomp2_4_monopolyclassic" class="" onclick="">
+				<img src="http://cdn.pogo.com/v/FVuTeA/img/game-thumbs/tn-monopolyclassic.gif"  />
+			</a>
+			<div class="tinyName"><a href="http://www.pogo.com/games/monopolyclassic?pageSection=_gamebar_whomp2_4_monopolyclassic" class="" onclick="">
+				MONOPOLY
+			</a></div>
+			
+			
+			
+			
+			
+			
+		</div>
+		
+			<div class="space"></div>
+		
+	
+		
+			
+			
+			
+				
+				
+				
+				
+			
+		
+		
+			
+				
+				
+			
+			
+			
+			
+		
+		
+		
+		
+		
+			
+		
+		
+		
+		
+		<div class="smallGame  favoriteNoFav ">
+			
+			<div class=" favoriteNoFav poppitblitz" game="poppitblitz"></div>
+			<a href="http://www.pogo.com/games/poppitsprint?pageSection=_gamebar_whomp2_5_poppitblitz" class="" onclick="">
+				<img src="http://cdn.pogo.com/v/FR3mjg/img/game-thumbs/en/tn-poppitblitz.gif"  />
+			</a>
+			<div class="tinyName"><a href="http://www.pogo.com/games/poppitsprint?pageSection=_gamebar_whomp2_5_poppitblitz" class="" onclick="">
+				Poppit! Sprint
+			</a></div>
+			
+			
+			
+			
+			
+			
+		</div>
+		
+			<div class="space"></div>
+		
+	
+		
+			
+			
+			
+				
+				
+				
+				
+			
+		
+		
+			
+				
+				
+			
+			
+			
+			
+		
+		
+		
+		
+		
+			
+		
+		
+		
+		
+		<div class="smallGame  favoriteNoFav ">
+			
+			<div class=" favoriteNoFav scrabblesprint" game="scrabblesprint"></div>
+			<a href="http://www.pogo.com/games/scrabblesprint?pageSection=_gamebar_whomp2_6_scrabblesprint" class="" onclick="">
+				<img src="http://cdn.pogo.com/v/FWjGyA/img/game-thumbs/tn-scrabblesprint.gif"  />
+			</a>
+			<div class="tinyName"><a href="http://www.pogo.com/games/scrabblesprint?pageSection=_gamebar_whomp2_6_scrabblesprint" class="" onclick="">
+				SCRABBLE Sprint
+			</a></div>
+			
+			
+			
+			
+			
+			
+		</div>
+		
+	
+</div>
+
+		
+	
+
+	
+
+
+</div>
+	
+
+			</div>
+		</div>
+	</div>
+
+    
+    
+        
+        <a class="addTime" style="display: none" id="igp_addtime" href="#" popupid="badgeTimeExtensionPopup" ></a>
+        <input  type="hidden" id="badgeTimeExtensionViewUrl" value="http://www.pogo.com/challenge/ajaxpopup/badgeExtensionTime.do?pageEntry=igp&action=view" />
+    
+
+    <div id="gameLandingTabs" selectedTab="" class="bottom show-room-info-false">
+       <div class="myTabs clearfix">
+			<ul class="ui-tabs-nav tabs-wide tabList">
+				
+					<li class="ui-state-default tab" tabtitle="overview"><a href="#overview" data-enum="_tab_ovw_whomp2">Overview</a></li>
+                
+				
+					<li class="ui-state-default tab" tabtitle="howToPlay"><a href="#howToPlay" data-enum="_tab_how_whomp2">How To Play</a></li>
+				
+                
+					<li class="ui-state-default tab" tabtitle="tipsAndTricks"><a href="#tipsAndTricks" data-enum="_tab_tips_whomp2">Tips and Tricks</a></li>
+                
+				
+				
+			    	<li class="ui-state-default tab" tabtitle="games_forum"><a href="#games_forum" data-enum="_tab_forums_whomp2">Forums</a></li>
+			    
+				
+	            
+	    			<li class="ui-state-default tab" tabtitle="tournaments"><a href="#tournaments" data-enum="_tab_tourn_whomp2">Tournaments</a></li>
+			    
+				<a href="/system-info" class="reportTab" target="_blank">Report a Problem</a>
+			</ul>
+       </div>
+			
+			
+			
+
+		<div id="selectedPanel" style="display:none;" selection=""></div>
+			<div id="myPanels" class="blueTitleContent">
+            	
+				<div id="overview" class="panel preloaded" customTag="un_whomp2_lp_overview_tab">
+					
+						
+						
+						
+							
+									
+									
+							
+
+
+
+
+
+
+
+
+
+	
+		
+			
+			
+			
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="page-l">
+	
+   	<h2 class="gameName">Play the witty word game, Word Whomp for free online!</h2>
+   	
+    
+		
+			
+			
+			
+		
+
+
+
+
+
+
+
+
+
+		
+		
+			
+			
+			
+		
+
+
+
+
+
+
+
+
+
+    
+	
+    <p class="long-desc">Witty <a href="/word-games">word games</a> like Word Whomp will make you go wild. This Pogo favorite challenges you to whomp adorable gophers and spell as many words as you can from a given set of letters before the clock runs out. Gophers will dig up veggies and bonuses as you unscramble words. Reach the carrot to enter the bonus round and score big!</p>
+    <div class="overview-ss-bkg">
+        <div class="ss-l"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/overview-q1.jpg" width="292" height="170" /><br><span class="ss-title">Use Your Words</span><br /><span class="ss-text">Make as many words as you can from the six letters in the middle of the screen.</span></div>
+        <div class="ss-r"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/overview-q2.jpg" width="292" height="170" /><br><span class="ss-title">Watch the Clock!</span><br /><span class="ss-text">Speed's the key in this addicting word games.  Form words as fast as you can before the clock runs out.</span></div>
+    </div>
+    <div class="overview-ss-bkg">
+        <div class="ss-l"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/overview-q3.jpg" width="292" height="170" /><br><span class="ss-title">Word Power</span><br /><span class="ss-text">Spelling words will advance the digging gopher towards the veggies and token bonuses.</span></div>
+        <div class="ss-r"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/overview-q4.jpg" width="292" height="170" /><br><span class="ss-title">Mix it Up</span><br /><span class="ss-text">If you're stumped, click the MIX UP button. When your letters switch places, you can often find words that you may have overlooked.</span></div>
+    </div>
+    <div class="clear20"></div>
+</div>
+<div class="page-r">
+    
+        
+    
+
+
+
+
+
+
+
+
+
+	
+		
+			
+			
+			
+        
+
+
+
+	
+		
+	
+	
+
+
+
+
+
+<p class="more-games">More Games Like Word Whomp&trade;</p>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/scrabble?pageSection=lp_whomp2_rec1_scrabble"><img src="http://cdn.pogo.com/v/D_ECGA/img/game-thumbs/tn-scrabble.gif" alt="SCRABBLE" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/scrabble?pageSection=lp_whomp2_rec1_scrabble">SCRABBLE</a>
+			
+	    		<br />
+					1977 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/scrabble?pageSection=lp_whomp2_rec1_scrabble">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/boggle-bash?pageSection=lp_whomp2_rec2_boggle"><img src="http://cdn.pogo.com/v/EbfiBQ/img/game-thumbs/tn-boggle.gif" alt="BOGGLE Bash" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/boggle-bash?pageSection=lp_whomp2_rec2_boggle">BOGGLE Bash</a>
+			
+	    		<br />
+					350 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/boggle-bash?pageSection=lp_whomp2_rec2_boggle">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/crossword-puzzles?pageSection=lp_whomp2_rec3_crossword"><img src="http://cdn.pogo.com/v/EYLl_A/img/game-thumbs/tn-crossword.gif" alt="Crossword Cove" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/crossword-puzzles?pageSection=lp_whomp2_rec3_crossword">Crossword Cove</a>
+			
+	    		<br />
+					912 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/crossword-puzzles?pageSection=lp_whomp2_rec3_crossword">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/poppit?pageSection=lp_whomp2_rec4_poppit2"><img src="http://cdn.pogo.com/v/D-Wywg/img/game-thumbs/tn-poppit2.gif" alt="Poppit!&trade;" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/poppit?pageSection=lp_whomp2_rec4_poppit2">Poppit!&trade;</a>
+			
+	    		<br />
+					985 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/poppit?pageSection=lp_whomp2_rec4_poppit2">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/tumble-bees?pageSection=lp_whomp2_rec5_tumbee2"><img src="http://cdn.pogo.com/v/D-WlgA/img/game-thumbs/tn-tumbee2.gif" alt="Tumble Bees" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/tumble-bees?pageSection=lp_whomp2_rec5_tumbee2">Tumble Bees</a>
+			
+	    		<br />
+					27 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/tumble-bees?pageSection=lp_whomp2_rec5_tumbee2">Play</a>
+			
+		</div>
+    </div>
+
+
+		
+	
+
+    
+     
+		
+			
+			
+			
+		
+
+
+
+
+
+
+
+
+
+	
+		
+			
+			
+			
+        
+
+
+
+
+
+
+
+
+<p class="more-games">Similar Download Games</p>
+
+
+
+
+	
+	
+	
+	
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://downloadgames.pogo.com/games/are-you-smarter-than-a-5th-grader?site=pogo&pageSection=overview_promo_download" onClick=""><img src="//static.iwincdn.com/images/product/1735412093184537187/fea_3.jpg" alt="Are You Smarter Than A 5th Grader" width="80" height="45"  /></a></div>
+		</div>
+		<div class="thumbnail-text">
+			<a href="http://downloadgames.pogo.com/games/are-you-smarter-than-a-5th-grader?site=pogo&pageSection=overview_promo_download" onClick="">Are You Smarter Than A 5th Grader</a>
+		</div>
+	</div>
+
+
+		
+	
+
+		
+		
+			
+			
+			
+		
+
+
+
+
+
+
+
+
+
+    
+
+</div>
+<br clear="all">
+
+		
+	
+
+						
+					
+				</div>
+                
+                
+					
+				 
+                    <div id="howToPlay" class="panel preloaded" customTag="un_whomp2_lp_howToPlay_tab">
+						
+
+<div id="htp">
+	<div class="page-l">
+    	<p class="long-desc"></p>
+    	<div class="htpText">The object of Word Whomp&trade; is to make as many words as you can from the six letters in the middle of the screen. Words must have at least 3 letters, and they can't be proper names, abbreviations, or contractions.  Make words by clicking the letters in order. For example, if you wish to spell "CAT," click (or type) the letter "C" first; then "A"; and then "T."</div><br clear="all">
+        
+        <div class="htpText">When you finish making a word, click the on screen ENTER button or press the "Enter" key. If the word is in the puzzle, the word will appear on the signs at the top of the screen. Spelling words will advance the digging gopher towards the veggies and token bonuses.</div><br clear="all">
+        
+        <div class="htpText">As soon as you reach the "Spin" carrot, you'll receive 10, 50, or 100 tokens (depending on the difficulty level), a jackpot spin, and tokens for each additional word you find! If you reach the "Last Word" in this witty word game, you will be rewarded with 200 more tokens!</div><br clear="all">
+        
+		<div><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/htp-ss1.jpg" width="667" height="291"></div><br clear="all">
+			<div class="horizDivide"></div>
+    		<span class="ss-title">Jackpot!</span><br>
+	        <div class="htpText">If you munch your "Spin" carrot, the Jackpot Spinner will spin as soon as your current word game ends.
+			<br /><br />
+			If the Jackpot Spinner lands on the word "JACKPOT," you'll win the jackpot amount shown on the left side of the game . The Jackpot gets bigger every second, so the longer you play, the more you can win.
+	        </div>
+        <br clear="all">
+
+        <div class="complete-game-guide">
+    <div class="horizDivide"></div>
+    <div class="htpText">
+        <h3>Complete Game Guide</h3>
+        If you'd like to learn more about how to play this game, please read the <a onclick="window.open('','howto','width=565,height=550,location=no,resizable=no,toolbar=yes,scrollbars=yes');" target="howto" href="/game/help.do?game=whomp2" title="Complete Game Guide">Complete Game Guide</a>.
+    </div>
+    <br clear="all">
+</div>
+    </div>
+
+    <div class="page-r">
+	    
+			
+		
+
+
+
+
+
+
+
+
+
+	
+		
+			
+			
+			
+        
+
+
+
+	
+		
+	
+	
+
+
+
+
+
+<p class="more-games">More Games Like Word Whomp&trade;</p>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/scrabble?pageSection=lp_whomp2_rec1_scrabble"><img src="http://cdn.pogo.com/v/D_ECGA/img/game-thumbs/tn-scrabble.gif" alt="SCRABBLE" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/scrabble?pageSection=lp_whomp2_rec1_scrabble">SCRABBLE</a>
+			
+	    		<br />
+					1977 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/scrabble?pageSection=lp_whomp2_rec1_scrabble">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/boggle-bash?pageSection=lp_whomp2_rec2_boggle"><img src="http://cdn.pogo.com/v/EbfiBQ/img/game-thumbs/tn-boggle.gif" alt="BOGGLE Bash" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/boggle-bash?pageSection=lp_whomp2_rec2_boggle">BOGGLE Bash</a>
+			
+	    		<br />
+					350 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/boggle-bash?pageSection=lp_whomp2_rec2_boggle">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/crossword-puzzles?pageSection=lp_whomp2_rec3_crossword"><img src="http://cdn.pogo.com/v/EYLl_A/img/game-thumbs/tn-crossword.gif" alt="Crossword Cove" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/crossword-puzzles?pageSection=lp_whomp2_rec3_crossword">Crossword Cove</a>
+			
+	    		<br />
+					912 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/crossword-puzzles?pageSection=lp_whomp2_rec3_crossword">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/poppit?pageSection=lp_whomp2_rec4_poppit2"><img src="http://cdn.pogo.com/v/D-Wywg/img/game-thumbs/tn-poppit2.gif" alt="Poppit!&trade;" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/poppit?pageSection=lp_whomp2_rec4_poppit2">Poppit!&trade;</a>
+			
+	    		<br />
+					985 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/poppit?pageSection=lp_whomp2_rec4_poppit2">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/tumble-bees?pageSection=lp_whomp2_rec5_tumbee2"><img src="http://cdn.pogo.com/v/D-WlgA/img/game-thumbs/tn-tumbee2.gif" alt="Tumble Bees" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/tumble-bees?pageSection=lp_whomp2_rec5_tumbee2">Tumble Bees</a>
+			
+	    		<br />
+					27 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/tumble-bees?pageSection=lp_whomp2_rec5_tumbee2">Play</a>
+			
+		</div>
+    </div>
+
+
+		
+	
+
+    </div>
+    <br clear="all">
+</div>
+
+					</div>
+ 				 
+                
+                
+				<div id="tipsAndTricks" class="panel preloaded" customTag="un_whomp2_lp_tipsAndTricks_tab">
+					
+  
+<div id="tnt">
+	<div class="page-l">
+    	<p class="long-desc">Here are some additional pointers designed to help you become a more advanced Word Whomp player.</p>
+        
+    	<div class="tntText"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/tnt-ss1.jpg" width="159" height="90" class="ss-bkg">All words in the puzzle contain 3 - 6 letters. Proper names and abbreviations don't count.</div><br clear="all">
+        <div class="horizDivide"></div>
+        
+        <div class="tntText"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/tnt-ss2.jpg" width="159" height="90" class="ss-bkg">Skill Level 1 is easiest, so try this level first. When you've mastered the basics, move on to a higher skill level. At the higher skill levels, your potential token bonus is greater.</div><br clear="all">
+        <div class="horizDivide"></div>
+        
+        <div class="tntText"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/tnt-ss3.jpg" width="159" height="90" class="ss-bkg">If you're stumped, click the MIX UP button. When your letters switch places, you can often find words that you may have overlooked. You can click the MIX UP button as often as you wish.</div><br clear="all">
+        <div class="horizDivide"></div>
+       
+        <div class="tntText"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/tnt-ss4.jpg" width="159" height="90" class="ss-bkg">After you reach the "Spin" carrot, longer words will earn you more tokens than shorter words. So always look for 5- and 6-letter words while entering shorter words.</div><br clear="all">
+		<div class="horizDivide"></div>
+        
+        <div class="tntText"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/tnt-ss5.jpg" width="159" height="90" class="ss-bkg">Words are listed alphabetically within each bracket of 3, 4, 5, and 6 letter words. Use this to your advantage as you try to spell the last few words in the game.</div><br clear="all">
+        <div class="horizDivide"></div>
+        
+        <div class="tntText"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/tnt-ss6.jpg" width="159" height="90" class="ss-bkg">At the end of each word game, look closely at the words you didn't find. These words will probably show up in future puzzles</div><br clear="all">
+        <div class="horizDivide"></div>
+        
+        <div class="tntText"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/tnt-ss7.jpg" width="159" height="90" class="ss-bkg">The Word Whomp dictionary does not include every word in the English language - instead, only those words that are in relatively common usage are included.</div><br clear="all">
+		<div class="horizDivide"></div>
+        
+        <div class="tntText"><img src="/hotdeploy/us/promotions/img/game-landing/whomp2/tnt-ss8.jpg" width="159" height="90" class="ss-bkg">If there's a "s" in the puzzle, don't forget to add it to as many words as you can to make plurals!</div><br clear="all">
+        
+    </div>
+
+    <div class="page-r">
+	    
+			
+		
+
+
+
+
+
+
+
+
+
+	
+		
+			
+			
+			
+        
+
+
+
+	
+		
+	
+	
+
+
+
+
+
+<p class="more-games">More Games Like Word Whomp&trade;</p>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/scrabble?pageSection=lp_whomp2_rec1_scrabble"><img src="http://cdn.pogo.com/v/D_ECGA/img/game-thumbs/tn-scrabble.gif" alt="SCRABBLE" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/scrabble?pageSection=lp_whomp2_rec1_scrabble">SCRABBLE</a>
+			
+	    		<br />
+					1977 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/scrabble?pageSection=lp_whomp2_rec1_scrabble">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/boggle-bash?pageSection=lp_whomp2_rec2_boggle"><img src="http://cdn.pogo.com/v/EbfiBQ/img/game-thumbs/tn-boggle.gif" alt="BOGGLE Bash" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/boggle-bash?pageSection=lp_whomp2_rec2_boggle">BOGGLE Bash</a>
+			
+	    		<br />
+					350 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/boggle-bash?pageSection=lp_whomp2_rec2_boggle">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/crossword-puzzles?pageSection=lp_whomp2_rec3_crossword"><img src="http://cdn.pogo.com/v/EYLl_A/img/game-thumbs/tn-crossword.gif" alt="Crossword Cove" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/crossword-puzzles?pageSection=lp_whomp2_rec3_crossword">Crossword Cove</a>
+			
+	    		<br />
+					912 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/crossword-puzzles?pageSection=lp_whomp2_rec3_crossword">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/poppit?pageSection=lp_whomp2_rec4_poppit2"><img src="http://cdn.pogo.com/v/D-Wywg/img/game-thumbs/tn-poppit2.gif" alt="Poppit!&trade;" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/poppit?pageSection=lp_whomp2_rec4_poppit2">Poppit!&trade;</a>
+			
+	    		<br />
+					985 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/poppit?pageSection=lp_whomp2_rec4_poppit2">Play</a>
+			
+		</div>
+    </div>
+
+	
+	
+
+	<div class="gameBkg">
+    	<div class="thumbnail-wrapper inl">
+        	<div class="thumbnail"> <a href="http://www.pogo.com/games/tumble-bees?pageSection=lp_whomp2_rec5_tumbee2"><img src="http://cdn.pogo.com/v/D-WlgA/img/game-thumbs/tn-tumbee2.gif" alt="Tumble Bees" width="80" height="45"  /></a></div>
+		</div>
+    	<div class="thumbnail-text">
+    		<a href="http://www.pogo.com/games/tumble-bees?pageSection=lp_whomp2_rec5_tumbee2">Tumble Bees</a>
+			
+	    		<br />
+					27 Now Playing!
+				<br />
+				<a href="http://www.pogo.com/games/tumble-bees?pageSection=lp_whomp2_rec5_tumbee2">Play</a>
+			
+		</div>
+    </div>
+
+
+		
+	
+
+    </div>
+    <br clear="all">
+</div>
+
+				</div>
+				
+	            
+			    
+				
+					<div id="games_forum" class="panel preloaded" customTag="un_whomp2_lp_games_forum_tab">
+						
+
+
+
+
+
+
+
+
+
+
+
+<div id="forum-container">
+    <div id="forum-header">
+        <h1>Word Whomp&trade; Forum: Latest Posts</h1>
+        <form method="post" id="topic-search" action="http://games-forum.pogo.com/search.php">
+            <input class="textbox" name="keywords" type="text" value="Search this forum..." onclick="if(this.value=='Search this forum...')this.value='';" onblur="if(this.value=='')this.value='Search this forum...';" />
+            <input class="formBT" src="/img/game/embedded/forum-search-icon.png" type="image" name="submit" />
+            <input type="hidden" value="69" name="fid[]" />
+            <input type="hidden" value="msgonly" name="sf" />
+        </form>
+        
+        <p>Here's the latest from Pogo members chatting in our <a href="http://games-forum.pogo.com/viewforum.php?f=69">Word Whomp&trade; Forum</a> where folks gather to make new friends, debate game tips, and share a joke or two.
+        
+        	<a href="http://www.pogo.com/action/pogo/createAccount.do">Register</a> to join (it's free)!</p>
+        
+		<p style="margin-top: 10px;"><strong>See something that’s not working? <a href="/system-info" class="reportTab" target="_blank">Click here to report a problem</a> &raquo;</strong></p>
+    </div>
+
+    <div class="horizDivide"></div>
+    
+    
+    <table>
+    
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/1048080807.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168931&p=1765547#p1765547">Word Whomp • Attention - Chrome 59</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=1823592">Pogo_Llama</a> <span style="font-size:16px;">&raquo;</span> June 30th, 2017, 9:08 pm</span>
+                <p id="post_content">Hello Pogo community,<br /><br />The most recent update to the Google Chrome browser to Chrome 59 has resulted in loading errors for many of Pogo games, specifically table games where you can play vs. a bot or a person.<br /><br />We are aware of this issue and are working on a fix to it. During this time, we ask that you play those specific games on a different browser such as Microsoft Edge, Mozilla Firefox, or Internet Explorer.<br /><br />Thank you and we sincerely apologize for the inconvenience.</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/21378531.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168644&p=1764885#p1764885">Word Whomp • Re: game does not reload</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=284476">cageypdx</a> <span style="font-size:16px;">&raquo;</span> June 29th, 2017, 3:30 am</span>
+                <p id="post_content">I tried the flags suggestion and it didn't work.  I hadn't noticed the red box next to the star until I read about that in the suggestions.  When I clicked the red box, I went to manage add ons and turned off the notify for flash, reloaded and it worked.</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/1022290983.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168644&p=1764245#p1764245">Word Whomp • Re: game does not reload</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=995946">forkey16</a> <span style="font-size:16px;">&raquo;</span> June 27th, 2017, 12:08 pm</span>
+                <p id="post_content">This potential solution did not work for me.<br />I use Chrome on a somewhat elderly Mac, lol.<br />But, the chrome&#058;//flags, scroll to flash, enable - worked great and solved the problem when Word Whomp would not load.<br />Glad and somewhat stunned I found this solution. There are so many posts in the forums that it is difficult to find solutions.<br />Many thanks to the moderator who posted this solution!! You made my day  <img src="http://games-forum.pogo.com/images/smilies/icon_e_smile.gif" alt=":)" title="Smile" />  <img src="http://games-forum.pogo.com/images/smilies/icon_e_smile.gif" alt=":)" title="Smile" /></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/1037816178.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168644&p=1764168#p1764168">Word Whomp • Re: game does not reload</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=1597516">Mod_Jada</a> <span style="font-size:16px;">&raquo;</span> June 27th, 2017, 1:09 am</span>
+                <p id="post_content"><blockquote><div><cite>MLucas2754 wrote:</cite><br />I can't get the game to load either.  What gives?<br /></div></blockquote><br /><br />Word Whomp loaded fine for me when I tried it just now.<br /><br />Here is what I do if a game doesn't load for me:<br /><br />I leave the page and return to the home page.<br />I go back to the game and it usually loads on the second try.<br />If it doesn't load on the second try I repeat the process and it always loads on the third try.<br /><br />Try that and see if it helps.<br /><br />You could also try using a browser other than the one you normally use to see if a game will load.</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/38403425.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168644&p=1764167#p1764167">Word Whomp • Re: game does not reload</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=991948">MLucas2754</a> <span style="font-size:16px;">&raquo;</span> June 27th, 2017, 1:04 am</span>
+                <p id="post_content">I can't get the game to load either.  What gives?</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/48612234.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168644&p=1763687#p1763687">Word Whomp • game does not reload</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=325783">pickleman51</a> <span style="font-size:16px;">&raquo;</span> June 25th, 2017, 1:54 pm</span>
+                <p id="post_content">game loads first game or two, plays normally, adds score to total then hangs, getting white screen <br /><br />loaded game in chrome and allowed flash, then loaded game in MS edge same issue with both</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/1037816178.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168546&p=1763351#p1763351">Word Whomp • Re: not loading game</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=1597516">Mod_Jada</a> <span style="font-size:16px;">&raquo;</span> June 24th, 2017, 2:41 am</span>
+                <p id="post_content"><blockquote><div><cite>mcdobo wrote:</cite><br />IT WORKED!!!  THANK YOU!!  THANK YOU!!!<br /></div></blockquote><br /><br /><span style="font-weight: bold">You're very welcome.  <img src="http://games-forum.pogo.com/images/smilies/icon_e_smile.gif" alt=":)" title="Smile" /> <br /></span></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/966386058.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168546&p=1763349#p1763349">Word Whomp • Re: not loading game</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=1504507">mcdobo</a> <span style="font-size:16px;">&raquo;</span> June 24th, 2017, 2:37 am</span>
+                <p id="post_content">IT WORKED!!!  THANK YOU!!  THANK YOU!!!</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/1037816178.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168546&p=1763337#p1763337">Word Whomp • Re: not loading game</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=1597516">Mod_Jada</a> <span style="font-size:16px;">&raquo;</span> June 24th, 2017, 1:43 am</span>
+                <p id="post_content">See if the instructions in the thread linked below help you:<br /><br /><a href="http://games-forum.pogo.com/viewtopic.php?f=155&amp;t=167935"  class="postlink">Chrome 59 and Flash</a></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/966386058.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168546&p=1763322#p1763322">Word Whomp • Re: not loading game</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=1504507">mcdobo</a> <span style="font-size:16px;">&raquo;</span> June 24th, 2017, 12:34 am</span>
+                <p id="post_content">Yes.  I've tried Internet Explorer.  It does run on that browser, but I keep losing my connection on IE; quite often I can't even get to the end of a game.</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/1037816178.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168546&p=1762975#p1762975">Word Whomp • Re: not loading game</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=1597516">Mod_Jada</a> <span style="font-size:16px;">&raquo;</span> June 23rd, 2017, 1:17 am</span>
+                <p id="post_content"><blockquote><div><cite>mcdobo wrote:</cite><br />I get the same thing.  I can get past the &quot;Start&quot; screen and the ad, then it hangs up on the Pogo background.  I'm using Google Chrome.  I have cleared the browsing data and flash cache and tried opening in a separate window but nothing seems to help.   Same with Sweet Tooth.<br /></div></blockquote><br /><br />Have you tried a different browser such as Internet Explorer or Firefox to see if you are able to play?</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/966386058.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168546&p=1762965#p1762965">Word Whomp • Re: not loading game</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=1504507">mcdobo</a> <span style="font-size:16px;">&raquo;</span> June 23rd, 2017, 12:50 am</span>
+                <p id="post_content">I get the same thing.  I can get past the &quot;Start&quot; screen and the ad, then it hangs up on the Pogo background.  I'm using Google Chrome.  I have cleared the browsing data and flash cache and tried opening in a separate window but nothing seems to help.   Same with Sweet Tooth.</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/1037816178.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168546&p=1762907#p1762907">Word Whomp • Re: not loading game</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=1597516">Mod_Jada</a> <span style="font-size:16px;">&raquo;</span> June 22nd, 2017, 9:53 pm</span>
+                <p id="post_content">The game is working and it loaded right up for me when I tried it just now.<br /><br />What happens when you try to load the game?<br /><br />Are you getting an error message?<br /><br />What browser are you using? <br /><br />Have you tried a different browser to see if the game will load?</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/928684073.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168546&p=1762906#p1762906">Word Whomp • not loading game</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=1844260">greatgranny1980</a> <span style="font-size:16px;">&raquo;</span> June 22nd, 2017, 9:49 pm</span>
+                <p id="post_content">game  is   not   loading    please   help <img src="http://games-forum.pogo.com/images/smilies/icon_e_surprised.gif" alt=":o" title="Surprised" /></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="width:150px;vertical-align:top;">
+                <img width="150" height="220" alt="User avatar" src="http://mini.pogo.com/miniimage/1048080807.jpg">
+            </td>
+            <td style="padding-left:30px; vertical-align:top;">
+                <h2><a style="font-size:22px;" href="http://games-forum.pogo.com/viewtopic.php?t=168102&p=1760346#p1760346">Word Whomp • Update - Attention: Flash Update Issue</a></h2>
+                <span style="font-size:14px; font-weight:bold;">By <a onclick="OmnitureLightEvent('null_forums_post_whomp2', false);  return true;"href="http://games-forum.pogo.com/memberlist.php?mode=viewprofile&amp;u=1823592">Pogo_Llama</a> <span style="font-size:16px;">&raquo;</span> June 14th, 2017, 6:50 pm</span>
+                <p id="post_content">As of 2 PM PT, June 16, Mahjong Escape and Undiscovered World should now be fixed. If you're still experiencing issues with these games, you may need to clear your cache and your Flash cache. (Make sure to un-check preserve Favorited sites option). <br /><br />Thank you.<br /><br />Hello Pogo community,<br /><br />Flash sent out an update overnight and this has since created issues on certain Pogo games. The Pogo team is currently investigating which specific Pogo games this is affecting and contacting the developer's to fix these issues. The team is aware of this and working to fix this as soon as possible. Thank you for your patience and understanding. I will update here as information becomes available.<br /><br />Thank you,<br /><br />Pogo_Llama</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="horizDivide"></div>
+            </td>
+        </tr>
+        
+    
+    </table>
+    
+    
+    <div id="forum-footer">
+    	<p>Here's the latest from Pogo members chatting in our <a href="http://games-forum.pogo.com/viewforum.php?f=69">Word Whomp&trade; Forum</a> where folks gather to make new friends, debate game tips, and share a joke or two.
+        
+        	<a href="http://www.pogo.com/action/pogo/createAccount.do">Register</a> to join (it's free)!</p>
+        
+    </div>
+
+</div>
+
+
+
+
+
+
+					</div>
+				
+	            
+					<div id="tournaments" class="panel preloaded" customTag="un_whomp2_lp_tournaments_tab">
+					</div>
+				
+            </div>
+		</div>
+		<input type="hidden" id="gameCode" value="whomp2">
+		<div class="bottom-bkg"></div>
+	</div>
+
+<div style="display:none">
+    <div id="gamecodeDiv">whomp2</div>
+    <div id="fundingUrl">https://www.pogo.com/action/pogop/pogogems/fund.do?returnType=game&returnValue=whomp2&intcmp=whomp2_ingame_gem_fund</div>
+    <iframe id="gaframe" src="" height="1" width="1"></iframe>
+    <iframe id="StartGameTaggingFrame" src="" height="1" width="1"></iframe>
+</div>
+
+<div id="COFlegal" class="starterChallengeDisclaimer">
+		<p>* Limited time free trial. Trial time is subject to change. Free Pogo account required. Trial is limited to one per free Pogo Account. Valid wherever trial is available.  Visit <a href="http://help.ea.com/article/pogo-starter-challenges-faq">http://help.ea.com/article/pogo-starter-challenges-faq</a> for details, including availability. You cannot access earned Badges or Badge Albums after your free trial ends unless you purchase a Club Pogo membership.</p>
+</div>
+
+
+
+
+
+  	
+</div>
+	
+		
+		
+			
+		
+
+
+
+
+	
+	
+		<!-- EAD doubleclick Track --> 
+		
+			
+			
+			
+		<script type="text/javascript">
+var axel = Math.random() + "";
+var a = axel * 10000000000000;
+document.write('<iframe src="http://4112862.fls.doubleclick.net/activityi;src=4112862;type=pogor986;cat=usfoo134;u1=;u2=;ord=1;num=' + a + '?" width="1" height="1" frameborder="0" style="display:none"></iframe>');
+</script>
+<noscript>
+<iframe src="http://4112862.fls.doubleclick.net/activityi;src=4112862;type=pogor986;cat=usfoo134;u1=;u2=;ord=1;num=1?" width="1" height="1" frameborder="0" style="display:none"></iframe>
+</noscript>
+    	 <div align="center">	
+                
+            
+    
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                
+            
+            
+                
+            
+
+            
+                     <div id="footer-us">
+                             <img id="us-footer-topfade-hidable" alt="" src="/img/footer/common/us-footer-topfade.jpg" width="1000" height="27" border="0" />  
+                                    <div id="footer-welcome">
+                                            
+                                        
+                                    </div>
+                                    
+                                    
+	                                    
+											
+												
+												
+												
+											
+										
+									
+                                    
+                                    <div id="footer-us-bg">
+                                        <ul class="categories" >
+                                    
+                                            <li id="Games" class="category">
+                                                <h3>Game Categories</h3>
+                                                <ul class="links leftCol">
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/puzzle-games">Puzzle Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/board-games">Board Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/card-games">Card Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/word-games">Word Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/casino-games">Casino Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/arcade-games">Arcade Games</a>
+                                                    </li>
+                                                     <li>
+                                                   		
+                                                   			
+                                                     		
+                                                  				
+                                                     		
+                                                   		
+                                                        <a href="http://downloadgames.pogo.com/?refid=10&pageSection=footer_downloads">Download Games</a>
+                                                    </li>
+                                                     <li>
+                                                        
+                                                        <a href="http://www.pogo.com/clubpogo-games">Club Pogo Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/mahjong-games">Mahjong Games</a>
+                                                    </li>
+                                                </ul>
+                                                <ul class="links">
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/bingo-games">Bingo Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/slots-games">Slots Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/match-3-games">Match-3 Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/sports-games">Sports Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/solitaire-games">Solitaire Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/hidden-object-games">Hidden Object Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/poker-games">Poker Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/bowling-games">Bowling Games</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            
+                                            <li id="genres" class="category">
+                                                <h3>Game Genres</h3>
+                                                <p>A new way to find your favorite Free Games</p>
+                                                <ul class="links">
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/fun-games">Fun Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/family-games">Family Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/brain-games">Brain Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/strategy-games">Strategy Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/classic-games">Classic Games</a>
+                                                    </li>
+                                                    <li>
+                                                        
+                                                        <a href="http://www.pogo.com/multiplayer-games">Multiplayer Games</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                            
+                                            <li id="Pogo" class="category">
+                                                <h3>Pogo</h3>
+                                                <ul class="links">
+                                                    
+                                                    
+                                                    
+                                                    
+                                                        
+                                                            
+                                                                
+                                                                
+                                                            
+
+
+
+
+
+
+
+
+
+
+
+
+	<li><a href="http://www.clubpogo.com/?site=pogo&pageSection=footer_joinclubpogo">Club Pogo</a></li>
+
+
+
+
+
+	
+	
+	
+		
+	
+	
+	<li><a href="http://www.pogo.com/benefits?pageSection=footer_friends">My Friends</a></li>
+
+
+
+
+
+
+
+	<b></b>
+
+
+
+	<li><a href="http://www.pogo.com/prize/prize.do?pageSection=footer_prize">Prizes</a></li>
+
+
+
+
+
+	
+	<li><a href="http://www.pogo.com/prize/rules.do?pageSection=footer_prizerules" rel="nofollow">Prize Rules</a></li>
+
+
+
+
+
+
+
+	<li><a href="http://games-forum.pogo.com/?pageSection=footer_forums">Games Forum</a></li>
+
+
+
+	<li><a href="http://help.pogo.com/?site=pogo">Help</a></li>
+
+
+
+
+
+	<li><a href="https://jobs.ea.com/">Jobs</a></li>
+
+
+
+
+
+
+	
+	
+	<li><a href="https://www.pogo.com/action/pogo/signin.do?pageSection=footer_login" rel="nofollow">Sign In</a></li>
+	<li><a href="http://www.pogo.com/action/pogo/createAccount.do?pageSection=footer_register" rel="nofollow">Register</a></li>
+
+
+
+
+	<li><a href="http://www.pogo.com/sitemap?pageSection=footer_sitemap">Sitemap</a></li>
+
+
+
+
+
+
+
+     <li><a href="/free-game-events">Promotions</a></li>
+
+
+
+                                                        
+                                                    
+                                                    
+                                                </ul>
+                                            </li>
+                            
+                                            <li id="EA" class="category">
+                                                <h3>EA</h3>
+                                                <ul class="links">
+                                                    
+                                                    
+                                                    
+                                                    
+                                                        
+                                                            
+                                                                
+                                                                
+                                                            
+
+
+
+
+
+
+
+
+
+
+
+
+	<li><a href="http://www.pogo.com/misc/advertise.jsp?pageSection=footer_advertise" rel="nofollow">Advertise</a></li>
+
+
+
+
+
+	<li><a href="http://www.info.ea.com/?pageSection=footer_corpinfo" rel="nofollow">Corporate Info</a></li>
+
+
+
+
+
+	<li><a class="popup||1021|600|yes|true" href="http://www.ea.com/legal?pageSection=footer_legalnotice" rel="nofollow">Legal</a></li>
+
+
+
+
+
+	<li><a class="popup||800|600|yes|true" href="http://tos.ea.com/legalapp/WEBPRIVACY/US/en/PC/?pageSection=footer_privacy" rel="nofollow"><span>Privacy and Cookie Policy</span> (Your Privacy Rights)</a></li>
+
+
+
+
+
+	<li><a class="popup||800|600|yes|true" href="http://tos.ea.com/legalapp/WEBTERMS/US/en/PC?pageSection=footer_tos" rel="nofollow">User Agreement</a></li>
+
+
+
+
+
+	<li><a href="http://preferences.truste.com/2.0/?type=pogo&affiliateId=156" target="_blank" rel="nofollow">Advertising Choices</a></li>
+
+
+
+
+
+                                                        
+                                                    
+                                                    
+                                                </ul>
+                                            </li>
+                                    
+                                            <li id="Platforms" class="category">
+                                                <h3>Platforms</h3>
+                                                <ul class="links">
+                                                    
+                                                        
+                                                            
+                                                        
+
+
+
+<ul>
+		<li><a href="http://www.ea.com/pc">PC Games</a></li>
+		<li><a href="http://www.ea.com/wii">Wii</a></li>
+		<li><a href="http://www.ea.com/xbox-360">Xbox</a></li>
+		<li><a href="http://www.ea.com/ps3">PS3</a></li>
+		<li><a href="http://www.ea.com/iphone">iPhone</a></li>
+		<li><a href="http://www.ea.com/ipad">iPad</a></li>
+		<li><a href="http://www.ea.com/mobile">Mobile</a></li>
+</ul> 
+                                                    
+                                                </ul>
+                                            </li>
+                                    
+                                        </ul>
+                                    </div>
+                                    
+                                    <div id="footer-us-tab-con">
+                                        <div id="footer-us-tabs" class="ui-tabs">
+                                            <ul class="ui-tabs-nav tabs-small tabs-wide">
+                                                <li id="FreeGamesTab" tabtitle="FreeGames" class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#FreeGames" onclick="return footerTabClicked('FreeGames');">Free Games</a></li>
+                                                <li id="ClubPogoGamesTab" tabtitle="ClubPogoGames" class="ui-state-default ui-corner-top"><a href="#ClubPogoGames" onclick="return footerTabClicked('ClubPogoGames');">Club Pogo Games</a></li>
+                                                <li id="DownloadGamesTab" tabtitle="DownloadGames" class="ui-state-default ui-corner-top"><a href="#DownloadGames" onclick="return footerTabClicked('DownloadGames');">Download Games</a></li>
+                                            </ul>
+                                        </div>
+                                        <div id="selectedPanel" selection=""></div>
+                                        <div id="myPanel" class="footer-us-gameslist">
+                                            
+
+
+
+
+<div id="FreeGames" class="panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom">
+<ul><li>0 - 9</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/pickup?pageSection=">52 Card Pickup</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/6th-st-omaha-poker?pageSection=">6th Street Omaha Poker</a></li>
+	<li>A</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/ali-baba-slots?pageSection=">Ali Baba Slots&trade;</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/all-star-football?pageSection=">All-Star Football</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/amazingadventures?pageSection=">Amazing Adventures</a></li>
+	<li>B</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/backgammon?pageSection=">Backgammon</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/balloon-bounce?pageSection=">Balloon Bounce</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/battleship?pageSection=">BATTLESHIP</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/battleshipnc?pageSection=">BATTLESHIP: Naval Combat</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/bejeweled2slots?pageSection=">Bejeweled 2 Slots</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/bej3?pageSection=">Bejeweled 3</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/bejtwist?pageSection=">Bejeweled Twist</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/bigcityadventure?pageSection=">Big City Adventure</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/big-shot-roulette?pageSection=">Big Shot Roulette&trade;</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/bingo-luau?pageSection=">Bingo Luau</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/blackjack-carnival?pageSection=">Blackjack Carnival</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/bloons-2?pageSection=">Bloons2</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/boggle-bash?pageSection=">BOGGLE Bash</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/bridge?pageSection=">Bridge</a></li>
+	<li>C</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/online-checkers?pageSection=">Checkers</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/online-chess?pageSection=">Chess</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/chuzzleslots?pageSection=">Chuzzle Slots</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/cirqueduflea?pageSection=">Cirque du Flea</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/claire-hart-soul-searcher?pageSection=">Claire Hart&trade;: Soul Searcher</a></li>
+	</ul><ul>
+	
+	
+	<li><a href="http://www.pogo.com/games/clue?pageSection=">CLUE Secrets &amp; Spies</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/connect4?pageSection=">Connect 4</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/cookieconnect-h5?pageSection=">Cookie Connect</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/cribbage?pageSection=">Cribbage</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/crossword-puzzles?pageSection=">Crossword Cove</a></li>
+	<li>D</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/dominoes?pageSection=">Dominoes</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/double-deuce-poker?pageSection=">Double Deuce Poker</a></li>
+	<li>E</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/euchre?pageSection=">Euchre</a></li>
+	<li>F</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/first-class-solitaire?pageSection=">First Class Solitaire</a></li>
+	<li>G</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/golfsolitaire?pageSection=">Golf Solitaire</a></li>
+	<li>H</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/hangman-hijinks?pageSection=">Hangman Hijinks</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/hearts?pageSection=">Hearts</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/free-online-poker?pageSection=">High Stakes Poker</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/high-stakes-pool?pageSection=">High Stakes Pool</a></li>
+	<li>J</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/jacks-or-better-poker?pageSection=">Jacks or Better Poker</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/jigsaw-treasure-hunter?pageSection=">Jigsaw Treasure Hunter</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/jokers-wild-poker?pageSection=">Jokers Wild Poker</a></li>
+	<li>K</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/keno?pageSection=">Keno</a></li>
+	<li>L</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/lettersfromnowhere?pageSection=">Letters from Nowhere</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/lost-temple-poker?pageSection=">Lost Temple Poker</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/lottso-express?pageSection=">Lottso! Express</a></li>
+	<li>M</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/mjescape?pageSection=">Mahjong Escape</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/mahjonggdimensions?pageSection=">Mahjongg Dimensions</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/mahjong-safari?pageSection=">Mahjong Safari</a></li>
+	</ul><ul>
+	
+	
+	<li><a href="http://www.pogo.com/games/minigolf?pageSection=">Mini Golf Madness</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/monopolyclassic?pageSection=">MONOPOLY</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/monopoly?pageSection=">MONOPOLY The World Edition</a></li>
+	<li>N</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/no-limit-texas-holdem-poker?pageSection=">No Limit Texas Hold'em</a></li>
+	<li>P</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/panda-pai-gow-poker?pageSection=">Panda Pai Gow Poker</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/payday-freecell?pageSection=">Payday FreeCell</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/paydaypoker?pageSection=">Payday Poker</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/peggleslots?pageSection=">Peggle Slots</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/phlinx?pageSection=">Phlinx</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/phlinx-h5?pageSection=">Phlinx 2</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/plants-vs-zombies?pageSection=">Plants vs. Zombies</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/pogo-bowl?pageSection=">Pogo&trade; Bowl</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/poppit?pageSection=">Poppit!&trade;</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/poppit-bingo-h5?pageSection=">Poppit! Bingo</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/poppitsprint?pageSection=">Poppit! Sprint</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/pucks-peak?pageSection=">Puck's Peak</a></li>
+	<li>R</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/rainy-day-spider-solitaire?pageSection=">Rainy Day Spider Solitaire</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/ride-the-tide?pageSection=">Ride The Tide</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/risk?pageSection=">RISK</a></li>
+	<li>S</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/sci-fi-slots?pageSection=">Sci-Fi Slots</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/scrabble?pageSection=">SCRABBLE</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/scrabblesprint?pageSection=">SCRABBLE Sprint</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/sherlockholmes?pageSection=">Sherlock Holmes</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/showbiz-slots?pageSection=">Showbiz Slots</a></li>
+	</ul><ul>
+	
+	
+	<li><a href="http://www.pogo.com/games/showbiz-slots-ii?pageSection=">Showbiz Slots II</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/slingo-blast?pageSection=">Slingo&reg; Blast</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/ricochet?pageSection=">Slingo&reg; Ricochet</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/sock-hop-slots?pageSection=">Sock Hop Slots</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/solitairegardens?pageSection=">Solitaire Gardens</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/spades?pageSection=">Spades</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/spooky-slots?pageSection=">Spooky Slots!</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/stackem?pageSection=">Stack 'em</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/story-quest-h5?pageSection=">StoryQuest</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/sudoku?pageSection=">Sudoku Classic</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/sudoku-puzzle-blast?pageSection=">Sudoku Puzzle Blast</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/sushicat2?pageSection=">Sushi Cat 2</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/swashbucks?pageSection=">Swashbucks</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/sweettooth?pageSection=">Sweet Tooth 2</a></li>
+	<li>T</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/trivial-pursuit?pageSection=">TRIVIAL PURSUIT Daily 20</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/trizzle?pageSection=">Trizzle</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/tumble-bees?pageSection=">Tumble Bees</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/turbo-21?pageSection=">Turbo 21&#153;</a></li>
+	<li>U</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/undiscovered-world?pageSection=">Undiscovered World</a></li>
+	<li>V</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/vaults-of-atlantis-slots?pageSection=">Vaults of Atlantis Slots</a></li>
+	<li>W</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/whtbb?pageSection=">Who Has The Biggest Brain</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/word-whomp?pageSection=">Word Whomp&trade;</a></li>
+	<li>Y</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/yahtzeesingleplayer?pageSection=">Yahtzee</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/yahtzee-party?pageSection=">YAHTZEE Party!</a></li>
+	<li>Z</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/zumasrevenge?pageSection=">Zuma's Revenge</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/zumaslots?pageSection=">Zuma Slots</a></li>
+	</ul>
+</div>
+
+
+<div id="ClubPogoGames" class="panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
+<ul><li>A</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/aces-up?pageSection=">Aces Up!</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/alhambrasolitaire?pageSection=">Alhambra Solitaire</a></li>
+	<li>B</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/battle-phlinx?pageSection=">Battle Phlinx</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/beaker-creatures?pageSection=">Beaker Creatures</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/blooop?pageSection=">Blooop</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/seaball?pageSection=">Boardwalk Sea Ball</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/bouncingletters?pageSection=">Bouncing Letters</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/bridgearkadium?pageSection=">Bridge Single Player</a></li>
+	<li>C</li>
+	
+	
+	<li><a href="javascript:void(0)">Canasta</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/casino-island-blackjack?pageSection=">Casino Island Blackjack</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/chainreaction?pageSection=">Chain Reaction</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/mines?pageSection=">Classic Mines</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/crazy-cakes?pageSection=">Crazy Cakes</a></li>
+	<li>D</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/dailycrossword?pageSection=">Daily Crossword</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/dice-city-roller?pageSection=">Dice City Roller</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/dice-derby?pageSection=">Dice Derby</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/tpdominoes?pageSection=">Dominoes Single Player</a></li>
+	<li>E</li>
+	
+	
+	<li><a href="javascript:void(0)">Everyone Wins Bingo</a></li>
+	<li>F</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/flindovision?pageSection=">Find-O-vision</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/flipout?pageSection=">Flip Out</a></li>
+	</ul><ul>
+	
+	
+	<li><a href="http://www.pogo.com/games/flower-daze?pageSection=">Flower Daze</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/fortune-bingo?pageSection=">Fortune Bingo</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/fcellsolitaire?pageSection=">Freecell Solitaire</a></li>
+	<li>G</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/gemswarfare?pageSection=">Gem's Warfare</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/gems3?pageSection=">Gems 3</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/gtsudoku?pageSection=">Greater Than Sudoku</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/greenback-bayou?pageSection=">Greenback Bayou</a></li>
+	<li>H</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/harvest-mania?pageSection=">Harvest Mania</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/hog-heaven-slots?pageSection=">Hog Heaven Slots</a></li>
+	<li>J</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/tpjigsaw?pageSection=">Jigsaw</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/jigsaw-detective?pageSection=">Jigsaw Detective</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/jungle-gin?pageSection=">Jungle Gin</a></li>
+	<li>K</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/kenopop?pageSection=">KenoPop!</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/klonsolitaire?pageSection=">Klondike Solitaire</a></li>
+	<li>L</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/loop?pageSection=">Loop the City</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/lottso?pageSection=">Lottso!</a></li>
+	<li>M</li>
+	
+	
+	<li><a href="javascript:void(0)">Mahjong Garden</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/mjdimendark?pageSection=">Mahjongg Dark Dimensions</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/makeover-madness?pageSection=">Makeover Madness</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/marthasolitaire?pageSection=">Martha Solitaire</a></li>
+	</ul><ul>
+	
+	
+	<li><a href="http://www.pogo.com/games/matchnmerge?pageSection=">Match and Merge</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/mathlines?pageSection=">Math Lines</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/mazesolitaire?pageSection=">Maze Solitaire</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/monkeygems?pageSection=">Monkey Gems</a></li>
+	
+	
+	
+	<li><a href="javascript:void(0)">MONOPOLY Slots</a></li>
+	<li>N</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/ninemensmorris?pageSection=">Nine Men's Morris</a></li>
+	<li>P</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/pegland?pageSection=">PegLand</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/penguin-blocks?pageSection=">Penguin Blocks</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/perfect-pair-solitaire?pageSection=">Perfect Pair Solitaire</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/pileofballs?pageSection=">Pile of Balls</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/pinochle?pageSection=">Pinochle</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/addiction-solitaire?pageSection=">Pogo&trade; Addiction Solitaire</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/pokersquare?pageSection=">Poker Square</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/pop-fu?pageSection=">Pop Fu</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/poppa-zoppa?pageSection=">PoppaZoppa&#153;</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/poppit-h5?pageSection=">Poppit! Party</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/pyrmdsolitaire?pageSection=">Pyramid Solitaire</a></li>
+	<li>Q</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/quick-quack?pageSection=">Quick Quack</a></li>
+	
+	
+	
+	<li><a href="javascript:void(0)">QWERTY</a></li>
+	</ul><ul><li>R</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/reversi?pageSection=">Reversi</a></li>
+	<li>S</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/score?pageSection=">Score</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/shufflebump?pageSection=">Shuffle Bump</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/spacehunt?pageSection=">Space Hunt</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/sparks?pageSection=">Sparks</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/tpspidersolitaire?pageSection=">Spider Solitaire</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/squelchies?pageSection=">Squelchies</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/stellar-sweeper?pageSection=">Stellar Sweeper</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/tpsudoku?pageSection=">Sudoku</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/sudokux?pageSection=">Sudoku X</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/superdominoes?pageSection=">Super Dominoes</a></li>
+	<li>T</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/free-texas-holdem?pageSection=">Texas Hold'em Poker</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/thousand-island-solitaire?pageSection=">Thousand Island Solitaire</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/treasurehunt?pageSection=">Treasure Hunt</a></li>
+	
+	
+	
+	<li><a href="javascript:void(0)">Tri-Peaks Solitaire</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/tumbletiles?pageSection=">Tumble Tiles</a></li>
+	<li>W</li>
+	
+	
+	<li><a href="http://www.pogo.com/games/wonderland-memories?pageSection=">Wonderland Memories</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/wordcraft?pageSection=">Word Craft</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/word-jong?pageSection=">WordJong&#153;</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/wordout?pageSection=">Word Out</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/wordsearch2?pageSection=">Word Search</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/wordsearch-daily?pageSection=">Word Search Daily</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/word-whomp-whackdown?pageSection=">Word Whomp&trade; Whackdown</a></li>
+	
+	
+	
+	<li><a href="http://www.pogo.com/games/world-class-solitaire?pageSection=">World Class Solitaire</a></li>
+	</ul>  
+</div>
+
+
+<div id="DownloadGames" class="panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide">
+<ul></ul><ul><li>B</li>
+	
+
+	<li><a href="http://downloadgames.pogo.com/games/bejeweled-twist?returnType=game&returnValue=iwin_bejeweled-twist">Bejeweled Twist</a></li>
+	</ul><ul></ul><ul><li>E</li>
+	
+
+	<li><a href="http://downloadgames.pogo.com/games/escape-rosecliff-island?returnType=game&returnValue=iwin_escape-rosecliff-island">Escape Rosecliff Island</a></li>
+	<li>I</li>
+	
+
+	<li><a href="http://downloadgames.pogo.com/games/insaniquarium?returnType=game&returnValue=iwin_insaniquarium">Insaniquarium</a></li>
+	<li>M</li>
+	
+
+	<li><a href="http://downloadgames.pogo.com/games/mystery-pi----stolen-in-san-francisco?returnType=game&returnValue=iwin_mystery-pi----stolen-in-san-francisco">Mystery P.I. -- Stolen in San Francisco</a></li>
+	
+	
+
+	<li><a href="http://downloadgames.pogo.com/games/mystery-pi-the-curious-case-of-counterfeit-cove?returnType=game&returnValue=iwin_mystery-pi-the-curious-case-of-counterfeit-cove">Mystery P.I. The Curious Case of Counterfeit Cove</a></li>
+	<li>V</li>
+	
+
+	<li><a href="http://downloadgames.pogo.com/games/vacation-quest-the-hawaiian-islands?returnType=game&returnValue=iwin_vacation-quest-the-hawaiian-islands">Vacation Quest: The Hawaiian Islands</a></li>
+	<li>Z</li>
+	
+
+	<li><a href="http://downloadgames.pogo.com/games/zumas-revenge?returnType=game&returnValue=iwin_zumas-revenge">Zuma's Revenge</a></li>
+	</ul>  
+</div>
+ 
+                                        </div>
+                                    </div>
+                                    
+                                    <script type="text/javascript">
+                                        function footerTabClicked(what) {
+                                            if(what == "FreeGames") {
+                                                document.getElementById("FreeGamesTab").className = "ui-state-default ui-corner-top ui-tabs-selected ui-state-active";
+                                                document.getElementById("ClubPogoGamesTab").className = "ui-state-default ui-corner-top";
+                                                document.getElementById("DownloadGamesTab").className = "ui-state-default ui-corner-top";
+            
+                                                document.getElementById("FreeGames").className = "panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide";
+                                                document.getElementById("ClubPogoGames").className = "panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom";
+                                                document.getElementById("DownloadGames").className = "panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom";
+                                                document.getElementById("FreeGames").style.display = "block";
+                                                document.getElementById("ClubPogoGames").style.display = "none";
+                                                document.getElementById("DownloadGames").style.display = "none";
+                                            }
+                                            else if(what == "ClubPogoGames") {
+                                                document.getElementById("FreeGamesTab").className = "ui-state-default ui-corner-top";
+                                                document.getElementById("ClubPogoGamesTab").className = "ui-state-default ui-corner-top ui-tabs-selected ui-state-active";
+                                                document.getElementById("DownloadGamesTab").className = "ui-state-default ui-corner-top";
+            
+                                                document.getElementById("FreeGames").className = "panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom";
+                                                document.getElementById("ClubPogoGames").className = "panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide";
+                                                document.getElementById("DownloadGames").className = "panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom";
+                                                document.getElementById("FreeGames").style.display = "none";
+                                                document.getElementById("ClubPogoGames").style.display = "block";
+                                                document.getElementById("DownloadGames").style.display = "none";
+                                            }
+                                            else if(what == "DownloadGames") {
+                                                document.getElementById("FreeGamesTab").className = "ui-state-default ui-corner-top";
+                                                document.getElementById("ClubPogoGamesTab").className = "ui-state-default ui-corner-top";
+                                                document.getElementById("DownloadGamesTab").className = "ui-state-default ui-corner-top ui-tabs-selected ui-state-active";
+            
+                                                document.getElementById("FreeGames").className = "panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom";
+                                                document.getElementById("ClubPogoGames").className = "panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom";
+                                                document.getElementById("DownloadGames").className = "panel preloaded ui-tabs-panel ui-widget-content ui-corner-bottom ui-tabs-hide";
+                                                document.getElementById("FreeGames").style.display = "none";
+                                                document.getElementById("ClubPogoGames").style.display = "none";
+                                                document.getElementById("DownloadGames").style.display = "block";
+                                            }
+                                            return false;
+                                        }
+                                    </script>
+                                    
+                                    <div id="copyright-text-new">
+                                        <img alt="" src="/img/footer/common/us-footer-bottomfade.jpg" width="1000" height="27" border="0" />
+                                    
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        
+                                        <p class="seoText">
+                                            Play <a href="http://www.pogo.com/">FREE online games</a>! Welcome to Pogo.com, a great place to play <a href="http://www.pogo.com/">free online games</a>, including <a href="http://www.pogo.com/puzzle-games">puzzle games</a>, <a href="http://www.pogo.com/word-games">word games</a>, <a href="http://www.pogo.com/card-games">card games</a>, and <a href="http://www.pogo.com/board-games">board games</a>. Unlike other free online games sites, we offer a variety of classic Hasbro board games like <a href="http://www.pogo.com/games/risk">RISK</a>, <a href="http://www.pogo.com/games/yahtzee-party">Yahtzee</a>, <a href="http://www.pogo.com/games/scrabble">Scrabble</a>, and <a href="http://www.pogo.com/games/monopoly">Monopoly</a>. We also have popular games like <a href="http://www.pogo.com/games/online-chess">Chess</a>, <a href="http://www.pogo.com/games/rainy-day-spider-solitaire">Spider Solitaire</a>, <a href="http://www.pogo.com/games/cribbage">Cribbage</a>, and <a href="/games/bej3">Bejeweled</a>.  Make friends and play free online games at Pogo.com!
+                                        </p>
+                                        <p>&copy; 2017 Electronic Arts Inc. Trademarks belong to their respective owners. All rights reserved.</p>
+                                    </div>
+                                
+                                    
+                                        
+
+	
+	
+	
+<iframe width="1" height="1" hspace="0" vspace="0" frameborder="0" scrolling="no" src="http://fls.doubleclick.net/activityi;src=1494613;type=usfoo615;cat=usfoo777;ord=1833371601"></iframe>
+	
+
+                                    
+                                
+                                </div>
+            
+            
+            
+           
+
+	
+
+
+
+
+	<iframe	src="//pogo.ea.com/sso?l="	
+	    style='display: none'> 
+	</iframe>
+
+	
+</div>
+
+
+
+
+
+<div id="modal_overlay"></div>
+
+
+
+
+
+</body>
+</html>

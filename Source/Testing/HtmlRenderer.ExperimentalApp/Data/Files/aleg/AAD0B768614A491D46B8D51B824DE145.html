@@ -1,0 +1,280 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+
+<head>
+
+<title>SQL Server Backup, Integrity Check, Index and Statistics Maintenance</title>
+
+<link rel="StyleSheet" href="/styles/style.css" type="text/css">
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<meta name="Description" content="Award-Winning SQL Server Maintenance Solution for backup, integrity check, index and statistics maintenance in SQL Server 2005, 2008, 2008 R2, 2012, 2014, and 2016">
+
+<meta name="Keywords" content="Sql Server Backup, Sql Server Integrity Check, Sql Server Index Maintenance, Sql Server Statistics Maintenance, Sql Server Maintenance Scripts">
+
+<meta name="Robots" content="Index, Follow, NOODP">
+
+</head>
+
+<body>
+
+<div class="header">
+<a href="/">SQL Server Maintenance Solution</a>
+</div> <!-- header -->
+
+<div id="content">
+
+<div class="menu">
+
+<h2 class="menu_title">Menu</h2>
+<ul class="leftnav">
+<li><a href="/">Home</a></li>
+<li><a href="/sql-server-backup.html">SQL Server Backup</a></li>
+<li><a href="/sql-server-integrity-check.html">SQL Server Integrity Check</a></li>
+<li><a href="/sql-server-index-and-statistics-maintenance.html">SQL Server Index and Statistics Maintenance</a></li>
+<li><a href="/downloads.html">Downloads</a></li>
+<li><a href="/frequently-asked-questions.html">Frequently Asked Questions</a></li>
+<li><a href="/versions.html">Version History</a></li>
+<li><a href="/organizations.html">Organizations that Use the Solution</a></li>
+<li><a href="/newsletter.html">Sign Up for the Newsletter</a></li>
+<li><a href="/license.html">License</a></li>
+<li><a href="/contact.html">Contact</a></li>
+</ul>
+
+<div class="awards">
+<h2 class="menu_title">Awards</h2>
+<a href="http://sqlmag.com/sql-server/2011-sql-server-magazine-editors-best-and-community-choice-awards"><img src="/images/community-choice-2011-gold.jpg" alt="2011 SQL Server Magazine Community Choice"></a>
+<a href="http://sqlmag.com/sql-server/2011-sql-server-magazine-editors-best-and-community-choice-awards"><img src="/images/editors-best-2011-silver.jpg" alt="2011 SQL Server Magazine Editors' Best"></a>
+<a href="https://mvp.microsoft.com/en-us/PublicProfile/5000459" rel="nofollow"><img src="/images/mvp.png" alt="Microsoft Most Valuable Professional"></a>
+</div> <!-- awards -->
+
+<div class="sponsors">
+<h2 class="menu_title">Sponsors</h2>
+<a href="http://www.red-gate.com/products/dba/sql-monitor/resources/articles/monitor-sql-server-io?utm_source=ola&amp;utm_medium=displayad&amp;utm_content=bottleneck&amp;utm_campaign=sqlmonitor&amp;utm_term=buttonad-25738"><img src="/images/redgate-sql-monitor-disk-io-bottlenecks.gif" alt="Redgate - SQL Monitor"></a>
+<a href="https://www.sqlskills.com/services/?utm_source=ola&amp;utm_medium=blog&amp;utm_campaign=maintscripts" rel="nofollow"><img src="/images/sql-skills.jpg" alt="SQLskills"></a>
+</div> <!-- sponsors -->
+
+</div> <!-- menu -->
+
+<div class="main">
+
+<h1>SQL Server Backup, Integrity Check, and Index and Statistics Maintenance</h1>
+
+<p>The SQL Server Maintenance Solution comprises scripts for running backups, integrity checks, and index and statistics maintenance on all editions of Microsoft SQL Server 2005, SQL Server 2008, SQL Server 2008 R2, SQL Server 2012, SQL Server 2014, and SQL Server 2016. The solution is based on stored procedures, the sqlcmd utility, and SQL Server Agent jobs. I designed the solution for the most mission-critical environments, and it is used in many <a href="/organizations.html">organizations</a> around the world. The SQL Server Maintenance Solution has been voted as Best Free Tool in the <a href="http://sqlmag.com/sql-server/best-free-sql-server-tool-2013">2013</a>, <a href="http://sqlmag.com/sql-server/2012-sql-server-pro-editors-best-and-community-choice-awards">2012</a>, <a href="http://sqlmag.com/sql-server/2011-sql-server-magazine-editors-best-and-community-choice-awards">2011</a>, and <a href="http://sqlmag.com/sql-server/2010-sql-server-magazine-editors-best-and-community-choice-awards">2010</a> SQL Server Magazine Awards, and a top session at <a href="https://www.youtube.com/watch?v=4gt8NOggkJk&amp;feature=youtu.be">PASS Summit 2014</a>. The SQL Server Maintenance Solution is <a href="/license.html">free</a>.
+
+<div class="testimonials">
+
+<p><span class="italic">“Personally, I’d recommend that you stop using Database Maintenance Plans entirely, and switch to a much more robust maintenance implementation using TSQL scripts. A free set of scripts that I recommend to all of my consulting clients can be found on Ola Hallengren’s blog: http://ola.hallengren.com.”</span> - <a href="http://social.msdn.microsoft.com/Forums/en-US/sqldatabaseengine/thread/47691f83-3904-4859-9f94-28d7416726e2">Jonathan Kehayias</a></p>
+
+</div> <!-- testimonials -->
+
+<h2>Getting Started</h2>
+
+<p>Download <a href="/scripts/MaintenanceSolution.sql" rel="nofollow">MaintenanceSolution.sql</a>. This script creates all the objects and jobs that you need.</p>
+
+<p>Learn more about using the SQL Server Maintenance Solution:</p>
+
+<ul>
+<li><a href="/sql-server-backup.html">DatabaseBackup</a>: SQL Server Backup</li>
+<li><a href="/sql-server-integrity-check.html">DatabaseIntegrityCheck</a>: SQL Server Integrity Check</li>
+<li><a href="/sql-server-index-and-statistics-maintenance.html">IndexOptimize</a>: SQL Server Index and Statistics Maintenance</li>
+</ul>
+
+<p>Sign up for the <a href="/newsletter.html">newsletter</a> to be alerted about updates to the solution.</p>
+
+<h2>Working with Availability Groups</h2>
+
+<p>One of the most requested features for a long time has been the ability to select availability groups. I have added this now. Here is how it works:</p>
+
+<p>EXECUTE dbo.DatabaseBackup<br>
+@AvailabilityGroups = 'AG1',<br>
+@Directory = 'C:\Backup',<br>
+@BackupType = 'FULL'</p>
+
+<p>EXECUTE dbo.DatabaseBackup<br>
+@AvailabilityGroups = 'AG1, AG2',<br>
+@Directory = 'C:\Backup',<br>
+@BackupType = 'FULL'</p>
+
+<p>EXECUTE dbo.DatabaseBackup<br>
+@AvailabilityGroups = 'ALL_AVAILABILITY_GROUPS, -AG1',<br>
+@Directory = 'C:\Backup',<br>
+@BackupType = 'FULL'</p>
+
+<p>Now what if you want to select all user databases that are not in availability groups? For this scenario I have added a new keyword in the @Databases parameter.</p>
+
+<p>EXECUTE dbo.DatabaseBackup<br>
+@Databases = 'USER_DATABASES, -AVAILABILITY_GROUP_DATABASES',<br>
+@Directory = 'C:\Backup',<br>
+@BackupType = 'FULL'</p>
+
+It works the same way in DatabaseBackup, DatabaseIntegrityCheck, and IndexOptimize.
+
+<h2>Backup to Azure Blob Storage</h2>
+
+<p>You can now use the SQL Server Maintenance Solution to back up to Azure Blob Storage. Here is how it works:</p>
+
+<p>EXECUTE dbo.DatabaseBackup @Databases = 'USER_DATABASES',<br>
+@URL = 'https://myaccount.blob.core.windows.net/mycontainer',<br>
+@Credential = 'mycredential',<br>
+@BackupType = 'FULL',<br>
+@Compress = 'Y',<br>
+@Verify = 'Y'</p>
+
+<p>You can also encrypt the backups. Then you do like this:</p>
+
+<p>EXECUTE dbo.DatabaseBackup @Databases = 'USER_DATABASES',<br>
+@URL = 'https://myaccount.blob.core.windows.net/mycontainer',<br>
+@Credential = 'MyCredential',<br>
+@BackupType = 'FULL',<br>
+@Compress = 'Y',<br>
+@Encrypt = 'Y',<br>
+@EncryptionAlgorithm = 'AES_256',<br>
+@ServerCertificate = 'MyCertificate',<br>
+@Verify = 'Y'</p>
+
+<h2>Mirrored Backup</h2>
+
+<p>You can mirrored the backup. You can combine it with striping of backups, and also specify a separate cleanup time for the mirror. Here is how it works:</p>
+
+<p>EXECUTE dbo.DatabaseBackup @Databases = 'USER_DATABASES',<br>
+@Directory = 'C:\Backup',<br>
+@MirrorDirectory = 'D:\Backup',<br>
+@BackupType = 'FULL',<br>
+@Compress = 'Y',<br>
+@Verify = 'Y',<br>
+@CleanupTime = 24,<br>
+@MirrorCleanupTime = 48</p>
+
+<h2>SQL Server 2014</h2>
+
+<p>I have added support for backup encryption, lock priorities for online index rebuilds, online index rebuilds of partitions, and updating of statistics on memory-optimized tables in SQL Server 2014.</p>
+
+<p>Here is how you can back up a database using encryption:</p>
+
+<p>EXECUTE dbo.DatabaseBackup @Databases = 'USER_DATABASES',<br>
+@Directory = 'C:\Backup',<br>
+@BackupType = 'FULL',<br>
+@Compress = 'Y',<br>
+@Encrypt = 'Y',<br>
+@EncryptionAlgorithm = 'AES_256',<br>
+@ServerCertificate = 'MyCertificate'</p>
+
+<p>Here is how you can rebuild indexes online using low priority locks:</p>
+
+<p>EXECUTE dbo.IndexOptimize @Databases = 'USER_DATABASES',<br>
+@FragmentationLow = NULL,<br>
+@FragmentationMedium = 'INDEX_REORGANIZE,INDEX_REBUILD_ONLINE,INDEX_REBUILD_OFFLINE',<br>
+@FragmentationHigh = 'INDEX_REBUILD_ONLINE,INDEX_REBUILD_OFFLINE',<br>
+@FragmentationLevel1 = 5,<br>
+@FragmentationLevel2 = 30,<br>
+@WaitAtLowPriorityMaxDuration = 1,<br>
+@WaitAtLowPriorityAbortAfterWait = 'NONE'</p>
+
+<p>Partitions will be rebuilt online by default.</p>
+
+<h2>Intelligent Index Maintenance</h2>
+
+<p>The SQL Server Maintenance Solution lets you intelligently rebuild or reorganize only the indexes that are fragmented. In the <a href="/sql-server-index-and-statistics-maintenance.html">IndexOptimize</a> procedure, you can define a preferred index maintenance operation for each fragmentation group. Take a look at this code:</p>
+
+<p>EXECUTE dbo.IndexOptimize @Databases = 'USER_DATABASES',<br>
+@FragmentationLow = NULL,<br>
+@FragmentationMedium = 'INDEX_REORGANIZE,INDEX_REBUILD_ONLINE,INDEX_REBUILD_OFFLINE',<br>
+@FragmentationHigh = 'INDEX_REBUILD_ONLINE,INDEX_REBUILD_OFFLINE',<br>
+@FragmentationLevel1 = 5,<br>
+@FragmentationLevel2 = 30</p>
+
+<p>In this example, indexes that have a high fragmentation level will be rebuilt, online if possible. Indexes that have a medium fragmentation level will be reorganized. Indexes that have a low fragmentation level will remain untouched.</p>
+
+<h2>Update Statistics</h2>
+
+<p>The <a href="/sql-server-index-and-statistics-maintenance.html">IndexOptimize</a> procedure can also be used to update statistics. You can choose to update all statistics, statistics on indexes only, or statistics on columns only. You can also choose to update the statistics only if any rows have been modified since the most recent statistics update.</p>
+
+<p>EXECUTE dbo.IndexOptimize @Databases = 'USER_DATABASES',<br>
+@FragmentationLow = NULL,<br>
+@FragmentationMedium = 'INDEX_REORGANIZE,INDEX_REBUILD_ONLINE,INDEX_REBUILD_OFFLINE',<br>
+@FragmentationHigh = 'INDEX_REBUILD_ONLINE,INDEX_REBUILD_OFFLINE',<br>
+@FragmentationLevel1 = 5,<br>
+@FragmentationLevel2 = 30,<br>
+@UpdateStatistics = 'ALL',<br>
+@OnlyModifiedStatistics = 'Y'</p>
+
+<h2>Solve “No Current Database” Issues</h2>
+
+<p>Most DBAs have experienced the error message “BACKUP LOG cannot be performed because there is no current database backup” or “Cannot perform a differential backup for database, because a current database backup does not exist”. These errors usually occur when you have created a new database or changed the database recovery model from Simple to Full. The answer is to determine, before you run the backup, whether a differential or transaction log backup can be performed. You can use the <a href="/sql-server-backup.html">DatabaseBackup</a> procedure’s @ChangeBackupType option to change the backup type dynamically if a differential or transaction log backup cannot be performed.</p>
+
+<p>Here’s an example of how to use the @ChangeBackupType option:</p>
+
+<p>EXECUTE dbo.DatabaseBackup<br>
+@Databases = 'USER_DATABASES',<br>
+@Directory = 'C:\Backup',<br>
+@BackupType = 'LOG',<br>
+@Verify = 'Y',<br>
+@ChangeBackupType = 'Y',<br>
+@CleanupTime = 24</p>
+
+<h2>Back up to Multiple Files</h2>
+
+<p>Databases are becoming larger and larger. You can tune the performance of SQL Server backup compression, by using multiple backup files, and the BUFFERCOUNT and MAXTRANSFERSIZE options. The <a href="/sql-server-backup.html">DatabaseBackup</a> procedure supports these options:</p>
+
+<p>EXECUTE dbo.DatabaseBackup<br>
+@Databases = 'USER_DATABASES',<br>
+@Directory = 'C:\Backup, D:\Backup, E:\Backup, F:\Backup',<br>
+@BackupType = 'FULL',<br>
+@Compress = 'Y',<br>
+@BufferCount = 50,<br>
+@MaxTransferSize = 4194304,<br>
+@NumberOfFiles = 4,<br>
+@CleanupTime = 24</p>
+
+<h2>Run Integrity Checks of Very Large Databases</h2>
+
+<p>The SQL Server Maintenance Solution has been designed to do integrity checks of very large databases. In the <a href="/sql-server-integrity-check.html">DatabaseIntegrityCheck</a> procedure you can choose do the checks on the database level, the filegroup level, or the table level. It also supports limiting the checks to the physical structures of the database:</p>
+
+<p>EXECUTE dbo.DatabaseIntegrityCheck<br>
+@Databases = 'USER_DATABASES',<br>
+@CheckCommands = 'CHECKDB',<br>
+@PhysicalOnly = 'Y'</p>
+
+<h2>SQL Server Community Awards</h2>
+
+<p>For the past four years, the SQL Server Maintenance Solution has been voted as Best Free Tool in the SQL Server Magazine Awards:</p>
+
+<ul>
+<li>2014 - 2017 Microsoft <a href="http://mvp.microsoft.com/en-us/MVP/Ola%20Hallengren-5000459">Most Valuable Professional</a> (MVP) - Data Platform</li>
+<li>2014 Simple-Talk and SQL Server Central <a href="https://www.simple-talk.com/blogs/victors-of-the-tribal-awards/">Tribal Awards</a>: Best Free Script</li>
+<li>2013 SQL Server Magazine <a href="http://sqlmag.com/sql-server/best-free-sql-server-tool-2013">Community Choice</a>: Best Free Tool, Gold award</li>
+<li>2012 SQL Server Magazine <a href="http://sqlmag.com/sql-server/2012-sql-server-pro-editors-best-and-community-choice-awards">Community Choice</a>: Best Free Tool, Gold award</li>
+<li>2011 SQL Server Magazine <a href="http://sqlmag.com/sql-server/2011-sql-server-magazine-editors-best-and-community-choice-awards">Editors’ Best</a>: Best Free Tool, Silver award</li>
+<li>2011 SQL Server Magazine <a href="http://sqlmag.com/sql-server/2011-sql-server-magazine-editors-best-and-community-choice-awards">Community Choice</a>: Best Free Tool, Gold award<br><span class="italic">“Hands down, one of the best tools out there! If you’re responsible for a database, you should be using Ola’s scripts. It’s very comprehensive, is efficient with resources, has numerous options, and is a brilliant piece of SQL coding!”</span></li>
+<li>2010 SQL Server Magazine <a href="http://sqlmag.com/sql-server/2010-sql-server-magazine-editors-best-and-community-choice-awards">Editors’ Best</a>: Best Free Tool, Bronze award</li>
+<li>2010 SQL Server Magazine <a href="http://sqlmag.com/sql-server/2010-sql-server-magazine-editors-best-and-community-choice-awards">Community Choice</a>: Best Free Tool, Gold award</li>
+</ul>
+
+<h2>The Solution in the News and on the Web</h2>
+
+<p>I had a session about the SQL Server Maintenance Solution on <a href="https://www.youtube.com/watch?v=4gt8NOggkJk&amp;feature=youtu.be">PASS Summit</a> in November 2014 (<a href="/[DBA-309]_Ola_Hallengren_PASS_Summit_2014.pdf">PDF version</a> and <a href="/[DBA-309]_Ola_Hallengren_PASS_Summit_2014.zip">demo scripts</a>).</p>
+
+<p>SQL PASS had a session about the SQL Server Maintenance Solution during the <a href="http://www.pass.org/24hours/fall2010/Home/AutomateYourDatabaseMaintenanceUsingOlaHalle.aspx">24 Hours of PASS</a> 2010 online conference.</p>
+
+<p><a href="https://www.simple-talk.com/sql/database-administration/automate-and-improve-your-database-maintenance-using-ola-hallengrens-free-script/">SimpleTalk</a> featured an article about the SQL Server Maintenance Solution in July 2010.</p>
+
+<p><a href="http://www.sqlmag.com/article/tsql3/three-in-one-database-maintenance-solution">SQL Server Magazine</a> featured an article about the SQL Server Maintenance Solution in its November 2008 issue (<a href="/sql-server-magazine.pdf">PDF version</a>).</p>
+
+<p>The SQL Server Maintenance Solution is available on <a href="https://github.com/olahallengren/sql-server-maintenance-solution" rel="">GitHub</a>.</p>
+
+<p>Feel free to <a href="/contact.html">contact</a> me if you have any questions. Thank you for trying out the solution.</p>
+
+</div> <!-- main -->
+
+</div> <!-- content -->
+
+<div class="footer">
+© 2017 Ola Hallengren | E-mail: <a href="mailto:ola@hallengren.com">ola@hallengren.com</a> | Sweden
+</div> <!-- footer -->
+
+</body>
+
+</html>

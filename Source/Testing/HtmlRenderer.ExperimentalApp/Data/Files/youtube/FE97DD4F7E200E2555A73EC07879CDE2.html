@@ -1,0 +1,808 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-control" content="no-cache">
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="content-language" content="en-us" /><script src="js/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="http://s7.addthis.com/js/200/addthis_widget.js"></script>
+<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+<script type="text/javascript" src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<script type="text/javascript" src="fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+<script src="js/global.js" type="text/javascript"></script>
+<link href="stylesheet.css" type="text/css" rel="stylesheet" />
+<title>Online Video Converter. 100% FREE!</title>
+<meta name="description" content="Check out a FREE Online Video Converter. Convert any audio / video to Gif, Mp3, Avi, iPod, iPhone, iPad, Android, Windows Media Player and other formats." />
+
+<script type="text/javascript">
+	var session = "1499866148-17";
+	var sess = "";
+	var language = "en";
+	var subsession = 0;
+	var ready_percent = 0;
+	var interval = 1000;
+	var error_finish = false;
+	var success_finish = false;
+	var format = "";
+	var video_title = "";
+	var click_time = 0;
+	var canceled = false;
+	var q_format = "";
+	var can_free_convert = 1;
+
+	$(document).ready(function() {
+	  $('a').focus( function() { $(this).blur(); } );
+	});
+
+
+	function ShowLimitProtection()
+	{
+		$("#protection-trigger").fancybox(
+		{
+			'overlayColor': '#000000',
+			'overlayOpacity': 0.85,
+			'scrolling': 'no',
+			'width': 'auto',
+			'height': 'auto'
+		});
+
+		$("#protection-trigger").trigger('click');
+		$.fancybox.resize();
+
+		return false;
+	}
+
+	function Clean()
+	{
+		ready_percent = 0;
+		error_finish = false;
+		success_finish = false;
+		format = "";
+		video_title = "";
+		canceled = false;
+
+		$('#progeess-line').css( { width: '0%' } );
+		$('#percent').html( '0%' );
+		$('#file-upload-ifr').contents().find('body').html("");
+	}
+
+	function GenerateSession()
+	{
+		sess = session + Math.floor( 10000 + Math.random() * 90000 );
+	}
+
+	function OnFileConvertClick()
+	{
+		return false;
+
+		if( !can_free_convert )
+		{
+			ShowLimitProtection();
+			return false;
+		}
+
+		if( !$('#agree-checkbox').attr('checked') )
+		{
+			alert( 'Please indicate your agreement with the Terms of Use' );
+			return false;
+		}
+
+		if( ( GetCurrentTime() - click_time ) < 500 ) return false;
+	 	click_time = GetCurrentTime();
+
+	 	Clean();
+
+		var f = "mp4";
+
+		if( $('#f_mp3').is(':checked') ) f = 'mp3';
+		if( $('#f_wav').is(':checked') ) f = 'wav';
+		if( $('#f_ogg').is(':checked') ) f = 'ogg';
+		if( $('#f_avi').is(':checked') ) f = 'avi';
+		if( $('#f_gif').is(':checked') ) f = 'gif';
+		if( $('#f_mov').is(':checked') ) f = 'mov';
+		if( $('#f_wmv').is(':checked') ) f = 'wmv';
+		if( $('#f_mp4').is(':checked') ) f = 'mp4';
+		if( $('#f_3gp').is(':checked') ) f = '3gp';
+		if( $('#f_mpg').is(':checked') ) f = 'mpg';
+		if( $('#f_flv').is(':checked') ) f = 'flv';
+		if( $('#f_jpeg2').is(':checked') ) f = 'jpeg2';
+		if( $('#f_jpeg5').is(':checked') ) f = 'jpeg5';
+
+		if( $('#file-name').val().length == 0 )
+		{
+			alert('Select file to convert');
+			return false;
+		}
+
+		var convert_func = "StartFileConvert('" + f + "')";
+		setTimeout( convert_func, 100 );
+	}
+
+	function StartFileConvert( convert_format )
+	{
+		$('#processing-status').removeClass("iscomplete");
+		$('#processing-status').removeClass("iserror");
+		$('#processing-status').addClass("isprogress");
+
+		$('#convert-form').hide();
+		$('#h2ads-form').hide();
+	//	$('#top-info-form').hide();
+		$('#convert-progress-form').show();
+
+		$('body,html').animate({scrollTop: 0}, 400);
+
+		GenerateSession();
+
+		format = convert_format;
+
+		$('#UPLOAD_IDENTIFIER').val( sess );
+		$('#file-upload-session').val( sess );
+		$('#file-upload-convert_format').val( format );
+		$('#file-upload-language').val( language );
+
+		$('#file-upload-submit').submit();
+
+		CheckStatus();
+
+	  	return false;
+	}
+
+	function CheckStatus()
+	{
+		if( error_finish || success_finish || canceled ) return false;
+
+		var content = $('#file-upload-ifr').contents().find('body').html();
+		content = trim( content );
+		if( content.length > 1 )
+		{
+			OnConvertComplete( content, null );
+			return false;
+		}
+
+		var status_data =
+			'session=' + sess +
+			'&language=' + language +
+			'&subsession=' + subsession;
+
+		$.ajax({
+		  type: 'GET',
+		  url: 'get_status.php',
+		  dataType: 'text',
+		  data: status_data,
+		  cache: false,
+		  success: OnStatus,
+		  error: function( XMLHttpRequest, textStatus )
+		  {
+			  setTimeout( 'CheckStatus()', interval );
+		  }
+		});
+
+		subsession++;
+
+		return false;
+	}
+
+	function OnStatus( data, textStatus )
+	{
+		if( error_finish || success_finish || canceled ) return false;
+
+		data = trim( data );
+
+		var result = data.split('|');
+		var message = result[0];
+
+		if( message == "UPLOAD_FILESIZE_LIMIT" )
+		{
+			Cancel( 'The size of the file exceeds 100 Mb<br>You must register to convert larger files<br><a href="#sign-up" oncontextmenu="SignupClick(); return false;" onclick="SignupClick(); return false;">Click here to register</a>' );
+			return false;
+		}
+
+		if( message == "INCORRECT_FORMAT" )
+		{
+			Cancel( 'The file format is not supported' );
+			return false;
+		}
+
+		if( result[1] > 0 && result[1] <= 100 )
+			ready_percent = result[1];
+
+		$('#progeess-line').css( { width: ready_percent + '%' } );
+		$('#percent').html( ready_percent + '%' );
+
+		if( message != '' )
+			$('#progress-status').text( message );
+
+		setTimeout( 'CheckStatus()', interval );
+
+		return false;
+	}
+
+	function OnConvertComplete( data, textStatus )
+	{
+		if( error_finish || success_finish || canceled ) return false;
+
+		var result;
+		var error_message = '';
+		var download_url = '';
+		var download_size = 0;
+
+		data = trim( data );
+		result = data.split('|');
+
+		download_url = htmlspecialchars_decode( result[0] );
+		error_message = result[2];
+		download_size = parseInt(result[1]/1024);
+
+		if( error_message == 'None' )
+		{
+			success_finish = true;
+
+			$('#progeess-line').css( { width: '100%' } );
+			$('#percent').html( '100%' );
+
+			if( format == "gif" )
+			{
+				document.location = download_url;
+				return false;
+			}
+			else
+			{
+				download_url = download_url.replace( "download.php", "downloader.php" );
+				document.location = download_url;
+				return false;
+			}
+/*
+			$('#processing-status').removeClass("iserror");
+			$('#processing-status').removeClass("isprogress");
+			$('#processing-status').addClass("iscomplete");
+
+			$('#download-size').html( '(File size: ' + download_size + ' Kb)' );
+			$('#download-button').attr("href", download_url);
+*/
+		}
+		else
+		if( error_message == 'free_limit' )
+		{
+			ShowLimitProtection();
+		}
+		else
+		{
+			ConvertError( error_message );
+		}
+
+		return false;
+	}
+
+	function ConvertError( error_message )
+	{
+		error_finish = true;
+
+		$('#error-text').html( error_message );
+		$('#processing-status').removeClass("iscomplete");
+		$('#processing-status').removeClass("isprogress");
+		$('#processing-status').addClass("iserror");
+
+		return false;
+	}
+
+	function Cancel( error )
+	{
+		if( canceled ) return false;
+
+		$('#file-upload-ifr').attr('src', "blank.html");
+
+		if( error == "" )
+		{
+			ConvertError( "Conversion canceled" );
+		}
+		else
+		{
+			ConvertError( error );
+		}
+
+		var cancel_data = 'session=' + sess;
+
+		$.ajax({
+		  type: 'GET',
+		  url: 'cancel.php',
+		  dataType: 'text',
+		  data: cancel_data,
+		  cache: false
+		});
+
+		canceled = true;
+
+		return false;
+	}
+
+</script>
+
+	<script type="text/javascript">
+	var password = "";
+	var domain = ".benderconverter.com";
+	var menu_class = "current";
+
+	function LangMenuClick()
+	{
+		$('#lang-menu').removeClass(menu_class);
+		if( menu_class == "current" )
+		{
+			$('#lang-menu').addClass("expanded");
+			menu_class = "expanded";
+		}
+		else
+		{
+			$('#lang-menu').addClass("current");
+			menu_class = "current";
+		}
+	}
+
+	function LoginClick()
+	{
+		var result = false;
+
+		if( password != "" )
+		{
+			location.replace("premium.php");
+			return false;
+		}
+
+		$('#password-loading').show();
+
+		$("#password-submit").prop('disabled', true);
+		$("#password").prop('disabled', true);
+
+		setCookie( "password", trim( $('#password').val() ), 180, "/", domain );
+
+		if( !CheckPassword() )
+		{
+			setCookie( "password", 1, 0, "/", domain );
+			password = "";
+		    result = false;
+
+			ShowLoginErrorForm();
+		}
+		else
+		{
+			password = trim( $('#password').val() );
+			$.fancybox.close();
+			result = true;
+		}
+		$("#password-submit").prop('disabled', false);
+		$("#password").prop('disabled', false);
+
+		if( result )
+			setTimeout( 'location.replace("premium.php")', 400 );
+		else
+			$('#password-loading').hide();
+
+		return false;
+	}
+
+	function SignupClick()
+	{
+		ShowSignupForm();
+		return false;
+	}
+
+	function SignoutClick()
+	{
+		password = "";
+		setCookie( "password", 1, 0, "/", domain );
+		location.replace("/");
+
+		return false;
+	}
+
+	function CheckPassword()
+	{
+		password = trim( getCookie( "password" ) );
+
+		if( !password || password == "" ) return false;
+
+		var check_result = false;
+		var rand = Math.floor( 100000000 + Math.random() * 900000000 );
+
+		$.ajax({
+		  type: 'POST',
+		  url: 'login.php',
+		  dataType: 'text',
+		  async: false,
+		  cache: false,
+		  data: {
+			password: password,
+			rand: rand
+		  },
+		  success: function( data )
+		  {
+			  data = trim( data );
+			  if( data == "Ok" ) check_result = true;
+		  },
+		  error: function( XMLHttpRequest, textStatus )
+		  {
+		  }
+		});
+
+		return check_result;
+	}
+
+	function ShowSignupForm()
+	{
+		$("#regclosed-trigger").fancybox(
+		{
+			'overlayColor': '#000000',
+			'overlayOpacity': 0.85,
+			'scrolling': 'no',
+			'width': 'auto',
+			'height': 'auto'
+		});
+
+		$("#regclosed-trigger").trigger('click');
+		$.fancybox.resize();
+
+		return false;
+	}
+
+
+	function ShowLoginErrorForm()
+	{
+		$("#loginerror-trigger").fancybox(
+		{
+			'overlayColor': '#000000',
+			'overlayOpacity': 0.85,
+			'scrolling': 'no',
+			'width': 'auto',
+			'height': 'auto'
+		});
+
+		$("#loginerror-trigger").trigger('click');
+		$.fancybox.resize();
+
+		return false;
+	}
+
+	</script>
+
+</head>
+
+<body id="bg">
+
+
+
+<div id="header">
+	<div class="container">
+		<a href="/"><img src="images/logo.png" alt="Online Video Converter" id="logo" /></a>
+		<strong class="slogan">Free online video converter</strong>
+
+		<div id="topmenu">
+			<ul>
+				<li class="m1"><a href="/" >Converter</a></li>
+
+				<li class="m2"><a href="terms.php" >Terms of Use</a></li>
+				<li class="m3"><a href="faq.php" >FAQ</a></li>
+				<li class="m4"><a href="contact.php" >Contact</a></li>
+				<li class="m5"><a href="http://www.addthis.com/bookmark.php?v=20"  rel="nofollow" onmouseover="return addthis_open(this, '', 'http://benderconverter.com/', 'Bender Converter')" onmouseout="addthis_close()" onclick="return addthis_sendto()">Bookmark</a></li>
+
+				<li class="m6"><a href="#sign-up"  oncontextmenu="SignupClick(); return false;" onclick="SignupClick(); return false;">Premium</a></li>
+
+			</ul>
+		</div>
+
+		<div id="langselector">
+			<span class="label">Choose your language:</span><div id="lang-menu" class="current">
+				<img class="image" src="images/lang-en.gif" alt="" />&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://benderconverter.com" onclick="LangMenuClick(); return false;">English</a>
+				<div class="clear">
+				</div>
+				<img class="image" src="images/lang-jp.gif" alt="" />&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://jp.benderconverter.com" onclick='setCookie( "Language", "jp", 180, "/", ".benderconverter.com" ); return true;'>日本語</a>
+				<div class="clear">
+				</div>
+				<img class="image" src="images/lang-ru.gif" alt="" />&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://ru.benderconverter.com" onclick='setCookie( "Language", "ru", 180, "/", ".benderconverter.com" ); return true;'>Русский</a>
+				<div class="clear">
+				</div>
+				<a id="rolldown" href="#" onclick="LangMenuClick(); return false;"></a>
+				<div class="endbg"></div>
+				</div>
+		</div>
+
+		<div id="authform">
+			<div class="endbg">
+				<span class="label">Enter your password:</span>
+
+				<div class="label" style="margin-left: -20px; display: none;" id="password-loading"><img src="images/loader.gif"></div>
+
+				<input type="text" id="password" class="input" name="" onkeypress="if(13==event.keyCode) { LoginClick(); return false; }" />
+				<input type="submit" id="password-submit" class="button" value="" onclick="javascript:LoginClick(); return false;" oncontextmenu="SignupClick(); return false;"/>
+				<a href="#sign-up" oncontextmenu="SignupClick(); return false;" onclick="SignupClick(); return false;" id="register-now">REGISTER</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="container" style="margin-top: -15px">
+	<div class="padder" id="top-info-form">
+		<h1>Online Video Converter</h1>
+		<p>Here you can convert video and audio files uploaded from your computer. Our converter supports the following formats: MP3, Avi, Mpeg, Flash video, iPod / iPhone, iPad, Gif, Jpeg and other popular formats.</p>
+	</div>
+
+	<div class="rounded-block">
+		<div class="sidebar">
+			<div class="legend">
+				SPREAD THE WORD			</div>
+			<div class="fieldset socials">
+				<!-- AddThis Button BEGIN -->
+				<div class="addthis_toolbox addthis_default_style ">
+				<a class="addthis_button_preferred_1"></a>
+				<a class="addthis_button_preferred_2"></a>
+				<a class="addthis_button_preferred_3"></a>
+				<a class="addthis_button_preferred_4"></a>
+				<a class="addthis_button_compact"></a>
+				<a class="addthis_counter addthis_bubble_style"></a>
+				</div>
+				<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4f5c812b39de3853"></script>
+				<!-- AddThis Button END -->
+
+				<br>
+
+                <g:plusone href="http://benderconverter.com/"></g:plusone>
+			</div>
+			<!-- -->
+			<!-- -->
+			<div class="legend">WHAT IS THIS?</div>
+			<div class="fieldset textblock">
+				<p>Bender Converter is an easy-to-use online application for converting audio and video files. You can <a href="/">convert video</a> and audio to MP3, AVI, FLV Flash, iPod / iPhone / iPad and other popular formats. The service is fast and does not require registration.</p>
+			</div>
+
+
+	<div class="legend">RECOMMENDED</div>
+	<div class="fieldset textblock">
+		<p><b>Updated: July 12, 2017</b><br/><br/>Looking for a cheap web hosting from a reliable service provider? Check it out - <a href="https://inexpensivewebhosting.reviews">affordable web hosting reviews at inexpensivewebhosting.reviews</a>.</p>
+		<br/>
+		<p><a href="https://docs.zone">Docs.Zone</a> is a free <a href="https://docs.zone">online PDF converter</a> for personal & business use. It makes PDF converting task incredibly easy and fast.</p>
+		<br/>
+		<p><a href="https://cloudbackuprobot.com">Cloud Backup Robot</a> is an excellent tool for <a href="https://cloudbackuprobot.com/sql-server-backup/">backing up SQL Server</a> and files. Cloud Backup Robot can make scheduled backups and save them to Dropbox, Google Drive, Amazon S3, local/network folder and FTP.</p>
+	</div>
+
+
+			<!-- -->
+		</div>
+
+		<div class="content">
+
+			<h2>Convert by upload</h2>
+
+
+			<div id="convert-form">
+			<div class="legend">STEP 1: SELECT THE FILE TO BE CONVERTED</div>
+			<div class="fieldset firstform">
+				<form target="file-upload-ifr" action="convert.php" enctype="multipart/form-data" method="post" id="file-upload-submit" accept-charset="UTF-8">
+					<input type="hidden" name="UPLOAD_IDENTIFIER" id="UPLOAD_IDENTIFIER" value="UPLOAD_IDENTIFIER" />
+
+					<div id="fileupload">
+
+						<input class="input" disabled="disabled" type="text" id="file-name" value=""/>
+
+						<input type="hidden" name="upload-convert" value="upload-convert" />
+						<input type="hidden" id="file-upload-session" name="session" value="session" />
+						<input type="hidden" id="file-upload-convert_format" name="convert_format" value="convert_format" />
+						<input type="hidden" id="file-upload-language" name="language" value="en" />
+
+						<input type="submit" value="Upload File" style="display: none;" />
+
+						<div id="browsefile" style="width:85px; height:27px; overflow: hidden;">
+							BROWSE							<div style="filter:alpha(opacity=0); opacity: 0.0; z-index: 2; position: absolute; padding: 0px; border: none; right: 0px; margin-top: -40px;">
+							<input type="file" id="file-input" name="uploaded-file" onclick="$('#file-name').val('');" onchange="$('#file-name').val(this.value);" onmouseout="$('#file-name').val(this.value);" style="font-size:50px; cursor: pointer; cursor: hand;"/>
+							</div>
+						</div>
+					</div>
+				</form>
+				<p class="taright">(up to 100Mb - <a href="#sign-up" style="color: #3c7895;" oncontextmenu="SignupClick(); return false;" onclick="SignupClick(); return false;">want more</a> ?)</p>
+			</div>
+			<!-- -->
+
+			<div class="legend">STEP 2: SELECT THE FORMAT YOU WOULD LIKE TO GET</div>
+			<div class="fieldset secondform">
+				<div class="col1">
+					<div class="group-heading">
+						<span class="audio">Audio</span><div>
+						</div>
+					</div>
+					<div class="clear">
+					</div>
+
+					<p class="lined"><input class="radio" type="radio" name="fformat" id="f_mp3" checked = "checked" /><label class="label" for="f_mp3">MP3 Audio <span>.mp3</span></label></p>
+
+					<p class="lined"><input class="radio" type="radio" name="fformat" id="f_wav" /><label class="label" for="f_wav">Waveform Audio <span>.wav</span></label></p>
+
+					<p><input class="radio" type="radio" name="fformat" id="f_ogg" /><label class="label" for="f_ogg">Ogg Vorbis <span>.ogg</span></label></p>
+
+					<!-- -->
+					<div class="clear">
+					</div>
+					<div class="group-heading">
+						<span class="other">Other</span><div>
+						</div>
+					</div>
+					<div class="clear">
+					</div>
+
+					<p class="lined"><input class="radio" type="radio" name="fformat" id="f_jpeg2" /><label class="label" for="f_jpeg2">Pics (2 frames / sec) <span>.jpg</span></label></p>
+
+					<p class="lined"><input class="radio" type="radio" name="fformat" id="f_jpeg5" /><label class="label" for="f_jpeg5">Pics (5 frames / sec) <span>.jpg</span></label></p>
+
+					<p><input class="radio" type="radio" name="fformat" id="f_gif" /><label class="label" for="f_gif">Gif Animation <span>.gif</span></label></p>
+				</div>
+				<div class="col2">
+					<div class="group-heading">
+						<span class="video">Video</span><div>
+						</div>
+					</div>
+					<!-- -->
+					<div class="clear">
+					</div>
+					<div class="col1">
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="f_avi" /><label class="label" for="f_avi">AVI Video <span>.avi</span></label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="f_mov" /><label class="label" for="f_mov">QuickTime Video <span>.mov</span></label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="f_flv" /><label class="label" for="f_flv">Flash Video <span>.flv</span></label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="f_3gp" /><label class="label" for="f_3gp">Video for Phone <span>.3gp</span></label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="f_mpg" /><label class="label" for="f_mpg">MPEG Video <span>.mpg</span></label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="f_wmv" /><label class="label" for="f_wmv">Windows Media Video <span>.wmv</span></label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="f_mp4" /><label class="label" for="f_mp4">MPEG-4 Video<span>.mp4</span></label></p>
+
+						<p><input class="radio" type="radio" name="fformat" id="ff_blackberry"/><label class="label" for="ff_blackberry">Blackberry Video</label></p>
+					</div>
+
+					<div class="col2">
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="ff_iphone" /><label class="label" for="ff_iphone">iPhone/iPod Video</label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="ff_ipad" /><label class="label" for="ff_ipad">iPad Video</label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="ff_android" /><label class="label" for="ff_android">Android Video</label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="ff_ps3" /><label class="label" for="ff_ps3">PS3 Video</label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="ff_psp" /><label class="label" for="ff_psp">PSP Video</label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="ff_xbox" /><label class="label" for="ff_xbox">XBOX Video</label></p>
+
+						<p class="lined"><input class="radio" type="radio" name="fformat" id="ff_wii" /><label class="label" for="ff_wii">WII Video</label></p>
+
+						<p><input class="radio" type="radio" name="fformat" id="ff_dvd" /><label class="label" for="ff_dvd">DVD Video</label></p>
+					</div>
+					<div class="clear">
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="legend">STEP 3: PRESS "CONVERT" TO LAUNCH THE CONVERSION PROCESS</div>
+			<div class="fieldset thirdform">
+				<a href="" class="green-button" onclick="OnFileConvertClick(); return false;">Convert<b class="arrow"></b></a>
+				<p><input class="radio" type="checkbox" checked="checked" name="" id="agree-checkbox" /><label class="label">I have read the <a href="terms.php">Terms of use</a> and I agree to be bound by them</label></p>
+				<div class="clear">
+				</div>
+			</div>
+			</div>
+
+			<iframe id="file-upload-ifr" width="1px" height="1px" style="display: none;" name="file-upload-ifr"></iframe>
+			<div id="convert-progress-form" style="display: none;">
+			<div class="legend">PROGRESS</div>
+			<div class="fieldset messageform">
+				<div id="processing-status" class="isprogress">
+					<!-- iserror, isprogress, iscomplete -->
+					<div class="not-supported">
+						<span id="error-text">Unknown error</span></div>
+					<div class="completed">
+						<span>Conversion successfully completed</span>
+						<div class="sys-message" id="download-size">(File size: 0 Kb)</div>
+					</div>
+					<div class="in-progress">
+						<span id="progress-status">Connecting to server...</span>
+						<div class="sys-message">(This may take a few minutes. Thank you for waiting.)</div>
+					</div>
+					<div id="progress-bar">
+						<div id="progeess-line" style="width: 0%"></div>
+						<div id="percent">0%</div>
+					</div>
+					<a href="/" class="green-button success" id="download-button">Download</a>
+					<a href="/" class="red-button progress" onclick="Cancel(''); return false;" id="cancel-button">Cancel</a>
+					<a href="/" class="green-button another" id="convert-another-button">Convert another file<b class="arrow"></b></a>
+				</div>
+			</div>
+			</div>
+
+
+		</div>
+
+		<div class="clear">
+		</div>
+	</div>
+</div>
+
+<div id="footer">
+	<div class="container">
+		<div id="footmenu">
+			<ul>
+				<li><a href="/">Converter</a></li>
+				<li><a href="terms.php">Terms of Use</a></li>
+				<li><a href="faq.php">FAQ</a></li>
+				<li><a href="contact.php">Contact</a></li>
+				<li><a href="http://www.addthis.com/bookmark.php?v=20" rel="nofollow" onmouseover="return addthis_open(this, '', 'http://benderconverter.com/', 'Bender Converter')" onmouseout="addthis_close()" onclick="return addthis_sendto()">Bookmark</a></li>
+			</ul>
+		</div>
+		<p>
+		Copyright (c) 2016. <a href="http://benderconverter.com">Online Video Converter</a>.<br>All trademarks are the property of their respective owners and are used here for identification purposes only.		</p>
+	</div>
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-11456355-2");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+<div style="display: none;">
+	<a href="#loginerror-form" id="loginerror-trigger"></a>
+	<div id="loginerror-form" style="color: #222222; font: 13px/16px Arial;">
+		<div style="color: white; background: #477eaa; padding: 4px; width: 300px;">
+		<b>Log in</b>
+		</div>
+
+		<br>
+
+		<table border="0" width="300" align="center" cellspacing="0" cellpadding="0">
+		<tr>
+			<td style="padding: 0px;" align="left" width="200">
+			<div style="color: red;"><b>You have entered an incorrect password or your password has expired.</b></div><br>
+
+			<div style="font: 11px/13px Arial;">
+				<b>Have you forgotten your password?</b><br>
+				Please <a href="contact.php">contact us</a> to recover your password.
+
+				<br><br>
+
+				<b>Haven't registered yet?</b><br>
+				You can register <a href="#sign-up" oncontextmenu="SignupClick(); return false;" onclick="SignupClick(); return false;">here</a>.
+			</div>
+			</td>
+		</tr>
+		</table>
+	</div>
+</div>
+
+<div style="display: none;">
+	<a href="#regclosed-form" id="regclosed-trigger"></a>
+	<div id="regclosed-form" style="color: #222222; font: 13px/16px Arial;">
+		<br/>
+		The registration is closed. Sorry for the inconvenience.
+		<br/><br/>
+	</div>
+</div>
+
+<div style="display: none;"><a href="#protection-form" id="protection-trigger"></a><div id="protection-form" style="color: #222222; font: 13px/16px Arial; width: 300px;">		<div style="color: white; background: #477eaa; padding: 4px; width: 300px;">
+		<b>Limit of conversions</b>
+		</div>
+		<br>
+		<div>
+		You have exceeded the daily limit of free conversions.<br><br>Please register to be able to convert an unlimited number of files or come back tomorrow.		<br><br>
+		<center><input type="submit" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Register&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" onclick="return SignupClick();" id="signup-next"/></center>
+		</div>
+</div></div>
+</body>
+
+</html>

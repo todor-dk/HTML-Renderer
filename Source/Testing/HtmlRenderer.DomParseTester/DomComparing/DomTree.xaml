@@ -1,0 +1,71 @@
+﻿<TreeView
+    x:Class="HtmlRenderer.DomParseTester.DomComparing.DomTree"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:HtmlRenderer.DomParseTester.Internal"
+    xmlns:local="clr-namespace:HtmlRenderer.DomParseTester.DomComparing"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:HtmlRenderer.DomParseTester.DomComparing.ViewModels"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
+    <TreeView.Resources>
+        <x:Array x:Key="TextDecorationOptions" Type="{x:Type TextDecorationCollection}">
+            <TextDecorationCollection>
+                <TextDecoration Location="Underline">
+                <TextDecoration.Pen>
+                    <Pen Brush="Yellow" />
+                </TextDecoration.Pen>
+            </TextDecoration>
+            </TextDecorationCollection>
+            <TextDecorationCollection>
+                <TextDecoration Location="Underline">
+                    <TextDecoration.Pen>
+                        <Pen Brush="Red" />
+                    </TextDecoration.Pen>
+                </TextDecoration>
+            </TextDecorationCollection>
+        </x:Array>
+        <local:CompareResultTextDecorationConverter x:Key="CompareResultTextDecorationConverter" />
+        <i:TextConverter x:Key="TextConverter" />
+        <Style x:Key="TextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="TextDecorations" Value="{Binding Path=CompareResult, Converter={StaticResource CompareResultTextDecorationConverter}, ConverterParameter={StaticResource  TextDecorationOptions}}" />
+            <Setter Property="ToolTip" Value="{Binding Path=CompareResult}" />
+        </Style>
+
+        <HierarchicalDataTemplate DataType="{x:Type vm:Document}" ItemsSource="{Binding Path=ChildNodes}">
+            <TextBlock Style="{StaticResource TextStyle}"><Run FontWeight="Bold" Text="{Binding Path=Model.NodeName, Mode=OneWay}" /></TextBlock>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type vm:DocumentFragment}" ItemsSource="{Binding Path=ChildNodes}">
+            <TextBlock Style="{StaticResource TextStyle}"><Run FontWeight="Bold" Text="{Binding Path=Model.NodeName, Mode=OneWay}" /></TextBlock>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type vm:Element}" ItemsSource="{Binding Path=ChildNodes}">
+            <TextBlock Style="{StaticResource TextStyle}">
+                &lt;<Run
+                    FontWeight="Bold"
+                    Foreground="DarkViolet"
+                    Text="{Binding Path=Model.NodeName, Mode=OneWay}" />
+                &gt;</TextBlock>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type vm:Text}" ItemsSource="{Binding Path=ChildNodes}">
+            <TextBlock Style="{StaticResource TextStyle}"><Run
+                    FontWeight="Bold"
+                    Foreground="DimGray"
+                    Text="{Binding Path=Model.NodeName, Mode=OneWay}" />
+                :<Run Text="{Binding Path=Model.Data, Mode=OneWay, Converter={StaticResource TextConverter}}" /></TextBlock>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type vm:Comment}" ItemsSource="{Binding Path=ChildNodes}">
+            <TextBlock Style="{StaticResource TextStyle}"><Run
+                    FontWeight="Bold"
+                    Foreground="DarkGreen"
+                    Text="{Binding Path=Model.NodeName, Mode=OneWay}" />
+                :<Run Text="{Binding Path=Model.Data, Mode=OneWay, Converter={StaticResource TextConverter}}" /></TextBlock>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type vm:DocumentType}" ItemsSource="{Binding Path=ChildNodes}">
+            <TextBlock Style="{StaticResource TextStyle}">
+                &lt;!DOCTYPE<Run Text="{Binding Path=Model.NodeName, Mode=OneWay}" /> <Run Text="{Binding Path=Model.PublicId, Mode=OneWay}" /> <Run Text="{Binding Path=Model.SystemId, Mode=OneWay}" />
+                &gt;</TextBlock>
+        </HierarchicalDataTemplate>
+    </TreeView.Resources>
+</TreeView>

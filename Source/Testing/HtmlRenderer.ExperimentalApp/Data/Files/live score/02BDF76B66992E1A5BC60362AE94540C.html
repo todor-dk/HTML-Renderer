@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>XBowling - Live Scores</title>
+		<link href="css/bootstrap.css" rel="stylesheet" />
+		<link href="css/style.css" rel="stylesheet" />
+	</head>
+ <body>
+ 	<script type="text/javascript" src="javascript/jquery-2.0.3.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascript/knockout.js"></script>
+	<script type="text/javascript" src="javascript/knockout.mapping.js"></script>
+	<script type="text/javascript" src="javascript/scn.js?b=201311192310"></script>
+	<script type="text/javascript" src="javascript/scn.livescoreslane.js?b=201311192310"></script>
+
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<center>
+				<a href="../index.html"><img src="xbowling.jpg" alt="XBowling" /></a>
+				<h1>Live Scores</h1>
+			</center>
+			<a href="../index.html" class="header-home-icon">
+				<img src="home-icon.png" />
+			</a>
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<ul class="breadcrumb">
+					<li><a href="select-administrative-area.html">Live Scores</a> <span class="divider">/</span></li>
+					<li><a data-bind="attr: { href: 'select-venue.html#/country/' + country() + '/administrativeArea/' + administrativeArea() }, text: administrativeArea"></a> <span class="divider">/</span></li>
+					<li><a data-bind="attr: { href: 'select-lane.html#/country/' + country() + '/administrativeArea/' + administrativeArea() + '/venue/' + venue() + '/venueName/' + venueName() }, text: venueName"></a> <span class="divider">/</span></li>
+					<li class="active">Lane <span data-bind="text: lane"></span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<h2 class="span6" data-bind="text: venueName"></h2>
+			<h3 class="span3 offset3 text-right">Lane <span data-bind="text: lane"></span></h3>
+		</div>
+		<div class="row-fluid">
+			<div class="loading-message" data-bind="visible: !firstLoadComplete()">Loading Live Scores... Please wait...</div>
+		</div>
+		<div data-bind="foreach: games">
+			<div class="row-fluid"> 
+				<div data-bind="template: 'templateLaneScore'"></div>
+			</div>
+		</div>
+	</div>
+	
+
+	
+	
+<!-- Templates -->	
+<script type="text/html" id="pinDisplay">
+  <div class="pins-container">
+    <div class="ballRow first">
+        <div data-bind="css: scn.getThrowClass($data, 6)">&nbsp;</div>
+        <div data-bind="css: scn.getThrowClass($data, 7)">&nbsp;</div>
+        <div data-bind="css: scn.getThrowClass($data, 8)">&nbsp;</div>
+        <div data-bind="css: scn.getThrowClass($data, 9)">&nbsp;</div>
+    </div>
+    <div class="ballRow">
+        <div class="ballPlaceholder">&nbsp;</div>
+        <div data-bind="css: scn.getThrowClass($data, 3)">&nbsp;</div>
+        <div data-bind="css: scn.getThrowClass($data, 4)">&nbsp;</div>
+        <div data-bind="css: scn.getThrowClass($data, 5)">&nbsp;</div>
+    </div>
+    <div class="ballRow">
+        <div class="ballPlaceholder">&nbsp;</div>
+        <div class="ballPlaceholder">&nbsp;</div>
+        <div data-bind="css: scn.getThrowClass($data, 1)">&nbsp;</div>
+        <div data-bind="css: scn.getThrowClass($data, 2)">&nbsp;</div>
+    </div>
+    <div class="ballRow">
+        <div class="ballPlaceholder">&nbsp;</div>
+        <div class="ballPlaceholder">&nbsp;</div>
+        <div class="ballPlaceholder">&nbsp;</div>
+        <div data-bind="css: scn.getThrowClass($data, 0)">&nbsp;</div>
+    </div>
+    <div class="frame-throw-number" data-bind="text: jQuery($element).parents('[data-throw-number]:first').attr('data-throw-number')"></div>
+  </div>
+</script>
+<script type="text/html" id="templateLaneScore">
+<div class="lane-name" data-bind="text: scn.decodeName(name())"></div>
+  <ul class="lane-row clearfix">
+	<li>
+		<div class="frame-number-container">1</div>
+		<div>
+			<div class="score-container" data-tap-order="1">
+				<div class="throw-score" data-bind="text: squareScore1"></div>
+				<div class="throw-score" data-bind="text: squareScore2"></div>
+				<div class="frame-score" data-bind="text: frameScore1"></div>
+			</div>
+			<div class="balls-container throw-1" data-tap-order="2" data-bind="with: standingPins01" data-throw-number="1">
+				<div data-bind="template: 'pinDisplay'"></div>
+			</div>
+			<div class="balls-container throw-2" data-tap-order="3" data-bind="with: standingPins02" data-throw-number="2">
+				<div data-bind="template: 'pinDisplay'"></div>
+			</div>
+		</div>
+	</li>
+	<li>
+		<div class="frame-number-container">2</div>
+		<div class="score-container" data-tap-order="1">
+			<div class="throw-score" data-bind="text: squareScore3"></div>
+			<div class="throw-score" data-bind="text: squareScore4"></div>
+			<div class="frame-score" data-bind="text: frameScore2"></div>
+		</div>
+		<div class="balls-container throw-1" data-tap-order="2" data-bind="with: standingPins03" data-throw-number="1">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+		<div class="balls-container throw-2" data-tap-order="3" data-bind="with: standingPins04" data-throw-number="2">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+	</li>
+	<li>
+		<div class="frame-number-container">3</div>
+		<div class="score-container" data-tap-order="1">
+			<div class="throw-score" data-bind="text: squareScore5"></div>
+			<div class="throw-score" data-bind="text: squareScore6"></div>
+			<div class="frame-score" data-bind="text: frameScore3"></div>
+		</div>
+		<div class="balls-container throw-1" data-tap-order="2" data-bind="with: standingPins05" data-throw-number="1">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+		<div class="balls-container throw-2" data-tap-order="3" data-bind="with: standingPins06" data-throw-number="2">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+	</li>
+	<li>
+		<div class="frame-number-container">4</div>
+		<div class="score-container" data-tap-order="1">
+			<div class="throw-score" data-bind="text: squareScore7"></div>
+			<div class="throw-score" data-bind="text: squareScore8"></div>
+			<div class="frame-score" data-bind="text: frameScore4"></div>
+		</div>
+		<div class="balls-container throw-1" data-tap-order="2" data-bind="with: standingPins07" data-throw-number="1">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+		<div class="balls-container throw-2" data-tap-order="3" data-bind="with: standingPins08" data-throw-number="2">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+	</li>
+	<li>
+		<div class="frame-number-container">5</div>
+		<div class="score-container" data-tap-order="1">
+			<div class="throw-score" data-bind="text: squareScore9"></div>
+			<div class="throw-score" data-bind="text: squareScore10"></div>
+			<div class="frame-score" data-bind="text: frameScore5"></div>
+		</div>
+		<div class="balls-container throw-1" data-tap-order="2" data-bind="with: standingPins09" data-throw-number="1">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+		<div class="balls-container throw-2" data-tap-order="3" data-bind="with: standingPins10" data-throw-number="2">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+	</li>
+	<li>
+		<div class="frame-number-container">6</div>
+		<div class="score-container" data-tap-order="1">
+			<div class="throw-score" data-bind="text: squareScore11"></div>
+			<div class="throw-score" data-bind="text: squareScore12"></div>
+			<div class="frame-score" data-bind="text: frameScore6"></div>
+		</div>
+		<div class="balls-container throw-1" data-tap-order="2" data-bind="with: standingPins11" data-throw-number="1">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+		<div class="balls-container throw-2" data-tap-order="3" data-bind="with: standingPins12" data-throw-number="2">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+	</li>
+	<li>
+		<div class="frame-number-container">7</div>
+		<div class="score-container" data-tap-order="1">
+			<div class="throw-score" data-bind="text: squareScore13"></div>
+			<div class="throw-score" data-bind="text: squareScore14"></div>
+			<div class="frame-score" data-bind="text: frameScore7"></div>
+		</div>
+		<div class="balls-container throw-1" data-tap-order="2" data-bind="with: standingPins13" data-throw-number="1">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+		<div class="balls-container throw-2" data-tap-order="3" data-bind="with: standingPins14" data-throw-number="2">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+	</li>
+	<li>
+		<div class="frame-number-container">8</div>
+		<div class="score-container" data-tap-order="1">
+			<div class="throw-score" data-bind="text: squareScore15"></div>
+			<div class="throw-score" data-bind="text: squareScore16"></div>
+			<div class="frame-score" data-bind="text: frameScore8"></div>
+		</div>
+		<div class="balls-container throw-1" data-tap-order="2" data-bind="with: standingPins15" data-throw-number="1">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+		<div class="balls-container throw-2" data-tap-order="3" data-bind="with: standingPins16" data-throw-number="2">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+	</li>
+	<li>
+		<div class="frame-number-container">9</div>
+		<div class="score-container" data-tap-order="1">
+			<div class="throw-score" data-bind="text: squareScore17"></div>
+			<div class="throw-score" data-bind="text: squareScore18"></div>
+			<div class="frame-score" data-bind="text: frameScore9"></div>
+		</div>
+		<div class="balls-container throw-1" data-tap-order="2" data-bind="with: standingPins17" data-throw-number="1">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+		<div class="balls-container throw-2" data-tap-order="3" data-bind="with: standingPins18" data-throw-number="2">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+	</li>
+	<li>
+		<div class="frame-number-container">10</div>
+		<div class="score-container tenth-frame" data-tap-order="1">
+			<div class="throw-score" data-bind="text: squareScore19"></div>
+			<div class="throw-score" data-bind="text: squareScore20"></div>
+			<div class="throw-score" data-bind="text: squareScore21"></div>
+			<div class="frame-score" data-bind="text: frameScore10"></div>
+		</div>
+		<div class="balls-container throw-1" data-tap-order="2" data-bind="with: standingPins19" data-throw-number="1">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+		<div class="balls-container throw-2" data-tap-order="3" data-bind="with: standingPins20" data-throw-number="2">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+		<div class="balls-container throw-2" data-tap-order="4" data-bind="with: standingPins21" data-throw-number="3">
+			<div data-bind="template: 'pinDisplay'"></div>
+		</div>
+	</li>
+  </ul>
+</script>
+ </body>
+</html>

@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using HtmlRenderer.TestLib.Dom;
 using HtmlRenderer.TestLib.Dom.Persisting;
 using Scientia.HtmlRenderer.Dom;
 using Scientia.HtmlRenderer;
@@ -14,6 +15,8 @@ namespace HtmlRenderer.UnitTests
         {
             var root = TextReader.FromData(Acid1Dom);
             Assert.IsNotNull(root);
+            var valid = (root as ReferenceDocument)?.IsHierarchyValid() ?? false;
+            Assert.IsTrue(valid, "The node hierarchy is broken");
 
             var eq = root.CompareWith(root, new TestLib.Dom.CompareContext());
             Assert.IsTrue(eq);
@@ -24,6 +27,8 @@ namespace HtmlRenderer.UnitTests
         {
             var root = TextReader.FromData(Acid1Dom);
             Assert.IsNotNull(root);
+            var valid = (root as ReferenceDocument)?.IsHierarchyValid() ?? false;
+            Assert.IsTrue(valid, "The node hierarchy is broken");
 
             System.IO.MemoryStream stream = new System.IO.MemoryStream();
             BinaryWriter.Save(root, stream);
@@ -31,6 +36,8 @@ namespace HtmlRenderer.UnitTests
             stream.Position = 0;
             var root2 = BinaryReader.FromStream(stream);
             Assert.IsNotNull(root2);
+            valid = (root2 as ReferenceDocument)?.IsHierarchyValid() ?? false;
+            Assert.IsTrue(valid, "The node hierarchy is broken");
 
             var eq = root.CompareWith(root2, new TestLib.Dom.CompareContext());
             Assert.IsTrue(eq);

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<!--[if lte IE 7]> <html class="ie7"> <![endif]-->
+<!--[if IE 8]>     <html class="ie8"> <![endif]-->
+<!--[if IE 9]>     <html class="ie9"> <![endif]-->
+<!--[if IE 10]>     <html class="ie10"> <![endif]-->
+<!--[if !IE]><!-->
+<html>
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>Ryanair</title>
+
+    <link href="BotDetectCaptcha.ashx?get=layoutStyleSheet" rel="stylesheet" type="text/css" />
+    <link href="/Content/style.css" rel="stylesheet" type="text/css" />
+    <link href="/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Content/datepicker.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="https://schdchng.ryanair.com/images/favicon.ico" />
+
+    <script src="/Scripts/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="/Scripts/modernizr-1.7.min.js" type="text/javascript"></script>
+    <script src="/Scripts/underscore.min.js" type="text/javascript"></script>
+    <script src="/Scripts/backbone.min.js" type="text/javascript"></script>
+    <script src="/Scripts/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/Scripts/bootstrap-datepicker.js" type="text/javascript"></script>
+    <script src="/Scripts/jquery.validate.min.js" type="text/javascript"></script>
+    <script src="/Scripts/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
+    <script src="/Scripts/date.js" type="text/javascript"></script>
+    <script src="/Scripts/json2.js" type="text/javascript"></script>
+    <script src="/Scripts/bootstrap-modal.js" type="text/javascript"></script>
+</head>
+
+<body style="padding-top: 90px">
+    <link href="/Content/ryanair.css" rel="stylesheet" type="text/css" />
+    <div class="container">
+        <script type="text/javascript">
+    $(function () {
+        $('.date-picker').datepicker({ format: 'dd/mm/yyyy', weekStart: 1 })
+                .on('changeDate', function (e) {
+                    $(this).blur();
+                    $(this).datepicker('hide');
+                });
+    });
+</script>
+
+<style>
+    .form-horizontal .controls {
+        margin-left: 230px;
+        *margin-left: 0;
+    }
+    .form-horizontal .control-label {
+        width: 300px;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $('#lang_selector').change(function (e) {
+            var language = 'en';
+            if (window.location.search === "") {
+                window.location = window.location.href + "?lg=" + e.target.value;
+            }
+            else {
+                window.location = window.location.href.replace(/lg=../, "lg=" + e.target.value);
+            }
+        });
+    })
+</script>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner" style="height: 60px; background-image: none; background-color: #22356b; vertical-align: middle; filter: none;">
+        <a href="http://www.ryanair.com">
+            <img alt="RyanAir" class="span2" src="/Images/ryanair.gif" style="margin: 5px; width: 244px; height:42px; padding-top:3px" />
+        </a>
+            <div class="navbar-padding" style="color: white; padding-top: 18px; font-size: 150%; text-align: left; vertical-align: middle;">Ryanair EU261 Compensation and Expense Claim Form</div>
+
+<select class="input-medium pull-right" id="lang_selector" name="lang" style="margin-top:-10px;"><option selected="selected" value="EN">English</option>
+<option value="SV">Swedish</option>
+<option value="ES">Spanish</option>
+<option value="NB">Norwegian</option>
+<option value="FR">French</option>
+<option value="IT">Italian</option>
+<option value="HU">Hungarian</option>
+<option value="NL">Dutch</option>
+<option value="PT">Portuguese</option>
+<option value="PL">Polish</option>
+<option value="CA">Catalan</option>
+<option value="DE">German</option>
+<option value="EL">Greek</option>
+<option value="DA">Danish</option>
+<option value="LT">Lithuanian</option>
+<option value="BG">Bulgarian</option>
+<option value="CS">Czech</option>
+<option value="RO">Romanian</option>
+</select>    </div>
+</div>
+
+<div>
+    <p align="center">Only <b>ONE</b> claim per booking is permitted. Do not submit more than one application as this may delay our response to you.</p>
+    <p align="center">Please complete the form below:</p>
+    <p align="center" style="font-weight: bold;">Please ensure you upload all documentation to support your claim, this includes your bank details (Bank Name/Account Holder/Account Number/IBAN/Swift).  Failure to supply this information at the point of application will result in <span style='text-decoration: underline;'>significant delays</span> in processing your payment.</p>
+<form action="/" class="form1 well-small form-horizontal" method="post">        <div class="control-group">
+            <label class="control-index-label" title="Your booking reference is the six digit unique reference code that was supplied at the time of flight reservation and is located on your flight itinerary">
+                Flight Reservation Number
+                <a href="javascript:alert('Your booking reference is the six digit unique reference code that was supplied at the time of flight reservation and is located on your flight itinerary')" style="text-decoration: underline">What is this</a>
+            </label>
+            <div class=" controls">
+                <input class="input-small" id="ReservationNumber" name="ReservationNumber" type="text" value="" />
+                <span class="help-inline"></span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-index-label">
+                Title:
+            </label>
+            <div class="controls">
+                <select class="input-small" data-val="true" data-val-required="Field is required" id="Title" name="Title" style="width:104px"><option value="Mr">Mr</option>
+<option value="Mrs">Mrs</option>
+<option value="Ms">Ms</option>
+</select>
+                <span class="help-inline"></span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-index-label">
+                Customer First name:
+            </label>
+            <div class="controls">
+                <input id="FirstName" name="FirstName" type="text" value="" />
+                <span class="help-inline"></span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-index-label">
+                Customer Surname:
+            </label>
+            <div class="controls">
+                <input id="Surname" name="Surname" type="text" value="" />
+                <span class="help-inline"></span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-index-label">
+                <span class="red-star" style="color: red; font-weight: bold">*</span> Delayed/Cancelled Flights Number
+            </label>
+            <div class="controls">
+                <div class="input-prepend">
+                    <span class="add-on">FR</span>
+                    <input class="input-small" id="FlightNumber" name="FlightNumber" type="text" value="" />
+                </div>
+                <span class="help-inline">
+                    
+                    
+                </span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-index-label">
+                Date of Disrupted Flight
+            </label>
+            <div class="controls date date-picker control-group" id="dp0" data-date="12/07/2017" data-date-format="dd/mm/yyyy">
+                <div class="input-append">
+                    <input id="DateOfCancelledFlight" name="DateOfCancelledFlight" class="input-small" size="16" type="text" value="" />
+                    <span class="add-on"><i class="icon-th"></i></span>
+                </div>
+                <span class="help-inline">
+                    
+                </span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-index-label">
+                Departure Airport:
+            </label>
+            <div class="controls">
+                <select id="DepartureAirport" name="DepartureAirport"><option value="">Please select ....</option>
+<option value="AAL">Aalborg</option>
+<option value="AAR">Aarhus</option>
+<option value="ABZ">Aberdeen</option>
+<option value="AGA">Agadir </option>
+<option value="AXD">Alexandroupolis</option>
+<option value="AHO">Alghero </option>
+<option value="ALC">Alicante</option>
+<option value="LEI">Almeria</option>
+<option value="AOC">Altenburg </option>
+<option value="AMS">Amsterdam </option>
+<option value="AOI">Ancona</option>
+<option value="AGH">Angelholm</option>
+<option value="ANG">Angoul&#234;me</option>
+<option value="ARW">Arad</option>
+<option value="OVD">Asturias</option>
+<option value="ATH">Athens</option>
+<option value="SOB">Balaton</option>
+<option value="BCN">Barcelona El Prat T2</option>
+<option value="BRI">Bari</option>
+<option value="BSL">Basel</option>
+<option value="BHD">Belfast (City)</option>
+<option value="BFS">Belfast International</option>
+<option value="EGC">Bergerac</option>
+<option value="BER">Berlin (Brandenburg)</option>
+<option value="SXF">Berlin (Schonefeld)</option>
+<option value="BZR">Beziers </option>
+<option value="BIQ">Biarritz</option>
+<option value="BIO">Bilbao</option>
+<option value="BLL">Billund</option>
+<option value="BHX">Birmingham T2</option>
+<option value="BLK">Blackpool</option>
+<option value="BLQ">Bologna</option>
+<option value="FRL">Bologna (Forli)</option>
+<option value="BOD">Bordeaux</option>
+<option value="BOH">Bournemouth</option>
+<option value="BTS">Bratislava</option>
+<option value="BRE">Bremen</option>
+<option value="BES">Brest </option>
+<option value="BDS">Brindisi</option>
+<option value="BRS">Bristol</option>
+<option value="BVE">Brive</option>
+<option value="BRQ">Brno</option>
+<option value="CRL">Brussels (Charleroi)</option>
+<option value="BRU">Brussels (Zaventem)</option>
+<option value="OTP">Bucharest (Otopeni)</option>
+<option value="BUD">Budapest T2B</option>
+<option value="BZG">Bydgoszcz</option>
+<option value="CAG">Cagliari</option>
+<option value="CCF">Carcassonne</option>
+<option value="CWL">Cardiff</option>
+<option value="CDT">Castell&#243;n-Costa Azahar</option>
+<option value="CTA">Catania</option>
+<option value="CQM">Ciudad Real</option>
+<option value="CFE">Clemont (Ferrand)</option>
+<option value="CGN">Cologne (Bonn)</option>
+<option value="CIY">Comiso</option>
+<option value="CND">Constanta</option>
+<option value="CPH">Copenhagen</option>
+<option value="CFU">Corfu</option>
+<option value="ORK">Cork</option>
+<option value="CHQ">Crete (Chania)</option>
+<option value="CRV">Crotone</option>
+<option value="CUF">Cuneo</option>
+<option value="LDY">Derry</option>
+<option value="DNR">Dinard</option>
+<option value="DLE">Dole</option>
+<option value="DSA">Doncaster</option>
+<option value="DTM">Dortmund</option>
+<option value="DUB">Dublin T1</option>
+<option value="MME">Durham Tees</option>
+<option value="NRN">D&#252;sseldorf (Weeze)</option>
+<option value="EMA">East Midlands</option>
+<option value="EDI">Edinburgh</option>
+<option value="VDA">Eilat (Ovda)</option>
+<option value="EIN">Eindhoven</option>
+<option value="EBJ">Esbjerg</option>
+<option value="ESU">Essaouria</option>
+<option value="FAO">Faro</option>
+<option value="FEZ">Fes </option>
+<option value="FSC">Figari </option>
+<option value="HHN">Frankfurt (Hahn)</option>
+<option value="FDH">Friedrichshafen</option>
+<option value="FUE">Fuerteventura</option>
+<option value="GDN">Gdańsk</option>
+<option value="GOA">Genoa</option>
+<option value="GRO">Girona (Barcelona)</option>
+<option value="GLA">Glasgow</option>
+<option value="PIK">Glasgow (Prestwick)</option>
+<option value="GOT">G&#246;teborg Landvetter</option>
+<option value="GSE">Gothenburg (City)</option>
+<option value="LPA">Gran Canaria</option>
+<option value="GRX">Granada</option>
+<option value="GRZ">Graz</option>
+<option value="GNB">Grenoble</option>
+<option value="GRQ">Groningen</option>
+<option value="HAM">Hamburg</option>
+<option value="LBC">Hamburg (L&#252;beck)</option>
+<option value="HAU">Haugesund</option>
+<option value="HUY">Humberside</option>
+<option value="IBZ">Ibiza</option>
+<option value="INV">Inverness</option>
+<option value="XRY">Jerez</option>
+<option value="JKG">Jonkoping (Axamo)</option>
+<option value="KLX">Kalamata</option>
+<option value="KLR">Kalmar</option>
+<option value="FKB">Karlsruhe (Baden-Baden)</option>
+<option value="KSD">Karlstad</option>
+<option value="KTW">Katowice</option>
+<option value="KUN">Kaunas</option>
+<option value="EFL">Kefalonia</option>
+<option value="KIR">Kerry</option>
+<option value="IEV">Kiev</option>
+<option value="KBP">Kiev-Borispol Airport  </option>
+<option value="KLU">Klagenfurt</option>
+<option value="NOC">Knock</option>
+<option value="KGS">Kos</option>
+<option value="KRK">Krakow</option>
+<option value="KID">Kristianstad</option>
+<option value="LRH">La Rochelle</option>
+<option value="SUF">Lamezia</option>
+<option value="ACE">Lanzarote</option>
+<option value="LPP">Lappeenranta </option>
+<option value="LCA">Larnaca</option>
+<option value="LBA">Leeds Bradford</option>
+<option value="LEJ">Leipzig (Halle)</option>
+<option value="LIL">Lille</option>
+<option value="LIG">Limoges</option>
+<option value="LNZ">Linz</option>
+<option value="LIS">Lisbon T2</option>
+<option value="LPL">Liverpool</option>
+<option value="ILD">Lleida</option>
+<option value="LCJ">Lodz</option>
+<option value="LGW">London (Gatwick)</option>
+<option value="LTN">London (Luton)</option>
+<option value="STN">London (Stansted)</option>
+<option value="LDE">Lourdes</option>
+<option value="LUZ">Lublin</option>
+<option value="LUX">Luxembourg Airport</option>
+<option value="LWO">Lviv</option>
+<option value="MST">Maastricht</option>
+<option value="MAD">Madrid T1</option>
+<option value="CSO">Magdeburg (Cochstedt)</option>
+<option value="MAH">Mahon</option>
+<option value="AGP">Malaga</option>
+<option value="MMX">Malm&#245; </option>
+<option value="MXP">Malpensa</option>
+<option value="MLA">Malta</option>
+<option value="MAN">Manchester T3</option>
+<option value="MBX">Maribor</option>
+<option value="RAK">Marrakesh</option>
+<option value="MRS">Marseille MP2</option>
+<option value="FMM">Memmingen (Munich West)</option>
+<option value="BGY">Milan (Bergamo)</option>
+<option value="MPL">Montpellier</option>
+<option value="FMO">Munster</option>
+<option value="MJV">Murcia</option>
+<option value="NDR">Nador</option>
+<option value="NTE">Nantes</option>
+<option value="NAP">Naples</option>
+<option value="NCL">Newcastle</option>
+<option value="NQY">Newquay</option>
+<option value="NCE">Nice T1</option>
+<option value="FNI">Nimes</option>
+<option value="NIS">Nis</option>
+<option value="NRK">Norrk&#246;ping</option>
+<option value="NUE">Nuremberg</option>
+<option value="OLB">Olbia</option>
+<option value="OMR">Oradea</option>
+<option value="OSI">Osijek</option>
+<option value="RYG">Oslo (Rygge)</option>
+<option value="TRF">Oslo (Torp)</option>
+<option value="OST">Ostend</option>
+<option value="OSR">Ostrava</option>
+<option value="OUD">Oujda</option>
+<option value="PMO">Palermo</option>
+<option value="PMI">Palma Mallorca</option>
+<option value="PFO">Paphos</option>
+<option value="PED">Pardubice</option>
+<option value="BVA">Paris (Beauvais)</option>
+<option value="XCR">Paris (Vatry)</option>
+<option value="PMF">Parma</option>
+<option value="GPA">Patras (Araxos)</option>
+<option value="PUF">Pau</option>
+<option value="PGF">Perpignan</option>
+<option value="PEG">Perugia</option>
+<option value="PSR">Pescara</option>
+<option value="PSA">Pisa</option>
+<option value="PDV">Plovdiv</option>
+<option value="TGD">Podgorica</option>
+<option value="PIS">Poitiers</option>
+<option value="PDL">Ponta Delgada</option>
+<option value="OPO">Porto</option>
+<option value="POZ">Poznań</option>
+<option value="PRG">Prague</option>
+<option value="PUY">Pula</option>
+<option value="RBA">Rabat</option>
+<option value="RNS">Rennes A&#233;roport</option>
+<option value="REU">Reus (Barcelona)</option>
+<option value="RHO">Rhodes</option>
+<option value="RIX">Riga</option>
+<option value="RJK">Rijeka</option>
+<option value="RMI">Rimini</option>
+<option value="RDZ">Rodez</option>
+<option value="CIA">Rome (Ciampino)</option>
+<option value="FCO">Rome (Fiumicino)</option>
+<option value="RLG">Rostock</option>
+<option value="RZE">Rzesz&#243;w</option>
+<option value="SZG">Salzburg</option>
+<option value="SDR">Santander</option>
+<option value="SCQ">Santiago Comp.</option>
+<option value="JTR">Santorini (Thira) National Airport</option>
+<option value="SVQ">Seville</option>
+<option value="SNN">Shannon</option>
+<option value="SFT">Skelleftea</option>
+<option value="VXO">Smaland (Vaxjo)</option>
+<option value="SOF">Sofia</option>
+<option value="EBU">St. Etienne</option>
+<option value="NYO">Stockholm (Skavsta)</option>
+<option value="VST">Stockholm (Vasteras)</option>
+<option value="SXB">Strasbourg</option>
+<option value="STR">Stuttgart</option>
+<option value="SZZ">Szczecin</option>
+<option value="TLL">Tallinn</option>
+<option value="TMP">Tampere</option>
+<option value="TNG">Tangier</option>
+<option value="TGM">Targu Mures</option>
+<option value="TLV">Tel Aviv</option>
+<option value="TFN">Tenerife (North)</option>
+<option value="TFS">Tenerife (South)</option>
+<option value="SKG">Thessaloniki</option>
+<option value="TSR">Timi?oara Traian Vuia International Airport</option>
+<option value="TLN">Toulon</option>
+<option value="TLS">Toulouse </option>
+<option value="TUF">Tours </option>
+<option value="TPS">Trapani</option>
+<option value="TRS">Trieste</option>
+<option value="TRN">Turin</option>
+<option value="TKU">Turku T2</option>
+<option value="VLC">Valencia</option>
+<option value="VLL">Valladolid</option>
+<option value="VAR">Varna</option>
+<option value="VCE">Venice (Marco Polo)</option>
+<option value="TSF">Venice (Treviso)</option>
+<option value="VRN">Verona</option>
+<option value="VBS">Verona (Brescia)</option>
+<option value="VGO">Vigo</option>
+<option value="VNO">Vilnius</option>
+<option value="VIT">Vitoria (Bilbao)</option>
+<option value="VOL">Volos</option>
+<option value="WAW">Warsaw (Chopin)</option>
+<option value="WMI">Warsaw (Modlin)</option>
+<option value="WRO">Wroclaw</option>
+<option value="ZAD">Zadar</option>
+<option value="ZTH">Zakinthos</option>
+<option value="ZAZ">Zaragoza</option>
+<option value="ZQW">Zweibruken</option>
+</select>
+                <span class="help-inline">
+                    
+                </span>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-index-label">
+                Arrival Airport:
+            </label>
+            <div class="controls">
+                <select id="ArrivalAirport" name="ArrivalAirport"><option value="">Please select ....</option>
+<option value="AAL">Aalborg</option>
+<option value="AAR">Aarhus</option>
+<option value="ABZ">Aberdeen</option>
+<option value="AGA">Agadir </option>
+<option value="AXD">Alexandroupolis</option>
+<option value="AHO">Alghero </option>
+<option value="ALC">Alicante</option>
+<option value="LEI">Almeria</option>
+<option value="AOC">Altenburg </option>
+<option value="AMS">Amsterdam </option>
+<option value="AOI">Ancona</option>
+<option value="AGH">Angelholm</option>
+<option value="ANG">Angoul&#234;me</option>
+<option value="ARW">Arad</option>
+<option value="OVD">Asturias</option>
+<option value="ATH">Athens</option>
+<option value="SOB">Balaton</option>
+<option value="BCN">Barcelona El Prat T2</option>
+<option value="BRI">Bari</option>
+<option value="BSL">Basel</option>
+<option value="BHD">Belfast (City)</option>
+<option value="BFS">Belfast International</option>
+<option value="EGC">Bergerac</option>
+<option value="BER">Berlin (Brandenburg)</option>
+<option value="SXF">Berlin (Schonefeld)</option>
+<option value="BZR">Beziers </option>
+<option value="BIQ">Biarritz</option>
+<option value="BIO">Bilbao</option>
+<option value="BLL">Billund</option>
+<option value="BHX">Birmingham T2</option>
+<option value="BLK">Blackpool</option>
+<option value="BLQ">Bologna</option>
+<option value="FRL">Bologna (Forli)</option>
+<option value="BOD">Bordeaux</option>
+<option value="BOH">Bournemouth</option>
+<option value="BTS">Bratislava</option>
+<option value="BRE">Bremen</option>
+<option value="BES">Brest </option>
+<option value="BDS">Brindisi</option>
+<option value="BRS">Bristol</option>
+<option value="BVE">Brive</option>
+<option value="BRQ">Brno</option>
+<option value="CRL">Brussels (Charleroi)</option>
+<option value="BRU">Brussels (Zaventem)</option>
+<option value="OTP">Bucharest (Otopeni)</option>
+<option value="BUD">Budapest T2B</option>
+<option value="BZG">Bydgoszcz</option>
+<option value="CAG">Cagliari</option>
+<option value="CCF">Carcassonne</option>
+<option value="CWL">Cardiff</option>
+<option value="CDT">Castell&#243;n-Costa Azahar</option>
+<option value="CTA">Catania</option>
+<option value="CQM">Ciudad Real</option>
+<option value="CFE">Clemont (Ferrand)</option>
+<option value="CGN">Cologne (Bonn)</option>
+<option value="CIY">Comiso</option>
+<option value="CND">Constanta</option>
+<option value="CPH">Copenhagen</option>
+<option value="CFU">Corfu</option>
+<option value="ORK">Cork</option>
+<option value="CHQ">Crete (Chania)</option>
+<option value="CRV">Crotone</option>
+<option value="CUF">Cuneo</option>
+<option value="LDY">Derry</option>
+<option value="DNR">Dinard</option>
+<option value="DLE">Dole</option>
+<option value="DSA">Doncaster</option>
+<option value="DTM">Dortmund</option>
+<option value="DUB">Dublin T1</option>
+<option value="MME">Durham Tees</option>
+<option value="NRN">D&#252;sseldorf (Weeze)</option>
+<option value="EMA">East Midlands</option>
+<option value="EDI">Edinburgh</option>
+<option value="VDA">Eilat (Ovda)</option>
+<option value="EIN">Eindhoven</option>
+<option value="EBJ">Esbjerg</option>
+<option value="ESU">Essaouria</option>
+<option value="FAO">Faro</option>
+<option value="FEZ">Fes </option>
+<option value="FSC">Figari </option>
+<option value="HHN">Frankfurt (Hahn)</option>
+<option value="FDH">Friedrichshafen</option>
+<option value="FUE">Fuerteventura</option>
+<option value="GDN">Gdańsk</option>
+<option value="GOA">Genoa</option>
+<option value="GRO">Girona (Barcelona)</option>
+<option value="GLA">Glasgow</option>
+<option value="PIK">Glasgow (Prestwick)</option>
+<option value="GOT">G&#246;teborg Landvetter</option>
+<option value="GSE">Gothenburg (City)</option>
+<option value="LPA">Gran Canaria</option>
+<option value="GRX">Granada</option>
+<option value="GRZ">Graz</option>
+<option value="GNB">Grenoble</option>
+<option value="GRQ">Groningen</option>
+<option value="HAM">Hamburg</option>
+<option value="LBC">Hamburg (L&#252;beck)</option>
+<option value="HAU">Haugesund</option>
+<option value="HUY">Humberside</option>
+<option value="IBZ">Ibiza</option>
+<option value="INV">Inverness</option>
+<option value="XRY">Jerez</option>
+<option value="JKG">Jonkoping (Axamo)</option>
+<option value="KLX">Kalamata</option>
+<option value="KLR">Kalmar</option>
+<option value="FKB">Karlsruhe (Baden-Baden)</option>
+<option value="KSD">Karlstad</option>
+<option value="KTW">Katowice</option>
+<option value="KUN">Kaunas</option>
+<option value="EFL">Kefalonia</option>
+<option value="KIR">Kerry</option>
+<option value="IEV">Kiev</option>
+<option value="KBP">Kiev-Borispol Airport  </option>
+<option value="KLU">Klagenfurt</option>
+<option value="NOC">Knock</option>
+<option value="KGS">Kos</option>
+<option value="KRK">Krakow</option>
+<option value="KID">Kristianstad</option>
+<option value="LRH">La Rochelle</option>
+<option value="SUF">Lamezia</option>
+<option value="ACE">Lanzarote</option>
+<option value="LPP">Lappeenranta </option>
+<option value="LCA">Larnaca</option>
+<option value="LBA">Leeds Bradford</option>
+<option value="LEJ">Leipzig (Halle)</option>
+<option value="LIL">Lille</option>
+<option value="LIG">Limoges</option>
+<option value="LNZ">Linz</option>
+<option value="LIS">Lisbon T2</option>
+<option value="LPL">Liverpool</option>
+<option value="ILD">Lleida</option>
+<option value="LCJ">Lodz</option>
+<option value="LGW">London (Gatwick)</option>
+<option value="LTN">London (Luton)</option>
+<option value="STN">London (Stansted)</option>
+<option value="LDE">Lourdes</option>
+<option value="LUZ">Lublin</option>
+<option value="LUX">Luxembourg Airport</option>
+<option value="LWO">Lviv</option>
+<option value="MST">Maastricht</option>
+<option value="MAD">Madrid T1</option>
+<option value="CSO">Magdeburg (Cochstedt)</option>
+<option value="MAH">Mahon</option>
+<option value="AGP">Malaga</option>
+<option value="MMX">Malm&#245; </option>
+<option value="MXP">Malpensa</option>
+<option value="MLA">Malta</option>
+<option value="MAN">Manchester T3</option>
+<option value="MBX">Maribor</option>
+<option value="RAK">Marrakesh</option>
+<option value="MRS">Marseille MP2</option>
+<option value="FMM">Memmingen (Munich West)</option>
+<option value="BGY">Milan (Bergamo)</option>
+<option value="MPL">Montpellier</option>
+<option value="FMO">Munster</option>
+<option value="MJV">Murcia</option>
+<option value="NDR">Nador</option>
+<option value="NTE">Nantes</option>
+<option value="NAP">Naples</option>
+<option value="NCL">Newcastle</option>
+<option value="NQY">Newquay</option>
+<option value="NCE">Nice T1</option>
+<option value="FNI">Nimes</option>
+<option value="NIS">Nis</option>
+<option value="NRK">Norrk&#246;ping</option>
+<option value="NUE">Nuremberg</option>
+<option value="OLB">Olbia</option>
+<option value="OMR">Oradea</option>
+<option value="OSI">Osijek</option>
+<option value="RYG">Oslo (Rygge)</option>
+<option value="TRF">Oslo (Torp)</option>
+<option value="OST">Ostend</option>
+<option value="OSR">Ostrava</option>
+<option value="OUD">Oujda</option>
+<option value="PMO">Palermo</option>
+<option value="PMI">Palma Mallorca</option>
+<option value="PFO">Paphos</option>
+<option value="PED">Pardubice</option>
+<option value="BVA">Paris (Beauvais)</option>
+<option value="XCR">Paris (Vatry)</option>
+<option value="PMF">Parma</option>
+<option value="GPA">Patras (Araxos)</option>
+<option value="PUF">Pau</option>
+<option value="PGF">Perpignan</option>
+<option value="PEG">Perugia</option>
+<option value="PSR">Pescara</option>
+<option value="PSA">Pisa</option>
+<option value="PDV">Plovdiv</option>
+<option value="TGD">Podgorica</option>
+<option value="PIS">Poitiers</option>
+<option value="PDL">Ponta Delgada</option>
+<option value="OPO">Porto</option>
+<option value="POZ">Poznań</option>
+<option value="PRG">Prague</option>
+<option value="PUY">Pula</option>
+<option value="RBA">Rabat</option>
+<option value="RNS">Rennes A&#233;roport</option>
+<option value="REU">Reus (Barcelona)</option>
+<option value="RHO">Rhodes</option>
+<option value="RIX">Riga</option>
+<option value="RJK">Rijeka</option>
+<option value="RMI">Rimini</option>
+<option value="RDZ">Rodez</option>
+<option value="CIA">Rome (Ciampino)</option>
+<option value="FCO">Rome (Fiumicino)</option>
+<option value="RLG">Rostock</option>
+<option value="RZE">Rzesz&#243;w</option>
+<option value="SZG">Salzburg</option>
+<option value="SDR">Santander</option>
+<option value="SCQ">Santiago Comp.</option>
+<option value="JTR">Santorini (Thira) National Airport</option>
+<option value="SVQ">Seville</option>
+<option value="SNN">Shannon</option>
+<option value="SFT">Skelleftea</option>
+<option value="VXO">Smaland (Vaxjo)</option>
+<option value="SOF">Sofia</option>
+<option value="EBU">St. Etienne</option>
+<option value="NYO">Stockholm (Skavsta)</option>
+<option value="VST">Stockholm (Vasteras)</option>
+<option value="SXB">Strasbourg</option>
+<option value="STR">Stuttgart</option>
+<option value="SZZ">Szczecin</option>
+<option value="TLL">Tallinn</option>
+<option value="TMP">Tampere</option>
+<option value="TNG">Tangier</option>
+<option value="TGM">Targu Mures</option>
+<option value="TLV">Tel Aviv</option>
+<option value="TFN">Tenerife (North)</option>
+<option value="TFS">Tenerife (South)</option>
+<option value="SKG">Thessaloniki</option>
+<option value="TSR">Timi?oara Traian Vuia International Airport</option>
+<option value="TLN">Toulon</option>
+<option value="TLS">Toulouse </option>
+<option value="TUF">Tours </option>
+<option value="TPS">Trapani</option>
+<option value="TRS">Trieste</option>
+<option value="TRN">Turin</option>
+<option value="TKU">Turku T2</option>
+<option value="VLC">Valencia</option>
+<option value="VLL">Valladolid</option>
+<option value="VAR">Varna</option>
+<option value="VCE">Venice (Marco Polo)</option>
+<option value="TSF">Venice (Treviso)</option>
+<option value="VRN">Verona</option>
+<option value="VBS">Verona (Brescia)</option>
+<option value="VGO">Vigo</option>
+<option value="VNO">Vilnius</option>
+<option value="VIT">Vitoria (Bilbao)</option>
+<option value="VOL">Volos</option>
+<option value="WAW">Warsaw (Chopin)</option>
+<option value="WMI">Warsaw (Modlin)</option>
+<option value="WRO">Wroclaw</option>
+<option value="ZAD">Zadar</option>
+<option value="ZTH">Zakinthos</option>
+<option value="ZAZ">Zaragoza</option>
+<option value="ZQW">Zweibruken</option>
+</select>
+                <span class="help-inline">
+                    
+                </span>
+            </div>
+        </div>
+        <div id="captcha" class="control-group">
+            <div class="controls" style="margin-left:210px;padding-left:20px;">
+                
+
+
+  <div class="LBD_CaptchaDiv" id="Eu261Captcha_CaptchaDiv" style="width: 230px !important; height: 50px !important;">
+    <div class="LBD_CaptchaImageDiv" id="Eu261Captcha_CaptchaImageDiv" style="width: 200px !important; height: 50px !important;"><!--
+   --><img class="LBD_CaptchaImage" id="Eu261Captcha_CaptchaImage" src="BotDetectCaptcha.ashx?get=image&amp;c=Eu261Captcha&amp;t=0c1715e02488426db792af3ed87c5644&amp;s=odbngR%2ftDuVC6Ya7AwruW6Mfewk2pgBC%2bWgltT0BesaNPfggFHhFVgVTpIWb6%2bfqZnGn5dkjxt%2bQIqHYsIPInQ%3d%3d" alt="Change the CAPTCHA code" /><!-- --></div><!--
+ --><div class="LBD_CaptchaIconsDiv" id="Eu261Captcha_CaptchaIconsDiv" style="width: 24px !important;"><!--
+   --><a class="LBD_ReloadLink" id="Eu261Captcha_ReloadLink" href="#" onclick="Eu261Captcha.ReloadImage(); this.blur(); return false;" title="Change the CAPTCHA code"><img class="LBD_ReloadIcon" id="Eu261Captcha_ReloadIcon" src="BotDetectCaptcha.ashx?get=reloadIcon" alt="Change the CAPTCHA code" /></a><!--
+   --><a class="LBD_SoundLink" id="Eu261Captcha_SoundLink" href="BotDetectCaptcha.ashx?get=sound&amp;c=Eu261Captcha&amp;t=0c1715e02488426db792af3ed87c5644&amp;s=odbngR%2ftDuVC6Ya7AwruW6Mfewk2pgBC%2bWgltT0BesaNPfggFHhFVgVTpIWb6%2bfqZnGn5dkjxt%2bQIqHYsIPInQ%3d%3d" onclick="Eu261Captcha.PlaySound(); this.blur(); return false;" title="Speak the CAPTCHA code"><img class="LBD_SoundIcon" id="Eu261Captcha_SoundIcon" src="BotDetectCaptcha.ashx?get=soundIcon" alt="Speak the CAPTCHA code" /></a><!--
+   --><div class="LBD_Placeholder" id="Eu261Captcha_AudioPlaceholder">&nbsp;</div><!--
+ --></div>
+    <script src="BotDetectCaptcha.ashx?get=clientScriptInclude" type="text/javascript"></script>
+    <script type="text/javascript">
+    //<![CDATA[
+      BotDetect.Init('Eu261Captcha', 'CaptchaCode', true, true, true, true, 120000, 7200);
+    //]]>
+    </script>
+    <input type="hidden" name="LBD_VCID_Eu261Captcha" id="LBD_VCID_Eu261Captcha" value="0c1715e02488426db792af3ed87c5644" />
+  </div>
+
+
+                <label class="control-index-label">
+                    Enter the code shown:
+                </label>
+            </div>
+            <div style="margin: 5px 230px">
+                <input id="CaptchaUserInput" name="CaptchaUserInput" type="text" value="" />
+                <span class="help-inline">
+                    
+                </span>
+            </div>
+        </div>
+<input Value="0c1715e02488426db792af3ed87c5644" id="CaptchaId" name="CaptchaId" type="hidden" value="" />        <label for="CaptchaUserInput" style="padding-top: 5px;">
+            <span class="red-star" style="color: red; font-weight: bold">*</span> Delayed refers to flight delays over three hours. Claims will not be accepted for delays less than three hours
+        </label>
+        <div class="" style="padding-top:5px;margin-right:50px">
+            If your flight has been cancelled or delayed more than 3 hours (on arrival) and is caused by reasons within the control of Ryanair you may be entitled to compensation, <a href='https://www.ryanair.com/content/dam/ryanair/help-centre-pdfs/eu261-version13/EU261%20for%20United%20Kingdom%20-%20EN.pdf'>click here</a> for more information and <a href='https://contactform.ryanair.com/?cr=eu261&amp;lg=en&amp;id=78'>click here</a> to submit your compensation claim
+        </div>
+        <div class="controls" style="padding-top: 10px;margin-left:230px">
+            <div class="">
+                <input id="btn-continue" class="btn btn-large" type="submit" value="Continue" />
+            </div>
+        </div>
+</form></div>
+
+    </div>
+</body>
+</html>

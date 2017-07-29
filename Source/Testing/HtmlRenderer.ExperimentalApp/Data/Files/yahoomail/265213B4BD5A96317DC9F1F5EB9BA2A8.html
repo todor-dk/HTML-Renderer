@@ -1,0 +1,477 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<link rel="apple-touch-icon-precomposed" href="vosnet/Handlers/Content/Images/Image.ashx?apple-touch-icon-precomposed.png">
+<link rel="shortcut icon" href="vosnet/Handlers/Content/Images/Image.ashx?favicon.ico">
+<link type="text/css" rel="stylesheet" href="VOSStyle_r.css?20130329">
+<link rel="stylesheet" type="text/css" media="print"  href="vosnet/Handlers/Content/StyleSheets/StyleSheet.ashx?print.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" language="javascript" src="includes/js/window.js"></script>
+<script language="javascript">window.name='VOS2401000000';</script><script type="text/javascript" language="javascript" src="includes/js/multisession.js?20120120907"></script>
+<script type="text/javascript" language="javascript">
+function getCookie(c_name)
+{
+	if (document.cookie.length > 0)
+	{
+		c_start = document.cookie.indexOf(c_name + "=")
+		if (c_start!= -1)
+		{
+			c_start = c_start + c_name.length + 1;
+			c_end = document.cookie.indexOf(";",c_start);
+			if (c_end == -1)
+			{
+				c_end = document.cookie.length;
+			}
+			return unescape(document.cookie.substring(c_start,c_end));
+		} 
+	}
+	return null;
+} 
+function createCookie(name,value,days)
+{
+	if (days)
+	{
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = "";
+		expires = "; " + date.toGMTString(); secure;
+	}
+	else
+	{
+		var expires = "";
+	}
+	document.cookie = name + "=" + value + expires + "; path=/; secure"
+}
+</script>
+<script type="text/javascript" language="javascript">
+var sPath = window.location.pathname;
+var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
+
+if (sPage.toLowerCase() != 'loginintro.asp')
+   {
+	var sessionTimeout = 120; // In minutes, 1 = 1 minute
+	var sessionTimeoutWarning = 105; // In minutes, 1 = 1 minute
+	var timeOnPageLoad = new Date();
+
+	//For warning
+	var setSessionWarning = setTimeout('SessionWarning()', parseInt(sessionTimeoutWarning) * 60 * 1000);
+	//To redirect to the welcome page
+	var setRedirectToWelcomePage = setTimeout('RedirectToWelcomePage()', parseInt(sessionTimeout) * 60 * 1000);
+
+	//Session Warning
+	function SessionWarning() {
+		//minutes left for expiry
+		var minutesForExpiry =  (parseInt(sessionTimeout) -
+			parseInt(sessionTimeoutWarning));
+		var message = 'Your session will expire in' + " " + minutesForExpiry +
+		" " + 'minutes. Please click anywhere on this page, save your information or navigate to  your next screen to continue your current session.';
+		alert(message);
+		var currentTime = new Date();
+		//time for expiry
+		var timeForExpiry = timeOnPageLoad.setMinutes(timeOnPageLoad.getMinutes()
+		    + parseInt(sessionTimeout));
+
+		//Current time is greater than the expiry time
+		if(Date.parse(currentTime) > timeForExpiry)
+			{
+				alert('Your previous session has expired. You will need to log in to continue working on this  site.');
+				window.location = 'https://mwejobs.maryland.gov/vosnet/Logoff.aspx?clearsession=true';
+			}
+		}
+		//Session timeout
+		function RedirectToWelcomePage(){
+			alert('Your previous session has expired. You will need to log in to continue working on this  site.');
+			window.location = 'https://mwejobs.maryland.gov/vosnet/Logoff.aspx?clearsession=true';
+		}
+   }
+   	function handleClick(evt) {
+           if (sPage.toLowerCase() != 'loginintro.asp' && sPage.toLowerCase() != 'default.asp')
+   	    {
+   		    clearTimeout(setSessionWarning);
+   		    clearTimeout(setRedirectToWelcomePage);
+   		    setTimeout('SessionWarning()', parseInt(sessionTimeoutWarning) * 60 * 1000);
+   		    setTimeout('RedirectToWelcomePage()', parseInt(sessionTimeout) * 60 * 1000);
+   	    }
+   	}
+	</script>
+<script type="text/javascript" language="javascript"  src="vosnet/JavaScript/jQueryLibrary/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" language="javascript"  src="vosnet/JavaScript/jQueryLibrary/jquery-migrate-1.3.0.min.js"></script>
+<script src="vosnet/JavaScript/Bootstrap/bootstrap.min.js"></script>
+<script src="vosnet/JavaScript/Bootstrap/vos-responsive-net.js"></script>
+<script type="text/javascript" language="javascript"  src="vosnet/JavaScript/gui_r.js"></script>
+<link type="text/css" href="vosnet/JavaScript/jQueryLibrary/themes/base/jquery-ui-1.7.3.custom.css" rel="stylesheet" />
+<link type="text/css" href="vosnet/Handlers/Content/StyleSheets/StyleSheet.ashx?confirm.css" rel="stylesheet" />
+<script type="text/javascript" language="javascript" src="vosnet/javascript/gsiframework.js"></script>
+<script type="text/javascript" language="javascript" src="vosnet/JavaScript/jQueryLibrary/jquery-ui.js"></script>
+<script type="text/javascript" language="javascript"  src="vosnet/JavaScript/jQueryLibrary/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" language="javascript">autoComplete = true;</script>
+<title>MWEJobs - Login</title>
+<meta name="author" content="www.geosolinc.com">
+<meta name="copyright" content="Copyright (c) 1998-2017 Geographic Solutions" />
+<meta name="distribution" content="global">
+<meta name='viewport' content='width=device-width,initial-scale=1.0' />
+<!-- Google Universal Analytics -->
+<script type="text/javascript">
+(function (i, s, o, g, r, a, m) {
+i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+(i[r].q = i[r].q || []).push(arguments)
+}, i[r].l = 1 * new Date(); a = s.createElement(o),
+m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+ga('create', 'UA-57058063-1', 'auto');
+ga('send', 'pageview');
+</script>
+<!-- End Google Universal Analytics -->
+
+</head>
+<body onclick="handleClick(event);">
+<DIV ID='splashScreen' STYLE='display:none;position:absolute;z-index:5;top:30%;left:35%;'>
+<TABLE BGCOLOR='#000000' BORDER=1 BORDERCOLOR='#000000' CELLPADDING=0 CELLSPACING=0 HEIGHT=200 WIDTH=300>
+<TR><TD WIDTH='100%' HEIGHT='100%' BGCOLOR='#FFFFFF' ALIGN='CENTER' VALIGN='MIDDLE'>
+</TD></TR></TABLE></DIV>
+<div id="CookiePath" class="hidden">/</div>
+<div id="MultiSessionURL" class="hidden">multisession.asp</div>
+<div id="AppUserTheme" class="hidden">graphic</div>
+<input name="hdnGlobalPopUpResources" type="hidden" id="hdnGlobalPopUpResources" value="TitleConfirm|Please Confirm...|-|TitleAlert|Alert...|-|ButtonOK|OK|-|ButtonCancel|Cancel|-||" />
+<div id='preTopMenu' class='containerx-fluid'></div>
+<div class='toolbar-menu noprint row' id='VOS_topmenubar'>
+<div id='gui_toolbar'>
+<div class='sidebar-brand' id='menu-toggle'>
+<i class='fa fa-bars' data-toggle='tooltip' title='Menu'></i><div class='sidebar-text'>Menu</div>
+</div>
+<div id="ctl00_adaPreference"><a accesskey="1" tabindex="1" href="javascript:Settings('vosnet/userprefs.aspx');">Page Preferences</a></div>
+<div id="skip-to-content"><a accesskey="2" tabindex="2" href="#content-main">Skip to main content</a></div>
+<div id="skip-to-footer"><a accesskey="3" tabindex="3" href="#content-footer">Skip to page footer</a></div>
+<ul  id="gui_nav_header">
+<li id="gui_nav_home" class="homesign"  onclick="return NavLinkClick(this);"><a href="https://mwejobs.maryland.gov/vosnet/Default.aspx?plang=E">Home</a></li>
+<li id="gui_nav_login" class="homesign" onclick="return NavLinkClick(this);"><a href="https://mwejobs.maryland.gov/loginintro.asp">Register/Sign in</a></li>
+<li id="gui_nav_js" onclick="return NavLinkClick(this);"><a href="javascript:confirmIndServices();">Services for Individuals</a></li>
+<li id="gui_nav_js" class="mob" onclick="return NavLinkClick(this);"><a href="vosnet/guesttype.aspx?1=1">Guest Access</a></li>
+<li id="gui_nav_emp" onclick="return NavLinkClick(this);"><a href="javascript:confirmEmpServices();">Services for Employers</a></li>
+<li id="gui_nav_lmi" onclick="return NavLinkClick(this);"><a href="javascript:confirmAnaServices();">Labor Market Analysis</a></li>
+</ul>
+</div>
+<div id='univsearch' class='hidden menubox'>
+   <h4>Quick Job Search</h4>
+   <div class='row'>
+       <input id='univsearchtxtkeyword' class='col-xs-5'  placeholder='Keyword' onfocus='this.placeholder="";' />
+       <input id='univsearchlocation' class='col-xs-4' placeholder='City or Zip' onfocus='this.placeholder="";' />
+       <input id='univsearchbtn' type='button' class='formbutt col-xs-3' value='Search' OnClick='myUnivSearch("2401000000");' />
+   </div>
+</div>
+</div>
+<div id='VOS_wrapper'>
+<div id='VOS_sidebar-wrapper' class='menubox navbar navbar-custom'>
+
+<div id="gui_menu">
+</div>
+</div>
+<div id='VOS_page-content-wrapper'>
+<div id='review_encl_mb'></div>
+<div id='gui_header_duff'></div>
+<div id='gui_header' class='row mastheadnet' >
+<div class='logoencl'><h1><a class='hlHome' href="https://mwejobs.maryland.gov/vosnet/Default.aspx">
+<img src="vosnet/Handlers/Content/Images/Image.ashx?logo.png" class='gui_logo_width' id='gui_logo' border='0' alt="MWEJobs" title="MWEJobs" /></a>
+<a id="ADAskipcontent" name="content-main"></a>
+</h1>
+</div>
+<div class='instrencl' role='complementary'>
+<p id="gui_instructions">If you have not previously registered, please click one of the links under <em>Create a User Account</em> to create a new User ID. To view MWEJobs with limited access, click the <em>Guest Access</em> link.</p>
+</div></div><div id='mstBody' class='row' role='main'>
+<p id="gui_instructions" class="gui_instructions_main">If you have not previously registered, please click one of the links under <em>Create a User Account</em> to create a new User ID. To view MWEJobs with limited access, click the <em>Guest Access</em> link.</p>
+
+<script type="text/javascript" language="javascript" src="vosnet/JavaScript/ADA.js"></script>
+
+
+<script language="javascript">
+<!--
+			
+function checkForm(theform)  
+{
+		  
+	if (theform.txtUsername.value == "" || theform.txtPassword.value == "")
+	{
+		alert("Please provide a Username and Password before you continue.");
+		return false;
+	}
+			
+	return true;
+}
+//-->
+</script>
+<noscript>
+
+
+<meta http-equiv="refresh" content="0;url=vosnet/settings.aspx?a=nojs">
+
+</noscript>
+
+<script language="javascript">
+<!--
+/******************************************************************************
+' Name:	PopupHelp(pageid, sectionid)
+'
+' Shared:
+'
+' Application: 
+'
+' Purpose: 
+'
+' Linked From: 
+'
+' Requires:
+'
+' Linked To:  
+'
+' Created: 
+'
+' History: ~1 
+'   TN  02/18/2012 - #186397 Added analyzer help
+'   DC  02/23/2012 - #186755 Modified javascript a bit as it is causing invalid paths for pages with "analyzer" in the name
+'******************************************************************************/
+
+var newHelp;
+
+function PopupHelp(pageid, sectionid)
+{
+	// define URL for new window
+    var url = "vosnet/info.aspx?pu=1&pageid=" + pageid + "&sectionid=" + sectionid;
+    var loc = location.pathname.toLowerCase();
+    //alert(loc);
+    if (loc.indexOf("analyzer/") != -1) 
+    {
+        loc = loc.substring(0, loc.indexOf("analyzer/"));
+        url = loc + "vosnet/info.aspx?pu=1&pageid=" + pageid + "&sectionid=" + sectionid;
+        //alert(url);
+    }
+	
+	
+		// Find left and top coordinates to center window
+		if (navigator.appVersion.indexOf("MSIE") > -1 || (navigator.appName == "Netscape" && parseInt(navigator.appVersion.charAt(0)) >= 4))
+		{
+			var h = (screen.availHeight - 300) / 2;
+			var w = (screen.availWidth - 450) / 2;
+			var center = ",top=" + h + ",left=" + w;
+		}
+			
+		if (!newHelp || newHelp.closed)
+		{
+			newHelp = window.open(url,"","resizable=yes,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,height=300,width=450" + center);
+			if (!newHelp.opener)
+			{
+				newHelp.opener = window;
+			}
+		}
+		else
+		{
+			// window's already open; bring to front
+			newHelp.location.href = url;
+			newHelp.focus();
+		}
+	
+}
+// -->
+</script>
+<form method='post' action='logincheck.asp' onSubmit='return checkForm(this)' name='frmLogin'>
+<table class="UTIwidth100 HPRtextleft" border='0' cellpadding='0' cellspacing='0' >
+<tr>
+<TD>&nbsp;</TD>
+<TD style="text-align:right;">
+<em>For help click the question mark icon next to each section.</em>
+</TD>
+</tr></table>
+<table style="width: 100%; background-color:; "  border="0" cellpadding="0" cellspacing="0" >
+<tr>
+<td>
+<br /><fieldset>
+<legend>Option 1 - Already Registered
+<span>
+</span>
+</legend>
+<table style="width: 100%; background-color:; "  border="0" cellpadding="0" cellspacing="0" >
+<td>
+<table style="width:590px; background-color:;" border="0" cellpadding="2" cellspacing="0">
+<tr>
+<td style="width: 550px; text-align:left;">
+<strong></strong>
+</td>
+<td style="width: 20px; text-align: right;">&nbsp;</td>
+<td style="width: 20px; text-align: left;"><a href='javascript:PopupHelp("login","existing");'><img src='vosnet/Handlers/Content/Images/Image.ashx?help16.gif' alt='Help question mark icon. Help question mark icon. Already Registered. This link opens a new window.' title='Help question mark icon. Already Registered. This link opens a new window.' border='0' style="width: 16; height: 16;"></a></td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+	<tr><td align='left'>
+<form method='post' action='logincheck.asp' onSubmit='return checkForm(this)' name='frmLogin'>
+<img src="vosnet/Handlers/Content/Images/Image.ashx?loading_small.gif" alt="Loading..." id="loading_login" style="border: none; padding-left: 10px;">
+<iframe src="vosnet/LoginFrame.aspx?action=" style="display: none; width: 100%; height: auto; margin: 0; padding: 0;" scrolling="no" frameborder="0" id="loginFrame" onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+<p>Your browser does not support iframes</p></iframe>
+<input type="hidden" id="txtUsername" name="txtUsername" value="">
+<input type="hidden" id="txtPassword" name="txtPassword" value="">
+<input type="hidden" id="txtPwdPlain" name="txtPwdPlain" value="">
+<p>			If you have forgotten your user name and/or password, please click&nbsp;<a title="Retrieve User Name or Password" class='bodylink' href='vosnet/Retrieval/SelectRetrievalOptions.aspx'>Retrieve User Name or Password</a>.<br /><br />
+</p>		</td>
+	</tr>
+</table>
+</fieldset>
+<br /><fieldset>
+<legend>Option 2 - Try Us Out
+<span>
+</span>
+</legend>
+<table style="width: 570px; background-color:; "  border="0" cellpadding="0" cellspacing="0" >
+<tr>
+<td>
+<table style="width:590px; background-color:;" border="0" cellpadding="2" cellspacing="0">
+<tr>
+<td style="width: 550px; text-align:left;">
+<strong></strong>
+</td>
+<td style="width: 20px; text-align: right;">&nbsp;</td>
+<td style="width: 20px; text-align: left;"><a href='javascript:PopupHelp("login","guest");'><img src='vosnet/Handlers/Content/Images/Image.ashx?help16.gif' alt='Help question mark icon. Help question mark icon. Try Us Out. This link opens a new window.' title='Help question mark icon. Try Us Out. This link opens a new window.' border='0' style="width: 16; height: 16;"></a></td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td align='left'>If you would like to view MWEJobs as a visitor to see what services are available, please click&nbsp;<em><a class='bodylink' href='vosnet/guesttype.aspx'>Guest Access</a></em>.
+</tr>
+	<tr><td align='center'>
+</table>
+</fieldset>
+<br /><fieldset>
+<legend>Option 3 - Create a User Account
+<span>
+</span>
+</legend>
+<table style="width: 570px; background-color:; "  border="0" cellpadding="0" cellspacing="0" >
+<tr>
+<td align='left'>
+<table style="width:590px; background-color:;" border="0" cellpadding="2" cellspacing="0">
+<tr>
+<td style="width: 550px; text-align:left;">
+<strong></strong>
+</td>
+<td style="width: 20px; text-align: right;">&nbsp;</td>
+<td style="width: 20px; text-align: left;"><a href='javascript:PopupHelp("login","register");'><img src='vosnet/Handlers/Content/Images/Image.ashx?help16.gif' alt='Help question mark icon. Help question mark icon. Create a User Account. This link opens a new window.' title='Help question mark icon. Create a User Account. This link opens a new window.' border='0' style="width: 16; height: 16;"></a></td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td>To become a MWEJobs user with access to our online services, select one of the following account types. If you are not sure about registering, visit the&nbsp;<em><a title="Why Register?" class='bodylink' href='https://mwejobs.maryland.gov/vosnet/communications/common/whyreg.aspx'>Why Register?</a></em> page.</td>
+</tr>
+<tr><td>&nbsp;</td></tr>
+<tr>
+<td>
+<a class='bodylink' href='vosnet/Privacy/RegistrationAgreement.aspx?t=ind&action='>Individual</a> - Register as this account type if you are an individual and wish to search for the latest job openings, post a résumé online, find career guidance, search for training and education programs, find information on local employers, etc.
+</td>
+</tr>
+<tr><td>&nbsp;</td></tr>
+<tr>
+<td>
+<a class='bodylink' href='vosnet/Registration/Emp/VerifyRegistrationIdentification.aspx?regType=3'>Employer</a> - Register as this account type if you represent an employer and wish to post job openings online, search for candidates for your jobs, view local industry or labor market information, etc. 
+</td>
+</tr>
+<tr><td>&nbsp;</td></tr>
+<tr>
+<td>
+<a class='bodylink' href='vosnet/Registration/Ana/Default.aspx'>Analyst</a> - Register as this account type if you are a labor market information or economic development professional looking to analyze area, occupation, and industry data over different geographical regions and time periods.
+</td>
+</tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+</fieldset>
+</td>
+</tr>
+</table>
+<hr size="3"></br><div align='center'>
+<input type="button" class="formbutt" value="Return to previous page" onClick="window.history.back();">
+</div></br>
+<div class="ShowOnPrint">
+<div class='ShowOnPrint'>
+<table border="0" align="center" cellspacing="2" cellpadding="2">
+	<tr>
+		<td class="copyright" align="center">
+Copyright &#169; 1998-2017 Geographic Solutions. All rights reserved.<br>
+For more information contact <a title="Geographic Solutions" class="copyright" href="https://www.geographicsolutions.com" target="new">Geographic Solutions</a>.
+		</td>
+	</tr>
+</table>
+<div style="text-align:center;" class="copyright">17.0</div>
+</div>
+</td>
+<td width="100%"><img src="vosnet/Handlers/Content/Images/Image.ashx?spacer.gif" border="0" height="1" width="5" alt="">&nbsp;</td>
+</tr>
+</table>
+<br>
+<script type="text/javascript">var _gaq = _gaq || [];_gaq.push(['_setAccount', 'UA-7306877-6']);_gaq.push(['_trackPageview']);(function() {var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script><script language="javascript" type="text/javascript">
+function confirmLogOff()
+{
+   geosol.confirm('Are you sure you want to sign out of the system?',function(choice)
+   {
+       if(choice) window.location.href = 'https://mwejobs.maryland.gov/vosnet/logoff.aspx?clearsession=true';
+   });
+}
+
+
+function ResumeConfirmRegistration()
+{
+var dialog = $("<p>To proceed further you must sign in to your MWEJobs account by clicking the Sign In button below. If you do not have an account you will need to click the Register button to create an account. To return click the Cancel button.</p>").dialog({
+ modal: true,
+ dialogClass:  'dashAlert',  
+ title: 'Sign In Or Register', 
+ closeText: '',
+   buttons: {
+     "Cancel":  function() {dialog.dialog('close');}, 
+     "Register":  function() {window.location.href = 'https://mwejobs.maryland.gov/vosnet/Registration/Ind/QuickRegistration.aspx?session=resbuilder';},
+     "Sign In": function() {window.location.href = 'https://mwejobs.maryland.gov/vosnet/LoginIntro.aspx'; return false;} 
+   }
+});
+
+$('.dashAlert').css('z-index',99001);
+$('.dashAlert').children('.ui-dialog-titlebar').removeClass('ui-corner-all');
+var tmpColor = $('.portlet-content').css('border-right-color') ;
+$('.dashAlert').children('.ui-dialog-content').addClass('dashAlert-helper-clearfix');
+$('.dashAlert').children('.ui-dialog-buttonpane').addClass('dashAlert-helper-clearfix');
+$('.dashAlert').children('.ui-dialog-buttonpane').children('.ui-dialog-buttonset').children('.ui-button').addClass('dashAlertButton');
+$('.dashAlert > div > button > span').removeClass('ui-icon');
+$('.dashAlert > div > button ').addClass('dashAlert-ui-icon');
+$('.dashAlert').children('.ui-dialog-buttonpane').css('margin-left','4px');
+$('.dashAlert').children('.ui-dialog-buttonpane').css('font-size','smaller');
+$('.dashAlert').css('border','1px solid ' + tmpColor);
+$('.dashAlert').children('.ui-dialog-titlebar').addClass('dashAlertTitle');
+$('.ui-widget-overlay').css('opacity',0.5);
+$('.ui-widget-overlay').css('filter','Alpha(Opacity=50)');
+$('.ui-widget-overlay').css('z-index',99000);
+$('.ui-widget-overlay').css( 'background', '#aaaaaa url("https://mwejobs.maryland.gov/vosnet/JavaScript/jQueryLibrary/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png") 50% 50% repeat-x');
+}
+
+
+function confirmIndServices()
+{
+       window.location.href = 'https://mwejobs.maryland.gov/vosnet/guest.aspx?guesttype=IND' ;
+}
+
+
+function confirmStuServices()
+{
+       window.location.href = 'https://mwejobs.maryland.gov/vosnet/guest.aspx?guesttype=IND&SUBGUESTTYPE=STUDENTVOS' ;
+}
+
+
+function confirmEmpServices()
+{
+       window.location.href = 'https://mwejobs.maryland.gov/vosnet/guest.aspx?guesttype=EMP' ;
+}
+
+
+function confirmAnaServices()
+{
+       window.location.href = 'https://mwejobs.maryland.gov/vosnet/guest.aspx?guesttype=LMI' ;
+}
+</script>
+</div>
+</body>
+</html>

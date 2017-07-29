@@ -1,0 +1,475 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="ctl00_Head1"><meta http-equiv="Cache-Control" content="private,no-cache, no-store, must-revalidate" /><meta http-equiv="Expires" content="-1" /><meta http-equiv="Pragma" content="private,no-cache" /><link href="/Auth/Content/CSS/Desktop/Login.0170671931.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="/Auth/Content/CSS/Desktop/LoginWidget.0170671931.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="/Auth/Content/CSS/Desktop/jquery-ui-1.9.2.custom.0170671931.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="/Auth/Content/Shared/css/usbankDesktop.0170671931.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="/Auth/Content/Shared/css/skinCommon.0170671931.css" rel="stylesheet" type="text/css" media="all"/>
+
+    <!-- START: PRJ17476 - B-18630 -->
+
+    <script type="text/javascript" src="/Auth/Content/Scripts/Shared/VisitorAPI.0170671931.js"></script>
+
+    <!-- END: PRJ17476 - B-18630 -->
+    
+
+    <script type="text/javascript" language="javascript">
+        var require = {
+            baseUrl: '/Auth/content/scripts',
+            waitSeconds: 180,
+            shim: {
+                'Shared/bootstrap': ['jquery'],
+                'Shared/jquery-pubsub': ['jquery', 'Shared/underscore'],
+                'Shared/jquery.validate': ['jquery'],
+                'Shared/jquery.selectFacade': ['jquery'],
+                'Global/jquery.usb.elementValidatorWDIV2.debug': ['jquery'],
+                'Shared/jquery-ui-1.9.2.custom': ['jquery'],
+                'Shared/underscore': {
+                    exports: '_'
+                },
+                'Global/modernizr-latest': {
+                    exports: 'Modernizr'
+                },
+                'Shared/cruxQueries': {
+                    exports: 'cq'
+                }
+
+            }
+        };          
+    </script>
+    
+    
+    
+    
+        <script type="text/javascript" language="javascript">
+            require.bundles = {
+                'LoginDesktop.0170671931': ['jquery', 'Global/Validator', 'Reporting/s_codeEvent', 'Shared/jquery-pubsub', 'Shared/underscore', 'Global/SessionWatch', 'Global/IdShieldImage', 'Shared/machineSecret_wrapper', 'Shared/machineSecret']
+            }
+        </script>
+        <script data-main='LoginDesktop.0170671931' src="/Auth/content/scripts/shared/require.0170671931.js"></script>
+    
+    
+         <script type="text/javascript" src="//nexus.ensighten.com/usbank/olbprod/Bootstrap.js"></script>
+        
+
+    <script src="/Auth/Content/Scripts/Shared/angular.0170671931.js"
+        type="text/javascript"></script>
+
+    <script src="/Auth/Content/Scripts/Shared/angular-cookies.0170671931.js"
+        type="text/javascript"></script>
+
+    <script type="text/javascript" src="/Auth/Content/Scripts/Shared/placeholder.0170671931.js"></script>
+
+    <script src="/Auth/Content/Scripts/Desktop/Login/LoginWidget.0170671931.js"
+        type="text/javascript"></script>
+
+    <script type="text/javascript" src="/Auth/Content/Scripts/Shared/CommonService.0170671931.js"></script>
+
+    <script type="text/javascript" src="/Auth/Content/Scripts/Reporting/Omniture_Constants.0170671931.js"></script>
+
+    
+    <title>PersonalID Step</title>    
+    <script type="text/javascript" src="/Auth/Content/Scripts/Desktop/Login/MsgModule.0170671931.js"></script>    
+<script type="text/javascript">
+    require(["jquery", "Shared/machineSecret_wrapper"], function($, msWrapperPromise) {
+            $(document).ready(function() {
+                var FirfoxUrl = 'http://www.mozilla.org/en-US/firefox/new/';
+                var Iexp = 'http://windows.microsoft.com/en-us/windows/upgrade-your-browser';
+                var Safari = 'http://support.apple.com/downloads/Safari_1_2';
+                var Chrome = 'https://www.google.com/intl/en/chrome/browser/';
+                var urlId = "";
+                var flagClick = 0;
+                var browserType = '';
+                var isContinueBrowsing ='false';
+
+                if (isContinueBrowsing != null && isContinueBrowsing == 'true') {
+                    s.linkTrackVars = s.linkTrackVars + ",prop53";
+                    s.prop53 = "olb:login:standalone less than optimal browser banner";
+                    s.tl(this, "o", "olb:login:standalone less than optimal browser banner", null, "navigate");
+                }
+
+                $('#linkUpgradeBrowser').click(function() {
+                    urlId = '#linkUpgradeBrowser';
+                    destinationCall(browserType);
+                });
+
+                msWrapperPromise.always(function() {
+                    //Setting flag to show machineSecretWrapper js file executed to load Actimize data.
+                    $("#hdnEntrustCompleted").val("true");
+                    //Checking if login button clicked already or not.
+                    if ($("#hdnUserSubmitedForm").val() == "true") {
+                        $("#btnContinue").click();
+                    }
+                });
+
+                function destinationCall(browserName) {
+                    if (flagClick == 0) {
+                        TagOmnitureBrowserUpgradeLinks(browserName);
+                        ThirdPartyLightbox();
+                    }
+                    if (flagClick == 1) {
+                        destPath = UB_GoToBrowserSite(browserName);
+                        $(urlId).attr('href', destPath);
+                        window.location.href = $(urlId).attr('href');
+                    }
+                }
+                
+                /* START: User story B31093 : Display Speed bump for all third party links*/
+                contClick = function() {
+                    flagClick = 1;
+                    $(urlId).click();
+                }
+                cancelClick = function() {
+                    flagClick = 0;
+                }
+                /* END: User story B31093 : Display Speed bump for all third party links*/
+
+                function UB_GoToBrowserSite(browser) {
+                    if (browser !== '') {
+                        var destinationPath = "";
+                        browserType = browser;
+                        switch (browser) {
+                            case 'firefox':
+                                destinationPath = FirfoxUrl;
+                                break;
+                            case 'chrome':
+                                destinationPath = Chrome;
+                                break;
+                            case 'safari':
+                                destinationPath = Safari;
+                                break;
+                            case 'ie':
+                                destinationPath = Iexp;
+                                break;
+                            default:
+                                destinationPath = "#";
+                        }
+
+                    }
+                    return destinationPath;
+                }
+
+               
+                function TagOmnitureBrowserUpgradeLinks(browser) {
+                    if (browser !== '') {
+                        switch (browser) {
+                        case 'ie':
+                            s.linkTrackVars = s.linkTrackVars + ",prop53";
+                            s.prop53 = "olb:login:standalone less than optimal browser link to upgrade IE";
+                            s.tl(this, "o", "olb:login:standalone less than optimal browser link to upgrade IE", null, "navigate");
+                            break;
+                        case 'firefox':
+                            s.linkTrackVars = s.linkTrackVars + ",prop53";
+                            s.prop53 = "olb:login:standalone less than optimal browser link to upgrade firefox";
+                            s.tl(this, "o", "olb:login:standalone less than optimal browser link to upgrade firefox", null, "navigate");
+                            break;
+                        case 'chrome':
+                            s.linkTrackVars = s.linkTrackVars + ",prop53";
+                            s.prop53 = "olb:login:standalone less than optimal browser link to upgrade chrome";
+                            s.tl(this, "o", "olb:login:standalone less than optimal browser link to upgrade chrome", null, "navigate");
+                            break;
+                        case 'safari':
+                            s.linkTrackVars = s.linkTrackVars + ",prop53";
+                            s.prop53 = "olb:login:standalone less than optimal browser link to upgrade safari";
+                            s.tl(this, "o", "olb:login:standalone less than optimal browser link to upgrade safari", null, "navigate");
+                            break;
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+        
+    <script type="text/javascript" src="https://www.usbank.com/foresee/foresee-trigger.js?foreSeeVersion=250"></script>
+    
+<title>
+
+</title></head>
+<body id="notIE" class="css-enabled cookies-enabled">
+    
+    <!-- DTS 168058 sCode javascript library needs to be in body section, not head section -->
+    
+
+    <script type="text/javascript" src="/Auth/Content/Scripts/Reporting/authreporting.0170671931.js"></script>
+
+    <script type="text/javascript">
+        var APPNAMEForSiteCat = "OLB";
+        var UXNAMEForSiteCat = "Desktop";
+        var reportingData_OLB = {
+            TaggingSolution_Date: "Ens_Nov_2015",
+            PageScope: 'LogIn'
+        };
+    </script>
+
+    <!-- Start - Unsupported Browser Persistent Message -->
+    
+    <!-- End -->
+    <div id='mainContainer' class="Container">
+        
+        <div id="siteHeader" class="commonHeader">
+            
+ <div class="customBackground"></div>
+<div id="siteHeader" class="headerContainer">
+<div class="menuLinks">                          
+           <span class="partnerLink"><a href="http://www.usbank.com" target="_blank">Back to  Site</a><span>|</span></span>
+           <span class="usbHomeLink"><a href="http://www.usbank.com">U.S. Bank Home</a><span>|</span></span>           
+           <span class="customerServiceLink"><a href="http://www.usbank.com/contact" target="_blank">Customer Service</a></span>
+           <span class="locationsLink"><span>|</span><a target="_blank" href="https://locations.usbank.com/search.html">Locations</a></span>           
+           
+        </div>
+    <div class="headerSection_Logos AuthCSBwrap">            
+            
+            <a href="http://www.usbank.com"><span class='logo'></span></a>  
+       
+    </div>
+    <div class="headerSection_Logos AuthCSBwrap">            
+         <span class='brandingusbanklogo usbMenu-span'></span>
+    </div>
+    <div class ="headerSection_Menus">                
+        <span class="partnerCardArt"></span>
+    </div>
+</div>
+<div class='clear'></div>
+
+            
+        </div>
+        <div class="clear">
+        </div>
+        
+        
+        
+    <div class="clear">
+    </div>
+    <div class="lw-AuthMainContainer" ng-app="myapp">
+        <div loginwidgetdir baseurl="" class="lw-floatLeft" personalid="" useriplocked="False" 
+            invalidloginattempts="0" islogout="False" isauth="true" 
+            hasnoassociatedaccounts="False"
+            issessiontimeout="False" errormessage="" usertype="" 
+            iscobrandedcard ="False" appName="OLB" cancelUrl="/Auth/Login">
+        </div>
+        <div>
+    <div id="divLoginNewUserMessageTemplate" class="lw-messageDivider">
+        
+        <div class="lw-marBottom10 lw-blueHead">
+            New user?</div>
+        <div class="lw-AuthForgotId lw-marBottom5">
+            <a href="https://www.usbank.com/online-banking/internet-banking.html"
+                class="lw-marBottom10">
+                Learn about Online Banking</a></div>
+        <div class="lw-AuthForgotId lw-marBottom20">
+            <a href="https://www.usbank.com/online-banking/internet-security.html">
+                Your information is safe with us</a></div>
+        <div>
+            <input type="submit" value="Enroll Now" id="btnEnroll" onclick="s.linkTrackVars= s.linkTrackVars + ',prop53,prop67,eVar67';s.prop53='olb:login:enter personal id standalone enroll now link';s.prop67=s.eVar67='login pilot';s.tl(this, 'o', 'olb:login:enter personal id standalone enroll now link', null, 'navigate');window.location = '/Auth/EnrollmentDesktop/Verification';"
+                class="lw-buttonGreyEnroll" /></div>
+        
+    </div>
+    <div id="divLoginNeedhelpMessageTemplate" class="lw-messageDivider hide">
+        <div class="lw-marBottom10 lw-blueHead">
+            Need login help?</div>
+        <div class="lw-textcolorgrey lw-AuthForgotId">
+            If this is your Personal ID but you don't recognize this question,
+            <a href="/Auth/Landingpage.aspx?La&type=ans"
+                onclick="s.linkTrackVars= s.linkTrackVars + ',prop53,prop67,eVar67';s.prop53='olb:login:answer security question standalone reset link';s.prop67=s.eVar67='login pilot';s.tl(this, 'o', 'olb:login:answer security question standalone reset link', null, 'navigate');">
+                reset your security questions now.</a></div>
+    </div>
+    <div id="divLoginNotyouMessageTemplate" class="lw-messageDivider hide lw-marginTop25">
+        <div class="lw-blueHead lw-marBottom10">
+            Not you?</div>
+        <div class="lw-textcolorgrey lw-AuthForgotId">
+            If this is not your security image, sound or phrase, do not enter your password,
+            <a href="/Auth/Login"
+                class="lw-marBottom10" onclick="s.linkTrackVars= s.linkTrackVars + ',prop53,prop67,eVar67';s.prop53='olb:login:enter password standalone start over link';s.prop67=s.eVar67='login pilot';s.tl(this, 'o', 'olb:login:enter password standalone start over link', null, 'navigate');">
+                start over.</a></div>
+    </div>
+    <div id="divYouAreLoggedOut" class="lw-messageDivider hide">
+        <div class="lw-blueHead lw-marBottom10">
+            For your security</div>
+        <div class="lw-textcolorgrey">
+            we recommend closing your browser after you log out.</div>
+    </div>
+    <div id="divYouHaveBeenLoggedOut" class="lw-messageDivider hide">
+        <div class="lw-blueHead lw-marBottom10">
+            For your security</div>
+        <div class="lw-textcolorgrey">
+            In order to safeguard your information, we log you out after 15 minutes of inactivity.</div>
+    </div>
+</div>
+    </div>
+    <input type="hidden" id="hdnEntrustCompleted" value="false" />
+    <input type="hidden" id="hdnUserSubmitedForm" value="false" />
+    <input type="hidden" id="ActimizeData" value=""/>
+        
+        <script type="text/javascript">
+            try {
+                var iFrameElement = document.createElement("iframe");
+                iFrameElement.setAttribute("width", "1");
+                iFrameElement.setAttribute("height", "1");
+                iFrameElement.setAttribute("frameBorder", "0");
+                iFrameElement.setAttribute("style", "display:none; width:1px; height:1px;");
+                iFrameElement.src = "/Auth/PreFetch.aspx";
+
+                document.body.appendChild(iFrameElement);
+            }
+            catch (ex) { }
+    </script>
+
+
+        
+    </div>
+    
+    
+    <!-- START: User story B31093 : Display Speed bump for all third party links-->
+    
+ <div id="UB_ThirdPartyLightbox" class="hide ui-dialog-content ui-widget-content">
+        <div class="PageTitle ThirdPartyTitle">
+            <strong>Leaving U.S. Bank Website</strong>
+        </div>
+        <div class='span-14 ThirdPartyContent'>
+            By selecting "Continue" you will be transferred to a third party website. U.S. Bank
+           does not own or control the website. U.S. Bank is not responsible for the content
+           of, or products and services provided by, the third party website. U.S. Bank doesn't
+           guarantee the system availability or accuracy of information contained on the third
+           party website.This third party website doesn't operate under the U.S. Bank privacy
+           and information security policies and practices.Please consult the privacy and information
+           secuirty policy on the third party website if you have any concerns or questions
+           about the website or its content. 
+        </div>
+        <div class='buttonPanel padBot20'>
+            <input type="button" value="Continue" id="btnOKThirdParty" />
+            <a id="btnCancelThirdParty" class="cancelLink">Cancel</a>
+        </div>
+    </div>
+    
+<script type="text/javascript" language="javascript">
+    require(["jquery"], function($) {
+        $(document).ready(function() {
+            var speedBumpLink = "";
+            var urlId = "";
+            ThirdPartyLightbox = function() {
+                var thirdPartyConfirmationDialog = $("#UB_ThirdPartyLightbox");
+                thirdPartyConfirmationDialog.dialog({
+                    width: '590px',
+                    height: '650px',
+                    modal: true,
+                    resizable: true,
+                    autoResize: false,
+                    dialogClass: 'infoDialog thirdPartySpeedBump',
+                    autoOpen: false,
+                    show: 'blind',
+                    hide: 'blind',
+                    closeText: 'Close',
+                    close: function(event, ui) {
+
+                    }
+                });
+                thirdPartyConfirmationDialog.dialog('open');
+            }
+
+            $('#btnOKThirdParty').click(function() {
+                $('#UB_ThirdPartyLightbox').dialog('close');
+
+                if (speedBumpLink != "") {
+                    window.open(speedBumpLink);
+                }
+                else {
+                    contClick();
+                }
+            });
+
+            $('#btnCancelThirdParty').click(function() {
+                $('#UB_ThirdPartyLightbox').dialog('close');
+                if (speedBumpLink == "") {
+                    cancelClick();
+                }
+                speedBumpLink = "";
+            });
+
+            openThirdPartyPopup = function(linkUrl) {
+                speedBumpLink = linkUrl;
+                ThirdPartyLightbox();
+            }
+        });
+    });
+</script>    
+    <!-- END: User story B31093 : Display Speed bump for all third party links-->    
+    
+    <div class="Footer" id="page-footer">
+        <div class="Footer_Container">
+            <div>
+                <div>
+                    <div class="Footer_Lock_Icon floatLeft">
+                    </div>
+                    <p>
+                        Connection Secured</p>
+                    <span class="floatRight"><a title="Security Standards" onclick="LinkClick(this.id,'olb:global footer:security standards link')"
+                        id="ss" href="https://www.usbank.com/online-security/fraud-prevention.html" target="_blank">
+                        Security Standards</a> | <a title="Privacy Pledge" onclick="LinkClick(this.id,'olb:global footer:privacy pledge link')"
+                            href="http://www.usbank.com/cgi_w/cfm/about/privacy/privacy_pledge.cfm" target="_blank">Privacy Pledge</a>
+                    </span>
+                </div>
+            </div>
+            <div>
+                ©2017
+                U.S. Bank
+            </div>
+            <div>
+                OLB: KS-MEA  017.06.7193.1
+            </div>
+            <hr />
+            <div>
+                
+					  <div style="border: 1px solid #ACACAC; border-radius: 2px 2px 2px 2px; margin-bottom: 15px; margin-top: 15px; padding: 12px 10px; width: 99%;">
+			<p style="color: #333333;font-size: 12px;font-weight: bold;line-height: 16px;margin:0px !important;padding:0px !important;opacity: 0.9;">Investment products and services are:</p>
+			<p style="color: #333333;font-size: 12px;font-weight: bold;line-height: 16px;margin:0px !important;padding:0px !important;opacity: 0.9;margin-top:12px !important;">Not a Deposit<span style="padding-left:6px;padding-right:6px;">•</span>Not FDIC Insured<span style="padding-left:6px;padding-right:6px;">•</span>May Lose Value<span style="padding-left:6px;padding-right:6px;">•</span>Not Bank Guaranteed<span style="padding-left:6px;padding-right:6px;">•</span>Not Insured by any Federal Government Agency</p>
+			</div>
+			 <br /> 
+				<div style="color:#333333;"><p style="font-size:10px; font-weight:bold; line-height:1; margin:0px 0px 0px">For U.S. Bank:</p><p style="font-size:10px; line-height:1; margin: 10px 0px 0px"><img src="/USB/CMSContent/images/EqualHousingLender1.png" alt="Equal Housing Lender" /> Equal Housing Lender. Deposit products offered by U.S. Bank National Association. Member FDIC</p><p style="font-size:10px; line-height:1; margin: 10px 0px 0px">U.S. Bank is not responsible for and does not guarantee the products, services or performance of U.S. Bancorp Investments.</p></div>
+			  <br /> 
+			<div style="color:#333333;"><p style="font-size:10px; font-weight:bold; line-height:1; margin:0px 0px 0px">For U.S. Bancorp Investments:</p><p style="font-size:10px; line-height:1.5; margin:10px 0px 0px">Investment products and services are available through U.S. Bancorp Investments, the marketing name for U.S. Bancorp Investments, Inc., member <a style="font-size:10px; text-decoration: underline;" title="FINRA" onclick="openThirdPartyPopup('http://www.finra.org/')" onmouseover="this.style.textDecoration = 'none',this.style.color= '#0c2074',this.style.cursor = 'pointer'" onmouseout="this.style.textDecoration = 'underline',this.style.color= '#0c2074'" target="_blank">FINRA</a> and <a style="font-size:10px; text-decoration: underline;" title="SIPC" onclick="openThirdPartyPopup('http://www.sipc.org/')" onmouseover="this.style.textDecoration = 'none',this.style.color= '#0c2074',this.style.cursor = 'pointer'" onmouseout="this.style.textDecoration = 'underline',this.style.color= '#0c2074'" target="_blank">SIPC</a>, an investment adviser and a brokerage subsidiary of U.S. Bancorp and affiliate of U.S. Bank.</p><p style="font-size:10px; line-height:2; margin:10px 0px 0px">The Financial Industry Regulatory Authority (FINRA) Rule 2267 provides for BrokerCheck to allow investors to learn about the professional background, business practices, and conduct of FINRA member firms or their brokers. To request such information, contact FINRA toll-free 1.800.289.9999 or via <a style="font-size:10px; text-decoration: underline;" title="http://brokercheck.finra.org" onclick="openThirdPartyPopup('http://brokercheck.finra.org/')" onmouseover="this.style.textDecoration = 'none',this.style.color= '#0c2074',this.style.cursor = 'pointer'" onmouseout="this.style.textDecoration = 'underline',this.style.color= '#0c2074'" target="_blank">http://brokercheck.finra.org</a>. An investor brochure describing BrokerCheck is also available through FINRA</p></div>
+		 </div>
+            <div class="footerSection_Logos">
+                <span class='footersegmentlogo'></span><span class='footerbrandingusbanklogo'></span>
+            </div>
+        </div>
+    </div>
+    <div style="display: none">
+        <div id="timeoutTemplate" class="infoDialog" title="">
+            <h2>
+                Signing out...</h2>
+            <div class="vs10">
+                <span>
+                    Warning! Your Online Banking session will expire soon....</span>
+            </div>
+            <div class="buttonPanel">
+                <span>
+                    <input type="button" value="Extend Session" id="btnExtendSession" class="usb-blue-default span-4" /></span>
+                <span class="padLeft15">
+                    <input type="button" value="Log Out" id="btnSignout" class="usb-blue-default Logout" /></span>
+            </div>
+            <div class="vs2">
+            </div>
+            <div class="timeoutTemplateExtendedMessage top" style="display: none">
+                Your session has been extended.
+            </div>
+            <div class="clear vs20">
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        require(["Global/SessionWatch"], function(SessionWatch) {
+            SessionWatch.Initialize();
+        });
+
+        function LinkClick(id, st) {
+            s.tl(this, 'o', st, null, 'navigate');
+        }
+              
+
+    </script>
+    
+    
+</body>
+</html>

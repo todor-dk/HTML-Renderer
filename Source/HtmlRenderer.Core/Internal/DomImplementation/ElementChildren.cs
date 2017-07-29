@@ -398,8 +398,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
             {
                 // 1. For each range whose start node is parent and start offset is greater than child's index, increase its start offset by count.
                 // 2. For each range whose end node is parent and end offset is greater than child's index, increase its end offset by count.
-
-                // TODO: The purpose of this is to patch existing Range objects that may be alive and in use.
+                FutureVersions.PatchExistingRanges();
             }
 
             // 3. Let nodes be node's children if node is a DocumentFragment node, and a list containing solely node otherwise.
@@ -417,7 +416,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
             //    nextSibling child, and previousSibling child's previous sibling or parent's last child if child is null.
             if (!suppressObservers)
             {
-                // TODO: Implement observers
+                FutureVersions.ImplementDomObservers();
             }
 
             // 7. For each newNode in nodes, in tree order, run these substeps:
@@ -501,6 +500,13 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
 
                         j++;
                     }
+
+                    // If reference node was not found, just append
+                    if (j < newContents.Length)
+                    {
+                        newContents[j] = newChild;
+                        newChild.SetParent(parent, j);
+                    }
                 }
 
                 this.Content = newContents;
@@ -522,7 +528,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
             // 3. For each range whose end node is an inclusive descendant of node, set its end to(parent, index).
             // 4. For each range whose start node is parent and start offset is greater than index, decrease its start offset by one.
             // 5. For each range whose end node is parent and end offset is greater than index, decrease its end offset by one.
-            // TODO: The purpose of the above is to patch existing Range objects that may be alive and in use.
+            FutureVersions.PatchExistingRanges();
 
             // 6. Let oldPreviousSibling be node's previous sibling.
             Dom.Node oldPreviousSibling = node.PreviousSibling;
@@ -531,13 +537,13 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
             //    a list solely containing node, nextSibling node's next sibling, and previousSibling oldPreviousSibling.
             if (!suppressObservers)
             {
-                // TODO: Implement observers
+                FutureVersions.ImplementDomObservers();
             }
 
             // 8. For each ancestor ancestor of node, if ancestor has any registered observers whose options's subtree is true,
             //    then for each such registered observer registered, append a transient registered observer whose observer and
             //    options are identical to those of registered and source which is registered to node's list of registered observers.
-            // TODO: Implement observers
+            FutureVersions.ImplementDomObservers();
 
             // 9. Remove node from its parent.
             this.RemoveNode(node);
@@ -586,68 +592,199 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
                 return;
             }
 
-            this.Content = ((ComplexContentCollection)this.Content).RemoveNode(node);
+            this.Content = ((ComplexContentCollection)this.Content).RemoveNode(node, idx);
         }
 
         private const int ComplexThreshold = 10;
 
         private class ComplexContentCollection
         {
+            private Node[] Items;
+
+            private int _Count;
+
+            private int _ElementCount;
+
+            private void EnsureCapacity(int capacity)
+            {
+                if (this.Items.Length < capacity)
+                {
+                    const uint MaxArrayLength = 0X7FEFFFFF;
+
+                    uint cap = Math.Max((uint)this.Items.Length, (uint)1) * (uint)2;
+                    if (cap > MaxArrayLength)
+                        cap = MaxArrayLength;
+                    int newCapacity = (int)cap;
+                    if (newCapacity < capacity)
+                        newCapacity = capacity;
+
+                    Node[] newItems = new Node[newCapacity];
+                    if (this._Count > 0)
+                    {
+                        Array.Copy(this.Items, 0, newItems, 0, this._Count);
+                    }
+                    this.Items = newItems;
+                }
+            }
+
             public ComplexContentCollection(Node[] existingNodes)
             {
+                this.Items = new Node[existingNodes.Length * 2];
+                Array.Copy(existingNodes, this.Items, existingNodes.Length);
+                this._Count = existingNodes.Length;
             }
 
             public int Count
             {
-                get { return 0; }
+                get { return this._Count; }
             }
 
             public Node GetNode(int index)
             {
-                return null;
+                if ((index < 0) || (index >= this._Count))
+                    return null;
+                return this.Items[index];
             }
 
             public IEnumerator<Node> GetNodeEnumerator()
             {
-                return null;
+                for (int i = 0; i < this._Count; i++)
+                    yield return this.Items[i];
             }
 
             public int ElementCount
             {
-                get { return 0; }
+                get { return this._ElementCount; }
             }
 
             public Element GetElement(int index)
             {
+                // IMPROVE: This is an expensive brute-force operation. 
+                // The cost of performing this is O(n). We may implement some caching if needed.
+                int elementIndex = 0;
+                for (int i = 0; i < this._Count; i++)
+                {
+                    Element elem = this.Items[i] as Element;
+                    if (elem != null)
+                    {
+                        if (elementIndex == index)
+                            return elem;
+
+                        elementIndex++;
+                    }
+                }
+
                 return null;
             }
 
             public IEnumerator<Element> GetElementEnumerator()
             {
-                return null;
+                for (int i = 0; i < this._Count; i++)
+                {
+                    Element elem = this.Items[i] as Element;
+                    if (elem != null)
+                        yield return elem;
+                }
             }
 
             public void InsertNode(ParentNode parent, Node newChild, Node referenceChild)
             {
+                if (newChild is Element)
+                    this._ElementCount++;
+                this.EnsureCapacity(this._Count + 1);
+
+                if (referenceChild != null)
+                {
+                    int idx = referenceChild.NodeCollectionIndex;
+#if DEBUG
+                    // Args. should have been validated by the callers, but check once more.
+                    if (this.GetNode(idx) != referenceChild)
+                        throw new ArgumentException();
+#endif
+
+                    Node[] items = this.Items;
+                    for (int i = idx + 1; i <= this._Count; i++)
+                    {
+                        Node node = items[i - 1];
+                        node.SetCollectionIndex(i);
+                        items[i] = node;
+                    }
+                    this.Items[idx] = newChild;
+                    newChild.SetParent(parent, idx);
+                    this._Count++;
+                }
+                else
+                {
+                    this.Items[this._Count] = newChild;
+                    newChild.SetParent(parent, this._Count);
+                    this._Count++;
+                }
             }
 
-            public object RemoveNode(Node node)
+            public object RemoveNode(Node node, int nodeIndex)
             {
+#if DEBUG
+                // Args. should have been validated by the callers, but check once more.
+                if (this.GetNode(nodeIndex) != node)
+                    throw new ArgumentException();
+#endif
+
+                this._Count--;
+                if (node is Element)
+                    this._ElementCount--;
+                for (int i = nodeIndex; i < this._Count; i++)
+                    this.Items[i] = this.Items[i + 1].SetCollectionIndex(i);
+                this.Items[this._Count] = null;
+
+                if (this._Count <= ElementChildren.ComplexThreshold)
+                    return this.Items.Take(this._Count).ToArray();
+
                 return this;
             }
 
             public Element GetLastElement()
             {
+                for (int i = this._Count - 1; i >= 0; i--)
+                {
+                    Element elem = this.Items[i] as Element;
+                    if (elem != null)
+                        return elem;
+                }
+
                 return null;
             }
 
             public Element GetNextElementSibling(Node node)
             {
+                int idx = node.NodeCollectionIndex;
+#if DEBUG
+                // Args. should have been validated by the callers, but check once more.
+                if (this.GetNode(idx) != node)
+                    throw new ArgumentException();
+#endif
+                for (int i = idx + 1; i < this._Count; i++)
+                {
+                    Element elem = this.Items[i] as Element;
+                    if (elem != null)
+                        return elem;
+                }
                 return null;
             }
 
             public Element GetPreviousElementSibling(Node node)
             {
+                int idx = node.NodeCollectionIndex;
+#if DEBUG
+                // Args. should have been validated by the callers, but check once more.
+                if (this.GetNode(idx) != node)
+                    throw new ArgumentException();
+#endif
+                for (int i = idx - 1; i >= 0; i--)
+                {
+                    Element elem = this.Items[i] as Element;
+                    if (elem != null)
+                        return elem;
+                }
                 return null;
             }
         }

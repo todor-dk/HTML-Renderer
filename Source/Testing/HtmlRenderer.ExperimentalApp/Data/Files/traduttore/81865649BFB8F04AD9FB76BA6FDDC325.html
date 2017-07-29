@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>MyMemory - Machine translation meets human translation</title>
+<META HTTP-EQUIV="CONTENT-LANGUAGE" CONTENT="en-ZA,en"><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="MyMemory is the world largest collaborative translation archive."/>
+<meta name="keywords" content="Dictionary, Translation Memory, translations, TMX, Machine Translation" />
+<meta name="viewport" content="width=device-width" />
+<script type="text/javascript" src="/inc/jquery.min.js"></script>
+<script type="text/javascript" src="/inc/animatedcollapse.js"></script>
+<script type="text/javascript" src="/inc/tms.js?v=1.4.5"></script>
+    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-545ca4a82f8c797e" async="async"></script>
+
+<link rel="canonical" href="http://mymemory.translated.net/" />
+
+<script type="text/javascript">
+
+		var phpsessid = "";
+var nloops = 0;
+var loops=0;
+
+function updateLinks(s,t) {
+	var req2 = null;
+	loops++;
+	if (window.XMLHttpRequest) { 
+		req2 = new XMLHttpRequest(); 
+	}
+	else if (window.ActiveXObject)	{
+		try {
+			req2 = new ActiveXObject("Msxml2.XMLHTTP");
+		} catch (e)
+		{
+			try {
+				req2 = new ActiveXObject("Microsoft.XMLHTTP");
+			} catch (e) {}
+		}
+	}
+	req2.onreadystatechange = function()
+	{ 
+		if(req2.readyState == 4)
+		{
+			if(req2.status == 200)	{ refreshContent(s,t);/*document. getElementById("otherlinks"). innerHTML = ""+req2.responseText+"";*/	}
+			else {	
+				// i keep the static value! 
+			}
+		} 
+	}; 
+	req2.open("GET", "/updateLinks.php?sl="+s+"&tl="+t+"&lang=en", true); 
+	req2.send(null);
+	if (loops<30)  setTimeout("updateLinks('"+s+"','"+t+"')",15000);
+} 
+
+
+function updatecounter()
+{ 
+	var req = null;
+	nloops++;
+	if (window.XMLHttpRequest) { 
+		req = new XMLHttpRequest(); 
+	}
+	else if (window.ActiveXObject)	{
+		try {
+			req = new ActiveXObject("Msxml2.XMLHTTP");
+		} catch (e)
+		{
+			try {
+				req = new ActiveXObject("Microsoft.XMLHTTP");
+			} catch (e) {}
+		}
+	}
+	req.onreadystatechange = function()
+	{ 
+		if(req.readyState == 4)
+		{
+			if(req.status == 200)	{ document. getElementById("segcounter"). innerHTML = "<b>"+req.responseText+"</b>";	}
+			else {	
+				// i keep the static value!
+			}
+		} 
+	}; 
+	req.open("GET", "/get_cached_segments_count.php", true); 
+	req.send(null);
+	if (nloops<10)  setTimeout("updatecounter()",10000);
+} 
+function changeclass() {
+	var el = document.getElementById("cnt");
+	el.value ="";
+	el.className ="load";
+}
+function refreshContent(s,t) {
+	if (loops>1) {
+		$("#otherlinks").fadeOut("slow", function(){
+				$("#otherlinks").load("/updateLinks.php?sl="+s+"&tl="+t+"&lang=en",false, function() {
+					$("#otherlinks").fadeIn("slow");
+					});
+				})}
+	return false;
+}
+
+
+</script>
+
+<style>
+body { 	font-size: 85%; font-family:"lucida grande", "Segoe UI", "Calibri", Arial, Helvetica, sans-serif;text-align:center;background:url(../img/bg_header.gif) 0 60px repeat-x; margin:0;padding:8px 0 0 0;}
+#mm{ background: url(../img/logo_mm.png) 0 0 no-repeat; display:block; width:173px;height:42px;margin:3px auto 20px auto;text-indent:-99999999px;clear:both;}
+#cnt{width:780px; margin:0 auto;text-align:left;}
+#mn{margin:10px 30px 60px 0;padding:0;font-size:80%;float:right;}
+#mn li{margin:0px 0 0 0;padding:0 6px 0 5px;display:inline;list-style:none; border-right:1px solid #999;}
+a:visited{color:#003366;text-decoration:underline}
+a:link{color:#003366;text-decoration:underline}
+a:hover{color:#003366;text-decoration:none}
+h1{font-weight:normal;font-size:180%;margin:0 0 5px 0;}
+h2{font-weight:normal;font-size:120%; margin:10px 0 0 0;}
+.foo{ width:100%;border-top:1px solid #ccc;padding:5px 0 10px 0; margin:30px 0 0 0;}
+.foo p{ margin:0px 0 0 10px; font-size:75%;text-align:left;}
+.cl{clear:both}
+.swp{border:0;margin:4px 2px -3px 2px;}
+.input{margin:20px 5px 10px 5px;width:490px;float:left;padding:1px 5px;font-size:130%;height:30px;border:1px solid #666;color:#666;margin-left:80px;font-family:"lucida grande", "Segoe UI","Calibri", Arial, Helvetica, sans-serif;-moz-border-radius:5px; -webkit-border-radius:5px; border-radius: 5px;  float:left;}
+.input5{margin:20px 5px 10px 5px ;width:490px;float:left;padding:3px 5px;font-size:130%; border:1px solid #666;color:#666;margin-left:85px;font-family:"lucida grande", "Segoe UI","Calibri", Arial, Helvetica, sans-serif;-moz-border-radius:5px; -webkit-border-radius:5px; border-radius: 5px;   float:left; }
+.input:focus{color:#000; border:1px solid #003366;background:#FFC}
+.input5:focus{color:#000; border:1px solid #003366;background:#FFC}
+.input_sm{font-size:140%;border:1px solid #999;background:#fff;padding:3px;color:#333;}
+.input_sm:hover{border:1px solid #0063c9}
+.input_sm:focus{background:fff;color:#000;}
+.sm{font-size:65%;margin:0 0 0 101px;float:left;}
+#mm{ background: url(../img/logo_mm.gif) 0 0 no-repeat; display:block; width:228px;height:48px;margin:2px 0 0px 10px;text-indent:-99999999px;clear:both;float:left;}
+.btn2{font-size:120%;height:34px;float:left;display:block;margin:20px 0 0 0px;padding:2px 10px;background:#4792D6 url(../img/loading.gif) 0 -999999px no-repeat;border:0;color:#fff !important;border-radius: 4px;-moz-border-radius: 4px;-webkit-border-radius: 4px;cursor:pointer;border:1px solid #4586BD;text-decoration:none !important;}
+.btn2:hover{border:1px solid #336591;text-decoration:none;}
+#cnt.load #girella{width:40px;background:url(../img/loading.gif) 0 0px no-repeat;border:0;height:40px;margin:21px 0 0 10px;position:absolute;}
+/* mobile style */
+#expbt{cursor:pointer;margin:19px 0px 0 60px;float:left;}
+.choose_lang {display:block!important;margin: 0px 0 0 10px;font-size: 75%;text-align: left;}
+.foo select {display: none;}
+@media only screen and (max-device-width: 767px) {
+body {padding: 0 5%;width: 90%;background: none;min-width: 280px;}
+.hidemobile {display: none;}
+.foo select {display: inline-block;}
+.foo p {text-align: center;}
+.swap_lang_btn {height: 21px;display: inline-block;margin: 0 4%;width: 8%;text-align: center;padding: 7px 2% 10px 2%;border: 1px solid #666;border-radius: 4px;}
+.btn2 {width: 100%;margin-top:75px; height: 40px;}
+.sm {margin: 0; margin-top: -98px; width: 100%;}
+.context-input,#expbt,.choose_lang {display: none!important;}
+#cnt {width: 100%; margin:0!important;}
+.input,.input5 {width: calc(96% - 1px); margin: 0!important;height: 40px;    padding: 2%;}
+.logo {width: 180px;height: 40px;margin: 20px auto 5px auto;}
+.input_sm {width: calc(40% - 1px)!important;height: 40px;margin: 0;}
+.foo {clear: both;float: left;}
+#otherlinks a {white-space: normal!important;}
+#select_target_mm {float: right;}
+#select_source_mm {float: left;}
+#filter_form {position: relative;}
+#girella {left: 80%;top: 64%;}
+#mn{margin:10px 30px 5px 0;}
+#cnt.load #girella {background: url(../img/loading_2.gif)no-repeat!important;background-size: 20px 20px!important;}
+#cnt.load #ib1 {background: #ccc;color:#EFEFEF!important; border: 1px solid #AAA;}
+}
+
+</style>
+<!--[if IE 6]>	<link href="css/ie6i.css" rel="stylesheet" type="text/css" /><![endif]-->
+<!--[if IE 7]>	<link href="css/ie7i.css" rel="stylesheet" type="text/css" /><![endif]-->
+</head>
+<body onload="document.f.q.focus();">
+<!--<a href="" id="mm" title="go to homepage"></a>				-->
+<ul id="mn" class="hidemobile">
+
+<li><a href="http://www.translated.net/en/">Professional Translation Service</a></li>
+			<li><a href="/doc/spec.php">Translation API</a></li>
+				<li><a href="/doc/">About MyMemory</a></li>
+								<li style="border-right:1px solid #ccc;padding-right:10px;"><a href="#" onclick="ExportMyMemories()">Download a TMX</a></li>
+				<li><a href="#" onclick="ImportMyMemory()">Contribute a TMX</a></li><li class="nb"><a href="/login_page.php?l=en"><b>Log in</b></a></li>						</ul>
+						<div class="cl"></div>
+
+						<img class="logo" src="/img/mymemory_retina.jpg" alt="MyMemory - the world's largest translation memory" width="316" height="69">
+						<h2>Get a better translation with <span id="segcounter"><b>1.506.600.909</b></span>  human contributions</h2><br>
+						<!-- <center>
+						Search through professionally translated sentences<br>
+						Contribute and organise<br>
+						</center> -->
+
+						<div id="cnt"><img  src="/img/expandIcon.png" alt="Click to expand" width="36" height="36" id="expbt" title="Click to expand" onclick="ToggleInputransform();"/>	
+						<form action="/s.php" method="get" id="filter_form" name="f"> 
+						<span id="inarea">
+						<input id="text" class="input" name="q" type="text" style="margin:20px 5px 10px 5px;" value="" />
+						</span>
+
+
+						<input id="ib1" class="btn2" type="submit" onclick="changeclass();" value="Search"/>
+						<span id="girella"></span>
+						<p class="sm">
+
+						<select id="select_source_mm" class="input_sm" name="sl" style="width: 239px">
+						<option selected value="Autodetect">Autodetect</option><option value="------" disabled="disabled">------</option><option value="af-ZA">Afrikaans</option><option value="sq-AL">Albanian</option><option value="am-ET">Amharic</option><option value="ar-SA">Arabic</option><option value="hy-AM">Armenian</option><option value="az-AZ">Azerbaijani</option><option value="bjs-BB">Bajan</option><option value="rm-RO">Balkan Gipsy</option><option value="eu-ES">Basque</option><option value="fr-BE">Belgian French</option><option value="bem-ZM">Bemba</option><option value="bn-IN">Bengali</option><option value="be-BY">Bielarus</option><option value="bi-VU">Bislama</option><option value="bs-BA">Bosnian</option><option value="br-FR">Breton</option><option value="bg-BG">Bulgarian</option><option value="my-MM">Burmese</option><option value="ca-ES">Catalan</option><option value="cb-PH">Cebuano</option><option value="ch-GU">Chamorro</option><option value="zh-CN">Chinese (Simplified)</option><option value="zh-TW">Chinese Traditional</option><option value="zdj-KM">Comorian (Ngazidja)</option><option value="cop-EG">Coptic</option><option value="aig-AG">Creole English (Antigua and Barbuda)</option><option value="bah-BS">Creole English (Bahamas)</option><option value="gcl-GD">Creole English (Grenadian)</option><option value="gyn-GY">Creole English (Guyanese)</option><option value="jam-JM">Creole English (Jamaican)</option><option value="svc-VC">Creole English (Vincentian)</option><option value="vic-US">Creole English (Virgin Islands)</option><option value="ht-HT">Creole French (Haitian)</option><option value="acf-LC">Creole French (Saint Lucian)</option><option value="crs-SC">Creole French (Seselwa)</option><option value="pov-GW">Creole Portuguese (Upper Guinea)</option><option value="hr-HR">Croatian</option><option value="cs-CZ">Czech</option><option value="da-DK">Danish</option><option value="nl-NL">Dutch</option><option value="dz-BT">Dzongkha</option><option value="en-GB">English</option><option value="eo-EU">Esperanto</option><option value="et-EE">Estonian</option><option value="fn-FNG">Fanagalo</option><option value="fo-FO">Faroese</option><option value="fi-FI">Finnish</option><option value="fr-FR">French</option><option value="gl-ES">Galician</option><option value="ka-GE">Georgian</option><option value="de-DE">German</option><option value="el-GR">Greek</option><option value="grc-GR">Greek (Classical)</option><option value="gu-IN">Gujarati</option><option value="ha-NE">Hausa</option><option value="haw-US">Hawaiian</option><option value="he-IL">Hebrew</option><option value="hi-IN">Hindi</option><option value="hu-HU">Hungarian</option><option value="is-IS">Icelandic</option><option value="id-ID">Indonesian</option><option value="kl-GL">Inuktitut (Greenlandic)</option><option value="ga-IE">Irish Gaelic</option><option value="it-IT">Italian</option><option value="ja-JA">Japanese</option><option value="jw-ID">Javanese</option><option value="kea-CV">Kabuverdianu</option><option value="kab-DZ">Kabylian</option><option value="ka-IN">Kannada</option><option value="kk-KZ">Kazakh</option><option value="km-KM">Khmer</option><option value="rw-RW">Kinyarwanda</option><option value="rn-RN">Kirundi</option><option value="ko-KR">Korean</option><option value="ku-TR">Kurdish</option><option value="ku-TR">Kurdish Sorani</option><option value="ky-KG">Kyrgyz</option><option value="lo-LA">Lao</option><option value="la-VA">Latin</option><option value="lv-LV">Latvian</option><option value="lt-LT">Lithuanian</option><option value="lb-LU">Luxembourgish</option><option value="mk-MK">Macedonian</option><option value="mg-MG">Malagasy</option><option value="ms-MY">Malay</option><option value="dv-MV">Maldivian</option><option value="mt-MT">Maltese</option><option value="gv-IM">Manx Gaelic</option><option value="mi-NZ">Maori</option><option value="mh-MH">Marshallese</option><option value="men-SL">Mende</option><option value="mn-MN">Mongolian</option><option value="mfe-MU">Morisyen</option><option value="ne-NP">Nepali</option><option value="niu-NU">Niuean</option><option value="no-NO">Norwegian</option><option value="ny-MW">Nyanja</option><option value="ur-PK">Pakistani</option><option value="pau-PW">Palauan</option><option value="pa-IN">Panjabi</option><option value="pap-PAP">Papiamentu</option><option value="ps-PK">Pashto</option><option value="fa-IR">Persian</option><option value="pis-SB">Pijin</option><option value="pl-PL">Polish</option><option value="pt-PT">Portuguese</option><option value="pot-US">Potawatomi</option><option value="qu-PE">Quechua</option><option value="ro-RO">Romanian</option><option value="ru-RU">Russian</option><option value="sm-WS">Samoan</option><option value="sg-CF">Sango</option><option value="gd-GB">Scots Gaelic</option><option value="sr-RS">Serbian</option><option value="sn-ZW">Shona</option><option value="si-LK">Sinhala</option><option value="sk-SK">Slovak</option><option value="sl-SI">Slovenian</option><option value="so-SO">Somali</option><option value="nso-ZA">Sotho, Southern</option><option value="es-ES">Spanish</option><option value="srn-SR">Sranan Tongo</option><option value="sw-SZ">Swahili</option><option value="sv-SE">Swedish</option><option value="de-CH">Swiss German</option><option value="syc-TR">Syriac (Aramaic)</option><option value="tl-PH">Tagalog</option><option value="tg-TJ">Tajik</option><option value="tmh-DZ">Tamashek (Tuareg)</option><option value="ta-LK">Tamil</option><option value="te-IN">Telugu</option><option value="tet-TL">Tetum</option><option value="th-TH">Thai</option><option value="bo-CN">Tibetan</option><option value="ti-TI">Tigrinya</option><option value="tpi-PG">Tok Pisin</option><option value="tkl-TK">Tokelauan</option><option value="to-TO">Tongan</option><option value="tn-BW">Tswana</option><option value="tr-TR">Turkish</option><option value="tk-TM">Turkmen</option><option value="tvl-TV">Tuvaluan</option><option value="uk-UA">Ukrainian</option><option value="ppk-ID">Uma</option><option value="uz-UZ">Uzbek</option><option value="vi-VN">Vietnamese</option><option value="wls-WF">Wallisian</option><option value="cy-GB">Welsh</option><option value="wo-SN">Wolof</option><option value="xh-ZA">Xhosa</option><option value="yi-YD">Yiddish</option><option value="zu-ZA">Zulu</option></select>
+<a style="text-decoration: none" href="javascript: void(0)" class="swap_lang_btn" title="Swap Languages" onclick="swapLangs()"><img src="/img/swap.gif" width="15" height="17" class="swp"/></a>
+<select id="select_target_mm" class="input_sm" name="tl" style="width: 240px">
+<!-- <option selected value="English">English</option> -->
+<option value="af-ZA">Afrikaans</option><option value="sq-AL">Albanian</option><option value="am-ET">Amharic</option><option value="ar-SA">Arabic</option><option value="hy-AM">Armenian</option><option value="az-AZ">Azerbaijani</option><option value="bjs-BB">Bajan</option><option value="rm-RO">Balkan Gipsy</option><option value="eu-ES">Basque</option><option value="fr-BE">Belgian French</option><option value="bem-ZM">Bemba</option><option value="bn-IN">Bengali</option><option value="be-BY">Bielarus</option><option value="bi-VU">Bislama</option><option value="bs-BA">Bosnian</option><option value="br-FR">Breton</option><option value="bg-BG">Bulgarian</option><option value="my-MM">Burmese</option><option value="ca-ES">Catalan</option><option value="cb-PH">Cebuano</option><option value="ch-GU">Chamorro</option><option value="zh-CN">Chinese (Simplified)</option><option value="zh-TW">Chinese Traditional</option><option value="zdj-KM">Comorian (Ngazidja)</option><option value="cop-EG">Coptic</option><option value="aig-AG">Creole English (Antigua and Barbuda)</option><option value="bah-BS">Creole English (Bahamas)</option><option value="gcl-GD">Creole English (Grenadian)</option><option value="gyn-GY">Creole English (Guyanese)</option><option value="jam-JM">Creole English (Jamaican)</option><option value="svc-VC">Creole English (Vincentian)</option><option value="vic-US">Creole English (Virgin Islands)</option><option value="ht-HT">Creole French (Haitian)</option><option value="acf-LC">Creole French (Saint Lucian)</option><option value="crs-SC">Creole French (Seselwa)</option><option value="pov-GW">Creole Portuguese (Upper Guinea)</option><option value="hr-HR">Croatian</option><option value="cs-CZ">Czech</option><option value="da-DK">Danish</option><option value="nl-NL">Dutch</option><option value="dz-BT">Dzongkha</option><option selected="selected" value="en-GB">English</option><option value="eo-EU">Esperanto</option><option value="et-EE">Estonian</option><option value="fn-FNG">Fanagalo</option><option value="fo-FO">Faroese</option><option value="fi-FI">Finnish</option><option value="fr-FR">French</option><option value="gl-ES">Galician</option><option value="ka-GE">Georgian</option><option value="de-DE">German</option><option value="el-GR">Greek</option><option value="grc-GR">Greek (Classical)</option><option value="gu-IN">Gujarati</option><option value="ha-NE">Hausa</option><option value="haw-US">Hawaiian</option><option value="he-IL">Hebrew</option><option value="hi-IN">Hindi</option><option value="hu-HU">Hungarian</option><option value="is-IS">Icelandic</option><option value="id-ID">Indonesian</option><option value="kl-GL">Inuktitut (Greenlandic)</option><option value="ga-IE">Irish Gaelic</option><option value="it-IT">Italian</option><option value="ja-JA">Japanese</option><option value="jw-ID">Javanese</option><option value="kea-CV">Kabuverdianu</option><option value="kab-DZ">Kabylian</option><option value="ka-IN">Kannada</option><option value="kk-KZ">Kazakh</option><option value="km-KM">Khmer</option><option value="rw-RW">Kinyarwanda</option><option value="rn-RN">Kirundi</option><option value="ko-KR">Korean</option><option value="ku-TR">Kurdish</option><option value="ku-TR">Kurdish Sorani</option><option value="ky-KG">Kyrgyz</option><option value="lo-LA">Lao</option><option value="la-VA">Latin</option><option value="lv-LV">Latvian</option><option value="lt-LT">Lithuanian</option><option value="lb-LU">Luxembourgish</option><option value="mk-MK">Macedonian</option><option value="mg-MG">Malagasy</option><option value="ms-MY">Malay</option><option value="dv-MV">Maldivian</option><option value="mt-MT">Maltese</option><option value="gv-IM">Manx Gaelic</option><option value="mi-NZ">Maori</option><option value="mh-MH">Marshallese</option><option value="men-SL">Mende</option><option value="mn-MN">Mongolian</option><option value="mfe-MU">Morisyen</option><option value="ne-NP">Nepali</option><option value="niu-NU">Niuean</option><option value="no-NO">Norwegian</option><option value="ny-MW">Nyanja</option><option value="ur-PK">Pakistani</option><option value="pau-PW">Palauan</option><option value="pa-IN">Panjabi</option><option value="pap-PAP">Papiamentu</option><option value="ps-PK">Pashto</option><option value="fa-IR">Persian</option><option value="pis-SB">Pijin</option><option value="pl-PL">Polish</option><option value="pt-PT">Portuguese</option><option value="pot-US">Potawatomi</option><option value="qu-PE">Quechua</option><option value="ro-RO">Romanian</option><option value="ru-RU">Russian</option><option value="sm-WS">Samoan</option><option value="sg-CF">Sango</option><option value="gd-GB">Scots Gaelic</option><option value="sr-RS">Serbian</option><option value="sn-ZW">Shona</option><option value="si-LK">Sinhala</option><option value="sk-SK">Slovak</option><option value="sl-SI">Slovenian</option><option value="so-SO">Somali</option><option value="nso-ZA">Sotho, Southern</option><option value="es-ES">Spanish</option><option value="srn-SR">Sranan Tongo</option><option value="sw-SZ">Swahili</option><option value="sv-SE">Swedish</option><option value="de-CH">Swiss German</option><option value="syc-TR">Syriac (Aramaic)</option><option value="tl-PH">Tagalog</option><option value="tg-TJ">Tajik</option><option value="tmh-DZ">Tamashek (Tuareg)</option><option value="ta-LK">Tamil</option><option value="te-IN">Telugu</option><option value="tet-TL">Tetum</option><option value="th-TH">Thai</option><option value="bo-CN">Tibetan</option><option value="ti-TI">Tigrinya</option><option value="tpi-PG">Tok Pisin</option><option value="tkl-TK">Tokelauan</option><option value="to-TO">Tongan</option><option value="tn-BW">Tswana</option><option value="tr-TR">Turkish</option><option value="tk-TM">Turkmen</option><option value="tvl-TV">Tuvaluan</option><option value="uk-UA">Ukrainian</option><option value="ppk-ID">Uma</option><option value="uz-UZ">Uzbek</option><option value="vi-VN">Vietnamese</option><option value="wls-WF">Wallisian</option><option value="cy-GB">Welsh</option><option value="wo-SN">Wolof</option><option value="xh-ZA">Xhosa</option><option value="yi-YD">Yiddish</option><option value="zu-ZA">Zulu</option></select>
+</p>
+<div class="cl" align="center">
+<br />
+
+<div class="contribution" style="min-height:120px;">	
+<h2 style="margin-bottom:5px"><b>Help!</b> Rate short translations that users are typing right now</h2>
+<small><b>How to contribute?</b> Delete wrong alignments, vote translations, add new ones.<br></small>
+<span id="otherlinks"><a style="white-space: nowrap;" href="http://mymemory.translated.net/en/Italian/German/contingenze"><b>contingenze</b>&nbsp;<small>(Italian&gt;German)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/French/Russian/amph%C3%A9taminique"><b>amphétaminique</b>&nbsp;<small>(French&gt;Russian)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/English/Kannada/essay-on-animals-for-15th-pages"><b>essay on animals for 15th pages</b>&nbsp;<small>(English&gt;Kannada)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/Hindi/Indonesian/%E0%A4%AC%E0%A5%87%E0%A4%9F%E0%A5%80"><b>बेटी</b>&nbsp;<small>(Hindi&gt;Indonesian)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/Hindi/English/kaise-h"><b>kaise h</b>&nbsp;<small>(Hindi&gt;English)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/Hindi/English/bf-seksi"><b>bf seksi</b>&nbsp;<small>(Hindi&gt;English)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/Hindi/English/kaise-ho-aa"><b>kaise ho aa</b>&nbsp;<small>(Hindi&gt;English)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/Hindi/English/so-gaye-kya"><b>so gaye kya</b>&nbsp;<small>(Hindi&gt;English)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/English/Hindi/flower-tiger-lilly"><b>flower tiger lilly</b>&nbsp;<small>(English&gt;Hindi)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/Slovenian/Italian/medicinska"><b>medicinska</b>&nbsp;<small>(Slovenian&gt;Italian)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/Hindi/English/babugosha"><b>babugosha</b>&nbsp;<small>(Hindi&gt;English)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/Hindi/English/saxy-movie"><b>saxy movie</b>&nbsp;<small>(Hindi&gt;English)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/Hindi/English/mujhe-aap-sabki-bahut-yaad-aati-hai"><b>mujhe aap sabki bahut yaad aati hai</b>&nbsp;<small>(Hindi&gt;English)</small></a>&nbsp;| <a style="white-space: nowrap;" href="http://mymemory.translated.net/en/Portuguese/Finnish/psicrof%C3%ADlica"><b>psicrofílica</b>&nbsp;<small>(Portuguese&gt;Finnish)</small></a></span>
+</div>		</div>
+
+
+
+
+
+</form>
+
+
+</div>
+
+<div class="foo"> 
+<p><a href="mailto:mymemory@translated.net?subject=MyMemory%20Abuse">Report Abuse</a>&nbsp; |
+<a href="/doc/en/tos.php">Terms of Service</a>&nbsp;|
+
+			<a href="/doc/">About MyMemory</a>
+								|
+				<a href="mailto:mymemory@translated.net?subject=About%20MyMemory">Contact Us</a> |
+
+				<br/><br/>
+				MyMemory in your language: 
+				<div class="choose_lang">
+					<a rel="alternate" hreflang="en" href="/english/">English</a>&nbsp;
+					|&nbsp;<a rel="alternate" hreflang="it" href="http://mymemory.translated.net/italiano/">Italiano</a>
+					|&nbsp;<a rel="alternate" hreflang="es" href="http://mymemory.translated.net/español/">Español</a>
+					|&nbsp;<a rel="alternate" hreflang="fr" href="http://mymemory.translated.net/français/">Français</a>
+					|&nbsp;<a rel="alternate" hreflang="de" href="http://mymemory.translated.net/deutsch/">Deutsch</a>
+					|&nbsp;<a rel="alternate" hreflang="nl" href="http://mymemory.translated.net/nederlands/">Nederlands</a>
+					|&nbsp;<a rel="alternate" hreflang="sv" href="http://mymemory.translated.net/svenska/">Svenska</a>
+					|&nbsp;<a rel="alternate" hreflang="pt" href="http://mymemory.translated.net/português/">Português</a>
+					|&nbsp;<a rel="alternate" hreflang="ru" href="http://mymemory.translated.net/русский/">Русский</a>
+					|&nbsp;<a rel="alternate" hreflang="ja" href="http://mymemory.translated.net/日本語/">日本語</a>
+					|&nbsp;<a rel="alternate" hreflang="zh" href="http://mymemory.translated.net/汉语/">汉语</a>
+					|&nbsp;<a rel="alternate" hreflang="ko" href="http://mymemory.translated.net/한국어/">한국어</a>
+					|&nbsp;<a rel="alternate" hreflang="tr" href="http://mymemory.translated.net/türkçe/">Türkçe</a>
+				</div>
+				</p>	
+				</div> 
+				<!-- Go to www.addthis.com/dashboard to customize your tools -->
+				<div class="addthis_native_toolbox" style="margin-left:10px"></div>
+				<script>
+				function sortSelect(selElem) {
+					var tmpAry = new Array();
+					for (var i=0;i<selElem.options.length;i++) {
+						tmpAry[i] = new Array();
+						tmpAry[i][0] = selElem.options[i].text;
+						tmpAry[i][1] = selElem.options[i].value;
+					}
+					tmpAry.sort();
+					while (selElem.options.length > 0) {
+						selElem.options[0] = null;
+					}
+					for (var i=0;i<tmpAry.length;i++) {
+						var op = new Option(tmpAry[i][0], tmpAry[i][1]);
+						selElem.options[i] = op;
+					}
+					return;
+				}
+/*
+   var num=document.getElementById('select_source_mm').selectedIndex;
+   var su=document.getElementById('select_source_mm').options[num].innerHTML;
+   var num1=document.getElementById('select_target_mm').selectedIndex;
+   var su1=document.getElementById('select_target_mm').options[num1].innerHTML;
+
+   sortSelect(document.getElementById('select_source_mm'));
+   sortSelect(document.getElementById('select_target_mm'));
+
+   var optsLen = document.getElementById('select_source_mm').options.length;
+   for (i=optsLen+1;i>1;i--) document.getElementById('select_source_mm').options[i] = new Option(document.getElementById('select_source_mm').options[i-2].text, document.getElementById('select_source_mm').options[i-2].value);
+
+   document.getElementById('select_source_mm').options[1] = new Option("------", "------");
+   document.getElementById('select_source_mm').options[1].disabled=true;
+   document.getElementById('select_source_mm').options[0] = new Option("Autodetect", "Autodetect");
+
+
+   for(i=0;i<document.getElementById('select_source_mm').length;i++) {
+   if(document.getElementById('select_source_mm').options[i].innerHTML==su) {
+   document.getElementById('select_source_mm').selectedIndex=i;
+   }
+   }
+   for(i=0;i<document.getElementById('select_target_mm').length;i++) {
+   if(document.getElementById('select_target_mm').options[i].innerHTML==su1) {
+   document.getElementById('select_target_mm').selectedIndex=i;
+   }
+   }
+   if ("Autodetect"=="Autodetect") document.getElementById('select_source_mm').selectedIndex=0;
+ */
+updatecounter();
+updateLinks('Autodetect','English');
+</script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-874793-3', 'auto');
+    ga('require', 'GTM-WXLPS6H');
+    ga('send', 'pageview');
+
+</script><!-- Google Code for Tag di remarketing -->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 1072206699;
+var google_conversion_label = "lqUXCM371QcQ66ai_wM";
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]> */
+</script>
+<script>
+// Script to create a dropdown from the languages ul
+  $('.foo .choose_lang').each(function() {
+      var select = $(document.createElement('select')).insertBefore($(this).hide());
+      $('a', this).each(function() {
+         
+          option = $(document.createElement('option')).appendTo(select).val(this.href).html($(this).html())
+          
+      });
+  });
+
+  $(".foo select").change(function() {
+          window.location = $(this).find("option:selected").val();
+  });
+// Show textarea on mobile version
+
+if ($(window).width() < 767) {
+   $('#expbt').click();
+   $('#mn').prependTo('.foo').removeClass('hidemobile');
+
+}
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+<div style="display:inline;">
+<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1072206699/?value=0&amp;label=lqUXCM371QcQ66ai_wM&amp;guid=ON&amp;script=0"/>
+</div>
+</noscript>
+	<!--div style="align:center; margin-top:20px">
+MyMemory will undergo a maintenance from 20:00 to 23:00 on July 2nd 2014 (CEST)
+	</div-->
+<div id="privacy-policy">
+    <div>
+    <span>We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies. <a href="https://www.translated.net/en/confidentiality#cookies" target="_blank" title="Privacy Policy">Learn more.</a></span>
+        <span class="privacy-policy-accept"><a>OK</a></span>    </div>
+    <link rel="stylesheet" href="/css/policy.css"/>
+    <script type="text/javascript" src="/js/cookie_policy.js">
+    </script>
+</div>
+	</body>
+	</html>

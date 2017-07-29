@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+	Youtube MP3 HD
+</title><meta id="head_fb_title" property="og:title" content="Youtube to MP3 HD" /><meta id="head_fb_description" property="og:description" content="Your description" /><meta id="head_fb_image" property="og:image" content="http://www.your-domain.com/path/image.jpg" /><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1" /><link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <script src='Scripts/jquery-1.9.1.min.js'></script>
+    <script src='Scripts/bootstrap.min.js'></script>
+    <script src="Scripts/app.js"></script>
+    <script src="Scripts/moment.js"></script>
+    <script src="Scripts/moment-duration-format.js"></script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-65773718-4', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+    <style>
+        body {
+            padding-top: 50px;
+        }
+
+        .starter-template {
+            padding: 40px 15px;
+            text-align: center;
+        }
+
+
+        #custom-search-input {
+            margin: 0;
+            margin-top: 10px;
+            padding: 0;
+        }
+
+            #custom-search-input .search-query {
+                padding-right: 3px;
+                padding-right: 4px \9;
+                padding-left: 3px;
+                padding-left: 4px \9;
+                /* IE7-8 doesn't have border-radius, so don't indent the padding */
+                margin-bottom: 0;
+                -webkit-border-radius: 3px;
+                -moz-border-radius: 3px;
+                border-radius: 3px;
+            }
+
+            #custom-search-input button {
+                border: 0;
+                background: none;
+                /** belows styles are working good */
+                padding: 2px 5px;
+                margin-top: 2px;
+                position: relative;
+                left: -28px;
+                /* IE7-8 doesn't have border-radius, so don't indent the padding */
+                margin-bottom: 0;
+                -webkit-border-radius: 3px;
+                -moz-border-radius: 3px;
+                border-radius: 3px;
+                color: #D9230F;
+            }
+
+        .search-query:focus + button {
+            z-index: 3;
+        }
+
+        /*body {
+            background: #333;
+        }*/
+
+        .cover-card {
+            border: 2px solid white;
+            background: silver;
+            padding: 0px;
+            margin: 0px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+            .cover-card > p {
+                text-align: center;
+                background-color: rgba(6,6,6,0.0);
+                width: 100%;
+                height: 100%;
+                font-weight: bold;
+                font-size: 20px;
+                /*background-color: rgba(6,6,6,0.0);
+                color: rgba(6,6,6,0.0);*/
+                background-color: rgba(6,6,6,0.3);
+                color: white;
+                text-shadow: 3px 3px 10px #000;
+            }
+
+            .cover-card:hover > p {
+                background-color: rgba(6,6,6,0.3);
+                color: white;
+                text-shadow: 3px 3px 10px #000;
+            }
+
+        .btn-facebook {
+            background: #3b5998;
+            border-radius: 0;
+            color: #fff;
+        }
+
+        /*.btn-facebook:link, .btn-facebook:visited {
+                color: #fff;
+            }
+
+            .btn-facebook:active, .btn-facebook:hover {
+                background: #30477a;
+                color: #fff;
+            }*/
+
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            padding-top: 30px;
+            height: 0;
+            overflow: hidden;
+        }
+
+            .video-container iframe,
+            .video-container object,
+            .video-container embed {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+        .glyphicon-refresh-animate {
+            -animation: spin .7s infinite linear;
+            -webkit-animation: spin2 .7s infinite linear;
+        }
+
+        @-webkit-keyframes spin2 {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: scale(1) rotate(0deg);
+            }
+
+            to {
+                transform: scale(1) rotate(360deg);
+            }
+        }
+    </style>
+
+    <script>
+        function aaa() {
+            //alert("cleick");
+
+            app.onClickSearch();
+
+        }
+
+        $(document).ready(function () {
+
+
+            ga('send', 'event', "Site", "Open", "");
+
+            var videoId = getParam('v', document.location.search);
+            if (videoId != null) {
+                var text = $("#search").val("https://www.youtube.com/watch?v=" + videoId);
+
+                app.onClickSearch();
+            }
+
+            var chartId = getParam('chartid', document.location.search);
+
+            if (chartId == null) {
+                var myRegexp = /^\/chart-.*-(\d+)/g;
+                var match = myRegexp.exec(document.location.pathname);
+                if (match != null && match.length == 2) {
+                    chartId = parseInt(match[1]);
+                    ga('send', 'event', "chart", "open", chartId);
+                }
+                else
+                    chartId = 0;
+            }
+
+
+
+
+
+            app.changeCharts(chartId);
+
+
+
+
+            $('#modalDownload').on('hidden.bs.modal', function () {
+
+                $("#modal_content").html('');
+            })
+
+
+        });
+
+        function getParam(name, url) {
+            if (!url) url = location.href
+            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + name + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(url);
+            return results == null ? null : results[1];
+        }
+
+    </script>
+
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '501765296664969',
+                xfbml: true,
+                version: 'v2.4'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+    </script>
+</head>
+<body>
+
+    <form method="post" action="./" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="KleVfunmPDIxb/Hkk3iPBNkYS28UBqpHTEw/DQSS2oy8pxhLVxFOT0dYaRRmetqBqiyZUaPiGAvWoCdF5b26a+nNqCkY8FZIyij2bCgUGDg=" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="CA0B0334" />
+</div>
+
+
+
+        
+
+
+        <div class="container-fluid">
+
+            
+
+            <div class="row col-md-10 col-md-offset-1">
+
+                <h2>Youtube MP3 HD </h2>
+
+                <div id="custom-search-input">
+                    <div class="input-group">
+                        <input type="text" id="search" class="search-query form-control" onkeypress="if (event.keyCode==13){ app.onClickSearch();return false;}" placeholder="Name or Youtube URL that you want to convert..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-danger" onclick="app.onClickSearch()" type="button">
+                                <span class=" glyphicon glyphicon-music"></span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+        <br />
+
+        <br />
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle col-md-12 col-xs-12" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Charts
+    <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" id="listChart">
+                <li data-id="0"><a href="javascript:app.changeCharts(0)">Most Downloaded</a></li>
+                <li data-id="3"><a href="javascript:app.changeCharts(3)">Billboard HOT 100</a></li>
+                <li data-id="4"><a href="javascript:app.changeCharts(4)">Billboard 200</a></li>
+                <li data-id="5"><a href="javascript:app.changeCharts(5)">Billboard Songs of The Summer</a></li>
+                <li data-id="6"><a href="javascript:app.changeCharts(6)">Billboard Radio Songs</a></li>
+                <li data-id="25"><a href="javascript:app.changeCharts(25)">Billboard Pop Songs</a></li>
+                <li data-id="26"><a href="javascript:app.changeCharts(26)">Billboard Adult Contemporary</a></li>
+                <li data-id="27"><a href="javascript:app.changeCharts(27)">Billboard Adult Pop Songs</a></li>
+                <li data-id="7"><a href="javascript:app.changeCharts(7)">Billboard Hot Country Songs</a></li>
+                <li data-id="8"><a href="javascript:app.changeCharts(8)">Billboard Hot Rock Songs</a></li>
+                <li data-id="9"><a href="javascript:app.changeCharts(9)">Billboard Hot R&B/Hip-Hop Songs</a></li>
+                <li data-id="10"><a href="javascript:app.changeCharts(10)">Billboard Hot R&B Songs</a></li>
+                <li data-id="11"><a href="javascript:app.changeCharts(11)">Billboard Hot Rap Songs</a></li>
+                <li data-id="12"><a href="javascript:app.changeCharts(12)">Billboard Hot Dance/Electronic Songs</a></li>
+                <li data-id="13"><a href="javascript:app.changeCharts(13)">Billboard Dance Club Songs</a></li>
+                <li data-id="14"><a href="javascript:app.changeCharts(14)">Billboard Hot Latin Songs</a></li>
+                <li data-id="15"><a href="javascript:app.changeCharts(15)">Billboard Regional Mexican Songs</a></li>
+                <li data-id="16"><a href="javascript:app.changeCharts(16)">Billboard Latin Pop Songs</a></li>
+                <li data-id="17"><a href="javascript:app.changeCharts(17)">Billboard Tropical Songs</a></li>
+                <li data-id="18"><a href="javascript:app.changeCharts(18)">Billboard Hot Christian Songs</a></li>
+                <li data-id="19"><a href="javascript:app.changeCharts(19)">Billboard Hot Gospel Songs</a></li>
+                <li data-id="20"><a href="javascript:app.changeCharts(20)">Billboard Japan Hot 100</a></li>
+                <li data-id="21"><a href="javascript:app.changeCharts(21)">Billboard The Official U.K. Singles Chart</a></li>
+                <li data-id="22"><a href="javascript:app.changeCharts(22)">Billboard Canadian Hot 100</a></li>
+                <li data-id="23"><a href="javascript:app.changeCharts(23)">Billboard Germany Songs</a></li>
+                <li data-id="24"><a href="javascript:app.changeCharts(24)">Billboard France Songs</a></li>
+            </ul>
+        </div>
+
+        <br />
+
+        <hr />
+        <div class="row row col-md-12">
+            <h3 id="chartTitle">Most Downloaded</h3>
+        </div>
+
+
+        <div id="chartItem">
+            <span style="font-size: 5em;text-align: center;width:100%" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+        </div>
+
+
+
+
+        <!-- Modal -->
+        <div id="modalDownload" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" dir="auto" id="modal_title">Title of Video</h4>
+                    </div>
+                    <div class="modal-body" id="modal_content">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        
+                        <div id="fb-root"></div>
+                        <script>(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+                        <button type="button" class="btn btn-danger col-md-12 col-xs-12" onclick="app.share_prompt()" style="border-radius: 0px; background: #3b5998; border-color: #3b5998;">Share on Facebook</button>
+                        <br />
+                        <br />
+                        <a id="modal_button_download" class="btn btn-success col-md-12 col-xs-12" style="border-radius: 0px">Download MP3</a><br />
+                        <br />
+                        <button type="button" class="btn btn-danger col-md-12 col-xs-12" data-dismiss="modal" style="border-radius: 0px">Close</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+
+
+</body>
+</html>

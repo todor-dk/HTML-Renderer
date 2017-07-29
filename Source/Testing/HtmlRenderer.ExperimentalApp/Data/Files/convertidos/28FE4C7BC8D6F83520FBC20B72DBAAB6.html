@@ -1,0 +1,2334 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" href="/css/flags.css" />
+<link href='http://fonts.googleapis.com/css?family=Patua+One' rel='stylesheet' type='text/css'>
+<link rel="shortcut icon" type="image/ico" href="favicon.ico" />
+
+<!--
+                   $$$$$
+                   $$$$$
+           $$$$$$$$$$$$$$$$$$
+       $$$$$$$$$$$$$$$$$$$$$$$$$$
+     $$$$$$$       $$$$$     $$$$$$$
+   $$$$$$          $$$$$       $$$$$$$
+  $$$$$$           $$$$$        $$$$$$
+  $$$$$$           $$$$$
+  $$$$$$           $$$$$
+   $$$$$$          $$$$$
+    $$$$$$$$       $$$$$
+      $$$$$$$$$$$$$$$$$$
+          $$$$$$$$$$$$$$$$$$$
+                 $$$$$$$$$$$$$$$$$
+                   $$$$$ $$$$$$$$$$
+                   $$$$$       $$$$$$$
+                   $$$$$          $$$$$$
+                   $$$$$           $$$$$$
+$$$$$$$            $$$$$          $$$$$$$
+ $$$$$$            $$$$$          $$$$$$$
+  $$$$$$$          $$$$$        $$$$$$$$
+   $$$$$$$$        $$$$$      $$$$$$$$
+      $$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+          $$$$$$$$$$$$$$$$$$$$$$
+                  $$$$$$$
+                   $$$$$
+                   $$$$$
+-->
+
+<title>Conversor de monedas</title>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+<script src="js/money.js"></script>
+
+<script type="text/javascript">
+  fx.rates = null;
+  fx.base = "";
+</script>
+<script src="js/functions.js"></script>
+
+</head>
+<body>
+
+<div id="container" class="home">
+
+  <div id="calc">
+    <h1><img src="/img/logo.png" title="Conversor de monedas" /> Conversor de monedas</h1>
+    <p id="intro">Convierte divisas con tipos de cambio actualizados cada hora</p>
+    <div>
+      <div id="importe-from">
+        <label for="moneyfrom">Importe:</label>
+        <input type="text" name="moneyfrom" id="moneyfrom" value="100" size="6" />
+      </div>
+      <div id="from">        
+        <input type="hidden" id="currencyfromhidden" value="" />
+        <label for="fromcurrency">Divisa origen:</label>
+        <input id="fromcurrency" class="currencyinput" value="" type="text" placeholder="Selecciona una divisa:" onclick="openselector(this)" onkeyup="filter(this)" />
+
+        <ul id="fromselector" class="currencyselector">
+          <li class="separator"><strong>Más utilizadas</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-eu" alt="Europa" currency="Euro" />Europa - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-us" alt="Estados Unidos" currency="Dólar estadounidense" />Estados Unidos - Dólar estadounidense</span>
+            <span class="code">USD</span>
+          </li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gb" alt="Reino Unido" currency="Libra esterlina" />Reino Unido - Libra esterlina</span>
+            <span class="code">GBP</span>
+          </li>
+          <li class='separator'><strong>A</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-af" alt="Afganistán" currency="Afgani afgano" />Afganistán - Afgani afgano</span>
+            <span class="code">AFN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-al" alt="Albania" currency="Lek albanés" />Albania - Lek albanés</span>
+            <span class="code">ALL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-de" alt="Alemania" currency="Euro" />Alemania - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-dz" alt="Algeria" currency="Dinar algerino" />Algeria - Dinar algerino</span>
+            <span class="code">DZD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ao" alt="Angola" currency="Kwanza angoleño" />Angola - Kwanza angoleño</span>
+            <span class="code">AOA</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="Antigua y Barbuda" currency="Dólar del Caribe Oriental" />Antigua y Barbuda - Dólar del Caribe &hellip;</span>
+            <span class="code">XCD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-an" alt="Antillas holandesas" currency="Florín antillano neerlandés" />Antillas holandesas - Florín antilla&hellip;</span>
+            <span class="code">ANG</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sa" alt="Arabia Saudita" currency="Riyal saudí" />Arabia Saudita - Riyal saudí</span>
+            <span class="code">SAR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ar" alt="Argentina" currency="Peso argentino" />Argentina - Peso argentino</span>
+            <span class="code">ARS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-am" alt="Armenia" currency="Dram armenio" />Armenia - Dram armenio</span>
+            <span class="code">AMD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-aw" alt="Aruba" currency="Florín arubeño" />Aruba - Florín arubeño</span>
+            <span class="code">AWG</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-au" alt="Australia" currency="Dólar australiano" />Australia - Dólar australiano</span>
+            <span class="code">AUD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-at" alt="Austria" currency="Euro" />Austria - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-az" alt="Azerbaiyán" currency="Manat azerbaiyano" />Azerbaiyán - Manat azerbaiyano</span>
+            <span class="code">AZN</span>
+          </li>
+          <li class='separator'><strong>B</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bs" alt="Bahamas" currency="Dólar bahameño" />Bahamas - Dólar bahameño</span>
+            <span class="code">BSD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bd" alt="Bangladés" currency="Taka bangladesí" />Bangladés - Taka bangladesí</span>
+            <span class="code">BDT</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bb" alt="Barbados" currency="Dólar de Barbados" />Barbados - Dólar de Barbados</span>
+            <span class="code">BBD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bh" alt="Baréin" currency="Dinar de Bahréin" />Baréin - Dinar de Bahréin</span>
+            <span class="code">BHD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bz" alt="Belice" currency="Dólar de Belice" />Belice - Dólar de Belice</span>
+            <span class="code">BZD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Benín" currency="Franco CFA de África Occidental" />Benín - Franco CFA de África Occiden&hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bm" alt="Bermudas" currency="Dólar de Bermuda" />Bermudas - Dólar de Bermuda</span>
+            <span class="code">BMD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-by" alt="Bielorrusia" currency="Rublo bielorruso" />Bielorrusia - Rublo bielorruso</span>
+            <span class="code">BYR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mm" alt="Birmania" currency="Kyat birmano" />Birmania - Kyat birmano</span>
+            <span class="code">MMK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bo" alt="Bolivia" currency="Boliviano" />Bolivia - Boliviano</span>
+            <span class="code">BOB</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ba" alt="Bosnia y Herzegovina" currency="Marco convertible de Bosnia-Herzegovina" />Bosnia y Herzegovina - Marco convertib&hellip;</span>
+            <span class="code">BAM</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bw" alt="Botsuana" currency="Pula de Botsuana" />Botsuana - Pula de Botsuana</span>
+            <span class="code">BWP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-br" alt="Brasil" currency="Real brasileño" />Brasil - Real brasileño</span>
+            <span class="code">BRL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bn" alt="Brunéi" currency="Dólar de Brunéi" />Brunéi - Dólar de Brunéi</span>
+            <span class="code">BND</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bg" alt="Bulgaria" currency="Lev búlgaro" />Bulgaria - Lev búlgaro</span>
+            <span class="code">BGN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Burkina Faso" currency="Franco CFA de África Occidental" />Burkina Faso - Franco CFA de África O&hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bi" alt="Burundi" currency="Franco burundés" />Burundi - Franco burundés</span>
+            <span class="code">BIF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bt" alt="Bután" currency="Ngultrum de Bután" />Bután - Ngultrum de Bután</span>
+            <span class="code">BTN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-be" alt="Bélgica" currency="Euro" />Bélgica - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>C</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cv" alt="Cabo Verde" currency="Escudo caboverdiano" />Cabo Verde - Escudo caboverdiano</span>
+            <span class="code">CVE</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kh" alt="Camboya" currency="Riel camboyano" />Camboya - Riel camboyano</span>
+            <span class="code">KHR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xa" alt="Camerún" currency="Franco CFA de África Central" />Camerún - Franco CFA de África Central</span>
+            <span class="code">XAF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ca" alt="Canadá" currency="Dólar canadiense" />Canadá - Dólar canadiense</span>
+            <span class="code">CAD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xa" alt="Chad" currency="Franco CFA de África Central" />Chad - Franco CFA de África Central</span>
+            <span class="code">XAF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cl" alt="Chile" currency="Unidades de fomento chilenas" />Chile - Unidades de fomento chilenas</span>
+            <span class="code">CLF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cl" alt="Chile" currency="Peso chileno" />Chile - Peso chileno</span>
+            <span class="code">CLP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cn" alt="China" currency="Yuan chino" />China - Yuan chino</span>
+            <span class="code">CNY</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cy" alt="Chipre" currency="Euro" />Chipre - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-va" alt="Ciudad del Vaticano" currency="Euro" />Ciudad del Vaticano - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-co" alt="Colombia" currency="Peso colombiano" />Colombia - Peso colombiano</span>
+            <span class="code">COP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-km" alt="Comoras" currency="Franco comoriano" />Comoras - Franco comoriano</span>
+            <span class="code">KMF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cd" alt="Congo" currency="Franco congoleño" />Congo - Franco congoleño</span>
+            <span class="code">CDF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kp" alt="Corea del Norte" currency="Won norcoreano" />Corea del Norte - Won norcoreano</span>
+            <span class="code">KPW</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kr" alt="Corea del Sur" currency="Won surcoreano" />Corea del Sur - Won surcoreano</span>
+            <span class="code">KRW</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cr" alt="Costa Rica" currency="Colón costarricense" />Costa Rica - Colón costarricense</span>
+            <span class="code">CRC</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Costa de Marfil" currency="Franco CFA de África Occidental" />Costa de Marfil - Franco CFA de Áfric&hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-hr" alt="Croacia" currency="Kuna croata" />Croacia - Kuna croata</span>
+            <span class="code">HRK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cu" alt="Cuba" currency="Peso cubano" />Cuba - Peso cubano</span>
+            <span class="code">CUP</span>
+          </li>
+          <li class='separator'><strong>D</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-dk" alt="Dinamarca" currency="Corona danesa" />Dinamarca - Corona danesa</span>
+            <span class="code">DKK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="Dominica" currency="Dólar del Caribe Oriental" />Dominica - Dólar del Caribe Oriental</span>
+            <span class="code">XCD</span>
+          </li>
+          <li class='separator'><strong>E</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-eg" alt="Egipto" currency="Libra egipcia" />Egipto - Libra egipcia</span>
+            <span class="code">EGP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sv" alt="El Salvador" currency="Colón salvadoreño" />El Salvador - Colón salvadoreño</span>
+            <span class="code">SVC</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ae" alt="Emiratos Árabes Unidos" currency="Dirham de los Emiratos Árabes Unidos" />Emiratos Árabes Unidos - Dirham de l&hellip;</span>
+            <span class="code">AED</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sk" alt="Eslovaquia" currency="Euro" />Eslovaquia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-si" alt="Eslovenia" currency="Euro" />Eslovenia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-es" alt="España" currency="Euro" />España - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-us" alt="Estados Unidos" currency="Dólar estadounidense" />Estados Unidos - Dólar estadounidense</span>
+            <span class="code">USD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ee" alt="Estonia" currency="Corona estonia" />Estonia - Corona estonia</span>
+            <span class="code">EEK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ee" alt="Estonia" currency="Euro" />Estonia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-et" alt="Etiopía" currency="Birr etíope" />Etiopía - Birr etíope</span>
+            <span class="code">ETB</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-eu" alt="Eurozona" currency="Euro" />Eurozona - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>F</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ph" alt="Filipinas" currency="Peso filipino" />Filipinas - Peso filipino</span>
+            <span class="code">PHP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-fi" alt="Finlandia" currency="Euro" />Finlandia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-fj" alt="Fiyi" currency="Dólar fiyiano" />Fiyi - Dólar fiyiano</span>
+            <span class="code">FJD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-fr" alt="Francia" currency="Euro" />Francia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>G</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gm" alt="Gambia" currency="Dalasi gambiano" />Gambia - Dalasi gambiano</span>
+            <span class="code">GMD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ge" alt="Georgia" currency="Lari georgiano" />Georgia - Lari georgiano</span>
+            <span class="code">GEL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gh" alt="Ghana" currency="Cedi ghanés" />Ghana - Cedi ghanés</span>
+            <span class="code">GHS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gi" alt="Gibraltar" currency="Libra de Gibraltar" />Gibraltar - Libra de Gibraltar</span>
+            <span class="code">GIP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="Granada" currency="Dólar del Caribe Oriental" />Granada - Dólar del Caribe Oriental</span>
+            <span class="code">XCD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gr" alt="Grecia" currency="Euro" />Grecia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gt" alt="Guatemala" currency="Quetzal guatemalteco" />Guatemala - Quetzal guatemalteco</span>
+            <span class="code">GTQ</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gn" alt="Guinea" currency="Franco guineano" />Guinea - Franco guineano</span>
+            <span class="code">GNF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xa" alt="Guinea Ecuatorial y Gabón" currency="Franco CFA de África Central" />Guinea Ecuatorial y Gabón - Franco &hellip;</span>
+            <span class="code">XAF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Guinea-Bissau" currency="Franco CFA de África Occidental" />Guinea-Bissau - Franco CFA de África &hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gy" alt="Guyana" currency="Dólar guyanés" />Guyana - Dólar guyanés</span>
+            <span class="code">GYD</span>
+          </li>
+          <li class='separator'><strong>H</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ht" alt="Haití" currency="Gourde haitiano" />Haití - Gourde haitiano</span>
+            <span class="code">HTG</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-nl" alt="Holanda" currency="Euro" />Holanda - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-hn" alt="Honduras" currency="Lempira hondureño" />Honduras - Lempira hondureño</span>
+            <span class="code">HNL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-hk" alt="Hong Kong" currency="Dólar de Hong Kong" />Hong Kong - Dólar de Hong Kong</span>
+            <span class="code">HKD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-hu" alt="Hungría" currency="Forint húngaro" />Hungría - Forint húngaro</span>
+            <span class="code">HUF</span>
+          </li>
+          <li class='separator'><strong>I</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-in" alt="India" currency="Rupia india" />India - Rupia india</span>
+            <span class="code">INR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-id" alt="Indonesia" currency="Rupia indonesia" />Indonesia - Rupia indonesia</span>
+            <span class="code">IDR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-iq" alt="Irak" currency="Dinar iraquí" />Irak - Dinar iraquí</span>
+            <span class="code">IQD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ie" alt="Irlanda" currency="Euro" />Irlanda - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ir" alt="Irán" currency="Rial iraní" />Irán - Rial iraní</span>
+            <span class="code">IRR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-is" alt="Islandia" currency="Corona islandesa" />Islandia - Corona islandesa</span>
+            <span class="code">ISK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ky" alt="Islas Caimán" currency="Dólar caimano" />Islas Caimán - Dólar caimano</span>
+            <span class="code">KYD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-fk" alt="Islas Malvinas" currency="Libra malvinense" />Islas Malvinas - Libra malvinense</span>
+            <span class="code">FKP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sb" alt="Islas Salomón" currency="Dólar de las Islas Salomón" />Islas Salomón - Dólar de las Islas S&hellip;</span>
+            <span class="code">SBD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-il" alt="Israel" currency="Nuevo shéquel israelí" />Israel - Nuevo shéquel israelí</span>
+            <span class="code">ILS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-it" alt="Italia" currency="Euro" />Italia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>J</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-jm" alt="Jamaica" currency="Dólar jamaicano" />Jamaica - Dólar jamaicano</span>
+            <span class="code">JMD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-jp" alt="Japón" currency="Yen japonés" />Japón - Yen japonés</span>
+            <span class="code">JPY</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-je" alt="Jersey" currency="Libra de Jersey" />Jersey - Libra de Jersey</span>
+            <span class="code">JEP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-jo" alt="Jordania" currency="Dinar jordano" />Jordania - Dinar jordano</span>
+            <span class="code">JOD</span>
+          </li>
+          <li class='separator'><strong>K</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kz" alt="Kazajistán" currency="Tenge kazajo" />Kazajistán - Tenge kazajo</span>
+            <span class="code">KZT</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ke" alt="Kenia" currency="Chelín keniata" />Kenia - Chelín keniata</span>
+            <span class="code">KES</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kg" alt="Kirguistán" currency="Som kirguís" />Kirguistán - Som kirguís</span>
+            <span class="code">KGS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kw" alt="Kuwait" currency="Dinar kuwaití" />Kuwait - Dinar kuwaití</span>
+            <span class="code">KWD</span>
+          </li>
+          <li class='separator'><strong>L</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-la" alt="Laos" currency="Kip laosiano" />Laos - Kip laosiano</span>
+            <span class="code">LAK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ls" alt="Lesoto" currency="Loti lesotense" />Lesoto - Loti lesotense</span>
+            <span class="code">LSL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lv" alt="Letonia" currency="Lat letón" />Letonia - Lat letón</span>
+            <span class="code">LVL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lr" alt="Liberia" currency="Dólar liberiano" />Liberia - Dólar liberiano</span>
+            <span class="code">LRD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ly" alt="Libia" currency="Dinar libio" />Libia - Dinar libio</span>
+            <span class="code">LYD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lt" alt="Lituania" currency="Litas lituano" />Lituania - Litas lituano</span>
+            <span class="code">LTL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lu" alt="Luxemburgo" currency="Euro" />Luxemburgo - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lb" alt="Líbano" currency="Libra libanesa" />Líbano - Libra libanesa</span>
+            <span class="code">LBP</span>
+          </li>
+          <li class='separator'><strong>M</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mo" alt="Macao" currency="Pataca de Macao" />Macao - Pataca de Macao</span>
+            <span class="code">MOP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mk" alt="Macedonia" currency="Denar macedonio" />Macedonia - Denar macedonio</span>
+            <span class="code">MKD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mg" alt="Madagascar" currency="Ariary malgache" />Madagascar - Ariary malgache</span>
+            <span class="code">MGA</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-my" alt="Malasia" currency="Ringgit malayo" />Malasia - Ringgit malayo</span>
+            <span class="code">MYR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mw" alt="Malawi" currency="Kwacha malauí" />Malawi - Kwacha malauí</span>
+            <span class="code">MWK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mv" alt="Maldivas" currency="Rufiyaa maldiva" />Maldivas - Rufiyaa maldiva</span>
+            <span class="code">MVR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mt" alt="Malta" currency="Euro" />Malta - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Malí" currency="Franco CFA de África Occidental" />Malí - Franco CFA de África Occidental</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ma" alt="Marruecos" currency="Dirham marroquí" />Marruecos - Dirham marroquí</span>
+            <span class="code">MAD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mu" alt="Mauricio" currency="Rupia mauricia" />Mauricio - Rupia mauricia</span>
+            <span class="code">MUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mr" alt="Mauritania" currency="Uquiya" />Mauritania - Uquiya</span>
+            <span class="code">MRO</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-md" alt="Moldavia" currency="Leu moldavo" />Moldavia - Leu moldavo</span>
+            <span class="code">MDL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mn" alt="Mongolia" currency="Tugrik mongol" />Mongolia - Tugrik mongol</span>
+            <span class="code">MNT</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mz" alt="Mozambique" currency="Metical mozambiqueño" />Mozambique - Metical mozambiqueño</span>
+            <span class="code">MZN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mx" alt="México" currency="Peso mexicano" />México - Peso mexicano</span>
+            <span class="code">MXN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mc" alt="Mónaco" currency="Euro" />Mónaco - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>N</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-na" alt="Namibia" currency="Dólar namibio" />Namibia - Dólar namibio</span>
+            <span class="code">NAD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-np" alt="Nepal" currency="Rupia nepalesa" />Nepal - Rupia nepalesa</span>
+            <span class="code">NPR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ni" alt="Nicaragua" currency="Córdoba nicaragüense" />Nicaragua - Córdoba nicaragüense</span>
+            <span class="code">NIO</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ng" alt="Nigeria" currency="Naira nigeriana" />Nigeria - Naira nigeriana</span>
+            <span class="code">NGN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-no" alt="Noruega" currency="Corona noruega" />Noruega - Corona noruega</span>
+            <span class="code">NOK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xp" alt="Nueva Caledonia" currency="Franco CFP" />Nueva Caledonia - Franco CFP</span>
+            <span class="code">XPF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-nz" alt="Nueva Zelanda" currency="Dólar neozelandés" />Nueva Zelanda - Dólar neozelandés</span>
+            <span class="code">NZD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Níger" currency="Franco CFA de África Occidental" />Níger - Franco CFA de África Occiden&hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          <li class='separator'><strong>O</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-om" alt="Oman" currency="Rial omaní" />Oman - Rial omaní</span>
+            <span class="code">OMR</span>
+          </li>
+          <li class='separator'><strong>P</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pk" alt="Pakistán" currency="Rupia pakistaní" />Pakistán - Rupia pakistaní</span>
+            <span class="code">PKR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pa" alt="Panamá" currency="Balboa panameña" />Panamá - Balboa panameña</span>
+            <span class="code">PAB</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pg" alt="Papúa Nueva Guinea" currency="Kina de Papúa Nueva Guinea" />Papúa Nueva Guinea - Kina de Papúa&hellip;</span>
+            <span class="code">PGK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-py" alt="Paraguay" currency="Guaraní paraguayo" />Paraguay - Guaraní paraguayo</span>
+            <span class="code">PYG</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pe" alt="Perú" currency="Nuevo sol peruano" />Perú - Nuevo sol peruano</span>
+            <span class="code">PEN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xp" alt="Polinesia Francesa" currency="Franco CFP" />Polinesia Francesa - Franco CFP</span>
+            <span class="code">XPF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pl" alt="Polonia" currency="zloty polaco" />Polonia - zloty polaco</span>
+            <span class="code">PLN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pt" alt="Portugal" currency="Euro" />Portugal - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>Q</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-qa" alt="Qatar" currency="Rial qatarí" />Qatar - Rial qatarí</span>
+            <span class="code">QAR</span>
+          </li>
+          <li class='separator'><strong>R</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gb" alt="Reino Unido" currency="Libra esterlina" />Reino Unido - Libra esterlina</span>
+            <span class="code">GBP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xa" alt="República Centroafricana" currency="Franco CFA de África Central" />República Centroafricana - Franco CFA&hellip;</span>
+            <span class="code">XAF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cz" alt="República Checa" currency="Corona checa" />República Checa - Corona checa</span>
+            <span class="code">CZK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-do" alt="República Dominicana" currency="Peso dominicano" />República Dominicana - Peso dominicano</span>
+            <span class="code">DOP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xa" alt="República del Congo" currency="Franco CFA de África Central" />República del Congo - Franco CFA de �&hellip;</span>
+            <span class="code">XAF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-rw" alt="Ruanda" currency="Franco ruandés" />Ruanda - Franco ruandés</span>
+            <span class="code">RWF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ro" alt="Rumanía" currency="Leu rumano" />Rumanía - Leu rumano</span>
+            <span class="code">RON</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ru" alt="Rusia" currency="Rublo ruso" />Rusia - Rublo ruso</span>
+            <span class="code">RUB</span>
+          </li>
+          <li class='separator'><strong>S</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ws" alt="Samoa" currency="Tala samoana" />Samoa - Tala samoana</span>
+            <span class="code">WST</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="San Cristóbal y Nieves" currency="Dólar del Caribe Oriental" />San Cristóbal y Nieves - Dólar del C&hellip;</span>
+            <span class="code">XCD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sm" alt="San Marino" currency="Euro" />San Marino - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="San Vicente y las Granadinas" currency="Dólar del Caribe Oriental" />San Vicente y las Granadinas - Dólar &hellip;</span>
+            <span class="code">XCD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sh" alt="Santa Elena" currency="Libra de Santa Helena" />Santa Elena - Libra de Santa Helena</span>
+            <span class="code">SHP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="Santa Lucía" currency="Dólar del Caribe Oriental" />Santa Lucía - Dólar del Caribe Orien&hellip;</span>
+            <span class="code">XCD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-st" alt="Santo Tomé y Príncipe" currency="Dobra de Santo Tomé y Príncipe" />Santo Tomé y Príncipe - Dobra de S&hellip;</span>
+            <span class="code">STD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Senegal" currency="Franco CFA de África Occidental" />Senegal - Franco CFA de África Occide&hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-rs" alt="Serbia" currency="Dinar serbio" />Serbia - Dinar serbio</span>
+            <span class="code">RSD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sc" alt="Seychelles" currency="Rupia de Seychelles" />Seychelles - Rupia de Seychelles</span>
+            <span class="code">SCR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sl" alt="Sierra Leona" currency="Leone de Sierra Leona" />Sierra Leona - Leone de Sierra Leona</span>
+            <span class="code">SLL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sg" alt="Singapur" currency="Dólar de Singapur" />Singapur - Dólar de Singapur</span>
+            <span class="code">SGD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sy" alt="Siria" currency="Libra siria" />Siria - Libra siria</span>
+            <span class="code">SYP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-so" alt="Somalia" currency="Chelín somalí" />Somalia - Chelín somalí</span>
+            <span class="code">SOS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lk" alt="Sri Lanka" currency="Rupia de Sri Lanka" />Sri Lanka - Rupia de Sri Lanka</span>
+            <span class="code">LKR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sz" alt="Suazilandia" currency="Lilangeni suazi" />Suazilandia - Lilangeni suazi</span>
+            <span class="code">SZL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-za" alt="Sudáfrica" currency="Rand sudafricano" />Sudáfrica - Rand sudafricano</span>
+            <span class="code">ZAR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sd" alt="Sudán" currency="Dinar sudanés" />Sudán - Dinar sudanés</span>
+            <span class="code">SDG</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-se" alt="Suecia" currency="Corona sueca" />Suecia - Corona sueca</span>
+            <span class="code">SEK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ch" alt="Suiza" currency="Franco suizo" />Suiza - Franco suizo</span>
+            <span class="code">CHF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sr" alt="Surinam" currency="Dólar surinamés" />Surinam - Dólar surinamés</span>
+            <span class="code">SRD</span>
+          </li>
+          <li class='separator'><strong>T</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-th" alt="Tailandia " currency="Baht tailandés" />Tailandia  - Baht tailandés</span>
+            <span class="code">THB</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tw" alt="Taiwan" currency="Dólar taiwanés" />Taiwan - Dólar taiwanés</span>
+            <span class="code">TWD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tz" alt="Tanzania" currency="Chelín tanzano" />Tanzania - Chelín tanzano</span>
+            <span class="code">TZS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tj" alt="Tayikistán" currency="Somoni tayik" />Tayikistán - Somoni tayik</span>
+            <span class="code">TJS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Togo" currency="Franco CFA de África Occidental" />Togo - Franco CFA de África Occidental</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-to" alt="Tonga" currency="Pa'anga tongano" />Tonga - Pa'anga tongano</span>
+            <span class="code">TOP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tt" alt="Trinidad y Tobago" currency="Dólar de Trinidad y Tobago" />Trinidad y Tobago - Dólar de Trinidad&hellip;</span>
+            <span class="code">TTD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tm" alt="Turkmenistán" currency="Manat turkmeno" />Turkmenistán - Manat turkmeno</span>
+            <span class="code">TMT</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tr" alt="Turquía" currency="Lira turca" />Turquía - Lira turca</span>
+            <span class="code">TRY</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tn" alt="Túnez" currency="Dinar tunecino" />Túnez - Dinar tunecino</span>
+            <span class="code">TND</span>
+          </li>
+          <li class='separator'><strong>U</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ua" alt="Ucrania" currency="Grivna ucraniana" />Ucrania - Grivna ucraniana</span>
+            <span class="code">UAH</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ug" alt="Uganda" currency="Chelín ugandés" />Uganda - Chelín ugandés</span>
+            <span class="code">UGX</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-uy" alt="Uruguay" currency="Peso uruguayo" />Uruguay - Peso uruguayo</span>
+            <span class="code">UYU</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-uz" alt="Uzbekistán" currency="Som uzbeko" />Uzbekistán - Som uzbeko</span>
+            <span class="code">UZS</span>
+          </li>
+          <li class='separator'><strong>V</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-vu" alt="Vanuatu" currency="Vatu de Vanuatu" />Vanuatu - Vatu de Vanuatu</span>
+            <span class="code">VUV</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ve" alt="Venezuela" currency="Bolívar fuerte venezolano" />Venezuela - Bolívar fuerte venezolano</span>
+            <span class="code">VEF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-vn" alt="Vietnam" currency="Dong vietnamita" />Vietnam - Dong vietnamita</span>
+            <span class="code">VND</span>
+          </li>
+          <li class='separator'><strong>W</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xp" alt="Wallis y Futuna" currency="Franco CFP" />Wallis y Futuna - Franco CFP</span>
+            <span class="code">XPF</span>
+          </li>
+          <li class='separator'><strong>Y</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ye" alt="Yemen" currency="Rial yemení" />Yemen - Rial yemení</span>
+            <span class="code">YER</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-dj" alt="Yibuti" currency="Franco yibutiano" />Yibuti - Franco yibutiano</span>
+            <span class="code">DJF</span>
+          </li>
+          <li class='separator'><strong>Z</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-zm" alt="Zambia" currency="Kwacha zambiano" />Zambia - Kwacha zambiano</span>
+            <span class="code">ZMK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-zw" alt="Zimbabue" currency="Dólar zimbabuense" />Zimbabue - Dólar zimbabuense</span>
+            <span class="code">ZWL</span>
+          </li>
+                  </ul>
+      </div>
+      <img id="reverse" src="/img/reverse.png" title="Realizar conversión inversa" />
+      <div id="to">
+        <input type="hidden" id="currencytohidden" value="" />
+        <label for="tocurrency">Divisa destino:</label>
+        <input id="tocurrency" value="" placeholder="Selecciona una divisa:" type="text" onclick="openselector(this)" onkeyup="filter(this)" class="currencyinput" />
+
+        <ul id="toselector" class="currencyselector">
+          <li class="separator"><strong>Más utilizadas</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-eu" alt="Europa" currency="Euro" />Europa - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-us" alt="Estados Unidos" currency="Dólar estadounidense" />Estados Unidos - Dólar estadounidense</span>
+            <span class="code">USD</span>
+          </li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gb" alt="Reino Unido" currency="Libra esterlina" />Reino Unido - Libra esterlina</span>
+            <span class="code">GBP</span>
+          </li>
+
+          <li class='separator'><strong>A</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-af" alt="Afganistán" currency="Afgani afgano" />Afganistán - Afgani afgano</span>
+            <span class="code">AFN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-al" alt="Albania" currency="Lek albanés" />Albania - Lek albanés</span>
+            <span class="code">ALL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-de" alt="Alemania" currency="Euro" />Alemania - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-dz" alt="Algeria" currency="Dinar algerino" />Algeria - Dinar algerino</span>
+            <span class="code">DZD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ao" alt="Angola" currency="Kwanza angoleño" />Angola - Kwanza angoleño</span>
+            <span class="code">AOA</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="Antigua y Barbuda" currency="Dólar del Caribe Oriental" />Antigua y Barbuda - Dólar del Caribe &hellip;</span>
+            <span class="code">XCD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-an" alt="Antillas holandesas" currency="Florín antillano neerlandés" />Antillas holandesas - Florín antilla&hellip;</span>
+            <span class="code">ANG</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sa" alt="Arabia Saudita" currency="Riyal saudí" />Arabia Saudita - Riyal saudí</span>
+            <span class="code">SAR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ar" alt="Argentina" currency="Peso argentino" />Argentina - Peso argentino</span>
+            <span class="code">ARS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-am" alt="Armenia" currency="Dram armenio" />Armenia - Dram armenio</span>
+            <span class="code">AMD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-aw" alt="Aruba" currency="Florín arubeño" />Aruba - Florín arubeño</span>
+            <span class="code">AWG</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-au" alt="Australia" currency="Dólar australiano" />Australia - Dólar australiano</span>
+            <span class="code">AUD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-at" alt="Austria" currency="Euro" />Austria - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-az" alt="Azerbaiyán" currency="Manat azerbaiyano" />Azerbaiyán - Manat azerbaiyano</span>
+            <span class="code">AZN</span>
+          </li>
+          <li class='separator'><strong>B</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bs" alt="Bahamas" currency="Dólar bahameño" />Bahamas - Dólar bahameño</span>
+            <span class="code">BSD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bd" alt="Bangladés" currency="Taka bangladesí" />Bangladés - Taka bangladesí</span>
+            <span class="code">BDT</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bb" alt="Barbados" currency="Dólar de Barbados" />Barbados - Dólar de Barbados</span>
+            <span class="code">BBD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bh" alt="Baréin" currency="Dinar de Bahréin" />Baréin - Dinar de Bahréin</span>
+            <span class="code">BHD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bz" alt="Belice" currency="Dólar de Belice" />Belice - Dólar de Belice</span>
+            <span class="code">BZD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Benín" currency="Franco CFA de África Occidental" />Benín - Franco CFA de África Occiden&hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bm" alt="Bermudas" currency="Dólar de Bermuda" />Bermudas - Dólar de Bermuda</span>
+            <span class="code">BMD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-by" alt="Bielorrusia" currency="Rublo bielorruso" />Bielorrusia - Rublo bielorruso</span>
+            <span class="code">BYR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mm" alt="Birmania" currency="Kyat birmano" />Birmania - Kyat birmano</span>
+            <span class="code">MMK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bo" alt="Bolivia" currency="Boliviano" />Bolivia - Boliviano</span>
+            <span class="code">BOB</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ba" alt="Bosnia y Herzegovina" currency="Marco convertible de Bosnia-Herzegovina" />Bosnia y Herzegovina - Marco convertib&hellip;</span>
+            <span class="code">BAM</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bw" alt="Botsuana" currency="Pula de Botsuana" />Botsuana - Pula de Botsuana</span>
+            <span class="code">BWP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-br" alt="Brasil" currency="Real brasileño" />Brasil - Real brasileño</span>
+            <span class="code">BRL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bn" alt="Brunéi" currency="Dólar de Brunéi" />Brunéi - Dólar de Brunéi</span>
+            <span class="code">BND</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bg" alt="Bulgaria" currency="Lev búlgaro" />Bulgaria - Lev búlgaro</span>
+            <span class="code">BGN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Burkina Faso" currency="Franco CFA de África Occidental" />Burkina Faso - Franco CFA de África O&hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bi" alt="Burundi" currency="Franco burundés" />Burundi - Franco burundés</span>
+            <span class="code">BIF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-bt" alt="Bután" currency="Ngultrum de Bután" />Bután - Ngultrum de Bután</span>
+            <span class="code">BTN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-be" alt="Bélgica" currency="Euro" />Bélgica - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>C</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cv" alt="Cabo Verde" currency="Escudo caboverdiano" />Cabo Verde - Escudo caboverdiano</span>
+            <span class="code">CVE</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kh" alt="Camboya" currency="Riel camboyano" />Camboya - Riel camboyano</span>
+            <span class="code">KHR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xa" alt="Camerún" currency="Franco CFA de África Central" />Camerún - Franco CFA de África Central</span>
+            <span class="code">XAF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ca" alt="Canadá" currency="Dólar canadiense" />Canadá - Dólar canadiense</span>
+            <span class="code">CAD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xa" alt="Chad" currency="Franco CFA de África Central" />Chad - Franco CFA de África Central</span>
+            <span class="code">XAF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cl" alt="Chile" currency="Unidades de fomento chilenas" />Chile - Unidades de fomento chilenas</span>
+            <span class="code">CLF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cl" alt="Chile" currency="Peso chileno" />Chile - Peso chileno</span>
+            <span class="code">CLP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cn" alt="China" currency="Yuan chino" />China - Yuan chino</span>
+            <span class="code">CNY</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cy" alt="Chipre" currency="Euro" />Chipre - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-va" alt="Ciudad del Vaticano" currency="Euro" />Ciudad del Vaticano - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-co" alt="Colombia" currency="Peso colombiano" />Colombia - Peso colombiano</span>
+            <span class="code">COP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-km" alt="Comoras" currency="Franco comoriano" />Comoras - Franco comoriano</span>
+            <span class="code">KMF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cd" alt="Congo" currency="Franco congoleño" />Congo - Franco congoleño</span>
+            <span class="code">CDF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kp" alt="Corea del Norte" currency="Won norcoreano" />Corea del Norte - Won norcoreano</span>
+            <span class="code">KPW</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kr" alt="Corea del Sur" currency="Won surcoreano" />Corea del Sur - Won surcoreano</span>
+            <span class="code">KRW</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cr" alt="Costa Rica" currency="Colón costarricense" />Costa Rica - Colón costarricense</span>
+            <span class="code">CRC</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Costa de Marfil" currency="Franco CFA de África Occidental" />Costa de Marfil - Franco CFA de Áfric&hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-hr" alt="Croacia" currency="Kuna croata" />Croacia - Kuna croata</span>
+            <span class="code">HRK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cu" alt="Cuba" currency="Peso cubano" />Cuba - Peso cubano</span>
+            <span class="code">CUP</span>
+          </li>
+          <li class='separator'><strong>D</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-dk" alt="Dinamarca" currency="Corona danesa" />Dinamarca - Corona danesa</span>
+            <span class="code">DKK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="Dominica" currency="Dólar del Caribe Oriental" />Dominica - Dólar del Caribe Oriental</span>
+            <span class="code">XCD</span>
+          </li>
+          <li class='separator'><strong>E</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-eg" alt="Egipto" currency="Libra egipcia" />Egipto - Libra egipcia</span>
+            <span class="code">EGP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sv" alt="El Salvador" currency="Colón salvadoreño" />El Salvador - Colón salvadoreño</span>
+            <span class="code">SVC</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ae" alt="Emiratos Árabes Unidos" currency="Dirham de los Emiratos Árabes Unidos" />Emiratos Árabes Unidos - Dirham de l&hellip;</span>
+            <span class="code">AED</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sk" alt="Eslovaquia" currency="Euro" />Eslovaquia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-si" alt="Eslovenia" currency="Euro" />Eslovenia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-es" alt="España" currency="Euro" />España - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-us" alt="Estados Unidos" currency="Dólar estadounidense" />Estados Unidos - Dólar estadounidense</span>
+            <span class="code">USD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ee" alt="Estonia" currency="Corona estonia" />Estonia - Corona estonia</span>
+            <span class="code">EEK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ee" alt="Estonia" currency="Euro" />Estonia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-et" alt="Etiopía" currency="Birr etíope" />Etiopía - Birr etíope</span>
+            <span class="code">ETB</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-eu" alt="Eurozona" currency="Euro" />Eurozona - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>F</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ph" alt="Filipinas" currency="Peso filipino" />Filipinas - Peso filipino</span>
+            <span class="code">PHP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-fi" alt="Finlandia" currency="Euro" />Finlandia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-fj" alt="Fiyi" currency="Dólar fiyiano" />Fiyi - Dólar fiyiano</span>
+            <span class="code">FJD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-fr" alt="Francia" currency="Euro" />Francia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>G</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gm" alt="Gambia" currency="Dalasi gambiano" />Gambia - Dalasi gambiano</span>
+            <span class="code">GMD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ge" alt="Georgia" currency="Lari georgiano" />Georgia - Lari georgiano</span>
+            <span class="code">GEL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gh" alt="Ghana" currency="Cedi ghanés" />Ghana - Cedi ghanés</span>
+            <span class="code">GHS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gi" alt="Gibraltar" currency="Libra de Gibraltar" />Gibraltar - Libra de Gibraltar</span>
+            <span class="code">GIP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="Granada" currency="Dólar del Caribe Oriental" />Granada - Dólar del Caribe Oriental</span>
+            <span class="code">XCD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gr" alt="Grecia" currency="Euro" />Grecia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gt" alt="Guatemala" currency="Quetzal guatemalteco" />Guatemala - Quetzal guatemalteco</span>
+            <span class="code">GTQ</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gn" alt="Guinea" currency="Franco guineano" />Guinea - Franco guineano</span>
+            <span class="code">GNF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xa" alt="Guinea Ecuatorial y Gabón" currency="Franco CFA de África Central" />Guinea Ecuatorial y Gabón - Franco &hellip;</span>
+            <span class="code">XAF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Guinea-Bissau" currency="Franco CFA de África Occidental" />Guinea-Bissau - Franco CFA de África &hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gy" alt="Guyana" currency="Dólar guyanés" />Guyana - Dólar guyanés</span>
+            <span class="code">GYD</span>
+          </li>
+          <li class='separator'><strong>H</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ht" alt="Haití" currency="Gourde haitiano" />Haití - Gourde haitiano</span>
+            <span class="code">HTG</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-nl" alt="Holanda" currency="Euro" />Holanda - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-hn" alt="Honduras" currency="Lempira hondureño" />Honduras - Lempira hondureño</span>
+            <span class="code">HNL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-hk" alt="Hong Kong" currency="Dólar de Hong Kong" />Hong Kong - Dólar de Hong Kong</span>
+            <span class="code">HKD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-hu" alt="Hungría" currency="Forint húngaro" />Hungría - Forint húngaro</span>
+            <span class="code">HUF</span>
+          </li>
+          <li class='separator'><strong>I</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-in" alt="India" currency="Rupia india" />India - Rupia india</span>
+            <span class="code">INR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-id" alt="Indonesia" currency="Rupia indonesia" />Indonesia - Rupia indonesia</span>
+            <span class="code">IDR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-iq" alt="Irak" currency="Dinar iraquí" />Irak - Dinar iraquí</span>
+            <span class="code">IQD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ie" alt="Irlanda" currency="Euro" />Irlanda - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ir" alt="Irán" currency="Rial iraní" />Irán - Rial iraní</span>
+            <span class="code">IRR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-is" alt="Islandia" currency="Corona islandesa" />Islandia - Corona islandesa</span>
+            <span class="code">ISK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ky" alt="Islas Caimán" currency="Dólar caimano" />Islas Caimán - Dólar caimano</span>
+            <span class="code">KYD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-fk" alt="Islas Malvinas" currency="Libra malvinense" />Islas Malvinas - Libra malvinense</span>
+            <span class="code">FKP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sb" alt="Islas Salomón" currency="Dólar de las Islas Salomón" />Islas Salomón - Dólar de las Islas S&hellip;</span>
+            <span class="code">SBD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-il" alt="Israel" currency="Nuevo shéquel israelí" />Israel - Nuevo shéquel israelí</span>
+            <span class="code">ILS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-it" alt="Italia" currency="Euro" />Italia - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>J</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-jm" alt="Jamaica" currency="Dólar jamaicano" />Jamaica - Dólar jamaicano</span>
+            <span class="code">JMD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-jp" alt="Japón" currency="Yen japonés" />Japón - Yen japonés</span>
+            <span class="code">JPY</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-je" alt="Jersey" currency="Libra de Jersey" />Jersey - Libra de Jersey</span>
+            <span class="code">JEP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-jo" alt="Jordania" currency="Dinar jordano" />Jordania - Dinar jordano</span>
+            <span class="code">JOD</span>
+          </li>
+          <li class='separator'><strong>K</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kz" alt="Kazajistán" currency="Tenge kazajo" />Kazajistán - Tenge kazajo</span>
+            <span class="code">KZT</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ke" alt="Kenia" currency="Chelín keniata" />Kenia - Chelín keniata</span>
+            <span class="code">KES</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kg" alt="Kirguistán" currency="Som kirguís" />Kirguistán - Som kirguís</span>
+            <span class="code">KGS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-kw" alt="Kuwait" currency="Dinar kuwaití" />Kuwait - Dinar kuwaití</span>
+            <span class="code">KWD</span>
+          </li>
+          <li class='separator'><strong>L</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-la" alt="Laos" currency="Kip laosiano" />Laos - Kip laosiano</span>
+            <span class="code">LAK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ls" alt="Lesoto" currency="Loti lesotense" />Lesoto - Loti lesotense</span>
+            <span class="code">LSL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lv" alt="Letonia" currency="Lat letón" />Letonia - Lat letón</span>
+            <span class="code">LVL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lr" alt="Liberia" currency="Dólar liberiano" />Liberia - Dólar liberiano</span>
+            <span class="code">LRD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ly" alt="Libia" currency="Dinar libio" />Libia - Dinar libio</span>
+            <span class="code">LYD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lt" alt="Lituania" currency="Litas lituano" />Lituania - Litas lituano</span>
+            <span class="code">LTL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lu" alt="Luxemburgo" currency="Euro" />Luxemburgo - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lb" alt="Líbano" currency="Libra libanesa" />Líbano - Libra libanesa</span>
+            <span class="code">LBP</span>
+          </li>
+          <li class='separator'><strong>M</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mo" alt="Macao" currency="Pataca de Macao" />Macao - Pataca de Macao</span>
+            <span class="code">MOP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mk" alt="Macedonia" currency="Denar macedonio" />Macedonia - Denar macedonio</span>
+            <span class="code">MKD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mg" alt="Madagascar" currency="Ariary malgache" />Madagascar - Ariary malgache</span>
+            <span class="code">MGA</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-my" alt="Malasia" currency="Ringgit malayo" />Malasia - Ringgit malayo</span>
+            <span class="code">MYR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mw" alt="Malawi" currency="Kwacha malauí" />Malawi - Kwacha malauí</span>
+            <span class="code">MWK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mv" alt="Maldivas" currency="Rufiyaa maldiva" />Maldivas - Rufiyaa maldiva</span>
+            <span class="code">MVR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mt" alt="Malta" currency="Euro" />Malta - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Malí" currency="Franco CFA de África Occidental" />Malí - Franco CFA de África Occidental</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ma" alt="Marruecos" currency="Dirham marroquí" />Marruecos - Dirham marroquí</span>
+            <span class="code">MAD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mu" alt="Mauricio" currency="Rupia mauricia" />Mauricio - Rupia mauricia</span>
+            <span class="code">MUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mr" alt="Mauritania" currency="Uquiya" />Mauritania - Uquiya</span>
+            <span class="code">MRO</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-md" alt="Moldavia" currency="Leu moldavo" />Moldavia - Leu moldavo</span>
+            <span class="code">MDL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mn" alt="Mongolia" currency="Tugrik mongol" />Mongolia - Tugrik mongol</span>
+            <span class="code">MNT</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mz" alt="Mozambique" currency="Metical mozambiqueño" />Mozambique - Metical mozambiqueño</span>
+            <span class="code">MZN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mx" alt="México" currency="Peso mexicano" />México - Peso mexicano</span>
+            <span class="code">MXN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-mc" alt="Mónaco" currency="Euro" />Mónaco - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>N</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-na" alt="Namibia" currency="Dólar namibio" />Namibia - Dólar namibio</span>
+            <span class="code">NAD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-np" alt="Nepal" currency="Rupia nepalesa" />Nepal - Rupia nepalesa</span>
+            <span class="code">NPR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ni" alt="Nicaragua" currency="Córdoba nicaragüense" />Nicaragua - Córdoba nicaragüense</span>
+            <span class="code">NIO</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ng" alt="Nigeria" currency="Naira nigeriana" />Nigeria - Naira nigeriana</span>
+            <span class="code">NGN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-no" alt="Noruega" currency="Corona noruega" />Noruega - Corona noruega</span>
+            <span class="code">NOK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xp" alt="Nueva Caledonia" currency="Franco CFP" />Nueva Caledonia - Franco CFP</span>
+            <span class="code">XPF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-nz" alt="Nueva Zelanda" currency="Dólar neozelandés" />Nueva Zelanda - Dólar neozelandés</span>
+            <span class="code">NZD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Níger" currency="Franco CFA de África Occidental" />Níger - Franco CFA de África Occiden&hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          <li class='separator'><strong>O</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-om" alt="Oman" currency="Rial omaní" />Oman - Rial omaní</span>
+            <span class="code">OMR</span>
+          </li>
+          <li class='separator'><strong>P</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pk" alt="Pakistán" currency="Rupia pakistaní" />Pakistán - Rupia pakistaní</span>
+            <span class="code">PKR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pa" alt="Panamá" currency="Balboa panameña" />Panamá - Balboa panameña</span>
+            <span class="code">PAB</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pg" alt="Papúa Nueva Guinea" currency="Kina de Papúa Nueva Guinea" />Papúa Nueva Guinea - Kina de Papúa&hellip;</span>
+            <span class="code">PGK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-py" alt="Paraguay" currency="Guaraní paraguayo" />Paraguay - Guaraní paraguayo</span>
+            <span class="code">PYG</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pe" alt="Perú" currency="Nuevo sol peruano" />Perú - Nuevo sol peruano</span>
+            <span class="code">PEN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xp" alt="Polinesia Francesa" currency="Franco CFP" />Polinesia Francesa - Franco CFP</span>
+            <span class="code">XPF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pl" alt="Polonia" currency="zloty polaco" />Polonia - zloty polaco</span>
+            <span class="code">PLN</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-pt" alt="Portugal" currency="Euro" />Portugal - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          <li class='separator'><strong>Q</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-qa" alt="Qatar" currency="Rial qatarí" />Qatar - Rial qatarí</span>
+            <span class="code">QAR</span>
+          </li>
+          <li class='separator'><strong>R</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-gb" alt="Reino Unido" currency="Libra esterlina" />Reino Unido - Libra esterlina</span>
+            <span class="code">GBP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xa" alt="República Centroafricana" currency="Franco CFA de África Central" />República Centroafricana - Franco CFA&hellip;</span>
+            <span class="code">XAF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-cz" alt="República Checa" currency="Corona checa" />República Checa - Corona checa</span>
+            <span class="code">CZK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-do" alt="República Dominicana" currency="Peso dominicano" />República Dominicana - Peso dominicano</span>
+            <span class="code">DOP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xa" alt="República del Congo" currency="Franco CFA de África Central" />República del Congo - Franco CFA de �&hellip;</span>
+            <span class="code">XAF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-rw" alt="Ruanda" currency="Franco ruandés" />Ruanda - Franco ruandés</span>
+            <span class="code">RWF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ro" alt="Rumanía" currency="Leu rumano" />Rumanía - Leu rumano</span>
+            <span class="code">RON</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ru" alt="Rusia" currency="Rublo ruso" />Rusia - Rublo ruso</span>
+            <span class="code">RUB</span>
+          </li>
+          <li class='separator'><strong>S</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ws" alt="Samoa" currency="Tala samoana" />Samoa - Tala samoana</span>
+            <span class="code">WST</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="San Cristóbal y Nieves" currency="Dólar del Caribe Oriental" />San Cristóbal y Nieves - Dólar del C&hellip;</span>
+            <span class="code">XCD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sm" alt="San Marino" currency="Euro" />San Marino - Euro</span>
+            <span class="code">EUR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="San Vicente y las Granadinas" currency="Dólar del Caribe Oriental" />San Vicente y las Granadinas - Dólar &hellip;</span>
+            <span class="code">XCD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sh" alt="Santa Elena" currency="Libra de Santa Helena" />Santa Elena - Libra de Santa Helena</span>
+            <span class="code">SHP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xc" alt="Santa Lucía" currency="Dólar del Caribe Oriental" />Santa Lucía - Dólar del Caribe Orien&hellip;</span>
+            <span class="code">XCD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-st" alt="Santo Tomé y Príncipe" currency="Dobra de Santo Tomé y Príncipe" />Santo Tomé y Príncipe - Dobra de S&hellip;</span>
+            <span class="code">STD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Senegal" currency="Franco CFA de África Occidental" />Senegal - Franco CFA de África Occide&hellip;</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-rs" alt="Serbia" currency="Dinar serbio" />Serbia - Dinar serbio</span>
+            <span class="code">RSD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sc" alt="Seychelles" currency="Rupia de Seychelles" />Seychelles - Rupia de Seychelles</span>
+            <span class="code">SCR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sl" alt="Sierra Leona" currency="Leone de Sierra Leona" />Sierra Leona - Leone de Sierra Leona</span>
+            <span class="code">SLL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sg" alt="Singapur" currency="Dólar de Singapur" />Singapur - Dólar de Singapur</span>
+            <span class="code">SGD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sy" alt="Siria" currency="Libra siria" />Siria - Libra siria</span>
+            <span class="code">SYP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-so" alt="Somalia" currency="Chelín somalí" />Somalia - Chelín somalí</span>
+            <span class="code">SOS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-lk" alt="Sri Lanka" currency="Rupia de Sri Lanka" />Sri Lanka - Rupia de Sri Lanka</span>
+            <span class="code">LKR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sz" alt="Suazilandia" currency="Lilangeni suazi" />Suazilandia - Lilangeni suazi</span>
+            <span class="code">SZL</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-za" alt="Sudáfrica" currency="Rand sudafricano" />Sudáfrica - Rand sudafricano</span>
+            <span class="code">ZAR</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sd" alt="Sudán" currency="Dinar sudanés" />Sudán - Dinar sudanés</span>
+            <span class="code">SDG</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-se" alt="Suecia" currency="Corona sueca" />Suecia - Corona sueca</span>
+            <span class="code">SEK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ch" alt="Suiza" currency="Franco suizo" />Suiza - Franco suizo</span>
+            <span class="code">CHF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-sr" alt="Surinam" currency="Dólar surinamés" />Surinam - Dólar surinamés</span>
+            <span class="code">SRD</span>
+          </li>
+          <li class='separator'><strong>T</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-th" alt="Tailandia " currency="Baht tailandés" />Tailandia  - Baht tailandés</span>
+            <span class="code">THB</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tw" alt="Taiwan" currency="Dólar taiwanés" />Taiwan - Dólar taiwanés</span>
+            <span class="code">TWD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tz" alt="Tanzania" currency="Chelín tanzano" />Tanzania - Chelín tanzano</span>
+            <span class="code">TZS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tj" alt="Tayikistán" currency="Somoni tayik" />Tayikistán - Somoni tayik</span>
+            <span class="code">TJS</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xo" alt="Togo" currency="Franco CFA de África Occidental" />Togo - Franco CFA de África Occidental</span>
+            <span class="code">XOF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-to" alt="Tonga" currency="Pa'anga tongano" />Tonga - Pa'anga tongano</span>
+            <span class="code">TOP</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tt" alt="Trinidad y Tobago" currency="Dólar de Trinidad y Tobago" />Trinidad y Tobago - Dólar de Trinidad&hellip;</span>
+            <span class="code">TTD</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tm" alt="Turkmenistán" currency="Manat turkmeno" />Turkmenistán - Manat turkmeno</span>
+            <span class="code">TMT</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tr" alt="Turquía" currency="Lira turca" />Turquía - Lira turca</span>
+            <span class="code">TRY</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-tn" alt="Túnez" currency="Dinar tunecino" />Túnez - Dinar tunecino</span>
+            <span class="code">TND</span>
+          </li>
+          <li class='separator'><strong>U</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ua" alt="Ucrania" currency="Grivna ucraniana" />Ucrania - Grivna ucraniana</span>
+            <span class="code">UAH</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ug" alt="Uganda" currency="Chelín ugandés" />Uganda - Chelín ugandés</span>
+            <span class="code">UGX</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-uy" alt="Uruguay" currency="Peso uruguayo" />Uruguay - Peso uruguayo</span>
+            <span class="code">UYU</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-uz" alt="Uzbekistán" currency="Som uzbeko" />Uzbekistán - Som uzbeko</span>
+            <span class="code">UZS</span>
+          </li>
+          <li class='separator'><strong>V</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-vu" alt="Vanuatu" currency="Vatu de Vanuatu" />Vanuatu - Vatu de Vanuatu</span>
+            <span class="code">VUV</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ve" alt="Venezuela" currency="Bolívar fuerte venezolano" />Venezuela - Bolívar fuerte venezolano</span>
+            <span class="code">VEF</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-vn" alt="Vietnam" currency="Dong vietnamita" />Vietnam - Dong vietnamita</span>
+            <span class="code">VND</span>
+          </li>
+          <li class='separator'><strong>W</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-xp" alt="Wallis y Futuna" currency="Franco CFP" />Wallis y Futuna - Franco CFP</span>
+            <span class="code">XPF</span>
+          </li>
+          <li class='separator'><strong>Y</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-ye" alt="Yemen" currency="Rial yemení" />Yemen - Rial yemení</span>
+            <span class="code">YER</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-dj" alt="Yibuti" currency="Franco yibutiano" />Yibuti - Franco yibutiano</span>
+            <span class="code">DJF</span>
+          </li>
+          <li class='separator'><strong>Z</strong></li>
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-zm" alt="Zambia" currency="Kwacha zambiano" />Zambia - Kwacha zambiano</span>
+            <span class="code">ZMK</span>
+          </li>
+          
+          <li>
+            <span class="country-coin"><img src="blank.gif" class="flag flag-zw" alt="Zimbabue" currency="Dólar zimbabuense" />Zimbabue - Dólar zimbabuense</span>
+            <span class="code">ZWL</span>
+          </li>
+                  </ul>
+      </div>
+      <div id="result"></div>
+    </div>
+
+    <p id="info">Esta calculadora es un <strong>conversor de monedas</strong> que permite convertir valores de más de 150 monedas de todo el mundo, incluyendo las más importantes como el Euro (EUR), Dólar (USD), Libra (GBP), etc. Los tipos de cambio son actualizados cada hora, ofreciendo así mayor exactitud en el cambio aplicado.</p>
+
+    <h2><img src="blank.gif" class="flag flag-eu" alt="Europa" />Convertir Euros a otras divisas</h2>
+    <ul class="links">
+          <li>
+        <a href="/convertir-euros-a-pesos-argentinos">Convertir Euros a <img src="blank.gif" class="flag flag-ar" alt="Argentina" />Pesos argentinos (ARS)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-dolares-australianos">Convertir Euros a <img src="blank.gif" class="flag flag-au" alt="Australia" />Dólares australianos (AUD)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-bolivianos">Convertir Euros a <img src="blank.gif" class="flag flag-bo" alt="Bolivia" />Bolivianos (BOB)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-reales-brasilenos">Convertir Euros a <img src="blank.gif" class="flag flag-br" alt="Brasil" />Reales brasileños (BRL)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-dolares-canadienses">Convertir Euros a <img src="blank.gif" class="flag flag-ca" alt="Canadá" />Dólares canadienses (CAD)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-pesos-chilenos">Convertir Euros a <img src="blank.gif" class="flag flag-cl" alt="Chile" />Pesos chilenos (CLP)</a>
+      </li>
+    </ul><ul class='links'>      <li>
+        <a href="/convertir-euros-a-yuanes-chinos">Convertir Euros a <img src="blank.gif" class="flag flag-cn" alt="China" />Yuanes chinos (CNY)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-pesos-colombianos">Convertir Euros a <img src="blank.gif" class="flag flag-co" alt="Colombia" />Pesos colombianos (COP)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-coronas-danesas">Convertir Euros a <img src="blank.gif" class="flag flag-dk" alt="Dinamarca" />Coronas danesas (DKK)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-colones-salvadorenos">Convertir Euros a <img src="blank.gif" class="flag flag-sv" alt="El Salvador" />Colónes salvadoreños (SVC)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-dolares-estadounidenses">Convertir Euros a <img src="blank.gif" class="flag flag-us" alt="Estados Unidos" />Dólares estadounidenses (USD)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-quitzales-guatemalteco">Convertir Euros a <img src="blank.gif" class="flag flag-gt" alt="Guatemala" />Quitzales guatemalteco (GTQ)</a>
+      </li>
+    </ul><ul class='links'>      <li>
+        <a href="/convertir-euros-a-lempiras-hondurenos">Convertir Euros a <img src="blank.gif" class="flag flag-hn" alt="Honduras" />Lempiras hondureños (HNL)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-rupias-indias">Convertir Euros a <img src="blank.gif" class="flag flag-in" alt="India" />Rupias indias (INR)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-yenes-japoneses">Convertir Euros a <img src="blank.gif" class="flag flag-jp" alt="Japón" />Yenes japoneses (JPY)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-pesos-mexicanos">Convertir Euros a <img src="blank.gif" class="flag flag-mx" alt="México" />Pesos mexicanos (MXN)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-coronas-noruegas">Convertir Euros a <img src="blank.gif" class="flag flag-no" alt="Noruega" />Coronas noruegas (NOK)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-balbboas-panamenas">Convertir Euros a <img src="blank.gif" class="flag flag-pa" alt="Panamá" />Balboas panameñas (PAB)</a>
+      </li>
+    </ul><ul class='links'>      <li>
+        <a href="/convertir-euros-a-guaranies-paraguayos">Convertir Euros a <img src="blank.gif" class="flag flag-py" alt="Paraguay" />Guaraníes paraguayos (PYG)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-nuevos-soles-peruanos">Convertir Euros a <img src="blank.gif" class="flag flag-pe" alt="Perú" />Nuevos soles peruanos (PEN)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-libras-esterlinas">Convertir Euros a <img src="blank.gif" class="flag flag-gb" alt="Reino Unido" />Libras esterlinas (GBP)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-rublos-rusos">Convertir Euros a <img src="blank.gif" class="flag flag-ru" alt="Rusia" />Rublos rusos (RUB)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-coronas-suecas">Convertir Euros a <img src="blank.gif" class="flag flag-se" alt="Suecia" />Coronas suecas (SEK)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-francos-suizos">Convertir Euros a <img src="blank.gif" class="flag flag-ch" alt="Suiza" />Francos suizos (CHF)</a>
+      </li>
+    </ul><ul class='links'>      <li>
+        <a href="/convertir-euros-a-pesos-uruguayos">Convertir Euros a <img src="blank.gif" class="flag flag-uy" alt="Uruguay" />Pesos uruguayos (UYU)</a>
+      </li>
+          <li>
+        <a href="/convertir-euros-a-bolivares-fuertes-venezolanos">Convertir Euros a <img src="blank.gif" class="flag flag-ve" alt="Venezuela" />Bolívares fuertes venezolanos (VEF)</a>
+      </li>
+        </ul>
+
+    <h2><img src="blank.gif" class="flag flag-us" alt="Estados Unidos" />Convertir Dólares a otras divisas</h2>
+    <ul class="links">
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-pesos-argentinos">Convertir Dólares a <img src="blank.gif" class="flag flag-ar" alt="Argentina" />Pesos argentinos (ARS)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-dolares-australianos">Convertir Dólares a <img src="blank.gif" class="flag flag-au" alt="Australia" />Dólares australianos (AUD)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-bolivianos">Convertir Dólares a <img src="blank.gif" class="flag flag-bo" alt="Bolivia" />Bolivianos (BOB)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-reales-brasilenos">Convertir Dólares a <img src="blank.gif" class="flag flag-br" alt="Brasil" />Reales brasileños (BRL)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-dolares-canadienses">Convertir Dólares a <img src="blank.gif" class="flag flag-ca" alt="Canadá" />Dólares canadienses (CAD)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-pesos-chilenos">Convertir Dólares a <img src="blank.gif" class="flag flag-cl" alt="Chile" />Pesos chilenos (CLP)</a>
+      </li>
+    </ul><ul class='links'>      <li>
+        <a href="/convertir-dolares-estadounidenses-a-yuanes-chinos">Convertir Dólares a <img src="blank.gif" class="flag flag-cn" alt="China" />Yuanes chinos (CNY)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-pesos-colombianos">Convertir Dólares a <img src="blank.gif" class="flag flag-co" alt="Colombia" />Pesos colombianos (COP)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-coronas-danesas">Convertir Dólares a <img src="blank.gif" class="flag flag-dk" alt="Dinamarca" />Coronas danesas (DKK)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-colones-salvadorenos">Convertir Dólares a <img src="blank.gif" class="flag flag-sv" alt="El Salvador" />Colónes salvadoreños (SVC)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-euros">Convertir Dólares a <img src="blank.gif" class="flag flag-eu" alt="Eurozona" />Euros (EUR)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-quitzales-guatemalteco">Convertir Dólares a <img src="blank.gif" class="flag flag-gt" alt="Guatemala" />Quitzales guatemalteco (GTQ)</a>
+      </li>
+    </ul><ul class='links'>      <li>
+        <a href="/convertir-dolares-estadounidenses-a-lempiras-hondurenos">Convertir Dólares a <img src="blank.gif" class="flag flag-hn" alt="Honduras" />Lempiras hondureños (HNL)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-rupias-indias">Convertir Dólares a <img src="blank.gif" class="flag flag-in" alt="India" />Rupias indias (INR)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-yenes-japoneses">Convertir Dólares a <img src="blank.gif" class="flag flag-jp" alt="Japón" />Yenes japoneses (JPY)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-pesos-mexicanos">Convertir Dólares a <img src="blank.gif" class="flag flag-mx" alt="México" />Pesos mexicanos (MXN)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-coronas-noruegas">Convertir Dólares a <img src="blank.gif" class="flag flag-no" alt="Noruega" />Coronas noruegas (NOK)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-balbboas-panamenas">Convertir Dólares a <img src="blank.gif" class="flag flag-pa" alt="Panamá" />Balboas panameñas (PAB)</a>
+      </li>
+    </ul><ul class='links'>      <li>
+        <a href="/convertir-dolares-estadounidenses-a-guaranies-paraguayos">Convertir Dólares a <img src="blank.gif" class="flag flag-py" alt="Paraguay" />Guaraníes paraguayos (PYG)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-nuevos-soles-peruanos">Convertir Dólares a <img src="blank.gif" class="flag flag-pe" alt="Perú" />Nuevos soles peruanos (PEN)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-libras-esterlinas">Convertir Dólares a <img src="blank.gif" class="flag flag-gb" alt="Reino Unido" />Libras esterlinas (GBP)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-rublos-rusos">Convertir Dólares a <img src="blank.gif" class="flag flag-ru" alt="Rusia" />Rublos rusos (RUB)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-coronas-suecas">Convertir Dólares a <img src="blank.gif" class="flag flag-se" alt="Suecia" />Coronas suecas (SEK)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-francos-suizos">Convertir Dólares a <img src="blank.gif" class="flag flag-ch" alt="Suiza" />Francos suizos (CHF)</a>
+      </li>
+    </ul><ul class='links'>      <li>
+        <a href="/convertir-dolares-estadounidenses-a-pesos-uruguayos">Convertir Dólares a <img src="blank.gif" class="flag flag-uy" alt="Uruguay" />Pesos uruguayos (UYU)</a>
+      </li>
+          <li>
+        <a href="/convertir-dolares-estadounidenses-a-bolivares-fuertes-venezolanos">Convertir Dólares a <img src="blank.gif" class="flag flag-ve" alt="Venezuela" />Bolívares fuertes venezolanos (VEF)</a>
+      </li>
+        </ul>
+    
+    <h2>Últimas conversiones realizadas</h2>
+    <ul class="links">
+          <li>
+        <a href="/8039-euros-a-dolares-estadounidenses">Convertir 8039 euros (EUR) a dólares estadounidenses (USD)</a>
+      </li>
+          <li>
+        <a href="/6449-dolares-estadounidenses-a-euros">Convertir 6449 dólares estadounidenses (USD) a euros (EUR)</a>
+      </li>
+          <li>
+        <a href="/6903-euros-a-dolares-estadounidenses">Convertir 6903 euros (EUR) a dólares estadounidenses (USD)</a>
+      </li>
+          <li>
+        <a href="/7621-dolares-estadounidenses-a-euros">Convertir 7621 dólares estadounidenses (USD) a euros (EUR)</a>
+      </li>
+          <li>
+        <a href="/5017-euros-a-dolares-estadounidenses">Convertir 5017 euros (EUR) a dólares estadounidenses (USD)</a>
+      </li>
+          <li>
+        <a href="/4395-euros-a-dolares-estadounidenses">Convertir 4395 euros (EUR) a dólares estadounidenses (USD)</a>
+      </li>
+          <li>
+        <a href="/5371-dolares-estadounidenses-a-euros">Convertir 5371 dólares estadounidenses (USD) a euros (EUR)</a>
+      </li>
+          <li>
+        <a href="/8200-euros-a-dolares-estadounidenses">Convertir 8200 euros (EUR) a dólares estadounidenses (USD)</a>
+      </li>
+          <li>
+        <a href="/4809-dolares-estadounidenses-a-euros">Convertir 4809 dólares estadounidenses (USD) a euros (EUR)</a>
+      </li>
+          <li>
+        <a href="/8232-dolares-estadounidenses-a-euros">Convertir 8232 dólares estadounidenses (USD) a euros (EUR)</a>
+      </li>
+    </ul><ul class='links'>      <li>
+        <a href="/6545-euros-a-dolares-estadounidenses">Convertir 6545 euros (EUR) a dólares estadounidenses (USD)</a>
+      </li>
+          <li>
+        <a href="/7257-dolares-estadounidenses-a-euros">Convertir 7257 dólares estadounidenses (USD) a euros (EUR)</a>
+      </li>
+          <li>
+        <a href="/7372-dolares-estadounidenses-a-euros">Convertir 7372 dólares estadounidenses (USD) a euros (EUR)</a>
+      </li>
+          <li>
+        <a href="/1033-dolares-estadounidenses-a-euros">Convertir 1033 dólares estadounidenses (USD) a euros (EUR)</a>
+      </li>
+          <li>
+        <a href="/3847-dolares-estadounidenses-a-euros">Convertir 3847 dólares estadounidenses (USD) a euros (EUR)</a>
+      </li>
+          <li>
+        <a href="/590-dolares-estadounidenses-a-euros">Convertir 590 dólares estadounidenses (USD) a euros (EUR)</a>
+      </li>
+          <li>
+        <a href="/1140-euros-a-dolares-estadounidenses">Convertir 1140 euros (EUR) a dólares estadounidenses (USD)</a>
+      </li>
+          <li>
+        <a href="/3702-euros-a-dolares-estadounidenses">Convertir 3702 euros (EUR) a dólares estadounidenses (USD)</a>
+      </li>
+          <li>
+        <a href="/4146-dolares-estadounidenses-a-euros">Convertir 4146 dólares estadounidenses (USD) a euros (EUR)</a>
+      </li>
+          <li>
+        <a href="/1815-euros-a-dolares-estadounidenses">Convertir 1815 euros (EUR) a dólares estadounidenses (USD)</a>
+      </li>
+    </ul><ul class='links'>    </ul>
+  </div>
+</div>
+<div id="footer">
+  <p><a href="/contacto">Contactar con nosotros</a> | <a href="/acercade">Acerca del conversor de monedas</a> | <a href="http://www.wahrungsrechner.net">Währungsrechner</a> | <a href="http://www.conversor-moedas.com">Conversor de moedas</a></p>
+</div>
+<!-- Start of StatCounter Code for Default Guide -->
+<script type="text/javascript">
+var sc_project=8414313; 
+var sc_invisible=1; 
+var sc_security="e6a465e1"; 
+var sc_https=1; 
+var scJsHost = (("https:" == document.location.protocol) ?
+"https://secure." : "http://www.");
+document.write("<sc"+"ript type='text/javascript' src='" +
+scJsHost +
+"statcounter.com/counter/counter_xhtml.js'></"+"script>");</script>
+<noscript><div class="statcounter"><a title="free hit
+counters" href="http://statcounter.com/"
+class="statcounter"><img class="statcounter"
+src="https://c.statcounter.com/8414313/0/e6a465e1/1/"
+alt="free hit counters" /></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+</body>
+</html>

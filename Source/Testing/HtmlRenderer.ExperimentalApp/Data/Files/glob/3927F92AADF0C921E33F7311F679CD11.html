@@ -1,0 +1,3429 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title>File::Glob - Perl extension for BSD glob routine - metacpan.org</title>
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed/distribution/perl" />
+        <link href="/_assets/81b07bb4d38046f75d7890266fc9aee4.css" rel="stylesheet" type="text/css">
+        <link rel="search" href="/static/opensearch.xml" type="application/opensearchdescription+xml" title="MetaCPAN">
+        <link rel="canonical" href="https://metacpan.org/pod/File::Glob" />
+        <meta name="description" content="Perl extension for BSD glob routine" />
+        <link rel="shortcut icon" href="/static/icons/favicon.ico">
+        <link rel="apple-touch-icon" sizes="152x152" href="/static/icons/apple-touch-icon.png">
+        <script src="/_assets/10a216f0acb4ece8ac9d95fb46a330c7.js" type="text/javascript"></script>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-27829474-1', {
+              siteSpeedSampleRate : 100
+          });
+          ga('send', 'pageview');
+
+          ga(function() {
+            var cookies=['__utma', '__utmb', '__utmc', '__utmv', '__utmz', '_gat'];
+            for (var i = cookies.length; i--; ) {
+              var cookie = cookies[i]+"=; expires="+(new Date(0)).toGMTString()+"; path=/";
+              document.cookie = cookie;
+              document.cookie = cookie + '; domain=.'+document.domain;
+            }
+          });
+        </script>
+        
+        
+        <meta name="twitter:card"        content="summary" />
+<meta name="twitter:url"         content="https://metacpan.org/pod/File::Glob" />
+<meta name="twitter:title"       content="File::Glob" />
+<meta name="twitter:description" content="Perl extension for BSD glob routine" />
+<meta name="twitter:site"        content="metacpan" />
+
+        
+    </head>
+    <body>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                <li class="visible-xs">
+                <a href="#" data-toggle="slidepanel" data-target=".slidepanel">
+                  <i class="fa fa-bars fa-2x icon-slidepanel"></i>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </a>
+                </li>
+            
+                    <li class="">
+                        <a href="/"><img src="/static/icons/metacpan-icon.png" />                            Home                        </a>
+                    </li>
+                    <li class="">
+                        <a href="/recent"><i class="fa fa-history"></i>                            Recent                        </a>
+                    </li>
+                    <li class="hidden-xs">
+                        <a href="/about"><i class="fa fa-info"></i>                            About                        </a>
+                    </li>
+                    <li class="hidden-xs">
+                        <a href="/about/faq"><i class="fa fa-question"></i>                            FAQ                        </a>
+                    </li>
+                    <li class="hidden-xs">
+                        <a href="https://github.com/metacpan/metacpan-web/issues"><i class="fa fa-github-alt"></i>                            GitHub Issues                        </a>
+                    </li>
+                    <li class="hidden-xs">
+                        <a href="/news"><i class="fa fa-newspaper-o"></i>                            News                        </a>
+                    </li>
+                    <li class="hidden-xs">
+                        <a href="/lab"><i class="fa fa-rocket"></i>                            Lab                        </a>
+                    </li>
+                    <li class="hidden-xs">
+                        <a href="https://fastapi.metacpan.org"><i class="fa fa-database"></i>                            API                        </a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <form action="https://metacpan.org/account/logout" method="POST" id="metacpan-logout"></form>
+                    <li class="dropdown logged_in" style="display: none;">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Account
+                        <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/account/identities">Identities</a></li>
+                            <li><a href="/account/profile">Profile</a></li>
+                            <li><a href="/account/favorite/list">Favorites</a></li>
+                            <li>
+                                <a href="#" onclick="$('#metacpan-logout').submit(); return false">Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown logged_out" style="display: none;">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Sign in
+                        <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="https://fastapi.metacpan.org/oauth2/authorize?client_id=metacpan.org&amp;choice=facebook" onclick="return logInPAUSE(this)">
+                                <i class="fa fa-facebook fa-fw"></i>
+                                Facebook
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://fastapi.metacpan.org/oauth2/authorize?client_id=metacpan.org&amp;choice=github" onclick="return logInPAUSE(this)">
+                                <i class="fa fa-github fa-fw"></i>
+                                GitHub
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://fastapi.metacpan.org/oauth2/authorize?client_id=metacpan.org&amp;choice=twitter" onclick="return logInPAUSE(this)">
+                                <i class="fa fa-twitter fa-fw"></i>
+                                Twitter
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://fastapi.metacpan.org/oauth2/authorize?client_id=metacpan.org&amp;choice=google" onclick="return logInPAUSE(this)">
+                                <i class="fa fa-google fa-fw"></i>
+                                Google
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/login/openid">
+                                <i class="fa fa-openid fa-fw"></i>
+                                OpenID
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container-fluid">
+
+        
+
+            
+            <div class="row hidden-phone">
+                <div class="head-small-logo col-md-3">
+                    <a href="/" class="small-logo"></a>
+                </div>
+                <div class="col-md-9">
+                    <form action="/search" class="search-form form-horizontal">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" name="q" size="41" id="search-input" class="form-control" value="">
+                                <span class="input-group-btn">
+                                    <button class="btn search-btn" type="submit">Search</button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+
+            <div class="row">
+                <div class="main-content col-md-12">
+                    
+
+
+
+
+<div itemscope itemtype="http://schema.org/SoftwareApplication">
+  
+
+
+<div class="breadcrumbs">
+  <span itemprop="author" itemscope itemtype="http://schema.org/Person" >
+    <a itemprop="url"  data-keyboard-shortcut="g a" rel="author" href="/author/XSAWYERX" title="" class="author-name"><span itemprop="name" >Sawyer X</span></a>
+  </span>
+  <span>&nbsp;/&nbsp;</span>
+  <div class="release status-latest maturity-released">
+    <span class="dropdown"><b class="caret"></b></span>
+    <select class="" onchange="document.location.href=this.value">
+
+  <option  value="/module/SHAY/perl-5.24.2-RC1/ext/File-Glob/Glob.pm">
+    5.024002 DEV
+      (SHAY on 2017-07-01)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.4-RC1/ext/File-Glob/Glob.pm">
+    5.022004 DEV
+      (SHAY on 2017-07-01)
+      
+  </option>
+
+  <option  value="/module/EHERMAN/perl-5.27.1/ext/File-Glob/Glob.pm">
+    5.027001 DEV
+      (EHERMAN on 2017-06-20)
+      
+  </option>
+
+  <option  value="/module/XSAWYERX/perl-5.27.0/ext/File-Glob/Glob.pm">
+    5.027000 DEV
+      (XSAWYERX on 2017-05-31)
+      
+  </option>
+
+  <option selected value="/module/XSAWYERX/perl-5.26.0/ext/File-Glob/Glob.pm">
+    5.026000
+      (XSAWYERX on 2017-05-30)
+      
+  </option>
+
+  <option  value="/module/XSAWYERX/perl-5.26.0-RC2/ext/File-Glob/Glob.pm">
+    5.026000 DEV
+      (XSAWYERX on 2017-05-23)
+      
+  </option>
+
+  <option  value="/module/XSAWYERX/perl-5.26.0-RC1/ext/File-Glob/Glob.pm">
+    5.026000 DEV
+      (XSAWYERX on 2017-05-11)
+      
+  </option>
+
+  <option  value="/module/XSAWYERX/perl-5.25.12/ext/File-Glob/Glob.pm">
+    5.025012 DEV
+      (XSAWYERX on 2017-04-20)
+      
+  </option>
+
+  <option  value="/module/XSAWYERX/perl-5.25.11/ext/File-Glob/Glob.pm">
+    5.025011 DEV
+      (XSAWYERX on 2017-03-20)
+      
+  </option>
+
+  <option  value="/module/RENEEB/perl-5.25.10/ext/File-Glob/Glob.pm">
+    5.025010 DEV
+      (RENEEB on 2017-02-20)
+      
+  </option>
+
+  <option  value="/module/ABIGAIL/perl-5.25.9/ext/File-Glob/Glob.pm">
+    5.025009 DEV
+      (ABIGAIL on 2017-01-20)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.24.1/ext/File-Glob/Glob.pm">
+    5.024001
+      (SHAY on 2017-01-14)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.3/ext/File-Glob/Glob.pm">
+    5.022003
+      (SHAY on 2017-01-14)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.24.1-RC5/ext/File-Glob/Glob.pm">
+    5.024001 DEV
+      (SHAY on 2017-01-02)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.3-RC5/ext/File-Glob/Glob.pm">
+    5.022003 DEV
+      (SHAY on 2017-01-02)
+      
+  </option>
+
+  <option  value="/module/XSAWYERX/perl-5.25.8/ext/File-Glob/Glob.pm">
+    5.025008 DEV
+      (XSAWYERX on 2016-12-20)
+      
+  </option>
+
+  <option  value="/module/EXODIST/perl-5.25.7/ext/File-Glob/Glob.pm">
+    5.025007 DEV
+      (EXODIST on 2016-11-20)
+      
+  </option>
+
+  <option  value="/module/ARC/perl-5.25.6/ext/File-Glob/Glob.pm">
+    5.025006 DEV
+      (ARC on 2016-10-20)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.24.1-RC4/ext/File-Glob/Glob.pm">
+    5.024001 DEV
+      (SHAY on 2016-10-12)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.3-RC4/ext/File-Glob/Glob.pm">
+    5.022003 DEV
+      (SHAY on 2016-10-12)
+      
+  </option>
+
+  <option  value="/module/STEVAN/perl-5.25.5/ext/File-Glob/Glob.pm">
+    5.025005 DEV
+      (STEVAN on 2016-09-20)
+      
+  </option>
+
+  <option  value="/module/BINGOS/perl-5.25.4/ext/File-Glob/Glob.pm">
+    5.025004 DEV
+      (BINGOS on 2016-08-20)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.24.1-RC3/ext/File-Glob/Glob.pm">
+    5.024001 DEV
+      (SHAY on 2016-08-11)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.3-RC3/ext/File-Glob/Glob.pm">
+    5.022003 DEV
+      (SHAY on 2016-08-11)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.24.1-RC2/ext/File-Glob/Glob.pm">
+    5.024001 DEV
+      (SHAY on 2016-07-25)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.3-RC2/ext/File-Glob/Glob.pm">
+    5.022003 DEV
+      (SHAY on 2016-07-25)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.25.3/ext/File-Glob/Glob.pm">
+    5.025003 DEV
+      (SHAY on 2016-07-20)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.24.1-RC1/ext/File-Glob/Glob.pm">
+    5.024001 DEV
+      (SHAY on 2016-07-17)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.3-RC1/ext/File-Glob/Glob.pm">
+    5.022003 DEV
+      (SHAY on 2016-07-17)
+      
+  </option>
+
+  <option  value="/module/WOLFSAGE/perl-5.25.2/ext/File-Glob/Glob.pm">
+    5.025002 DEV
+      (WOLFSAGE on 2016-06-20)
+      
+  </option>
+
+  <option  value="/module/XSAWYERX/perl-5.25.1/ext/File-Glob/Glob.pm">
+    5.025001 DEV
+      (XSAWYERX on 2016-05-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.25.0/ext/File-Glob/Glob.pm">
+    5.025000 DEV
+      (RJBS on 2016-05-09)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.24.0/ext/File-Glob/Glob.pm">
+    5.024000
+      (RJBS on 2016-05-09)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.24.0-RC5/ext/File-Glob/Glob.pm">
+    5.024000 DEV
+      (RJBS on 2016-05-04)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.24.0-RC4/ext/File-Glob/Glob.pm">
+    5.024000 DEV
+      (RJBS on 2016-05-02)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.2/ext/File-Glob/Glob.pm">
+    5.022002
+      (SHAY on 2016-04-29)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.24.0-RC3/ext/File-Glob/Glob.pm">
+    5.024000 DEV
+      (RJBS on 2016-04-27)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.24.0-RC2/ext/File-Glob/Glob.pm">
+    5.024000 DEV
+      (RJBS on 2016-04-23)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.24.0-RC1/ext/File-Glob/Glob.pm">
+    5.024000 DEV
+      (RJBS on 2016-04-14)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.2-RC1/ext/File-Glob/Glob.pm">
+    5.022002 DEV
+      (SHAY on 2016-04-10)
+      
+  </option>
+
+  <option  value="/module/ABIGAIL/perl-5.23.9/ext/File-Glob/Glob.pm">
+    5.023009 DEV
+      (ABIGAIL on 2016-03-20)
+      
+  </option>
+
+  <option  value="/module/XSAWYERX/perl-5.23.8/ext/File-Glob/Glob.pm">
+    5.023008 DEV
+      (XSAWYERX on 2016-02-20)
+      
+  </option>
+
+  <option  value="/module/STEVAN/perl-5.23.7/ext/File-Glob/Glob.pm">
+    5.023007 DEV
+      (STEVAN on 2016-01-20)
+      
+  </option>
+
+  <option  value="/module/DAGOLDEN/perl-5.23.6/ext/File-Glob/Glob.pm">
+    5.023006 DEV
+      (DAGOLDEN on 2015-12-21)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.1/ext/File-Glob/Glob.pm">
+    5.022001
+      (SHAY on 2015-12-13)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.1-RC4/ext/File-Glob/Glob.pm">
+    5.022001 DEV
+      (SHAY on 2015-12-08)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.1-RC3/ext/File-Glob/Glob.pm">
+    5.022001 DEV
+      (SHAY on 2015-12-02)
+      
+  </option>
+
+  <option  value="/module/ABIGAIL/perl-5.23.5/ext/File-Glob/Glob.pm">
+    5.023005 DEV
+      (ABIGAIL on 2015-11-20)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.1-RC2/ext/File-Glob/Glob.pm">
+    5.022001 DEV
+      (SHAY on 2015-11-15)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.22.1-RC1/ext/File-Glob/Glob.pm">
+    5.022001 DEV
+      (SHAY on 2015-10-31)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.23.4/ext/File-Glob/Glob.pm">
+    5.023004 DEV
+      (SHAY on 2015-10-20)
+      
+  </option>
+
+  <option  value="/module/PCM/perl-5.23.3/ext/File-Glob/Glob.pm">
+    5.023003 DEV
+      (PCM on 2015-09-21)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.20.3/ext/File-Glob/Glob.pm">
+    5.020003
+      (SHAY on 2015-09-12)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.20.3-RC2/ext/File-Glob/Glob.pm">
+    5.020003 DEV
+      (SHAY on 2015-08-29)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.20.3-RC1/ext/File-Glob/Glob.pm">
+    5.020003 DEV
+      (SHAY on 2015-08-22)
+      
+  </option>
+
+  <option  value="/module/WOLFSAGE/perl-5.23.2/ext/File-Glob/Glob.pm">
+    5.023002 DEV
+      (WOLFSAGE on 2015-08-20)
+      
+  </option>
+
+  <option  value="/module/WOLFSAGE/perl-5.23.1/ext/File-Glob/Glob.pm">
+    5.023001 DEV
+      (WOLFSAGE on 2015-07-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.23.0/ext/File-Glob/Glob.pm">
+    5.023000 DEV
+      (RJBS on 2015-06-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.22.0/ext/File-Glob/Glob.pm">
+    5.022000
+      (RJBS on 2015-06-01)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.22.0-RC2/ext/File-Glob/Glob.pm">
+    5.022000 DEV
+      (RJBS on 2015-05-21)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.22.0-RC1/ext/File-Glob/Glob.pm">
+    5.022000 DEV
+      (RJBS on 2015-05-19)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.21.11/ext/File-Glob/Glob.pm">
+    5.021011 DEV
+      (SHAY on 2015-04-20)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.21.10/ext/File-Glob/Glob.pm">
+    5.021010 DEV
+      (SHAY on 2015-03-20)
+      
+  </option>
+
+  <option  value="/module/XSAWYERX/perl-5.21.9/ext/File-Glob/Glob.pm">
+    5.021009 DEV
+      (XSAWYERX on 2015-02-21)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.20.2/ext/File-Glob/Glob.pm">
+    5.020002
+      (SHAY on 2015-02-14)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.20.2-RC1/ext/File-Glob/Glob.pm">
+    5.020002 DEV
+      (SHAY on 2015-02-01)
+      
+  </option>
+
+  <option  value="/module/WOLFSAGE/perl-5.21.8/ext/File-Glob/Glob.pm">
+    5.021008 DEV
+      (WOLFSAGE on 2015-01-20)
+      
+  </option>
+
+  <option  value="/module/CORION/perl-5.21.7/ext/File-Glob/Glob.pm">
+    5.021007 DEV
+      (CORION on 2014-12-20)
+      
+  </option>
+
+  <option  value="/module/BINGOS/perl-5.21.6/ext/File-Glob/Glob.pm">
+    5.021006 DEV
+      (BINGOS on 2014-11-20)
+      
+  </option>
+
+  <option  value="/module/ABIGAIL/perl-5.21.5/ext/File-Glob/Glob.pm">
+    5.021005 DEV
+      (ABIGAIL on 2014-10-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.4/ext/File-Glob/Glob.pm">
+    5.018004
+      (RJBS on 2014-10-02)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.3/ext/File-Glob/Glob.pm">
+    5.018003
+      (RJBS on 2014-10-01)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.3-RC2/ext/File-Glob/Glob.pm">
+    5.018003 DEV
+      (RJBS on 2014-09-27)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.21.4/ext/File-Glob/Glob.pm">
+    5.021004 DEV
+      (SHAY on 2014-09-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.3-RC1/ext/File-Glob/Glob.pm">
+    5.018003 DEV
+      (RJBS on 2014-09-17)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.20.1/ext/File-Glob/Glob.pm">
+    5.020001
+      (SHAY on 2014-09-14)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.20.1-RC2/ext/File-Glob/Glob.pm">
+    5.020001 DEV
+      (SHAY on 2014-09-07)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.20.1-RC1/ext/File-Glob/Glob.pm">
+    5.020001 DEV
+      (SHAY on 2014-08-25)
+      
+  </option>
+
+  <option  value="/module/PCM/perl-5.21.3/ext/File-Glob/Glob.pm">
+    5.021003 DEV
+      (PCM on 2014-08-21)
+      
+  </option>
+
+  <option  value="/module/ABIGAIL/perl-5.21.2/ext/File-Glob/Glob.pm">
+    5.021002 DEV
+      (ABIGAIL on 2014-07-20)
+      
+  </option>
+
+  <option  value="/module/WOLFSAGE/perl-5.21.1/ext/File-Glob/Glob.pm">
+    5.021001 DEV
+      (WOLFSAGE on 2014-06-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.21.0/ext/File-Glob/Glob.pm">
+    5.021000 DEV
+      (RJBS on 2014-05-27)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.20.0/ext/File-Glob/Glob.pm">
+    5.020000
+      (RJBS on 2014-05-27)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.20.0-RC1/ext/File-Glob/Glob.pm">
+    5.020000 DEV
+      (RJBS on 2014-05-17)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.19.11/ext/File-Glob/Glob.pm">
+    5.019011 DEV
+      (SHAY on 2014-04-20)
+      
+  </option>
+
+  <option  value="/module/ARC/perl-5.19.10/ext/File-Glob/Glob.pm">
+    5.019010 DEV
+      (ARC on 2014-03-20)
+      
+  </option>
+
+  <option  value="/module/TONYC/perl-5.19.9/ext/File-Glob/Glob.pm">
+    5.019009 DEV
+      (TONYC on 2014-02-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.19.8/ext/File-Glob/Glob.pm">
+    5.019008 DEV
+      (RJBS on 2014-01-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.2/ext/File-Glob/Glob.pm">
+    5.018002
+      (RJBS on 2014-01-07)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.2-RC4/ext/File-Glob/Glob.pm">
+    5.018002 DEV
+      (RJBS on 2013-12-22)
+      
+  </option>
+
+  <option  value="/module/ABIGAIL/perl-5.19.7/ext/File-Glob/Glob.pm">
+    5.019007 DEV
+      (ABIGAIL on 2013-12-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.2-RC3/ext/File-Glob/Glob.pm">
+    5.018002 DEV
+      (RJBS on 2013-12-19)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.2-RC2/ext/File-Glob/Glob.pm">
+    5.018002 DEV
+      (RJBS on 2013-12-07)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.2-RC1/ext/File-Glob/Glob.pm">
+    5.018002 DEV
+      (RJBS on 2013-12-02)
+      
+  </option>
+
+  <option  value="/module/BINGOS/perl-5.19.6/ext/File-Glob/Glob.pm">
+    5.019006 DEV
+      (BINGOS on 2013-11-20)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.19.5/ext/File-Glob/Glob.pm">
+    5.019005 DEV
+      (SHAY on 2013-10-20)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.19.4/ext/File-Glob/Glob.pm">
+    5.019004 DEV
+      (SHAY on 2013-09-20)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.19.3/ext/File-Glob/Glob.pm">
+    5.019003 DEV
+      (SHAY on 2013-08-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.1/ext/File-Glob/Glob.pm">
+    5.018001
+      (RJBS on 2013-08-12)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.1-RC3/ext/File-Glob/Glob.pm">
+    5.018001 DEV
+      (RJBS on 2013-08-09)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.1-RC2/ext/File-Glob/Glob.pm">
+    5.018001 DEV
+      (RJBS on 2013-08-04)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.1-RC1/ext/File-Glob/Glob.pm">
+    5.018001 DEV
+      (RJBS on 2013-08-02)
+      
+  </option>
+
+  <option  value="/module/ARISTOTLE/perl-5.19.2/ext/File-Glob/Glob.pm">
+    5.019002 DEV
+      (ARISTOTLE on 2013-07-22)
+      
+  </option>
+
+  <option  value="/module/DAGOLDEN/perl-5.19.1/ext/File-Glob/Glob.pm">
+    5.019001 DEV
+      (DAGOLDEN on 2013-06-21)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.19.0/ext/File-Glob/Glob.pm">
+    5.019000 DEV
+      (RJBS on 2013-05-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.0/ext/File-Glob/Glob.pm">
+    5.018000
+      (RJBS on 2013-05-18)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.0-RC4/ext/File-Glob/Glob.pm">
+    5.018000 DEV
+      (RJBS on 2013-05-16)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.0-RC3/ext/File-Glob/Glob.pm">
+    5.018000 DEV
+      (RJBS on 2013-05-14)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.0-RC2/ext/File-Glob/Glob.pm">
+    5.018000 DEV
+      (RJBS on 2013-05-12)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.18.0-RC1/ext/File-Glob/Glob.pm">
+    5.018000 DEV
+      (RJBS on 2013-05-11)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.17.11/ext/File-Glob/Glob.pm">
+    5.017011 DEV
+      (RJBS on 2013-04-21)
+      
+  </option>
+
+  <option  value="/module/CORION/perl-5.17.10/ext/File-Glob/Glob.pm">
+    5.017010 DEV
+      (CORION on 2013-03-21)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.16.3/ext/File-Glob/Glob.pm">
+    5.016003
+      (RJBS on 2013-03-11)
+      
+  </option>
+
+  <option  value="/module/DAPM/perl-5.14.4/ext/File-Glob/Glob.pm">
+    5.014004
+      (DAPM on 2013-03-10)
+      
+  </option>
+
+  <option  value="/module/DAPM/perl-5.14.4-RC2/ext/File-Glob/Glob.pm">
+    5.014004 DEV
+      (DAPM on 2013-03-07)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.16.3-RC1/ext/File-Glob/Glob.pm">
+    5.016003 DEV
+      (RJBS on 2013-03-07)
+      
+  </option>
+
+  <option  value="/module/DAPM/perl-5.14.4-RC1/ext/File-Glob/Glob.pm">
+    5.014004 DEV
+      (DAPM on 2013-03-05)
+      
+  </option>
+
+  <option  value="/module/BINGOS/perl-5.17.9/ext/File-Glob/Glob.pm">
+    5.017009 DEV
+      (BINGOS on 2013-02-20)
+      
+  </option>
+
+  <option  value="/module/ARC/perl-5.17.8/ext/File-Glob/Glob.pm">
+    5.017008 DEV
+      (ARC on 2013-01-20)
+      
+  </option>
+
+  <option  value="/module/DROLSKY/perl-5.17.7/ext/File-Glob/Glob.pm">
+    5.017007 DEV
+      (DROLSKY on 2012-12-18)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.17.6/ext/File-Glob/Glob.pm">
+    5.017006 DEV
+      (RJBS on 2012-11-21)
+      
+  </option>
+
+  <option  value="/module/DOM/perl-5.12.5/ext/File-Glob/Glob.pm">
+    5.012005
+      (DOM on 2012-11-10)
+      
+  </option>
+
+  <option  value="/module/DOM/perl-5.12.5-RC2/ext/File-Glob/Glob.pm">
+    5.012005 DEV
+      (DOM on 2012-11-08)
+      
+  </option>
+
+  <option  value="/module/DOM/perl-5.12.5-RC1/ext/File-Glob/Glob.pm">
+    5.012005 DEV
+      (DOM on 2012-11-03)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.16.2/ext/File-Glob/Glob.pm">
+    5.016002
+      (RJBS on 2012-11-01)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.16.2-RC1/ext/File-Glob/Glob.pm">
+    5.016002 DEV
+      (RJBS on 2012-10-27)
+      
+  </option>
+
+  <option  value="/module/FLORA/perl-5.17.5/ext/File-Glob/Glob.pm">
+    5.017005 DEV
+      (FLORA on 2012-10-20)
+      
+  </option>
+
+  <option  value="/module/DOM/perl-5.14.3/ext/File-Glob/Glob.pm">
+    5.014003
+      (DOM on 2012-10-12)
+      
+  </option>
+
+  <option  value="/module/DOM/perl-5.14.3-RC2/ext/File-Glob/Glob.pm">
+    5.014003 DEV
+      (DOM on 2012-10-10)
+      
+  </option>
+
+  <option  value="/module/DOM/perl-5.14.3-RC1/ext/File-Glob/Glob.pm">
+    5.014003 DEV
+      (DOM on 2012-09-26)
+      
+  </option>
+
+  <option  value="/module/FLORA/perl-5.17.4/ext/File-Glob/Glob.pm">
+    5.017004 DEV
+      (FLORA on 2012-09-20)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.17.3/ext/File-Glob/Glob.pm">
+    5.017003 DEV
+      (SHAY on 2012-08-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.16.1/ext/File-Glob/Glob.pm">
+    5.016001
+      (RJBS on 2012-08-08)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.16.1-RC1/ext/File-Glob/Glob.pm">
+    5.016001 DEV
+      (RJBS on 2012-08-03)
+      
+  </option>
+
+  <option  value="/module/TONYC/perl-5.17.2/ext/File-Glob/Glob.pm">
+    5.017002 DEV
+      (TONYC on 2012-07-20)
+      
+  </option>
+
+  <option  value="/module/DOY/perl-5.17.1/ext/File-Glob/Glob.pm">
+    5.017001 DEV
+      (DOY on 2012-06-20)
+      
+  </option>
+
+  <option  value="/module/ZEFRAM/perl-5.17.0/ext/File-Glob/Glob.pm">
+    5.017000 DEV
+      (ZEFRAM on 2012-05-26)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.16.0/ext/File-Glob/Glob.pm">
+    5.016000
+      (RJBS on 2012-05-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.16.0-RC2/ext/File-Glob/Glob.pm">
+    5.016000 DEV
+      (RJBS on 2012-05-16)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.16.0-RC1/ext/File-Glob/Glob.pm">
+    5.016000 DEV
+      (RJBS on 2012-05-15)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.16.0-RC0/ext/File-Glob/Glob.pm">
+    5.016000 DEV
+      (RJBS on 2012-05-11)
+      
+  </option>
+
+  <option  value="/module/ABIGAIL/perl-5.15.9/ext/File-Glob/Glob.pm">
+    5.015009 DEV
+      (ABIGAIL on 2012-03-20)
+      
+  </option>
+
+  <option  value="/module/CORION/perl-5.15.8/ext/File-Glob/Glob.pm">
+    5.015008 DEV
+      (CORION on 2012-02-20)
+      
+  </option>
+
+  <option  value="/module/BINGOS/perl-5.15.7/ext/File-Glob/Glob.pm">
+    5.015007 DEV
+      (BINGOS on 2012-01-20)
+      
+  </option>
+
+  <option  value="/module/DROLSKY/perl-5.15.6/ext/File-Glob/Glob.pm">
+    5.015006 DEV
+      (DROLSKY on 2011-12-20)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.15.5/ext/File-Glob/Glob.pm">
+    5.015005 DEV
+      (SHAY on 2011-11-20)
+      
+  </option>
+
+  <option  value="/module/FLORA/perl-5.15.4/ext/File-Glob/Glob.pm">
+    5.015004 DEV
+      (FLORA on 2011-10-20)
+      
+  </option>
+
+  <option  value="/module/FLORA/perl-5.14.2/ext/File-Glob/Glob.pm">
+    5.014002
+      (FLORA on 2011-09-26)
+      
+  </option>
+
+  <option  value="/module/STEVAN/perl-5.15.3/ext/File-Glob/Glob.pm">
+    5.015003 DEV
+      (STEVAN on 2011-09-21)
+      
+  </option>
+
+  <option  value="/module/FLORA/perl-5.14.2-RC1/ext/File-Glob/Glob.pm">
+    5.014002 DEV
+      (FLORA on 2011-09-19)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.15.2/ext/File-Glob/Glob.pm">
+    5.015002 DEV
+      (RJBS on 2011-08-21)
+      
+  </option>
+
+  <option  value="/module/ZEFRAM/perl-5.15.1/ext/File-Glob/Glob.pm">
+    5.015001 DEV
+      (ZEFRAM on 2011-07-20)
+      
+  </option>
+
+  <option  value="/module/DAGOLDEN/perl-5.15.0/ext/File-Glob/Glob.pm">
+    5.015000 DEV
+      (DAGOLDEN on 2011-06-20)
+      
+  </option>
+
+  <option  value="/module/LBROCARD/perl-5.12.4/ext/File-Glob/Glob.pm">
+    5.012004
+      (LBROCARD on 2011-06-20)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.14.1/ext/File-Glob/Glob.pm">
+    5.014001
+      (JESSE on 2011-06-17)
+      
+  </option>
+
+  <option  value="/module/LBROCARD/perl-5.12.4-RC2/ext/File-Glob/Glob.pm">
+    5.012004 DEV
+      (LBROCARD on 2011-06-15)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.14.1-RC1/ext/File-Glob/Glob.pm">
+    5.014001 DEV
+      (JESSE on 2011-06-09)
+      
+  </option>
+
+  <option  value="/module/LBROCARD/perl-5.12.4-RC1/ext/File-Glob/Glob.pm">
+    5.012004 DEV
+      (LBROCARD on 2011-06-08)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.14.0/ext/File-Glob/Glob.pm">
+    5.014000
+      (JESSE on 2011-05-14)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.14.0-RC3/ext/File-Glob/Glob.pm">
+    5.014000 DEV
+      (JESSE on 2011-05-11)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.14.0-RC2/ext/File-Glob/Glob.pm">
+    5.014000 DEV
+      (JESSE on 2011-05-04)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.14.0-RC1/ext/File-Glob/Glob.pm">
+    5.014000 DEV
+      (JESSE on 2011-04-20)
+      
+  </option>
+
+  <option  value="/module/FLORA/perl-5.13.11/ext/File-Glob/Glob.pm">
+    5.013011 DEV
+      (FLORA on 2011-03-20)
+      
+  </option>
+
+  <option  value="/module/AVAR/perl-5.13.10/ext/File-Glob/Glob.pm">
+    5.013010 DEV
+      (AVAR on 2011-02-20)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.12.3/ext/File-Glob/Glob.pm">
+    5.012003
+      (RJBS on 2011-01-22)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.13.9/ext/File-Glob/Glob.pm">
+    5.013009 DEV
+      (JESSE on 2011-01-21)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.12.3-RC3/ext/File-Glob/Glob.pm">
+    5.012003 DEV
+      (RJBS on 2011-01-18)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.12.3-RC2/ext/File-Glob/Glob.pm">
+    5.012003 DEV
+      (RJBS on 2011-01-15)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.12.3-RC1/ext/File-Glob/Glob.pm">
+    5.012003 DEV
+      (RJBS on 2011-01-10)
+      
+  </option>
+
+  <option  value="/module/ZEFRAM/perl-5.13.8/ext/File-Glob/Glob.pm">
+    5.013008 DEV
+      (ZEFRAM on 2010-12-19)
+      
+  </option>
+
+  <option  value="/module/BINGOS/perl-5.13.7/ext/File-Glob/Glob.pm">
+    5.013007 DEV
+      (BINGOS on 2010-11-21)
+      
+  </option>
+
+  <option  value="/module/MIYAGAWA/perl-5.13.6/ext/File-Glob/Glob.pm">
+    5.013006 DEV
+      (MIYAGAWA on 2010-10-21)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.13.5/ext/File-Glob/Glob.pm">
+    5.013005 DEV
+      (SHAY on 2010-09-19)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.12.2/ext/File-Glob/Glob.pm">
+    5.012002
+      (JESSE on 2010-09-07)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.12.2-RC1/ext/File-Glob/Glob.pm">
+    5.012002 DEV
+      (JESSE on 2010-08-31)
+      
+  </option>
+
+  <option  value="/module/FLORA/perl-5.13.4/ext/File-Glob/Glob.pm">
+    5.013004 DEV
+      (FLORA on 2010-08-20)
+      
+  </option>
+
+  <option  value="/module/DAGOLDEN/perl-5.13.3/ext/File-Glob/Glob.pm">
+    5.013003 DEV
+      (DAGOLDEN on 2010-07-20)
+      
+  </option>
+
+  <option  value="/module/MSTROUT/perl-5.13.2/ext/File-Glob/Glob.pm">
+    5.013002 DEV
+      (MSTROUT on 2010-06-22)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.13.1/ext/File-Glob/Glob.pm">
+    5.013001 DEV
+      (RJBS on 2010-05-20)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.12.1/ext/File-Glob/Glob.pm">
+    5.012001
+      (JESSE on 2010-05-16)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.12.1-RC2/ext/File-Glob/Glob.pm">
+    5.012001 DEV
+      (JESSE on 2010-05-13)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.12.1-RC1/ext/File-Glob/Glob.pm">
+    5.012001 DEV
+      (JESSE on 2010-05-10)
+      
+  </option>
+
+  <option  value="/module/LBROCARD/perl-5.13.0/ext/File-Glob/Glob.pm">
+    5.013000 DEV
+      (LBROCARD on 2010-04-20)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.12.0/ext/File-Glob/Glob.pm">
+    5.012000
+      (JESSE on 2010-04-12)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.12.0-RC5/ext/File-Glob/Glob.pm">
+    5.012000 DEV
+      (JESSE on 2010-04-10)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.12.0-RC4/ext/File-Glob/Glob.pm">
+    5.012000 DEV
+      (JESSE on 2010-04-07)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.12.0-RC3/ext/File-Glob/Glob.pm">
+    5.012000 DEV
+      (JESSE on 2010-04-03)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.12.0-RC2/ext/File-Glob/Glob.pm">
+    5.012000 DEV
+      (JESSE on 2010-04-01)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.12.0-RC1/ext/File-Glob/Glob.pm">
+    5.012000 DEV
+      (JESSE on 2010-03-29)
+      
+  </option>
+
+  <option  value="/module/SHAY/perl-5.11.5/ext/File-Glob/Glob.pm">
+    5.011005 DEV
+      (SHAY on 2010-02-21)
+      
+  </option>
+
+  <option  value="/module/RJBS/perl-5.11.4/ext/File-Glob/Glob.pm">
+    5.011004 DEV
+      (RJBS on 2010-01-20)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.11.3/ext/File-Glob/Glob.pm">
+    5.011003 DEV
+      (JESSE on 2009-12-21)
+      
+  </option>
+
+  <option  value="/module/LBROCARD/perl-5.11.2/ext/File-Glob/Glob.pm">
+    5.011002 DEV
+      (LBROCARD on 2009-11-20)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.11.1/ext/File-Glob/Glob.pm">
+    5.011001 DEV
+      (JESSE on 2009-10-20)
+      
+  </option>
+
+  <option  value="/module/JESSE/perl-5.11.0/ext/File-Glob/Glob.pm">
+    5.011000 DEV
+      (JESSE on 2009-10-02)
+      
+  </option>
+
+  <option  value="/module/DAPM/perl-5.10.1/ext/File-Glob/Glob.pm">
+    5.010001
+      (DAPM on 2009-08-23)
+      
+  </option>
+
+  <option  value="/module/DAPM/perl-5.10.1-RC2/ext/File-Glob/Glob.pm">
+    5.010001 DEV
+      (DAPM on 2009-08-18)
+      
+  </option>
+
+  <option  value="/module/DAPM/perl-5.10.1-RC1/ext/File-Glob/Glob.pm">
+    5.010001 DEV
+      (DAPM on 2009-08-06)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.9/ext/File-Glob/Glob.pm">
+    5.008009
+      (NWCLARK on 2008-12-14)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.9-RC2/ext/File-Glob/Glob.pm">
+    5.008009 DEV
+      (NWCLARK on 2008-12-06)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.9-RC1/ext/File-Glob/Glob.pm">
+    5.008009 DEV
+      (NWCLARK on 2008-11-10)
+      
+  </option>
+
+  <option  value="/module/RGARCIA/perl-5.10.0/ext/File-Glob/Glob.pm">
+    5.010000
+      (RGARCIA on 2007-12-18)
+      
+  </option>
+
+  <option  value="/module/RGARCIA/perl-5.9.5/ext/File-Glob/Glob.pm">
+    5.009005 DEV
+      (RGARCIA on 2007-07-07)
+      
+  </option>
+
+  <option  value="/module/RGARCIA/perl-5.9.4/ext/File-Glob/Glob.pm">
+    5.009004 DEV
+      (RGARCIA on 2006-08-15)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.8/ext/File-Glob/Glob.pm">
+    5.008008
+      (NWCLARK on 2006-02-01)
+      
+  </option>
+
+  <option  value="/module/RGARCIA/perl-5.9.3/ext/File-Glob/Glob.pm">
+    5.009003 DEV
+      (RGARCIA on 2006-01-28)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.8-RC1/ext/File-Glob/Glob.pm">
+    5.008008 DEV
+      (NWCLARK on 2006-01-20)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.7/ext/File-Glob/Glob.pm">
+    5.008007
+      (NWCLARK on 2005-05-30)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.7-RC1/ext/File-Glob/Glob.pm">
+    5.008007 DEV
+      (NWCLARK on 2005-05-18)
+      
+  </option>
+
+  <option  value="/module/RGARCIA/perl-5.9.2/ext/File-Glob/Glob.pm">
+    5.009002 DEV
+      (RGARCIA on 2005-04-01)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.6/ext/File-Glob/Glob.pm">
+    5.008006
+      (NWCLARK on 2004-11-27)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.6-RC1/ext/File-Glob/Glob.pm">
+    5.008006 DEV
+      (NWCLARK on 2004-11-11)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.5/ext/File-Glob/Glob.pm">
+    5.008005
+      (NWCLARK on 2004-07-19)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.5-RC2/ext/File-Glob/Glob.pm">
+    5.008005 DEV
+      (NWCLARK on 2004-07-08)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.5-RC1/ext/File-Glob/Glob.pm">
+    5.008005 DEV
+      (NWCLARK on 2004-07-06)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.4/ext/File-Glob/Glob.pm">
+    5.008003
+      (NWCLARK on 2004-04-21)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.4-RC2/ext/File-Glob/Glob.pm">
+    5.008003 DEV
+      (NWCLARK on 2004-04-15)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.4-RC1/ext/File-Glob/Glob.pm">
+    5.008003 DEV
+      (NWCLARK on 2004-04-05)
+      
+  </option>
+
+  <option  value="/module/RGARCIA/perl-5.9.1/ext/File-Glob/Glob.pm">
+    5.009001 DEV
+      (RGARCIA on 2004-03-16)
+      
+  </option>
+
+  <option  value="/module/LBROCARD/perl5.005_04/ext/File-Glob/Glob.pm">
+    5.005
+      (LBROCARD on 2004-02-23)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.3/ext/File-Glob/Glob.pm">
+    5.008003
+      (NWCLARK on 2004-01-14)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.3-RC1/ext/File-Glob/Glob.pm">
+    5.008001 DEV
+      (NWCLARK on 2004-01-07)
+      
+  </option>
+
+  <option  value="/module/RCLAMP/perl-1.0_16/ext/File-Glob/Glob.pm">
+    1.0_16
+      (RCLAMP on 2003-12-18)
+      
+  </option>
+
+  <option  value="/module/RGARCIA/perl-5.6.2/ext/File-Glob/Glob.pm">
+    v5.6.2
+      (RGARCIA on 2003-11-15)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.2/ext/File-Glob/Glob.pm">
+    5.008001
+      (NWCLARK on 2003-11-05)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.2-RC2/ext/File-Glob/Glob.pm">
+    5.008001 DEV
+      (NWCLARK on 2003-11-03)
+      
+  </option>
+
+  <option  value="/module/NWCLARK/perl-5.8.2-RC1/ext/File-Glob/Glob.pm">
+    5.008001 DEV
+      (NWCLARK on 2003-10-27)
+      
+  </option>
+
+  <option  value="/module/HVDS/perl-5.9.0/ext/File-Glob/Glob.pm">
+    5.009 DEV
+      (HVDS on 2003-10-27)
+      
+  </option>
+
+  <option  value="/module/JHI/perl-5.8.1/ext/File-Glob/Glob.pm">
+    v5.8.1
+      (JHI on 2003-09-25)
+      
+  </option>
+
+  <option  value="/module/SREZIC/perl-5.005-minimal-bin-1-arm-linux/ext/File-Glob/Glob.pm">
+    5.005
+      (SREZIC on 2003-01-25)
+      
+  </option>
+
+  <option  value="/module/SREZIC/perl-5.005-Tk-800.023-bin-0-arm-linux/ext/File-Glob/Glob.pm">
+    5.005
+      (SREZIC on 2003-01-10)
+      
+  </option>
+
+  <option  value="/module/JHI/perl-5.8.0/ext/File-Glob/Glob.pm">
+    v5.8.0
+      (JHI on 2002-07-18)
+      
+  </option>
+        <optgroup label="BackPAN">
+          
+
+  <option  value="/module/JESSE/perl-5.12.0-RC0/ext/File-Glob/Glob.pm">
+    5.012000 DEV
+      (JESSE on 2010-03-21)
+      
+  </option>
+
+  <option  value="/module/RGARCIA/perl-5.10.0-RC2/ext/File-Glob/Glob.pm">
+    5.010000 DEV
+      (RGARCIA on 2007-11-25)
+      
+  </option>
+
+  <option  value="/module/RGARCIA/perl-5.10.0-RC1/ext/File-Glob/Glob.pm">
+    5.009005 DEV
+      (RGARCIA on 2007-11-17)
+      
+  </option>
+
+  <option  value="/module/HOOO/perl-0.0017/ext/File-Glob/Glob.pm">
+    0.0017 DEV
+      (HOOO on 2007-05-01)
+      
+  </option>
+
+  <option  value="/module/LBROCARD/perl5.005_04-RC2/ext/File-Glob/Glob.pm">
+    5.005 DEV
+      (LBROCARD on 2004-02-18)
+      
+  </option>
+
+  <option  value="/module/LBROCARD/perl5.005_04-RC1/ext/File-Glob/Glob.pm">
+    5.005_04 DEV
+      (LBROCARD on 2004-02-04)
+      
+  </option>
+
+  <option  value="/module/LBROCARD/perl5.005_03-MAINT22213/ext/File-Glob/Glob.pm">
+    5.005_03 DEV
+      (LBROCARD on 2004-01-27)
+      
+  </option>
+
+  <option  value="/module/LBROCARD/perl5.005_03-MAINT22178/ext/File-Glob/Glob.pm">
+    5.005_03 DEV
+      (LBROCARD on 2004-01-20)
+      
+  </option>
+
+  <option  value="/module/LBROCARD/perl5.005_03-MAINT21792/ext/File-Glob/Glob.pm">
+    5.005_03 DEV
+      (LBROCARD on 2003-12-05)
+      
+  </option>
+
+  <option  value="/module/RGARCIA/perl-5.6.2-RC1/ext/File-Glob/Glob.pm">
+    v5.6.2 DEV
+      (RGARCIA on 2003-11-08)
+      
+  </option>
+
+  <option  value="/module/JHI/perl-5.8.1-RC5/ext/File-Glob/Glob.pm">
+    v5.8.1 DEV
+      (JHI on 2003-09-22)
+      
+  </option>
+
+  <option  value="/module/JHI/perl-5.8.1-RC4/ext/File-Glob/Glob.pm">
+    v5.8.1 DEV
+      (JHI on 2003-08-01)
+      
+  </option>
+
+  <option  value="/module/JHI/perl-5.8.1-RC3/ext/File-Glob/Glob.pm">
+    v5.8.1 DEV
+      (JHI on 2003-07-30)
+      
+  </option>
+
+  <option  value="/module/JHI/perl-5.8.1-RC2/ext/File-Glob/Glob.pm">
+    v5.8.1 DEV
+      (JHI on 2003-07-11)
+      
+  </option>
+
+  <option  value="/module/JHI/perl-5.8.1-RC1/ext/File-Glob/Glob.pm">
+    v5.8.1 DEV
+      (JHI on 2003-07-10)
+      
+  </option>
+
+  <option  value="/module/MSCHWERN/perl-1.0_15/ext/File-Glob/Glob.pm">
+    1.0_15
+      (MSCHWERN on 2002-12-18)
+      
+  </option>
+
+  <option  value="/module/JHI/perl-5.8.0-RC3/ext/File-Glob/Glob.pm">
+    v5.8.0 DEV
+      (JHI on 2002-07-14)
+      
+  </option>
+
+  <option  value="/module/JHI/perl-5.8.0-RC2/ext/File-Glob/Glob.pm">
+    v5.8.0 DEV
+      (JHI on 2002-06-21)
+      
+  </option>
+        </optgroup>
+    
+</select>
+    
+    <a data-keyboard-shortcut="g d" class="release-name" href="/release/perl">perl-5.26.0</a>
+    
+    
+  </div>
+  <div class="inline"><script type="text/javascript">
+  MetaCPAN.favs_to_check['perl'] = 1;
+</script>
+
+<div id="perl-fav" class="logged_in">
+<form action="/account/favorite/add" style="display: inline" onsubmit="return favDistribution(this)">
+    <input type="hidden" name="remove" value="0">
+    <input type="hidden" name="release" value="perl-5.26.0">
+    <input type="hidden" name="author" value="XSAWYERX">
+    <input type="hidden" name="distribution" value="perl">
+    <button type="submit" class="favorite highlight"><span>298</span> ++</button>
+</form>
+</div>
+<div class="logged_out">
+<a href="" onclick="alert('Please sign in to add favorites'); return false" class="favorite highlight">
+<span>298</span> ++</a>
+</div>
+</div>
+  &nbsp;/&nbsp;<span itemprop="name" >File::Glob</span>
+</div>
+
+
+  <ul class="nav-list slidepanel">
+    <li class="visible-xs">
+      <div>
+    <form action="/search">
+        <input type="search" class="form-control tool-bar-form" placeholder="Search" name="q">
+        <input type="submit" class="hidden">
+    </form>
+</div>
+
+    </li>
+    <li class="nav-header">
+      <time class="relatize" itemprop="dateModified" datetime="2017-05-30">30 May 2017 19:41:19 GMT</time>
+    </li>
+    
+    <li>
+      Module version: <span itemprop="softwareVersion">1.28</span>
+    </li>
+    
+    <li>
+      <a data-keyboard-shortcut="g s" href="/source/XSAWYERX/perl-5.26.0/ext/File-Glob/Glob.pm"><i class="fa fa-fw fa-file-code-o black"></i>Source</a>
+      (<a href="https://st.aticpan.org/source/XSAWYERX/perl-5.26.0/ext/File-Glob/Glob.pm">raw</a>)
+    </li>
+    
+    <li>
+      <a data-keyboard-shortcut="g b" href="/source/XSAWYERX/perl-5.26.0/ext/File-Glob"><i class="fa fa-fw fa-folder-open black"></i>Browse</a>
+      (<a href="https://st.aticpan.org/source/XSAWYERX/perl-5.26.0/">raw</a>)
+    </li>
+    <li>
+    <a data-keyboard-shortcut="g c" href="/changes/distribution/perl"><i class="fa fa-fw fa-cogs black"></i>Changes</a>
+</li>
+
+<li>
+    <a class="nopopup" href="http://www.perl.org/"><i class="fa fa-fw fa-external-link black"></i>Homepage</a>
+</li>
+
+
+<li>
+    
+    
+    <a href="http://perl5.git.perl.org/"><i class="fa fa-fw fa-code-fork black"></i>Clone  repository</a>
+    
+</li>
+
+<li>
+    <a data-keyboard-shortcut="g i" href="https://rt.perl.org/"><i class="fa fa-fw fa-info-circle black"></i>Issues</a>
+    
+</li>
+
+<li>
+    
+<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" >
+  <a href="http://cpanratings.perl.org/rate/?distribution=perl"><i class="fa fa-fw fa-smile-o black"></i><span class="rating-45"></span></a><span class="hidden" itemprop="ratingValue" >4.5</span> (<a href="http://cpanratings.perl.org/dist/perl"><span itemprop="reviewCount" >6</span> reviews</a>)
+</span>
+
+</li>
+
+<li>
+    
+    <a href="http://matrix.cpantesters.org/?dist=perl+5.26.0" title="Matrix"><i class="fa fa-fw fa-check-circle black"></i>Testers</a>
+    
+</li>
+<li>
+    <a href="http://cpants.cpanauthors.org/release/XSAWYERX/perl-5.26.0"><i class="fa fa-fw fa-line-chart black"></i>Kwalitee</a>
+</li>
+
+<li><i class="fa fa-fw fa-gavel black"></i>License: perl_5</li>
+
+
+
+
+    <li class="nav-header">Activity</li>
+    <li><div class="activity-graph">
+  <img src="/activity?res=month&amp;distribution=perl" width="170" height="22" />
+  <div align="right"><small class="comment">24 month</small></div>
+</div>
+</li>
+    <li class="nav-header">Tools</li>
+<li>
+    <i class="fa fa-file fa-fw black"></i><a href="http://perlybook.org/?source=File::Glob&amp;book_selection=&amp;target=mobi" title="Download POD of this module in .mobi format for Kindle.">MOBI</a> | <a href="http://perlybook.org/?source=File::Glob&amp;book_selection=&amp;target=epub" title="Download POD of this module in .epub format for E-book readers.">EPUB</a></li>
+
+<li>
+    <a itemprop="downloadUrl" href="https://cpan.metacpan.org/authors/id/X/XS/XSAWYERX/perl-5.26.0.tar.gz">
+    <i class="fa fa-download fa-fw black"></i>Download (<span itemprop="fileSize" >16.35Mb</span>)</a>
+    
+    <span class="invisible" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+      <span itemprop="price">0</span>
+    </span>
+    
+</li>
+<li>
+    <a href="https://explorer.metacpan.org/?url=%2Fmodule%2FXSAWYERX%2Fperl-5.26.0%2Fext%2FFile-Glob%2FGlob.pm">
+    <i class="fa fa-list-alt fa-fw black"></i>MetaCPAN Explorer
+    </a>
+</li>
+<li>
+    <a href="http://cpanratings.perl.org/rate/?distribution=perl">
+    <i class="fa fa-star fa-fw black"></i>Rate this distribution
+    </a>
+</li>
+<li>
+  <a href="/permission/distribution/perl">
+    <i class="fa fa-key fa-fw black"></i>Upload permissions
+  </a>
+</li>
+<li>
+    <a href="/feed/distribution/perl">
+    <i class="fa fa-rss-square fa-fw black"></i>Subscribe to distribution
+    </a>
+</li>
+<li>
+    <button class="btn btn-link" data-toggle="modal" data-target="#install-instructions-dialog">
+      <i class="fa fa-terminal fa-fw black"></i>Install Instructions
+    </button>
+</li>
+<li>
+    <form action="/search">
+        <input type="hidden" name="q" value="dist:perl">
+        <input type="search" name="q" placeholder="Search distribution" style="width: 153px" class="form-control tool-bar-form">
+        <input type="submit" style="display: none">
+    </form>
+</li>
+<li>
+    <select onchange="document.location.href='/module/'+this.value" class="form-control tool-bar-form">
+        <option>Jump to version</option>
+    <option value="SHAY/perl-5.24.2-RC1/ext/File-Glob/Glob.pm">5.024002 DEV (SHAY on 2017-07-01)</option>
+
+    <option value="SHAY/perl-5.22.4-RC1/ext/File-Glob/Glob.pm">5.022004 DEV (SHAY on 2017-07-01)</option>
+
+    <option value="EHERMAN/perl-5.27.1/ext/File-Glob/Glob.pm">5.027001 DEV (EHERMAN on 2017-06-20)</option>
+
+    <option value="XSAWYERX/perl-5.27.0/ext/File-Glob/Glob.pm">5.027000 DEV (XSAWYERX on 2017-05-31)</option>
+
+    <option value="XSAWYERX/perl-5.26.0-RC2/ext/File-Glob/Glob.pm">5.026000 DEV (XSAWYERX on 2017-05-23)</option>
+
+    <option value="XSAWYERX/perl-5.26.0-RC1/ext/File-Glob/Glob.pm">5.026000 DEV (XSAWYERX on 2017-05-11)</option>
+
+    <option value="XSAWYERX/perl-5.25.12/ext/File-Glob/Glob.pm">5.025012 DEV (XSAWYERX on 2017-04-20)</option>
+
+    <option value="XSAWYERX/perl-5.25.11/ext/File-Glob/Glob.pm">5.025011 DEV (XSAWYERX on 2017-03-20)</option>
+
+    <option value="RENEEB/perl-5.25.10/ext/File-Glob/Glob.pm">5.025010 DEV (RENEEB on 2017-02-20)</option>
+
+    <option value="ABIGAIL/perl-5.25.9/ext/File-Glob/Glob.pm">5.025009 DEV (ABIGAIL on 2017-01-20)</option>
+
+    <option value="SHAY/perl-5.24.1/ext/File-Glob/Glob.pm">5.024001 (SHAY on 2017-01-14)</option>
+
+    <option value="SHAY/perl-5.22.3/ext/File-Glob/Glob.pm">5.022003 (SHAY on 2017-01-14)</option>
+
+    <option value="SHAY/perl-5.24.1-RC5/ext/File-Glob/Glob.pm">5.024001 DEV (SHAY on 2017-01-02)</option>
+
+    <option value="SHAY/perl-5.22.3-RC5/ext/File-Glob/Glob.pm">5.022003 DEV (SHAY on 2017-01-02)</option>
+
+    <option value="XSAWYERX/perl-5.25.8/ext/File-Glob/Glob.pm">5.025008 DEV (XSAWYERX on 2016-12-20)</option>
+
+    <option value="EXODIST/perl-5.25.7/ext/File-Glob/Glob.pm">5.025007 DEV (EXODIST on 2016-11-20)</option>
+
+    <option value="ARC/perl-5.25.6/ext/File-Glob/Glob.pm">5.025006 DEV (ARC on 2016-10-20)</option>
+
+    <option value="SHAY/perl-5.24.1-RC4/ext/File-Glob/Glob.pm">5.024001 DEV (SHAY on 2016-10-12)</option>
+
+    <option value="SHAY/perl-5.22.3-RC4/ext/File-Glob/Glob.pm">5.022003 DEV (SHAY on 2016-10-12)</option>
+
+    <option value="STEVAN/perl-5.25.5/ext/File-Glob/Glob.pm">5.025005 DEV (STEVAN on 2016-09-20)</option>
+
+    <option value="BINGOS/perl-5.25.4/ext/File-Glob/Glob.pm">5.025004 DEV (BINGOS on 2016-08-20)</option>
+
+    <option value="SHAY/perl-5.24.1-RC3/ext/File-Glob/Glob.pm">5.024001 DEV (SHAY on 2016-08-11)</option>
+
+    <option value="SHAY/perl-5.22.3-RC3/ext/File-Glob/Glob.pm">5.022003 DEV (SHAY on 2016-08-11)</option>
+
+    <option value="SHAY/perl-5.24.1-RC2/ext/File-Glob/Glob.pm">5.024001 DEV (SHAY on 2016-07-25)</option>
+
+    <option value="SHAY/perl-5.22.3-RC2/ext/File-Glob/Glob.pm">5.022003 DEV (SHAY on 2016-07-25)</option>
+
+    <option value="SHAY/perl-5.25.3/ext/File-Glob/Glob.pm">5.025003 DEV (SHAY on 2016-07-20)</option>
+
+    <option value="SHAY/perl-5.24.1-RC1/ext/File-Glob/Glob.pm">5.024001 DEV (SHAY on 2016-07-17)</option>
+
+    <option value="SHAY/perl-5.22.3-RC1/ext/File-Glob/Glob.pm">5.022003 DEV (SHAY on 2016-07-17)</option>
+
+    <option value="WOLFSAGE/perl-5.25.2/ext/File-Glob/Glob.pm">5.025002 DEV (WOLFSAGE on 2016-06-20)</option>
+
+    <option value="XSAWYERX/perl-5.25.1/ext/File-Glob/Glob.pm">5.025001 DEV (XSAWYERX on 2016-05-20)</option>
+
+    <option value="RJBS/perl-5.25.0/ext/File-Glob/Glob.pm">5.025000 DEV (RJBS on 2016-05-09)</option>
+
+    <option value="RJBS/perl-5.24.0/ext/File-Glob/Glob.pm">5.024000 (RJBS on 2016-05-09)</option>
+
+    <option value="RJBS/perl-5.24.0-RC5/ext/File-Glob/Glob.pm">5.024000 DEV (RJBS on 2016-05-04)</option>
+
+    <option value="RJBS/perl-5.24.0-RC4/ext/File-Glob/Glob.pm">5.024000 DEV (RJBS on 2016-05-02)</option>
+
+    <option value="SHAY/perl-5.22.2/ext/File-Glob/Glob.pm">5.022002 (SHAY on 2016-04-29)</option>
+
+    <option value="RJBS/perl-5.24.0-RC3/ext/File-Glob/Glob.pm">5.024000 DEV (RJBS on 2016-04-27)</option>
+
+    <option value="RJBS/perl-5.24.0-RC2/ext/File-Glob/Glob.pm">5.024000 DEV (RJBS on 2016-04-23)</option>
+
+    <option value="RJBS/perl-5.24.0-RC1/ext/File-Glob/Glob.pm">5.024000 DEV (RJBS on 2016-04-14)</option>
+
+    <option value="SHAY/perl-5.22.2-RC1/ext/File-Glob/Glob.pm">5.022002 DEV (SHAY on 2016-04-10)</option>
+
+    <option value="ABIGAIL/perl-5.23.9/ext/File-Glob/Glob.pm">5.023009 DEV (ABIGAIL on 2016-03-20)</option>
+
+    <option value="XSAWYERX/perl-5.23.8/ext/File-Glob/Glob.pm">5.023008 DEV (XSAWYERX on 2016-02-20)</option>
+
+    <option value="STEVAN/perl-5.23.7/ext/File-Glob/Glob.pm">5.023007 DEV (STEVAN on 2016-01-20)</option>
+
+    <option value="DAGOLDEN/perl-5.23.6/ext/File-Glob/Glob.pm">5.023006 DEV (DAGOLDEN on 2015-12-21)</option>
+
+    <option value="SHAY/perl-5.22.1/ext/File-Glob/Glob.pm">5.022001 (SHAY on 2015-12-13)</option>
+
+    <option value="SHAY/perl-5.22.1-RC4/ext/File-Glob/Glob.pm">5.022001 DEV (SHAY on 2015-12-08)</option>
+
+    <option value="SHAY/perl-5.22.1-RC3/ext/File-Glob/Glob.pm">5.022001 DEV (SHAY on 2015-12-02)</option>
+
+    <option value="ABIGAIL/perl-5.23.5/ext/File-Glob/Glob.pm">5.023005 DEV (ABIGAIL on 2015-11-20)</option>
+
+    <option value="SHAY/perl-5.22.1-RC2/ext/File-Glob/Glob.pm">5.022001 DEV (SHAY on 2015-11-15)</option>
+
+    <option value="SHAY/perl-5.22.1-RC1/ext/File-Glob/Glob.pm">5.022001 DEV (SHAY on 2015-10-31)</option>
+
+    <option value="SHAY/perl-5.23.4/ext/File-Glob/Glob.pm">5.023004 DEV (SHAY on 2015-10-20)</option>
+
+    <option value="PCM/perl-5.23.3/ext/File-Glob/Glob.pm">5.023003 DEV (PCM on 2015-09-21)</option>
+
+    <option value="SHAY/perl-5.20.3/ext/File-Glob/Glob.pm">5.020003 (SHAY on 2015-09-12)</option>
+
+    <option value="SHAY/perl-5.20.3-RC2/ext/File-Glob/Glob.pm">5.020003 DEV (SHAY on 2015-08-29)</option>
+
+    <option value="SHAY/perl-5.20.3-RC1/ext/File-Glob/Glob.pm">5.020003 DEV (SHAY on 2015-08-22)</option>
+
+    <option value="WOLFSAGE/perl-5.23.2/ext/File-Glob/Glob.pm">5.023002 DEV (WOLFSAGE on 2015-08-20)</option>
+
+    <option value="WOLFSAGE/perl-5.23.1/ext/File-Glob/Glob.pm">5.023001 DEV (WOLFSAGE on 2015-07-20)</option>
+
+    <option value="RJBS/perl-5.23.0/ext/File-Glob/Glob.pm">5.023000 DEV (RJBS on 2015-06-20)</option>
+
+    <option value="RJBS/perl-5.22.0/ext/File-Glob/Glob.pm">5.022000 (RJBS on 2015-06-01)</option>
+
+    <option value="RJBS/perl-5.22.0-RC2/ext/File-Glob/Glob.pm">5.022000 DEV (RJBS on 2015-05-21)</option>
+
+    <option value="RJBS/perl-5.22.0-RC1/ext/File-Glob/Glob.pm">5.022000 DEV (RJBS on 2015-05-19)</option>
+
+    <option value="SHAY/perl-5.21.11/ext/File-Glob/Glob.pm">5.021011 DEV (SHAY on 2015-04-20)</option>
+
+    <option value="SHAY/perl-5.21.10/ext/File-Glob/Glob.pm">5.021010 DEV (SHAY on 2015-03-20)</option>
+
+    <option value="XSAWYERX/perl-5.21.9/ext/File-Glob/Glob.pm">5.021009 DEV (XSAWYERX on 2015-02-21)</option>
+
+    <option value="SHAY/perl-5.20.2/ext/File-Glob/Glob.pm">5.020002 (SHAY on 2015-02-14)</option>
+
+    <option value="SHAY/perl-5.20.2-RC1/ext/File-Glob/Glob.pm">5.020002 DEV (SHAY on 2015-02-01)</option>
+
+    <option value="WOLFSAGE/perl-5.21.8/ext/File-Glob/Glob.pm">5.021008 DEV (WOLFSAGE on 2015-01-20)</option>
+
+    <option value="CORION/perl-5.21.7/ext/File-Glob/Glob.pm">5.021007 DEV (CORION on 2014-12-20)</option>
+
+    <option value="BINGOS/perl-5.21.6/ext/File-Glob/Glob.pm">5.021006 DEV (BINGOS on 2014-11-20)</option>
+
+    <option value="ABIGAIL/perl-5.21.5/ext/File-Glob/Glob.pm">5.021005 DEV (ABIGAIL on 2014-10-20)</option>
+
+    <option value="RJBS/perl-5.18.4/ext/File-Glob/Glob.pm">5.018004 (RJBS on 2014-10-02)</option>
+
+    <option value="RJBS/perl-5.18.3/ext/File-Glob/Glob.pm">5.018003 (RJBS on 2014-10-01)</option>
+
+    <option value="RJBS/perl-5.18.3-RC2/ext/File-Glob/Glob.pm">5.018003 DEV (RJBS on 2014-09-27)</option>
+
+    <option value="SHAY/perl-5.21.4/ext/File-Glob/Glob.pm">5.021004 DEV (SHAY on 2014-09-20)</option>
+
+    <option value="RJBS/perl-5.18.3-RC1/ext/File-Glob/Glob.pm">5.018003 DEV (RJBS on 2014-09-17)</option>
+
+    <option value="SHAY/perl-5.20.1/ext/File-Glob/Glob.pm">5.020001 (SHAY on 2014-09-14)</option>
+
+    <option value="SHAY/perl-5.20.1-RC2/ext/File-Glob/Glob.pm">5.020001 DEV (SHAY on 2014-09-07)</option>
+
+    <option value="SHAY/perl-5.20.1-RC1/ext/File-Glob/Glob.pm">5.020001 DEV (SHAY on 2014-08-25)</option>
+
+    <option value="PCM/perl-5.21.3/ext/File-Glob/Glob.pm">5.021003 DEV (PCM on 2014-08-21)</option>
+
+    <option value="ABIGAIL/perl-5.21.2/ext/File-Glob/Glob.pm">5.021002 DEV (ABIGAIL on 2014-07-20)</option>
+
+    <option value="WOLFSAGE/perl-5.21.1/ext/File-Glob/Glob.pm">5.021001 DEV (WOLFSAGE on 2014-06-20)</option>
+
+    <option value="RJBS/perl-5.21.0/ext/File-Glob/Glob.pm">5.021000 DEV (RJBS on 2014-05-27)</option>
+
+    <option value="RJBS/perl-5.20.0/ext/File-Glob/Glob.pm">5.020000 (RJBS on 2014-05-27)</option>
+
+    <option value="RJBS/perl-5.20.0-RC1/ext/File-Glob/Glob.pm">5.020000 DEV (RJBS on 2014-05-17)</option>
+
+    <option value="SHAY/perl-5.19.11/ext/File-Glob/Glob.pm">5.019011 DEV (SHAY on 2014-04-20)</option>
+
+    <option value="ARC/perl-5.19.10/ext/File-Glob/Glob.pm">5.019010 DEV (ARC on 2014-03-20)</option>
+
+    <option value="TONYC/perl-5.19.9/ext/File-Glob/Glob.pm">5.019009 DEV (TONYC on 2014-02-20)</option>
+
+    <option value="RJBS/perl-5.19.8/ext/File-Glob/Glob.pm">5.019008 DEV (RJBS on 2014-01-20)</option>
+
+    <option value="RJBS/perl-5.18.2/ext/File-Glob/Glob.pm">5.018002 (RJBS on 2014-01-07)</option>
+
+    <option value="RJBS/perl-5.18.2-RC4/ext/File-Glob/Glob.pm">5.018002 DEV (RJBS on 2013-12-22)</option>
+
+    <option value="ABIGAIL/perl-5.19.7/ext/File-Glob/Glob.pm">5.019007 DEV (ABIGAIL on 2013-12-20)</option>
+
+    <option value="RJBS/perl-5.18.2-RC3/ext/File-Glob/Glob.pm">5.018002 DEV (RJBS on 2013-12-19)</option>
+
+    <option value="RJBS/perl-5.18.2-RC2/ext/File-Glob/Glob.pm">5.018002 DEV (RJBS on 2013-12-07)</option>
+
+    <option value="RJBS/perl-5.18.2-RC1/ext/File-Glob/Glob.pm">5.018002 DEV (RJBS on 2013-12-02)</option>
+
+    <option value="BINGOS/perl-5.19.6/ext/File-Glob/Glob.pm">5.019006 DEV (BINGOS on 2013-11-20)</option>
+
+    <option value="SHAY/perl-5.19.5/ext/File-Glob/Glob.pm">5.019005 DEV (SHAY on 2013-10-20)</option>
+
+    <option value="SHAY/perl-5.19.4/ext/File-Glob/Glob.pm">5.019004 DEV (SHAY on 2013-09-20)</option>
+
+    <option value="SHAY/perl-5.19.3/ext/File-Glob/Glob.pm">5.019003 DEV (SHAY on 2013-08-20)</option>
+
+    <option value="RJBS/perl-5.18.1/ext/File-Glob/Glob.pm">5.018001 (RJBS on 2013-08-12)</option>
+
+    <option value="RJBS/perl-5.18.1-RC3/ext/File-Glob/Glob.pm">5.018001 DEV (RJBS on 2013-08-09)</option>
+
+    <option value="RJBS/perl-5.18.1-RC2/ext/File-Glob/Glob.pm">5.018001 DEV (RJBS on 2013-08-04)</option>
+
+    <option value="RJBS/perl-5.18.1-RC1/ext/File-Glob/Glob.pm">5.018001 DEV (RJBS on 2013-08-02)</option>
+
+    <option value="ARISTOTLE/perl-5.19.2/ext/File-Glob/Glob.pm">5.019002 DEV (ARISTOTLE on 2013-07-22)</option>
+
+    <option value="DAGOLDEN/perl-5.19.1/ext/File-Glob/Glob.pm">5.019001 DEV (DAGOLDEN on 2013-06-21)</option>
+
+    <option value="RJBS/perl-5.19.0/ext/File-Glob/Glob.pm">5.019000 DEV (RJBS on 2013-05-20)</option>
+
+    <option value="RJBS/perl-5.18.0/ext/File-Glob/Glob.pm">5.018000 (RJBS on 2013-05-18)</option>
+
+    <option value="RJBS/perl-5.18.0-RC4/ext/File-Glob/Glob.pm">5.018000 DEV (RJBS on 2013-05-16)</option>
+
+    <option value="RJBS/perl-5.18.0-RC3/ext/File-Glob/Glob.pm">5.018000 DEV (RJBS on 2013-05-14)</option>
+
+    <option value="RJBS/perl-5.18.0-RC2/ext/File-Glob/Glob.pm">5.018000 DEV (RJBS on 2013-05-12)</option>
+
+    <option value="RJBS/perl-5.18.0-RC1/ext/File-Glob/Glob.pm">5.018000 DEV (RJBS on 2013-05-11)</option>
+
+    <option value="RJBS/perl-5.17.11/ext/File-Glob/Glob.pm">5.017011 DEV (RJBS on 2013-04-21)</option>
+
+    <option value="CORION/perl-5.17.10/ext/File-Glob/Glob.pm">5.017010 DEV (CORION on 2013-03-21)</option>
+
+    <option value="RJBS/perl-5.16.3/ext/File-Glob/Glob.pm">5.016003 (RJBS on 2013-03-11)</option>
+
+    <option value="DAPM/perl-5.14.4/ext/File-Glob/Glob.pm">5.014004 (DAPM on 2013-03-10)</option>
+
+    <option value="DAPM/perl-5.14.4-RC2/ext/File-Glob/Glob.pm">5.014004 DEV (DAPM on 2013-03-07)</option>
+
+    <option value="RJBS/perl-5.16.3-RC1/ext/File-Glob/Glob.pm">5.016003 DEV (RJBS on 2013-03-07)</option>
+
+    <option value="DAPM/perl-5.14.4-RC1/ext/File-Glob/Glob.pm">5.014004 DEV (DAPM on 2013-03-05)</option>
+
+    <option value="BINGOS/perl-5.17.9/ext/File-Glob/Glob.pm">5.017009 DEV (BINGOS on 2013-02-20)</option>
+
+    <option value="ARC/perl-5.17.8/ext/File-Glob/Glob.pm">5.017008 DEV (ARC on 2013-01-20)</option>
+
+    <option value="DROLSKY/perl-5.17.7/ext/File-Glob/Glob.pm">5.017007 DEV (DROLSKY on 2012-12-18)</option>
+
+    <option value="RJBS/perl-5.17.6/ext/File-Glob/Glob.pm">5.017006 DEV (RJBS on 2012-11-21)</option>
+
+    <option value="DOM/perl-5.12.5/ext/File-Glob/Glob.pm">5.012005 (DOM on 2012-11-10)</option>
+
+    <option value="DOM/perl-5.12.5-RC2/ext/File-Glob/Glob.pm">5.012005 DEV (DOM on 2012-11-08)</option>
+
+    <option value="DOM/perl-5.12.5-RC1/ext/File-Glob/Glob.pm">5.012005 DEV (DOM on 2012-11-03)</option>
+
+    <option value="RJBS/perl-5.16.2/ext/File-Glob/Glob.pm">5.016002 (RJBS on 2012-11-01)</option>
+
+    <option value="RJBS/perl-5.16.2-RC1/ext/File-Glob/Glob.pm">5.016002 DEV (RJBS on 2012-10-27)</option>
+
+    <option value="FLORA/perl-5.17.5/ext/File-Glob/Glob.pm">5.017005 DEV (FLORA on 2012-10-20)</option>
+
+    <option value="DOM/perl-5.14.3/ext/File-Glob/Glob.pm">5.014003 (DOM on 2012-10-12)</option>
+
+    <option value="DOM/perl-5.14.3-RC2/ext/File-Glob/Glob.pm">5.014003 DEV (DOM on 2012-10-10)</option>
+
+    <option value="DOM/perl-5.14.3-RC1/ext/File-Glob/Glob.pm">5.014003 DEV (DOM on 2012-09-26)</option>
+
+    <option value="FLORA/perl-5.17.4/ext/File-Glob/Glob.pm">5.017004 DEV (FLORA on 2012-09-20)</option>
+
+    <option value="SHAY/perl-5.17.3/ext/File-Glob/Glob.pm">5.017003 DEV (SHAY on 2012-08-20)</option>
+
+    <option value="RJBS/perl-5.16.1/ext/File-Glob/Glob.pm">5.016001 (RJBS on 2012-08-08)</option>
+
+    <option value="RJBS/perl-5.16.1-RC1/ext/File-Glob/Glob.pm">5.016001 DEV (RJBS on 2012-08-03)</option>
+
+    <option value="TONYC/perl-5.17.2/ext/File-Glob/Glob.pm">5.017002 DEV (TONYC on 2012-07-20)</option>
+
+    <option value="DOY/perl-5.17.1/ext/File-Glob/Glob.pm">5.017001 DEV (DOY on 2012-06-20)</option>
+
+    <option value="ZEFRAM/perl-5.17.0/ext/File-Glob/Glob.pm">5.017000 DEV (ZEFRAM on 2012-05-26)</option>
+
+    <option value="RJBS/perl-5.16.0/ext/File-Glob/Glob.pm">5.016000 (RJBS on 2012-05-20)</option>
+
+    <option value="RJBS/perl-5.16.0-RC2/ext/File-Glob/Glob.pm">5.016000 DEV (RJBS on 2012-05-16)</option>
+
+    <option value="RJBS/perl-5.16.0-RC1/ext/File-Glob/Glob.pm">5.016000 DEV (RJBS on 2012-05-15)</option>
+
+    <option value="RJBS/perl-5.16.0-RC0/ext/File-Glob/Glob.pm">5.016000 DEV (RJBS on 2012-05-11)</option>
+
+    <option value="ABIGAIL/perl-5.15.9/ext/File-Glob/Glob.pm">5.015009 DEV (ABIGAIL on 2012-03-20)</option>
+
+    <option value="CORION/perl-5.15.8/ext/File-Glob/Glob.pm">5.015008 DEV (CORION on 2012-02-20)</option>
+
+    <option value="BINGOS/perl-5.15.7/ext/File-Glob/Glob.pm">5.015007 DEV (BINGOS on 2012-01-20)</option>
+
+    <option value="DROLSKY/perl-5.15.6/ext/File-Glob/Glob.pm">5.015006 DEV (DROLSKY on 2011-12-20)</option>
+
+    <option value="SHAY/perl-5.15.5/ext/File-Glob/Glob.pm">5.015005 DEV (SHAY on 2011-11-20)</option>
+
+    <option value="FLORA/perl-5.15.4/ext/File-Glob/Glob.pm">5.015004 DEV (FLORA on 2011-10-20)</option>
+
+    <option value="FLORA/perl-5.14.2/ext/File-Glob/Glob.pm">5.014002 (FLORA on 2011-09-26)</option>
+
+    <option value="STEVAN/perl-5.15.3/ext/File-Glob/Glob.pm">5.015003 DEV (STEVAN on 2011-09-21)</option>
+
+    <option value="FLORA/perl-5.14.2-RC1/ext/File-Glob/Glob.pm">5.014002 DEV (FLORA on 2011-09-19)</option>
+
+    <option value="RJBS/perl-5.15.2/ext/File-Glob/Glob.pm">5.015002 DEV (RJBS on 2011-08-21)</option>
+
+    <option value="ZEFRAM/perl-5.15.1/ext/File-Glob/Glob.pm">5.015001 DEV (ZEFRAM on 2011-07-20)</option>
+
+    <option value="DAGOLDEN/perl-5.15.0/ext/File-Glob/Glob.pm">5.015000 DEV (DAGOLDEN on 2011-06-20)</option>
+
+    <option value="LBROCARD/perl-5.12.4/ext/File-Glob/Glob.pm">5.012004 (LBROCARD on 2011-06-20)</option>
+
+    <option value="JESSE/perl-5.14.1/ext/File-Glob/Glob.pm">5.014001 (JESSE on 2011-06-17)</option>
+
+    <option value="LBROCARD/perl-5.12.4-RC2/ext/File-Glob/Glob.pm">5.012004 DEV (LBROCARD on 2011-06-15)</option>
+
+    <option value="JESSE/perl-5.14.1-RC1/ext/File-Glob/Glob.pm">5.014001 DEV (JESSE on 2011-06-09)</option>
+
+    <option value="LBROCARD/perl-5.12.4-RC1/ext/File-Glob/Glob.pm">5.012004 DEV (LBROCARD on 2011-06-08)</option>
+
+    <option value="JESSE/perl-5.14.0/ext/File-Glob/Glob.pm">5.014000 (JESSE on 2011-05-14)</option>
+
+    <option value="JESSE/perl-5.14.0-RC3/ext/File-Glob/Glob.pm">5.014000 DEV (JESSE on 2011-05-11)</option>
+
+    <option value="JESSE/perl-5.14.0-RC2/ext/File-Glob/Glob.pm">5.014000 DEV (JESSE on 2011-05-04)</option>
+
+    <option value="JESSE/perl-5.14.0-RC1/ext/File-Glob/Glob.pm">5.014000 DEV (JESSE on 2011-04-20)</option>
+
+    <option value="FLORA/perl-5.13.11/ext/File-Glob/Glob.pm">5.013011 DEV (FLORA on 2011-03-20)</option>
+
+    <option value="AVAR/perl-5.13.10/ext/File-Glob/Glob.pm">5.013010 DEV (AVAR on 2011-02-20)</option>
+
+    <option value="RJBS/perl-5.12.3/ext/File-Glob/Glob.pm">5.012003 (RJBS on 2011-01-22)</option>
+
+    <option value="JESSE/perl-5.13.9/ext/File-Glob/Glob.pm">5.013009 DEV (JESSE on 2011-01-21)</option>
+
+    <option value="RJBS/perl-5.12.3-RC3/ext/File-Glob/Glob.pm">5.012003 DEV (RJBS on 2011-01-18)</option>
+
+    <option value="RJBS/perl-5.12.3-RC2/ext/File-Glob/Glob.pm">5.012003 DEV (RJBS on 2011-01-15)</option>
+
+    <option value="RJBS/perl-5.12.3-RC1/ext/File-Glob/Glob.pm">5.012003 DEV (RJBS on 2011-01-10)</option>
+
+    <option value="ZEFRAM/perl-5.13.8/ext/File-Glob/Glob.pm">5.013008 DEV (ZEFRAM on 2010-12-19)</option>
+
+    <option value="BINGOS/perl-5.13.7/ext/File-Glob/Glob.pm">5.013007 DEV (BINGOS on 2010-11-21)</option>
+
+    <option value="MIYAGAWA/perl-5.13.6/ext/File-Glob/Glob.pm">5.013006 DEV (MIYAGAWA on 2010-10-21)</option>
+
+    <option value="SHAY/perl-5.13.5/ext/File-Glob/Glob.pm">5.013005 DEV (SHAY on 2010-09-19)</option>
+
+    <option value="JESSE/perl-5.12.2/ext/File-Glob/Glob.pm">5.012002 (JESSE on 2010-09-07)</option>
+
+    <option value="JESSE/perl-5.12.2-RC1/ext/File-Glob/Glob.pm">5.012002 DEV (JESSE on 2010-08-31)</option>
+
+    <option value="FLORA/perl-5.13.4/ext/File-Glob/Glob.pm">5.013004 DEV (FLORA on 2010-08-20)</option>
+
+    <option value="DAGOLDEN/perl-5.13.3/ext/File-Glob/Glob.pm">5.013003 DEV (DAGOLDEN on 2010-07-20)</option>
+
+    <option value="MSTROUT/perl-5.13.2/ext/File-Glob/Glob.pm">5.013002 DEV (MSTROUT on 2010-06-22)</option>
+
+    <option value="RJBS/perl-5.13.1/ext/File-Glob/Glob.pm">5.013001 DEV (RJBS on 2010-05-20)</option>
+
+    <option value="JESSE/perl-5.12.1/ext/File-Glob/Glob.pm">5.012001 (JESSE on 2010-05-16)</option>
+
+    <option value="JESSE/perl-5.12.1-RC2/ext/File-Glob/Glob.pm">5.012001 DEV (JESSE on 2010-05-13)</option>
+
+    <option value="JESSE/perl-5.12.1-RC1/ext/File-Glob/Glob.pm">5.012001 DEV (JESSE on 2010-05-10)</option>
+
+    <option value="LBROCARD/perl-5.13.0/ext/File-Glob/Glob.pm">5.013000 DEV (LBROCARD on 2010-04-20)</option>
+
+    <option value="JESSE/perl-5.12.0/ext/File-Glob/Glob.pm">5.012000 (JESSE on 2010-04-12)</option>
+
+    <option value="JESSE/perl-5.12.0-RC5/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-04-10)</option>
+
+    <option value="JESSE/perl-5.12.0-RC4/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-04-07)</option>
+
+    <option value="JESSE/perl-5.12.0-RC3/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-04-03)</option>
+
+    <option value="JESSE/perl-5.12.0-RC2/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-04-01)</option>
+
+    <option value="JESSE/perl-5.12.0-RC1/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-03-29)</option>
+
+    <option value="SHAY/perl-5.11.5/ext/File-Glob/Glob.pm">5.011005 DEV (SHAY on 2010-02-21)</option>
+
+    <option value="RJBS/perl-5.11.4/ext/File-Glob/Glob.pm">5.011004 DEV (RJBS on 2010-01-20)</option>
+
+    <option value="JESSE/perl-5.11.3/ext/File-Glob/Glob.pm">5.011003 DEV (JESSE on 2009-12-21)</option>
+
+    <option value="LBROCARD/perl-5.11.2/ext/File-Glob/Glob.pm">5.011002 DEV (LBROCARD on 2009-11-20)</option>
+
+    <option value="JESSE/perl-5.11.1/ext/File-Glob/Glob.pm">5.011001 DEV (JESSE on 2009-10-20)</option>
+
+    <option value="JESSE/perl-5.11.0/ext/File-Glob/Glob.pm">5.011000 DEV (JESSE on 2009-10-02)</option>
+
+    <option value="DAPM/perl-5.10.1/ext/File-Glob/Glob.pm">5.010001 (DAPM on 2009-08-23)</option>
+
+    <option value="DAPM/perl-5.10.1-RC2/ext/File-Glob/Glob.pm">5.010001 DEV (DAPM on 2009-08-18)</option>
+
+    <option value="DAPM/perl-5.10.1-RC1/ext/File-Glob/Glob.pm">5.010001 DEV (DAPM on 2009-08-06)</option>
+
+    <option value="NWCLARK/perl-5.8.9/ext/File-Glob/Glob.pm">5.008009 (NWCLARK on 2008-12-14)</option>
+
+    <option value="NWCLARK/perl-5.8.9-RC2/ext/File-Glob/Glob.pm">5.008009 DEV (NWCLARK on 2008-12-06)</option>
+
+    <option value="NWCLARK/perl-5.8.9-RC1/ext/File-Glob/Glob.pm">5.008009 DEV (NWCLARK on 2008-11-10)</option>
+
+    <option value="RGARCIA/perl-5.10.0/ext/File-Glob/Glob.pm">5.010000 (RGARCIA on 2007-12-18)</option>
+
+    <option value="RGARCIA/perl-5.9.5/ext/File-Glob/Glob.pm">5.009005 DEV (RGARCIA on 2007-07-07)</option>
+
+    <option value="RGARCIA/perl-5.9.4/ext/File-Glob/Glob.pm">5.009004 DEV (RGARCIA on 2006-08-15)</option>
+
+    <option value="NWCLARK/perl-5.8.8/ext/File-Glob/Glob.pm">5.008008 (NWCLARK on 2006-02-01)</option>
+
+    <option value="RGARCIA/perl-5.9.3/ext/File-Glob/Glob.pm">5.009003 DEV (RGARCIA on 2006-01-28)</option>
+
+    <option value="NWCLARK/perl-5.8.8-RC1/ext/File-Glob/Glob.pm">5.008008 DEV (NWCLARK on 2006-01-20)</option>
+
+    <option value="NWCLARK/perl-5.8.7/ext/File-Glob/Glob.pm">5.008007 (NWCLARK on 2005-05-30)</option>
+
+    <option value="NWCLARK/perl-5.8.7-RC1/ext/File-Glob/Glob.pm">5.008007 DEV (NWCLARK on 2005-05-18)</option>
+
+    <option value="RGARCIA/perl-5.9.2/ext/File-Glob/Glob.pm">5.009002 DEV (RGARCIA on 2005-04-01)</option>
+
+    <option value="NWCLARK/perl-5.8.6/ext/File-Glob/Glob.pm">5.008006 (NWCLARK on 2004-11-27)</option>
+
+    <option value="NWCLARK/perl-5.8.6-RC1/ext/File-Glob/Glob.pm">5.008006 DEV (NWCLARK on 2004-11-11)</option>
+
+    <option value="NWCLARK/perl-5.8.5/ext/File-Glob/Glob.pm">5.008005 (NWCLARK on 2004-07-19)</option>
+
+    <option value="NWCLARK/perl-5.8.5-RC2/ext/File-Glob/Glob.pm">5.008005 DEV (NWCLARK on 2004-07-08)</option>
+
+    <option value="NWCLARK/perl-5.8.5-RC1/ext/File-Glob/Glob.pm">5.008005 DEV (NWCLARK on 2004-07-06)</option>
+
+    <option value="NWCLARK/perl-5.8.4/ext/File-Glob/Glob.pm">5.008003 (NWCLARK on 2004-04-21)</option>
+
+    <option value="NWCLARK/perl-5.8.4-RC2/ext/File-Glob/Glob.pm">5.008003 DEV (NWCLARK on 2004-04-15)</option>
+
+    <option value="NWCLARK/perl-5.8.4-RC1/ext/File-Glob/Glob.pm">5.008003 DEV (NWCLARK on 2004-04-05)</option>
+
+    <option value="RGARCIA/perl-5.9.1/ext/File-Glob/Glob.pm">5.009001 DEV (RGARCIA on 2004-03-16)</option>
+
+    <option value="LBROCARD/perl5.005_04/ext/File-Glob/Glob.pm">5.005 (LBROCARD on 2004-02-23)</option>
+
+    <option value="NWCLARK/perl-5.8.3/ext/File-Glob/Glob.pm">5.008003 (NWCLARK on 2004-01-14)</option>
+
+    <option value="NWCLARK/perl-5.8.3-RC1/ext/File-Glob/Glob.pm">5.008001 DEV (NWCLARK on 2004-01-07)</option>
+
+    <option value="RCLAMP/perl-1.0_16/ext/File-Glob/Glob.pm">1.0_16 (RCLAMP on 2003-12-18)</option>
+
+    <option value="RGARCIA/perl-5.6.2/ext/File-Glob/Glob.pm">v5.6.2 (RGARCIA on 2003-11-15)</option>
+
+    <option value="NWCLARK/perl-5.8.2/ext/File-Glob/Glob.pm">5.008001 (NWCLARK on 2003-11-05)</option>
+
+    <option value="NWCLARK/perl-5.8.2-RC2/ext/File-Glob/Glob.pm">5.008001 DEV (NWCLARK on 2003-11-03)</option>
+
+    <option value="NWCLARK/perl-5.8.2-RC1/ext/File-Glob/Glob.pm">5.008001 DEV (NWCLARK on 2003-10-27)</option>
+
+    <option value="HVDS/perl-5.9.0/ext/File-Glob/Glob.pm">5.009 DEV (HVDS on 2003-10-27)</option>
+
+    <option value="JHI/perl-5.8.1/ext/File-Glob/Glob.pm">v5.8.1 (JHI on 2003-09-25)</option>
+
+    <option value="SREZIC/perl-5.005-minimal-bin-1-arm-linux/ext/File-Glob/Glob.pm">5.005 (SREZIC on 2003-01-25)</option>
+
+    <option value="SREZIC/perl-5.005-Tk-800.023-bin-0-arm-linux/ext/File-Glob/Glob.pm">5.005 (SREZIC on 2003-01-10)</option>
+
+    <option value="JHI/perl-5.8.0/ext/File-Glob/Glob.pm">v5.8.0 (JHI on 2002-07-18)</option>
+
+<optgroup label="BackPAN"></optgroup>
+
+    <option value="JESSE/perl-5.12.0-RC0/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-03-21)
+    </option>
+
+    <option value="RGARCIA/perl-5.10.0-RC2/ext/File-Glob/Glob.pm">5.010000 DEV (RGARCIA on 2007-11-25)
+    </option>
+
+    <option value="RGARCIA/perl-5.10.0-RC1/ext/File-Glob/Glob.pm">5.009005 DEV (RGARCIA on 2007-11-17)
+    </option>
+
+    <option value="HOOO/perl-0.0017/ext/File-Glob/Glob.pm">0.0017 DEV (HOOO on 2007-05-01)
+    </option>
+
+    <option value="LBROCARD/perl5.005_04-RC2/ext/File-Glob/Glob.pm">5.005 DEV (LBROCARD on 2004-02-18)
+    </option>
+
+    <option value="LBROCARD/perl5.005_04-RC1/ext/File-Glob/Glob.pm">5.005_04 DEV (LBROCARD on 2004-02-04)
+    </option>
+
+    <option value="LBROCARD/perl5.005_03-MAINT22213/ext/File-Glob/Glob.pm">5.005_03 DEV (LBROCARD on 2004-01-27)
+    </option>
+
+    <option value="LBROCARD/perl5.005_03-MAINT22178/ext/File-Glob/Glob.pm">5.005_03 DEV (LBROCARD on 2004-01-20)
+    </option>
+
+    <option value="LBROCARD/perl5.005_03-MAINT21792/ext/File-Glob/Glob.pm">5.005_03 DEV (LBROCARD on 2003-12-05)
+    </option>
+
+    <option value="RGARCIA/perl-5.6.2-RC1/ext/File-Glob/Glob.pm">v5.6.2 DEV (RGARCIA on 2003-11-08)
+    </option>
+
+    <option value="JHI/perl-5.8.1-RC5/ext/File-Glob/Glob.pm">v5.8.1 DEV (JHI on 2003-09-22)
+    </option>
+
+    <option value="JHI/perl-5.8.1-RC4/ext/File-Glob/Glob.pm">v5.8.1 DEV (JHI on 2003-08-01)
+    </option>
+
+    <option value="JHI/perl-5.8.1-RC3/ext/File-Glob/Glob.pm">v5.8.1 DEV (JHI on 2003-07-30)
+    </option>
+
+    <option value="JHI/perl-5.8.1-RC2/ext/File-Glob/Glob.pm">v5.8.1 DEV (JHI on 2003-07-11)
+    </option>
+
+    <option value="JHI/perl-5.8.1-RC1/ext/File-Glob/Glob.pm">v5.8.1 DEV (JHI on 2003-07-10)
+    </option>
+
+    <option value="MSCHWERN/perl-1.0_15/ext/File-Glob/Glob.pm">1.0_15 (MSCHWERN on 2002-12-18)
+    </option>
+
+    <option value="JHI/perl-5.8.0-RC3/ext/File-Glob/Glob.pm">v5.8.0 DEV (JHI on 2002-07-14)
+    </option>
+
+    <option value="JHI/perl-5.8.0-RC2/ext/File-Glob/Glob.pm">v5.8.0 DEV (JHI on 2002-06-21)
+    </option>
+
+
+    </select>
+</li>
+<li>
+    <select name="release" onchange="document.location.href='/diff/file/?target=XSAWYERX%2Fperl-5.26.0%2Fext%2FFile-Glob%2FGlob.pm&amp;source=' + encodeURIComponent(this.value)" class="form-control tool-bar-form">
+        <option>Diff with version</option>
+    <option value="SHAY/perl-5.24.2-RC1/ext/File-Glob/Glob.pm">5.024002 DEV (SHAY on 2017-07-01)</option>
+
+    <option value="SHAY/perl-5.22.4-RC1/ext/File-Glob/Glob.pm">5.022004 DEV (SHAY on 2017-07-01)</option>
+
+    <option value="EHERMAN/perl-5.27.1/ext/File-Glob/Glob.pm">5.027001 DEV (EHERMAN on 2017-06-20)</option>
+
+    <option value="XSAWYERX/perl-5.27.0/ext/File-Glob/Glob.pm">5.027000 DEV (XSAWYERX on 2017-05-31)</option>
+
+    <option value="XSAWYERX/perl-5.26.0-RC2/ext/File-Glob/Glob.pm">5.026000 DEV (XSAWYERX on 2017-05-23)</option>
+
+    <option value="XSAWYERX/perl-5.26.0-RC1/ext/File-Glob/Glob.pm">5.026000 DEV (XSAWYERX on 2017-05-11)</option>
+
+    <option value="XSAWYERX/perl-5.25.12/ext/File-Glob/Glob.pm">5.025012 DEV (XSAWYERX on 2017-04-20)</option>
+
+    <option value="XSAWYERX/perl-5.25.11/ext/File-Glob/Glob.pm">5.025011 DEV (XSAWYERX on 2017-03-20)</option>
+
+    <option value="RENEEB/perl-5.25.10/ext/File-Glob/Glob.pm">5.025010 DEV (RENEEB on 2017-02-20)</option>
+
+    <option value="ABIGAIL/perl-5.25.9/ext/File-Glob/Glob.pm">5.025009 DEV (ABIGAIL on 2017-01-20)</option>
+
+    <option value="SHAY/perl-5.24.1/ext/File-Glob/Glob.pm">5.024001 (SHAY on 2017-01-14)</option>
+
+    <option value="SHAY/perl-5.22.3/ext/File-Glob/Glob.pm">5.022003 (SHAY on 2017-01-14)</option>
+
+    <option value="SHAY/perl-5.24.1-RC5/ext/File-Glob/Glob.pm">5.024001 DEV (SHAY on 2017-01-02)</option>
+
+    <option value="SHAY/perl-5.22.3-RC5/ext/File-Glob/Glob.pm">5.022003 DEV (SHAY on 2017-01-02)</option>
+
+    <option value="XSAWYERX/perl-5.25.8/ext/File-Glob/Glob.pm">5.025008 DEV (XSAWYERX on 2016-12-20)</option>
+
+    <option value="EXODIST/perl-5.25.7/ext/File-Glob/Glob.pm">5.025007 DEV (EXODIST on 2016-11-20)</option>
+
+    <option value="ARC/perl-5.25.6/ext/File-Glob/Glob.pm">5.025006 DEV (ARC on 2016-10-20)</option>
+
+    <option value="SHAY/perl-5.24.1-RC4/ext/File-Glob/Glob.pm">5.024001 DEV (SHAY on 2016-10-12)</option>
+
+    <option value="SHAY/perl-5.22.3-RC4/ext/File-Glob/Glob.pm">5.022003 DEV (SHAY on 2016-10-12)</option>
+
+    <option value="STEVAN/perl-5.25.5/ext/File-Glob/Glob.pm">5.025005 DEV (STEVAN on 2016-09-20)</option>
+
+    <option value="BINGOS/perl-5.25.4/ext/File-Glob/Glob.pm">5.025004 DEV (BINGOS on 2016-08-20)</option>
+
+    <option value="SHAY/perl-5.24.1-RC3/ext/File-Glob/Glob.pm">5.024001 DEV (SHAY on 2016-08-11)</option>
+
+    <option value="SHAY/perl-5.22.3-RC3/ext/File-Glob/Glob.pm">5.022003 DEV (SHAY on 2016-08-11)</option>
+
+    <option value="SHAY/perl-5.24.1-RC2/ext/File-Glob/Glob.pm">5.024001 DEV (SHAY on 2016-07-25)</option>
+
+    <option value="SHAY/perl-5.22.3-RC2/ext/File-Glob/Glob.pm">5.022003 DEV (SHAY on 2016-07-25)</option>
+
+    <option value="SHAY/perl-5.25.3/ext/File-Glob/Glob.pm">5.025003 DEV (SHAY on 2016-07-20)</option>
+
+    <option value="SHAY/perl-5.24.1-RC1/ext/File-Glob/Glob.pm">5.024001 DEV (SHAY on 2016-07-17)</option>
+
+    <option value="SHAY/perl-5.22.3-RC1/ext/File-Glob/Glob.pm">5.022003 DEV (SHAY on 2016-07-17)</option>
+
+    <option value="WOLFSAGE/perl-5.25.2/ext/File-Glob/Glob.pm">5.025002 DEV (WOLFSAGE on 2016-06-20)</option>
+
+    <option value="XSAWYERX/perl-5.25.1/ext/File-Glob/Glob.pm">5.025001 DEV (XSAWYERX on 2016-05-20)</option>
+
+    <option value="RJBS/perl-5.25.0/ext/File-Glob/Glob.pm">5.025000 DEV (RJBS on 2016-05-09)</option>
+
+    <option value="RJBS/perl-5.24.0/ext/File-Glob/Glob.pm">5.024000 (RJBS on 2016-05-09)</option>
+
+    <option value="RJBS/perl-5.24.0-RC5/ext/File-Glob/Glob.pm">5.024000 DEV (RJBS on 2016-05-04)</option>
+
+    <option value="RJBS/perl-5.24.0-RC4/ext/File-Glob/Glob.pm">5.024000 DEV (RJBS on 2016-05-02)</option>
+
+    <option value="SHAY/perl-5.22.2/ext/File-Glob/Glob.pm">5.022002 (SHAY on 2016-04-29)</option>
+
+    <option value="RJBS/perl-5.24.0-RC3/ext/File-Glob/Glob.pm">5.024000 DEV (RJBS on 2016-04-27)</option>
+
+    <option value="RJBS/perl-5.24.0-RC2/ext/File-Glob/Glob.pm">5.024000 DEV (RJBS on 2016-04-23)</option>
+
+    <option value="RJBS/perl-5.24.0-RC1/ext/File-Glob/Glob.pm">5.024000 DEV (RJBS on 2016-04-14)</option>
+
+    <option value="SHAY/perl-5.22.2-RC1/ext/File-Glob/Glob.pm">5.022002 DEV (SHAY on 2016-04-10)</option>
+
+    <option value="ABIGAIL/perl-5.23.9/ext/File-Glob/Glob.pm">5.023009 DEV (ABIGAIL on 2016-03-20)</option>
+
+    <option value="XSAWYERX/perl-5.23.8/ext/File-Glob/Glob.pm">5.023008 DEV (XSAWYERX on 2016-02-20)</option>
+
+    <option value="STEVAN/perl-5.23.7/ext/File-Glob/Glob.pm">5.023007 DEV (STEVAN on 2016-01-20)</option>
+
+    <option value="DAGOLDEN/perl-5.23.6/ext/File-Glob/Glob.pm">5.023006 DEV (DAGOLDEN on 2015-12-21)</option>
+
+    <option value="SHAY/perl-5.22.1/ext/File-Glob/Glob.pm">5.022001 (SHAY on 2015-12-13)</option>
+
+    <option value="SHAY/perl-5.22.1-RC4/ext/File-Glob/Glob.pm">5.022001 DEV (SHAY on 2015-12-08)</option>
+
+    <option value="SHAY/perl-5.22.1-RC3/ext/File-Glob/Glob.pm">5.022001 DEV (SHAY on 2015-12-02)</option>
+
+    <option value="ABIGAIL/perl-5.23.5/ext/File-Glob/Glob.pm">5.023005 DEV (ABIGAIL on 2015-11-20)</option>
+
+    <option value="SHAY/perl-5.22.1-RC2/ext/File-Glob/Glob.pm">5.022001 DEV (SHAY on 2015-11-15)</option>
+
+    <option value="SHAY/perl-5.22.1-RC1/ext/File-Glob/Glob.pm">5.022001 DEV (SHAY on 2015-10-31)</option>
+
+    <option value="SHAY/perl-5.23.4/ext/File-Glob/Glob.pm">5.023004 DEV (SHAY on 2015-10-20)</option>
+
+    <option value="PCM/perl-5.23.3/ext/File-Glob/Glob.pm">5.023003 DEV (PCM on 2015-09-21)</option>
+
+    <option value="SHAY/perl-5.20.3/ext/File-Glob/Glob.pm">5.020003 (SHAY on 2015-09-12)</option>
+
+    <option value="SHAY/perl-5.20.3-RC2/ext/File-Glob/Glob.pm">5.020003 DEV (SHAY on 2015-08-29)</option>
+
+    <option value="SHAY/perl-5.20.3-RC1/ext/File-Glob/Glob.pm">5.020003 DEV (SHAY on 2015-08-22)</option>
+
+    <option value="WOLFSAGE/perl-5.23.2/ext/File-Glob/Glob.pm">5.023002 DEV (WOLFSAGE on 2015-08-20)</option>
+
+    <option value="WOLFSAGE/perl-5.23.1/ext/File-Glob/Glob.pm">5.023001 DEV (WOLFSAGE on 2015-07-20)</option>
+
+    <option value="RJBS/perl-5.23.0/ext/File-Glob/Glob.pm">5.023000 DEV (RJBS on 2015-06-20)</option>
+
+    <option value="RJBS/perl-5.22.0/ext/File-Glob/Glob.pm">5.022000 (RJBS on 2015-06-01)</option>
+
+    <option value="RJBS/perl-5.22.0-RC2/ext/File-Glob/Glob.pm">5.022000 DEV (RJBS on 2015-05-21)</option>
+
+    <option value="RJBS/perl-5.22.0-RC1/ext/File-Glob/Glob.pm">5.022000 DEV (RJBS on 2015-05-19)</option>
+
+    <option value="SHAY/perl-5.21.11/ext/File-Glob/Glob.pm">5.021011 DEV (SHAY on 2015-04-20)</option>
+
+    <option value="SHAY/perl-5.21.10/ext/File-Glob/Glob.pm">5.021010 DEV (SHAY on 2015-03-20)</option>
+
+    <option value="XSAWYERX/perl-5.21.9/ext/File-Glob/Glob.pm">5.021009 DEV (XSAWYERX on 2015-02-21)</option>
+
+    <option value="SHAY/perl-5.20.2/ext/File-Glob/Glob.pm">5.020002 (SHAY on 2015-02-14)</option>
+
+    <option value="SHAY/perl-5.20.2-RC1/ext/File-Glob/Glob.pm">5.020002 DEV (SHAY on 2015-02-01)</option>
+
+    <option value="WOLFSAGE/perl-5.21.8/ext/File-Glob/Glob.pm">5.021008 DEV (WOLFSAGE on 2015-01-20)</option>
+
+    <option value="CORION/perl-5.21.7/ext/File-Glob/Glob.pm">5.021007 DEV (CORION on 2014-12-20)</option>
+
+    <option value="BINGOS/perl-5.21.6/ext/File-Glob/Glob.pm">5.021006 DEV (BINGOS on 2014-11-20)</option>
+
+    <option value="ABIGAIL/perl-5.21.5/ext/File-Glob/Glob.pm">5.021005 DEV (ABIGAIL on 2014-10-20)</option>
+
+    <option value="RJBS/perl-5.18.4/ext/File-Glob/Glob.pm">5.018004 (RJBS on 2014-10-02)</option>
+
+    <option value="RJBS/perl-5.18.3/ext/File-Glob/Glob.pm">5.018003 (RJBS on 2014-10-01)</option>
+
+    <option value="RJBS/perl-5.18.3-RC2/ext/File-Glob/Glob.pm">5.018003 DEV (RJBS on 2014-09-27)</option>
+
+    <option value="SHAY/perl-5.21.4/ext/File-Glob/Glob.pm">5.021004 DEV (SHAY on 2014-09-20)</option>
+
+    <option value="RJBS/perl-5.18.3-RC1/ext/File-Glob/Glob.pm">5.018003 DEV (RJBS on 2014-09-17)</option>
+
+    <option value="SHAY/perl-5.20.1/ext/File-Glob/Glob.pm">5.020001 (SHAY on 2014-09-14)</option>
+
+    <option value="SHAY/perl-5.20.1-RC2/ext/File-Glob/Glob.pm">5.020001 DEV (SHAY on 2014-09-07)</option>
+
+    <option value="SHAY/perl-5.20.1-RC1/ext/File-Glob/Glob.pm">5.020001 DEV (SHAY on 2014-08-25)</option>
+
+    <option value="PCM/perl-5.21.3/ext/File-Glob/Glob.pm">5.021003 DEV (PCM on 2014-08-21)</option>
+
+    <option value="ABIGAIL/perl-5.21.2/ext/File-Glob/Glob.pm">5.021002 DEV (ABIGAIL on 2014-07-20)</option>
+
+    <option value="WOLFSAGE/perl-5.21.1/ext/File-Glob/Glob.pm">5.021001 DEV (WOLFSAGE on 2014-06-20)</option>
+
+    <option value="RJBS/perl-5.21.0/ext/File-Glob/Glob.pm">5.021000 DEV (RJBS on 2014-05-27)</option>
+
+    <option value="RJBS/perl-5.20.0/ext/File-Glob/Glob.pm">5.020000 (RJBS on 2014-05-27)</option>
+
+    <option value="RJBS/perl-5.20.0-RC1/ext/File-Glob/Glob.pm">5.020000 DEV (RJBS on 2014-05-17)</option>
+
+    <option value="SHAY/perl-5.19.11/ext/File-Glob/Glob.pm">5.019011 DEV (SHAY on 2014-04-20)</option>
+
+    <option value="ARC/perl-5.19.10/ext/File-Glob/Glob.pm">5.019010 DEV (ARC on 2014-03-20)</option>
+
+    <option value="TONYC/perl-5.19.9/ext/File-Glob/Glob.pm">5.019009 DEV (TONYC on 2014-02-20)</option>
+
+    <option value="RJBS/perl-5.19.8/ext/File-Glob/Glob.pm">5.019008 DEV (RJBS on 2014-01-20)</option>
+
+    <option value="RJBS/perl-5.18.2/ext/File-Glob/Glob.pm">5.018002 (RJBS on 2014-01-07)</option>
+
+    <option value="RJBS/perl-5.18.2-RC4/ext/File-Glob/Glob.pm">5.018002 DEV (RJBS on 2013-12-22)</option>
+
+    <option value="ABIGAIL/perl-5.19.7/ext/File-Glob/Glob.pm">5.019007 DEV (ABIGAIL on 2013-12-20)</option>
+
+    <option value="RJBS/perl-5.18.2-RC3/ext/File-Glob/Glob.pm">5.018002 DEV (RJBS on 2013-12-19)</option>
+
+    <option value="RJBS/perl-5.18.2-RC2/ext/File-Glob/Glob.pm">5.018002 DEV (RJBS on 2013-12-07)</option>
+
+    <option value="RJBS/perl-5.18.2-RC1/ext/File-Glob/Glob.pm">5.018002 DEV (RJBS on 2013-12-02)</option>
+
+    <option value="BINGOS/perl-5.19.6/ext/File-Glob/Glob.pm">5.019006 DEV (BINGOS on 2013-11-20)</option>
+
+    <option value="SHAY/perl-5.19.5/ext/File-Glob/Glob.pm">5.019005 DEV (SHAY on 2013-10-20)</option>
+
+    <option value="SHAY/perl-5.19.4/ext/File-Glob/Glob.pm">5.019004 DEV (SHAY on 2013-09-20)</option>
+
+    <option value="SHAY/perl-5.19.3/ext/File-Glob/Glob.pm">5.019003 DEV (SHAY on 2013-08-20)</option>
+
+    <option value="RJBS/perl-5.18.1/ext/File-Glob/Glob.pm">5.018001 (RJBS on 2013-08-12)</option>
+
+    <option value="RJBS/perl-5.18.1-RC3/ext/File-Glob/Glob.pm">5.018001 DEV (RJBS on 2013-08-09)</option>
+
+    <option value="RJBS/perl-5.18.1-RC2/ext/File-Glob/Glob.pm">5.018001 DEV (RJBS on 2013-08-04)</option>
+
+    <option value="RJBS/perl-5.18.1-RC1/ext/File-Glob/Glob.pm">5.018001 DEV (RJBS on 2013-08-02)</option>
+
+    <option value="ARISTOTLE/perl-5.19.2/ext/File-Glob/Glob.pm">5.019002 DEV (ARISTOTLE on 2013-07-22)</option>
+
+    <option value="DAGOLDEN/perl-5.19.1/ext/File-Glob/Glob.pm">5.019001 DEV (DAGOLDEN on 2013-06-21)</option>
+
+    <option value="RJBS/perl-5.19.0/ext/File-Glob/Glob.pm">5.019000 DEV (RJBS on 2013-05-20)</option>
+
+    <option value="RJBS/perl-5.18.0/ext/File-Glob/Glob.pm">5.018000 (RJBS on 2013-05-18)</option>
+
+    <option value="RJBS/perl-5.18.0-RC4/ext/File-Glob/Glob.pm">5.018000 DEV (RJBS on 2013-05-16)</option>
+
+    <option value="RJBS/perl-5.18.0-RC3/ext/File-Glob/Glob.pm">5.018000 DEV (RJBS on 2013-05-14)</option>
+
+    <option value="RJBS/perl-5.18.0-RC2/ext/File-Glob/Glob.pm">5.018000 DEV (RJBS on 2013-05-12)</option>
+
+    <option value="RJBS/perl-5.18.0-RC1/ext/File-Glob/Glob.pm">5.018000 DEV (RJBS on 2013-05-11)</option>
+
+    <option value="RJBS/perl-5.17.11/ext/File-Glob/Glob.pm">5.017011 DEV (RJBS on 2013-04-21)</option>
+
+    <option value="CORION/perl-5.17.10/ext/File-Glob/Glob.pm">5.017010 DEV (CORION on 2013-03-21)</option>
+
+    <option value="RJBS/perl-5.16.3/ext/File-Glob/Glob.pm">5.016003 (RJBS on 2013-03-11)</option>
+
+    <option value="DAPM/perl-5.14.4/ext/File-Glob/Glob.pm">5.014004 (DAPM on 2013-03-10)</option>
+
+    <option value="DAPM/perl-5.14.4-RC2/ext/File-Glob/Glob.pm">5.014004 DEV (DAPM on 2013-03-07)</option>
+
+    <option value="RJBS/perl-5.16.3-RC1/ext/File-Glob/Glob.pm">5.016003 DEV (RJBS on 2013-03-07)</option>
+
+    <option value="DAPM/perl-5.14.4-RC1/ext/File-Glob/Glob.pm">5.014004 DEV (DAPM on 2013-03-05)</option>
+
+    <option value="BINGOS/perl-5.17.9/ext/File-Glob/Glob.pm">5.017009 DEV (BINGOS on 2013-02-20)</option>
+
+    <option value="ARC/perl-5.17.8/ext/File-Glob/Glob.pm">5.017008 DEV (ARC on 2013-01-20)</option>
+
+    <option value="DROLSKY/perl-5.17.7/ext/File-Glob/Glob.pm">5.017007 DEV (DROLSKY on 2012-12-18)</option>
+
+    <option value="RJBS/perl-5.17.6/ext/File-Glob/Glob.pm">5.017006 DEV (RJBS on 2012-11-21)</option>
+
+    <option value="DOM/perl-5.12.5/ext/File-Glob/Glob.pm">5.012005 (DOM on 2012-11-10)</option>
+
+    <option value="DOM/perl-5.12.5-RC2/ext/File-Glob/Glob.pm">5.012005 DEV (DOM on 2012-11-08)</option>
+
+    <option value="DOM/perl-5.12.5-RC1/ext/File-Glob/Glob.pm">5.012005 DEV (DOM on 2012-11-03)</option>
+
+    <option value="RJBS/perl-5.16.2/ext/File-Glob/Glob.pm">5.016002 (RJBS on 2012-11-01)</option>
+
+    <option value="RJBS/perl-5.16.2-RC1/ext/File-Glob/Glob.pm">5.016002 DEV (RJBS on 2012-10-27)</option>
+
+    <option value="FLORA/perl-5.17.5/ext/File-Glob/Glob.pm">5.017005 DEV (FLORA on 2012-10-20)</option>
+
+    <option value="DOM/perl-5.14.3/ext/File-Glob/Glob.pm">5.014003 (DOM on 2012-10-12)</option>
+
+    <option value="DOM/perl-5.14.3-RC2/ext/File-Glob/Glob.pm">5.014003 DEV (DOM on 2012-10-10)</option>
+
+    <option value="DOM/perl-5.14.3-RC1/ext/File-Glob/Glob.pm">5.014003 DEV (DOM on 2012-09-26)</option>
+
+    <option value="FLORA/perl-5.17.4/ext/File-Glob/Glob.pm">5.017004 DEV (FLORA on 2012-09-20)</option>
+
+    <option value="SHAY/perl-5.17.3/ext/File-Glob/Glob.pm">5.017003 DEV (SHAY on 2012-08-20)</option>
+
+    <option value="RJBS/perl-5.16.1/ext/File-Glob/Glob.pm">5.016001 (RJBS on 2012-08-08)</option>
+
+    <option value="RJBS/perl-5.16.1-RC1/ext/File-Glob/Glob.pm">5.016001 DEV (RJBS on 2012-08-03)</option>
+
+    <option value="TONYC/perl-5.17.2/ext/File-Glob/Glob.pm">5.017002 DEV (TONYC on 2012-07-20)</option>
+
+    <option value="DOY/perl-5.17.1/ext/File-Glob/Glob.pm">5.017001 DEV (DOY on 2012-06-20)</option>
+
+    <option value="ZEFRAM/perl-5.17.0/ext/File-Glob/Glob.pm">5.017000 DEV (ZEFRAM on 2012-05-26)</option>
+
+    <option value="RJBS/perl-5.16.0/ext/File-Glob/Glob.pm">5.016000 (RJBS on 2012-05-20)</option>
+
+    <option value="RJBS/perl-5.16.0-RC2/ext/File-Glob/Glob.pm">5.016000 DEV (RJBS on 2012-05-16)</option>
+
+    <option value="RJBS/perl-5.16.0-RC1/ext/File-Glob/Glob.pm">5.016000 DEV (RJBS on 2012-05-15)</option>
+
+    <option value="RJBS/perl-5.16.0-RC0/ext/File-Glob/Glob.pm">5.016000 DEV (RJBS on 2012-05-11)</option>
+
+    <option value="ABIGAIL/perl-5.15.9/ext/File-Glob/Glob.pm">5.015009 DEV (ABIGAIL on 2012-03-20)</option>
+
+    <option value="CORION/perl-5.15.8/ext/File-Glob/Glob.pm">5.015008 DEV (CORION on 2012-02-20)</option>
+
+    <option value="BINGOS/perl-5.15.7/ext/File-Glob/Glob.pm">5.015007 DEV (BINGOS on 2012-01-20)</option>
+
+    <option value="DROLSKY/perl-5.15.6/ext/File-Glob/Glob.pm">5.015006 DEV (DROLSKY on 2011-12-20)</option>
+
+    <option value="SHAY/perl-5.15.5/ext/File-Glob/Glob.pm">5.015005 DEV (SHAY on 2011-11-20)</option>
+
+    <option value="FLORA/perl-5.15.4/ext/File-Glob/Glob.pm">5.015004 DEV (FLORA on 2011-10-20)</option>
+
+    <option value="FLORA/perl-5.14.2/ext/File-Glob/Glob.pm">5.014002 (FLORA on 2011-09-26)</option>
+
+    <option value="STEVAN/perl-5.15.3/ext/File-Glob/Glob.pm">5.015003 DEV (STEVAN on 2011-09-21)</option>
+
+    <option value="FLORA/perl-5.14.2-RC1/ext/File-Glob/Glob.pm">5.014002 DEV (FLORA on 2011-09-19)</option>
+
+    <option value="RJBS/perl-5.15.2/ext/File-Glob/Glob.pm">5.015002 DEV (RJBS on 2011-08-21)</option>
+
+    <option value="ZEFRAM/perl-5.15.1/ext/File-Glob/Glob.pm">5.015001 DEV (ZEFRAM on 2011-07-20)</option>
+
+    <option value="DAGOLDEN/perl-5.15.0/ext/File-Glob/Glob.pm">5.015000 DEV (DAGOLDEN on 2011-06-20)</option>
+
+    <option value="LBROCARD/perl-5.12.4/ext/File-Glob/Glob.pm">5.012004 (LBROCARD on 2011-06-20)</option>
+
+    <option value="JESSE/perl-5.14.1/ext/File-Glob/Glob.pm">5.014001 (JESSE on 2011-06-17)</option>
+
+    <option value="LBROCARD/perl-5.12.4-RC2/ext/File-Glob/Glob.pm">5.012004 DEV (LBROCARD on 2011-06-15)</option>
+
+    <option value="JESSE/perl-5.14.1-RC1/ext/File-Glob/Glob.pm">5.014001 DEV (JESSE on 2011-06-09)</option>
+
+    <option value="LBROCARD/perl-5.12.4-RC1/ext/File-Glob/Glob.pm">5.012004 DEV (LBROCARD on 2011-06-08)</option>
+
+    <option value="JESSE/perl-5.14.0/ext/File-Glob/Glob.pm">5.014000 (JESSE on 2011-05-14)</option>
+
+    <option value="JESSE/perl-5.14.0-RC3/ext/File-Glob/Glob.pm">5.014000 DEV (JESSE on 2011-05-11)</option>
+
+    <option value="JESSE/perl-5.14.0-RC2/ext/File-Glob/Glob.pm">5.014000 DEV (JESSE on 2011-05-04)</option>
+
+    <option value="JESSE/perl-5.14.0-RC1/ext/File-Glob/Glob.pm">5.014000 DEV (JESSE on 2011-04-20)</option>
+
+    <option value="FLORA/perl-5.13.11/ext/File-Glob/Glob.pm">5.013011 DEV (FLORA on 2011-03-20)</option>
+
+    <option value="AVAR/perl-5.13.10/ext/File-Glob/Glob.pm">5.013010 DEV (AVAR on 2011-02-20)</option>
+
+    <option value="RJBS/perl-5.12.3/ext/File-Glob/Glob.pm">5.012003 (RJBS on 2011-01-22)</option>
+
+    <option value="JESSE/perl-5.13.9/ext/File-Glob/Glob.pm">5.013009 DEV (JESSE on 2011-01-21)</option>
+
+    <option value="RJBS/perl-5.12.3-RC3/ext/File-Glob/Glob.pm">5.012003 DEV (RJBS on 2011-01-18)</option>
+
+    <option value="RJBS/perl-5.12.3-RC2/ext/File-Glob/Glob.pm">5.012003 DEV (RJBS on 2011-01-15)</option>
+
+    <option value="RJBS/perl-5.12.3-RC1/ext/File-Glob/Glob.pm">5.012003 DEV (RJBS on 2011-01-10)</option>
+
+    <option value="ZEFRAM/perl-5.13.8/ext/File-Glob/Glob.pm">5.013008 DEV (ZEFRAM on 2010-12-19)</option>
+
+    <option value="BINGOS/perl-5.13.7/ext/File-Glob/Glob.pm">5.013007 DEV (BINGOS on 2010-11-21)</option>
+
+    <option value="MIYAGAWA/perl-5.13.6/ext/File-Glob/Glob.pm">5.013006 DEV (MIYAGAWA on 2010-10-21)</option>
+
+    <option value="SHAY/perl-5.13.5/ext/File-Glob/Glob.pm">5.013005 DEV (SHAY on 2010-09-19)</option>
+
+    <option value="JESSE/perl-5.12.2/ext/File-Glob/Glob.pm">5.012002 (JESSE on 2010-09-07)</option>
+
+    <option value="JESSE/perl-5.12.2-RC1/ext/File-Glob/Glob.pm">5.012002 DEV (JESSE on 2010-08-31)</option>
+
+    <option value="FLORA/perl-5.13.4/ext/File-Glob/Glob.pm">5.013004 DEV (FLORA on 2010-08-20)</option>
+
+    <option value="DAGOLDEN/perl-5.13.3/ext/File-Glob/Glob.pm">5.013003 DEV (DAGOLDEN on 2010-07-20)</option>
+
+    <option value="MSTROUT/perl-5.13.2/ext/File-Glob/Glob.pm">5.013002 DEV (MSTROUT on 2010-06-22)</option>
+
+    <option value="RJBS/perl-5.13.1/ext/File-Glob/Glob.pm">5.013001 DEV (RJBS on 2010-05-20)</option>
+
+    <option value="JESSE/perl-5.12.1/ext/File-Glob/Glob.pm">5.012001 (JESSE on 2010-05-16)</option>
+
+    <option value="JESSE/perl-5.12.1-RC2/ext/File-Glob/Glob.pm">5.012001 DEV (JESSE on 2010-05-13)</option>
+
+    <option value="JESSE/perl-5.12.1-RC1/ext/File-Glob/Glob.pm">5.012001 DEV (JESSE on 2010-05-10)</option>
+
+    <option value="LBROCARD/perl-5.13.0/ext/File-Glob/Glob.pm">5.013000 DEV (LBROCARD on 2010-04-20)</option>
+
+    <option value="JESSE/perl-5.12.0/ext/File-Glob/Glob.pm">5.012000 (JESSE on 2010-04-12)</option>
+
+    <option value="JESSE/perl-5.12.0-RC5/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-04-10)</option>
+
+    <option value="JESSE/perl-5.12.0-RC4/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-04-07)</option>
+
+    <option value="JESSE/perl-5.12.0-RC3/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-04-03)</option>
+
+    <option value="JESSE/perl-5.12.0-RC2/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-04-01)</option>
+
+    <option value="JESSE/perl-5.12.0-RC1/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-03-29)</option>
+
+    <option value="SHAY/perl-5.11.5/ext/File-Glob/Glob.pm">5.011005 DEV (SHAY on 2010-02-21)</option>
+
+    <option value="RJBS/perl-5.11.4/ext/File-Glob/Glob.pm">5.011004 DEV (RJBS on 2010-01-20)</option>
+
+    <option value="JESSE/perl-5.11.3/ext/File-Glob/Glob.pm">5.011003 DEV (JESSE on 2009-12-21)</option>
+
+    <option value="LBROCARD/perl-5.11.2/ext/File-Glob/Glob.pm">5.011002 DEV (LBROCARD on 2009-11-20)</option>
+
+    <option value="JESSE/perl-5.11.1/ext/File-Glob/Glob.pm">5.011001 DEV (JESSE on 2009-10-20)</option>
+
+    <option value="JESSE/perl-5.11.0/ext/File-Glob/Glob.pm">5.011000 DEV (JESSE on 2009-10-02)</option>
+
+    <option value="DAPM/perl-5.10.1/ext/File-Glob/Glob.pm">5.010001 (DAPM on 2009-08-23)</option>
+
+    <option value="DAPM/perl-5.10.1-RC2/ext/File-Glob/Glob.pm">5.010001 DEV (DAPM on 2009-08-18)</option>
+
+    <option value="DAPM/perl-5.10.1-RC1/ext/File-Glob/Glob.pm">5.010001 DEV (DAPM on 2009-08-06)</option>
+
+    <option value="NWCLARK/perl-5.8.9/ext/File-Glob/Glob.pm">5.008009 (NWCLARK on 2008-12-14)</option>
+
+    <option value="NWCLARK/perl-5.8.9-RC2/ext/File-Glob/Glob.pm">5.008009 DEV (NWCLARK on 2008-12-06)</option>
+
+    <option value="NWCLARK/perl-5.8.9-RC1/ext/File-Glob/Glob.pm">5.008009 DEV (NWCLARK on 2008-11-10)</option>
+
+    <option value="RGARCIA/perl-5.10.0/ext/File-Glob/Glob.pm">5.010000 (RGARCIA on 2007-12-18)</option>
+
+    <option value="RGARCIA/perl-5.9.5/ext/File-Glob/Glob.pm">5.009005 DEV (RGARCIA on 2007-07-07)</option>
+
+    <option value="RGARCIA/perl-5.9.4/ext/File-Glob/Glob.pm">5.009004 DEV (RGARCIA on 2006-08-15)</option>
+
+    <option value="NWCLARK/perl-5.8.8/ext/File-Glob/Glob.pm">5.008008 (NWCLARK on 2006-02-01)</option>
+
+    <option value="RGARCIA/perl-5.9.3/ext/File-Glob/Glob.pm">5.009003 DEV (RGARCIA on 2006-01-28)</option>
+
+    <option value="NWCLARK/perl-5.8.8-RC1/ext/File-Glob/Glob.pm">5.008008 DEV (NWCLARK on 2006-01-20)</option>
+
+    <option value="NWCLARK/perl-5.8.7/ext/File-Glob/Glob.pm">5.008007 (NWCLARK on 2005-05-30)</option>
+
+    <option value="NWCLARK/perl-5.8.7-RC1/ext/File-Glob/Glob.pm">5.008007 DEV (NWCLARK on 2005-05-18)</option>
+
+    <option value="RGARCIA/perl-5.9.2/ext/File-Glob/Glob.pm">5.009002 DEV (RGARCIA on 2005-04-01)</option>
+
+    <option value="NWCLARK/perl-5.8.6/ext/File-Glob/Glob.pm">5.008006 (NWCLARK on 2004-11-27)</option>
+
+    <option value="NWCLARK/perl-5.8.6-RC1/ext/File-Glob/Glob.pm">5.008006 DEV (NWCLARK on 2004-11-11)</option>
+
+    <option value="NWCLARK/perl-5.8.5/ext/File-Glob/Glob.pm">5.008005 (NWCLARK on 2004-07-19)</option>
+
+    <option value="NWCLARK/perl-5.8.5-RC2/ext/File-Glob/Glob.pm">5.008005 DEV (NWCLARK on 2004-07-08)</option>
+
+    <option value="NWCLARK/perl-5.8.5-RC1/ext/File-Glob/Glob.pm">5.008005 DEV (NWCLARK on 2004-07-06)</option>
+
+    <option value="NWCLARK/perl-5.8.4/ext/File-Glob/Glob.pm">5.008003 (NWCLARK on 2004-04-21)</option>
+
+    <option value="NWCLARK/perl-5.8.4-RC2/ext/File-Glob/Glob.pm">5.008003 DEV (NWCLARK on 2004-04-15)</option>
+
+    <option value="NWCLARK/perl-5.8.4-RC1/ext/File-Glob/Glob.pm">5.008003 DEV (NWCLARK on 2004-04-05)</option>
+
+    <option value="RGARCIA/perl-5.9.1/ext/File-Glob/Glob.pm">5.009001 DEV (RGARCIA on 2004-03-16)</option>
+
+    <option value="LBROCARD/perl5.005_04/ext/File-Glob/Glob.pm">5.005 (LBROCARD on 2004-02-23)</option>
+
+    <option value="NWCLARK/perl-5.8.3/ext/File-Glob/Glob.pm">5.008003 (NWCLARK on 2004-01-14)</option>
+
+    <option value="NWCLARK/perl-5.8.3-RC1/ext/File-Glob/Glob.pm">5.008001 DEV (NWCLARK on 2004-01-07)</option>
+
+    <option value="RCLAMP/perl-1.0_16/ext/File-Glob/Glob.pm">1.0_16 (RCLAMP on 2003-12-18)</option>
+
+    <option value="RGARCIA/perl-5.6.2/ext/File-Glob/Glob.pm">v5.6.2 (RGARCIA on 2003-11-15)</option>
+
+    <option value="NWCLARK/perl-5.8.2/ext/File-Glob/Glob.pm">5.008001 (NWCLARK on 2003-11-05)</option>
+
+    <option value="NWCLARK/perl-5.8.2-RC2/ext/File-Glob/Glob.pm">5.008001 DEV (NWCLARK on 2003-11-03)</option>
+
+    <option value="NWCLARK/perl-5.8.2-RC1/ext/File-Glob/Glob.pm">5.008001 DEV (NWCLARK on 2003-10-27)</option>
+
+    <option value="HVDS/perl-5.9.0/ext/File-Glob/Glob.pm">5.009 DEV (HVDS on 2003-10-27)</option>
+
+    <option value="JHI/perl-5.8.1/ext/File-Glob/Glob.pm">v5.8.1 (JHI on 2003-09-25)</option>
+
+    <option value="SREZIC/perl-5.005-minimal-bin-1-arm-linux/ext/File-Glob/Glob.pm">5.005 (SREZIC on 2003-01-25)</option>
+
+    <option value="SREZIC/perl-5.005-Tk-800.023-bin-0-arm-linux/ext/File-Glob/Glob.pm">5.005 (SREZIC on 2003-01-10)</option>
+
+    <option value="JHI/perl-5.8.0/ext/File-Glob/Glob.pm">v5.8.0 (JHI on 2002-07-18)</option>
+
+<optgroup label="BackPAN"></optgroup>
+
+    <option value="JESSE/perl-5.12.0-RC0/ext/File-Glob/Glob.pm">5.012000 DEV (JESSE on 2010-03-21)
+    </option>
+
+    <option value="RGARCIA/perl-5.10.0-RC2/ext/File-Glob/Glob.pm">5.010000 DEV (RGARCIA on 2007-11-25)
+    </option>
+
+    <option value="RGARCIA/perl-5.10.0-RC1/ext/File-Glob/Glob.pm">5.009005 DEV (RGARCIA on 2007-11-17)
+    </option>
+
+    <option value="HOOO/perl-0.0017/ext/File-Glob/Glob.pm">0.0017 DEV (HOOO on 2007-05-01)
+    </option>
+
+    <option value="LBROCARD/perl5.005_04-RC2/ext/File-Glob/Glob.pm">5.005 DEV (LBROCARD on 2004-02-18)
+    </option>
+
+    <option value="LBROCARD/perl5.005_04-RC1/ext/File-Glob/Glob.pm">5.005_04 DEV (LBROCARD on 2004-02-04)
+    </option>
+
+    <option value="LBROCARD/perl5.005_03-MAINT22213/ext/File-Glob/Glob.pm">5.005_03 DEV (LBROCARD on 2004-01-27)
+    </option>
+
+    <option value="LBROCARD/perl5.005_03-MAINT22178/ext/File-Glob/Glob.pm">5.005_03 DEV (LBROCARD on 2004-01-20)
+    </option>
+
+    <option value="LBROCARD/perl5.005_03-MAINT21792/ext/File-Glob/Glob.pm">5.005_03 DEV (LBROCARD on 2003-12-05)
+    </option>
+
+    <option value="RGARCIA/perl-5.6.2-RC1/ext/File-Glob/Glob.pm">v5.6.2 DEV (RGARCIA on 2003-11-08)
+    </option>
+
+    <option value="JHI/perl-5.8.1-RC5/ext/File-Glob/Glob.pm">v5.8.1 DEV (JHI on 2003-09-22)
+    </option>
+
+    <option value="JHI/perl-5.8.1-RC4/ext/File-Glob/Glob.pm">v5.8.1 DEV (JHI on 2003-08-01)
+    </option>
+
+    <option value="JHI/perl-5.8.1-RC3/ext/File-Glob/Glob.pm">v5.8.1 DEV (JHI on 2003-07-30)
+    </option>
+
+    <option value="JHI/perl-5.8.1-RC2/ext/File-Glob/Glob.pm">v5.8.1 DEV (JHI on 2003-07-11)
+    </option>
+
+    <option value="JHI/perl-5.8.1-RC1/ext/File-Glob/Glob.pm">v5.8.1 DEV (JHI on 2003-07-10)
+    </option>
+
+    <option value="MSCHWERN/perl-1.0_15/ext/File-Glob/Glob.pm">1.0_15 (MSCHWERN on 2002-12-18)
+    </option>
+
+    <option value="JHI/perl-5.8.0-RC3/ext/File-Glob/Glob.pm">v5.8.0 DEV (JHI on 2002-07-14)
+    </option>
+
+    <option value="JHI/perl-5.8.0-RC2/ext/File-Glob/Glob.pm">v5.8.0 DEV (JHI on 2002-06-21)
+    </option>
+
+
+    </select>
+</li>
+
+<li class="nav-header">Permalinks</li>
+<li>
+    <a href="/pod/release/XSAWYERX/perl-5.26.0/ext/File-Glob/Glob.pm">This version</a>
+</li>
+<li>
+    <a itemprop="url" href="/pod/File::Glob">Latest version</a>
+</li>
+<li class="nav-header">S.C.O</li>
+<li>
+    <a href="http://search.cpan.org/~XSAWYERX/perl-5.26.0/ext/File-Glob/Glob.pm" rel="nofollow">This version</a>
+</li>
+<li>
+    <a href="http://search.cpan.org/perldoc?File::Glob" rel="nofollow">Latest version</a>
+</li>
+
+  </ul>
+
+  <button id="right-panel-toggle" class="btn-link" onclick="togglePanel('right'); return false;"><span class="panel-hidden">Show</span><span class="panel-visible">Hide</span> Right Panel</button>
+  <div id="right-panel" class="pull-right">
+  <div class="box-right">
+  <!-- For plussers -->
+
+<div class="plussers hidden-phone">
+<div><b>++ed by:</b></div>
+
+
+
+
+<!-- Display counts of plussers-->
+<p>
+
+
+298 non-PAUSE users.
+
+</p>
+</div>
+
+
+<div class="author-pic">
+<a href="/author/XSAWYERX">
+  <img src="https://secure.gravatar.com/avatar/f2bdad6d5883044b9d3c88e50f957bfc?s=130&amp;d=https%3A%2F%2Fsecure.gravatar.com%2Favatar%2Ff2bdad6d5883044b9d3c88e50f957bfc%3Fs%3D130%26d%3Didenticon">
+</a>
+
+<strong>
+  <a rel="author" href="/author/XSAWYERX">XSAWYERX</a>
+</strong>
+<span title="">Sawyer X</span>
+
+
+
+</div>
+
+  
+
+<div id="contributors">
+    <div class="contributors-header">and 1 contributors</div>
+    <div align="right">
+        <button class="btn-link"
+            onclick="$(this).hide(); $('#contributors ul').slideDown(); return false;"
+        >show them</button>
+    </div>
+    <ul class="nav nav-list box-right" style="display: none">
+    
+        <li class="contributor">
+        perl5-porters@perl.org
+        
+        </li>
+    
+    </ul>
+</div>
+
+
+
+  </div>
+  <ul class="nav-list box-right hidden-phone dependencies">
+    <li class="nav-header">Dependencies</li>
+    <li><i class="ttip" title="dynamic_config enabled">unknown</i></li>
+    <li><hr /></li>
+    <li>
+        <a href="http://deps.cpantesters.org/?module=perl">
+        <i class="fa fa-retweet fa-fw black"></i>CPAN Testers List</a>
+    </li>
+    <li>        <a href="/requires/module/File::Glob?sort=[[2,1]]">        <i class="fa fa-share fa-fw black"></i>Reverse dependencies</a>
+    </li>
+</ul>
+
+
+  </div>
+  <a name="___pod"></a>
+  <div class="pod content anchors">
+  
+  <ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#DESCRIPTION">DESCRIPTION</a>
+    <ul>
+      <li><a href="#META-CHARACTERS">META CHARACTERS</a></li>
+      <li><a href="#EXPORTS">EXPORTS</a>
+        <ul>
+          <li><a href="#:bsd_glob">:bsd_glob</a></li>
+          <li><a href="#:glob">:glob</a></li>
+          <li><a href="#bsd_glob1">bsd_glob</a></li>
+          <li><a href="#:nocase-and-:case">:nocase and :case</a></li>
+          <li><a href="#csh_glob">csh_glob</a></li>
+        </ul>
+      </li>
+      <li><a href="#POSIX-FLAGS">POSIX FLAGS</a></li>
+    </ul>
+  </li>
+  <li><a href="#DIAGNOSTICS">DIAGNOSTICS</a></li>
+  <li><a href="#NOTES">NOTES</a></li>
+  <li><a href="#SEE-ALSO">SEE ALSO</a></li>
+  <li><a href="#AUTHOR">AUTHOR</a></li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>File::Glob - Perl extension for BSD glob routine</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<pre><code>  use File::Glob &#39;:bsd_glob&#39;;
+
+  @list = bsd_glob(&#39;*.[ch]&#39;);
+  $homedir = bsd_glob(&#39;~gnat&#39;, GLOB_TILDE | GLOB_ERR);
+
+  if (GLOB_ERROR) {
+    # an error occurred reading $homedir
+  }
+
+  ## override the core glob (CORE::glob() does this automatically
+  ## by default anyway, since v5.6.0)
+  use File::Glob &#39;:globally&#39;;
+  my @sources = &lt;*.{c,h,y}&gt;;
+
+  ## override the core glob, forcing case sensitivity
+  use File::Glob qw(:globally :case);
+  my @sources = &lt;*.{c,h,y}&gt;;
+
+  ## override the core glob forcing case insensitivity
+  use File::Glob qw(:globally :nocase);
+  my @sources = &lt;*.{c,h,y}&gt;;
+
+  ## glob on all files in home directory
+  use File::Glob &#39;:globally&#39;;
+  my @sources = &lt;~gnat/*&gt;;</code></pre>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>The glob angle-bracket operator <code>&lt;&gt;</code> is a pathname generator that implements the rules for file name pattern matching used by Unix-like shells such as the Bourne shell or C shell.</p>
+
+<p>File::Glob::bsd_glob() implements the FreeBSD glob(3) routine, which is a superset of the POSIX glob() (described in IEEE Std 1003.2 &quot;POSIX.2&quot;). bsd_glob() takes a mandatory <code>pattern</code> argument, and an optional <code>flags</code> argument, and returns a list of filenames matching the pattern, with interpretation of the pattern modified by the <code>flags</code> variable.</p>
+
+<p>Since v5.6.0, Perl&#39;s CORE::glob() is implemented in terms of bsd_glob(). Note that they don&#39;t share the same prototype--CORE::glob() only accepts a single argument. Due to historical reasons, CORE::glob() will also split its argument on whitespace, treating it as multiple patterns, whereas bsd_glob() considers them as one pattern. But see <code>:bsd_glob</code> under <a href="#EXPORTS">&quot;EXPORTS&quot;</a>, below.</p>
+
+<h2 id="META-CHARACTERS"><a id="META"></a>META CHARACTERS</h2>
+
+<pre><code>  \       Quote the next metacharacter
+  []      Character class
+  {}      Multiple pattern
+  *       Match any string of characters
+  ?       Match any single character
+  ~       User name home directory</code></pre>
+
+<p>The metanotation <code>a{b,c,d}e</code> is a shorthand for <code>abe ace ade</code>. Left to right order is preserved, with results of matches being sorted separately at a low level to preserve this order. As a special case <code>{</code>, <code>}</code>, and <code>{}</code> are passed undisturbed.</p>
+
+<h2 id="EXPORTS">EXPORTS</h2>
+
+<p>See also the <a href="#POSIX-FLAGS">&quot;POSIX FLAGS&quot;</a> below, which can be exported individually.</p>
+
+<h3 id=":bsd_glob"><a id="bsd_glob"></a><code>:bsd_glob</code></h3>
+
+<p>The <code>:bsd_glob</code> export tag exports bsd_glob() and the constants listed below. It also overrides glob() in the calling package with one that behaves like bsd_glob() with regard to spaces (the space is treated as part of a file name), but supports iteration in scalar context; i.e., it preserves the core function&#39;s feature of returning the next item each time it is called.</p>
+
+<h3 id=":glob"><a id="glob"></a><code>:glob</code></h3>
+
+<p>The <code>:glob</code> tag, now discouraged, is the old version of <code>:bsd_glob</code>. It exports the same constants and functions, but its glob() override does not support iteration; it returns the last file name in scalar context. That means this will loop forever:</p>
+
+<pre><code>    use File::Glob &#39;:glob&#39;;
+    while (my $file = &lt;* copy.txt&gt;) {
+        ...
+    }</code></pre>
+
+<h3 id="bsd_glob1"><code>bsd_glob</code></h3>
+
+<p>This function, which is included in the two export tags listed above, takes one or two arguments. The first is the glob pattern. The second, if given, is a set of flags ORed together. The available flags and the default set of flags are listed below under <a href="#POSIX-FLAGS">&quot;POSIX FLAGS&quot;</a>.</p>
+
+<p>Remember that to use the named constants for flags you must import them, for example with <code>:bsd_glob</code> described above. If not imported, and <code>use strict</code> is not in effect, then the constants will be treated as bareword strings, which won&#39;t do what you what.</p>
+
+<h3 id=":nocase-and-:case"><a id="nocase-and-:case"></a><code>:nocase</code> and <code>:case</code></h3>
+
+<p>These two export tags globally modify the default flags that bsd_glob() and, except on VMS, Perl&#39;s built-in <code>glob</code> operator use. <code>GLOB_NOCASE</code> is turned on or off, respectively.</p>
+
+<h3 id="csh_glob"><code>csh_glob</code></h3>
+
+<p>The csh_glob() function can also be exported, but you should not use it directly unless you really know what you are doing. It splits the pattern into words and feeds each one to bsd_glob(). Perl&#39;s own glob() function uses this internally.</p>
+
+<h2 id="POSIX-FLAGS"><a id="POSIX"></a>POSIX FLAGS</h2>
+
+<p>If no flags argument is give then <code>GLOB_CSH</code> is set, and on VMS and Windows systems, <code>GLOB_NOCASE</code> too. Otherwise the flags to use are determined solely by the flags argument. The POSIX defined flags are:</p>
+
+<dl>
+
+<dt id="GLOB_ERR"><code>GLOB_ERR</code></dt>
+<dd>
+
+<p>Force bsd_glob() to return an error when it encounters a directory it cannot open or read. Ordinarily bsd_glob() continues to find matches.</p>
+
+</dd>
+<dt id="GLOB_LIMIT"><code>GLOB_LIMIT</code></dt>
+<dd>
+
+<p>Make bsd_glob() return an error (GLOB_NOSPACE) when the pattern expands to a size bigger than the system constant <code>ARG_MAX</code> (usually found in limits.h). If your system does not define this constant, bsd_glob() uses <code>sysconf(_SC_ARG_MAX)</code> or <code>_POSIX_ARG_MAX</code> where available (in that order). You can inspect these values using the standard <code>POSIX</code> extension.</p>
+
+</dd>
+<dt id="GLOB_MARK"><code>GLOB_MARK</code></dt>
+<dd>
+
+<p>Each pathname that is a directory that matches the pattern has a slash appended.</p>
+
+</dd>
+<dt id="GLOB_NOCASE"><code>GLOB_NOCASE</code></dt>
+<dd>
+
+<p>By default, file names are assumed to be case sensitive; this flag makes bsd_glob() treat case differences as not significant.</p>
+
+</dd>
+<dt id="GLOB_NOCHECK"><code>GLOB_NOCHECK</code></dt>
+<dd>
+
+<p>If the pattern does not match any pathname, then bsd_glob() returns a list consisting of only the pattern. If <code>GLOB_QUOTE</code> is set, its effect is present in the pattern returned.</p>
+
+</dd>
+<dt id="GLOB_NOSORT"><code>GLOB_NOSORT</code></dt>
+<dd>
+
+<p>By default, the pathnames are sorted in ascending ASCII order; this flag prevents that sorting (speeding up bsd_glob()).</p>
+
+</dd>
+</dl>
+
+<p>The FreeBSD extensions to the POSIX standard are the following flags:</p>
+
+<dl>
+
+<dt id="GLOB_BRACE"><code>GLOB_BRACE</code></dt>
+<dd>
+
+<p>Pre-process the string to expand <code>{pat,pat,...}</code> strings like csh(1). The pattern &#39;{}&#39; is left unexpanded for historical reasons (and csh(1) does the same thing to ease typing of find(1) patterns).</p>
+
+</dd>
+<dt id="GLOB_NOMAGIC"><code>GLOB_NOMAGIC</code></dt>
+<dd>
+
+<p>Same as <code>GLOB_NOCHECK</code> but it only returns the pattern if it does not contain any of the special characters &quot;*&quot;, &quot;?&quot; or &quot;[&quot;. <code>NOMAGIC</code> is provided to simplify implementing the historic csh(1) globbing behaviour and should probably not be used anywhere else.</p>
+
+</dd>
+<dt id="GLOB_QUOTE"><code>GLOB_QUOTE</code></dt>
+<dd>
+
+<p>Use the backslash (&#39;\&#39;) character for quoting: every occurrence of a backslash followed by a character in the pattern is replaced by that character, avoiding any special interpretation of the character. (But see below for exceptions on DOSISH systems).</p>
+
+</dd>
+<dt id="GLOB_TILDE"><code>GLOB_TILDE</code></dt>
+<dd>
+
+<p>Expand patterns that start with &#39;~&#39; to user name home directories.</p>
+
+</dd>
+<dt id="GLOB_CSH"><code>GLOB_CSH</code></dt>
+<dd>
+
+<p>For convenience, <code>GLOB_CSH</code> is a synonym for <code>GLOB_BRACE | GLOB_NOMAGIC | GLOB_QUOTE | GLOB_TILDE | GLOB_ALPHASORT</code>.</p>
+
+</dd>
+</dl>
+
+<p>The POSIX provided <code>GLOB_APPEND</code>, <code>GLOB_DOOFFS</code>, and the FreeBSD extensions <code>GLOB_ALTDIRFUNC</code>, and <code>GLOB_MAGCHAR</code> flags have not been implemented in the Perl version because they involve more complex interaction with the underlying C structures.</p>
+
+<p>The following flag has been added in the Perl implementation for csh compatibility:</p>
+
+<dl>
+
+<dt id="GLOB_ALPHASORT"><code>GLOB_ALPHASORT</code></dt>
+<dd>
+
+<p>If <code>GLOB_NOSORT</code> is not in effect, sort filenames is alphabetical order (case does not matter) rather than in ASCII order.</p>
+
+</dd>
+</dl>
+
+<h1 id="DIAGNOSTICS">DIAGNOSTICS</h1>
+
+<p>bsd_glob() returns a list of matching paths, possibly zero length. If an error occurred, &amp;File::Glob::GLOB_ERROR will be non-zero and <code>$!</code> will be set. &amp;File::Glob::GLOB_ERROR is guaranteed to be zero if no error occurred, or one of the following values otherwise:</p>
+
+<dl>
+
+<dt id="GLOB_NOSPACE"><code>GLOB_NOSPACE</code></dt>
+<dd>
+
+<p>An attempt to allocate memory failed.</p>
+
+</dd>
+<dt id="GLOB_ABEND"><code>GLOB_ABEND</code></dt>
+<dd>
+
+<p>The glob was stopped because an error was encountered.</p>
+
+</dd>
+</dl>
+
+<p>In the case where bsd_glob() has found some matching paths, but is interrupted by an error, it will return a list of filenames <b>and</b> set &amp;File::Glob::ERROR.</p>
+
+<p>Note that bsd_glob() deviates from POSIX and FreeBSD glob(3) behaviour by not considering <code>ENOENT</code> and <code>ENOTDIR</code> as errors - bsd_glob() will continue processing despite those errors, unless the <code>GLOB_ERR</code> flag is set.</p>
+
+<p>Be aware that all filenames returned from File::Glob are tainted.</p>
+
+<h1 id="NOTES">NOTES</h1>
+
+<ul>
+
+<li><p>If you want to use multiple patterns, e.g. <code>bsd_glob(&quot;a* b*&quot;)</code>, you should probably throw them in a set as in <code>bsd_glob(&quot;{a*,b*}&quot;)</code>. This is because the argument to bsd_glob() isn&#39;t subjected to parsing by the C shell. Remember that you can use a backslash to escape things.</p>
+
+</li>
+<li><p>On DOSISH systems, backslash is a valid directory separator character. In this case, use of backslash as a quoting character (via GLOB_QUOTE) interferes with the use of backslash as a directory separator. The best (simplest, most portable) solution is to use forward slashes for directory separators, and backslashes for quoting. However, this does not match &quot;normal practice&quot; on these systems. As a concession to user expectation, therefore, backslashes (under GLOB_QUOTE) only quote the glob metacharacters &#39;[&#39;, &#39;]&#39;, &#39;{&#39;, &#39;}&#39;, &#39;-&#39;, &#39;~&#39;, and backslash itself. All other backslashes are passed through unchanged.</p>
+
+</li>
+<li><p>Win32 users should use the real slash. If you really want to use backslashes, consider using Sarathy&#39;s File::DosGlob, which comes with the standard Perl distribution.</p>
+
+</li>
+</ul>
+
+<h1 id="SEE-ALSO"><a id="SEE"></a>SEE ALSO</h1>
+
+<p><a href="/pod/perlfunc#glob">&quot;glob&quot; in perlfunc</a>, glob(3)</p>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p>The Perl interface was written by Nathan Torkington &lt;gnat@frii.com&gt;, and is released under the artistic license. Further modifications were made by Greg Bacon &lt;gbacon@cs.uah.edu&gt;, Gurusamy Sarathy &lt;gsar@activestate.com&gt;, and Thomas Wegner &lt;wegner_thomas@yahoo.com&gt;. The C glob code has the following copyright:</p>
+
+<p>Copyright (c) 1989, 1993 The Regents of the University of California. All rights reserved.</p>
+
+<p>This code is derived from software contributed to Berkeley by Guido van Rossum.</p>
+
+<p>Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</p>
+
+<ol>
+
+<li><p>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</p>
+
+</li>
+<li><p>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</p>
+
+</li>
+<li><p>Neither the name of the University nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.</p>
+
+</li>
+</ol>
+
+<p>THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</p>
+  
+        <div id="install-instructions-dialog" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Module Install Instructions</h4>
+            </div>
+            <div class="modal-body">
+                <p>To install File::Glob, simply copy and paste either of the commands in to your terminal</p>
+                <p><a href="/pod/distribution/App-cpanminus/bin/cpanm">cpanm</a></p>
+                <pre>
+                    cpanm File::Glob</pre>
+                <p><a href="/pod/CPAN">CPAN shell</a></p>
+                <pre>
+                    perl -MCPAN -e shell
+                    install File::Glob</pre>
+                <p>For more information on module installation please visit <a href="http://www.cpan.org/modules/INSTALL.html">the detailed CPAN module installation guide</a>.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" data-dismiss="modal" class="btn">Close</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+  </div>
+</div>
+
+                </div>
+            </div>
+
+            <div class="row footer">
+                <div class="hidden-xs hidden-sm col-md-2">&nbsp;</div>
+                <div class="col-xs-2 col-sm-1 col-md-1" style="text-align: center">
+                    <a href="https://fastapi.metacpan.org">API</a>
+                </div>
+                <div class="col-xs-5 col-sm-3 col-md-2" style="text-align: center">
+                    <a href="/about">About MetaCPAN</a>
+                </div>
+                <div class="hidden-xs col-sm-2 col-md-2" style="text-align: center">
+                    <a href="/mirrors">CPAN Mirrors</a>
+                </div>
+                <div class="hidden-xs col-sm-3 col-md-2" style="text-align: center">
+                    <a href="https://github.com/metacpan/metacpan-web">Fork metacpan.org</a>
+                </div>
+                <div class="hidden-xs col-sm-1 col-md-1" style="text-align: center">
+                    <a href="https://www.perl.org/">Perl.org</a>
+                </div>
+            </div>
+
+            <div class="row" style="padding:15px">
+              <div class="hidden-xs col-md-4 text-right" style="padding:25px">
+                <span class="hidden-phone" style="color: #999">Hosting generously provided by:</span>
+              </div>
+              <div class="col-xs-9 col-md-4" style="padding:25px">
+                <a href="http://www.bytemark.co.uk/r/metacpan.org/" target="_blank">
+                  <img width="210" src="/static/images/sponsors/bytemark_logo.png">
+                </a>
+              </div>
+              <div class="col-xs-9 col-md-4" style="padding:15px">
+                <a target="_blank" href="https://www.liquidweb.com/">
+                  <img width="170" src="/static/images/sponsors/liquidweb_color.png">
+                </a>
+              </div>
+            </div>
+        </div>
+        <div class="modal fade" tabindex="-1" role="dialog" id="keyboard-shortcuts">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Keyboard Shortcuts</h4>
+              </div>
+              <div class="modal-body row">
+                <div class="col-md-6">
+  <table class="table keyboard-shortcuts">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Global</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="keys">
+          <kbd>s</kbd>
+        </td>
+        <td>Focus search bar</td>
+      </tr>
+      <tr>
+        <td class="keys">
+          <kbd>?</kbd>
+        </td>
+        <td>Bring up this help dialog</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="table keyboard-shortcuts">
+    <thead>
+      <tr>
+        <th></th>
+        <th>GitHub</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="keys">
+          <kbd>g</kbd> <kbd>p</kbd>
+        </td>
+        <td>Go to pull requests</td>
+      </tr>
+      <tr>
+        <td class="keys">
+          <kbd>g</kbd> <kbd>i</kbd>
+        </td>
+        <td>go to github issues (only if github is preferred repository)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="col-md-6">
+  <table class="table keyboard-shortcuts">
+    <thead>
+      <tr>
+        <th></th>
+        <th>POD</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="keys">
+          <kbd>g</kbd> <kbd>a</kbd>
+        </td>
+        <td>Go to author</td>
+      </tr>
+      <tr>
+        <td class="keys">
+          <kbd>g</kbd> <kbd>c</kbd>
+        </td>
+        <td>Go to changes</td>
+      </tr>
+      <tr>
+        <td class="keys">
+          <kbd>g</kbd> <kbd>i</kbd>
+        </td>
+        <td>Go to issues</td>
+      </tr>
+      <tr>
+        <td class="keys">
+          <kbd>g</kbd> <kbd>d</kbd>
+        </td>
+        <td>Go to dist</td>
+      </tr>
+      <tr>
+        <td class="keys">
+          <kbd>g</kbd> <kbd>r</kbd>
+        </td>
+        <td>Go to repository/SCM</td>
+      </tr>
+      <tr>
+        <td class="keys">
+          <kbd>g</kbd> <kbd>s</kbd>
+        </td>
+        <td>Go to source</td>
+      </tr>
+      <tr>
+        <td class="keys">
+          <kbd>g</kbd> <kbd>b</kbd>
+        </td>
+        <td>Go to file browse</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+              </div>
+              <div class="modal-footer"></div>
+            </div>
+          </div>
+        </div>
+    </body>
+</html>

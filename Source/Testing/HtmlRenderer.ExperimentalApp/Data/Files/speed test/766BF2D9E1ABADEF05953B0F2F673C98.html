@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Internet Health Test: the Open Broadband Speed Test</title>
+		<meta charset="utf-8" />
+		<meta property="og:type" content="article" />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:site_name" content="Internet Health Test"/>
+		<meta property="og:title" content="Internet Health Test: the Open Broadband Speed Test" />
+		<meta property="og:image" content="http://internethealthtest.org/resources/images/share.png" />
+		<meta property="og:url" content="http://internethealthtest.org/" />
+		<meta property="og:description" content="Internet Health Test: Measure the performance of your broadband connection and diagnose problems between you and the Internet." />
+		<link rel="icon" type="image/x-icon" href="http://internethealthtest.org/resources/images/favicon.ico" />
+		<link rel="icon" type="image/png" href="http://internethealthtest.org/resources/images/favicon.png" />
+		<link rel="stylesheet" type="text/css" href="resources/stylesheets/dashboard.css"/>
+        <link rel="stylesheet" href="resources/stylesheets/jquery.mobile.min.css">
+		<script src="resources/scripts/ua-parser.js"></script>
+        <script src="resources/scripts/jquery.min.js"></script>
+        <script src="resources/scripts/jquery.mobile.min.js"></script>
+        <script src="resources/scripts/jquery.percentageloader-0.2.js"></script>
+        <script src="resources/scripts/url.min.js"></script>
+        <script src="resources/scripts/Chart.min.js"></script>
+        <script src="resources/scripts/ndt.js"></script>
+        <script src="resources/scripts/dashboard.js"></script>
+		<script>
+		  var socialMediaContext = {
+			'twitter': {
+				'text': 'Internet Health Test: the Open Broadband Speed Test. How fast is your Internet connection? https://www.internethealthtest.org',
+				'share': function() {
+						var shareUrl = $('.result_url_share').val();
+						var tweetText = 'Check out my #InternetHealthTest result! See how well your connection performs and compare results. ' +  shareUrl;
+						return 'https://twitter.com/home?status=' + encodeURIComponent(tweetText);
+					}
+				},
+			'reddit': {
+				'text': 'Internet Health Test: the Open Broadband Speed Test',
+				'link': 'https://www.internethealthtest.org/'
+			},
+			'facebook': {
+				'share': function() {
+						var shareUrl = $('.result_url_share').val();
+						return 'https://www.facebook.com/sharer/sharer.php?u='  + encodeURIComponent(shareUrl);
+					}
+			},
+			'email': {
+				'share': function() {
+						var title = 'Check Out My Internet Health Test Result!';
+						var shareUrl = $('.result_url_share').val();
+						var body = "Did you know that broadband performance can differ across different parts of the Internet? I ran the Internet Health Test to check for slowdowns on my Internet connection. You should too!\n\n" + shareUrl;
+						return 'mailto:?subject='  + encodeURIComponent(title) + '&body=' + encodeURIComponent(body);
+					}
+			},
+			'embed': {
+				'text': '<iframe src="http://internethealthtest.org" name="internethealthtest" width="600" height="400" style="border: none; margin: 0px"></iframe>'
+			}
+		  };
+		</script>
+	</head>
+	<body>
+        <div data-role="page" class="canvas" style="min-height: 400px">
+			<div data-role="popup" data-history="false" class="supported_browser_dialogue ui-content" data-dismissible="false">
+				<a class="ui-btn ui-btn-inline ui-icon-alert ui-btn-icon-notext ui-corner-all"></a>
+				We're sorry, but your browser doesn't seem to support the test requirements. To participate, please try upgrading to a newer version of your browser.
+			</div>
+			<div data-role="popup" data-history="false" data-overlay-theme="a"
+					class="tests_failed_dialogue ui-content" data-dismissible="true">
+						We're sorry, the tests appear to have failed.
+						This is most likely due to restrictions on your network,
+						such as an office or personal firewall,
+						or browser plugins that block access to the tests.
+						Please check to see if their are any applications or firewalls that could
+						be limiting your ability to conduct measurements, and that your
+						software is up-to-date.
+			</div>
+			<div data-role="popup" data-history="false" data-overlay-theme="a" class="ui-content intro_overlay">
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<img src="resources/images/network.svg" class="intro_overlay_icon"/>
+						<div class="warning_text">The Internet Health Test involves speed tests that may transfer large amounts of data over your connection. If you are on a mobile broadband provider that limits data consumption or charges based on usage, you can avoid overages by making sure your device is connected to WiFi when you run this test.</div>
+						<div class="ui-corner-all custom-corners shared_results">
+							<div class="ui-body ui-body-a">
+								<canvas class="test_series_chart"></canvas>
+								<ul data-role="listview" data-inset="true">
+									<li class="consistency">
+										<h4>Consistency</h4>
+										<span class="ui-li-count ui-body-inherit"></span>
+									</li>
+									<li class="high">
+										Fastest Test
+										<span class="ui-li-count ui-body-inherit"></span>
+									</li>
+									<li class="low">
+										Slowest Test
+										<span class="ui-li-count ui-body-inherit"></span>
+									</li>
+									<li class="slow_links">
+										<small></small>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="ui-block-b">
+						<h3>Internet Health Test</h3>
+						<em>The Open Broadband Speed Test.</em>
+						<p>How fast is your Internet connection? Test to find out!</p>
+						<input type="button" value="Start Test" class="dashboard__start_button">
+						<small>To learn more about the data collected see the <a href="http://www.measurementlab.net/privacy">Privacy Policy</a>.</small>
+					</div>
+				</div>
+			</div>
+			<div data-role="popup" data-history="false" data-overlay-theme="a" class="ui-content embed_overlay">
+				<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-left">Close</a><h3>HTML Embed Code</h3>
+				<label for="textarea">Share the test on your blog or site and help us collect more information.</label>
+				<textarea name="textarea" id="textarea"><iframe src="http://internethealthtest.org" name="internethealthtest" width="600" height="400" style="border: none; margin: 0px"></iframe></textarea>
+			</div>
+			<div data-role="popup" data-history="false" data-overlay-theme="a" class="ui-content about_overlay">
+				<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-left">Close</a>
+				<h4>How does the test work?</h4>
+					The Internet Health Test runs a few short speed tests to several measurement servers on different networks to compare how your broadband connection performance varies to different parts of the Internet. These tests shouldn't take too long and do not collect personal information from your browser.
+				<br />
+				<h4>Want to Learn More or Report Issues?</h4>
+					Please reach out to the Internet Health Test: <a href="mailto:help@internethealthtest.org">help@internethealthtest.org</a>
+			</div>
+			<div data-role="popup" data-history="false" id="result_explanation" class="ui-content" data-theme="a" style="max-width:350px;">
+				Download speed is the maximum rate that your computer could receive data from the server. Each row can be expanded to display more metrics from the test.
+			</div>
+			<div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" data-theme="a" class="panel__measurement_results">
+				<div class="ui-corner-all custom-corners">
+					<div class="ui-bar ui-bar-a">Measurement Data</div>
+					<div class="ui-body ui-body-a">
+						<ul data-role="listview" data-inset="true"></ul>
+						<button data-rel="close">Hide</button>
+					</div>
+				</div>
+			</div>
+            <div data-role="header" data-icon="internethealth" data-theme="a">
+                <h1>
+					<img src="/resources/images/favicon.png" class="header-icon" />
+					Internet Health Test
+                </h1>
+				<div data-type="horizontal" class="ui-btn-left">
+					<a class="intro_overlay_about" data-role="button" data-mini="true" data-theme="a">What Is This?</a>
+				</div>
+				<div data-type="horizontal" class="ui-btn-right">
+					<a href="#" class="ui-btn ui-icon-twitter ui-btn-icon-notext ui-corner-all" onclick="window.open('https://twitter.com/home?status=' + encodeURIComponent(socialMediaContext['twitter']['text']));" data-inline="true">Twitter</a>
+					<a href="#" class="ui-btn ui-icon-facebook ui-btn-icon-notext ui-corner-all" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=https://www.internethealthtest.org/');" data-inline="true">Facebook</a>
+					<a href="#" onclick="window.open('http://www.reddit.com/r/technology/submit?url=' + encodeURIComponent(socialMediaContext['reddit']['link']) + '&title=' + encodeURIComponent(socialMediaContext['reddit']['text']));" class="ui-btn ui-icon-reddit ui-btn-icon-notext ui-corner-all" data-inline="true">Reddit</a>
+					<a href="#" class="ui-btn ui-icon-wordpress ui-btn-icon-notext ui-corner-all intro_overlay_embed" data-inline="true">Embed</a>
+				</div>
+            </div>
+            <div data-role="main" class="ui-content content_panel ui-grid-a">
+                <div class="container__performance_meter ui-block-a ui-corner-all custom-corners">
+					<div class="ui-body ui-body-a">
+						<div class="performance_meter"></div>
+					</div>
+					<div class="ui-bar ui-bar-a">
+						<h3 class="label__server_location">Location: <span class="select__client_location"></span></h3><br />
+						<h3 class="label__server_location">Closest Server: <span class="select__server_location"></span></h3>
+					</div>
+                </div>
+                <div class="container__dashboard ui-block-b">
+					<div class="dashboard__result_list ui-corner-all custom-corners">
+						<div class="ui-bar ui-bar-a">
+							Steps
+							<span class="ui-li-count result_label">Speed
+								<a href="#result_explanation" data-rel="popup" data-transition="pop" class="my-tooltip-btn ui-btn ui-alt-icon ui-nodisc-icon ui-corner-all ui-btn-inline ui-icon-info ui-btn-icon-notext result_explanation" title="Learn more">Learn more</a>
+							</span>
+						</div>
+						<div class="ui-body ui-body-a">
+							<ul data-role="listview" data-inset="true">
+							</ul>
+						</div>
+						<input type="button" value="Start Test" class="dashboard__start_button" data-theme="z">
+					</div>
+					<div class="share_overlay">
+						<input type="button" value="Test Again" class="dashboard__start_button" data-theme="z">
+						<div class="ui-shadow ui-corner-all custom-corners share_results">
+							<div class="ui-bar ui-bar-a">Your Results</div>
+						<ul class="ui-body ui-body-a share_results__table" data-role="listview" data-inset="true">
+							<li class="average">
+								<h4>Average Speed</h4>
+								<span class="ui-li-count ui-body-inherit"></span>
+							</li>
+							<li class="consistency">
+								Consistency
+								<span class="ui-li-count ui-body-inherit"></span>
+							</li>
+							<li class="high">
+								Fastest Test
+								<span class="ui-li-count ui-body-inherit"></span>
+							</li>
+							<li class="low">
+								Slowest Test
+								<span class="ui-li-count ui-body-inherit"></span>
+							</li>
+							<li class="slow_links">
+								<h4></h4>
+							</li>
+						</ul>
+					</div>
+					<div class="ui-shadow ui-corner-all custom-corners share-results">
+						<div class="ui-bar ui-bar-a">Share</div>
+						<div class="ui-body ui-body-a">
+							<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+								<input type="button" data-icon="twitter" onclick="window.open(socialMediaContext['twitter']['share']());" data-inline="true" value="Tweet" />
+								<input type="button" data-icon="facebook" onclick="window.open(socialMediaContext['facebook']['share']());" data-inline="true" value="Share" />
+								<input type="button" data-icon="email" onclick="window.open(socialMediaContext['email']['share']());" data-inline="true" value="Mail" />
+								<button class="link_button" data-theme="d">Link</button>
+								<input id="result_url_share" class="result_url_share" data-wrapper-class="controlgroup-textinput ui-btn" type="text" value="" readonly>
+							</div>
+						</div>
+					</div>
+					<div class="ui-shadow ui-corner-all custom-corners share_results__advanced">
+					<div class="ui-bar" data-theme="d">Advanced</div>
+					<ul class="ui-body ui-body-a share_results__advanced_table" data-role="listview" data-inset="true">
+						<li class="low">
+							<span class="provider-name">Slowest Test</span>
+							<span class="ui-li-count ui-body-inherit"></span>
+						</li>
+					</ul>
+				</div>
+                </div>
+            </div>
+			<div data-role="footer" class="infrastructure_footnote">
+				<p style="float: left">This test uses M-Lab code and infrastructure for performance measurements. <a href="#" onclick="window.open('http://www.measurementlab.net/about')">Learn more about M-Lab and its data policies.</a></p>
+				<p style="float: right">Questions or Concerns: <a href="mailto:help@internethealthtest.org">help@internethealthtest.org</a></p>
+			</div>
+      </div>
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-62511773-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    </body>
+</html>

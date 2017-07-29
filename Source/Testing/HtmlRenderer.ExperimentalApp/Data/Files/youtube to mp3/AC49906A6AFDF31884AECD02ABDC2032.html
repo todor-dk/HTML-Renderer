@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>AllToMP3 - Download YouTube in MP3 with tags, cover and lyrics!</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="style.css">
+    <meta property="og:url" content="https://alltomp3.org" />
+    <meta property="og:title" content="AllToMP3 - Download YouTube in beautiful MP3 😎" />
+    <meta property="og:description" content="Download YouTube, SoundCloud, Spotify in MP3 with tags (title, artist, cover, lyrics, genre...) and high quality!" />
+    <meta property="og:image" content="https://alltomp3.org/alltomp3-4.png" />
+    <meta property="og:image:width" content="2000" />
+    <meta property="og:image:height" content="1132" />
+  </head>
+  <body>
+    <div class="title">AllToMP3</div>
+    <div class="subtitle">Download YouTube, SoundCloud, Spotify in <span title="MP3 with title, artist, genre, cover, lyrics and 256 kb/s 😎" class="dtooltip" data-tipped-options="position: 'bottom'">MP3*</span></div>
+
+    <div class="demo" id="demo">
+      <div class="demo-c">
+        <div class="demo-input" id="demo-url"></div>
+        <div class="demo-websites">
+          <i class="icon-youtube demo-site" v-bind:class="{ 'site-active': (infos.type === 'youtube') }"></i>
+          <i class="icon-soundcloud demo-site" v-bind:class="{ 'site-active': (infos.type === 'soundcloud') }"></i>
+          <i class="icon-spotify demo-site" v-bind:class="{ 'site-active': (infos.type === 'spotify') }"></i>
+          <i class="icon-deezer demo-site" v-bind:class="{ 'site-active': (infos.type === 'deezer') }"></i>
+        </div>
+      </div>
+      <div class="demo-c demo-c-2" id="demo-arrow">
+        <div class="demo-arrow"><img src="assets/img/arrow.png" /></div>
+        <div class="demo-icon"><img src="assets/img/icon.png" /></div>
+      </div>
+      <div class="demo-c demo-c-3" id="track-infos">
+        <div class="demo-track-cover">
+          <img v-bind:src="infos.cover" />
+        </div>
+        <div class="demo-track-infos">
+          <div class="demo-track-title">{{ infos.title }}</div>
+          <div class="demo-track-artist">{{ infos.artist }}</div>
+          <div class="demo-track-more">
+            {{ infos.duration }} • {{ infos.genre }} • {{ infos.release }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="download">
+      <div class="download" v-if="!display.mobile">
+        <div class="download-main">
+          <a class="download-big" v-if="display.infos && !display.other && !display.isLinux" v-bind:href="display.infos.url">
+            <div class="download-icon">
+              <i class="fa fa-apple"></i>
+            </div>
+            <div class="download-text">
+              <div class="download-title">
+                Download
+              </div>
+              <div class="download-subtitle">
+                {{ display.name }} • {{ display.infos.size }} Mo
+              </div>
+            </div>
+          </a>
+          <div class="download-big" v-if="display.isLinux && !display.other" v-on:click="displayLinux">
+            <div class="download-icon">
+              <i class="fa fa-linux"></i>
+            </div>
+            <div class="download-text">
+              <div class="download-title">
+                Install
+              </div>
+              <div class="download-subtitle">
+                GNU/Linux
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="linux-installation" v-if="display.linux">
+          AllToMP3 is available on Ubuntu, Debian, elementary OS and Linux Mint.<br /><br />
+          For Ubuntu &lt; 16.04 (Xenial), Debian &lt; 9 (Stretch), elementary OS and Linux Mint, your first have to install pathlib:<br />
+          <code onClick="selectText(this)">sudo pip install pathlib</code><br /><br />
+          Then, to install AllToMP3:<br />
+          <code onClick="selectText(this)">curl -s https://packagecloud.io/install/repositories/AllToMP3/alltomp3/script.deb.sh | sudo bash<br />
+  sudo apt-get install alltomp3</code><br /><br />
+          You can then launch it via <code>alltomp3</code> or from your distribution launcher.
+        </div>
+        <div class="download-other-btn" v-if="(display.infos || display.isLinux) && !display.other" v-on:click="displayOther">
+          Other platforms
+        </div>
+        <div class="download-other" v-if="display.other">
+          <a class="download-big" v-bind:href="mac.url">
+            <div class="download-icon">
+              <i class="fa fa-apple"></i>
+            </div>
+            <div class="download-text">
+              <div class="download-title">
+                Download
+              </div>
+              <div class="download-subtitle">
+                macOS • {{ mac.size }} Mo
+              </div>
+            </div>
+          </a>
+          <a class="download-big" v-bind:href="windows.url">
+            <div class="download-icon">
+              <i class="fa fa-windows"></i>
+            </div>
+            <div class="download-text">
+              <div class="download-title">
+                Download
+              </div>
+              <div class="download-subtitle">
+                Windows • {{ windows.size }} Mo
+              </div>
+            </div>
+          </a>
+          <div class="download-big" v-on:click="displayLinux">
+            <div class="download-icon">
+              <i class="fa fa-linux"></i>
+            </div>
+            <div class="download-text">
+              <div class="download-title">
+                Install
+              </div>
+              <div class="download-subtitle">
+                GNU/Linux
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="info-large" v-if="display.mobile">
+        AllToMP3 is only available as a desktop application for computers. Come back from your computer 😉.
+      </div>
+    </div>
+
+    <div class="about">
+      <a href="https://github.com/ntag">Made with <i class="fa fa-heart" aria-hidden="true"></i> by NTag</a> • <a href="https://github.com/alltomp3/alltomp3-app">Source available on <i class="fa fa-github" aria-hidden="true"></i></a>
+    </div>
+
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/entypo.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:100,200,400,700" rel="stylesheet">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="tipped/js/tipped/tipped.js"></script>
+    <link rel="stylesheet" type="text/css" href="tipped/css/tipped/tipped.css" />
+    <script type="text/javascript" src="vendor/typewriter.js"></script>
+    <script src="vendor/vue.min.js"></script>
+    <script src="main.js" type='text/javascript'></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-37367655-1', 'alltomp3.org');
+      ga('send', 'pageview');
+
+    </script>
+  </body>
+</html>

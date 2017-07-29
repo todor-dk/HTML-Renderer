@@ -1,0 +1,357 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><html><head>   <script type="text/javascript">
+function utmx_section(){}function utmx(){}
+
+</script> <script type="text/javascript">utmx_section("CSS")</script> <link href="https://fonts.googleapis.com/css?family=Product+Sans" rel="stylesheet"> <link href="/tools/dlpage/res/c/css/goog.css" rel="stylesheet" type="text/css"> <link href="/tools/dlpage/res/c/css/dlpage.css" rel="stylesheet" type="text/css"> </noscript>  
+<link href="/tools/dlpage/res/gappssync/gappssync.css" rel="stylesheet" type="text/css" />
+ <link rel="icon" type="image/ico" href="//www.google.com/favicon.ico"> <script type="text/javascript">utmx_section("Page Title")</script> <title>G Suite Sync for Microsoft Outlook&reg;</title> </noscript> <script type="text/javascript">
+  function setHl(newHl) {
+    var query = location.search;
+    if (query.length == 0) {
+      location.search = "?hl=" + newHl;
+      return;
+    }
+    if (-1 == query.indexOf("hl=")) {
+      location.search = query + "&hl=" + newHl;
+      return;
+    }
+    location.search = query.replace(/hl=[^&]*/, "hl=" + newHl);
+  }
+</script> <script type="text/javascript" src="/tools/dlpage/res/c/gu-util.js">
+  
+</script> <script type="text/javascript">
+  // Set up the global update.installscript namespace.
+  if (!window.update) {
+    update = {};
+  }
+  if (!window.update.installscript) {
+    update.installscript = {};
+  }
+
+  
+  
+  function runTagParamsHook(tag, opt_guid) {return tag;}
+  
+  function runThankYouQueryHook(query) {return query;}
+  
+  function runGetAppsPageHook(apps) {return apps;}
+
+  
+  var referer = null;
+
+  
+  
+     update.installscript.updater_expts = '';
+  
+  
+  
+    update.installscript.app_expts = '';
+  
+
+
+  function resetButtons(name) {
+    var buttons = document.getElementsByName(name);
+    for (i = 0; i < buttons.length; ++i) {
+      buttons[i].disabled = false;
+    }
+  }
+  function showThrobber(isVisible) {
+    var divThrobber = document.getElementById('throbber');
+    var imgThrobber = document.getElementById('throbber-img');
+    if (!divThrobber || !imgThrobber) {
+      return;
+    }
+    if (!isVisible) {
+      divThrobber.style.display = 'none';
+    }
+    
+    imgThrobber.src = isVisible ?
+      
+         "/tools/dlpage/res/c/image/loading-16.gif"
+      
+        : "";
+    if (isVisible) {
+      divThrobber.style.display = 'inline';
+    }
+  }
+  
+  function getThankyouUrl(extraQuery) {
+    var thankYouPath = "gappssync/thankyou.html";
+    if (areStatsEnabled()) {
+      extraQuery += '&statcb=';
+    }
+    var query = "" + extraQuery;
+    if (query.length > 0 && query.charAt(0) != '?') {
+      query = '?' + query;
+    }
+    query = runThankYouQueryHook(query);
+    return thankYouPath + query;
+  }
+  function queueThankyou(timeout, queryString, opt_navDocument) {
+    var page = getThankyouUrl(queryString);
+    var doc = opt_navDocument || this.document;
+
+    function navigateToThankyou() {
+      showThrobber(false);
+      resetButtons("submitbutton");
+      doc.location.href = page;
+    }
+
+    if (!timeout) {
+      navigateToThankyou();
+      return;
+    }
+
+    setTimeout(navigateToThankyou, timeout);
+  }
+  function getApps() {
+    var apps = new Array();
+    
+    
+    
+    
+      apps.push(_GU_createAppInfo(
+          "{BEBCAD10-F1BC-4F92-B4A7-9E2545C809ED}",
+          "G Suite Sync\u2122 for Microsoft Outlook\xae",
+          "true",
+          runTagParamsHook(
+              "",
+              "{BEBCAD10-F1BC-4F92-B4A7-9E2545C809ED}"),
+          update.installscript.app_expts));
+     
+      apps.push(_GU_createAppInfo(
+          "{7DF3B6EE-9890-4307-BDE5-E1F3FCB09771}",
+          "G Suite Migration\u2122 for Microsoft Outlook\xae",
+          "true",
+          runTagParamsHook(
+              "",
+              "{7DF3B6EE-9890-4307-BDE5-E1F3FCB09771}"),
+          update.installscript.app_expts));
+    
+    
+    
+    
+    return runGetAppsPageHook(apps);
+  }
+  function areStatsEnabled() {
+    var statcb = document.getElementById("statcb");
+    return (statcb && statcb.checked);
+  }
+  function isDownloadTaggingEnabled() {
+    
+    return true;
+  }
+  function getDownloadPath() {
+    
+      
+        return "/google-apps-sync/googleappssyncsetup.exe";
+      
+    
+  }
+  function buildDownloadUrl(statEnable, opt_buildDownloadPath, opt_filePath) {
+     
+
+    var defaultDownloadPath = isDownloadTaggingEnabled() ?
+        _GU_buildDlPath : _GU_buildDlPathNoTag;
+    var buildDownloadPath = opt_buildDownloadPath || defaultDownloadPath;
+    var filePath = opt_filePath || getDownloadPath();
+    var dlServer =
+    "https://dl.google.com";
+    return buildDownloadPath(getApps(),
+                             "en",
+                             statEnable,
+                             dlServer,
+                             filePath,
+                             update.installscript.updater_expts);
+  }
+  function downloadAndThankYou(delayTime, statEnable, opt_navDocument,
+                               opt_buildDownloadPath, opt_filePath) {
+    
+    if (navigator.appVersion.indexOf('Chrome/') != -1 ||
+        navigator.appVersion.indexOf('Safari/') != -1) {
+      queueThankyou(0, '', opt_navDocument);
+      return;
+    }
+
+    var method = getInstallSource();
+    sendDlPagePing("install", method);
+
+    queueThankyou(delayTime, '', opt_navDocument);
+
+    var downloadUri =
+        buildDownloadUrl(statEnable, opt_buildDownloadPath, opt_filePath);
+
+    if (method === 'clickonce' ||
+        navigator.userAgent.indexOf('Firefox/') != -1) {
+      var windowFeatures = 'toolbar=0,location=no,directories=0,status=0,scrollbars=no,resizable=0,width=1,height=1,top=0,left=0';
+      window.open(downloadUri, '_blank', windowFeatures);
+      window.focus();
+    } else {
+      location.href = downloadUri;
+    }
+
+    showThrobber(true);
+  }
+  function installViaDownload(opt_navDocument) {
+    downloadAndThankYou(4000, areStatsEnabled(), opt_navDocument);
+  }
+  function isClickOnceEnabled() {
+    
+    return false;
+  }
+  function isOneClickEnabled() {
+    return true;
+  }
+  function installViaClickOnce(opt_navDocument) {
+    
+    downloadAndThankYou(10000, areStatsEnabled(), opt_navDocument, _GU_buildClickOncePath, "");
+  }
+  function installViaOneClick(opt_navDocument) {
+    showThrobber(true);
+    window.google.update.oneclick.install(
+      getApps(),
+      "en",
+      areStatsEnabled(),
+      function() {queueThankyou(4000, '\x26oneclickinstalled=', opt_navDocument);},
+      function(hr) {installViaDownload(opt_navDocument);},
+      update.installscript.updater_expts);
+  }
+  function getInstallSource() {
+    
+      if (isOneClickEnabled() && _GU_isOneClickAvailable()) {
+        return 'oneclick';
+      } else if (isClickOnceEnabled() && _GU_isClickOnceAvailable()) {
+        return 'clickonce';
+      } else {
+        return 'download';
+      }
+    
+  }
+  function installApp(opt_navDocument) {
+    
+
+    var method = getInstallSource();
+    if (method === 'oneclick') {
+      installViaOneClick(opt_navDocument);
+    } else if (method === 'clickonce') {
+      installViaClickOnce(opt_navDocument);
+    } else {
+      installViaDownload(opt_navDocument);
+    }
+  }
+  
+  function sendDlPagePing(stage, installSource) {
+    var img = new Image();
+    var extra = GU_buildGlobalExtra(
+          "en",
+          areStatsEnabled(),
+          update.installscript.updater_expts);
+    var tag = GU_BuildTag(getApps(), extra);
+    img.src = '//tools.google.com/service/update2/dlpageping?' +
+        tag +
+        '&stage=' + stage +
+        '&installsource=' + installSource;
+  }
+  function downloadInstaller(opt_pageName) {
+    var hasStatcb =
+    
+      false;
+    
+    location.href = buildDownloadUrl(hasStatcb);
+
+    var pageName = opt_pageName || "install";
+    var installMethod = getInstallSource();
+    sendDlPagePing(pageName, installMethod);
+  }
+  var pageTracker;  
+  function doSubmit() {
+    var installMethod = getInstallSource();
+    if (typeof _gaq != 'undefined') {
+      _gaq.push(['_trackPageview'], '/ty/retry_' + installMethod);
+    } else if (pageTracker) {
+      pageTracker._trackPageview("/ty/retry_" + installMethod);
+    }
+    downloadInstaller("retry");
+  }
+  
+  
+  
+  _GU_OnloadHandlerAdd(
+    function() {
+      if (isOneClickEnabled()) {
+      _GU_SetupOneClick();
+      }
+    }, 0); // front of list
+  
+  _GU_OnloadHandlerAdd(
+    function(pagename) {
+      sendDlPagePing(pagename, getInstallSource());
+    });  // added to end of body.onload handler list
+
+
+</script> </head> <body onload="_GU_OnloadBody(&#39;index&#39;);"><div id="container"><noscript>You need a JavaScript-capable browser to download this software. <a href="http://www.google.com/support/bin/answer.py?answer=23852&hl=en">Click here for instructions</a> on how to enable JavaScript in your browser.</noscript>  <div id="header"><div class="logo"><span class="lockup-logo-gsuite"></span></div>  <h1>&nbsp;</h1></div> <div id="main"><div id="content"><h2><script type="text/javascript">utmx_section("Header")</script> G Suite Sync for Microsoft Outlook&reg; </noscript></h2> <p><script type="text/javascript">utmx_section("Tagline")</script> 
+                    G Suite Sync for Microsoft Outlook® allows you to use Microsoft Outlook® 2003, 2007, 2010, 2013 and 2016 effectively with G Suite.
+                    You get the cost savings, security and reliability of G Suite, while employees can use the interface they prefer for email, contacts, calendar and notes.
+                    <p> The G Suite Sync download includes <a href="http://tools.google.com/dlpage/outlookmigration">G Suite Migration for Microsoft Outlook®</a> to import existing data to Google.
+                    <p> <a href="https://support.google.com/quickfixes/answer/6252390?utm_source=tools&utm_medium=web&utm_campaign=GASMO&utm_content=setup">Set up G Suite Sync</a>
+                    <p> <a href="https://support.google.com/a/answer/148484">Help and information for Administrators</a>
+     </noscript></p> <script type="text/javascript">utmx_section("Jewel")</script> 
+<iframe width="445" height="344" src="//www.youtube.com/embed/_Zl7AVAAggY" frameborder="0" allowfullscreen></iframe>
+ </noscript></div> <div id="action"><div class="blue"><div class="button"><span><span><a name="submitbutton" href="javascript:this.disabled%3Dtrue;installApp();"><script type="text/javascript">utmx_section("Button Text")</script> Download G Suite Sync </noscript></a></span></span></div> <p><script type="text/javascript">utmx_section("Button Subtitle")</script> 
+      <div class="centeredmenu2">
+      <div class="centeredmenu3">
+        Version <a href="https://support.google.com/a/answer/153463">4.0.7.0</a><p/>
+      </div>
+      </div>
+      <div class="centeredmenu1"><div class="centeredmenu2"><div class="centeredmenu3"><p>
+      <b>System requirements:</b>
+      <br>
+                    Requires G Suite, G Suite for Education, or G Suite for Government
+      <p/>
+                    Windows XP (32 bit) <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=5b33b5a8-5e76-401f-be08-1e1555d4f3d4">SP3 </a>
+      <br>
+                    Windows Vista (32 bit) <a href="http://www.microsoft.com/downloads/details.aspx?familyid=B0C7136D-5EBB-413B-89C9-CB3D06D12674">SP1</a>
+      <br>
+                    Windows Vista (64 bit) <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=874a414b-32b2-41cc-bd8b-d71eda5ec07c">SP1</a>
+      <br>
+                    Windows 7 (32 and 64 bit)
+      <br>
+                    Windows 8 (32 and 64 bit)
+      <br>
+                    Windows 10 (32 and 64 bit)
+      <p/><p/>
+                    Microsoft Outlook 2003® <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=E25B7049-3E13-433B-B9D2-5E3C1132F206">SP3</a>
+      <br>
+                    Microsoft Outlook 2007® <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=B444BF18-79EA-46C6-8A81-9DB49B4AB6E5">SP2</a> (or <a
+                    href="http://www.microsoft.com/downloads/details.aspx?FamilyId=9EC51594-992C-4165-A997-25DA01F388F5">SP1</a> with <a href="http://support.microsoft.com/kb/959642">hotfix</a>)
+      <br>
+                    Microsoft Outlook 2010® (32 and 64 bit)
+      <br>
+                    Microsoft Outlook 2013® (32 and 64 bit)
+      <br>
+                    Microsoft Outlook 2016® (32 and 64 bit)
+      </p></div></div></div>
+     </noscript></p> </div> <script type="text/javascript">utmx_section("Bullets")</script> <p>
+      <a href="https://support.google.com/a/answer/148484#gappsreq">More about system requirements</a><br/>
+      <a href="https://support.google.com/a/answer/150403">Help with installation</a>
+      <p/>
+      <strong>Currently using Google Apps Free Edition? </strong><br />
+      <a href="https://gsuite.google.com/?utm_medium=et&utm_campaign=en&utm_source=tools-gappsync&hl=en">Get a free trial</a> of G Suite and try G Suite Sync.
+    </p> </noscript>  <p class="links"><script type="text/javascript">utmx_section("Learn More Link")</script> <a href="#"></a> </noscript></p></div></div>  <div id="footer"><p>&copy;2017 Google - <a href="https://www.google.com/apps/intl/en/terms/standard_terms.html">Terms of Service</a> - <a href="https://www.google.com/apps/intl/en/terms/use_policy.html">Program Policies</a> - <a href="https://www.google.com/support/a/?hl=en">Help Center</a> - <a href="https://cloud.googleblog.com/">Google Cloud Blog</a> </p></div></div>  <script type="text/javascript">
+  var gaJsHost = (("https:" == document.location.protocol) ?
+      "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost +
+      "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script> <script type="text/javascript">
+  
+  if (typeof _gat != "undefined") {
+    var path = "";
+    
+      var pageTracker = _gat._getTracker("UA-18073-9");
+      if (path) {
+        pageTracker._setCookiePath(path);
+      }
+      pageTracker._trackPageview();
+    
+    
+  }
+  </script></body></html>

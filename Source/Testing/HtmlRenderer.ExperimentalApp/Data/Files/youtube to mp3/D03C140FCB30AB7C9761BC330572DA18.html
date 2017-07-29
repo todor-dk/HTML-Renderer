@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>YouTube to mp3 Converter - YTBmp3</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="shortcut icon" href="/assets/favicon.fb84052c.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/assets/vendor.c6da2412.css">
+    <link rel="stylesheet" href="/assets/global.69a42739.css">
+    
+    
+    
+<meta name="description" content="Download mp3 from YouTube with the fastest online converter in the World. No limits, no popups, no waiting for conversion. Try now for free!">
+<meta name="keywords" content="youtube, mp3, convert, converter, online, instant, download, audio">
+<meta name="author" content="Janoš Guljaš, Milovan Misho Petković">
+<meta property="og:title" content="YouTube to mp3 Converter - YTBmp3.com">
+<meta property="og:description" content="Download mp3 from YouTube with the fastest online converter in the World. No limits, no popups, no waiting for conversion. Try now for free!">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.ytbmp3.com/">
+<meta property="og:image" width="1200" height="630" content="https://www.ytbmp3.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="YouTube to mp3 Converter - YTBmp3.com">
+<meta name="twitter:description" content="Download mp3 from YouTube with the fastest online converter in the World. No limits, no popups, no waiting for conversion. Try now for free!">
+<meta name="twitter:image" content="https://www.ytbmp3.com/tw-image.png">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-4929102892555994",
+    enable_page_level_ads: true
+  });
+</script>
+
+    
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-49511821-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
+  </head>
+  <body>
+    
+<section class="hero is-light">
+  <div class="hero-head" id="header">
+    <header class="nav">
+      <div class="container">
+        <div class="nav-left is-hidden-touch">
+        </div>
+        <div class="nav-center">
+           <a class="nav-item" href="/"><h1>YouTube to mp3 Converter Online</h1></a>
+        </div>
+        <span class="nav-toggle" v-on:click="isActive = !isActive" v-bind:class="{'is-active': isActive}">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+        <div class="nav-right nav-menu" v-bind:class="{'is-active': isActive}">
+          <a class="nav-item" href="/howto">
+            <span class="icon">
+              <i class="fa fa-question-circle-o"></i>
+            </span>
+            <span class="text">How to...</span>
+          </a>
+          <a class="nav-item" href="https://www.facebook.com/YTBmp3/" target="_blank">
+            <span class="icon">
+              <i class="fa fa-facebook"></i>
+            </span>
+            <span class="text is-hidden-tablet">Facebook page</span>
+          </a>
+          <a class="nav-item" href="https://twitter.com/ytbmp3" target="_blank">
+            <span class="icon">
+              <i class="fa fa-twitter"></i>
+            </span>
+            <span class="text is-hidden-tablet">Twitter profile</span>
+          </a>
+        </div>
+      </div>
+    </header>
+  </div>
+  
+</section>
+
+
+<section class="main">
+  <p class="section is-paddingless-bottom is-hidden-touch"></p>
+  <div class="container">
+    
+<div class="column is-6 is-offset-3" id="app">
+  <p class="title has-text-centered is-2"><img src="/assets/logo-header-converter.638e3b74.png" v-bind:src="headerSrc" alt="YouTube to mp3 Converter - YTBmp3" width="400" v-on:mouseover="showDoodle()" v-on:mouseleave="hideDoodle()" v-on:click="toggleDoodle()"></p>
+  <form method="post" autocomplete="off" v-on:submit.prevent="search(q)" v-bind:class="{'is-disabled': searchForm.isLoading}">
+    <div class="field">
+      <p class="control has-icon is-expanded" v-bind:class="{'is-loading': searchForm.status == 'searching'}">
+        <input class="input" id="q" type="text" v-model="q" placeholder="Search or Enter YouTube URL" autofocus>
+        <span class="icon is-small">
+          <i class="fa fa-youtube"></i>
+        </span>
+      </p>
+      <transition name="fade">
+        <p class="help" v-if="suggestions" v-cloak>
+          <span>Suggestions:</span>
+          <span v-for="(suggestion, index) in suggestions">
+            <a v-text="suggestion" v-on:click="search(suggestion)"></a><span v-if="index+1 < suggestions.length">, </span><span v-else>...</span>
+          </span>
+        </p>
+      </transition>
+      <p class="help is-danger has-text-centered" v-for="err in searchForm.errors" v-cloak v-html="err"></p>
+      <p class="help is-danger has-text-centered" v-for="err in searchForm.fieldErrors.q" v-cloak v-html="err"></p>
+    </div>
+  </form>
+<transition-group name="fade">
+  <div v-if="items" v-for="(item, i) in items" v-bind:key="item" v-cloak>
+    <div class="box youtube-item">
+    <article class="media" v-if="item.type == 'video'" v-cloak>
+      <div class="media-left is-hidden-touch">
+        <figure class="image thumbnail">
+          <img v-bind:src="item.thumbnail_url" v-bind:alt="item.title">
+        </figure>
+        <p class="content is-small has-text-centered is-light">
+          <span v-text="item.date_published"></span> -
+          <strong v-text="item.duration"></strong>
+          <br v-if="item.view_count">
+          <span v-if="item.view_count" v-text="formatThousands(item.view_count, 0)+' views'"></span>
+        </p>
+        <p></p>
+      </div>
+      <div class="media-content">
+        <div class="content">
+          <p class="is-lineheight-small">
+            <a v-bind:href="'https://www.youtube.com/watch?v='+item.id" target="_blank" v-if="item.id"><strong v-text="item.title"></strong></a>
+            <strong v-text="item.title" v-else></strong>
+            <a class="content is-small is-nowrap" v-if="item.channel && item.channel_id" v-bind:href="'https://www.youtube.com/channel/'+item.channel_id" v-text="item.channel" target="_blank"></a>
+            <i class="content is-small is-nowrap" v-else v-text="item.channel"></i>
+          </p>
+          <p>
+            <form method="post" v-on:submit.prevent="download(i)" autocomplete="off" v-bind:class="{'is-disabled': item.downloadForm.isLoading}" v-if="!item.downloadForm.isDone">
+              <div class="field">
+                <p class="control">
+                  <button type="submit" class="button is-primary" v-bind:class="{'is-loading': item.downloadForm.isLoading}"><span class="icon"><i class="fa fa-arrow-circle-down"></i></span><span>Download</span></button>
+                  <a class="button is-light is-small to-bottom" v-bind:href="'https://www.ytbmp4.com/watch?v='+item.id" target="_blank">Download video on ytbmp4.com...</a>
+                </p>
+              </div>
+              <div class="field has-addons">
+                <div class="control">
+                  <span class="select is-small">
+                    <select v-model="item.downloadForm.fields.bitrate">
+                      <option value="">Auto Bitrate</option>
+                      <option value="320">320kbps</option>
+                      <option value="256">256kbps</option>
+                      <option value="224">224kbps</option>
+                      <option value="192">192kbps</option>
+                      <option value="160">160kbps</option>
+                      <option value="128">128kbps</option>
+                      <option value="112">112kbps</option>
+                      <option value="96">96kbps</option>
+                      <option value="80">80kbps</option>
+                      <option value="64">64kbps</option>
+                    </select>
+                  </span>
+                </div>
+                <div class="control">
+                  <input type="text" class="input is-small" v-model="item.downloadForm.fields.start" placeholder="Start time: 0s">
+                </div>
+                <div class="control">
+                  <input type="text" class="input is-small" v-model="item.downloadForm.fields.end" v-bind:placeholder="'End time: ' + item.duration">
+                </div>
+              </div>
+              
+              <div class="help is-danger" v-for="err in item.downloadForm.errors" v-cloak v-html="err"></div>
+              <div class="help is-danger" v-for="err in item.downloadForm.fieldErrors.id" v-cloak v-html="err"></div>
+              <div class="help is-danger" v-for="err in item.downloadForm.fieldErrors.bitrate" v-cloak v-html="err"></div>
+              <div class="help is-danger" v-for="err in item.downloadForm.fieldErrors.start" v-cloak v-html="err"></div>
+              <div class="help is-danger" v-for="err in item.downloadForm.fieldErrors.end" v-cloak v-html="err"></div>
+            </form>
+            <div class="notification is-primary"  v-if="item.downloadForm.isDone">
+              <button class="button is-small back is-primary" v-on:click="item.downloadForm.isDone=false">
+                <span class="icon">
+                  <i class="fa fa-reply fa-flip-vertical"></i>
+                </span>
+              </button>
+              <p>Download in progress...</p>
+              
+<p>
+<adsense
+  ad-client="ca-pub-4929102892555994"
+  ad-slot="1023982971"
+  v-bind:ad-format="adType()"></adsense>
+</p>
+<ul class="share-buttons is-marginless">
+  <li><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.ytbmp3.com&t=" title="Share on Facebook" target="_blank" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(document.URL) + '&t=' + encodeURIComponent(document.URL)); return false;"><img alt="Share on Facebook" width="20" src="/assets/social/svg/Facebook.bc88ee0f.svg"></a></li>
+  <li><a href="https://twitter.com/intent/tweet?source=https%3A%2F%2Fwww.ytbmp3.com&text=:%20https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Tweet" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(document.title) + ':%20'  + encodeURIComponent(document.URL)); return false;"><img alt="Tweet" width="20" src="/assets/social/svg/Twitter.6b0fcb6a.svg"></a></li>
+  <li><a href="https://plus.google.com/share?url=https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=' + encodeURIComponent(document.URL)); return false;"><img alt="Share on Google+" width="20" src="/assets/social/svg/Google&#43;.de67370a.svg"></a></li>
+  <li><a href="http://www.tumblr.com/share?v=3&u=https%3A%2F%2Fwww.ytbmp3.com&t=&s=" target="_blank" title="Post to Tumblr" onclick="window.open('http://www.tumblr.com/share?v=3&u=' + encodeURIComponent(document.URL) + '&t=' +  encodeURIComponent(document.title)); return false;"><img alt="Post to Tumblr" width="20" src="/assets/social/svg/Tumblr.549e084d.svg"></a></li>
+  <li><a href="http://pinterest.com/pin/create/button/?url=https%3A%2F%2Fwww.ytbmp3.com&description=" target="_blank" title="Pin it" onclick="window.open('http://pinterest.com/pin/create/button/?url=' + encodeURIComponent(document.URL) + '&description=' +  encodeURIComponent(document.title)); return false;"><img alt="Pin it" width="20" src="/assets/social/svg/Pinterest.0882a91d.svg"></a></li>
+  <li><a href="https://getpocket.com/save?url=https%3A%2F%2Fwww.ytbmp3.com&title=" target="_blank" title="Add to Pocket" onclick="window.open('https://getpocket.com/save?url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Add to Pocket" width="20" src="/assets/social/svg/Pocket.3892eef1.svg"></a></li>
+  <li><a href="http://www.reddit.com/submit?url=https%3A%2F%2Fwww.ytbmp3.com&title=" target="_blank" title="Submit to Reddit" onclick="window.open('http://www.reddit.com/submit?url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Submit to Reddit" width="20" src="/assets/social/svg/Reddit.18c0936e.svg"></a></li>
+  <li><a href="http://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.ytbmp3.com&title=&summary=&source=https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Share on LinkedIn" onclick="window.open('http://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Share on LinkedIn" width="20" src="/assets/social/svg/LinkedIn.51009b1b.svg"></a></li>
+  <li><a href="http://wordpress.com/press-this.php?u=https%3A%2F%2Fwww.ytbmp3.com&t=&s=" target="_blank" title="Publish on WordPress" onclick="window.open('http://wordpress.com/press-this.php?u=' + encodeURIComponent(document.URL) + '&t=' +  encodeURIComponent(document.title)); return false;"><img alt="Publish on WordPress" width="20" src="/assets/social/svg/Wordpress.6add6310.svg"></a></li>
+  <li><a href="https://pinboard.in/popup_login/?url=https%3A%2F%2Fwww.ytbmp3.com&title=&description=" target="_blank" title="Save to Pinboard" onclick="window.open('https://pinboard.in/popup_login/?url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Save to Pinboard" width="20" src="/assets/social/svg/Pinboard.e6ec1cb0.svg"></a></li>
+  <li><a href="mailto:?subject=&body=:%20https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Send email" onclick="window.open('mailto:?subject=' + encodeURIComponent(document.title) + '&body=' +  encodeURIComponent(document.URL)); return false;"><img alt="Send email" width="20" src="/assets/social/svg/Email.41c17dc6.svg"></a></li>
+</ul>
+
+            </div>
+          </p>
+          <p>
+            <div class="is-hidden-desktop">
+              <p>
+                <figure class="image">
+                  <img v-bind:src="item.thumbnail_url" v-bind:alt="item.title" width="240">
+                </figure>
+              </p>
+              <p class="content is-small has-text-centered is-light">
+                <span v-text="item.date_published"></span> - <strong v-text="'length '+item.duration"></strong> - <span v-text="formatThousands(item.view_count, 0)+' views'"></span>
+              </p>
+              <p></p>
+            </div>
+          </p>
+        </div>
+        <p class="content is-small is-marginless break-word" v-html="item.summary" v-if="item.summary && !item.showDescription"></p>
+        <p class="content is-small is-marginless break-word" v-html="item.description" v-if="item.description && item.showDescription"></p>
+        <p class="content is-small" v-if="item.summary && item.description && item.summary.replace(/\.$/, '') != item.description.replace(/\.$/, '').replace(/<br>/, ' ')">
+          <a v-on:click="item.showDescription=true" v-if="!item.showDescription">More...</a>
+          <a v-on:click="item.showDescription=false" v-if="item.showDescription">Less...</a>
+        </p>
+      </div>
+    </article>
+    <article class="media" v-if="item.type == 'playlist'" v-cloak>
+      <div class="media-left is-hidden-touch">
+        <figure class="image thumbnail">
+          <img v-bind:src="item.thumbnail_url" v-bind:alt="item.title">
+        </figure>
+        <p class="content is-small has-text-centered is-light">
+          <span v-text="item.date_published"></span> -
+          <strong v-text="item.video_count + ' video' + plural(item.video_count)"></strong>
+        </p>
+        <p></p>
+      </div>
+      <div class="media-content">
+        <div class="content">
+          <p class="is-lineheight-small">
+            <a v-bind:href="'https://www.youtube.com/playlist?list='+item.id" target="_blank" v-if="item.id"><strong v-text="item.title"></strong></a>
+            <strong v-text="item.title" v-else></strong>
+            <a class="content is-small is-nowrap" v-if="item.channel && item.channel_id" v-bind:href="'https://www.youtube.com/channel/'+item.channel_id" v-text="item.channel" target="_blank"></a>
+            <i class="content is-small is-nowrap" v-else v-text="item.channel"></i>
+          </p>
+          <p>
+            <form method="post" v-on:submit.prevent="download(i)" autocomplete="off" v-bind:class="{'is-disabled': item.downloadForm.isLoading}" v-if="!item.downloadForm.isDone">
+              <div class="field">
+                <p class="control">
+                  <button type="submit" class="button is-primary" v-bind:class="{'is-loading': item.downloadForm.isLoading}"><span class="icon"><i class="fa fa-arrow-circle-down"></i></span><span>Download playlist</span></button>
+                </p>
+              </div>
+              
+              <div class="field has-addons">
+                <div class="control">
+                  <span class="select is-small">
+                    <select v-model="item.downloadForm.fields.bitrate">
+                      <option value="">Auto Bitrate</option>
+                      <option value="320">320kbps</option>
+                      <option value="256">256kbps</option>
+                      <option value="224">224kbps</option>
+                      <option value="192">192kbps</option>
+                      <option value="160">160kbps</option>
+                      <option value="128">128kbps</option>
+                      <option value="112">112kbps</option>
+                      <option value="96">96kbps</option>
+                      <option value="80">80kbps</option>
+                      <option value="64">64kbps</option>
+                    </select>
+                  </span>
+                </div>
+              </div>
+              
+              <div class="help is-danger" v-for="err in item.downloadForm.errors" v-cloak v-html="err"></div>
+              <div class="help is-danger" v-for="err in item.downloadForm.fieldErrors.id" v-cloak v-html="err"></div>
+              <div class="help is-danger" v-for="err in item.downloadForm.fieldErrors.bitrate" v-cloak v-html="err"></div>
+            </form>
+            <div class="notification is-primary"  v-if="item.downloadForm.isDone">
+              <button class="button is-small back is-primary" v-on:click="item.downloadForm.isDone=false">
+                <span class="icon">
+                  <i class="fa fa-reply fa-flip-vertical"></i>
+                </span>
+              </button>
+              <p>Download in progress...</p>
+              
+<p>
+<adsense
+  ad-client="ca-pub-4929102892555994"
+  ad-slot="1023982971"
+  v-bind:ad-format="adType()"></adsense>
+</p>
+<ul class="share-buttons is-marginless">
+  <li><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.ytbmp3.com&t=" title="Share on Facebook" target="_blank" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(document.URL) + '&t=' + encodeURIComponent(document.URL)); return false;"><img alt="Share on Facebook" width="20" src="/assets/social/svg/Facebook.bc88ee0f.svg"></a></li>
+  <li><a href="https://twitter.com/intent/tweet?source=https%3A%2F%2Fwww.ytbmp3.com&text=:%20https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Tweet" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(document.title) + ':%20'  + encodeURIComponent(document.URL)); return false;"><img alt="Tweet" width="20" src="/assets/social/svg/Twitter.6b0fcb6a.svg"></a></li>
+  <li><a href="https://plus.google.com/share?url=https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=' + encodeURIComponent(document.URL)); return false;"><img alt="Share on Google+" width="20" src="/assets/social/svg/Google&#43;.de67370a.svg"></a></li>
+  <li><a href="http://www.tumblr.com/share?v=3&u=https%3A%2F%2Fwww.ytbmp3.com&t=&s=" target="_blank" title="Post to Tumblr" onclick="window.open('http://www.tumblr.com/share?v=3&u=' + encodeURIComponent(document.URL) + '&t=' +  encodeURIComponent(document.title)); return false;"><img alt="Post to Tumblr" width="20" src="/assets/social/svg/Tumblr.549e084d.svg"></a></li>
+  <li><a href="http://pinterest.com/pin/create/button/?url=https%3A%2F%2Fwww.ytbmp3.com&description=" target="_blank" title="Pin it" onclick="window.open('http://pinterest.com/pin/create/button/?url=' + encodeURIComponent(document.URL) + '&description=' +  encodeURIComponent(document.title)); return false;"><img alt="Pin it" width="20" src="/assets/social/svg/Pinterest.0882a91d.svg"></a></li>
+  <li><a href="https://getpocket.com/save?url=https%3A%2F%2Fwww.ytbmp3.com&title=" target="_blank" title="Add to Pocket" onclick="window.open('https://getpocket.com/save?url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Add to Pocket" width="20" src="/assets/social/svg/Pocket.3892eef1.svg"></a></li>
+  <li><a href="http://www.reddit.com/submit?url=https%3A%2F%2Fwww.ytbmp3.com&title=" target="_blank" title="Submit to Reddit" onclick="window.open('http://www.reddit.com/submit?url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Submit to Reddit" width="20" src="/assets/social/svg/Reddit.18c0936e.svg"></a></li>
+  <li><a href="http://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.ytbmp3.com&title=&summary=&source=https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Share on LinkedIn" onclick="window.open('http://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Share on LinkedIn" width="20" src="/assets/social/svg/LinkedIn.51009b1b.svg"></a></li>
+  <li><a href="http://wordpress.com/press-this.php?u=https%3A%2F%2Fwww.ytbmp3.com&t=&s=" target="_blank" title="Publish on WordPress" onclick="window.open('http://wordpress.com/press-this.php?u=' + encodeURIComponent(document.URL) + '&t=' +  encodeURIComponent(document.title)); return false;"><img alt="Publish on WordPress" width="20" src="/assets/social/svg/Wordpress.6add6310.svg"></a></li>
+  <li><a href="https://pinboard.in/popup_login/?url=https%3A%2F%2Fwww.ytbmp3.com&title=&description=" target="_blank" title="Save to Pinboard" onclick="window.open('https://pinboard.in/popup_login/?url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Save to Pinboard" width="20" src="/assets/social/svg/Pinboard.e6ec1cb0.svg"></a></li>
+  <li><a href="mailto:?subject=&body=:%20https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Send email" onclick="window.open('mailto:?subject=' + encodeURIComponent(document.title) + '&body=' +  encodeURIComponent(document.URL)); return false;"><img alt="Send email" width="20" src="/assets/social/svg/Email.41c17dc6.svg"></a></li>
+</ul>
+
+            </div>
+          </p>
+          <p>
+            <div class="is-hidden-desktop">
+              <p>
+                <figure class="image">
+                  <img v-bind:src="item.thumbnail_url" v-bind:alt="item.title" width="240">
+                </figure>
+              </p>
+              <p class="content is-small has-text-centered is-light">
+                <span v-text="item.date_published"></span> - <strong v-text="item.video_count + ' video' + plural(item.video_count)"></strong>
+              </p>
+              <p></p>
+            </div>
+          </p>
+        </div>
+        <p class="content is-small is-marginless" v-html="item.summary" v-if="item.summary && !item.showDescription"></p>
+        <p class="content is-small is-marginless" v-html="item.description" v-if="item.description && item.showDescription"></p>
+        <p class="content is-small" v-if="item.summary && item.description && item.summary.replace(/\.$/, '') != item.description.replace(/\.$/, '').replace(/<br>/, ' ')">
+          <a v-on:click="item.showDescription=true" v-if="!item.showDescription">More...</a>
+          <a v-on:click="item.showDescription=false" v-if="item.showDescription">Less...</a>
+        </p>
+      </div>
+    </article>
+  </div>
+  </div>
+</transition-group>
+
+<div class="column has-text-centered">
+  <a class="button" v-bind:class="{'is-loading': moreForm.isLoading}" v-on:click="more" v-if="moreForm.fields.token" v-cloak>More...</a>
+</div>
+<p class="help is-danger has-text-centered" v-for="err in moreForm.errors" v-cloak v-html="err"></p>
+<p class="help is-danger has-text-centered" v-for="err in moreForm.fieldErrors.q" v-cloak v-html="err"></p>
+<p class="help is-danger has-text-centered" v-for="err in moreForm.fieldErrors.token" v-cloak v-html="err"></p>
+</div>
+
+<div class="column is-6 is-offset-3 has-text-centered content is-small">
+  <article class="is-light" id="description">
+    <p>YTBmp3 is YouTube to mp3 online coverter.<br> <strong>Listen audio from your favorite YouTube videos</strong> whenever you want <strong>by downloading</strong><br>the highest quality <strong>mp3 file</strong> that can be converted from source video.</p>
+    <p>Download <strong>whole playlists</strong> with <strong>one click</strong>! Just paste a playlist link or search for one.</p>
+    <p><strong>Select desired bitrate</strong> or <strong>trim the length</strong> of the converted audio<br> by specifying the start and end time with subsecond precision. <a v-on:click="showTimeInfo=true" v-if="!showTimeInfo">More...</a><transition name="fade"><span v-show="showTimeInfo" v-cloak><br>The <strong>Auto bitrate option</strong> will choose the <strong>highest bitrate</strong> that is available.<br> Time can be represented in seconds, <strong>10.5</strong>,<br> with colon separating hours, minutes and seconds, <strong>1:35.2</strong>,<br> or with h, m and s suffixes, <strong>1h20m1.8s</strong>.<span><transition></p>
+    <p><strong>Search for videos and playlists</strong> directly from here,<br>but you can still <strong>paste URLs</strong>, if you want.</p>
+    <p>The conversion is <strong>instant</strong>!<br>No need to wait for processing.</p>
+  </article>
+  <div class="section is-paddingless-bottom">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-4929102892555994"
+         data-ad-slot="8285054578"
+         data-ad-format="horizontal"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+</div>
+
+  </div>
+</section>
+
+
+<footer>
+  <div class="container">
+    <div class="content has-text-centered">
+      <div class="nav-center">
+        <a class="nav-item is-hidden-mobile" href="/"><span class="icon"><i class="fa fa-home"></i></span></a>
+        <a class="nav-item" href="/about">About</a>
+        <a class="nav-item" href="/contact">Contact</a>
+        <a class="nav-item" href="/terms-of-service">Terms of Service</a>
+      </div>
+      <p>
+        <ul class="share-buttons">
+          <li><a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.ytbmp3.com&t=" title="Share on Facebook" target="_blank" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(document.URL) + '&t=' + encodeURIComponent(document.URL)); return false;"><img alt="Share on Facebook" src="/assets/social/black/Facebook.e1f7e55e.png"></a></li>
+          <li><a href="https://twitter.com/intent/tweet?source=https%3A%2F%2Fwww.ytbmp3.com&text=:%20https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Tweet" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(document.title) + ':%20'  + encodeURIComponent(document.URL)); return false;"><img alt="Tweet" src="/assets/social/black/Twitter.ac8b13de.png"></a></li>
+          <li><a href="https://plus.google.com/share?url=https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Share on Google+" onclick="window.open('https://plus.google.com/share?url=' + encodeURIComponent(document.URL)); return false;"><img alt="Share on Google+" src="/assets/social/black/Google&#43;.2aabb8f1.png"></a></li>
+          <li><a href="http://www.tumblr.com/share?v=3&u=https%3A%2F%2Fwww.ytbmp3.com&t=&s=" target="_blank" title="Post to Tumblr" onclick="window.open('http://www.tumblr.com/share?v=3&u=' + encodeURIComponent(document.URL) + '&t=' +  encodeURIComponent(document.title)); return false;"><img alt="Post to Tumblr" src="/assets/social/black/Tumblr.c478a517.png"></a></li>
+          <li><a href="http://pinterest.com/pin/create/button/?url=https%3A%2F%2Fwww.ytbmp3.com&description=" target="_blank" title="Pin it" onclick="window.open('http://pinterest.com/pin/create/button/?url=' + encodeURIComponent(document.URL) + '&description=' +  encodeURIComponent(document.title)); return false;"><img alt="Pin it" src="/assets/social/black/Pinterest.0a459d7c.png"></a></li>
+          <li><a href="https://getpocket.com/save?url=https%3A%2F%2Fwww.ytbmp3.com&title=" target="_blank" title="Add to Pocket" onclick="window.open('https://getpocket.com/save?url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Add to Pocket" src="/assets/social/black/Pocket.a7bc747d.png"></a></li>
+          <li><a href="http://www.reddit.com/submit?url=https%3A%2F%2Fwww.ytbmp3.com&title=" target="_blank" title="Submit to Reddit" onclick="window.open('http://www.reddit.com/submit?url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Submit to Reddit" src="/assets/social/black/Reddit.93d99586.png"></a></li>
+          <li><a href="http://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fwww.ytbmp3.com&title=&summary=&source=https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Share on LinkedIn" onclick="window.open('http://www.linkedin.com/shareArticle?mini=true&url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Share on LinkedIn" src="/assets/social/black/LinkedIn.700ceb60.png"></a></li>
+          <li><a href="http://wordpress.com/press-this.php?u=https%3A%2F%2Fwww.ytbmp3.com&t=&s=" target="_blank" title="Publish on WordPress" onclick="window.open('http://wordpress.com/press-this.php?u=' + encodeURIComponent(document.URL) + '&t=' +  encodeURIComponent(document.title)); return false;"><img alt="Publish on WordPress" src="/assets/social/black/Wordpress.e4a38cec.png"></a></li>
+          <li><a href="https://pinboard.in/popup_login/?url=https%3A%2F%2Fwww.ytbmp3.com&title=&description=" target="_blank" title="Save to Pinboard" onclick="window.open('https://pinboard.in/popup_login/?url=' + encodeURIComponent(document.URL) + '&title=' +  encodeURIComponent(document.title)); return false;"><img alt="Save to Pinboard" src="/assets/social/black/Pinboard.962fed42.png"></a></li>
+          <li><a href="mailto:?subject=&body=:%20https%3A%2F%2Fwww.ytbmp3.com" target="_blank" title="Send email" onclick="window.open('mailto:?subject=' + encodeURIComponent(document.title) + '&body=' +  encodeURIComponent(document.URL)); return false;"><img alt="Send email" src="/assets/social/black/Email.eec9f56e.png"></a></li>
+        </ul>
+      </p>
+    </div>
+  </div>
+</footer>
+
+    <script src="/assets/vendor.aa89e7af.js"></script>
+    <script src="/assets/global.56cbe680.js"></script>
+    
+    <script>
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+      document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '524917434320868');
+      fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=524917434320868&ev=PageView&noscript=1" /></noscript>
+    
+    
+<script>
+  new Vue({
+    el: "#header",
+    data: {
+      isActive: false
+    }
+  })
+</script>
+
+    
+<template id="adsense" v-cloak>
+  <ins class="adsbygoogle"
+    :data-ad-client="adClient"
+    :data-ad-slot="adSlot"
+    :data-ad-format="adFormat"
+    :style="adStyle"></ins>
+</template>
+<script>
+  Vue.component('adsense', {
+    template: "#adsense",
+    props: {
+      adClient: {
+        type: String,
+        required: true
+      },
+      adSlot: {
+        type: String,
+        required: true
+      },
+      adFormat: {
+        type: String,
+        required: false,
+        default: 'auto'
+      },
+      adStyle: {
+        type: String,
+        required: false,
+        default: 'display: block'
+      },
+    },
+    mounted() {
+      (window.adsbygoogle = window.adsbygoogle || []).push({})
+    }
+  });
+  
+  var logo = "\/assets\/logo-header-converter.638e3b74.png";
+  app = new Vue({
+    el: "#app",
+    data: {
+      searchForm: {
+        fields: {
+          q: ""
+        },
+        errors: [],
+        fieldErrors: {},
+        isLoading: false,
+        isDone: false,
+        status: ""
+      },
+      moreForm: {
+        fields: {
+          q: "",
+          token: ""
+        },
+        errors: [],
+        fieldErrors: {},
+        isLoading: false,
+        isDone: false,
+      },
+      downloadForm: {
+        fields: {
+          id: "",
+          bitrate: "",
+          start: "",
+          end: ""
+        },
+        errors: [],
+        fieldErrors: {},
+        isLoading: false,
+        isDone: false
+      },
+      q: "",
+      token: "",
+      items: [],
+      suggestions: null,
+      headerSrc: logo,
+      doodles: [
+        "\/assets\/doodle\/1.d5b6ff72.gif",
+        "\/assets\/doodle\/2.1cae4c77.gif"
+      ]
+    },
+    watch: {
+      q: function() {
+        if (this.q.replace(/\s+/g, '') == app.searchForm.fields.q.replace(/\s+/g, '')) {
+          return
+        };
+        this.searchForm.fieldErrors = {};
+        if (this.q) {
+          this.searchForm.status = 'typing';
+        } else {
+          this.searchForm.status = '';
+        };
+        this.searchForm.fields.q = this.q;
+        this.searchDebounce()
+      }
+    },
+    methods: {
+      search: function(q) {
+        var app = this;
+        if (q) {
+          app.q = q;
+          app.searchForm.fields.q = q
+        };
+        if (app.searchForm.fields.q == "") {
+          app.searchForm.fieldErrors = {};
+          app.items = [];
+          app.moreForm.fields.token = "";
+          app.suggestions = null;
+          app.reset();
+          return
+        };
+        app.searchForm.status = 'searching';
+        httpPost(app.searchForm, '/i/search', function(response) {
+          app.reset();
+          if (!sameIDs(app.items, response.data.items)) {
+            app.items = processItems(response.data.items);
+          };
+          app.suggestions = response.data.suggestions || null;
+          app.moreForm.fields.token = response.data.next;
+          
+          ga('send', {
+            hitType: 'pageview',
+            page: location.pathname+'?q='+app.searchForm.fields.q
+          });
+          
+        }, function(response) {
+          standardHTTPError(app.searchForm, response);
+          app.reset();
+          app.items = [];
+          app.moreForm.fields.token = "";
+          app.suggestions = null;
+        })
+        document.getElementById("q").focus()
+      },
+      more: _.throttle(function() {
+        var app = this;
+        if (app.searchForm.isLoading) return;
+        if (app.moreForm.isLoading) return;
+        app.moreForm.fields.q = app.q;
+        httpPost(app.moreForm, '/i/search', function(response) {
+          app.reset();
+          var items = processItems(response.data.items);
+          for (var i = 0; i < response.data.items.length; i++) {
+            app.items.push(items[i])
+          }
+          app.moreForm.fields.token = response.data.next;
+        }, function(response) {
+          standardHTTPError(app.moreForm, response);
+          app.reset();
+          app.items = [];
+          app.token = "";
+        })
+      }, 500),
+      searchDebounce: _.debounce(function(q) {
+        this.search(q)
+      }, 500),
+      download: _.throttle(function(i) {
+        var app = this;
+        httpPost(app.items[i].downloadForm, '/i/download', function(response) {
+          window.location = response.data.location;
+          
+          ga('send', {
+            hitType: 'event',
+            eventCategory: 'ytbmp3',
+            eventAction: 'convert',
+            eventLabel: app.items[i].id
+          });
+          
+          app.items[i].downloadForm.isDone = true
+        })
+      }, 333),
+      reset: function() {
+        this.searchForm.status = ""
+      },
+      formatThousands: function(n, dp){
+        var e = '', s = e+n, l = s.length, b = n < 0 ? 1 : 0,
+            i = s.lastIndexOf('.'), j = i == -1 ? l : i,
+            r = e, d = s.substr(j+1, dp);
+        while ( (j-=3) > b ) { r = ',' + s.substr(j, 3) + r; }
+        return s.substr(0, j + 3) + r + 
+          (dp ? '.' + d + ( d.length < dp ? 
+              ('00000').substr(0, dp - d.length):e):e);
+      },
+      plural: function(n) {
+        if (n > 0) return 's';
+        return ''
+      },
+      adType: function() {
+        if (Math.max(document.documentElement.clientWidth, window.innerWidth || 0) > 979) {
+          return 'horizontal'
+        };
+        return 'rectangle'
+      },
+      showDoodle: function() {
+        if (this.doodles.length > 0) {
+          this.headerSrc = this.doodles[getRandomInt(0, this.doodles.length)]
+        }
+      },
+      hideDoodle: function() {
+        this.headerSrc = logo
+      },
+      toggleDoodle: function() {
+        if (this.headerSrc == logo) {
+          this.showDoodle()
+        } else {
+          this.hideDoodle()
+        }
+      }
+    },
+    mounted: function(){
+      document.getElementById("q").focus();
+      
+    }
+  });
+  var processItems = function(items) {
+    if (items != undefined) {
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        items[i].showDescription = item.summary == undefined || item.summary == "";
+        switch(item.type) {
+          case 'video':
+          items[i].downloadForm = {
+            fields: {
+              type: "mp3",
+              id: item.id,
+              bitrate: "",
+              start: "",
+              end: ""
+            },
+            errors: [],
+            fieldErrors: {},
+            isLoading: false,
+            isDone: false
+          };
+          break;
+          case 'playlist':
+          items[i].downloadForm = {
+            fields: {
+              type: "playlist",
+              id: item.id,
+              bitrate: ""
+            },
+            errors: [],
+            fieldErrors: {},
+            isLoading: false,
+            isDone: false
+          };
+          break;
+        }
+      };
+    };
+    return items
+  };
+  var sameIDs = function(a, b) {
+    var l = a.length;
+    if (l != b.length) {
+      return false
+    }
+    for (var i = 0; i < l; i++) {
+      if (a[i].id != b[i].id) {
+        return false
+      }
+    }
+    return true
+  };
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+</script>
+<script>
+  new Vue({
+    el: "#description",
+    data: {
+      showTimeInfo: false
+    }
+  })
+</script>
+
+  </body>
+</html>

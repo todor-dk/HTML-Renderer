@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Dom Files</title>
+    <meta charset="utf-8" />
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script src="DomTools.js"></script>
+    <script type="text/javascript">
+        // Key 1: 38d6f422f3dc4d18aee88e958cdc40cd
+        // Key 2: 14df86e18bdc47f9b317e029463e8269
+
+        var url = location.toString();
+        var idx = -1;
+        for (var i = 0; i < 3; i++) {
+            idx = url.indexOf('/', idx + 1);
+        }
+        var baseUrl = url.substr(0, idx + 1);
+
+        var intervalID = window.setInterval(analyzeDocsWorker, 100);
+
+        var runAnalyze = false;
+
+        function analyzeDocs()
+        {
+            runAnalyze = true;
+        }
+
+        function analyzeDocsWorker() {
+            if (!runAnalyze)
+                return;
+
+            runAnalyze = false;
+
+            var div = document.getElementById('content');
+            $.getJSON('api/documents')
+                .done(function (data) {
+                    // On success, 'data' contains a list of keywords.
+                    //$.each(data, function (id, keyword) {
+                    //    FindKeywordUrls(id, keyword);
+                    //});
+
+                    if (data != null) {
+                        div.innerText = baseUrl + data.Url;
+                        //if (true)
+                        //    return;
+                        var win = window.open(baseUrl + data.Url); // 'http://localhost:14873/acid1.htm'
+                        var doc = win.document;
+                        doc.onreadystatechange = function () {
+                            if (doc.readyState === "complete") {
+                                var dom = DomTools.AnalyzeDocument(doc);
+
+                                data.Dom = dom;
+
+                                $.ajax({
+                                    type: "PUT",
+                                    url: 'api/documents/' + data.Id,
+                                    data: JSON.stringify(data),
+                                    contentType: "application/json;charset=utf-8",
+                                    success: function (data1, status, xhr) {
+                                        // alert("The result is : " + status + ": " + data1);
+                                        runAnalyze = true;
+                                        win.close();
+                                    },
+                                    error: function (xhr) {
+                                        alert("ERROR: " + xhr);
+                                    }
+                                });
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        div.innerText = "DONE!";
+                    }
+                });
+        }
+
+        //function analyzeDocs()
+        //{
+        //    var win = window.open('http://localhost:14873/acid1.htm');
+        //    loadedDoc = win.document;
+        //}
+
+        //function analyzeDocument()
+        //{
+        //    var div = document.getElementById('content');
+        //    div.innerText = DomTools.AnalyzeDocument(loadedDoc);
+        //}
+    </script>
+</head>
+<body>
+    <a href="javascript:void(0)" onclick="analyzeDocs();">Analyze Documents</a>
+    <div id="content"></div>
+</body>
+</html>

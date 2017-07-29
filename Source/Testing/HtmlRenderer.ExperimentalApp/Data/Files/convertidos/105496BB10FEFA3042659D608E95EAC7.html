@@ -1,0 +1,665 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.1 Transitional//EN">
+<HTML>
+<HEAD>
+<title>GPS Latitude and Longitude Converter</title>
+<META NAME="Author" CONTENT="For CSGNetwork.Com, Computer Support Group - Dr. Gene Davis">
+<META NAME="Subject" CONTENT="CSGNetwork public information">
+<META NAME="Description" CONTENT="GPS Latitude and Longitude Converter, convert from any of three various GPS co-ordinate designations.">
+<META NAME="Keywords" CONTENT="GPS, satellite, navigation, co-ordinate, latitude, longitude, map, degree, degrees, minute, minutes, second, seconds, decimal, boat, ship, marine, travel, reservations, trip, tickets, itinerary, hike, airplane, plane, chart, aviation">
+<META NAME="Language" CONTENT="English">
+<META NAME="Expires" CONTENT="Never">
+<META NAME="Copyright" CONTENT="© 1977 - 2009 Computer Support Group - CSGNetwork and CSGNetwork.Com are registered trademarks with the US Patent and Trademark Office">
+<META NAME="Designer" CONTENT="Dr. Gene Davis">
+<META NAME="Publisher" CONTENT="Computer Support Group, Inc.">
+<META NAME="Revisit-After" CONTENT="14 Days">
+<META NAME="Distribution" CONTENT="Global">
+<META NAME="Robots" CONTENT="All">
+<script type="text/javascript">
+
+<!--
+
+
+
+// CED subroutine for cleaning up JavaScript rounding errors 
+
+// to any reasonable number of decimal places 5/5/1997 last mod 2/19/2004
+
+// round for decimal of (value of precision) places, default is 3
+
+// This routine can be used to pass a number and a number for precision
+
+// or just a number only, that is to be rounded to a set number of decimal
+
+// places. This routine supports leading and trailing zeros, leading and
+
+// trailing spaces, and padding. To prevent errors, pass variables as a string.
+
+
+
+function perRound(num, precision) {
+
+	var precision = 3; //default value if not passed from caller, change if desired
+
+	// remark if passed from caller
+
+	precision = parseInt(precision); // make certain the decimal precision is an integer
+
+    var result1 = num * Math.pow(10, precision);
+
+    var result2 = Math.round(result1);
+
+    var result3 = result2 / Math.pow(10, precision);
+
+    return zerosPad(result3, precision);
+
+}
+
+
+
+function zerosPad(rndVal, decPlaces) {
+
+    var valStrg = rndVal.toString(); // Convert the number to a string
+
+    var decLoc = valStrg.indexOf("."); // Locate the decimal point
+
+    // check for a decimal 
+
+    if (decLoc == -1) {
+
+        decPartLen = 0; // If no decimal, then all decimal places will be padded with 0s
+
+        // If decPlaces is greater than zero, add a decimal point
+
+        valStrg += decPlaces > 0 ? "." : "";
+
+    }
+
+    else {
+
+        decPartLen = valStrg.length - decLoc - 1; // If there is a decimal already, only the needed decimal places will be padded with 0s
+
+    }
+
+     var totalPad = decPlaces - decPartLen;    // Calculate the number of decimal places that need to be padded with 0s
+
+    if (totalPad > 0) {
+
+        // Pad the string with 0s
+
+        for (var cntrVal = 1; cntrVal <= totalPad; cntrVal++) 
+
+            valStrg += "0";
+
+        }
+
+    return valStrg;
+
+}
+
+// send the value in as "num" in a variable
+
+
+
+// clears field of default value
+
+function clear_field(field) {
+
+		if (field.value==field.defaultValue) {
+
+			field.value=''
+
+		}
+
+	}
+
+function convertDDD()
+{
+	var deg = document.inDDDMMSS.form1_ddd.value;
+	var min = document.inDDDMMSS.form1_mm.value;
+	var sec = document.inDDDMMSS.form1_ss.value;
+
+	if (deg == "" || min == "" || sec == ""){
+			alert("Make a valid entry for DDD, MM and SS.");
+	}
+
+	else if (deg > 180 || deg < 0){
+			alert("Enter a value between 0 and 180 degrees.");
+	}
+	else if (min > 60 || min < 0){
+			alert("Enter a value between 0 and 60 minutes.");
+	}
+	else if (sec > 60 || sec < 0){
+			alert("Enter a value between 0 and 60 seconds.");
+	}
+
+	else {
+
+		document.inDDDMMSS.form1_gpsdeg.value = deg;
+
+		var dec_min = (min*1.0 + (sec/60.0));
+		document.inDDDMMSS.form1_gpsmin.value = dec_min;
+
+		var answer1 = deg*1.0 + (dec_min/60.0);
+		document.inDDDMMSS.form1_dec.value=answer1;
+	}
+}
+
+function convertDecDeg()
+{
+	var deg = 0;
+	deg = document.inDecDeg.form2_dec.value;
+
+	if (deg == ""){
+			alert("Enter a value for decimal degrees.");
+		}
+		else if (deg > 180 || deg < 0){
+			alert("Enter a value between 0 and 180 for degrees");
+		}
+	else {
+		var gpsdeg = parseInt(deg);
+		var remainder = deg - (gpsdeg * 1.0);
+		var gpsmin = remainder * 60.0;
+
+		document.inDecDeg.form2_gpsdeg.value = gpsdeg;
+		document.inDecDeg.form2_gpsmin.value = gpsmin;
+
+		document.inDecDeg.form2_ddd.value = gpsdeg;
+		document.inDecDeg.form2_mm.value= parseInt(gpsmin);
+		var remainder2 = gpsmin - (parseInt(gpsmin)*1.0);
+		document.inDecDeg.form2_ss.value = parseInt(remainder2*60.0);
+	}
+}
+
+function convertGps()
+{
+	var deg = 0;
+	var min = 0;
+	deg = document.inGPScoord.form3_gpsdeg.value;
+	min = document.inGPScoord.form3_gpsmin.value;
+
+	if (deg == "" || min == ""){
+			alert("Enter a value for GPS degrees and GPS min.");
+	}
+	else if (deg > 180 || deg < 0){
+			alert("Degrees should be between 0 and 180.");
+	}
+	else if (min > 60 || min < 0){
+				alert("Minutes should be between than 0 and 60.");
+	}
+	else {
+
+		document.inGPScoord.form3_dec.value = (deg*1.0) + min/60.0;
+
+		document.inGPScoord.form3_ddd.value = deg;
+		document.inGPScoord.form3_mm.value= parseInt(min);
+		var remainder2 = min - (parseInt(min)*1.0);
+		document.inGPScoord.form3_ss.value = parseInt(remainder2*60.0);
+	}
+}
+
+// --->
+</script>
+
+</HEAD>
+
+
+<BODY BGCOLOR=FFFFFF TEXT=000000 LINK=0000FF VLINK=800080>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-8018289210612122",
+    enable_page_level_ads: true
+  });
+</script>
+<STYLE TYPE="text/css">
+<!--
+body { font-family: Tahoma, Verdana; }
+input.btn {
+  color:black;
+  font: bold 75% 'tahoma',helvetica,sans-serif;
+  background-color:#ffd148;
+  border: 2px solid;
+  border-color: #c7c5c8;
+ }
+ 
+ input.btn2 {
+  color:black;
+  font: bold 95% 'tahoma',helvetica,sans-serif;
+  background-color:#ffd148;
+  border: 2px solid;
+  border-color: #c7c5c8;
+ 
+}
+//-->
+</STYLE>
+<meta name="viewport" content="width=958, initial-scale=1">
+<div align="center"><table width="949" border="0" cellpadding="0" bgcolor="#899194" cellspacing="0">
+  <tr>
+    <td colspan="13"><div align="left"><img src="http://storage.googleapis.com/csgnetworkstatic/allbar_header.png" width="950" height="37" alt="CSGNetwork.com Free Information"></div></td>
+  </tr>
+<tr valign="middle"><td><div align="left" style="float:left;">
+<form action="http://www.csgnetwork.com/search_frame.html" id="cse-search-box">
+  <div>
+    <input type="hidden" name="cx" value="partner-pub-8018289210612122:1424138921" />
+    <input type="hidden" name="cof" value="FORID:10" />
+    <input type="hidden" name="ie" value="UTF-8" />
+    <input type="text" name="q" size="55" />
+    <input type="submit" name="sa" value="Search" class="btn" />
+  </div>
+</form>
+</div>
+
+<div align="center" style="float:right; margin-right:40px;"><span style="decoration:none; color:white; font-weight:bold; font-size:smaller;">
+<a href="http://www.csgnetwork.com" style="decoration:none; color:white;"><b>Home</a></b>  |  
+<a href="http://www.csgnetwork.com/top_free_apps.html" style="decoration:none; color:white;"><b>Top Free Apps</b></a>  |<br />
+<a href="http://www.csgnetwork.com/converters.html" style="decoration:none; color:white;"><b>CALCULATORS and CONVERTERS</b></a>  |  
+<a href="#" onClick="history.go(-1)" style="decoration:none; color:white;"><b>Back</b></a> </span></div>
+</td></tr>
+</table></div>
+
+<tr><td colspan="3"><br />
+<div align="center">
+<!-- Geography Top Link Unit -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:728px;height:15px"
+     data-ad-client="ca-pub-8018289210612122"
+     data-ad-slot="3079665409"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+</td></tr>
+</table></div>
+
+
+<TABLE ALIGN="center" width="950" BORDER=0 CELLPADDING=5>
+
+<TR BGCOLOR=#FFFFFF>
+
+<!--ROW 1-->
+
+<TD WIDTH=80%>
+
+<h1>GPS Latitude and Longitude Converter</h1>
+
+
+
+<center>
+
+<TABLE ALIGN="center" BORDER=5 CELLPADDING=5>
+
+<TR BGCOLOR=#FFFFFF>
+<td valign="top">
+<!-- Geography Left W Skyscraper -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:160px;height:600px"
+     data-ad-client="ca-pub-8018289210612122"
+     data-ad-slot="8754124868"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+</td>
+<!--ROW 1-->
+
+<TD WIDTH=80%>
+
+
+
+<TABLE ALIGN="center" BORDER=5 CELLPADDING=5>
+
+<TR BGCOLOR=#FFFFFF>
+
+<TD WIDTH=80%>
+
+<!--ROW 1-->
+
+<center>
+
+
+
+<TABLE ALIGN="center" BORDER=5 CELLPADDING=5>
+          <tr>
+        <td><p align="center"><strong>GPS Latitude / Longitude Coordinate Converter</strong></td>
+      </tr>
+      <tr>
+        <td>
+
+          
+        </td>
+      </tr>
+      <tr>
+        <td>
+        <form name="inDDDMMSS">
+          <div><div align="center"><center>
+<TABLE ALIGN="center" BORDER=5 CELLPADDING=5 WIDTH=500>
+<TR BGCOLOR="#B6D4D2">
+<TD align="center" colspan="2">
+Required Data Entry
+</td>
+</tr>
+				<tr>
+				  <td>Degrees/Minutes/Seconds</td>
+				  <td>
+				     DDD <input type="text" size="3" name="form1_ddd">
+				     MM <input type="text" size="2" name="form1_mm">
+				     SS <input type="text" size="2" name="form1_ss">
+				  </td>
+				</tr>
+				<tr>
+				  <td align="center" colspan="2" BGCOLOR="#B6D4D2"><input type="button" value="Calculate" onClick="convertDDD(this.inDDDMMSS)">&nbsp;&nbsp;&nbsp;<input type="reset" value="Reset Values">
+                  <br />
+<hr style="background:#ffd148; border:0; height:5px" />
+<!-- Geography Mid 300 -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:250px"
+     data-ad-client="ca-pub-8018289210612122"
+     data-ad-slot="1412130975"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<hr style="background:#ffd148; border:0; height:5px" /></td>
+				</tr>
+<TR BGCOLOR="#B6D4D2">
+<TD align="center" colspan="2">
+Calculated Results
+</td>
+</tr>
+				<tr>
+				  <td>GPS Coordinate</td><td>
+				    DDD <input type="text" size="3" name="form1_gpsdeg"> 
+				    MM.MMMM <input type="text" size="8" name="form1_gpsmin"></td>
+				</tr>
+				<tr>
+				  <td>Decimal Degrees</td><td>
+				    DDD.DDDD <input type="text" size="12" name="form1_dec"></td>
+				</tr>
+            </table>
+          </center></div></div>
+        </form>
+        </td>
+      </tr>
+		<tr>
+		  <td>
+
+		  <form name="inDecDeg">
+		    <small><small>
+			<div><div align="center"><center>
+<TABLE ALIGN="center" BORDER=5 CELLPADDING=5 WIDTH=500>
+<TR BGCOLOR="#B6D4D2">
+<TD align="center" colspan="2">
+Required Data Entry
+</td>
+</tr>
+			  <tr>
+				<td>Decimal Degrees</td><td>
+				   DDD.DDDD <input type="text" size="12" name="form2_dec">
+				</td>
+			  </tr>
+			  <tr>
+				<td align="center" colspan="2" BGCOLOR="#B6D4D2"><input type="button" value="Calculate" onClick="convertDecDeg(this.inDecDeg)">&nbsp;&nbsp;&nbsp;<input type="reset" value="Reset Values"></td>
+			  </tr>
+<TR BGCOLOR="#B6D4D2">
+<TD align="center" colspan="2">
+Calculated Results
+</td>
+</tr>
+			  <tr>
+				  <td>GPS Coordinate</td><td>
+				  
+				 DDD <input type="text" size="3" name="form2_gpsdeg"> 
+				 MM.MMMM <input type="text" size="8" name="form2_gpsmin"></td>
+			  </tr>
+		      <tr>
+				  <td>Degrees/Minutes/Seconds</td><td>
+				     DDD <input type="text" size="3" name="form2_ddd">
+				     MM <input type="text" size="2" name="form2_mm">
+				     SS <input type="text" size="2" name="form2_ss"></td>
+			  </tr>
+			</table>
+			</center></div></div>
+		  </form>
+		  </td>
+      </tr>
+		<tr>
+		  <td>
+		  <form name="inGPScoord">
+		    <small><small>
+			<div><div align="center"><center>
+<TABLE ALIGN="center" BORDER=5 CELLPADDING=5 WIDTH=500>
+<TR BGCOLOR="#B6D4D2">
+<TD align="center" colspan="2">
+Required Data Entry
+</td>
+</tr>
+			  <tr>
+				<td>GPS Coordinate</td><td> DDD <input type="text" size="3" name="form3_gpsdeg"> 
+				 MM.MMMM <input type="text" size="8" name="form3_gpsmin"></td>
+			  </tr>
+			  <tr>
+				<td align="center" colspan="2" BGCOLOR="#B6D4D2"><input type="button" value="Calculate" onClick="convertGps(this.inGPScoord)">&nbsp;&nbsp;&nbsp;<input type="reset" value="Reset Values"></td>
+			  </tr>
+<TR BGCOLOR="#B6D4D2">
+<TD align="center" colspan="2">
+Calculated Results
+</td>
+</tr>
+			  <tr>
+				 <td>Decimal Degrees</td><td>
+				     DDD.DDDD <input type="text" size="12" name="form3_dec"></td>
+			  </tr>
+		      <tr>
+				  <td>Degrees/Minutes/Seconds</td><td>
+				        DDD <input type="text" size="3" name="form3_ddd">
+				        MM <input type="text" size="2" name="form3_mm">
+				        SS <input type="text" size="2" name="form3_ss">
+				  </td>
+			 </tr>
+			</table>
+			</center></div></div>
+		  </form>
+		  </td>
+		  
+      </tr>
+    </table>
+    </center></div>
+
+
+
+<div align="center"><img src="latlongrid.gif" width="473" height="348" alt="GPS Latitude Longitude grid" border="0"></div>
+
+
+
+</TD>
+
+</TR>
+
+</TABLE>
+
+</center>
+
+</TD>
+
+</TR>
+
+</TABLE>
+
+</center>
+
+</TD>
+
+</TR>
+<tr>
+<td colspan="2">
+<br><br>
+
+This <A HREF="http://www.csgnetwork.com/glossaryc.html#converter"><B>converter</B></a> requires the use of <A HREF="http://www.csgnetwork.com/glossaryj.html#Javascript"><B>Javascript</B></a> enabled and capable browsers. It is designed to convert the various distinct methods of co-ordinate nomenclature from one methodology to another. Due to the fact that GPS information is so readily available now for daily weather information, automotive use, aviation, marine and personal use, many companies have set their own standards as to how that information is displayed and disseminated. (<A HREF="http://www.ngs.noaa.gov/cgi-bin/nadcon.prl" target="_blank" rel="nofollow">Get NAD27 and NAD83 conversion info from NOAA here...</a>) Any method is very accurate in the native form but converting between them can create substantial error. When using a hand held <A HREF="http://www.csgnetwork.com/glossaryg.html#GPS"><B>GPS</B></a> for instance, you may have to use the information and convert it to or from what a <A HREF="http://www.csgnetwork.com/glossaryg.html#GIS"><B>GIS</B></a> map displays. We have created this series of converters to take degrees, minutes and seconds and convert them to decimal degrees or degrees and decimal minutes. In order to establish a point, you MUST have latitude and longitude coordinates in one form or another. If you need to get that information relating to distances between points, use the <A HREF="http://www.csgnetwork.com/gpsdistcalc.html"><B>GPS Latitude and Longitude Distance Calculator</B></a>. If you need to get that information to a different format, use these converters. (Please keep in mind that this is a conversion utility and NOT an entry for a point. Validity is NOT tested. The minutes and seconds designations are OF ARC and not of time.) The different formats are as follows:<br /><br />
+Degrees, minutes and seconds (DDD, MM, SS) is the conventional method of presentation. Remember that in the case of degrees of latitude, the format would be negative or positive DD, while longitude could be negative or positive DDD. There is usually a quadrasphere designation as well, such as N, S, E or W, based on the equator and the prime meridian. For the hemisphere, either North or South, the designation is N or S for latitude. East of the prime meridian is E (positive) and West of the prime meridian is W (negative). Negative numbers (in certain situations, Southern latitude is displayed as negative; if you see a negative latitude, it is South while a negative longitude is West) can also be used to express a quadrasphere designation. In this converter, we do neither since it does not matter; we are ONLY converting numbers. All numbers are assumed to be positive.<br /><br />
+Decimal Degrees is displayed as the degrees in normal value, with both minutes and seconds in decimal format, as a degree value. There is ONLY a degree designation. (DDD.DDDD) A maximum of 4 decimal places is adequate.<br /><br />
+What is most often known as GPS format (though not all GPS units use it o agree on it...), is displayed as (DDD,MM.MMMM) in which seconds are converted to decimal minutes, as a minute value. Seconds have the value of 0 to 60, with 0 and 60 (usually designated as 0 to 59 and then restarting at 0) being the same value, minutes have the same characteristics and degrees are valid from 0 to 180 and 180 to 0, (0 and 180 do NOT have the same value) both North and South of the equator, and East and West of the prime meridian.
+<br /><br />
+If you are not familiar with latitude and longitude, here is a crash course in navigation. (Probably a poor choice of words...) Lines of latitude and longitude are hypothetical lines on the surface of the Earth. On the Earth, lines of latitude are circles of different size. The longest (largest in diameter) is the equator, whose latitude is zero, while at the poles, at latitudes 90° north and 90° south (or -90°), the circles shrink to a point. On the Earth, lines of constant longitude (meridians) extend from pole to pole, and cross the lines of latitude. Every point on the surface of the Earth has coordinates where a given line of latitude and a give line of longitude intersect (cross). To sum it up, latitude is measured from the equator, with positive values going north (0 to 90) and negative values going south (0 to -90). Longitude is measured from the Prime Meridian (which is the longitude that runs through Greenwich, England), with positive values going east (0 to 180) and negative values going west (0 to -180). So, for example, 65 degrees west longitude, 45 degrees north latitude is -65 degrees longitude, +45 degrees latitude. Now that the designations (and reasons for them) are perfectly clear, here is the set of formulae if you need to do this manually.<br /><br />
+
+Degrees Minutes Seconds to Degrees Minutes.m (GPS)<br>
+Degrees = Degrees, Minutes.m = Minutes + (Seconds / 60)<br>
+<br />
+Degrees Minutes.m to Decimal Degrees<br>
+.d = M.m / 60, Decimal Degrees = Degrees + .d<br /><br />
+There are 60 minutes in a degree and 60 seconds in a minute; 3600 seconds in a degree. There are 360 degrees in a complete circle or sphere but in all longitude and latitude measurements, the total of the degrees is expressed as 2 halves of 180 degrees each.
+</td></tr>
+</TABLE>
+
+</center>
+
+<center>
+
+Version 5.1.4
+
+</center>
+
+
+</TD>
+
+</TR>
+
+</TABLE>
+
+
+
+</center>
+
+</TD>
+
+</TR>
+
+</TABLE>
+
+</center>
+
+</center>
+
+<br>
+
+<br>
+
+
+
+</TD>
+
+</TR>
+
+</TABLE>
+<!-- google_ad_section_start(weight=ignore) -->
+<!--Below is thumbnail code for facebook-->
+<link rel="image_src" href="http://www.csgnetwork.com/Icons/thumb_information.png">
+<link rel="image_src" href="http://www.csgnetwork.com/Icons/thumb_calculator.png">
+</td></tr></table>
+<div style="clear:both;"></div>
+<div align="center">
+<table border="0" bgcolor="#FFFFFF" width="750">	   
+<tr><td><div style="float:left;font-size:smaller;margin-left:70px;">
+Leave us a question or comment on <a href="http://www.facebook.com/pages/CSGNetworkcom-Free-Apps/139436549442339" target="_blank">Facebook <img src="http://storage.googleapis.com/csgnetworkstatic/facebook-icon.png" height="20" width="20" border="0"/></a></div></td></tr>
+<tr valign="middle">
+<td></td><td colspan="2" bgcolor="#999DA8"><div align="center" style="font-size:14pt; color:#FFFFFF;"><b>Search or Browse Our Site</b></div></font></td>
+</tr><tr><td>  
+<div align="center">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- All pages Large Rectangle -->
+<ins class="adsbygoogle"
+     style="display:inline-block;width:336px;height:280px"
+     data-ad-client="ca-pub-8018289210612122"
+     data-ad-slot="3358458988"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</td>
+<!-- SiteSearch Google -->
+</td><td bgcolor="ffffff" valign="top">
+<div align="center"><table border="0" cellpadding="4" width="70%" bgcolor="FFFFFF">
+  <tr><td colspan="3"><div align="center">
+<form action="http://www.csgnetwork.com/search_frame.html" id="cse-search-box">
+  <div>
+    <input type="hidden" name="cx" value="partner-pub-8018289210612122:li00ja-20in" />
+    <input type="hidden" name="cof" value="FORID:10" />
+    <input type="hidden" name="ie" value="ISO-8859-1" />
+    <input type="text" name="q" size="40" />
+    <input type="submit" class="btn2" width="40" name="sa" value="Search" />
+  </div></form>
+<script async type="text/javascript" src="http://www.google.com/cse/brand?form=cse-search-box&amp;lang=en"></script></div>
+</td></tr><tr valign="top" bgcolor="FFFFFF"><td></b><span style="font-size:smaller;">
+<A HREF="http://www.csgnetwork.com/automotiveconverters.html"><b>Automotive</b></a><BR>
+<A HREF="http://www.csgnetwork.com/aviationconverters.html"><b>Aviation</b></a><BR>
+<A HREF="http://www.csgnetwork.com/financialconverters.html"><b>Business</b></a><BR>
+<A HREF="http://www.csgnetwork.com/communicateconverters.html"><b>Communications</b></a><BR>
+<A HREF="http://www.csgnetwork.com/computerconverters.html"><b>Computer</b></a><BR>
+<A HREF="http://www.csgnetwork.com/constructionconverters.html"><b>Construction</b></a><BR>
+<A HREF="http://www.csgnetwork.com/electronicsconverters.html"><b>Electronics</b></a><BR>
+<A HREF="http://www.csgnetwork.com/everydayconverters.html"><b>Everyday Use</b></a><BR>
+<A HREF="http://www.csgnetwork.com/financialconverters.html"><b>Financial</b></a><BR>
+<A HREF="http://www.csgnetwork.com/generalconverters.html"><b>General Interest</b></a><BR>
+<A HREF="http://www.csgnetwork.com/geographyconverters.html"><b>Geography Related</b></a><BR>
+<A HREF="http://www.csgnetwork.com/healthconverters.html"><b>Health</b></a></span>
+</td>   
+ <td width="125"><span style="font-size:smaller;">
+<A HREF="http://www.csgnetwork.com/constructionconverters.html"><b>Home Repair</b></a><BR>
+<A HREF="http://www.csgnetwork.com/sssconverters.html"><b>Javascript</b></a><BR>
+<A HREF="http://www.csgnetwork.com/lotterycalcs.html"><b>Lottery</b></a><BR>
+<A HREF="http://www.csgnetwork.com/marineconverters.html"><b>Marine</b></a><BR>
+<A HREF="http://www.csgnetwork.com/mathhelpconverters.html"><b>Math Help</b></a><BR>
+<A HREF="http://www.csgnetwork.com/mathconverters.html"><b>Math Scripts</b></a><BR>
+<A HREF="http://www.csgnetwork.com/automotiveconverters.html"><b>Mechanical</b></a><BR>
+<A HREF="http://www.csgnetwork.com/financialconverters.html"><b>Money</b></a><BR>
+<A HREF="http://www.csgnetwork.com/scienceconverters.html"><b>Science</b></a><BR>
+<A HREF="http://www.csgnetwork.com/sportsconverters.html"><b>Sports</b></a><BR>
+<A HREF="http://www.csgnetwork.com/timeconverters.html"><b>Time</b></a><BR>
+<A HREF="http://www.csgnetwork.com/weatherconverters.html"><b>Weather</b></a></span>
+</td></tr></table>
+<!-- google_ad_section_stop(weight=ignore) -->
+</td></tr>
+<tr><td colspan="4"><div align="center"><img src="http://storage.googleapis.com/csgnetworkstatic/allbottom.png" alt="Free Information Calculators and Converters" /></div>
+</td></tr></table>
+
+<br />
+<!-- google_ad_section_start(weight=ignore) -->
+<div align="center"><table width="950" border="0" cellpadding="0" cellspacing="0"><tr><td>
+</td>
+<td valign="middle" align="left"><img src="http://storage.googleapis.com/csgnetworkstatic/cslogo.png" width="234" height="16" alt="International Copyright Violation" border="0"></td>
+</tr></table></div>
+<div align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="950">
+<tr><td><SCRIPT LANGUAGE="JavaScript"><!--
+    today=new Date();
+    y0=today.getFullYear();//  --->
+</SCRIPT>
+<div align="center" style="font-size:x-small">Registered&reg; Trademark&trade; and Copyright© 1973 - <SCRIPT LANGUAGE="JavaScript">
+ <!--- 
+    document.write(y0);
+ // ---></SCRIPT>
+<a href="http://www.csgnetwork.com/">CSG, Computer Support Group, Inc. and CSGNetwork.Com</a> All Rights Reserved</b></div><br />
+</td></tr></table>
+<font size="3"><div align="center"><a href="http://www.csgnetwork.com/">Home</a> | <a href="http://www.csgnetwork.com/advertising.html" rel="nofollow">Advertising</a> | <a href="http://www.csgnetwork.com/converters.html">Calculators and Converters</a> | <a href="http://www.csgnetwork.com/contact.html">Contact Us</a> | <a href="http://www.csgnetwork.com/sssconverters.html">Javascript</a> | <a href="http://www.csgnetwork.com/sitemap.html">Sitemap</a> | <a href="http://www.csgnetwork.com/glossary.html">Glossary</a> | <a href="http://www.csgnetwork.com/top_free_apps.html">Top Free Apps</a></div></font>
+<!-- google_ad_section_stop(weight=ignore) -->
+<!-- END of Last Page Load or Refresh JavaScript -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-586965-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</TD>
+
+</TR>
+
+</TABLE>
+
+</BODY> 
+
+</HTML>
+
+
+

@@ -1,0 +1,462 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <script>
+            var proto = "https:";
+            if (window.location.protocol != proto) {
+                window.location.href = proto + window.location.href.substring(window.location.protocol.length)
+            }
+        </script>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Mail.Gov.In</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=8" > <!-- IE8 mode -->
+            <link href="css/style.css" rel="stylesheet" type="text/css" />
+            <script src="js/js-image-slider.js" type="text/javascript"></script>
+
+
+            <style type="text/css">
+                @import "../../../js/dojotoolkit/dojo/resources/dojo.css";
+                @import "../../../js/dojotoolkit/dijit/themes/dijit.css";
+                @import "../../../js/dojotoolkit/dijit/themes/dijit_rtl.css";
+                @import "../../../js/dojotoolkit/dijit/themes/tundra/form/Button.css";
+                @import "../../../js/dojotoolkit/dojox/form/resources/DropDownSelect.css";
+            </style>
+            <link rel="stylesheet" href="../../../layout/css/login.css" type="text/css"/>
+
+
+            <script type="text/javascript">
+            var djConfig = {
+                cacheBust: "3.0.1.0.0_16051217",
+                isDebug: false,
+                parseOnLoad: true
+            };
+
+            (function () {
+                function getParameter(paramName) {
+                    paramName += "=";
+                    var queryString = window.location.search;
+                    var strBegin = queryString.indexOf(paramName);
+                    if (strBegin == -1) {
+                        strBegin = queryString.length;
+                    } else {
+                        strBegin += paramName.length;
+                    }
+                    var strEnd = queryString.indexOf("&", strBegin);
+
+                    if (strEnd == -1) {
+                        strEnd = queryString.length;
+                    }
+
+                    return queryString.substring(strBegin, strEnd);
+                }
+
+                var locale = getParameter("lang");
+                if (locale.length > 0) {
+                    djConfig.locale = locale.toLowerCase();
+                    if ((djConfig.locale.indexOf("ar") == 0) || (djConfig.locale.indexOf("he") == 0)) {
+                        djConfig.direction = "rtl";
+                    } else {
+                        djConfig.direction = "ltr";
+                    }
+                    var top = document.getElementsByTagName("html")[0];
+                    top.dir = djConfig.direction;
+                }
+            })()
+            </script>
+
+
+            <script type="text/javascript" src="../../../js/dojotoolkit/dojo/dojo.js"></script>
+
+            <script type="text/javascript">
+            dojo.registerModulePath("iwc", "../../iwc");
+            dojo.require("iwc.i18n.resources");
+            dojo.requireLocalization("iwc.i18n", "resources");
+            iwc.l10n = dojo.i18n.getLocalization("iwc.i18n", "resources");
+            dojo.require("iwc.login");
+
+            function reloadWithHttps() {
+                if (window.location.protocol == "http:") {
+                    var contextPath = iwc.cookie("iwc-auth", "path");
+                    var defaultURL = "";
+                    if (contextPath && contextPath != "") {
+                        defaultURL = "https://" + window.location.host + contextPath;
+                    } else {
+                        defaultURL = "https://" + window.location.host + window.location.pathname + window.location.search;
+                    }
+                    window.location.replace(defaultURL);
+                }
+            }
+
+            dojo.addOnLoad(function () {
+                reloadWithHttps();
+                // prevent clickjacking
+                if (top.location.hostname != self.location.hostname) {
+                    try {
+                        if (document.forms[0].password) {
+                            document.forms[0].style.display = "none";
+                        }
+                    } catch (e) {
+                        document.body.style.display = "none";
+                    }
+                }
+
+                iwc.login.setFocus();
+                iwc.login.doI18N();
+                //document.getElementById('picCache').src='imageList.html?'+djConfig.cacheBust;
+                //var lang = langLblMapping[djConfig.locale.toLowerCase()]?langLblMapping[djConfig.locale.toLowerCase()]:langLblMapping['en-us'];
+                var lang = "en_us";
+                if (djConfig && djConfig.locale) {
+                    lang = djConfig.locale.toLowerCase();
+                }
+                dijit.byId('langButton').attr("value", lang);
+                dojo.connect(dijit.byId("langButton"), "onChange", function (lang) {
+                    var loginUrl = window.location;
+
+                    if (window.location.search != "" && window.location.search.indexOf('lang=') > -1)
+                        loginUrl = loginUrl.href.replace('lang=' + iwc.login.getParameter('lang'), 'lang=' + lang);
+                    else
+                        loginUrl = loginUrl + "?lang=" + lang
+
+                    if (window.location.search.indexOf("u=1") == -1)
+                        loginUrl = loginUrl + '&u=1';
+
+                    window.location = loginUrl;
+                    return false;
+                });
+            });
+
+            function login() {
+                return iwc.login.checkName();
+            }
+            </script>
+
+    </head>
+
+    <body>
+        <script type="text/javascript">
+
+        </script>
+
+        <div id="header">
+            <div class="emb"><img src="images/emb.png" width="64" height="57" alt="" /></div>
+            <div class="gov" title="mail.gov.in"><h1>@GOV.IN</h1></div>
+            <div class="links-right-top">
+                <a href="safe.html" target="_blank"><img src="images/safe-mail.png" width="74" height="61" alt="SAFEEmail" title="SAFEEmail" /></a>
+                <a href="policy.html" target="_blank"><img src="images/policies.png" width="74" height="61" alt="Policies" title="Policies" /></a>
+                <a href="faq.html" target="_blank"><img src="images/faq.png" width="74" height="61" alt="FAQ" title="FAQ" /></a>
+                <a href="https://quicksms.gov.in" target="_blank"><img src="images/quickmail.png" width="74" height="61" alt="QuickSMS" title="QuickSMS" /></a>
+            </div>
+        </div>
+
+        <div id="mid-container">
+            <div class="mid-container-left">
+                <div id="importent-note-area"><br />
+                    <div align="center">
+                        <strong>This site can be best viewed in Firefox 3.5 and above ,IE 9 and above,chrome 18 and above. To check your browser version <a href="http://www.whatbrowser.org/" target="_blank"> click here </a></strong>
+                        <br/><br/> For slow Internet connections (Data Card, Low end configurations Desktop). <br/> <a href="https://webmail.nic.in/">Click Here</a> </div>
+                    <div id="sliderFrame">
+                        <div id="slider">
+                            <a href="https://logapp.emailgov.in" target="_blank">  <img src="images/banner5.jpg" alt=""  /> </a>
+                            <a href="https://msgapp.emailgov.in/logindetail/" target="_blank"> <img src="images/banner1.jpg" alt="" /> </a>
+                            <a href="https://msgapp.emailgov.in/idlookup/" target="_blank"> <img src="images/banner2.jpg" alt="" /> </a>
+                            <a href="https://quicksms.gov.in/mobile" target="_blank"><img src="images/banner3.jpg" /> </a>
+                            <a href="https://quicksms.gov.in" target="_blank"> <img src="images/banner4.jpg" /> </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <hr color="#666666" />
+            <div id="contentu">
+                <div class="gallery-wrap">
+                    <div class="gallery clearfix">
+                        <div class="gallery__item">
+                            <a href="http://egreetings.gov.in" target="_blank" class="gallery__link">
+                                <img src="images/small.gif" class="gallery__img" alt="" />
+                            </a>
+                        </div>
+                        <div class="gallery__item">
+                            <a href="http://www.nkn.in/" class="gallery__link" target="_blank">
+                                <img src="images/4.png" class="gallery__img" alt="" />
+                            </a>
+                        </div>
+                        <div class="gallery__item">
+                            <a href="https://sampark.gov.in" target="_blank" class="gallery__link">
+                                <img src="images/sampark.gif" class="gallery__img" alt="" />
+                            </a>
+                        </div>
+
+                        <div class="gallery__item">
+                            <a href="http://www.getyourown.in" target="_blank" class="gallery__link">
+                                <img src="images/nixi_logo_1.jpg" class="gallery__img" alt="" />
+                            </a>
+                        </div>
+
+
+                        <div class="gallery__item">
+                            <a href="http://www.pmindia.gov.in" class="gallery__link" target="_blank">
+                                <img src="images/pm.jpg" class="gallery__img" alt="" />
+                            </a>
+                        </div>
+
+                        <div class="gallery__item">
+                            <a href="http://esamiksha.gov.in" class="gallery__link" target="_blank">
+                                <img src="images/esmiksha.jpg" class="gallery__img" alt="" />
+                            </a>
+                        </div>
+                         <div class="gallery__item">
+                            <a href="http://esuvidha.gov.in" class="gallery__link" target="_blank">
+                                <img src="images/esuvidha.jpg" class="gallery__img" alt="" />
+                            </a>
+                        </div>
+
+                        <div class="gallery__item">
+                            <a href="http://www.india.gov.in/" target="_blank" class="gallery__link">
+                                <img src="images/3.png" class="gallery__img" alt="" />
+                            </a>
+                        </div>
+
+                        <div class="gallery__item">
+                            <a href="http://data.gov.in" target="_blank" class="gallery__link">
+                                <img src="images/2.png" class="gallery__img" alt="" />
+                            </a>
+                        </div>
+
+                    </div> <!-- .gallery -->
+                    <div class="gallery__controls clearfix">
+                        <div href="#" class="gallery__controls-prev">
+                            <img src="images/prev.png" alt="" />
+                        </div>
+                        <div href="#" class="gallery__controls-next">
+                            <img src="images/next.png" alt="" />
+                        </div>
+                    </div> <!-- .gallery__controls -->
+
+                    <script type="text/javascript" src="js/new.js"></script>
+                    <script type="text/javascript">
+                        // Only run everything once the page has completely loaded
+                        $(window).load(function() {
+
+                            // Set general variables
+                            // ====================================================================
+                            var totalWidth = 0;
+
+                            // Total width is calculated by looping through each gallery item and
+                            // adding up each width and storing that in `totalWidth`
+                            $(".gallery__item").each(function() {
+                                totalWidth = totalWidth + $(this).outerWidth(true);
+                            });
+
+                            // The maxScrollPosition is the furthest point the items should
+                            // ever scroll to. We always want the viewport to be full of images.
+                            var maxScrollPosition = totalWidth - $(".gallery-wrap").outerWidth();
+
+                            // This is the core function that animates to the target item
+                            // ====================================================================
+                            function toGalleryItem($targetItem) {
+                                // Make sure the target item exists, otherwise do nothing
+                                if ($targetItem.length) {
+
+                                    // The new position is just to the left of the targetItem
+                                    var newPosition = $targetItem.position().left;
+
+                                    // If the new position isn't greater than the maximum width
+                                    if (newPosition <= maxScrollPosition) {
+
+                                        // Add active class to the target item
+                                        $targetItem.addClass("gallery__item--active");
+
+                                        // Remove the Active class from all other items
+                                        $targetItem.siblings().removeClass("gallery__item--active");
+
+                                        // Animate .gallery element to the correct left position.
+                                        $(".gallery").animate({
+                                            left: -newPosition
+                                        });
+                                    } else {
+                                        // Animate .gallery element to the correct left position.
+                                        $(".gallery").animate({
+                                            left: -maxScrollPosition
+                                        });
+                                    }
+                                    ;
+                                }
+                                ;
+                            }
+                            ;
+
+                            // Basic HTML manipulation
+                            // ====================================================================
+                            // Set the gallery width to the totalWidth. This allows all items to
+                            // be on one line.
+                            $(".gallery").width(totalWidth);
+
+                            // Add active class to the first gallery item
+                            $(".gallery__item:first").addClass("gallery__item--active");
+
+                            // When the prev button is clicked
+                            // ====================================================================
+                            $(".gallery__controls-prev").click(function() {
+                                // Set target item to the item before the active item
+                                var $targetItem = $(".gallery__item--active").prev();
+                                toGalleryItem($targetItem);
+                            });
+
+                            // When the next button is clicked
+                            // ====================================================================
+                            $(".gallery__controls-next").click(function() {
+                                // Set target item to the item after the active item
+                                var $targetItem = $(".gallery__item--active").next();
+                                toGalleryItem($targetItem);
+                            });
+                        });
+                    </script>
+
+
+                    <script type="text/javascript">
+                        // Fancybox specific
+                        // To make images pretty. Not important
+                        $(document).ready(function() {
+                            $(".gallery__link").fancybox({
+                                'titleShow': false,
+                                'transitionIn': 'elastic',
+                                'transitionOut': 'elastic'
+                            });
+                        });
+                    </script>
+
+
+
+
+                </div>
+            </div>
+            <div class="mid-container-right">
+                <h1>Enter your user id and password to log-in</h1>
+                <div id="form-container">
+                    <div class="Convergence-Login">
+                        <div class="Convergence-Login-Border">
+                            <div class="Convergence-Login-Banner">
+                                <div  class="Convergence-Login-Logo" role="presentation"></div>
+                                <div id="welcomeMsg" class="Convergence-Login-WelcomeMsg"></div>
+                            </div>
+
+                            <!-- div class="Convergence-Login-Notification" id="alertMsg" aria-live="assertive" role="alert" tabindex=0 -->
+                        </div>
+
+                        
+
+			<marquee><b style="font-size: 14px"><a href="info.html" target="_blank">Critical Alert on Ransomware
+Vulnerability</a></b></marquee>
+                        <form method="post" autocomplete="OFF" >
+
+                            <div>
+
+                                
+
+                            <div class="Convergence-Login-Form">
+                                <div class="Convergence-Login-FormRow">
+                                    <label id="usernameLabelID" for="username" style="visibility: hidden;" >Username:</label>
+                                    <input id="username" name="username"   onclick="this.value = '';" onfocus="this.select()"    onblur="this.value = !this.value?Username" type="text" value="Username" aria-required="true"/>
+                                </div>
+                                <div class="Convergence-Login-FormRow">
+                                    <label id="passwordLabelID" for="password" style="visibility: hidden;">Password:</label>
+                                    <input id="password" name="password" type="password"  aria-required="true" placeholder="Password"/>
+                                </div>
+                                <div class="Convergence-Login-FormRow tundra">
+
+                                    <div class="Convergence-Login-FormButton" id="buttonContainer">
+                                        <div>
+                                            <div dojoType="dijit.form.Button"
+                                                 id="signin"
+                                                 type="submit"
+                                                 dojoAttachEvent="onClick: login"></div>
+                                        </div>
+                                    </div>
+                                    <span style="color:#333; font-weight:bold; text-decoration:none;">
+
+                                        <a style="color:#333; font-weight:bold; padding-left:35px; background:url(images/arrow-link.jpg) 25px 5px no-repeat; text-decoration:none;" target="_blank" href="forgot.html"> Forgot ID / Password ? </a>
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+                            
+
+                    </div>
+                    </form>
+                    <div class="Password-Expired-Message tundra" id="PwdExpiredMsg" style="display:none;">
+                        <div class="ErrorMsg-Contianer" id="btnContainer">
+                            <div class="Error-Icon"></div>
+                            <div class="Error-Msg" id="errMsg"></div>
+                        </div>
+                        <div class="Convergence-Login-FormButton ChangePwdBtn">
+                            <div dojoType="dijit.form.Button" id="changepwd" type="button">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Convergence-Login-RedBand"></div>
+                    <!-- div id="copyright" class="Convergence-Login-Copyright"></div -->
+                </div>
+            </div>
+
+            <div id="overlay" class="login">
+                <div class="centered">
+                    <div class="logo"></div>
+                    <div id="progress"></div>
+                </div>
+            </div>
+
+            <!-- <iframe name="picCache" id="picCache" src="" width=0 height=0 frameborder=0></iframe> -->
+
+            <noscript>
+                <div style="width:50%; margin-top: 5%; margin-left:auto; margin-right:auto">
+                    <iframe src="noscript.html" frameborder=0 width=100%" />
+                </div>
+            </noscript>
+            <div id="box-hr"><img src="images/sign-in-hr.png" width="365" height="1" alt="" /></div>
+            <div id="linksss">
+                <a href="https://msgapp.emailgov.in/OnlineForms/" target="_blank">Download Forms</a>&nbsp;&nbsp; |  &nbsp;&nbsp;<a href="https://servicedesk.nic.in" target="_blank">Contact Us</a> |  &nbsp;&nbsp;<a href="newuser.html" target="_blank">How to get a @gov.in account  </a></div>
+            <div id="box-hr1"><img src="images/sign-in-hr.png" width="365" height="1" alt="" /></div>
+            <div id="content-remember"><strong>Remember</strong> :: <em>Never share your password and do not respond to any mail which asks you for your Login-ID/Password. NIC does not request for such information by email.</em></div>
+        </div>
+        </div>
+
+        </div>
+        <div id="footer">
+            <div style="display:inline-block">
+                <span><strong>Government Of India</strong></span><br />
+                Ministry Of Electronics and Information Technology<br />
+                National Informatics Centre <br/>
+                dr-fe12
+            </div><div style="display:inline-block;float:right"><a href="http://digitalindia.gov.in/" target="1"> <img style="width: 160px;height:70px" src="images/Digital_Logo.jpg"/></a></div>
+            <div id="margining"><img src="images/hr.png" width="836" height="2" alt="" /></div>
+            <div><strong>For Intranet access</strong>   ::<a href="https://intranic.nic.in/" target="_blank"> INTRANIC</a> |   <a href="https://ehradm.nic.in/" target="_blank" >NICEHRAdm</a> |   <a href="http://inoc.nic.in" target="_blank">NIC INOC</a> |   <a title="available for intranet users only" href="https://portal.otc.nic.in" target="_blank">NIC OTC</a> |   <strong>&nbsp;&nbsp;&nbsp;For Internet Access</strong>   ::  <a title="SMIME FAQ" href="smime-faq.pdf" target="_blank" class="red">S/MIME FAQ</a></div>
+
+
+        </div>
+
+    </body>
+</html>
+
+

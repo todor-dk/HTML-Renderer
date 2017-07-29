@@ -1,0 +1,512 @@
+<font color=#35373A></font>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1"><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /><title>
+	Convert For Me - YouTube Converter - Dailymotion Converter - MySpace Converter
+</title><meta name="DESCRIPTION" content="ConvertForMe.com site allows you Convert Onine Flv video like YouTube, Dailymotion and MySpace Video, you can convert and download it online to more popular formats like mpg, mp4, mp3, mov, wmv, 3gp,mpg, dvd...etc. " /><meta name="KEYWORDS" content="Convert video, Convertforme, Convert for me, convert it, YouTube, dailymotion, myspace, download youtube video, download dailymotion video, download myspace video, Youtube converter, convert youtube, convert youtube video, Conversion video, convert youtube video, download video youtube, Flv , Flvplayer, Flv video, Flv format, Flv format change, Free flv converter, Free online flv converter, Free online flv conversion, .flv, Flv extension, Flv conversion, Online flv conversion, Flv converter, Online flv converter, Download flv file, Convert Flv file, Flv file , Avi conversion, Mpg conversion, mpeg4 conversion, mpeg conversion, mp4 conversion, mov conversion, 3gp conversion, mp3 conversion, convert Avi , convert Mpg , convert mpeg4 , convert mpeg , convert mp4 , convert mov , convert 3gp , convert mp3 , Flv to avi, Flv to mpg, Flv to mpeg4, Flv to mpeg, Flv to mp4, Flv to mov, Flv to3gp, Flv to mp3, Flv to video, Flv to pc, Flv to mc, Flv to ipod, Flv to iphone, Flv to psp, Flv to mobile, Flv to avi conversion, Flv to mpg conversion, Flv to mpeg4 conversion, Flv to mpeg conversion, Flv to mp4 conversion, Flv to mov conversion, Flv to 3gp conversion, Flv to mp3 conversion, Flv to video conversion, Flv to pc conversion, Flv to mc conversion, Flv to ipod conversion, Flv to iphone conversion, Flv to psp conversion, Flv to mobile conversion, Convert Flv to avi, Convert Flv to mpg, Convert Flv to mpeg4, Convert Flv to mpeg, Convert Flv to mp4, Convert Flv to mov, Convert Flv to 3gp, Convert Flv to mp3, Convert Flv to video, Run flv in media player, flash  video to avi, flash video  to mpg, flash video  to mpeg4, flash video  to mpeg, flash video to mp4, flash video to mov, flash video to3gp, flash video to mp3, online  video to avi, online  video  to mpg, online  video  to mpeg4, online  video  to mpeg, online  video to mp4, online  video to mov, online  video to 3gp, online  video to mp3, flash to avi, flash to mpg, flash to mpeg4, flash to mpeg, flash to mp4, flash to mov, flash to3gp, flash to mp3, flash to video, flash to pc, flash to mc, flash to ipod, flash to iphone, flash to psp, flash to mobile, flash to avi conversion, flash to mpg conversion, flash to mpeg4 conversion, flash to mpeg conversion, flash to mp4 conversion, flash to mov conversion, flash to 3gp conversion, flash to mp3 conversion, flash to video conversion, flash to pc conversion, flash to mc conversion, flash to ipod conversion, flash to iphone conversion, flash to psp conversion, flash to mobile conversion, Convert flash to avi, Convert flash to mpg, Convert flash to mpeg4, Convert flash to mpeg, Convert flash to mp4, Convert flash to mov, Convert flash to 3gp, Convert flash to mp3, Convert flash to video, Video, convert video, video converting, video conversion, video flash, flash video, video format  , video format conversion, video format convert, online convert video, online video converting, online video conversion, online video flash, online flash video, online video format  , online video format conversion, online video format convert, converter, flv, avi, mp4, 3gp, Mov, mp3, wmv, .avi, .mp4, .3gp, .Mov, .mp3, .wmv, online video, flash video " /><link href="stylesheet.css" rel="stylesheet" type="text/css" />
+<!--[if lt IE 7]>
+<style type="text/css">
+img, div, a, li, class, td, table, span, body { behavior: url(iepngfix/iepngfix.htc) };
+</style>
+<![endif]-->
+<script language='JavaScript' src='scripts/bubble.js'></script>
+<script language="JavaScript" src="scripts/inputreplacer.js"></script>
+<script language='JavaScript' src='scripts/rs.js'></script>
+<script type="text/javascript">
+	window.onload=function(){initinputControls();enableTooltips("wizard");};
+	var url;
+	var ext;
+	var flvDownloadPath;
+	var workingStatus=false;
+	function updateValues()
+	{
+	url=document.getElementById("texturl").value;
+	if(document.getElementById("extmpg").checked)
+		{
+			ext="mpg";
+		}
+	else if(document.getElementById("extmov").checked)
+		{
+			ext="mov";
+		}
+	else if(document.getElementById("extmp4").checked)
+		{
+			ext="mp4";
+		}
+	else if(document.getElementById("ext3gp").checked)
+		{
+			ext="3gp";
+		}
+	else if(document.getElementById("extmp3").checked)
+		{
+			ext="mp3";
+		}
+	else if(document.getElementById("extflv").checked)
+		{
+			ext="flv";
+		}
+	else if(document.getElementById("extdvd").checked)
+		{
+			ext="dvd";
+		}
+	else if(document.getElementById("extwmv").checked)
+		{
+			ext="wmv";
+		}
+	else if(document.getElementById("extwav").checked)
+		{
+			ext="wav";
+		}
+	else if(document.getElementById("extasf").checked)
+		{
+			ext="asf";
+		}
+	
+	}
+	
+	function showStep(stepno)
+	{
+		document.getElementById("step1").style.display="none";
+		document.getElementById("step2").style.display="none";
+		document.getElementById("step3").style.display="none";
+		document.getElementById("step4").style.display="none";
+		document.getElementById( stepno).style.display="inline";
+	}
+	
+	function checkConnection()
+	{
+		//alert("Starting");
+		workingStatus=true;
+		showStep("step2");
+		updateValues();
+		//alert(ext);
+		document.getElementById("status").innerHTML="Connecting to server...";
+		RS.Execute("convert.aspx", "Validate",url, checkConnectionCallback);
+		//alert("CheckConnection End");
+		
+	}
+	
+	function checkConnectionCallback(options)
+	{
+		//alert("Check Connection Callback");
+		if(workingStatus==true)
+		{
+			if(options=="true")
+			{
+				//alert("Callback returns True");
+				downloadFile();
+			}
+			else
+			{
+				showError("<span class='error'>Connection failed !</span><br><span class='smalltext'>Please Check the Url or Try Again</span>");
+			}
+		}
+	}	
+	
+	function downloadFile()
+	{
+		//alert("Enterted Download File");
+		if(ext=="flv")
+		{
+			//alert("ext format is flv");
+			document.getElementById("status").innerHTML="Resolving FLV File...";
+			RS.Execute("convert.aspx", "getFlvUrl",url, downloadFlvCallback);
+			//alert("called downloadFlvCallback");
+		}
+		else
+		{
+			//alert("ext format is  not flv");
+			document.getElementById("status").innerHTML="Preparing files...";
+			RS.Execute("convert.aspx", "DownloadFile",url, downloadFileCallback);
+		}
+	}	
+	
+	function downloadFlvCallback(options)
+	{
+		if(workingStatus==true)
+		{
+			showStep("step3");
+			document.getElementById("downloada").href= options;
+			workingStatus==false;
+		}
+	}
+	
+	function downloadFileCallback(options)
+	{
+	    if(workingStatus==true)
+		{
+			if(options!="")
+			{
+				flvDownloadPath=options;
+				convertFile();
+			}
+			else
+			{
+				showError("");
+			}
+		}
+	}	
+	
+	function convertFile()
+	{
+		document.getElementById("status").innerHTML="Processing...";
+		RS.Execute("convert.aspx", "ConvertFile",flvDownloadPath,ext, convertFileCallback);
+	}	
+	
+	function convertFileCallback(options)
+	{
+		if(workingStatus==true)
+		{
+			showStep("step3");
+			document.getElementById("downloada").href="download.aspx?ext=" + ext + "&file=" + options;
+			workingStatus==false;
+		}
+	}	
+	
+	function cancelTransfer()
+	{
+		//showStep("step1");
+		workingStatus==false;
+		document.location="Default.aspx";
+	}	
+		
+	function showError(message)
+	  {
+	  	showStep("step4");
+		document.getElementById("error").innerHTML=message;
+	  }
+</script>
+<script src="Scripts/AC_RunActiveContent.js" type="text/javascript"></script>
+<style type="text/css">
+<!--
+h1 {
+	font-size: 1px;
+	font-weight: 1;
+	color: #424242;
+}
+-->
+</style>
+<link href="stylesheet_old.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+<!--
+.style7 {
+	font-size: 16px;
+	font-weight: bold;
+	color: #FF9900;
+}
+-->
+</style>
+
+
+
+</head>
+
+<body>
+
+
+
+<table width="1120" border="0" cellspacing="0" cellpadding="0" align="center">
+ <tr>
+  <td class="a1"></td>
+  <td width="120"></td>
+ </tr>
+ <tr>
+  <td align="center" valign="top">
+   <table width="1000" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+     <td class="a2"></td>
+     <td class="a3">
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                                    
+    <div id="step1">
+   <table cellspacing="0" cellpadding="0" align="center" width="300">
+    <tr>
+     <td width="12%"><font color="#ffffff" face="verdana" size="2">URL</span></td>
+     <td width="88%"><label><input name="texturl" type="text" class="textbox" id="texturl" value="http://" onClick="this.value=''"></label></td>
+    </tr>
+    <tr>
+     <td align="left" valign="top"><font color=#000000 size=1>Example:</span></td>
+     <td align="left"><font color=#ffffff size=1> http://youtube.com/watch?v=T7OLaNA16cA</td>
+    </tr>
+    <tr>
+     <td colspan="2" align="left"><hr size="1" color="#FFFFFF"><font color=#ffffff size=2>Convert for</span></td>
+    </tr>
+   </table>
+   
+   <table cellspacing="0" cellpadding="0" align="center" width="370">
+    <tr>
+     <td width="50%" align="left" valign="top" class="optionTexts"><label><input name="extentsion1" type="radio" id="extmpg" value="radio" checked><font color="#ffffff" face="verdana" size="2">Windows <font color="#ffffff" face="verdana" size="2">(.mpeg)</span></label></td>
+     <td width="50%" align="left" valign="top" class="optionTexts"><input type="radio" name="extentsion1" id="ext3gp" value="radio"><font color="#ffffff" face="verdana" size="2">Mobile <font color="#ffffff" face="verdana" size="2">(.3gp)</span></td>
+    </tr>
+    <tr>
+     <td align="left" valign="top" class="optionTexts"><input type="radio" name="extentsion1" id="extmov" value="radio"><font color="#ffffff" face="verdana" size="2">Mac <font color="#ffffff" face="verdana" size="2">(.mov)</span></td>
+     <td align="left" valign="top" class="optionTexts"><input type="radio" name="extentsion1" id="extmp3" value="radio"><font color="#ffffff" face="verdana" size="2">Audio Only <font color="#ffffff" face="verdana" size="2">(.mp3)</span></td>
+    </tr>
+    <tr>
+     <td align="left" valign="top" class="optionTexts"><input type="radio" name="extentsion1" id="extmp4" value="radio"><font color="#ffffff" face="verdana" size="2">iPod/PSP/iPhone <font color="#ffffff" face="verdana" size="2">(.mp4)</span></td>
+     <td align="left" valign="top" class="optionTexts"><input type="radio" name="extentsion1" id="extflv" value="radio"><font color="#ffffff" face="verdana" size="2">Flash <font color="#ffffff" face="verdana" size="2">(.flv)</span></td>
+    </tr>
+    <tr>
+     <td align="left" valign="top" class="optionTexts"><input type="radio" name="extentsion1" id="extwmv" value="radio"><font color="#ffffff" face="verdana" size="2">Windows <font color="#ffffff" face="verdana" size="2">(.wmv)</span></td>
+     <td align="left" valign="top" class="optionTexts"><input type="radio" name="extentsion1" id="extwav" value="radio"><font color="#ffffff" face="verdana" size="2">Audio <font color="#ffffff" face="verdana" size="2">(.wav)</span></td>
+    </tr>
+    
+   </table>
+   <table cellspacing="0" cellpadding="0" align="center" width="440">
+    <tr>
+     <td><center><img src="images/download_button.png" border="0" onClick="checkConnection();"></center></td>
+    </tr>
+   </table>
+   
+   </div>
+   <div id="step2" style="display:none;" >
+  
+  
+   
+   <table cellspacing="0" cellpadding="0" align="center" width="440">
+    <tr>
+     <td align="center"><br><br><div id="status"><font color="#ffffff" face="verdana" size="2">Connecting to server...</span></div></td>
+    </tr>
+    <tr>
+                      <td align="center"><img src="processing.gif" width="350" height="19"></td>
+                    </tr>
+   
+    <tr>
+                     <td align="center"><div id="status">
+                     <font color="#ffffff" face="verdana" size="2">(This will take some minutes.Thank you for your patience)</span>
+                     <br><br>
+                        
+                     </td>
+    </tr>
+    
+   </table>
+   <table cellspacing="0" cellpadding="0" align="center" width="440">
+    <tr>
+     <td align="center"><br><br><img src="images/cancel.png" onClick="cancelTransfer();"></td>     
+    </tr>
+   </table>
+   
+   </div>
+              
+   <div id="step3"  style="display:none;"  >
+        
+
+
+   <table cellspacing="0" cellpadding="0" align="center" width="440">
+    <tr>
+     <td align="center"><br><br><font color=#ffffff size=4>File Converted Successfully !</span></td>
+    </tr>
+    
+    <tr>
+                      <td align="center"></td>
+                    </tr>
+                    <tr>
+                      <td align="center"><font color=#ffffff size=4>Please download the file from below...</span></td>
+                    </tr>
+                     <td align="center"><div id="status">
+                     
+                     <br><br>
+                     
+                     </td>
+    </tr> 
+    
+   </table>
+   <table cellspacing="0" cellpadding="0" align="center" width="440">
+    <tr>
+     <td align="center"><img onClick="cancelTransfer();" src="images/back.png" border="0"> <a href="#" target="fdownload" id="downloada"><img src="images/download.png" border="0"></a></td>
+    </tr>
+   </table>
+   
+   </div>
+            
+            
+            
+            
+  <div id="step4"  style="display:none;"  >
+              
+              
+   <table cellspacing="0" cellpadding="0" align="center" width="440">
+    <tr>
+     <td align="center"><br><br><div id="error"><font color="#ffffff" face="verdana" size="2">Connecting to server...</span></div></td>
+    </tr>
+    <tr>
+                      <td align="center"><img src="processing.gif" width="350" height="19"></td>
+                    </tr>
+    <tr>
+                      <td align="center">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td align="center">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td align="center" class="smalltext"></td>
+                    </tr>
+                    <tr>
+                     <td align="center"><div id="status">
+                     <span class="smalltext"></span>
+                     <br><br>
+                     <br><br>
+                     </td>
+    </tr> 
+   </table>
+   <table cellspacing="0" cellpadding="0" align="center" width="440">
+    <tr>
+     <td align="center"><br><br><img onClick="cancelTransfer();" src="images/back.png" border="0"></td>
+     <td width="240"></td>
+    </tr>
+   </table>   
+  </div>
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+     </td>
+     <td class="a4"></td>
+    </tr>
+   </table>
+  </td>
+  <td width="120"></td>
+ </tr>
+ <tr>
+  <td class="a5"></td>
+  <td width="120"></td>
+ </tr>
+</table>
+<iframe id="fdownload" name="fdownload" style="border:none;width:0px;height=15;"></iframe>            
+       
+<center>  
+<br>        
+</form>
+<BR><BR>
+
+
+<center>
+<br><br>
+<font face="georgia" size="4" color="#000000"><b>For your video file, ConvertForMe recommend :</b></font><br><a href="http://www.videolan.org" target="_blank"><img src="vlc.png" border="0"  align="center"></a>
+<br><br>
+  </td>
+ </tr>
+</table>
+
+<br>
+<a href=http://www.convertyoutubesoftware.com target="_blank"><font color=#333333>YouTube Converter Software</font></a>
+<br><br>
+
+<table cellspacing=0 cellpadding=0 align=center width=949 border=1 bordercolor=#0077B0>
+ <tr>
+  <td>
+  <center>
+  <a href=http://www.watereffect.net target=_blank><img src=partenariat/watereffect_logo.png border=0 alt="Water effect"></a> 
+  <a href=http://www.mirroreffect.net target=_blank><img src=partenariat/mirroreffect_logo.png border=0 alt="Mirror effect"></a> 
+  <a href=http://www.iphonethemegenerator.com target=_blank><img src=partenariat/iphonethemegenerator_logo.png border=0 alt="Iphone Theme Generator"></a>
+  <a href=http://www.photowithme.com target=_blank><img src=partenariat/photowithme_logo.png border=0 alt="Take Photo online with celebrities"></a>
+  <a href=http://www.convertpdftoword.net target=_blank><img src=partenariat/convertpdftoword.png border=0 alt="convert pdf to word"></a>
+  <a href=http://www.imagetovideo.com target=_blank><img src=partenariat/imagetovideo_logo.png border=0 alt="Convert image to video"></a>
+  <a href=http://www.savewebsites.com target=_blank><img src=partenariat/savewebsites_logo.png border=0 alt="Save Online Your best websites"></a>
+  <a href=http://www.simpsonspictures.net target=_blank><img src=partenariat/simpsonspictures.png border=0 alt="Generate Online your picture with the Simpsons"></a>
+  <a href="http://www.roundmypic.com" target="_blank"><img src="Partenariat/roundmypic.png" border="0" alt="Round Picture"></a>
+  <a href=http://www.pdftowordconverter.net target=_blank><img src=partenariat/pdftowordconverter.png border=0 alt="Pdf to word converter"></a>
+  <a href=http://www.mypictureonmagazine.com target=_blank><img src=partenariat/mypictureonmagazine.png border=0 alt="Fake Magazine Covers"></a>
+  <a href=http://www.convertmypdf.net target=_blank><img src=partenariat/convertmypdf.png border=0 alt="Convert PDF"></a>
+  <a href=http://www.texttopdfconverter.com target=_blank><img src=partenariat/texttopdfconverter.png border=0 alt="Convert Text file to PDF"></a>
+  <a href=http://www.flipyourwords.com target=_blank><img src=partenariat/flipyourwords.png border=0 alt="Flip Words"></a>
+  <a href=http://www.glittertextonline.com target=_blank><img src=partenariat/glittertextonline.png border=0 alt="Glitter Text"></a>
+  <a href=http://www.createagif.net target=_blank><img src=partenariat/createagif.png border=0 alt="Create a gif"></a>
+  <a href=http://www.mirrortext.net target=_blank><img src=Partenariat/mirrortext.gif border=0 alt="Mirror Text Effect Online"></a>
+  <a href=http://www.eatmyname.com target=_blank><img src=Partenariat/eatmyname.png border=0 alt="Eat Your Name Online !"></a>
+  <a href=http://www.texteffect.net target=_blank><img src=Partenariat/texteffect.png border=0 alt="Text Effect"></a>
+  <a href=http://www.zipmyfiles.net target=_blank><img src=Partenariat/zipmyfiles.png border=0 alt="Zip Files Online"></a>
+  
+  </center>
+  </td>
+ </tr>
+</table>
+<br>
+
+
+
+
+<br><br>
+<table cellspacing="0" cellpadding="0" class="bg" align="center">
+ <tr>
+  <td>
+   <table cellspacing="0" cellpadding="0" width="800" align="center">
+    <tr>
+     
+  <td>
+   <!-- AddThis Button BEGIN -->
+<script type="text/javascript">var addthis_pub="bil80";</script>
+<a href="http://www.addthis.com/bookmark.php?v=20" onmouseover="return addthis_open(this, '', '[URL]', '[TITLE]')" onmouseout="addthis_close()" onclick="return addthis_sendto()"><img src="http://s7.addthis.com/static/btn/lg-share-en.gif" width="125" height="16" alt="Bookmark and Share" style="border:0"/></a><script type="text/javascript" src="http://s7.addthis.com/js/200/addthis_widget.js"></script>
+<!-- AddThis Button END -->
+
+</td>
+  <td width="30"></td>
+  <td>
+
+   <!--------------------------Xiti-------------------------->
+<a href="http://www.xiti.com/xiti.asp?s=424087" title="WebAnalytics" target="_top">
+<script type="text/javascript">
+<!--
+Xt_param = 's=424087&p=';
+try {Xt_r = top.document.referrer;}
+catch(e) {Xt_r = document.referrer; }
+Xt_h = new Date();
+Xt_i = '<img width="80" height="15" border="0" alt="" ';
+Xt_i += 'src="http://logv10.xiti.com/g.xiti?'+Xt_param;
+Xt_i += '&hl='+Xt_h.getHours()+'x'+Xt_h.getMinutes()+'x'+Xt_h.getSeconds();
+if(parseFloat(navigator.appVersion)>=4)
+{Xt_s=screen;Xt_i+='&r='+Xt_s.width+'x'+Xt_s.height+'x'+Xt_s.pixelDepth+'x'+Xt_s.colorDepth;}
+document.write(Xt_i+'&ref='+Xt_r.replace(/[<>"]/g, '').replace(/&/g, '$')+'" title="Internet Audience">');
+//-->
+</script>
+<noscript>
+Mesure d'audience ROI statistique webanalytics par <img width="80" height="15" src="http://logv10.xiti.com/g.xiti?s=424087&p=" alt="WebAnalytics" />
+</noscript></a>
+
+<!------------------------------------------------------------> 
+</td>
+  <td width="30"></td>
+  <td>
+<script type="text/javascript" src="http://widgets.amung.us/small.js"></script><script type="text/javascript">WAU_small('atwldi2zup3k')</script>
+
+  </td>
+  <td width="50"></td>
+  <td>
+   <font color=#ffffff face=verdana size=1>Copyright © ConvertForMe.com<br><br>
+   <a href="http://www.directpagerank.com" target="_blank"><font color=#ffffff face=verdana size=1>Page Rank</a> | <a href="http://www.justfreelancer.com" target="_blank"><font color=#ffffff face=verdana size=1>Freelancer</a> | <a href="http://www.tubetomp3.net" target="_blank"><font color=#ffffff face=verdana size=1>YouTube To Mp3</a>
+   
+   <br></font>
+  </td>
+ </tr>
+</table>
+
+  </td>
+ </tr>
+</table>
+
+
+</body>
+</html>

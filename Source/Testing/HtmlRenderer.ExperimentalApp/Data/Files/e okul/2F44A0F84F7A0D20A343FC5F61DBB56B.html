@@ -1,0 +1,637 @@
+
+
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>T.C. Millî Eğitim Bakanlığı e-Okul Yönetim Bilgi Sistemi</title>
+    <meta name="GENERATOR" content="Microsoft Visual Studio .NET 7.1">
+    <meta name="CODE_LANGUAGE" content="C#">
+    <link rel="shortcut icon" type="icon/ico" href="favicon.ico">
+    <meta name="vs_defaultClientScript" content="JavaScript">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta content="540" http-equiv="Refresh">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/eokulyeni.css">
+    <script language="javascript" charset="ISO-8859-9" src="scripts/alankontrol.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script language="javascript">
+        function setfocus() {
+            var frm;
+            frm = document.getElementById("VBSLogin");
+            frm.guvenlikKontrol.focus();
+        }
+        function gGetElementById(s) {
+            var o = (document.getElementById ? document.getElementById(s)
+                                        : document.all[s]);
+            return ((o == null) ? false : o);
+        }
+        function playCaptcha(wavURL) {
+            var embedCode = '<EMBED SRC=' + wavURL + ' HIDDEN="true" AUTOSTART="true" />';
+
+            gGetElementById("playAudio").innerHTML = "";
+            gGetElementById("playAudio").innerHTML = embedCode;
+        }
+
+        function TusOkuGenel(e) {
+            var frm;
+            frm = document.getElementById("VBSLogin");
+
+
+            //var keynum;
+            //if (window.event) // IE
+            //{
+            //    keynum = e.keyCode;
+            //}
+            //else if (e.which) // Netscape/Firefox/Opera
+            //{
+            //    keynum = e.which;
+            //}
+
+            //if (keynum == 13) {
+
+            //    frm.hdnGirisTur.value = "GENEL";
+            //    GirisYap();
+            //}
+        }
+
+        function TusOkuVBS(e) {
+            var frm;
+            frm = document.getElementById("VBSLogin");
+
+
+            //var keynum;
+            //if (window.event) // IE
+            //{
+            //    keynum = e.keyCode;
+            //}
+            //else if (e.which) // Netscape/Firefox/Opera
+            //{
+            //    keynum = e.which;
+            //}
+
+            //if (keynum == 13) {
+            //    frm.hdnGirisTur.value = "VBS";
+            //    GirisYapVBS();
+            //}
+        }
+
+        function GirisYap() {
+            UyariMesaji = "";
+            var frm;
+            frm = document.getElementById("VBSLogin");
+
+            //if ((frm.hdnGirisTur.value == "GENEL") || (frm.hdnGirisTur.value == "")) {
+            UyariMesaji = UyariMesaji + NumAlan(frm.guvenlikKontrol.value, "Giriş Kodu", 9999, 1000, false);
+            UyariMesaji = UyariMesaji + TextAlan(frm.txtKullaniciAd.value, "Kullanıcı Adı", 20, false);
+            UyariMesaji = UyariMesaji + TextAlan(frm.txtSifre.value, "Şifre", 12, false);
+
+            if (UyariMesaji != "") {
+                alert(UyariMesaji);
+                return false;
+            }
+            else {
+                frm.hdnKontrol.value = "evet";
+                //frm.submit();
+                return true;
+            }
+            //    }
+
+        }
+
+        function GirisYapVBS() {
+            UyariMesaji = "";
+            var frm;
+            frm = document.getElementById("VBSLogin");
+            //if (frm.hdnGirisTur.value == "GENEL")
+            //    return false;
+            //if ( (frm.hdnGirisTur.value == "VBS") || (frm.hdnGirisTur.value == ""))
+            //{
+
+            UyariMesaji = UyariMesaji + NumAlan(frm.txtVBSImage.value, "Resimdeki Rakamlar", 9999, 1000, false);
+            UyariMesaji = UyariMesaji + NumAlan(frm.VBSKullanici.value, "Öğrenci T.C. Kimlik No", 99999999999, 10000000000, false);
+            UyariMesaji = UyariMesaji + NumAlan(frm.VBSpassword.value, "Öğrenci Okul No", 9999999999, 1, false);
+
+            if (UyariMesaji != "") {
+                alert(UyariMesaji);
+                return false;
+            }
+            else {
+                //window.open('https://e-okul.meb.gov.tr/mebsmsservis/sms.htm','_blank','height=768,width=1024,toolbar=no,location=yes,directories=yes,status=yes,menubar=yes,scrollbars=yes,copyhistory=yes,resizable=yes')
+
+                frm.hdnKontrol.value = "VBSGiris";
+
+                //frm.submit();
+                return true;
+            }
+            //}
+
+        }
+        function GirisYapML() {
+            UyariMesaji = "";
+            var frm;
+            frm = document.getElementById("VBSLogin");
+            if (UyariMesaji != "") {
+                alert(UyariMesaji);
+                return false;
+            }
+            else {
+                frm.hdnKontrol.value = "MLGiris";
+                return true;
+            }
+        }
+        var sec = 0;
+        function cthwindow() {
+            sec++;
+            if (sec == 2) {
+                window.parent.close();
+                self.parent.myLytebox.end(); return false;
+            }
+            window.setTimeout("cthwindow();", 1000);
+        }
+    </script>
+
+    <style>
+        body {
+            background: url(images/bg.jpg) no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            height: 100%;
+            background-color: #223253;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+
+
+</head>
+<body onload="setfocus();">
+    <form method="post" action="./" onkeypress="javascript:return WebForm_FireDefaultButton(event, 'btnGiris')" id="VBSLogin">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTM4Mjg0MjY4NWRkvlVLzrNxifvRmN4erXztrRcoLUxo9X8pW8sy8RKU5LY=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['VBSLogin'];
+if (!theForm) {
+    theForm = document.VBSLogin;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=LyZ5H66Ex9QmlwRlzs4YuEaQIikgigxViyJOXhGsVrq8tWWANFmaqYxQCOtF_d6wc841V0NzLey8v_Y0sqQ_TUMZgk6yGBZe0eXBeDhuR281&amp;t=635793125982061497" type="text/javascript"></script>
+
+
+<script src="/WebResource.axd?d=spVOMevLJ7lHcMeR4EmJ0kPJUFPsQzD7GzJVWa3zotZ5dTlO1tGLD1v7UI_UP4TpF1giqN3FjejwuOoSgbT0EiAmYF3JoEIDABqajUbB8gM1&amp;t=635793125982061497" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="6FD7EF6D" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAr2IMg85EcXKZbQua8SnPl6BeswNteea2BIxDaPTL+h30VhDC5aqjY87cjL1rY9QTsVc50sRkhdkPhNOYwym0tSopeBjfopUMAE2LO2ama1uo6fY8YMvV+sEav2OSQnk6Z0ao4Vv6fljX88Fb8TCuJOXct4vbB33W21oWZq/mOhPDdAtxvnnpW/oH/pFrMMeUzR0byd9SYSISWjsyb24wWJV01b+bELSg1q8onVbAM/wtXY4AS5ObDLDH+m7YGHs80=" />
+</div>
+        
+
+        <nav class="navbar navbar-default navbararka topmenu">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="logineOkul.aspx">
+                        <img src="images/mobillogo.png" class="img-responsive mobillogo"></a>
+
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav mobiletoggle">
+
+
+                        <li><a href="https://e-okul.meb.gov.tr/IlkOgretim/MEM/IOM00010.aspx" target="_blank">Diploma Doğrulama</a></li>
+                        <li><a href="https://yardimmasasi.meb.gov.tr" target="_blank">Yardım Masası</a></li>
+
+
+
+
+                    </ul>
+                    </li>
+      </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+
+
+        <div class="container topmenub">
+            <div class="logo">
+                <a href="logineOkul.aspx">
+                    <img src="images/eokullogo.png" class="img-responsive"></a>
+            </div>
+            <div class="logoyan">
+                <div class="logoyanust">
+                    <img src="images/location.png">
+                    MEB Bilgi İşlem Dairesi Başkanlığı
+                </div>
+                <div class="logoyanalt">
+
+                    <a href="https://e-okul.meb.gov.tr/IlkOgretim/MEM/IOM00010.aspx" class="ustmenu" target="_blank">Diploma Doğrulama </a><span class="turuncuc">/</span>
+                    <a href="https://yardimmasasi.meb.gov.tr" class="ustmenu" target="_blank">Yardım Masası </a>
+
+                </div>
+
+            </div>
+            <div class="logomeb">
+                <a href="logineOkul.aspx">
+                    <img src="images/meblogo.png" class="img-responsive pull-right"></a>
+            </div>
+
+        </div>
+
+        <div class="container anaorta">
+            <div class="row">
+                <div class="col-sm-5">
+
+                    <div class="panel panel-default girisarka">
+                        <div class="panel-body">
+
+                            <div class="strike">
+                                <span>e-OKUL YÖNETİM BİLGİ SİSTEMİ</span>
+                            </div>
+
+                            
+                            <input name="hdnKontrol" type="hidden" id="hdnKontrol" />
+                            <input id="hdnGirisTur" type="hidden" name="hdnGirisTur">
+                            
+
+                            <div class="form-group">
+
+                                <center>
+                                    <table>
+                                        <tr>
+                                            <td><img id="image1" class="img-responsive cpt" src="guvenlikkod.aspx?id=997" /></td>
+                                            <td><a href="javascript:playCaptcha('sound/61602F77E6BB8304.wav')"> <img src="images/engelli.png" class="img-responsive cpt2"  alt="DİNLEDİGİNİZ HARF ve RAKAMLARI GİRİNİZ" /></a>
+                                                <img id="Image6" src="guvenlikkod1.aspx" style="height:0px;width:0px;" />
+                                                <div id=playAudio></div></td>
+                                        </tr>
+                                    </table>
+                                </center>
+
+                            </div>
+
+
+
+
+                            <div class="form-group">
+                                <label class="girisbeyaz" for="exampleInputEmail1">Resimdeki Rakamlar</label>
+
+                                <fieldset>
+
+                                    <input name="guvenlikKontrol" type="text" maxlength="4" id="guvenlikKontrol" class="form-control input-lg" placeholder="Lütfen Resimdeki Numaraları Yazınız" />
+                                </fieldset>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="girisbeyaz" for="exampleInputEmail1">Kullanıcı Adı</label>
+                                <fieldset>
+
+                                    <input name="txtKullaniciAd" type="text" maxlength="20" id="txtKullaniciAd" class="form-control input-lg" placeholder="Lütfen Kullanıcı Adınızı Yazınız" />
+                                </fieldset>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <label class="girisbeyaz" for="exampleInputEmail1">Şifre</label>
+                                <fieldset>
+
+                                    <input name="txtSifre" type="password" maxlength="10" id="txtSifre" class="form-control input-lg" placeholder="Lütfen Şifrenizi Yazınız" onkeydown="javascript:TusOkuGenel(event);" />
+                                </fieldset>
+                            </div>
+
+
+                            <fieldset>
+                                <!-- <button type="submit" id="send-button" class="btn main-btn soldanbosluk">Giriş</button> -->
+                                <input type="submit" name="btnGiris" value="Giriş" onclick="return GirisYap();" id="btnGiris" class="btn btn-giris center-block" />
+                            </fieldset>
+
+
+
+                            
+                            <div id="pnlIlkOgretim">
+
+</div>
+                            
+                            
+                            <div id="pnlSinavlar">
+	
+                                <div id="pnlOGES">
+
+	</div>
+                            
+</div>
+                            
+                            
+                            
+                            
+                            <div id="pnlKontenjan">
+
+</div>
+                            
+                            
+                            
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="col-sm-2">
+
+
+                    <img src="images/girislogo.png" class="img-responsive center-block logoust">
+                </div>
+
+
+                <div class="col-sm-5">
+                    <div class="panel panel-default girisarka">
+                        <div class="panel-body">
+
+                            <div class="strike2">
+                                <span>VELİ BİLGİLENDİRME SİSTEMİ</span>
+                            </div>
+
+
+
+                            <div id="pnlWB">
+	
+                                
+                                <div class="form-group">
+
+                                    <center>
+                                    <table>
+                                        <tr>
+                                            <td><img id="imgvbs" class="img-responsive cpt" src="guvenlikkod.aspx?id=997" />
+                                	</td>
+                                            <td><a href="javascript:playCaptcha('sound/61602F77E6BB8304.wav')"> <img src="images/engelli.png" class="img-responsive cpt2" alt="DİNLEDİGİNİZ HARF ve RAKAMLARI GİRİNİZ" /></a></td>
+                                        </tr>
+                                    </table>
+                                </center>
+
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="girisbeyaz" for="exampleInputEmail1">Resimdeki Rakamlar</label>
+                                    <fieldset>
+                                        <input name="txtVBSImage" type="text" maxlength="4" id="txtVBSImage" class="form-control input-lg" placeholder="Lütfen Resimdeki Numaraları Yazınız" />
+                                    </fieldset>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="girisbeyaz" for="exampleInputEmail1">Öğrenci T.C. Kimlik Numarası</label>
+                                    <fieldset>
+
+                                        <input name="VBSKullanici" type="text" maxlength="11" id="VBSKullanici" class="form-control input-lg" placeholder="Lütfen Öğrenci T.C. Kimlik Numarasını Yazınız" />
+                                    </fieldset>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="girisbeyaz" for="exampleInputEmail1">Öğrenci Okul Numarası</label>
+                                    <fieldset>
+
+                                        <input name="VBSpassword" type="text" maxlength="10" id="VBSpassword" class="form-control input-lg" placeholder="Lütfen Öğrenci Okul Numarasını Yazınız" onkeydown="javascript:TusOkuVBS(event);" />
+                                    </fieldset>
+
+                                </div>
+
+                                <fieldset>
+
+                                    <input type="submit" name="btnTamamvbs" value="Giriş" onclick="return GirisYapVBS();" id="btnTamamvbs" class="btn btn-giris2 center-block" />
+
+
+                                </fieldset>
+                            
+</div>
+
+
+                            
+
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+
+
+        <div class="container-fluid footerarka">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+
+                        <div class="baslik boldbaslik">
+                            e-OKUL HABERLER/DUYURULAR
+                        </div>
+
+
+                       
+                         <div class="media haberaltcizgi">
+                            <div class="media-left habersol">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading haberbaslik">e-Kayıt İşlemleri</h4>
+                                <div class="habercizgi">2017-2018 öğretim yılı e-Kayıt uygulaması sonucu adres bilginize göre Anasınıfı, İlkokul 1. sınıf veya Ortaokul 5. sınıfa kayıt yaptırmanız gereken okulu görmek için <a href="/IlkOgretim/MEM/IOM00009.aspx" target="_blank" class="habermenu">Tıklayınız &rarr;</a></div>
+                            </div>
+                        </div>
+                        <div class="media haberaltcizgi">
+                            <div class="media-left habersol">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading haberbaslik">MEB Kelime Uygulaması Yayınlandı</h4>
+                                <div class="habercizgi">Öğrencilerimiz ve velilerimiz için eğlenceli mobil bir kelime oyunu hazırladık.İndirmek için <a href="https://itunes.apple.com/tr/app/meb-kelime/id1180541371?mt=8" target="_blank" class="habermenu">Tıklayınız</a></div>
+                            </div>
+                        </div>
+
+
+                        <div class="media haberaltcizgi">
+                            <div class="media-left habersol">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading haberbaslik">Tasarımımız Yenilendi</h4>
+                                <div class="habercizgi">
+                                    Yenilenen tasarımımız ile artık e-okul mobil uyumlu çok daha özgün ve yenilikçi bir görünüme sahip.
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="media haberaltcizgi">
+                            <div class="media-left habersol">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading haberbaslik">Kurum Standatları Modülü</h4>
+                                <div class="habercizgi">
+                                    2016-2017 Eğitim-Öğretim yılında resmi okul öncesi eğitim kurumları, ilkokul, ortaokul, imam hatip ortaokulları ve yatılı bölge ortaokullarının değerlendirilmesini sağlayacak "Okul Öncesi Eğitim ve İlköğretim Kurumları Standatları Modülü" veri girişine açılmıştır
+                                    (Veliler, <strong>Veli T.C. Kimlik No ve Öğrenci No</strong> ile, öğrenciler ise <strong>Öğrenci T.C. Kimlik no ve Öğrenci No</strong>ile giriş yapacaklardır.
+                                    <br />
+                                    Veli/Öğrenciler olarak kurumunuzu değerlendirmek için <a href="https://mebbis.meb.gov.tr/IKS/iks00003.aspx" target="_blank" class="habermenu">Tıklayınız</a>.
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        
+
+
+                        
+
+
+                        
+
+                        
+
+                        
+                        
+
+                        
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        <!-- /.post-content m -->
+
+
+                        
+                        
+                        
+                        
+
+
+                        
+                        
+                        
+                        <!--<p class="post-title">Temel Öğretimden Ortaöğretime Geçiş Uygulaması 2014 Yılı Yerleştirme Sonuçları için <a href="teogsonucsorgula.aspx" class="lytebox" data-lyte-options="width:80% height:100% changeTipCursor:false forceCloseClick:false " data-title="<img src='/images/eokul_kucuk.png'>">Tıklayınız &rarr;</a></p>-->
+                        
+
+
+                        <!-- teog başvuru -->
+                        
+                        <!-- teog başvuru son -->
+
+
+                    </div>
+                    <div class="col-sm-6">
+
+                        <div class="baslik boldbaslik mobilhaber">
+                            SINAV (TEOG-İOKBS) ve NAKİL İŞLEMLERİ           
+                        </div>
+
+                       
+
+
+                        <div class="media haberaltcizgi">
+                            <div class="media-left habersol">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading haberbaslik">2017 Ortaöğretim Kurumlarına Geçiş Uygulaması</h4>
+                                <div class="habercizgi">
+                                    <p class="post-title">2017 Yılı Ortaöğretim Kurumlarına Geçiş Uygulaması Kapsamında Oluşan Yerleştirmeye Esas Puan Değerleri için <a href="http://teog2017.meb.gov.tr/" class="habermenu" target="_blank">Tıklayınız</a></p>
+                                    <p class="post-title">2017 Yılı Ortaöğretim Kurumlarına Geçiş Uygulaması Tercih Listeleri için <a href="/SinavIslemleri/BasvuruIslemleri/OKSTERCIH/SNV08008.ASPX" class="habermenu" target="_blank">Tıklayınız</a></p>
+                                    <p class="post-title">2017 Yılı Ortaöğretim Kurumlarına Geçiş Uygulaması Tercih ve Yerleştirme e-Kılavuzu için <a href="http://odsgm.meb.gov.tr/meb_iys_dosyalar/2017_06/07165021_2017_YILI_TERCYH_VE_YERLEYTYRME_e-KILAVUZU.pdf" class="habermenu" target="_blank">Tıklayınız</a></p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="media haberaltcizgi">
+                            <div class="media-left habersol">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading haberbaslik">Sınav İtirazları Giriş Ekranı</h4>
+                                <div class="habercizgi">T.C. Milli Eğitim Bakanlığı Ölçme, Değerlendirme ve Sınav Hizmetleri Genel Müdürlüğü Sınav İtirazları Giriş Ekranı için <a href="https://eitiraz.meb.gov.tr" target="_blank" class="habermenu">Tıklayınız</a></div>
+                            </div>
+                        </div>
+
+
+                        <div class="media haberaltcizgi">
+                            <div class="media-left habersol">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading haberbaslik">Boş Kontenjan ve Taban Puan Bilgileri</h4>
+                                <div class="habercizgi">Sınavla öğrenci alan ortaöğretim kurumlarında NAKİL işlemleri boş kontenjan ve taban puan bilgileri için <a href="https://e-okul.meb.gov.tr/OrtaOgretim/OKL/OOK06006.aspx" class="habermenu" target="_blank">Tıklayınız</a></div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="container-fluid footeralt">
+                <div class="container footertext">
+                    <div class="footertexttop pull-left">MEB © - Tüm Hakları Saklıdır. Gizlilik, Kullanım ve Telif Hakları bildiriminde belirtilen kurallar çerçevesinde hizmet sunulmaktadır.</div>
+                    <a href="https://itunes.apple.com/tr/developer/t-c-milli-egitim-bakanlig%C4%B1/id656664734" target="_blank">
+                        <img class="img-responsive pull-right mobileapp" src="images/app.png"></a>
+                    <a href="https://play.google.com/store/apps/developer?id=T.C.+Milli+E%C4%9Fitim+Bakanl%C4%B1%C4%9F%C4%B1" target="_blank">
+                        <img class="img-responsive pull-right" src="images/googleplay.png"></a>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+    
+
+<script type="text/javascript">
+//<![CDATA[
+WebForm_AutoFocus('btnGiris');//]]>
+</script>
+</form>
+</body>
+</html>

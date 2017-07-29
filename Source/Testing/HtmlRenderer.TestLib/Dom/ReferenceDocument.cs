@@ -4,11 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Scientia.HtmlRenderer.Dom;
+using HtmlRenderer.TestLib.Dom.Persisting;
 
 namespace HtmlRenderer.TestLib.Dom
 {
     public sealed class ReferenceDocument : ReferenceParentNode
     {
+        public static ReferenceDocument FromDocument(Document document)
+        {
+            System.IO.MemoryStream stream = new System.IO.MemoryStream();
+            DomBinaryWriter.Save(document, stream);
+            stream.Position = 0;
+
+            return BinaryReader.FromStream(stream) as ReferenceDocument;
+        }
+
         public ReferenceDocument(Persisting.IReader reader, Scientia.HtmlRenderer.Dom.NodeType type)
             : base(reader, type)
         {
@@ -119,6 +129,11 @@ namespace HtmlRenderer.TestLib.Dom
                 return false;
 
             return true;
+        }
+
+        public bool IsHierarchyValid()
+        {
+            return this.IsHierarchyValidRecursive();
         }
     }
 }

@@ -1,0 +1,1813 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html><head>
+<meta name="generator" content="Infor e-Commerce Development Studio 14.9.0.0">
+<meta name="keywords" content="ecommerce, e-commerce, ebusiness, e-business, shop, netcommerce">
+<meta name="author" content="Infor">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+<meta name="description" content=" e-Commerce site based on Infor e-Commerce.">
+<title>Iconex Store</title>
+
+<link rel="shortcut icon" href="../common/icons/favicon.ico" type="image/vnd.microsoft.icon"/>
+
+
+
+
+
+
+	
+<link rel="stylesheet" type="text/css" href="../common/themes/core/theme.css" title="e-Sales Theme" />
+	
+<link rel="stylesheet" type="text/css" href="../common/themes/core/theme.chrome.css" title="e-Sales Theme" />
+	
+<link rel="stylesheet" type="text/css" href="../common/themes/core/page-specific-styles/Home.css" title="e-Sales Theme" />
+	
+<link rel="stylesheet" type="text/css" href="../common/themes/core/page-specific-styles/Home.chrome.css" title="e-Sales Theme" />
+
+
+	
+<link rel="stylesheet" type="text/css" href="../common/themes/core/generic-styles/base64-styles.css" title="e-Sales Theme" />
+
+	
+	
+	
+		
+<link rel="stylesheet" type="text/css" href="../common/themes/core/theme.css" title="e-Sales Theme" />
+		
+<link rel="stylesheet" type="text/css" href="../common/themes/core/theme.chrome.css" title="e-Sales Theme" />
+		
+<link rel="stylesheet" type="text/css" href="../common/themes/core/page-specific-styles/Home.css" title="e-Sales Theme" />
+		
+<link rel="stylesheet" type="text/css" href="../common/themes/core/page-specific-styles/Home.chrome.css" title="e-Sales Theme" />
+	
+	
+	
+<link rel="stylesheet" type="text/css" href="../common/themes/core/generic-styles/base64-styles.css" title="e-Sales Theme" />
+	
+
+
+
+
+
+<script id="jQuery Core" type="text/javascript" src="../common/jquery/jquery-1.9.1.js"></script>
+<script id="jQuery UI" type="text/javascript" src="../common/jquery/jquery-ui-1.10.2.custom.js"></script>
+
+<script id="ModularCheck" type="text/javascript">
+// Input should be string so we can cope with different decimal separators.
+function  ModularCheck(oField, strMinimumSize, strModularSize, strItemName,showMin) {
+	var bComma = false;
+	var strAlert;
+	var rQty;
+	Check=false;
+
+	if(oField.disabled)  return true;         // ignore disabled elements
+
+	if ( oField == null ) {
+		rQty = strModularSize;       //oField is null when you submit via the 'buy-one' functionality
+	} else {
+		rQty = ClearSpaces(oField.value);
+		rQty = String2Float(rQty, bComma);
+	}
+	if(oField.value=="" || oField.value==null) { return true;}
+	var rMinimumSize = strMinimumSize;
+	//if (isNaN( rMinimumSize )) {
+	//	rMinimumSize = 0.0;
+	//}
+	if (strDecPoint !=","){
+		if (isNaN( rMinimumSize )) {
+			rMinimumSize = 0.0;
+		}
+	} else { 
+		rMinimumSize = String2Float(rMinimumSize , bComma);
+	}	
+
+	var rModularSize = strModularSize;
+	if (strDecPoint !=","){
+		if (isNaN( rModularSize )) {
+			rModularSize = 0.0;
+		}
+	}
+	else {
+		rModularSize=String2Float(rModularSize, bComma);
+	}
+
+
+	if (isNaN( rQty )) {
+		//Eg. someone tries to buy 'a' items
+		return;             //no warning or calculation will take place
+	}
+
+	if (rQty <= 0 ) {
+		// added to handle items with zero as minQty due to change in repl logic
+		strAlert='The value is not allowed, please select another.';
+		ShowMessage(oField, strAlert);
+
+		return;
+	}
+
+
+	if (rQty < rMinimumSize) {
+		Check=false;
+		strAlert='The minimum allowed value is'+' '+rMinimumSize+'.';	
+
+		if(showMin) ShowMessage(oField, strAlert);
+
+		return; //no warning or calculation will take place
+	}
+
+	if (oField.value>999999){
+		strAlert='The maximum allowed value is 999999.';
+		ShowMessage(oField, strAlert);
+
+		return;
+	}
+
+	var oFieldData = eval("x = " + oField.attributes['jsValidation'].value);
+	// Validation for maximum allowed value
+	var fieldMax = oFieldData.max;
+	if (fieldMax) {
+		if (rQty > fieldMax){
+			var strErrorPrompt = 'The maximum allowed value is %%0.';
+			strErrorPrompt = strErrorPrompt.replace("%%0", fieldMax);
+			ShowMessage(oField, strAlert);
+			
+			return;
+		}
+	}
+	
+	if(NoFraction(rQty, rModularSize) && rQty >= rMinimumSize) {
+		Check=true;
+		return true;             //User has bought correct amount
+	}
+
+	// User has not bought correct amount
+	var rSmallestQty
+	if(rModularSize == 0 ) {
+		rSmallestQty = rMinimumSize;
+	}
+	else {
+		rSmallestQty = CalcQuantity(rMinimumSize, rModularSize, fieldMax);
+	}
+
+	if(rQty<=0 || rQty < rMinimumSize &&  oField != null) {
+		// round up to the minimum quantity
+		Check=false;
+		strAlert='The minimum allowed value is'+' '+rMinimumSize+'.';
+		if(showMin) ShowMessage(oField, strAlert);
+
+		return false;
+	}
+	else {
+		Check=true;
+		// round up to the next correct step based on the modular quantity
+		rQty = CalcQuantity( rQty, rModularSize);
+		if (isNaN( rQty )) {
+			return true;
+		}
+		//strAlert = 'You must order in multiples of \'' + strItemName + '\' items ' + Float2String(rModularSize, bComma) + '.\nThe quantity you ordered has been set to ' + Float2String(rQty, bComma) + '.';
+		strAlert = 'You must order in multiples of ' + Float2String(rModularSize, bComma) + ' items \'' + strItemName + '\'.\nThe quantity you ordered has been set to ' + Float2String(rQty, bComma) + '.';
+	}
+
+	if( oField != null) {
+		var strTemp = new String(rQty);
+		if (bComma)
+			oField.value= strTemp.replace('.', ',');
+		else
+			oField.value= strTemp;
+		if (oField.className!='hiddenquantity') {
+			// Show alert of changed values - the alert must be at the end of this function, otherwise the form may be submitted before the qty value is actually updated
+			ShowMessage(oField, strAlert);
+
+			return true;
+		}
+	}
+
+	return true;
+}
+
+function String2Float( str, bComma ) {
+   var strTemp = new String(str);
+   if (bComma) {
+      //strTemp = strTemp.replace('.', '').replace(',', '.');		
+      strTemp = strTemp.replace(',', '.');		
+   } else {
+      strTemp = strTemp.replace(',', '');		
+   }
+	
+   return parseFloat(strTemp);
+}
+
+function Float2String( r, bComma ) {
+   var subStr1;
+   var numzero;
+   var subStr2;
+   var strTemp = new String(r);
+   subStr2=strTemp.substring((strTemp.indexOf(".") + 1),(strTemp.length));
+   subStr1=strTemp.substring(0,(strTemp.indexOf(".") ));
+   numzero=parseInt(subStr2);
+
+   if(numzero==0)
+   return subStr1;
+
+   if (bComma)
+      return strTemp.replace('.', ',');
+   else
+      return strTemp;
+}
+
+function CalcQuantity(rQty, rModularSize, rMax) {
+    //var rNew = Math.ceil(rQty / rModularSize) * rModularSize;
+    //return Math.round(rNew * 1000) / 1000;    // Try to ensure that a little unpreciseness does not result in 1.0250000000000001 - modular quantity has 3 decimals
+	var rNew = Math.ceil(rQty / rModularSize) * rModularSize;
+	// Try to ensure that a little unpreciseness does not result in
+	//1.0250000000000001 - modular quantity has 3 decimals
+	rNew = Math.round(rNew * 1000) / 1000;
+	if (rMax && rNew > rMax) {
+		rNew = Math.floor(rQty / rModularSize) * rModularSize;
+		rNew = Math.round(rNew * 1000) / 1000;
+	}
+	return rNew;       
+}
+
+function NoFraction(rQty, rModularSize) {
+    if (rModularSize == 0) {
+        return true;
+    } else {
+        return Math.abs(rQty - CalcQuantity(rQty, rModularSize)) < 0.00001;
+    }
+}
+
+function ClearSpaces(r) {
+   var strTemp = new String(r);
+   return strTemp.replace(/ /gi,'').replace(/\xA0/g,'');
+
+}
+
+function ShowMessage(oField, strAlert) {
+	if (oField.hashObject) {
+		oField.hashObject.setItem(oField.hashObject.length, {err:strAlert});
+	} else {
+		alert(strAlert);
+		if(BrowserDetect.browser=='Firefox' || BrowserDetect.browser=='Safari') {
+			myCurrentElem = oField;
+			setTimeout('myCurrentElem.focus();' , 0);
+		} else {
+			oField.focus();
+		}
+	}
+}
+
+strPrototype = "1,234.5";
+strDecPoint = strPrototype.charAt(strPrototype.search("5") - 1);
+</script>
+
+<script
+    id="ValidateForm"
+    type="text/javascript">
+    
+    var currentElem;
+    
+    String.prototype.trim = function() {
+    	a = this.replace(/^\s+/, '');
+    	return a.replace(/\s+$/, '');
+    };
+    
+    function ValidateFormGallery(qty,id) {
+    	var flag = 0;	
+    	value = qty.trim();
+    	if (value == '') {
+    		alert("Please enter the quantity you need to buy.");
+    		flag=1;
+    	}
+    	else {
+    		strPrototype = "1,234.5";
+    		strDecPoint = strPrototype.charAt(strPrototype.search("5") - 1);
+    
+    		if (strDecPoint == ".") {
+    			re = /^[+-]?[\d,]*\.?\d*$/;
+    		}
+    		else if (strDecPoint == ",") {
+    			re = /^[+-]?[\d((\s\xA0)|(\s\xa0)|(.))]*,?\d*$/;
+    		}
+    		else {
+    			return null;
+    		}
+    
+    		if (!re.test(value)) {
+    			alert('Entry must be numeric.');
+    			flag=1;
+    		}
+    	}
+    	if (flag == 1)	{
+    		document.getElementById(id).focus();
+    		return false;
+    	}
+    	else {
+    		return true;
+    	}
+     }
+    
+    function ValidateNumeric(objField, doAlert) {
+    	var strAlert = null;
+    
+    	strFieldValue = objField.value;
+    
+    	if (strFieldValue == "") {
+    		return null;
+    	}
+    
+    	strPrototype = "1,234.5";
+    	strThousandSeparator = strPrototype.charAt(strPrototype.search("2") - 1);
+    	strDecPoint = strPrototype.charAt(strPrototype.search("5") - 1);
+    
+    	nonblockingSpaceRE = /[\s\xA0]+$/;
+    	// trim all thousand separators
+    	if (strThousandSeparator == " " || strThousandSeparator.match(nonblockingSpaceRE)) {
+    		strFieldValueTrimmed = ClearSpaces(strFieldValue);
+    	}
+    	else {
+    		var trimRE = new RegExp('['+strThousandSeparator+']', 'g');
+    		var strFieldValueTrimmed = strFieldValue.replace(trimRE, '');
+    	}
+    
+    	var re = new RegExp("^\\d*\\"+ strDecPoint + "{0,1}\\d*$");
+    
+    	if (!re.test(strFieldValueTrimmed) || strFieldValue == "."  ||   strFieldValue == ",") {
+    		strAlert='Entry must be numeric.';
+    		if (doAlert == true) {			
+    			alert(strAlert);
+    			if(BrowserDetect.browser=='Explorer') {
+    				objField.focus();
+    			}
+    			else {
+    				currentElem = objField;
+    				var timer = setTimeout("currentElem.focus()", 50);
+    			}
+    		}
+    	}
+    	else {
+    		objField.value = strFieldValueTrimmed;
+    	}
+    
+    	return strAlert;
+    }
+</script>
+
+<script id="ValidateFormMod" type="text/javascript">
+function ValidateFormMod(objForm)
+{
+  Check=true;
+  var listvaluenotfound=true;
+  var checked=false;
+  if (objForm != null) {
+	for (var i=0; i<objForm.elements.length; i++)
+	{
+		objField = objForm.elements[i];
+
+		if(objField.disabled)  continue;         // ignore disabled elements
+
+		if (objField.attributes['jsValidation'] == null)
+		 continue;
+
+		objFieldData = eval("x = " + objField.attributes['jsValidation'].value);	
+
+		minimumqty = objFieldData.min;
+		modularqty= objFieldData.mod;
+		name= objFieldData.name;
+		if(!ModularCheck(objField,minimumqty,modularqty,name,true)) return false;
+	}
+  }
+return true;
+}
+</script>
+
+
+<script
+    id="Variable_Check"
+    type="text/javascript">
+    
+    var Check = true;
+    var EnterClick = false;
+    var showMin = true;
+    var Enterkey = false;
+</script>
+
+
+
+
+	<script type="text/javascript" src="../common/jquery/jquery.bpopup-0.9.3.js"></script>
+	<script type="text/javascript" src="../common/jquery/jquery.easing.1.3.js"></script>
+	<script type="text/javascript" src="../common/jquery/jquery.slides.min.js"></script>
+	<script type="text/javascript" src="../common/jquery/jquery.mousewheel.js"></script>
+	<script type="text/javascript" src="../common/jquery/perfect-scrollbar.js"></script>
+	<script type="text/javascript" src="../common/jquery/jquery.dropdown.min.js"></script>
+	<script type="text/javascript" src="../common/jquery/jquery-changeOrDelayedKeyListener.min.js"></script>
+	<script type="text/javascript" src="../common/widgets/iec.base-widget.js"></script>
+	<script type="text/javascript" src="../common/widgets/iec.item-details-widget.js"></script>
+	<script type="text/javascript" src="../common/widgets/iec.init-widgets.js"></script>
+	<script type="text/javascript" src="../common/widgets/iec.banner-widget.js"></script>
+	<script type="text/javascript" src="../common/widgets/iec.campaign-banner-widget.js"></script>
+	<script type="text/javascript" src="../common/widgets/iec.promotion-banner-widget.js"></script>
+	<script type="text/javascript" src="../common/widgets/iec.item-recommendation-widget.js"></script>
+	<script type="text/javascript" src="../common/widgets/iec.user-activity-log-widget.js"></script>
+	<script type="text/javascript" src="../common/includes/readmore.js"></script>
+	<script type="text/javascript" src="../common/includes/placeHolder.js"></script>
+	<script type="text/javascript" src="../common/includes/inforFieldSet.js"></script>
+	<script type="text/javascript" src="../common/includes/customScrollableDropdown.js"></script>
+	<script type="text/javascript" src="../common/includes/valueChanged.js"></script>
+	<script type="text/javascript" src="../common/includes/bannerLoader.js"></script>  
+	<script type="text/javascript" src="../common/includes/iaDebugButtons.js"></script>
+	<script type="text/javascript" src="../common/includes/on-document-ready.js"></script>	 
+	<script type="text/javascript" src="../common/includes/image-resize.js"></script>
+	<script type="text/javascript">
+		jQuery.support.placeholder = (function(){
+		    var i = document.createElement('input');
+		    return 'placeholder' in i;
+		})();
+	</script>
+
+
+	
+<script id="Dojo" type="text/javascript" src="../common/dojo/dojo.js" ></script>
+<script type="text/javascript">
+
+$.ajaxSetup({
+    dataFilter: function (response) {
+    	var data='<script type="text/javascript">$(document).ready(function(){resizeImage();});<\/script>';
+    	if(response.indexOf("fitAspectRatio")!=-1){
+    		return response.concat(data);
+    	}
+        return response;
+    }
+});
+
+
+$(document).ready(function(){
+	resizeImage();
+});
+
+$(document).ajaxComplete(function(){
+	resizeImage();
+}); 
+</script>
+
+<script type="text/javascript">
+// generated by widgetPostAction tag 
+function postAction(url, formNode, onload) {
+
+  var load = function(type, data) {
+    if (data && data.events) {
+      for (var i=0; i<data.events.length; i++) {
+        dojo.event.topic.publish(data.events[i], data);
+      }
+    }
+    
+    if (onload) {
+      onload(type, data);
+    }
+  }
+
+ if (url.indexOf('sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49') == -1) { 
+ if ((url.lastIndexOf('?') != url.length-1) && (url.lastIndexOf('&') != url.length-1)) {
+ if (url.indexOf('?') != -1) { 
+ url = url + '&'; 
+ } else { 
+ url = url + '?'; 
+ } 
+ }
+ url = url + 'sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; 
+ } 
+  if (formNode) {
+    dojo.io.bind({url : url, load : load, mimetype : 'text/json', formNode : formNode});
+  } else {
+    dojo.io.bind({url : url, load : load, mimetype : 'text/json'});
+  }
+}
+</script>
+
+
+
+
+<script id="addLoad" type="text/javascript">
+	function addLoadEvent(func) {
+    	var oldonload = window.onload;
+    	if (typeof window.onload != 'function') {
+    		window.onload = func;
+    	} else {
+    		window.onload = function() {
+    			if (oldonload) {
+    				oldonload();
+    			}
+    			func();
+    		}
+    	}
+	}
+
+    function reloadshoppingcart() {
+    	postAction('OrderLinesUpdate.jsp?sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49', dojo.byId('orderForm'));
+    }
+</script>
+
+
+     <script type="text/javascript">
+        $(document).ready(function(){
+			$("select[name='maxno']").msDropdown();
+        });
+</script>
+</head>
+
+
+<body class="Home">
+	<div id="backToTop">
+	<a class="backToTopLink" href="#"><div class="backToTopImage" title="Back to Top">&nbsp;</div></a>
+</div>
+<script type="text/javascript">
+	//You may trigger this function on scroll of the window
+	//i.e. if you scroll past the top value, then display the button.
+	function showOrHideBackToTopButton(top) {
+		var myTop = (top)?top:0;
+		var winScTop = $(window).scrollTop();
+		if (myTop <= winScTop) {
+			$('#backToTop').show();
+		} else {
+			$('#backToTop').hide();
+		}
+	}
+</script>
+	<div id="layout_main">
+		<div id="layout_topOuterWrapper" >
+			<div id="layout_topInnerWrapper">
+				<div id="layout_top">
+					 <div id="layout_topLeft">
+      					<a href="default.jsp?sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" tabindex="4" id="logoLink"><div class="logo"></div></a>
+<!-- Published by Infor e-Commerce Development Studio -->
+    				</div>
+    				 <div id="layout_topRight">    				 	
+    				 	
+
+
+
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>QuickTools</title>
+<link rel="stylesheet" type="text/css" href="../common/themes/core/page-specific-styles/HeaderToolBox.css">
+<link href="../common/themes/core-bc/generic-styles/perfect-scrollbar.css" rel="stylesheet">
+
+<!-- MY FAVORITE WIDGET -->
+
+	
+
+
+
+
+				    </div>
+					<div id="layout_topCenter">
+						<div id="layout_topmenu">
+							
+
+
+
+
+
+
+
+     
+     
+<div id="dynamicMenu" class="dynamicMenu">
+    <ul class="menu">
+     
+          <li class="shopCategories">
+               <div class="menuHeader">
+                    <span class="categories_icon" title="Shop Categories"></span>
+                    <span id="shopLabel">Shop</span>
+                    <span id="categoriesLabel">Categories</span>
+                    <span class="arrowDown"></span>
+               </div>
+               <div class="menuContent">
+                    
+
+
+
+
+
+
+     <div id="menuDiv">
+
+
+		</div>
+
+
+     <div class="categoryMenuList allCat" id="allCategories">
+
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=26203&@where.CategoryKeySearch@op.eq@comp.Items=26203&@ShowTree=categories&@where.ParentCategoryID=26203&amp;@where.ParentCategoryName=2ST+LABELS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=26203&@where.CategoryKeySearch@op.eq@comp.Items=26203&@ShowTree=categories&@where.ParentCategoryID=26203&amp;@where.ParentCategoryName=2ST+LABELS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    2ST LABELS                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=11450&@where.CategoryKeySearch@op.eq@comp.Items=11450&@ShowTree=categories&@where.ParentCategoryID=11450&amp;@where.ParentCategoryName=2ST+ROLLS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=11450&@where.CategoryKeySearch@op.eq@comp.Items=11450&@ShowTree=categories&@where.ParentCategoryID=11450&amp;@where.ParentCategoryName=2ST+ROLLS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    2ST ROLLS                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=13785&@where.CategoryKeySearch@op.eq@comp.Items=13785&@ShowTree=categories&@where.ParentCategoryID=13785&amp;@where.ParentCategoryName=ATM+ROLLS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=13785&@where.CategoryKeySearch@op.eq@comp.Items=13785&@ShowTree=categories&@where.ParentCategoryID=13785&amp;@where.ParentCategoryName=ATM+ROLLS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    ATM ROLLS                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=13760&@where.CategoryKeySearch@op.eq@comp.Items=13760&@ShowTree=categories&@where.ParentCategoryID=13760&amp;@where.ParentCategoryName=BOND+PRINTED+ROLLS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=13760&@where.CategoryKeySearch@op.eq@comp.Items=13760&@ShowTree=categories&@where.ParentCategoryID=13760&amp;@where.ParentCategoryName=BOND+PRINTED+ROLLS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    BOND PRINTED ROLLS                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=11333&@where.CategoryKeySearch@op.eq@comp.Items=11333&@ShowTree=categories&@where.ParentCategoryID=11333&amp;@where.ParentCategoryName=BOND+SINGLE-PLY+ROLLS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=11333&@where.CategoryKeySearch@op.eq@comp.Items=11333&@ShowTree=categories&@where.ParentCategoryID=11333&amp;@where.ParentCategoryName=BOND+SINGLE-PLY+ROLLS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    BOND SINGLE-PLY ROLLS                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=11362&@where.CategoryKeySearch@op.eq@comp.Items=11362&@ShowTree=categories&@where.ParentCategoryID=11362&amp;@where.ParentCategoryName=CARBONLESS+ROLLS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=11362&@where.CategoryKeySearch@op.eq@comp.Items=11362&@ShowTree=categories&@where.ParentCategoryID=11362&amp;@where.ParentCategoryName=CARBONLESS+ROLLS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    CARBONLESS ROLLS                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=59092&@where.CategoryKeySearch@op.eq@comp.Items=59092&@ShowTree=categories&@where.ParentCategoryID=59092&amp;@where.ParentCategoryName=CLEANING+KITS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=59092&@where.CategoryKeySearch@op.eq@comp.Items=59092&@ShowTree=categories&@where.ParentCategoryID=59092&amp;@where.ParentCategoryName=CLEANING+KITS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    CLEANING KITS                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=51722&@where.CategoryKeySearch@op.eq@comp.Items=51722&@ShowTree=categories&@where.ParentCategoryID=51722&amp;@where.ParentCategoryName=CUT-SHEET+LASER&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=51722&@where.CategoryKeySearch@op.eq@comp.Items=51722&@ShowTree=categories&@where.ParentCategoryID=51722&amp;@where.ParentCategoryName=CUT-SHEET+LASER&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    CUT-SHEET LASER                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=59054&@where.CategoryKeySearch@op.eq@comp.Items=59054&@ShowTree=categories&@where.ParentCategoryID=59054&amp;@where.ParentCategoryName=ENVELOPES&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=59054&@where.CategoryKeySearch@op.eq@comp.Items=59054&@ShowTree=categories&@where.ParentCategoryID=59054&amp;@where.ParentCategoryName=ENVELOPES&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    ENVELOPES                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=59079&@where.CategoryKeySearch@op.eq@comp.Items=59079&@ShowTree=categories&@where.ParentCategoryID=59079&amp;@where.ParentCategoryName=EQUIPMENT&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=59079&@where.CategoryKeySearch@op.eq@comp.Items=59079&@ShowTree=categories&@where.ParentCategoryID=59079&amp;@where.ParentCategoryName=EQUIPMENT&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    EQUIPMENT                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=59093&@where.CategoryKeySearch@op.eq@comp.Items=59093&@ShowTree=categories&@where.ParentCategoryID=59093&amp;@where.ParentCategoryName=EQUIPMENT+SUPPLIES&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=59093&@where.CategoryKeySearch@op.eq@comp.Items=59093&@ShowTree=categories&@where.ParentCategoryID=59093&amp;@where.ParentCategoryName=EQUIPMENT+SUPPLIES&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    EQUIPMENT SUPPLIES                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=11324&@where.CategoryKeySearch@op.eq@comp.Items=11324&@ShowTree=categories&@where.ParentCategoryID=11324&amp;@where.ParentCategoryName=FACSIMILE+PAPER&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=11324&@where.CategoryKeySearch@op.eq@comp.Items=11324&@ShowTree=categories&@where.ParentCategoryID=11324&amp;@where.ParentCategoryName=FACSIMILE+PAPER&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    FACSIMILE PAPER                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=11361&@where.CategoryKeySearch@op.eq@comp.Items=11361&@ShowTree=categories&@where.ParentCategoryID=11361&amp;@where.ParentCategoryName=FANFOLD&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=11361&@where.CategoryKeySearch@op.eq@comp.Items=11361&@ShowTree=categories&@where.ParentCategoryID=11361&amp;@where.ParentCategoryName=FANFOLD&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    FANFOLD                    
+               </a>
+               </div>
+     
+     		   
+               <div class="categoryItem allCatItem">
+                      
+                 <a
+                         onClick="window.location.href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=51707&@where.CategoryKeySearch@op.eq@comp.Items=51707&@ShowTree=categories&@where.ParentCategoryID=51707&amp;@where.ParentCategoryName=FORMS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                         href='GalleryView.jsp?@where.CategoryParent:CategoryID@op.eq@comp.Items=51707&@where.CategoryKeySearch@op.eq@comp.Items=51707&@ShowTree=categories&@where.ParentCategoryID=51707&amp;@where.ParentCategoryName=FORMS&amp;sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'
+                 >                                  
+                    
+                    
+                    FORMS                    
+               </a>
+               </div>
+     			 <div class="viewAllCat">
+                  <a
+                       onClick="window.location.href='GalleryView.jsp?@ShowTree=categories&externalPageUrl=GalleryView.jsp&ByItems=true&sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; return false;"
+                       href='GalleryView.jsp?@ShowTree=categories&externalPageUrl=GalleryView.jsp&ByItems=true&sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'>
+                       View All
+                   </a>
+             </div>	
+
+     
+
+    </div>
+               <!-- WITH CAMPAIGNS -->
+
+          <div id="campaign">
+               <a href="Campaigns.jsp?sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" title="Campaigns">
+                    <div id="campaignimage"></div>
+               </a>
+          </div>
+   
+
+
+<!-- Published by Infor e-Commerce Development Studio -->
+
+               </div>
+          </li>
+          
+          <li class="search">
+               <div class="menuHeader">
+                    <div id="itemQuickSearchForm">
+                         
+                              
+                         
+
+
+
+          
+
+     <div id="widgetMenuItemQuickSearch">
+               
+
+               <script id="TrimFunction" type="text/javascript">
+				function trim(s) {
+				  while (s.substring(0,1) == ' ') {
+					s = s.substring(1,s.length);
+				  }
+				  while (s.substring(s.length-1,s.length) == ' ') {
+					s = s.substring(0,s.length-1);
+				  }
+				  return s;
+				}
+     			</script>
+                 <script id="functionBrowserDetect" type="text/javascript" src="BrowserDetect.js"></script>
+                 <div class="content">
+                    <form action="ItemList.jsp" method="Post" target="" name="MenuQuickSearchForm">
+                         <input type="hidden" name="sessionkey" value="1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" />
+                         <input type="text"
+                              name="quicksearchstring" value="" size="15"
+                              onkeypress="if (((event.which) ? event.which : event.keyCode) == 13) {this.value=trim(this.value);}" onblur="this.value=trim(this.value)" tabindex="1"
+                              class="quickSearchText"
+                              id="menuItemSearch" 
+                              placeHolder="Search" autocomplete="off"/>
+                         <input type="hidden" name="@SearchRequestOrigin" value="b2bQuickSearch" /><input type="button" value=" " name="quickSearchBtn"
+                              class="lookupButton" onclick="document.MenuQuickSearchForm.submit(); return false;" tabindex="1" />
+                         <input type="hidden" name="FromByItems"
+                              value="true" />
+                    </form>
+               </div>
+               
+
+
+     </div><script type="text/javascript">
+{
+  // generated by widgetHTML tag 
+  var widget = dojo.byId('widgetMenuItemQuickSearch');
+  var widgetParent = document.createElement('div');
+  widget.parentNode.replaceChild(widgetParent, widget);
+  widgetParent.appendChild(widget);
+}
+</script>
+
+<!-- Published by Infor e-Commerce Development Studio -->
+
+                    </div>
+               </div>
+               
+   
+               <div class="menuContent searchContainer">
+                    
+
+
+
+
+
+
+
+<form action="ItemList.jsp" method="Post" target="" name="MenuSearchForm">
+	<input type="hidden" name="sessionkey" value="1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" />
+	<input type="hidden" name="@where.ItemID@op.fulltextsearch@comp.Items" id="ItemNameNumber" value="" />
+	
+	<input type="hidden" name="wildcardsearch" value="b2bFilter">
+		
+	<input type="hidden" name="FromByItems" value="true" />
+	
+
+		<div class="feature">
+	  		<div class="searchDropDownLabel">Category</div>
+			<select name="@where.CategoryKeySearch@op.eq@comp.Items" id="Category" style="display: none;">
+				<option value="" selected="selected">Select</option>
+<option value="26203">2ST LABELS</option>
+<option value="11450">2ST ROLLS</option>
+<option value="13785">ATM ROLLS</option>
+<option value="13760">BOND PRINTED ROLLS</option>
+<option value="11333">BOND SINGLE-PLY ROLLS</option>
+<option value="11362">CARBONLESS ROLLS</option>
+<option value="59092">CLEANING KITS</option>
+<option value="51722">CUT-SHEET LASER</option>
+<option value="59054">ENVELOPES</option>
+<option value="59079">EQUIPMENT</option>
+<option value="59093">EQUIPMENT SUPPLIES</option>
+<option value="11324">FACSIMILE PAPER</option>
+<option value="11361">FANFOLD</option>
+<option value="51707">FORMS</option>
+<option value="55866">HIGH SPEED ENCODING RIBBONS</option>
+<option value="26155">HIGH SPEED LASER LABELS</option>
+<option value="55735">ICONEX LASER CONSUMABLES</option>
+<option value="26064">ICONEX STICKY MEDIA</option>
+<option value="59052">INK JET EQUIPMENT</option>
+<option value="55847">INKING AND CASSETTES FOR NCR EQ</option>
+<option value="55856">INKING CASSETTES</option>
+<option value="26426">LINERLESS LABELS</option>
+<option value="59013">MISC OTHER</option>
+<option value="59015">MISC. MEDIA</option>
+<option value="35548">MTTR RIBBON</option>
+<option value="55231">OEM INK JET CARTRIDGES</option>
+<option value="55634">OEM LASER CONSUMABLES</option>
+<option value="59027">PERIPHERALS</option>
+<option value="55830">POROUS RUBBER AND INK ROLLS</option>
+<option value="55829">SIMPLICITY RIBBONS</option>
+<option value="26165">THERMAL LABELS</option>
+<option value="11363">THERMAL PAPER</option>
+<option value="13718">THERMAL PRINTED ROLLS</option>
+<option value="26104">THERMAL TRANSFER LABELS</option>
+<option value="35576">TTR</option>
+
+			</select>	  		
+            <input
+	            type="hidden"
+  	            	name="@where.CategoryParent.CategoryID@op.eq@comp.Items"
+      		        value="" />					
+		</div>
+
+			
+	<div class="searchdiv">
+		<a onclick="document.MenuSearchForm.submit(); return false;"><span class="searchButton">Search</span></a>
+	</div>
+	
+</form>	
+<script>
+	$(document).ready(function(e) {		
+		$('#Category').customScrollableDropdown();
+		$('#Manufacturer').customScrollableDropdown();
+		$('#Brand').customScrollableDropdown();
+						
+		$("#menuItemSearch").keyup(function() {
+			$("#ItemNameNumber").val($("#menuItemSearch").val());
+			$("#quicksearchstring").val($("#menuItemSearch").val());
+		});
+				
+	});		
+</script>
+
+
+               </div>
+                          
+          </li>
+<!-- Wayne 5/24/17 Add language selector -->
+<!-- Wayne 5/26/17 Hide language selector -->
+
+          <li class="shoppingCart" id="shoppingCart">
+               <div class="menuHeader" id="shoppingCartCount">
+                    
+
+
+
+
+
+
+
+		<div id="widgetMenuItemCount">
+			<div class="shoppingcart_icon"></div>
+				<span class="shoppingcart_label" title="0 Items">
+					0
+
+				Items
+				</span>
+				<span class="arrowDown"></span>
+			</div><script type="text/javascript">
+{
+  // generated by widgetHTML tag 
+  var widget = dojo.byId('widgetMenuItemCount');
+  var widgetParent = document.createElement('div');
+  widget.parentNode.replaceChild(widgetParent, widget);
+  widgetParent.appendChild(widget);
+}
+</script>
+
+			
+			<script type="text/javascript">
+{
+  // generated by widgetReload tag 
+  var parent = dojo.byId('widgetMenuItemCount').parentNode;
+  parent.replace = function(type, data, evt) {
+    var parent = dojo.byId('widgetMenuItemCount').parentNode;
+    parent.innerHTML = data;
+    parent.isLoaded = true;
+  // custom code begins 
+
+				
+			  // custom code ends 
+  }
+  parent.load = function() {
+    if (!this.isLoaded) {
+ var loadurl = 'MenuItemCount.jsp?sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; 
+ if (loadurl.indexOf('sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49') == -1) { 
+ if ((loadurl.lastIndexOf('?') != loadurl.length-1) && (loadurl.lastIndexOf('&') != loadurl.length-1)) {
+ if (loadurl.indexOf('?') != -1) { 
+ loadurl = loadurl + '&'; 
+ } else { 
+ loadurl = loadurl + '?'; 
+ } 
+ }
+ loadurl = loadurl + 'sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; 
+ } 
+ dojo.io.bind({
+ url: loadurl,
+        load: this.replace,
+        mimetype: 'text/plain'
+      });
+    }
+  }
+  parent.reload = function(data) {
+    if (this.isLoaded) {
+ var reloadurl = 'MenuItemCount.jsp?sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49' + (data.urlParameters ? '&' + data.urlParameters : ''); 
+ if (reloadurl.indexOf('sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49') == -1) { 
+ if ((reloadurl.lastIndexOf('?') != reloadurl.length-1) && (reloadurl.lastIndexOf('&') != reloadurl.length-1)) {
+ if (reloadurl.indexOf('?') != -1) { 
+ reloadurl = reloadurl + '&'; 
+ } else { 
+ reloadurl = reloadurl + '?'; 
+ } 
+ }
+ reloadurl = reloadurl + 'sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; 
+ } 
+ dojo.io.bind({
+ url: reloadurl,
+        load: this.replace,
+        mimetype: 'text/plain'
+      });
+    }
+  }
+  parent.isLoaded = true;
+
+  dojo.event.topic.subscribe('OrderLinesUpdateUpdate', parent, 'reload');
+}
+</script>
+<!-- Published by Infor e-Commerce Development Studio -->
+
+               </div>
+               <div class="menuContent cartContainer" id="shoppingCartDiv">
+                    
+
+
+<!-- Published by Infor e-Commerce Development Studio -->
+
+               </div> 
+          </li>     
+          
+               <li class="login">
+                    <div class="menuHeader">
+                         <div class="myAccount_icon" title="Login"></div>
+                         <span class="myAccount_label" title="Login">Login</span>
+                         <span class="arrowDown"></span>
+                    </div>
+                    <div class="menuContent loginContainer">
+                         
+
+	<script type="text/javascript">
+		function demoLogin(user){
+			var userId = user+'@infor.demo';
+			var userPsswd = 'demo';
+			var userNamePsswd = '@user.password';
+			var loginFormObj = document.MenuLoginForm;
+			var loginFormUserIdEle = loginFormObj.elements['@user.userid'];
+			loginFormUserIdEle.value = userId;
+			$(loginFormObj).find('[name="' + userNamePsswd + '"]').each(function() {
+				$("<input type='password' size='34'/>").attr({ name: userNamePsswd, value: userPsswd }).insertBefore(this);
+			}).remove();
+			submitForm(loginFormObj);
+		}
+	</script>
+
+	<div id="widgetMenuLoginForm">
+
+				<div>
+					<div id="loginFormContent">
+
+						<form
+							action="Default2.jsp"
+							method="Post"
+							target="_top"
+							name="MenuLoginForm"
+							onsubmit="submitForm(document.MenuLoginForm); return false;">
+                            <input
+                              type="hidden"
+                              name="sessionkey"
+                              value="1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" />
+                              <input type="hidden" name="chkUsePrevious" value="1"/>       
+                            <div class="loginFields">
+                                <div class="loginFieldIcon">   
+     							   <div class="loginFieldIconPerson"></div>
+                                </div> 
+     							<input
+     								type="text"
+     								name="@user.userid"
+     								value=""
+     								size="34"
+     								tabindex="2"
+     								accesskey="L" placeholder="Login Name"/>
+                            </div>
+                            <div class="loginFields" id="passwordDiv">
+                                <div class="loginFieldIcon">   
+                                   <div class="loginFieldIconLock"></div>
+                                </div>
+     							<input
+     								type="password"
+     								name="@user.password"
+                                    id="passwordField"         
+     								value=""
+     								size="34"
+     								tabindex="2" id="passwordField" placeholder="Password"
+                                />
+                            </div>
+                            
+                            
+                            <div id="loginButton">
+                                <input
+     								type="submit"
+     								value="Login"
+     								name="loginBtn"
+     								class="loginBtn"
+     								tabindex="2" /><input
+     								type="hidden"
+     								name="SwitchActive"
+     								value="8149851" />
+                            </div>
+                            <div class="layoutCleaner">&nbsp;</div>
+
+								<input
+									type="hidden"
+									name="@update@comp.UpdateLogin"
+									value="true" />
+								<input
+									type="hidden"
+									name="@field.UserID@key.+X@comp.UpdateLogin"
+									value="" />
+								<input
+									type="hidden"
+									name="@update@comp.UpdateLoginReset"
+									value="true" />
+								<input
+									type="hidden"
+									name="@field.UserID@key.+X@comp.UpdateLoginReset"
+									value="" />
+
+							<script
+								id="PostURL"
+								type="text/javascript">
+								
+								function postURL(url) {
+								  var xmlhttp=false;
+								  /*@cc_on @*/
+								  /*@if (@_jscript_version >= 5)
+								  // JScript gives us Conditional compilation, we can cope with old IE versions.
+								  // and security blocked creation of the objects.
+								  try {
+									xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+								  } catch (e) {
+									try {
+									  xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+									} catch (E) {
+									  xmlhttp = false;
+									}
+								  }
+								  @end @*/
+
+								  if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
+									xmlhttp = new XMLHttpRequest();
+								  }
+
+								  xmlhttp.open("POST", url , false);
+								  xmlhttp.send("");
+								}
+							</script>
+
+								<script
+									id="submitForm"
+									type="text/javascript">
+									
+									function submitForm(form) {
+										 var Url = document.location.href;
+										 postURL("ibm_security_logout?sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49");
+										 form.action= 'Default2.jsp?sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49&'+
+											  Url.substring(Url.indexOf("mainpage"));
+
+										 form.submit();
+									}
+								</script>
+
+						</form>
+						<script
+							id="SetFieldInFocus"
+							type="text/javascript">
+						</script>
+					</div>
+					<div class="layoutCleaner">&nbsp;</div>
+					<div class="loginLinks">
+					
+
+						<div class="content register">
+							<a
+								href="#"
+								onclick="document.ToRegisterForm.submit(); return false;"
+								tabindex="2"><span>Register</span></a>
+							<form
+								action="Login.jsp"
+								method="Post"
+								target=""
+								name="ToRegisterForm">
+								<input
+									type="hidden"
+									name="sessionkey"
+									value="1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" /><input
+									type="hidden"
+									name="ShowForm"
+									value="Register" />
+<input type="hidden" name="sessionkey" value="1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" />
+<input type="hidden" name="mainpage" value="Home.jsp" />
+
+								<input
+									type="hidden"
+									name="SwitchActive"
+									value="8149851" /><input
+									type="hidden"
+									name="GuestOrder"
+									value=""
+									id="GuestOrder" />
+							</form>
+                            
+						</div>
+                        <span class="toolbarSpacer"></span>
+
+						<div class="content register">
+							<a
+								href="#"
+								onclick="document.ToForgottenPasswordForm.submit(); return false;"
+								tabindex="2"><span>Forgotten your password?</span></a>
+							<form
+								action="ForgottenPassword.jsp"
+								method="Post"
+								target=""
+								name="ToForgottenPasswordForm">
+								<input
+									type="hidden"
+									name="sessionkey"
+									value="1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" /><input
+									type="hidden"
+									name="ShowForm"
+									value="ForgottenPassword" />
+							</form>
+						</div>
+
+
+
+				</div>
+				</div>
+
+		</div><script type="text/javascript">
+{
+  // generated by widgetHTML tag 
+  var widget = dojo.byId('widgetMenuLoginForm');
+  var widgetParent = document.createElement('div');
+  widget.parentNode.replaceChild(widgetParent, widget);
+  widgetParent.appendChild(widget);
+}
+</script>
+	
+<!-- Published by Infor e-Commerce Development Studio -->
+
+                    </div>
+               </li>
+          
+          
+     </ul>
+</div>
+
+
+
+<script type="text/javascript">
+
+
+     jQuery(document).ready(function($) {
+          var EFFECT_TIME = 200;
+          var dynamicMenu = $('.dynamicMenu .menu');
+          $('li .menuHeader', dynamicMenu).on('click', function() {
+               var parentLi = $(this).parent('li');
+               var isCurrentActive = parentLi.hasClass("active");
+               deactivateAll(dynamicMenu);
+               toggleAccountIcon(parentLi);
+               if (!isCurrentActive) {
+                    toggle(parentLi);
+               } 
+          }
+          );
+          
+          function toggleLogin(){
+               var liLogin = $("li.login");
+               if(''=='yes'){
+                    toggle(liLogin);
+               }
+          }
+          
+          function deactivateAll(menu) {
+               $('li', menu).each(function() {
+                    if ($(this).hasClass("active")) {
+                         $(this).find(".menuContent").stop().slideUp(EFFECT_TIME / 2);
+                         $(this).removeClass("active");
+                    }
+                    if ($(this).hasClass("newItem")) {
+                         $(this).removeClass("newItem");
+                    }
+                    
+                   	$(this).find(".menuHeader").find('span').each( function() {
+             			if ($(this).hasClass("arrowUp")) {
+             				$(this).removeClass("arrowUp");
+              				$(this).addClass("arrowDown");
+             			}
+              		});
+                                        
+               });
+          }
+
+          function toggle(elem) {
+               $(elem).find(".menuContent").stop().slideDown(EFFECT_TIME);
+               $(elem).addClass("active");
+               
+               if($(elem).hasClass("shoppingCart")){
+                    $('#menuShoppingCartContainer .menuCartContainer').perfectScrollbar('update');
+               }    
+
+               $(elem).find(".menuHeader").find('span').each( function () {
+             		if ($(this).hasClass("arrowDown")) {
+             			$(this).removeClass("arrowDown");
+             			$(this).addClass("arrowUp");
+             			return false;
+             		}
+             		
+             		if ($(this).hasClass("arrowUp")) {
+             			$(this).removeClass("arrowUp");
+             			$(this).addClass("arrowDown");
+             			return false;
+             		}               			
+             });
+               
+               $('body').click(function(event) {
+                    var $target = $(event.target);
+                    if ($target.parents('.dynamicMenu').length == 0) {
+                         deactivateAll(dynamicMenu);
+                    }
+               });
+          }
+          
+          function toggleAccountIcon(elem){
+               if($(elem).hasClass("myAccount")){
+                    var divAccount = $(".myAccount_icon");
+                    if(divAccount.length != 0){
+                         divAccount.addClass("myAcctActive_icon");
+                         divAccount.removeClass("myAccount_icon");
+                    } else {
+                         divAccount = $(".myAcctActive_icon");
+                         divAccount.addClass("myAccount_icon");
+                         divAccount.removeClass("myAcctActive_icon");
+                    }
+               } else {
+                    var divAccount = $(".myAcctActive_icon");
+                    divAccount.addClass("myAccount_icon");
+                    divAccount.removeClass("myAcctActive_icon");
+               }
+          }
+          toggleLogin();
+     });
+     
+     
+</script>
+
+
+
+
+<!-- Published by Infor e-Commerce Development Studio -->
+
+						</div>
+					</div>
+					<div class="layoutCleaner">&nbsp;</div>
+				</div>
+			</div>
+			
+			<div class="languageSelector" id="layout_selectlanguage2">
+				
+				
+
+
+   
+<div class="selectlanguage">
+
+
+
+
+<div class="flags_corner flag">
+	
+	<select  name="languages" class="languages" id="languages" onchange="executeUrl(this)" style="width:150px">
+					<option 
+					value="" 
+					selected="selected"
+					data-image="../common/images/flags/en-US.gif">English</option> 							
+				<option 
+					value="UpdateLanguage.jsp?@USER.LocaleID=4&@USER.LanguageCode=FR&@USER.CountryCode=FR&previousPageURI=https%3A%2F%2Ficonexstore.com%2Finfor-ecom-b2b%2Fcc%2FHome.jsp%3Fmainpage%3DHome.jsp&clearCache=clear&sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49"
+					data-image="../common/images/flags/FR-FR.gif">French</option>
+														
+				<option 
+					value="UpdateLanguage.jsp?@USER.LocaleID=7&@USER.LanguageCode=CF&@USER.CountryCode=CA&previousPageURI=https%3A%2F%2Ficonexstore.com%2Finfor-ecom-b2b%2Fcc%2FHome.jsp%3Fmainpage%3DHome.jsp&clearCache=clear&sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49"
+					data-image="../common/images/flags/CF-CA.gif">French Canadian</option>
+														
+				<option 
+					value="UpdateLanguage.jsp?@USER.LocaleID=6&@USER.LanguageCode=IT&@USER.CountryCode=IT&previousPageURI=https%3A%2F%2Ficonexstore.com%2Finfor-ecom-b2b%2Fcc%2FHome.jsp%3Fmainpage%3DHome.jsp&clearCache=clear&sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49"
+					data-image="../common/images/flags/IT-IT.gif">Italian</option>
+							
+	</SELECT>
+	<script type="text/javascript">
+		function executeUrl(sel) {
+			var value = sel.options[sel.selectedIndex].value;  
+			if(value!="") {
+				window.location = value;
+			}
+		}
+		
+		$(document).ready(function(e) {
+			/* try {
+				$("#languages").msDropdown();
+			} catch(ex) {} */
+			$("#languages").makeScrollableDropDown({});
+		});
+	</script>
+</div>
+
+</div>
+<!-- Published by Infor e-Commerce Development Studio -->
+			</div>
+
+		</div>
+				<!-- UserID: 2 -->
+				<!-- User email: guest@infor.demo -->
+				<!-- usergroupkey: Guest -->
+				<!-- usergroupid: 2 -->
+				<!-- OrderID: 8149851 -->
+				<!-- cartItemCount: null -->
+				<!-- MvxWarehouse:  -->
+				<!-- DefMvxWarehouse: null -->
+				<!-- whlo: null -->
+				<!-- CountryID: US -->
+				<!-- MvxOrderType: ECM -->		
+				<!-- Email: guest@infor.demo -->		
+				<!-- Send Mail on Order: false -->		
+		<div id="layout_contentOuterWrapper">
+			<div id="layout_contentInnerWrapper">
+				<div id="layout_center">
+				<div id="Title" class="titleimage">
+Home
+</div><div class='content'>
+
+
+
+
+
+
+	<div class="iecWidget iecCampaignBannerWidget bannerHolder" 
+		data-section-name="HomeBanner"
+		data-page-name="Home.jsp"
+	    data-view-type="Home"
+		data-source="GetMvxCampaigns.jsp" 
+		data-max-record="5"
+		data-rotate="true"
+		data-image-only="false"
+		data-auto-play="true"
+		data-ia-event="RecommendCampaigns">
+	</div>
+
+
+
+<div>
+
+<script
+        id="functionProceed"
+        type="text/javascript">
+        
+    function proceed() {
+    	return (true) || confirm('The contents of your current order will be lost if you continue. Do you wish to continue?');
+    }
+</script>
+    <div class="welcomeSection">
+        <div class="welcomeHeader">
+            <h2>
+Welcome to&nbsp;Iconex Store
+
+            </h2>
+        </div>
+        <div class="welcomeText">
+
+            <p><span class="par1">It’s now even easier and faster to order Iconex products.</span></p>
+            <p><span class="par2">• Responsive design looks great on any device<br>
+• Fast checkout with multiple ship to locations<br>
+• One-click ordering with standard orders <br>
+• Easy order tracking and invoice management<br></span></p>
+            <p><span class="par3">Visitors can browse the website as a guest without logging in. To make purchases you will need to be a registered user of the website. Use the Login dropdown in the main menu above to login or register as a user of this website.</span></p>
+
+            <p><span class="par5"><a href="http://iconexbrief.com/wp-content/uploads/2017/06/Iconex_Store_Training_r1.pdf" target="blank"><img src="http://iconexbrief.com/wp-content/uploads/2017/06/training.png" alt="" width="500" height="42" /></a><br><br>
+For questions or assistance related to the website:<br>email <a href="mailto:customer.care@iconex.com">customer.care@iconex.com</a> or call <a href="tel:1-888-979-8627">1-888-979-8627</a></span></p>
+        </div>
+    </div></div>
+
+
+<div class="multiWidgetHolder">
+
+
+
+	<div id="InlineFavoritesLinks" class="contentTabs"></div>
+	<!--jsp:include page="InlineItemLinks.jsp" flush="true" /-->
+				
+	
+	
+
+	
+	
+	
+<script type="text/javascript">
+     $(document).ready(function(){
+          $('.entry_details #quickLinkWidgetContent').perfectScrollbar();
+          $("div#quicktool").load("../cc/Icons.jsp?sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49");
+          $("div#InlineFavoritesLinks").load("../cc/InlineItemLinks.jsp?sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49");
+          
+          
+          
+          try{
+        	  setTimeout(allViewAll, 1000);
+			}catch(e){}
+          
+     });
+    
+     function allViewAll(){
+    	 
+          var allCampaings = "<li class=\"slidesjs-pagination-item\"> <a  class=\"viewAll\" title=\"View All\" href=\"CampaignList.jsp?sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49\" >&nbsp;</a></li>";
+          
+          
+		  var pagination = $("div.HomeBanner ul.banners ul.slidesjs-pagination");
+          var arrcampaignDescp=new Array();
+		  $("div.bannerDetails a span.title","div.HomeBanner ul.banners").each(function(){
+			  arrcampaignDescp.push($(this).text());
+		  });
+		  
+		  var count=0;
+		  $("li.slidesjs-pagination-item a",pagination).each(function(){
+			 $(this).attr("title",$.trim(arrcampaignDescp[count]));
+			 count++;
+		  });
+		  
+		  
+          pagination.append(allCampaings);
+
+          if(!pagination.find('.viewAll').length)
+          {
+          	setTimeout(allViewAll,100);
+          }
+     }     
+</script>
+     
+<noscript>
+<b>This web site is designed to be used with JavaScript. You have either turned JavaScript off or your browser does not support JavaScript.</b>
+</noscript>
+</div><div>
+
+
+					<script id="reloadShoppingCart" type="text/javascript">
+						addLoadEvent(reloadshoppingcart);
+					</script>
+				  </div>
+				<div class="layoutCleaner">&nbsp;</div>
+			</div> <!-- End of: layout_center -->
+		</div> <!-- End of: layout_contentInnerWrapper -->
+	</div> <!-- End of: layout_contentOuterWrapper -->
+
+
+
+
+	<div id="layout_bottomOuterWrapper">
+		<div id="layout_bottomInnerWrapper">
+			<div id="layout_bottom">
+				<div class="footerPartition">
+					<div class="tophalf">
+						<div class="upLeft">
+							<div>
+								
+			                              
+                                                        
+		                         
+
+
+
+
+
+
+
+</div><div class='content'>
+
+
+
+	
+    
+	<div class="Sitemap2">
+	
+	</div>
+	
+
+		                    </div>          
+						</div>
+						<div class="upRight">
+							<div class="quickSearchContainer">
+								
+									
+								
+
+		
+		
+	<div id="widgetItemQuickSearch">
+    
+        <div class="">
+            <script id="TrimFunction" type="text/javascript">
+				function trim(s) {
+				  while (s.substring(0,1) == ' ') {
+					s = s.substring(1,s.length);
+				  }
+				  while (s.substring(s.length-1,s.length) == ' ') {
+					s = s.substring(0,s.length-1);
+				  }
+				  return s;
+				}
+			</script>
+            <script
+                id="functionBrowserDetect"
+                type="text/javascript"
+                src="BrowserDetect.js">
+				// linking to BrowserDetect.js
+			</script>
+
+            <div class="">
+            </div>
+            <div class="content">
+                <form
+                    action="ItemList.jsp"
+                    method="Post"
+                    target=""
+                    name="SearchForm">
+                    <input type="hidden"
+                        name="sessionkey"
+                        value="1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" />
+                   	<input type="text"
+                        id="quickSearchId"
+                        name="quicksearchstring"
+                        value=""
+                        size="15"
+                        onkeypress="if (((event.which) ? event.which : event.keyCode) == 13) {this.value=trim(this.value);}"
+                        onblur="this.value=trim(this.value)"
+                        tabindex="1"
+                        class="quickSearchText2" 
+                        placeholder="Search" 
+                        maxlength="18" />
+                    <input type="hidden" 
+                    	name="@SearchRequestOrigin" 
+                    	value="b2bQuickSearch" />
+                    <input type="button" 
+                    	value=" " name="quickSearchBtn"
+                        class="quickSearchBtn2"
+                        onclick="document.SearchForm.submit(); return false;"
+                        tabindex="1" /><input type="hidden" name="FromByItems"
+                        value="true" 
+                     	/>
+                    <div>
+                        <table
+                            cellspacing="0"
+                            cellpadding="0"
+                            border="0"
+                            class="tblQuickSearch">
+                            <tr>
+                                <td>
+
+										<input
+											type="checkbox"
+											name="wildcardsearch"
+											value="b2bQuickSearch"
+											id="qswildcardsearch" style="display:none" />
+
+                                </td>
+                                <td>
+									<label style="display:none">contains</label>
+								</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div style="display: none;">
+                        <input
+                            type="submit"
+                            value=""
+                            name="submit1" />
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+</div><script type="text/javascript">
+{
+  // generated by widgetHTML tag 
+  var widget = dojo.byId('widgetItemQuickSearch');
+  var widgetParent = document.createElement('div');
+  widget.parentNode.replaceChild(widgetParent, widget);
+  widgetParent.appendChild(widget);
+}
+</script>
+
+<!-- Published by Infor e-Commerce Development Studio -->
+
+							</div>
+<!-- Wayne 5/24/17 drop language selector -->	
+
+							<div id="layout_currecySelector">
+								
+									
+									
+									
+									
+									
+									
+									
+									
+								
+<!-- Published by Infor e-Commerce Development Studio -->
+							</div>
+						</div>
+					</div>
+					<div class="downLeft">
+						<div>
+							<div class="entry_header"><div id="bottomInfoMenuHolder">
+    <span class="menuItem"><a style="" href="Content.jsp?content=privacy&sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" class="categorymenuitem" tabindex="2">Privacy&nbsp;Policy</a></span> <span class="menuItem"> <a style="" href="Content.jsp?content=termsofuse&sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" class="categorymenuitem" tabindex="2">Terms&nbsp;of&nbsp;Use</a></span> <span class="menuItem"> <a style="" href="Content.jsp?content=purchaseterms&sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" class="categorymenuitem" tabindex="2">Shipping&nbsp;and&nbsp;Returns</a></span> <span class="menuItem"> <a style="" href="Content.jsp?content=help&sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" class="categorymenuitem" tabindex="2">Help</a></span> <span class="menuItem"> <a style="" href="About.jsp?sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49" class="categorymenuitem" tabindex="2">About Iconex</a></span> <span class="menuItem">            </span>
+       </div>
+
+</div> <!-- end entry_header -->
+<!-- Published by Infor e-Commerce Development Studio -->
+						</div>
+					</div>
+					<div class="downRight">
+						<div id="widgetPoweredInfo">
+<div id="poweredInfo" class="poweredInfo"><span class="label">Powered by</span> <span class="productName">Infor</span>
+</div></div><script type="text/javascript">
+{
+  // generated by widgetHTML tag 
+  var widget = dojo.byId('widgetPoweredInfo');
+  var widgetParent = document.createElement('div');
+  widget.parentNode.replaceChild(widgetParent, widget);
+  widgetParent.appendChild(widget);
+}
+</script>
+
+<!-- Published by Infor e-Commerce Development Studio -->
+					</div>
+				</div>
+				<div class="layoutCleaner">&nbsp;</div>
+			</div>
+		</div>
+	</div>
+</div> <!-- End of: layout_main -->
+
+
+
+
+
+<script id="sessionKeys" type="text/javascript">
+	var gCsrfTokenUrlParam = 'sessionkey=1H97-8NVM-X1NX-KL27-X01A-AINS-C6GN-7K49'; 
+</script>
+
+</body>
+</html>
+<!-- Published by Infor e-Commerce Development Studio -->

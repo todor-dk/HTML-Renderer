@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>Free Live Score</title>
+<meta name="keywords" content="Live Score,Scores,spbo">
+<meta name="Description" content="Free Live Score by Spbo1.com">
+<style>
+body{font-size:12px; margin:0;}
+td{font-size:12px;}
+a:link {color:#0000FF;text-decoration: none;}
+a:visited {color:#0000FF;text-decoration: none;}
+a:hover {color:#FF8000;text-decoration: underline;}
+.inbg {BACKGROUND-COLOR:#FF80FF;}
+.s1bg {background-image: url("/i/s1bg.gif");}
+.s2bg {background-image: url("/i/s2bg.gif");}
+.inp {width:13px;height:13px;padding:0px;}
+</style>
+</head>
+
+<body topmargin="0" bottommargin="0" leftmargin="0">
+<a name="top"></a>
+<SCRIPT language=JavaScript>
+function ca(){
+var idss=document.getElementById("lsf").elements;
+for (i=0; i< idss.length; i++) {
+if(idss[i].name != "c"){
+if(idss[i].checked){idss[i].checked = false;}else{idss[i].checked = true;}
+}
+}
+}
+function zding(a){
+var nsid;
+if(a == 1){
+nsid="";
+var idss=document.getElementById("lsf").elements;
+for (i=0; i< idss.length; i++) {
+if(idss[i].checked){nsid+=idss[i].value;}
+}
+if(nsid){
+document.getElementById("diszd").value=nsid+document.getElementById("diszd").value;
+}else{
+document.getElementById("diszd").value="";
+}
+sh();
+}else if(a == 2){
+nsid="";
+var idss=document.getElementById("flf").elements;
+for (i=0; i< idss.length; i++) {
+if(idss[i].checked){nsid+=idss[i].value;}
+}
+if(nsid){
+document.getElementById("diszd").value=nsid+document.getElementById("diszd").value;
+}else{
+document.getElementById("diszd").value="";
+}
+sh();
+}
+}
+function tc(a){
+var nsid;
+if(a == 1){
+nsid="";
+var idss=document.getElementById("lsf").elements;
+for (i=0; i< idss.length; i++) {
+if(idss[i].checked){nsid+=idss[i].value;idss[i].checked = false;}
+}
+if(nsid){
+document.getElementById("disno").value=nsid+document.getElementById("disno").value;
+var nsid2=nsid.split(".");
+for (i=0; i< nsid2.length-1; i++) {
+document.getElementById("tr_"+nsid2[i]).style.display = "none";if(document.getElementById("tr_g"+nsid2[i])){document.getElementById("tr_g"+nsid2[i]).style.display = "none";}
+}
+}else{
+document.getElementById("disno").value="";
+document.getElementById("disyc").value="";
+sh();
+}
+}else if(a == 2){
+nsid="";
+document.getElementById("sxno").value=2;
+var idss=document.getElementById("flf").elements;
+for (i=0; i< idss.length; i++) {
+if(idss[i].checked){nsid+=idss[i].value;}
+}
+if(nsid){
+document.getElementById("disno").value=nsid+document.getElementById("disno").value;
+}else{
+document.getElementById("disno").value="";
+document.getElementById("disyc").value="";
+}
+sh();
+}
+}
+function sx(a){
+var nsid;
+if(a == 1){
+nsid="";
+var idss=document.getElementById("lsf").elements;
+for (i=0; i< idss.length; i++) {
+if(idss[i].checked){nsid+=idss[i].value;}
+}
+document.getElementById("disyc").value=nsid;
+if(nsid == ""){document.getElementById("disno").value="";}
+document.getElementById("sxno").value=1;
+sh();
+}else if(a == 2){
+nsid="";
+if(document.getElementById("sxno").value == 1){document.getElementById("sxno").value=2;document.getElementById("disyc2").value=document.getElementById("disyc").value;}
+var flss=document.getElementById("flf").elements;
+for (i=0; i< flss.length; i++) {
+if(flss[i].checked){nsid+=flss[i].value;}
+}
+nsid=nsid+document.getElementById("disyc2").value;
+document.getElementById("disyc").value=nsid;
+if(nsid == ""){document.getElementById("disno").value="";}
+sh();
+}
+}
+function getFLXml(b){
+if(window.ActiveXObject){
+xmlFL = new ActiveXObject("Microsoft.XMLDOM");
+xmlFL.async=false;
+xmlFL.load("x/f"+b+".xml");
+op();
+}
+else if(document.implementation && document.implementation.createDocument){
+var xmlhttp=new window.XMLHttpRequest();
+xmlhttp.open("GET","x/f"+b+".xml",false);
+xmlhttp.send(null);
+xmlFL=xmlhttp.responseXML;
+op();
+}else{return;}
+}
+function op(id){
+if(document.getElementById("fltb")){
+if(document.getElementById("fltb").style.display == ""){document.getElementById("fltb").style.display = "none";}else if(document.getElementById("fltb").style.display == "none"){document.getElementById("fltb").style.display = "";}
+}else{
+if(id == 1){getFLXml(document.getElementById("bb").value);}else{
+if(!xmlFL || !xmlFL.documentElement || !xmlFL.documentElement.firstChild){var id="";}else{var id=xmlFL.documentElement.firstChild.nodeValue;}
+var yid2;
+var yid3;
+var ls="";
+var yid=id.split("!");
+if(yid.length >15){
+var ia=Math.round(1/6*(yid.length-1))-1;
+var ia2=Math.round(1/3*(yid.length-1))-1;
+var ia3=Math.round(1/2*(yid.length-1))-1;
+var ia4=Math.round(2/3*(yid.length-1))-1;
+var ia5=Math.round(5/6*(yid.length-1))-1;
+}else{
+var ia=Math.round(1/3*(yid.length-1))-1;
+var ia2=Math.round(2/3*(yid.length-1))-1;
+}
+for (i=0; i< yid.length-1; i++) {
+yid2=yid[i].split(",");
+yid3=yid2[1].split(".");
+ls+="<input name=b"+i+" id=b"+i+" type=checkbox value=\""+yid2[1]+"\"> "+yid2[0]+"<br>";
+if(i == ia | i == ia2 | i == ia3 | i == ia4 | i == ia5){ls+="</td><td valign=top bgcolor=#FFFFE6>";}
+}
+document.getElementById("flhtm").innerHTML="<table id=fltb cellpadding=0 cellspacing=0 border=0 align=center><tr><td><form name=flf id=flf><table align=center width=500 cellpadding=2 cellspacing=1 border=0 bgcolor=#808040><tr><td height=20 valign=bottom colspan=6 bgcolor=#FFD2D2 style='color:#333333' align=center><a href='javascript:em(5)'><img src=http://img.spbo1.com/images/b5.gif width=31 height=19 border=0></a> <a href='javascript:em(6)'><img src=http://img.spbo1.com/images/b6.gif width=31 height=19 border=0></a> <a href='javascript:em(7)'><img src=http://img.spbo1.com/images/b7.gif width=31 height=19 border=0></a> <a href='javascript:em(3)'><img src=http://img.spbo1.com/images/b3.gif width=31 height=19 border=0></a> <a href='javascript:em(4)'><img src=http://img.spbo1.com/images/b4.gif width=31 height=19 border=0></a> <a href='javascript:em(9)'><img src=http://img.spbo1.com/images/b9.gif width=36 height=19 border=0></a> <a href='javascript:em(10)'><img src=http://img.spbo1.com/images/b10.gif width=36 height=19 border=0></a></td></tr><tr><td valign=top bgcolor=#FFFFE6>"+ls+"</td></tr><tr><td colspan=6 bgcolor=#FFD2D2 align=center><input type=button value='全选' onclick='javascript:sha()' style='font-size:12px;color:#333333;'> <input type=button value='反选' onclick='javascript:hda()' style='font-size:12px;color:#333333;'> &nbsp; <input type=button value='剔除选中' onclick='javascript:tc(2)' style='font-size:12px;color:#333333;'> <input type=button value='保留选中' onclick='javascript:sx(2)' style='font-size:12px;color:#333333;'> <input type=button value='置顶选中' onclick='javascript:zding(2)' style='font-size:12px;color:#333333;'> &nbsp; <input type=button value='完成' onclick='javascript:op();' style='font-size:12px;color:#333333;'></td></tr></table></form></td></tr></table>";
+}
+}
+}
+function hda(){
+var fm=document.getElementById("flf").elements;
+for (i=0; i< fm.length; i++) {
+fm[i].checked=false;
+}
+}
+function sha(){
+var fm=document.getElementById("flf").elements;
+for (i=0; i< fm.length; i++) {
+fm[i].checked=true;
+}
+}
+</script>
+
+<table width="500" cellpadding=0 cellspacing=0 align=center><tr>
+<td align="right"><a href="javascript:tc(1)"><img src=http://img.spbo1.com/images/tc.gif width=42 height=46 border=0></a></td><td width="34" align="right"><a href="javascript:sx(1)"><img src=http://img.spbo1.com/images/bl.gif width=24 height=46 border=0></a></td><td width="34" align="right"><a href="javascript:zding(1)"><img src=http://img.spbo1.com/images/zding.gif width=24 height=46 border=0></a></td>
+<td width="122" align="right"><a href="javascript:en('a')"><img src=http://img.spbo1.com/images/jt.gif width=34 height=19 border=0></a> <a href="javascript:en('b')"><img src=http://img.spbo1.com/images/ft.gif width=34 height=19 border=0></a> <a href="javascript:en('c')"><img src=http://img.spbo1.com/images/en.gif width=34 height=19 border=0></a><br></td>
+<td width="112" align="right"><a href="javascript:em('1')"><img src=http://img.spbo1.com/images/b1.gif width=31 height=19 border=0></a> <a href="javascript:em('2')"><img src=http://img.spbo1.com/images/b2.gif width=31 height=19 border=0></a> <a href="javascript:em('8')"><img src=http://img.spbo1.com/images/b8.gif width=31 height=19 border=0></a><br><a href="javascript:em(4)"><img src=http://img.spbo1.com/images/b4.gif width=31 height=19 border=0></a> <a href="javascript:em('3')"><img src=http://img.spbo1.com/images/b3.gif width=31 height=19 border=0></a> <a href="javascript:op(1)"><img src=http://img.spbo1.com/images/bst.gif width=31 height=19 border=0></a></td>
+<td width="8" align="right"></td>
+<td width="92" align="left"><table cellpadding=0 cellspacing=0 border=0><tr><td colspan="2">&nbsp;<font color=#333333>POPUPS:</font><input type="checkbox" name="openwin" id="openwin" checked></td></tr><td valign="top"><select name="soundopen" id="soundopen" style="font-size:12px;color:333333; WIDTH: 55px;"><option value="">None</option><option selected value="1">Sound1</option><option value="3">Sound2</option><option value="5">Sound3</option><option value="4">Sound4</option><option value="2">Sound5</option></select></td><td><input type="button" value="TEST" onclick="javascript:st()" style="width:30px;height:20px;font-size:12px;color:#333333;"></td></tr></table></td>
+<td width=45 align="right"><a href=http://www.spbo1.com/eend0.htm target=_blank><font color=red>[</font> Result<font color=red>]</font></a><br><a href=http://www.spbo1.com/enew0.htm target=_blank><font color=red>[</font>Fixture<font color=red>]</a></td>
+</tr></table>
+<SCRIPT language=JavaScript>
+function en(URL) {
+try{
+document.getElementById("yy").value=URL;
+var theURL='h/'+URL+document.getElementById("bb").value+'.htm';
+timebf.location.href=theURL;
+}catch(e){}
+}
+function em(URL) {
+try{
+document.getElementById("bb").value=URL;
+var theURL='h/'+document.getElementById("yy").value+URL+'.htm';
+document.getElementById("disyc").value="";
+document.getElementById("disno").value="";
+document.getElementById("sxno").value=2;
+timebf.location.href=theURL;
+if(document.getElementById("fltb")){
+if(document.getElementById("fltb").style.display == ""){document.getElementById("fltb").style.display = "none";}
+}
+document.getElementById("flhtm").innerHTML="";
+}catch(e){}
+}
+function st() {
+var sound=document.getElementById("soundopen").value;
+if(sound){
+document.getElementById("goalsound").innerHTML="<embed width=1 height=1 src='/i/in"+sound+".swf'>";
+}}
+function sh() {
+try{
+var shdz='h/'+document.getElementById("yy").value+document.getElementById("bb").value+'.htm';
+timebf.location.href=shdz;
+}catch(e){}
+}
+function sh2() {
+var ss=0;
+var idss2=document.getElementById("lsf").elements;
+for (i=0; i< idss2.length; i++) {
+if(idss2[i].checked){ss=1;break;}
+}
+if(ss){
+ss=document.getElementById("ssno").value - 0 + 1;
+document.getElementById("ssno").value=ss;
+//document.all.goaltips.innerHTML=ss;
+if(ss < 3){return;}
+}
+document.getElementById("ssno").value=1;
+try{
+var shdz='h/'+document.getElementById("yy").value+document.getElementById("bb").value+'.htm';
+timebf.location.href=shdz;
+}catch(e){}
+}
+setInterval("sh2()",60000);
+</script>
+<input type="hidden" name="lsid" id="lsid" value="">
+<input type="hidden" name="newjqidhtm" id="newjqidhtm" value="">
+<input type="hidden" name="disyc" id="disyc" value="">
+<input type="hidden" name="disyc2" id="disyc2" value="">
+<input type="hidden" name="disno" id="disno" value="">
+<input type="hidden" name="diszd" id="diszd" value="">
+<input type="hidden" name="sxno" id="sxno" value="2">
+<input type="hidden" name="ssno" id="ssno" value="1">
+<script>function dis(){document.getElementById("disyc").value="";document.getElementById("disno").value="";document.getElementById("diszd").value="";document.getElementById("sxno").value=2;}window.setTimeout("dis()", 100);</script>
+<span id="flhtm"></span>
+<table cellSpacing="0" cellPadding="0" border="0" align=center bgColor="#FFFBFF">
+<tbody><tr><td><span id="goaltips"></span></td></tr>
+<tr>
+<td vAlign="top" bgColor="#ffffff" align="center"><iframe name="timebf" id="timebf" marginwidth="0" marginheight="0" border="0" frameborder="0" height="0" width="0" scrolling="no" noresize src="h/c3.htm"></iframe><form name=lsf id=lsf><div id="bflive"><center><br><br><br><br>Please wait ....<br><br></div><div id="bflive2"></div><div id="bflive3"></div></form>
+</td>
+</tr>
+</tbody>
+</table>
+<input type="hidden" name="newzt" id="newzt" value="1">
+<input type="hidden" name="yy" id="yy" value="c">
+<input type="hidden" name="bb" id="bb" value="3">
+<input type="hidden" name="rhzt" id="rhzt" value="2">
+<table cellpadding="0" cellspacing="3" border="0" align="center" width="500">
+ <tr>
+ <td width="400"><a href="en.htm" target="_self">[ Show ALL ]</a> <font color="A2A2A2">Tips: <font color=FF80C0>Odds</font>for Macausot's Odds, <img src=/i/zd.gif width=10 height=10>for LiveBetting</td>
+ <td align="right"><a href="#top" target="_self"><font face="Arial"><b>Top</a></td>
+ </tr>
+<tr>
+ <td align="center" colspan="2"><a href="http://www.spbo1.com" target="_blank"><font color=red>[</font> Free Live Score by SPBO <font color=red>]</font></a></td>
+</tr>
+<tr>
+ <td align="center" colspan="2" height="1" bgcolor="gray"></td>
+</tr>
+</tbody>
+ </table>
+<span id="goalsound"></span>
+<a name="bottom"></a>
+<SCRIPT language=JavaScript src=ec2e.js></script>
+
+</body>
+
+</html>
