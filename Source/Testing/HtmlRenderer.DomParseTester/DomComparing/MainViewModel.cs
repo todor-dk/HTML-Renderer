@@ -1,11 +1,13 @@
 ﻿using HtmlRenderer.DomParseTester.DomComparing.ViewModels;
 using HtmlRenderer.DomParseTester.ViewModels;
+using HtmlRenderer.TestLib;
 using HtmlRenderer.TestLib.Dom;
 using Microsoft.Win32;
 using Scientia.HtmlRenderer;
 using Scientia.HtmlRenderer.Html5.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -63,13 +65,17 @@ namespace HtmlRenderer.DomParseTester.DomComparing
 
         public ICommand RightOpenHtmlCommand { get; private set; }
 
+        public ObservableCollection<RecentItem> RecentItems { get; private set; }
+
         public MainViewModel()
         {
             this.LeftOpenDomCommand = new GenericCommand(this.LeftOpenDom);
             this.LeftOpenHtmlCommand = new GenericCommand(this.LeftOpenHtml);
             this.RightOpenDomCommand = new GenericCommand(this.RightOpenDom);
             this.RightOpenHtmlCommand = new GenericCommand(this.RightOpenHtml);
+            this.RecentItems = new ObservableCollection<RecentItem>();
             this.Context = new Context();
+            this.LoadRecent();
         }
 
         private void LeftOpenDom()
@@ -82,6 +88,11 @@ namespace HtmlRenderer.DomParseTester.DomComparing
             this.OpenHtml(node => this.Left = node);
         }
 
+        public void LeftOpenRecent(RecentItem recent)
+        {
+            this.OpenRecent(recent, node => this.Left = node);
+        }
+
         private void RightOpenDom()
         {
             this.OpenDom(node => this.Right = node);
@@ -90,6 +101,12 @@ namespace HtmlRenderer.DomParseTester.DomComparing
         private void RightOpenHtml()
         {
             this.OpenHtml(node => this.Right = node);
+        }
+
+
+        public void RightOpenRecent(RecentItem recent)
+        {
+            this.OpenRecent(recent, node => this.Right = node);
         }
 
         private void OpenDom(Action<Node> action)
@@ -114,7 +131,9 @@ namespace HtmlRenderer.DomParseTester.DomComparing
 
             Node node = Node.FromReferenceNode(this.Context, root);
             action(node);
-            this.Compare(this.Left, this.Right);
+
+            this.UpdateRecent(dlg.FileName, RecentItem.FileType.Dom);
+            this.CompareAndValidate();
         }
 
         private void OpenHtml(Action<Node> action)
@@ -145,39 +164,81 @@ namespace HtmlRenderer.DomParseTester.DomComparing
 
             Node node = Node.FromReferenceNode(this.Context, root);
             action(node);
-            this.Compare(this.Left, this.Right);
+
+            this.UpdateRecent(dlg.FileName, RecentItem.FileType.Html);
+            this.CompareAndValidate();
         }
 
-        private CompareResult Compare(Node left, Node right)
+        private void OpenRecent(RecentItem recent, Action<Node> action)
         {
-            CompareResult result = left.Compare(right);
-            result = this.Context.GetCompareResult(result);
+            if (recent == null)
+                return;
+            string path = recent.Path;
+            if (!File.Exists(path))
+                return;
 
-            if ((left != null) && (right != null))
+            ReferenceNode root;
+            if (recent.Type == RecentItem.FileType.Html)
             {
-                if (left.ChildNodes.Count != right.ChildNodes.Count)
-                {
-                    result = result | CompareResult.ChildCountMismatch;
-                }
-                else
-                {
-                    for (int i = 0; i < left.ChildNodes.Count; i++)
-                    {
-                        Node leftChild = left.ChildNodes[i];
-                        Node rightChild = right.ChildNodes[i];
-                        CompareResult childResult = this.Compare(leftChild, rightChild);
-                        if (childResult != CompareResult.Equal)
-                            result = result | CompareResult.ChildDifferent;
-                    }
-                }
+                string html = File.ReadAllText(path);
+
+                // Parse the HTML
+                StringHtmlStream stream = new StringHtmlStream(html);
+                BrowsingContext browsingContext = new BrowsingContext();
+                var document = browsingContext.ParseDocument(stream, "url:unknown");
+
+                root = ReferenceDocument.FromDocument(document);
+            }
+            else
+            {
+                string txt = File.ReadAllText(path);
+                root = TestLib.Dom.Persisting.TextReader.FromData(txt);
             }
 
-            if (left != null)
-                left.CompareResult = result;
-            if (right != null)
-                right.CompareResult = result;
+            Node node = Node.FromReferenceNode(this.Context, root);
+            action(node);
 
-            return result;
+            this.CompareAndValidate();
+        }
+
+        private void UpdateRecent(string path, RecentItem.FileType type)
+        {
+            RecentItem recent = new RecentItem(path, type);
+            foreach (RecentItem item in this.RecentItems.Where(i => i.Equals(recent)).ToArray())
+                this.RecentItems.Remove(item);
+
+            this.RecentItems.Insert(0, recent);
+
+            string txt = String.Join(";", this.RecentItems.Select(i => ((i.Type == RecentItem.FileType.Dom) ? "D" : "H") + i.Path));
+
+            Properties.Settings.Default.RecentItems = txt;
+            Properties.Settings.Default.Save();
+        }
+
+        private void LoadRecent()
+        {
+            string txt = Properties.Settings.Default.RecentItems ?? String.Empty;
+            string[] items = txt.Split(';');
+            foreach(string item in items)
+            {
+                if (item.Length == 0)
+                    continue;
+                RecentItem.FileType type = (item[0] == 'D') ? RecentItem.FileType.Dom : RecentItem.FileType.Html;
+                this.RecentItems.Add(new RecentItem(item.Substring(1), type));
+            }
+        }
+
+        private void CompareAndValidate()
+        {
+            CompareContext cc = new CompareContext(this.Left, this.Right);
+            cc.IgnoredCompareResult = CompareResult.Node_BaseUri | CompareResult.Document_CharacterSet | CompareResult.Document_DocumentUri | CompareResult.Document_Url | CompareResult.Document_Origin;
+
+            if ((this.Left != null) && (this.Right != null))
+                cc.CompareRecursive(this.Left.GetModel(), this.Right.GetModel());
+            if (this.Left != null)
+                cc.ValidateRecursive(this.Left.GetModel(), null, null, null, null, null, null);
+            if (this.Right != null)
+                cc.ValidateRecursive(this.Right.GetModel(), null, null, null, null, null, null);
         }
     }
 }

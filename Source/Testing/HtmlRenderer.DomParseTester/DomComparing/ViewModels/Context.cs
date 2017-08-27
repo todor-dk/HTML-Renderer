@@ -15,13 +15,5 @@ namespace HtmlRenderer.DomParseTester.DomComparing.ViewModels
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        public CompareResult GetCompareResult(CompareResult result)
-        {
-            result = result & ~CompareResult.Node_BaseUri;
-            result = result & ~CompareResult.Element_ClassList;
-
-            return result;
-        }
     }
 }

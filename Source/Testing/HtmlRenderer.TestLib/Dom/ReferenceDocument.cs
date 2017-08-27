@@ -8,7 +8,7 @@ using HtmlRenderer.TestLib.Dom.Persisting;
 
 namespace HtmlRenderer.TestLib.Dom
 {
-    public sealed class ReferenceDocument : ReferenceParentNode
+    public sealed class ReferenceDocument : ReferenceParentNode, Document
     {
         public static ReferenceDocument FromDocument(Document document)
         {
@@ -56,84 +56,75 @@ namespace HtmlRenderer.TestLib.Dom
         {
             visitor.VisitDocument(this);
         }
+        
+        #region Document interface
 
-        public override bool CompareWith(ReferenceNode other, CompareContext context)
+        DomImplementation Document.Implementation => throw new NotImplementedException();
+
+        DocumentType Document.DocType => this.DocType;
+
+        Element Document.DocumentElement => this.DocumentElement;
+
+        HtmlCollection Document.GetElementsByTagName(string localName)
         {
-            return this.CompareWithDocument(other as ReferenceDocument, context);
+            throw new NotImplementedException();
         }
 
-        internal bool CompareWithDocument(ReferenceDocument other, CompareContext context)
+        HtmlCollection Document.GetElementsByTagNameNS(string @namespace, string localName)
         {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithParentNode(other, context))
-                return false;
-
-            if (this.CharacterSet != other.CharacterSet)
-                return false;
-            if (this.CompatMode != other.CompatMode)
-                return false;
-            if (this.ContentType != other.ContentType)
-                return false;
-            if (!this.DocType.CompareReference(other.DocType, context))
-                return false;
-            if (!this.DocumentElement.CompareReference(other.DocumentElement, context))
-                return false;
-            if (this.DocumentUri != other.DocumentUri)
-                return false;
-            if (this.Origin != other.Origin)
-                return false;
-            if (this.QuirksMode != other.QuirksMode)
-                return false;
-            if (this.Url != other.Url)
-                return false;
-
-            return true;
+            throw new NotImplementedException();
         }
 
-        public override bool CompareWith(Node other, CompareContext context)
+        HtmlCollection Document.GetElementsByClassName(string className)
         {
-            return this.CompareWithDocument(other as Document, context);
+            throw new NotImplementedException();
         }
 
-        internal bool CompareWithDocument(Document other, CompareContext context)
+        Element Document.CreateElement(string localName)
         {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithParentNode(other, context))
-                return false;
-
-            if (this.CharacterSet != other.CharacterSet)
-                return false;
-            if (this.CompatMode != other.CompatMode)
-                return false;
-            if (this.ContentType != other.ContentType)
-                return false;
-            if (!this.DocType.CompareDom(other.DocType, context))
-                return false;
-            if (!this.DocumentElement.CompareDom(other.DocumentElement, context))
-                return false;
-            if (!context.IgnoreDocumentUri && (this.DocumentUri != other.DocumentUri))
-                return false;
-            if (!context.IgnoreDocumentOrigin && (this.Origin != other.Origin))
-                return false;
-            if (this.QuirksMode != other.QuirksMode)
-                return false;
-            if (this.Url != other.Url)
-                return false;
-
-            return true;
+            throw new NotImplementedException();
         }
 
-        public bool IsHierarchyValid()
+        Element Document.CreateElementNS(string @namespace, string qualifiedName)
         {
-            return this.IsHierarchyValidRecursive();
+            throw new NotImplementedException();
         }
+
+        DocumentFragment Document.CreateDocumentFragment()
+        {
+            throw new NotImplementedException();
+        }
+
+        Text Document.CreateTextNode(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        Comment Document.CreateComment(string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        ProcessingInstruction Document.CreateProcessingInstruction(string target, string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        Node Document.ImportNode(Node node, bool deep)
+        {
+            throw new NotImplementedException();
+        }
+
+        Node Document.AdoptNode(Node node)
+        {
+            throw new NotImplementedException();
+        }
+
+        Element NonElementParentNode.GetElementById(string elementId)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

@@ -7,7 +7,7 @@ using Scientia.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
-    public abstract class ReferenceParentNode : ReferenceNode
+    public abstract class ReferenceParentNode : ReferenceNode, ParentNode
     {
         public ReferenceParentNode()
         {
@@ -32,51 +32,16 @@ namespace HtmlRenderer.TestLib.Dom
 
         public int? ChildElementCount { get; private set; }
 
-        internal bool CompareWithParentNode(ReferenceParentNode other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
+        #region ParentNode interface
 
-            if (!this.CompareWithNode(other, context))
-                return false;
+        HtmlCollection ParentNode.Children => this.Children;
 
-            if (this.ChildElementCount != other.ChildElementCount)
-                return false;
-            if (!this.Children.CompareReferenceCollection(other.Children, context))
-                return false;
-            if (!this.FirstElementChild.CompareReference(other.FirstElementChild, context))
-                return false;
-            if (!this.LastElementChild.CompareReference(other.LastElementChild, context))
-                return false;
+        Element ParentNode.FirstElementChild => this.FirstElementChild;
 
-            return true;
-        }
+        Element ParentNode.LastElementChild => this.LastElementChild;
 
-        internal bool CompareWithParentNode(ParentNode other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
+        int ParentNode.ChildElementCount => this.ChildElementCount ?? -1;
 
-            if (!this.CompareWithNode((Node)other, context))
-                return false;
-
-            if (!context.IgnoreChildrenPropertiesExceptForElement || (this is ReferenceElement))
-            {
-                if (this.ChildElementCount != other.ChildElementCount)
-                    return false;
-                if (!this.Children.CompareDomCollection(other.Children, context))
-                    return false;
-                if (!this.FirstElementChild.CompareDom(other.FirstElementChild, context))
-                    return false;
-                if (!this.LastElementChild.CompareDom(other.LastElementChild, context))
-                    return false;
-            }
-
-            return true;
-        }
+        #endregion
     }
 }

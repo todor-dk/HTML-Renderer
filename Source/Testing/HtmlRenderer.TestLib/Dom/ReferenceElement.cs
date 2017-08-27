@@ -7,7 +7,7 @@ using Scientia.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
-    public sealed class ReferenceElement : ReferenceParentNode
+    public sealed class ReferenceElement : ReferenceParentNode, Element
     {
         public ReferenceElement()
         {
@@ -28,7 +28,7 @@ namespace HtmlRenderer.TestLib.Dom
             this.TagName = reader.ReadString("TagName");
             this.Id = reader.ReadString("Id");
             this.ClassName = reader.ReadString("ClassName");
-            this.ClassList = reader.ReadStringList("ClassList");
+            this.ClassList = ReferenceDomTokenList.FromArray(reader.ReadStringList("ClassList"));
 
             int attribs = reader.ReadInt("Attributes");
             for (int i = 0; i < attribs; i++)
@@ -47,97 +47,19 @@ namespace HtmlRenderer.TestLib.Dom
 
         public string ClassName { get; private set; }
 
-        public string[] ClassList { get; private set; }
+        public ReferenceDomTokenList ClassList { get; private set; }
 
         public ReferenceAttrList Attributes { get; private set; }
 
         public ReferenceElement PreviousElementSibling { get; private set; }
 
         public ReferenceElement NextElementSibling { get; private set; }
-
+        
         protected override void AcceptOverride(IConcreteVisitor visitor)
         {
             visitor.VisitElement(this);
         }
-
-        public override bool CompareWith(ReferenceNode other, CompareContext context)
-        {
-            return this.CompareWithElement(other as ReferenceElement, context);
-        }
-
-        internal bool CompareWithElement(ReferenceElement other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithParentNode(other, context))
-                return false;
-
-            if (!this.Attributes.CompareReferenceCollection(other.Attributes, context))
-                return false;
-            if (this.ClassList.ArraysEquals(other.ClassList))
-                return false;
-            if (this.ClassName != other.ClassName)
-                return false;
-            if (this.Id != other.Id)
-                return false;
-            if (this.LocalName != other.LocalName)
-                return false;
-            if (this.NamespaceUri != other.NamespaceUri)
-                return false;
-            if (!this.NextElementSibling.CompareReference(other.NextElementSibling, context))
-                return false;
-            if (this.Prefix != other.Prefix)
-                return false;
-            if (!this.PreviousElementSibling.CompareReference(other.PreviousElementSibling, context))
-                return false;
-            if (this.TagName != other.TagName)
-                return false;
-
-            return true;
-        }
-
-        public override bool CompareWith(Node other, CompareContext context)
-        {
-            return this.CompareWithElement(other as Element, context);
-        }
-
-        internal bool CompareWithElement(Element other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithParentNode(other, context))
-                return false;
-
-            if (!this.Attributes.CompareDomCollection(other.Attributes, context))
-                return false;
-            //if (this.ClassList.ArraysEquals(other.ClassList))
-            //    return false;
-            if (this.ClassName != other.ClassName)
-                return false;
-            if (this.Id != other.Id)
-                return false;
-            if (this.LocalName != other.LocalName)
-                return false;
-            if (this.NamespaceUri != other.NamespaceUri)
-                return false;
-            if (!this.NextElementSibling.CompareDom(other.NextElementSibling, context))
-                return false;
-            if (this.Prefix != other.Prefix)
-                return false;
-            if (!this.PreviousElementSibling.CompareDom(other.PreviousElementSibling, context))
-                return false;
-            if (this.TagName != other.TagName)
-                return false;
-
-            return true;
-        }
-
+        
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -158,5 +80,80 @@ namespace HtmlRenderer.TestLib.Dom
             sb.Append('>');
             return sb.ToString();
         }
+        
+        #region Element interface
+
+        string Element.Id { get => this.Id; set => throw new NotImplementedException(); }
+        string Element.ClassName { get => this.ClassName; set => throw new NotImplementedException(); }
+
+        DomTokenList Element.ClassList => this.ClassList;
+
+        AttrCollection Element.Attributes => this.Attributes;
+
+        Element NonDocumentTypeChildNode.PreviousElementSibling => this.PreviousElementSibling;
+
+        Element NonDocumentTypeChildNode.NextElementSibling => this.NextElementSibling;
+
+        string Element.GetAttribute(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        string Element.GetAttributeNS(string @namespace, string localName)
+        {
+            throw new NotImplementedException();
+        }
+
+        void Element.SetAttribute(string name, string value)
+        {
+            throw new NotImplementedException();
+        }
+
+        void Element.SetAttributeNS(string @namespace, string name, string value)
+        {
+            throw new NotImplementedException();
+        }
+
+        void Element.RemoveAttribute(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        void Element.RemoveAttributeNS(string @namespace, string localName)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool Element.HasAttribute(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool Element.HasAttributeNS(string @namespace, string localName)
+        {
+            throw new NotImplementedException();
+        }
+
+        HtmlCollection Element.GetElementsByTagName(string localName)
+        {
+            throw new NotImplementedException();
+        }
+
+        HtmlCollection Element.GetElementsByTagNameNS(string @namespace, string localName)
+        {
+            throw new NotImplementedException();
+        }
+
+        HtmlCollection Element.GetElementsByClassName(string classNames)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ChildNode.Remove()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

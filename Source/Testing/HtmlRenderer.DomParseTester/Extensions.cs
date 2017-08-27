@@ -40,5 +40,25 @@ namespace HtmlRenderer.DomParseTester
 
             return true;
         }
+
+        public static bool ListsEquals<TItem>(this IReadOnlyList<TItem> a, IReadOnlyList<TItem> b)
+            where TItem : IEquatable<TItem>
+        {
+            if (a == b)
+                return true;
+            if ((a == null) || (b == null))
+                return false;
+
+            if (a.Count != b.Count)
+                return false;
+
+            for (int i = 0; i < a.Count; i++)
+            {
+                if (!a[i].Equals(b[i]))
+                    return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -632,6 +632,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
                 this.Items = new Node[existingNodes.Length * 2];
                 Array.Copy(existingNodes, this.Items, existingNodes.Length);
                 this._Count = existingNodes.Length;
+                this._ElementCount = existingNodes.Count(node => node is Element);
             }
 
             public int Count

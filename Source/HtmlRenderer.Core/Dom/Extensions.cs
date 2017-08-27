@@ -153,5 +153,51 @@ namespace Scientia.HtmlRenderer.Dom
 
             return null;
         }
+
+        /// <summary>
+        /// Determines if this node is a descendant of <paramref name="other"/>.
+        /// </summary>
+        /// <param name="self">This (the context) node.</param>
+        /// <param name="other">Node to test if it is ancestor of this node.</param>
+        /// <returns>True if <paramref name="other"/> is an ancestor of this node, otherwise false.</returns>
+        public static bool IsDescendantOf(this Node self, Node other)
+        {
+            Contract.RequiresNotNull(self, nameof(self));
+
+            if (other == null)
+                return false;
+            if (!other.HasChildren())
+                return false;
+
+            Node node = self.ParentNode;
+            while (node != null)
+            {
+                if (node == other)
+                    return true;
+
+                node = node.ParentNode;
+            }
+
+            return false;
+        }
+
+        public static bool CompareName(this Attr self, Attr other)
+        {
+            if (Object.ReferenceEquals(self, other))
+                return true;
+            if (other == null)
+                return false;
+
+            if (self.LocalName != other.LocalName)
+                return false;
+            if (self.Name != other.Name)
+                return false;
+            if (self.NamespaceUri != other.NamespaceUri)
+                return false;
+            if (self.Prefix != other.Prefix)
+                return false;
+
+            return true;
+        }
     }
 }

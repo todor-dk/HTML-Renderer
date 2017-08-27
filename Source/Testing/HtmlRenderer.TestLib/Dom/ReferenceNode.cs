@@ -7,7 +7,7 @@ using Scientia.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
-    public abstract class ReferenceNode
+    public abstract class ReferenceNode : Node
     {
         public ReferenceNode()
         {
@@ -76,83 +76,91 @@ namespace HtmlRenderer.TestLib.Dom
         }
 
         protected abstract void AcceptOverride(IConcreteVisitor visitor);
+        
+        #region Node interface
 
-        public abstract bool CompareWith(ReferenceNode other, CompareContext context);
+        Document Node.OwnerDocument => this.OwnerDocument;
 
-        internal bool CompareWithNode(ReferenceNode other, CompareContext context)
+        Node Node.ParentNode => this.ParentNode;
+
+        Element Node.ParentElement => this.ParentElement;
+
+        NodeList Node.ChildNodes => this.ChildNodes;
+
+        Node Node.FirstChild => this.FirstChild;
+
+        Node Node.LastChild => this.LastChild;
+
+        Node Node.PreviousSibling => this.PreviousSibling;
+
+        Node Node.NextSibling => this.NextSibling;
+
+        string Node.NodeValue { get => this.NodeValue; set => throw new NotImplementedException(); }
+        string Node.TextContent { get => this.TextContent; set => throw new NotImplementedException(); }
+
+        bool Node.HasChildren()
         {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (this.BaseUri != other.BaseUri)
-                return false;
-            if (!this.ChildNodes.CompareReferenceCollection(other.ChildNodes, context))
-                return false;
-            if (!this.FirstChild.CompareReference(other.FirstChild, context))
-                return false;
-            if (!this.LastChild.CompareReference(other.LastChild, context))
-                return false;
-            if (!this.NextSibling.CompareReference(other.NextSibling, context))
-                return false;
-            if (this.NodeName != other.NodeName)
-                return false;
-            if (this.NodeType != other.NodeType)
-                return false;
-            if (this.NodeValue != other.NodeValue)
-                return false;
-            if (!this.OwnerDocument.CompareReference(other.OwnerDocument, context))
-                return false;
-            if (!this.ParentElement.CompareReference(other.ParentElement, context))
-                return false;
-            if (!this.ParentNode.CompareReference(other.ParentNode, context))
-                return false;
-            if (!this.PreviousSibling.CompareReference(other.PreviousSibling, context))
-                return false;
-            if (this.TextContent != other.TextContent)
-                return false;
-
-            return true;
+            return this.ChildNodes.Count != 0;
         }
 
-        public abstract bool CompareWith(Node other, CompareContext context);
-
-        internal bool CompareWithNode(Node other, CompareContext context)
+        void Node.Normalize()
         {
-            if (Object.ReferenceEquals(this, other))
-                return true;
+            throw new NotImplementedException();
+        }
+
+        Node Node.CloneNode(bool deep)
+        {
+            throw new NotImplementedException();
+        }
+
+        DocumentPosition Node.CompareDocumentPosition(Node other)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool Node.Contains(Node other)
+        {
             if (other == null)
                 return false;
-
-            if ((this.BaseUri != other.BaseUri) && !context.IgnoreBaseUriExceptForElementAndDocument && !((this is ReferenceElement) || (this is ReferenceDocument)))
-                return false;
-                if (!this.ChildNodes.CompareDomCollection(other.ChildNodes, context))
-                return false;
-            if (!this.FirstChild.CompareDom(other.FirstChild, context))
-                return false;
-            if (!this.LastChild.CompareDom(other.LastChild, context))
-                return false;
-            if (!this.NextSibling.CompareDom(other.NextSibling, context))
-                return false;
-            if (this.NodeName != other.NodeName)
-                return false;
-            if (this.NodeType != other.NodeType)
-                return false;
-            if (this.NodeValue != other.NodeValue)
-                return false;
-            if (!this.OwnerDocument.CompareDom(other.OwnerDocument, context))
-                return false;
-            if (!this.ParentElement.CompareDom(other.ParentElement, context))
-                return false;
-            if (!this.ParentNode.CompareDom(other.ParentNode, context))
-                return false;
-            if (!this.PreviousSibling.CompareDom(other.PreviousSibling, context))
-                return false;
-            if (this.TextContent != other.TextContent)
-                return false;
-
-            return true;
+            return (this == other) || other.IsDescendantOf(this);
         }
+
+        string Node.LookupPrefix(string @namespace)
+        {
+            throw new NotImplementedException();
+        }
+
+        string Node.LookupNamespaceUri(string prefix)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool Node.IsDefaultNamespace(string @namespace)
+        {
+            throw new NotImplementedException();
+        }
+
+        Node Node.InsertBefore(Node newChild, Node referenceChild)
+        {
+            throw new NotImplementedException();
+        }
+
+        Node Node.AppendChild(Node node)
+        {
+            throw new NotImplementedException();
+        }
+
+        Node Node.ReplaceChild(Node newChild, Node existingChild)
+        {
+            throw new NotImplementedException();
+        }
+
+        Node Node.RemoveChild(Node child)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
     }
 }

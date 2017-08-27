@@ -244,17 +244,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
         {
             if (other == null)
                 return false;
-
-            Node node = this;
-            while (node != null)
-            {
-                if (node == other)
-                    return true;
-
-                node = node._ParentNode;
-            }
-
-            return false;
+            return (this == other) || other.IsDescendantOf(this);
         }
 
         /// <summary>

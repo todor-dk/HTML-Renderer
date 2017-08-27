@@ -15,11 +15,13 @@ namespace HtmlRenderer.UnitTests
         {
             var root = TextReader.FromData(Acid1Dom);
             Assert.IsNotNull(root);
-            var valid = (root as ReferenceDocument)?.IsHierarchyValid() ?? false;
-            Assert.IsTrue(valid, "The node hierarchy is broken");
 
-            var eq = root.CompareWith(root, new TestLib.Dom.CompareContext());
-            Assert.IsTrue(eq);
+            var cc = new TestLib.CompareContext();
+            var valid = cc.ValidateRecursive(root as ReferenceDocument);
+            Assert.IsTrue(valid == TestLib.HierarchyResult.Valid, "The node hierarchy is broken");
+
+            var eq = cc.CompareRecursive(root, root);
+            Assert.IsTrue(eq == TestLib.CompareResult.Equal);
         }
 
         [TestMethod]
@@ -27,8 +29,10 @@ namespace HtmlRenderer.UnitTests
         {
             var root = TextReader.FromData(Acid1Dom);
             Assert.IsNotNull(root);
-            var valid = (root as ReferenceDocument)?.IsHierarchyValid() ?? false;
-            Assert.IsTrue(valid, "The node hierarchy is broken");
+
+            var cc = new TestLib.CompareContext();
+            var valid = cc.ValidateRecursive(root as ReferenceDocument);
+            Assert.IsTrue(valid == TestLib.HierarchyResult.Valid, "The node hierarchy is broken");
 
             System.IO.MemoryStream stream = new System.IO.MemoryStream();
             BinaryWriter.Save(root, stream);
@@ -36,11 +40,13 @@ namespace HtmlRenderer.UnitTests
             stream.Position = 0;
             var root2 = BinaryReader.FromStream(stream);
             Assert.IsNotNull(root2);
-            valid = (root2 as ReferenceDocument)?.IsHierarchyValid() ?? false;
-            Assert.IsTrue(valid, "The node hierarchy is broken");
 
-            var eq = root.CompareWith(root2, new TestLib.Dom.CompareContext());
-            Assert.IsTrue(eq);
+            valid = cc.ValidateRecursive(root2 as ReferenceDocument);
+            Assert.IsTrue(valid == TestLib.HierarchyResult.Valid, "The node hierarchy is broken");
+
+
+            var eq = cc.CompareRecursive(root, root2);
+            Assert.IsTrue(eq == TestLib.CompareResult.Equal);
         }
 
         [TestMethod]
@@ -61,10 +67,10 @@ namespace HtmlRenderer.UnitTests
             var root = TextReader.FromData(Acid1Dom);
             Assert.IsNotNull(root);
 
-            var cc = new TestLib.Dom.CompareContext();
-            cc.IgnoreDocumentOrigin = true;
-            var eq = root.CompareWith(doc, cc);
-            Assert.IsTrue(eq);
+            var cc = new TestLib.CompareContext();
+            // cc.IgnoreDocumentOrigin = true;
+            var eq = cc.CompareRecursive(root, doc);
+            Assert.IsTrue((eq == TestLib.CompareResult.Equal) || (eq == TestLib.CompareResult.Document_Origin));
         }
 
         public static Document CreateAcidDom(BrowsingContext context)

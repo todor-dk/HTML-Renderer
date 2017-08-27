@@ -7,7 +7,7 @@ using Scientia.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
-    public sealed class ReferenceDocumentFragment : ReferenceParentNode
+    public sealed class ReferenceDocumentFragment : ReferenceParentNode, DocumentFragment
     {
         public ReferenceDocumentFragment(Persisting.IReader reader, Scientia.HtmlRenderer.Dom.NodeType type)
             : base(reader, type)
@@ -18,41 +18,14 @@ namespace HtmlRenderer.TestLib.Dom
         {
             visitor.VisitDocumentFragment(this);
         }
+        
+        #region DocumentType interface
 
-        public override bool CompareWith(ReferenceNode other, CompareContext context)
+        Element NonElementParentNode.GetElementById(string elementId)
         {
-            return this.CompareWithDocumentFragment(other as ReferenceDocumentFragment, context);
+            throw new NotImplementedException();
         }
 
-        internal bool CompareWithDocumentFragment(ReferenceDocumentFragment other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithParentNode(other, context))
-                return false;
-
-            return true;
-        }
-
-        public override bool CompareWith(Node other, CompareContext context)
-        {
-            return this.CompareWithDocumentFragment(other as DocumentFragment, context);
-        }
-
-        internal bool CompareWithDocumentFragment(DocumentFragment other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithParentNode(other, context))
-                return false;
-
-            return true;
-        }
+        #endregion
     }
 }

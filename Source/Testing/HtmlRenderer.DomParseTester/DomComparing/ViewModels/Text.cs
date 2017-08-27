@@ -12,23 +12,5 @@ namespace HtmlRenderer.DomParseTester.DomComparing.ViewModels
         public Text(Context context, ReferenceText model) : base(context, model)
         {
         }
-
-        protected CompareResult CompareWithText(ReferenceText otherModel)
-        {
-            CompareResult result = this.CompareWithCharacterData(otherModel);
-
-            if (this.Model.WholeText != otherModel.WholeText)
-                result = result | CompareResult.Text_WholeText;
-            
-            return result;
-        }
-
-        public override CompareResult Compare(Node other)
-        {
-            Text candidate = other as Text;
-            if (candidate == null)
-                return CompareResult.NodeTypeMismatch;
-            return this.CompareWithText(candidate.Model);
-        }
     }
 }

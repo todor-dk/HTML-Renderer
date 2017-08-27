@@ -28,10 +28,26 @@
             </TextDecorationCollection>
         </x:Array>
         <local:CompareResultTextDecorationConverter x:Key="CompareResultTextDecorationConverter" />
+        <local:HierarchyCompareResultTextDecorationConverter x:Key="HierarchyCompareResultTextDecorationConverter" />
         <i:TextConverter x:Key="TextConverter" />
         <Style x:Key="TextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="TextDecorations" Value="{Binding Path=CompareResult, Converter={StaticResource CompareResultTextDecorationConverter}, ConverterParameter={StaticResource  TextDecorationOptions}}" />
-            <Setter Property="ToolTip" Value="{Binding Path=CompareResult}" />
+            <Setter Property="TextDecorations">
+                <Setter.Value>
+                    <MultiBinding Converter="{StaticResource HierarchyCompareResultTextDecorationConverter}" ConverterParameter="{StaticResource TextDecorationOptions}">
+                        <Binding Path="HierarchyResult" />
+                        <Binding Path="CompareResult" />
+                    </MultiBinding>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ToolTip">
+                <Setter.Value>
+                    <TextBlock>
+                        <Run Text="{Binding Path=HierarchyResult}" />
+                        <Run Text=" " />
+                        <Run Text="{Binding Path=CompareResult}" />
+                    </TextBlock>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <HierarchicalDataTemplate DataType="{x:Type vm:Document}" ItemsSource="{Binding Path=ChildNodes}">

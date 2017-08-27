@@ -1,4 +1,5 @@
-﻿using HtmlRenderer.TestLib.Dom;
+﻿using HtmlRenderer.TestLib;
+using HtmlRenderer.TestLib.Dom;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -39,13 +40,28 @@ namespace HtmlRenderer.DomParseTester.DomComparing.ViewModels
 
         private CompareResult _CompareResult;
 
+        public HierarchyResult HierarchyResult
+        {
+            get
+            {
+                return this._HierarchyResult;
+            }
+            set
+            {
+                if (this._HierarchyResult == value)
+                    return;
+                this._HierarchyResult = value;
+                this.OnPropertyChanged(nameof(this.HierarchyResult));
+            }
+        }
+
+        private HierarchyResult _HierarchyResult;
+
         public Node(Context context)
         {
             this.ChildNodes = new List<Node>();
             this.Context = context;
         }
-
-        public abstract CompareResult Compare(Node other);
 
         public static Node FromReferenceNode(Context context, ReferenceNode node)
         {
@@ -71,6 +87,8 @@ namespace HtmlRenderer.DomParseTester.DomComparing.ViewModels
                 return new DocumentType(context, (ReferenceDocumentType)node);
             throw new AggregateException();
         }
+
+        internal abstract ReferenceNode GetModel();
     }
     
     public abstract class Node<TReferenceNode> : Node
@@ -84,26 +102,9 @@ namespace HtmlRenderer.DomParseTester.DomComparing.ViewModels
             this.Model = model;
         }
 
-        protected CompareResult CompareWithNode(TReferenceNode otherModel)
+        internal override ReferenceNode GetModel()
         {
-            CompareResult result = CompareResult.Equal;
-
-            if (this.Model.BaseUri != otherModel.BaseUri)
-                result = result | CompareResult.Node_BaseUri;
-
-            if (this.Model.NodeName != otherModel.NodeName)
-                result = result | CompareResult.Node_NodeName;
-
-            if (this.Model.NodeType != otherModel.NodeType)
-                result = result | CompareResult.Node_NodeType;
-
-            if (this.Model.NodeValue != otherModel.NodeValue)
-                result = result | CompareResult.Node_NodeValue;
-
-            if (this.Model.TextContent != otherModel.TextContent)
-                result = result | CompareResult.Node_TextContent;
-
-            return result;
+            return this.Model;
         }
     }
 }

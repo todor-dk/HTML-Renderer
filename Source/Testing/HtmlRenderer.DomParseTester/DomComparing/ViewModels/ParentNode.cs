@@ -14,12 +14,5 @@ namespace HtmlRenderer.DomParseTester.DomComparing.ViewModels
             : base(context, model)
         {
         }
-
-        protected CompareResult CompareWithParentNode(TReferenceNode otherModel)
-        {
-            CompareResult result = this.CompareWithNode(otherModel);
-            
-            return result;
-        }
     }
 }

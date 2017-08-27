@@ -24,5 +24,17 @@ namespace HtmlRenderer.DomParseTester.DomComparing
             this.DataContext = new MainViewModel();
             this.InitializeComponent();
         }
+
+        private void OpenRecentLeft_Click(object sender, RoutedEventArgs e)
+        {
+            RecentItem item = (e.OriginalSource as MenuItem)?.DataContext as RecentItem;
+            ((MainViewModel)this.DataContext)?.LeftOpenRecent(item);
+        }
+
+        private void OpenRecentRight_Click(object sender, RoutedEventArgs e)
+        {
+            RecentItem item = (e.OriginalSource as MenuItem)?.DataContext as RecentItem;
+            ((MainViewModel)this.DataContext)?.RightOpenRecent(item);
+        }
     }
 }

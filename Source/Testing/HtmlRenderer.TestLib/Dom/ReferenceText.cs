@@ -7,7 +7,7 @@ using Scientia.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
-    public sealed class ReferenceText : ReferenceCharacterData
+    public sealed class ReferenceText : ReferenceCharacterData, Text
     {
         public ReferenceText(Persisting.IReader reader, Scientia.HtmlRenderer.Dom.NodeType type)
             : base(reader, type)
@@ -21,49 +21,14 @@ namespace HtmlRenderer.TestLib.Dom
         {
             visitor.VisitText(this);
         }
+        
+        #region Text interface
 
-        public override bool CompareWith(ReferenceNode other, CompareContext context)
+        Text Text.SplitText(int offset)
         {
-            return this.CompareWithText(other as ReferenceText, context);
+            throw new NotImplementedException();
         }
 
-
-        internal bool CompareWithText(ReferenceText other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithCharacterData(other, context))
-                return false;
-
-            if (this.WholeText != other.WholeText)
-                return false;
-
-            return true;
-        }
-
-        public override bool CompareWith(Node other, CompareContext context)
-        {
-            return this.CompareWithText(other as Text, context);
-        }
-
-
-        internal bool CompareWithText(Text other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithCharacterData(other, context))
-                return false;
-
-            if (this.WholeText != other.WholeText)
-                return false;
-
-            return true;
-        }
+        #endregion
     }
 }

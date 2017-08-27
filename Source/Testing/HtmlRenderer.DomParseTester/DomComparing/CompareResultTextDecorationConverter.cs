@@ -1,4 +1,5 @@
 ﻿using HtmlRenderer.DomParseTester.DomComparing.ViewModels;
+using HtmlRenderer.TestLib;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -19,7 +20,7 @@ namespace HtmlRenderer.DomParseTester.DomComparing
             if ((decorations == null) || (decorations.Length < 2))
                 return null;
             CompareResult result = (CompareResult)value;
-            if (result == CompareResult.ChildDifferent)
+            if (result == CompareResult.InvalidChild)
                 return decorations[0];
             if (result != CompareResult.Equal)
                 return decorations[1];

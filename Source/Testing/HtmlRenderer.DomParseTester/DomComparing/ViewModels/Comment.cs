@@ -12,13 +12,5 @@ namespace HtmlRenderer.DomParseTester.DomComparing.ViewModels
         public Comment(Context context, ReferenceComment model) : base(context, model)
         {
         }
-
-        public override CompareResult Compare(Node other)
-        {
-            Comment candidate = other as Comment;
-            if (candidate == null)
-                return CompareResult.NodeTypeMismatch;
-            return this.CompareWithCharacterData(candidate.Model);
-        }
     }
 }

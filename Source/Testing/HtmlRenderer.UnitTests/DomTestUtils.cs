@@ -8,7 +8,7 @@ using System.IO;
 using Scientia.HtmlRenderer.Html5.Parsing;
 using Scientia.HtmlRenderer;
 using Scientia.HtmlRenderer.Dom;
-using HtmlRenderer.TestLib.Dom.Persisting;
+using HtmlRenderer.TestLib;
 
 namespace HtmlRenderer.UnitTests
 {
@@ -45,11 +45,20 @@ namespace HtmlRenderer.UnitTests
             var root = TestLib.Dom.Persisting.TextReader.FromData(dom);
             Assert.IsNotNull(root);
 
-            var cc = new TestLib.Dom.CompareContext();
-            cc.IgnoreDocumentOrigin = true;
-            cc.IgnoreBaseUriExceptForElementAndDocument = true;
-            var eq = root.CompareWith(document, cc);
-            Assert.IsTrue(eq);
+            var cc = new CompareContext();
+
+            var hr = cc.ValidateRecursive(document);
+            Assert.IsTrue(hr == HierarchyResult.Valid, "Document Structure is Invalid. " + hr.ToString());
+
+            hr = cc.ValidateRecursive(root as Document);
+            Assert.IsTrue(hr == HierarchyResult.Valid, "Reference Structure is Invalid. " + hr.ToString());
+
+            //cc.IgnoreDocumentOrigin = true;
+            //cc.IgnoreBaseUriExceptForElementAndDocument = true;
+            cc.IgnoredCompareResult = CompareResult.Node_BaseUri | CompareResult.Document_CharacterSet | CompareResult.Document_DocumentUri | CompareResult.Document_Url | CompareResult.Document_Origin;
+
+            var eq = cc.CompareRecursive(root, document);
+            Assert.IsTrue(eq == CompareResult.Equal, "Document and Reference are not equal. " + eq);
         }
     }
 }

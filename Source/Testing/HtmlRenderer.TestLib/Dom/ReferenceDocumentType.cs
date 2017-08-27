@@ -7,7 +7,7 @@ using Scientia.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
-    public sealed class ReferenceDocumentType : ReferenceNode
+    public sealed class ReferenceDocumentType : ReferenceNode, DocumentType
     {
         public ReferenceDocumentType(Persisting.IReader reader, Scientia.HtmlRenderer.Dom.NodeType type)
             : base(reader, type)
@@ -22,60 +22,19 @@ namespace HtmlRenderer.TestLib.Dom
         public string PublicId { get; private set; }
 
         public string SystemId { get; private set; }
-
+        
         protected override void AcceptOverride(IConcreteVisitor visitor)
         {
             visitor.VisitDocumentType(this);
         }
+        
+        #region DocumentType interface
 
-        public override bool CompareWith(ReferenceNode other, CompareContext context)
+        void ChildNode.Remove()
         {
-            return this.CompareWithDocumentType(other as ReferenceDocumentType, context);
+            throw new NotImplementedException();
         }
 
-        internal bool CompareWithDocumentType(ReferenceDocumentType other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithNode(other, context))
-                return false;
-
-            if (this.Name != other.Name)
-                return false;
-            if (this.PublicId != other.PublicId)
-                return false;
-            if (this.SystemId != other.SystemId)
-                return false;
-
-            return true;
-        }
-
-        public override bool CompareWith(Node other, CompareContext context)
-        {
-            return this.CompareWithDocumentType(other as DocumentType, context);
-        }
-
-        internal bool CompareWithDocumentType(DocumentType other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithNode(other, context))
-                return false;
-
-            if (this.Name != other.Name)
-                return false;
-            if (this.PublicId != other.PublicId)
-                return false;
-            if (this.SystemId != other.SystemId)
-                return false;
-
-            return true;
-        }
+        #endregion
     }
 }

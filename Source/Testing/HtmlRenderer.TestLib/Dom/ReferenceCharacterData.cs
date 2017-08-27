@@ -7,7 +7,7 @@ using Scientia.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
-    public abstract class ReferenceCharacterData : ReferenceNode
+    public abstract class ReferenceCharacterData : ReferenceNode, CharacterData
     {
         public ReferenceCharacterData(Persisting.IReader reader, Scientia.HtmlRenderer.Dom.NodeType type)
             : base(reader, type)
@@ -26,51 +26,45 @@ namespace HtmlRenderer.TestLib.Dom
         
         public ReferenceElement NextElementSibling { get; private set; }
 
-        internal bool CompareWithCharacterData(ReferenceCharacterData other, CompareContext context)
+
+        #region CharacterData interface
+
+        string CharacterData.Data { get => this.Data; set => throw new NotImplementedException(); }
+        
+        Element NonDocumentTypeChildNode.PreviousElementSibling => this.PreviousElementSibling;
+
+        Element NonDocumentTypeChildNode.NextElementSibling => this.NextElementSibling;
+
+        void CharacterData.AppendData(string data)
         {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithNode(other, context))
-                return false;
-
-            if (this.Data != other.Data)
-                return false;
-            if (this.Length != other.Length)
-                return false;
-            if (!this.NextElementSibling.CompareReference(other.NextElementSibling, context))
-                return false;
-            if (!this.PreviousElementSibling.CompareReference(other.PreviousElementSibling, context))
-                return false;
-
-            return true;
+            throw new NotImplementedException();
         }
 
-        internal bool CompareWithCharacterData(CharacterData other, CompareContext context)
+        void CharacterData.DeleteData(int offset, int count)
         {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareWithNode(other, context))
-                return false;
-
-            if (this.Data != other.Data)
-                return false;
-            if (this.Length != other.Length)
-                return false;
-            if (!context.IgnoreChildrenPropertiesExceptForElement)
-            {
-                if (!this.NextElementSibling.CompareDom(other.NextElementSibling, context))
-                    return false;
-                if (!this.PreviousElementSibling.CompareDom(other.PreviousElementSibling, context))
-                    return false;
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
+
+        void CharacterData.InsertData(int offset, string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ChildNode.Remove()
+        {
+            throw new NotImplementedException();
+        }
+
+        void CharacterData.ReplaceData(int offset, int count, string data)
+        {
+            throw new NotImplementedException();
+        }
+
+        string CharacterData.SubstringData(int offset, int length)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

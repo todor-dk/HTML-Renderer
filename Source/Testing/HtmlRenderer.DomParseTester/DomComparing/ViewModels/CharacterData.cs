@@ -13,18 +13,5 @@ namespace HtmlRenderer.DomParseTester.DomComparing.ViewModels
         public CharacterData(Context context, TReferenceNode model) : base(context, model)
         {
         }
-
-        protected CompareResult CompareWithCharacterData(TReferenceNode otherModel)
-        {
-            CompareResult result = this.CompareWithNode(otherModel);
-
-            if (this.Model.Data != otherModel.Data)
-                result = result | CompareResult.CharacterData_Data;
-
-            if (this.Model.Length != otherModel.Length)
-                result = result | CompareResult.CharacterData_Length;
-
-            return result;
-        }
     }
 }

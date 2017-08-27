@@ -7,7 +7,7 @@ using Scientia.HtmlRenderer.Dom;
 
 namespace HtmlRenderer.TestLib.Dom
 {
-    public sealed class ReferenceAttr
+    public sealed class ReferenceAttr: Attr
     {
         public ReferenceAttr(ReferenceElement owner, string namespaceUri, string prefix, string localName, string name, string value)
         {
@@ -31,78 +31,12 @@ namespace HtmlRenderer.TestLib.Dom
 
         public ReferenceElement OwnerElement { get; private set; }
 
-        public bool CompareWith(ReferenceAttr other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
+        #region Attr interface
 
-            if (!this.CompareName(other))
-                return false;
-            
-            if (!this.OwnerElement.CompareReference(other.OwnerElement, context))
-                return false;
-            if (this.Value != other.Value)
-                return false;
+        Element Attr.OwnerElement => this.OwnerElement;
 
-            return true;
-        }
+        string Attr.Value { get => this.Value; set => throw new NotImplementedException(); }
 
-        public bool CompareName(ReferenceAttr other)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (this.LocalName != other.LocalName)
-                return false;
-            if (this.Name != other.Name)
-                return false;
-            if (this.NamespaceUri != other.NamespaceUri)
-                return false;
-            if (this.Prefix != other.Prefix)
-                return false;
-
-            return true;
-        }
-
-        public bool CompareWith(Attr other, CompareContext context)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (!this.CompareName(other))
-                return false;
-
-            if (!this.OwnerElement.CompareDom(other.OwnerElement, context))
-                return false;
-            if (this.Value != other.Value)
-                return false;
-
-            return true;
-        }
-
-        public bool CompareName(Attr other)
-        {
-            if (Object.ReferenceEquals(this, other))
-                return true;
-            if (other == null)
-                return false;
-
-            if (this.LocalName != other.LocalName)
-                return false;
-            if (this.Name != other.Name)
-                return false;
-            if (this.NamespaceUri != other.NamespaceUri)
-                return false;
-            if (this.Prefix != other.Prefix)
-                return false;
-
-            return true;
-        }
+        #endregion
     }
 }
