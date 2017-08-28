@@ -46,7 +46,6 @@ namespace HtmlRenderer.DomParseTester.DomComparing
                 return decorations[0];
             if (hr != HierarchyResult.Valid)
                 return decorations[1];
-            return null;
 
             CompareResult cr = (CompareResult)values[1];
             if (cr == CompareResult.InvalidChild)

@@ -10,6 +10,8 @@ namespace HtmlRenderer.DomParseTester.Internal
 {
     internal class TextConverter : IValueConverter
     {
+        public static readonly TextConverter Current = new TextConverter();
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string txt = value as string;

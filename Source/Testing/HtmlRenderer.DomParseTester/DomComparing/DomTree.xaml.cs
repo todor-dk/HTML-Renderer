@@ -28,21 +28,41 @@ namespace HtmlRenderer.DomParseTester.DomComparing
 
 
 
-        public Node DomNode
+        public Node RootNode
         {
-            get { return (Node)GetValue(DomNodeProperty); }
-            set { SetValue(DomNodeProperty, value); }
+            get { return (Node)GetValue(RootNodeProperty); }
+            set { SetValue(RootNodeProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for DomNode.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty DomNodeProperty =
-            DependencyProperty.Register("DomNode", typeof(Node), typeof(DomTree), new PropertyMetadata(null, DomTree.DomNodeChanged));
+        // Using a DependencyProperty as the backing store for RootNode.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RootNodeProperty =
+            DependencyProperty.Register("RootNode", typeof(Node), typeof(DomTree), new PropertyMetadata(null, DomTree.RootNodeChanged));
 
-        private static void DomNodeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void RootNodeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             DomTree self = (DomTree)d;
             self.DataContext = e.NewValue;
             self.ItemsSource = new object[] { e.NewValue };
         }
+
+        public Node SelectedNode
+        {
+            get { return (Node)this.GetValue(DomTree.SelectedNodeProperty); }
+            set { this.SetValue(DomTree.SelectedNodeProperty, value); }
+        }
+
+        /// <summary>
+        /// Dependency property definition for the <see cref="SelectedNode"/> property.
+        /// </summary>
+        public static readonly DependencyProperty SelectedNodeProperty =
+            DependencyProperty.Register(nameof(DomTree.SelectedNode), typeof(Node), typeof(DomTree),
+                new PropertyMetadata(null));
+
+        protected override void OnSelectedItemChanged(RoutedPropertyChangedEventArgs<object> e)
+        {
+            base.OnSelectedItemChanged(e);
+            this.SelectedNode = this.SelectedItem as Node;
+        }
+
     }
 }

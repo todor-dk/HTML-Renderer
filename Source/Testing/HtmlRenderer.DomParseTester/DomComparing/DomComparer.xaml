@@ -13,9 +13,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="2*" />
             <RowDefinition Height="1*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -41,18 +41,21 @@
         </Menu>
 
         <local:DomTree
+            x:Name="LeftTree"
             Grid.Row="1"
             Grid.Column="0"
-            Margin="0,0,2,0"
-            DomNode="{Binding Path=DataContext.Left, ElementName=DomComparerElement}" />
+            Margin="0,0,2,2"
+            RootNode="{Binding Path=DataContext.Left, ElementName=DomComparerElement}" />
         <local:DomTree
+            x:Name="RightTree"
             Grid.Row="1"
             Grid.Column="1"
-            Margin="2,0,0,0"
-            DomNode="{Binding Path=DataContext.Right, ElementName=DomComparerElement}" />
+            Margin="2,0,0,2"
+            RootNode="{Binding Path=DataContext.Right, ElementName=DomComparerElement}" />
 
         <GridSplitter
             Grid.Row="1"
+            Grid.RowSpan="3"
             Grid.Column="0"
             Width="4"
             Margin="0,0,-2,0"
@@ -68,5 +71,36 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Bottom"
             Background="Transparent" />
+        <GridSplitter
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Height="4"
+            Margin="0,0,0,-2"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Bottom"
+            Background="Transparent" />
+
+        <local:PropertiesList
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="0,2,2,2"
+            DomNode="{Binding ElementName=LeftTree, Path=SelectedNode}" />
+        <local:PropertiesList
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="2,2,0,2"
+            DomNode="{Binding ElementName=RightTree, Path=SelectedNode}" />
+
+        <local:AttributesList
+            Grid.Row="3"
+            Grid.Column="0"
+            Margin="0,2,2,0"
+            DomNode="{Binding ElementName=LeftTree, Path=SelectedNode}" />
+        <local:AttributesList
+            Grid.Row="3"
+            Grid.Column="1"
+            Margin="2,2,0,0"
+            DomNode="{Binding ElementName=RightTree, Path=SelectedNode}" />
     </Grid>
 </Window>

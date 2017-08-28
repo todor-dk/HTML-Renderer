@@ -110,7 +110,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
             get
             {
                 // Not very efficient, but this works.
-                return this.OfType<Dom.DocumentType>().FirstOrDefault();
+                return this.ChildNodes.OfType<Dom.DocumentType>().FirstOrDefault();
             }
         }
 

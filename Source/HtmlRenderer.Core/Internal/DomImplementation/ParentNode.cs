@@ -8,7 +8,7 @@ using Scientia.HtmlRenderer.Dom;
 
 namespace Scientia.HtmlRenderer.Internal.DomImplementation
 {
-    internal abstract class ParentNode : Node, Dom.ParentNode, Dom.NodeList, Dom.HtmlCollection
+    internal abstract class ParentNode : Node, Dom.ParentNode
     {
         // This contains the child nodes and elements. See ElementChildren for further description.
         protected ElementChildren _Children = new ElementChildren();
@@ -29,7 +29,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
         /// </remarks>
         public override NodeList ChildNodes
         {
-            get { return this; }
+            get { return new NodeListImplementation(this); }
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
         /// </summary>
         public HtmlCollection Children
         {
-            get { return this; }
+            get { return new HtmlCollectionImplementation(this); }
         }
 
         /// <summary>
@@ -281,118 +281,258 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
 
         #endregion
 
-        #region NodeList interface
+        #region Helper object for NodeList interface
 
-        /*
-            To optimize memory, instead of using a separate collection object,
-            THIS object is the same as the child collection object.
-        */
-
-        /// <summary>
-        /// Returns the node with index index from the collection. The nodes are sorted in tree order.
-        /// </summary>
-        /// <param name="index">The requested index.</param>
-        /// <returns>Returns the node with index index from the collection or null if there is no index'th node in the collection.</returns>
-        Dom.Node NodeList.Item(int index)
+        private struct NodeListImplementation : Dom.NodeList, IEquatable<NodeListImplementation>
         {
-            return this._Children.GetNode(index);
-        }
+            private readonly ParentNode Owner;
 
-        /// <summary>
-        /// Returns the number of nodes in the collection.
-        /// </summary>
-        int NodeList.Length
-        {
-            get { return this._Children.GetNodeCount(); }
-        }
-
-        /// <summary>
-        /// Gets the number of nodes in the collection.
-        /// </summary>
-        int IReadOnlyCollection<Dom.Node>.Count
-        {
-            get { return this._Children.GetNodeCount(); }
-        }
-
-        /// <summary>
-        /// Gets the node at the specified index in the child node list.
-        /// </summary>
-        /// <param name="index">The zero-based index of the node to get.</param>
-        /// <returns>The node at the specified index in the list.</returns>
-        Dom.Node IReadOnlyList<Dom.Node>.this[int index]
-        {
-            get
+            internal NodeListImplementation(ParentNode owner)
             {
-                Dom.Node node = this.GetNode(index);
-                if (node == null)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return node;
+                this.Owner = owner;
             }
-        }
 
-        IEnumerator<Dom.Node> IEnumerable<Dom.Node>.GetEnumerator()
-        {
-            return this._Children.GetNodeEnumerator();
-        }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this._Children.GetNodeEnumerator();
+            #region Equality Members
+
+            /// <summary>
+            /// Returns a hash code for this instance.
+            /// </summary>
+            /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+            public override int GetHashCode()
+            {
+                return this.Owner.GetHashCode();
+            }
+
+            /// <summary>
+            /// Determines whether the specified NodeListImplementation is equal to the current NodeListImplementation.
+            /// </summary>
+            /// <param name="other">Another NodeListImplementation to compare to this NodeListImplementation.</param>
+            /// <returns><c>true</c> if this NodeListImplementation equals the given NodeListImplementation, <c>false</c> otherwise.</returns>
+            public bool Equals(NodeListImplementation other)
+            {
+                return Object.ReferenceEquals(this.Owner, other.Owner);
+            }
+
+            /// <summary>
+            /// Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+            /// </summary>
+            /// <param name="obj">Another object to compare to.</param>
+            /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
+            public override bool Equals(object obj)
+            {
+                if (!(obj is NodeListImplementation))
+                    return false;
+
+                return this.Equals((NodeListImplementation)obj);
+            }
+
+            /// <summary>
+            /// Compares whether the left NodeListImplementation operand is equal to the right NodeListImplementation operand.
+            /// </summary>
+            /// <param name="left">The left NodeListImplementation operand.</param>
+            /// <param name="right">The right NodeListImplementation operand.</param>
+            /// <returns>The result of the equality operator.</returns>
+            public static bool operator ==(NodeListImplementation left, NodeListImplementation right)
+            {
+                return left.Equals(right);
+            }
+
+            /// <summary>
+            /// Compares whether the left NodeListImplementation operand is not equal to the right NodeListImplementation operand.
+            /// </summary>
+            /// <param name="left">The left NodeListImplementation operand.</param>
+            /// <param name="right">The right NodeListImplementation operand.</param>
+            /// <returns>The result of the inequality operator.</returns>
+            public static bool operator !=(NodeListImplementation left, NodeListImplementation right)
+            {
+                return !left.Equals(right);
+            }
+
+            #endregion
+
+
+            /// <summary>
+            /// Returns the node with index index from the collection. The nodes are sorted in tree order.
+            /// </summary>
+            /// <param name="index">The requested index.</param>
+            /// <returns>Returns the node with index index from the collection or null if there is no index'th node in the collection.</returns>
+            Dom.Node NodeList.Item(int index)
+            {
+                return this.Owner._Children.GetNode(index);
+            }
+
+            /// <summary>
+            /// Returns the number of nodes in the collection.
+            /// </summary>
+            int NodeList.Length
+            {
+                get { return this.Owner._Children.GetNodeCount(); }
+            }
+
+            /// <summary>
+            /// Gets the number of nodes in the collection.
+            /// </summary>
+            int IReadOnlyCollection<Dom.Node>.Count
+            {
+                get { return this.Owner._Children.GetNodeCount(); }
+            }
+
+            /// <summary>
+            /// Gets the node at the specified index in the child node list.
+            /// </summary>
+            /// <param name="index">The zero-based index of the node to get.</param>
+            /// <returns>The node at the specified index in the list.</returns>
+            Dom.Node IReadOnlyList<Dom.Node>.this[int index]
+            {
+                get
+                {
+                    Dom.Node node = this.Owner.GetNode(index);
+                    if (node == null)
+                        throw new ArgumentOutOfRangeException(nameof(index));
+                    return node;
+                }
+            }
+
+            IEnumerator<Dom.Node> IEnumerable<Dom.Node>.GetEnumerator()
+            {
+                return this.Owner._Children.GetNodeEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return this.Owner._Children.GetNodeEnumerator();
+            }
         }
 
         #endregion
 
-        #region HtmlCollection interface
+        #region Helper object for HtmlCollection interface
 
-        /// <summary>
-        /// Returns the element with index index from the collection. The elements are sorted in tree order.
-        /// </summary>
-        /// <param name="index">The requested index.</param>
-        /// <returns>Returns the element with index index from the collection or null if there is no index'th element in the collection.</returns>
-        Dom.Element HtmlCollection.Item(int index)
+        private struct HtmlCollectionImplementation : Dom.HtmlCollection, IEquatable<HtmlCollectionImplementation>
         {
-            return this._Children.GetElement(index);
-        }
+            private readonly ParentNode Owner;
 
-        /// <summary>
-        /// Returns the first element with ID or name name from the collection.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        Dom.Element HtmlCollection.NamedItem(string name)
-        {
-            Contract.RequiresNotNull(name, nameof(name));
-
-            return this._Children.GetNamedElement(name);
-        }
-
-        /// <summary>
-        /// Returns the number of elements in the collection.
-        /// </summary>
-        int HtmlCollection.Length
-        {
-            get { return this._Children.GetElementCount(); }
-        }
-
-        Dom.Element IReadOnlyList<Dom.Element>.this[int index]
-        {
-            get
+            internal HtmlCollectionImplementation(ParentNode owner)
             {
-                Dom.Element element = this._Children.GetElement(index);
-                if (element == null)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-                return element;
+                this.Owner = owner;
             }
-        }
 
-        int IReadOnlyCollection<Dom.Element>.Count
-        {
-            get { return this._Children.GetElementCount(); }
-        }
 
-        IEnumerator<Dom.Element> IEnumerable<Dom.Element>.GetEnumerator()
-        {
-            return this._Children.GetElementEnumerator();
+            #region Equality Members
+
+            /// <summary>
+            /// Returns a hash code for this instance.
+            /// </summary>
+            /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+            public override int GetHashCode()
+            {
+                return this.Owner.GetHashCode();
+            }
+
+            /// <summary>
+            /// Determines whether the specified HtmlCollectionImplementation is equal to the current HtmlCollectionImplementation.
+            /// </summary>
+            /// <param name="other">Another HtmlCollectionImplementation to compare to this HtmlCollectionImplementation.</param>
+            /// <returns><c>true</c> if this HtmlCollectionImplementation equals the given HtmlCollectionImplementation, <c>false</c> otherwise.</returns>
+            public bool Equals(HtmlCollectionImplementation other)
+            {
+                return Object.ReferenceEquals(this.Owner, other.Owner);
+            }
+
+            /// <summary>
+            /// Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+            /// </summary>
+            /// <param name="obj">Another object to compare to.</param>
+            /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
+            public override bool Equals(object obj)
+            {
+                if (!(obj is HtmlCollectionImplementation))
+                    return false;
+
+                return this.Equals((HtmlCollectionImplementation)obj);
+            }
+
+            /// <summary>
+            /// Compares whether the left HtmlCollectionImplementation operand is equal to the right HtmlCollectionImplementation operand.
+            /// </summary>
+            /// <param name="left">The left HtmlCollectionImplementation operand.</param>
+            /// <param name="right">The right HtmlCollectionImplementation operand.</param>
+            /// <returns>The result of the equality operator.</returns>
+            public static bool operator ==(HtmlCollectionImplementation left, HtmlCollectionImplementation right)
+            {
+                return left.Equals(right);
+            }
+
+            /// <summary>
+            /// Compares whether the left HtmlCollectionImplementation operand is not equal to the right HtmlCollectionImplementation operand.
+            /// </summary>
+            /// <param name="left">The left HtmlCollectionImplementation operand.</param>
+            /// <param name="right">The right HtmlCollectionImplementation operand.</param>
+            /// <returns>The result of the inequality operator.</returns>
+            public static bool operator !=(HtmlCollectionImplementation left, HtmlCollectionImplementation right)
+            {
+                return !left.Equals(right);
+            }
+
+            #endregion
+
+
+            /// <summary>
+            /// Returns the element with index index from the collection. The elements are sorted in tree order.
+            /// </summary>
+            /// <param name="index">The requested index.</param>
+            /// <returns>Returns the element with index index from the collection or null if there is no index'th element in the collection.</returns>
+            Dom.Element HtmlCollection.Item(int index)
+            {
+                return this.Owner._Children.GetElement(index);
+            }
+
+            /// <summary>
+            /// Returns the first element with ID or name name from the collection.
+            /// </summary>
+            /// <param name="name"></param>
+            /// <returns></returns>
+            Dom.Element HtmlCollection.NamedItem(string name)
+            {
+                Contract.RequiresNotNull(name, nameof(name));
+
+                return this.Owner._Children.GetNamedElement(name);
+            }
+
+            /// <summary>
+            /// Returns the number of elements in the collection.
+            /// </summary>
+            int HtmlCollection.Length
+            {
+                get { return this.Owner._Children.GetElementCount(); }
+            }
+
+            Dom.Element IReadOnlyList<Dom.Element>.this[int index]
+            {
+                get
+                {
+                    Dom.Element element = this.Owner._Children.GetElement(index);
+                    if (element == null)
+                        throw new ArgumentOutOfRangeException(nameof(index));
+                    return element;
+                }
+            }
+
+            int IReadOnlyCollection<Dom.Element>.Count
+            {
+                get { return this.Owner._Children.GetElementCount(); }
+            }
+
+            IEnumerator<Dom.Element> IEnumerable<Dom.Element>.GetEnumerator()
+            {
+                return this.Owner._Children.GetElementEnumerator();
+            }
+
+            public IEnumerator GetEnumerator()
+            {
+                return this.Owner._Children.GetElementEnumerator();
+            }
         }
 
         #endregion

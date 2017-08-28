@@ -9,7 +9,7 @@ using Scientia.HtmlRenderer.Html5;
 
 namespace Scientia.HtmlRenderer.Internal.DomImplementation
 {
-    internal abstract class Element : ParentNode, Dom.Element, Dom.AttrCollection
+    internal abstract class Element : ParentNode, Dom.Element
     {
         // This contains the attributes of the element. See ElementAttributes for further description.
         private ElementAttributes _Attributes = new ElementAttributes();
@@ -97,7 +97,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
         /// </summary>
         public AttrCollection Attributes
         {
-            get { return this; }
+            get { return new AttrCollectionImplementation(this); }
         }
 
         /// <summary>
@@ -457,39 +457,109 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
 
         #region AttrCollection interface
 
-        int AttrCollection.Count
+        private struct AttrCollectionImplementation : Dom.AttrCollection, IEquatable<AttrCollectionImplementation>
         {
-            get { return this._Attributes.GetCount(); }
-        }
+            private readonly Element Owner;
 
-        int NamedNodeMap.Length
-        {
-            get { return this._Attributes.GetCount(); }
-        }
+            public AttrCollectionImplementation(Element owner)
+            {
+                this.Owner = owner;
+            }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this._Attributes.GetEnumerator();
-        }
 
-        IEnumerator<Dom.Attr> IEnumerable<Dom.Attr>.GetEnumerator()
-        {
-            return this._Attributes.GetEnumerator();
-        }
+            #region Equality Members
 
-        Dom.Attr NamedNodeMap.Item(int index)
-        {
-            return this._Attributes.GetItem(index);
-        }
+            /// <summary>
+            /// Returns a hash code for this instance.
+            /// </summary>
+            /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+            public override int GetHashCode()
+            {
+                return this.Owner.GetHashCode();
+            }
 
-        Dom.Attr NamedNodeMap.GetNamedItem(string name)
-        {
-            return this.Attributes.FirstOrDefault(attr => attr.Name == name);
-        }
+            /// <summary>
+            /// Determines whether the specified AttrCollectionImplementation is equal to the current AttrCollectionImplementation.
+            /// </summary>
+            /// <param name="other">Another AttrCollectionImplementation to compare to this AttrCollectionImplementation.</param>
+            /// <returns><c>true</c> if this AttrCollectionImplementation equals the given AttrCollectionImplementation, <c>false</c> otherwise.</returns>
+            public bool Equals(AttrCollectionImplementation other)
+            {
+                return Object.ReferenceEquals(this.Owner, other.Owner);
+            }
 
-        Dom.Attr NamedNodeMap.GetNamedItemNS(string namespaceUri, string localName)
-        {
-            return this.Attributes.FirstOrDefault(attr => (attr.NamespaceUri == namespaceUri) && (attr.LocalName == localName));
+            /// <summary>
+            /// Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+            /// </summary>
+            /// <param name="obj">Another object to compare to.</param>
+            /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
+            public override bool Equals(object obj)
+            {
+                if (!(obj is AttrCollectionImplementation))
+                    return false;
+
+                return this.Equals((AttrCollectionImplementation)obj);
+            }
+
+            /// <summary>
+            /// Compares whether the left AttrCollectionImplementation operand is equal to the right AttrCollectionImplementation operand.
+            /// </summary>
+            /// <param name="left">The left AttrCollectionImplementation operand.</param>
+            /// <param name="right">The right AttrCollectionImplementation operand.</param>
+            /// <returns>The result of the equality operator.</returns>
+            public static bool operator ==(AttrCollectionImplementation left, AttrCollectionImplementation right)
+            {
+                return left.Equals(right);
+            }
+
+            /// <summary>
+            /// Compares whether the left AttrCollectionImplementation operand is not equal to the right AttrCollectionImplementation operand.
+            /// </summary>
+            /// <param name="left">The left AttrCollectionImplementation operand.</param>
+            /// <param name="right">The right AttrCollectionImplementation operand.</param>
+            /// <returns>The result of the inequality operator.</returns>
+            public static bool operator !=(AttrCollectionImplementation left, AttrCollectionImplementation right)
+            {
+                return !left.Equals(right);
+            }
+
+            #endregion
+
+
+            int AttrCollection.Count
+            {
+                get { return this.Owner._Attributes.GetCount(); }
+            }
+
+            int NamedNodeMap.Length
+            {
+                get { return this.Owner._Attributes.GetCount(); }
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return this.Owner._Attributes.GetEnumerator();
+            }
+
+            IEnumerator<Dom.Attr> IEnumerable<Dom.Attr>.GetEnumerator()
+            {
+                return this.Owner._Attributes.GetEnumerator();
+            }
+
+            Dom.Attr NamedNodeMap.Item(int index)
+            {
+                return this.Owner._Attributes.GetItem(index);
+            }
+
+            Dom.Attr NamedNodeMap.GetNamedItem(string name)
+            {
+                return this.Owner.Attributes.FirstOrDefault(attr => attr.Name == name);
+            }
+
+            Dom.Attr NamedNodeMap.GetNamedItemNS(string namespaceUri, string localName)
+            {
+                return this.Owner.Attributes.FirstOrDefault(attr => (attr.NamespaceUri == namespaceUri) && (attr.LocalName == localName));
+            }
         }
 
         #endregion
