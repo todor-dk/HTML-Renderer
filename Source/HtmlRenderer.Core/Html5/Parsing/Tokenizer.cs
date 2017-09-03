@@ -467,14 +467,25 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             this.SelfClosingTagAcknowledged = false;
             this.CurrentToken.ResetToken();
 
-            // Continue tokenizing until a token has been emitted.
-            while (this.CurrentToken.Type == TokenType.Unknown)
+            // See if any token is enqueued.
+            if (this.EmitTokenQueue.Count != 0)
             {
-                this.Tokenize();
+                Action emitAction = this.EmitTokenQueue.Dequeue();
+                emitAction();
+            }
+            else
+            {
+                // Continue tokenizing until a token has been emitted.
+                while (this.CurrentToken.Type == TokenType.Unknown)
+                {
+                    this.Tokenize();
+                }
             }
 
             return this.CurrentToken;
         }
+
+        private readonly Queue<Action> EmitTokenQueue = new Queue<Action>();
 
         /// <summary>
         /// Used by the tree parsing stage to inform the tokinzer that a
@@ -890,7 +901,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         /// <summary>
         /// The source HTML stream, where we read characters from.
         /// </summary>
-        private readonly HtmlStream HtmlStream;
+        internal readonly HtmlStream HtmlStream;
 
         /// <summary>
         /// The current input character is the last character to have been consumed.
@@ -982,12 +993,18 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void EmitCharacter(char ch)
         {
-            this.CurrentToken.SetCharacter(ch);
+            if (this.CurrentToken.Type == TokenType.Unknown)
+                this.CurrentToken.SetCharacter(ch);
+            else
+                this.EmitTokenQueue.Enqueue(() => this.EmitCharacter(ch));
         }
 
         private void EmitEndOfFile()
         {
-            this.CurrentToken.SetEndOfFile();
+            if (this.CurrentToken.Type == TokenType.Unknown)
+                this.CurrentToken.SetEndOfFile();
+            else
+                this.EmitTokenQueue.Enqueue(this.EmitEndOfFile);
         }
 
         #region DocType related logic
@@ -1019,11 +1036,14 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
         private void EmitDocType()
         {
-            this.CurrentToken.SetDocType(
-                this.DocTypeName?.ToString(),
-                this.DocTypePublicIdentifier?.ToString(),
-                this.DocTypeSystemIdentifier?.ToString(),
-                this.DocTypeForceQuirks);
+            string name = this.DocTypeName?.ToString();
+            string publicId = this.DocTypePublicIdentifier?.ToString();
+            string systemId = this.DocTypeSystemIdentifier?.ToString();
+            bool quirks = this.DocTypeForceQuirks;
+            if (this.CurrentToken.Type == TokenType.Unknown)
+                this.CurrentToken.SetDocType(name, publicId, systemId, quirks);
+            else
+                this.EmitTokenQueue.Enqueue(() => this.CurrentToken.SetDocType(name, publicId, systemId, quirks));
         }
 
         #endregion
@@ -1044,7 +1064,15 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         {
             // NB: We pass the ToString as function, because it is not sure they need
             // the string data and that way we save memory garbage.
-            this.CurrentToken.SetComment(this.CommentData.ToString);
+            if (this.CurrentToken.Type == TokenType.Unknown)
+            {
+                this.CurrentToken.SetComment(this.CommentData.ToString);
+            }
+            else
+            {
+                string data = this.CommentData.ToString();
+                this.EmitTokenQueue.Enqueue(() => this.CurrentToken.SetComment(() => data));
+            }
         }
 
         #endregion
@@ -1093,14 +1121,33 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 if (this.TagIsSelfClosing)
                     this.InformParseError(Parsing.ParseError.InvalidTag);
 
-                this.CurrentToken.SetEndTag(this.TagName.ToString(), this.TagIsSelfClosing, attributes);
+                this.EmitEndTag(this.TagName.ToString(), this.TagIsSelfClosing, attributes);
             }
             else
             {
-                this.LastStartTagName = this.TagName.ToString();
-                bool isSelfClosing = this.TagIsSelfClosing;
-                this.CurrentToken.SetStartTag(this.LastStartTagName, isSelfClosing, attributes);
+                this.EmitStartTag(this.TagName.ToString(), this.TagIsSelfClosing, attributes);
             }
+        }
+
+        private void EmitStartTag(string tagName, bool isSelfClosing, Attribute[] attributes)
+        {
+            if (this.CurrentToken.Type == TokenType.Unknown)
+            {
+                this.LastStartTagName = tagName;
+                this.CurrentToken.SetStartTag(tagName, isSelfClosing, attributes);
+            }
+            else
+            {
+                this.EmitTokenQueue.Enqueue(() => this.EmitStartTag(tagName, isSelfClosing, attributes));
+            }
+        }
+
+        private void EmitEndTag(string tagName, bool isSelfClosing, Attribute[] attributes)
+        {
+            if (this.CurrentToken.Type == TokenType.Unknown)
+                this.CurrentToken.SetEndTag(tagName, isSelfClosing, attributes);
+            else
+                this.EmitTokenQueue.Enqueue(() => this.CurrentToken.SetEndTag(tagName, isSelfClosing, attributes));
         }
 
         private string LastStartTagName;
@@ -4652,6 +4699,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
                     // When it comes to interpreting the number, interpret it as a hexadecimal number.
                     isHex = true;
+                    ch = this.ConsumeNextInputCharacter();
                 }
                 else
                 {
@@ -4663,8 +4711,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 }
 
                 // Consume as many characters as match the range of characters given above (ASCII hex digits or ASCII digits).
+
                 StringBuilder number = new StringBuilder();
-                ch = this.ConsumeNextInputCharacter();
+
                 while ((isHex && ch.IsAsciiHexDigit()) || (!isHex && ch.IsAsciiDigit()))
                 {
                     consumedCharacters.Append(ch);
@@ -4693,6 +4742,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 {
                     // If it isn't, there is a parse error.
                     this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+
+                    // Must reconsume the last char that is not useful to us.
+                    this.ReconsumeInputCharacters(new string(ch, 1));
                 }
 
                 // If one or more characters match the range, then take them all and interpret the
@@ -4791,29 +4843,33 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 }
                 else
                 {
+                    // We need to figure out what the next char is.
+                    if (actualName.Length < characterName.Length)
+                    { 
+                        ch = characterName[actualName.Length];
+                    }
+                    else if (ch != Characters.EOF)
+                    {
+                        // If the last read char was EOF, no need to do this.
+                        ch = this.ConsumeNextInputCharacter();
+                        consumedCharacters.Append(ch);
+                    }
+
                     // If the character reference is being consumed as part of an attribute, and the last character matched
                     // is not a ";" (U + 003B) character, and the next character is either a "=" (U + 003D) character or an
-                    // alphanumeric ASCII character, then, for historical reasons ...
-                    if (partOfAnAttribute && (actualName[actualName.Length - 1] != ';'))
+                    // alphanumeric ASCII character, then ...
+                    if (partOfAnAttribute && (actualName[actualName.Length - 1] != ';') && ((ch == '=') || ch.IsAlphaNumericAsciiCharacter()))
                     {
-                        // We need to figure out what the next char is.
-                        if (ch != Characters.EOF)
-                        {
-                            // If the last read char was EOF, no need to do this.
-                            ch = this.ConsumeNextInputCharacter();
-                            consumedCharacters.Append(ch);
-                        }
+                        // ... then, for historical reasons all the characters that were matched after
+                        // the U + 0026 AMPERSAND character(&) must be unconsumed, and nothing is returned.
+                        this.ReconsumeInputCharacters(consumedCharacters.ToString());
 
-                        if ((ch == '=') || ch.IsAlphaNumericAsciiCharacter())
-                        {
-                            // ... all the characters that were matched after
-                            // the U + 0026 AMPERSAND character(&) must be unconsumed, and nothing is returned.
-                            // However, if this next character is in fact a "=" (U + 003D) character, then this is a parse error,
-                            // because some legacy user agents will misinterpret the markup in those cases.
-                            if (ch == '=')
-                                this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
-                            this.ReconsumeInputCharacters(consumedCharacters.ToString());
-                        }
+                        // However, if this next character is in fact a "=" (U + 003D) character, then this is a parse error,
+                        // because some legacy user agents will misinterpret the markup in those cases.
+                        if (ch == '=')
+                            this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+
+                        return null;
                     }
 
                     // Otherwise, a character reference is parsed. If the last character matched is not a ";"(U + 003B) character,

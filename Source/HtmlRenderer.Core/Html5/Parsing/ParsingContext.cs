@@ -25,19 +25,15 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 {
     public abstract class ParsingContext
     {
-        public ParsingContext(string url, string characterSet)
+        public ParsingContext(string url)
         {
             Contract.RequiresNotEmptyOrWhiteSpace(url, nameof(url));
-            Contract.RequiresNotEmptyOrWhiteSpace(characterSet, nameof(characterSet));
 
             this.Url = url;
-            this.CharacterSet = characterSet;
         }
 
         public string Url { get; private set; }
-
-        public string CharacterSet { get; private set; }
-
+        
         // http://www.w3.org/TR/html51/semantics-embedded-content.html#iframe-iframe-srcdoc-document
         public abstract bool IsIFrameSource { get; }
 

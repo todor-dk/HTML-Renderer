@@ -37,13 +37,12 @@ namespace Scientia.HtmlRenderer
             return new Internal.DomImplementation.HtmlDocument(this, baseUri, characterSet);
         }
 
-        public Document ParseDocument(HtmlStream htmlContents, string url, string characterSet = "utf-8")
+        public Document ParseDocument(HtmlStream htmlContents, string url)
         {
             Contract.RequiresNotNull(htmlContents, nameof(htmlContents));
             Contract.RequiresNotEmptyOrWhiteSpace(url, nameof(url));
-            Contract.RequiresNotEmptyOrWhiteSpace(characterSet, nameof(characterSet));
 
-            return this.ParseDocument(htmlContents, new DocumentParsingContext(url, characterSet));
+            return this.ParseDocument(htmlContents, new DocumentParsingContext(url));
         }
 
         public Document ParseDocument(HtmlStream htmlContents, DocumentParsingContext parsingContext)
@@ -51,8 +50,31 @@ namespace Scientia.HtmlRenderer
             Contract.RequiresNotNull(htmlContents, nameof(htmlContents));
             Contract.RequiresNotNull(parsingContext, nameof(parsingContext));
 
-            Document document = this.CreateHtmlDocument(parsingContext.Url, parsingContext.CharacterSet);
-            DomParser.ParseDocument(document, parsingContext, Internal.DomImplementation.InternalDomFactory.Current, htmlContents);
+            // Determine the charset of the document. See: http://www.w3.org/TR/2017/CR-html51-20170620/syntax.html#determining-the-character-encoding
+            HtmlStream.RevertInformation revertInfo = htmlContents.DetermineEncoding(parsingContext);
+
+            // The HtmlStream now has a charset (or at least a suggestion to what this may be)
+            Document document = this.CreateHtmlDocument(parsingContext.Url, htmlContents.CharacterSet);
+
+            try
+            {
+                // Try to parse - if this hits a <META> with charset information and incompatible encoding, EncodingChangedException may be thrown.
+                DomParser.ParseDocument(document, parsingContext, Internal.DomImplementation.InternalDomFactory.Current, htmlContents);
+            }
+            catch (HtmlStream.EncodingChangedException)
+            {
+                // The encoding has changed. We need to re-parser.
+
+                // 1. Revert the HTML stream.
+                revertInfo.Revert();
+
+                // 2. Create a new document with the correct encoding.
+                document = this.CreateHtmlDocument(parsingContext.Url, htmlContents.CharacterSet);
+
+                // 3. Parse again.
+                DomParser.ParseDocument(document, parsingContext, Internal.DomImplementation.InternalDomFactory.Current, htmlContents);
+            }
+            
             return document;
         }
     }

@@ -13,7 +13,7 @@ namespace HtmlRenderer.UnitTests
         [TestMethod]
         public void ParseAcid1()
         {
-            StringHtmlStream stream = new StringHtmlStream(ReferenceParserTests.Acid1Html);
+            StringHtmlStream stream = new StringHtmlStream(ReferenceParserTests.Acid1Html, "windows-1252");
             BrowsingContext browsingContext = new BrowsingContext();
             Document document = browsingContext.ParseDocument(stream, "about:blank");
         }
@@ -21,9 +21,9 @@ namespace HtmlRenderer.UnitTests
         [TestMethod]
         public void ParseAcid1AndReferenceEquality()
         {
-            StringHtmlStream stream = new StringHtmlStream(ReferenceParserTests.Acid1Html);
+            StringHtmlStream stream = new StringHtmlStream(ReferenceParserTests.Acid1Html, "windows-1252");
             BrowsingContext browsingContext = new BrowsingContext();
-            Document document = browsingContext.ParseDocument(stream, "http://localhost/Test/acid1.htm", "windows-1252");
+            Document document = browsingContext.ParseDocument(stream, "http://localhost/Test/acid1.htm");
             
             Assert.IsNotNull(document);
 
@@ -31,7 +31,7 @@ namespace HtmlRenderer.UnitTests
             Assert.IsNotNull(root);
 
             var cc = new TestLib.CompareContext();
-            //cc.IgnoreDocumentOrigin = true;
+            cc.IgnoredCompareResult = TestLib.CompareResult.Document_Origin;
             var eq = cc.CompareRecursive(root, document);
             Assert.IsTrue((eq == TestLib.CompareResult.Equal) || (eq == TestLib.CompareResult.Document_Origin));
         }
@@ -39,9 +39,9 @@ namespace HtmlRenderer.UnitTests
         [TestMethod]
         public void TestCopyAsReference()
         {
-            StringHtmlStream stream = new StringHtmlStream(ReferenceParserTests.Acid1Html);
+            StringHtmlStream stream = new StringHtmlStream(ReferenceParserTests.Acid1Html, "windows-1252");
             BrowsingContext browsingContext = new BrowsingContext();
-            Document document = browsingContext.ParseDocument(stream, "http://localhost/Test/acid1.htm", "windows-1252");
+            Document document = browsingContext.ParseDocument(stream, "http://localhost/Test/acid1.htm");
 
             Assert.IsNotNull(document);
 

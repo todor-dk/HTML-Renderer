@@ -32,5 +32,11 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
             Internal.DomImplementation.Document doc = (Internal.DomImplementation.Document)document;
             doc.QuirksMode = mode;
         }
+
+        public override void SetCharacterSet(Dom.Document document, string characterSet)
+        {
+            Internal.DomImplementation.Document doc = (Internal.DomImplementation.Document)document;
+            doc.CharacterSet = characterSet;
+        }
     }
 }

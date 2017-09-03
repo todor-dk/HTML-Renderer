@@ -64,6 +64,17 @@ namespace HtmlRenderer.DomParseTester.DomComparing
                 new PropertyMetadata(null));
 
 
+        private void ListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+            PropertyDefinition pd = (sender as ListView)?.SelectedItem as PropertyDefinition;
+            if (pd == null)
+                return;
+
+            Clipboard.Clear();
+            Clipboard.SetText(pd.Name + " = " + pd.Value);
+        }
+
         public class PropertyDefinition : DependencyObject
         {
             public PropertyDefinition(Node node, string path, bool isValid)

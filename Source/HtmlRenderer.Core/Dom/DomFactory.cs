@@ -27,6 +27,8 @@ namespace Scientia.HtmlRenderer.Dom
     {
         public abstract void SetQuirksMode(Document document, QuirksMode mode);
 
+        public abstract void SetCharacterSet(Document document, string characterSet);
+
         /// <summary>
         /// Append a DocumentType node to the Document node.
         /// Associate the DocumentType node with the Document object so that it is

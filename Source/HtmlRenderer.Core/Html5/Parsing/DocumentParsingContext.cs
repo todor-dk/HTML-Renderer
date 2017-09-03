@@ -40,8 +40,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             get { return null; }
         }
 
-        public DocumentParsingContext(string url, string characterSet)
-            : base(url, characterSet)
+        public DocumentParsingContext(string url)
+            : base(url)
         {
         }
     }

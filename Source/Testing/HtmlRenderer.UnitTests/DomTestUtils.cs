@@ -31,13 +31,15 @@ namespace HtmlRenderer.UnitTests
                 url = reader.ReadLine().Substring(5);
             }
 
-            string html = File.ReadAllText(path + ".html");
-
-            // Parse the HTML
-            StringHtmlStream stream = new StringHtmlStream(html);
-            BrowsingContext browsingContext = new BrowsingContext();
-            Document document = browsingContext.ParseDocument(stream, url);
-
+            Document document;
+            using (FileStream fs = File.OpenRead(path + ".html"))
+            {
+                // Parse the HTML
+                StreamHtmlStream stream = new StreamHtmlStream(fs);
+                BrowsingContext browsingContext = new BrowsingContext();
+                document = browsingContext.ParseDocument(stream, url);
+            }
+            
             Assert.IsNotNull(document);
 
             string dom = File.ReadAllText(path + ".dom");

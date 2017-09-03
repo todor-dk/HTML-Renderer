@@ -1,4 +1,5 @@
 ﻿using HtmlRenderer.DomParseTester.DomComparing.ViewModels;
+using HtmlRenderer.TestLib.Dom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +59,18 @@ namespace HtmlRenderer.DomParseTester.DomComparing
         public AttributesList()
         {
             InitializeComponent();
+        }
+
+        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
+        {
+            base.OnMouseDoubleClick(e);
+
+            ReferenceAttr attr = this.SelectedItem as ReferenceAttr;
+            if (attr == null)
+                return;
+
+            Clipboard.Clear();
+            Clipboard.SetText(attr.Name + " = " + attr.Value);
         }
     }
 }

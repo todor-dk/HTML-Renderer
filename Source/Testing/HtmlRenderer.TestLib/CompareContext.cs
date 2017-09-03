@@ -240,7 +240,7 @@ namespace HtmlRenderer.TestLib
 
             CompareResult result = CompareResult.Equal;
 
-            if (self.CharacterSet != other.CharacterSet)
+            if (!String.Equals(self.CharacterSet, other.CharacterSet, StringComparison.OrdinalIgnoreCase))
                 result = result | CompareResult.Document_CharacterSet;
 
             if (self.CompatMode != other.CompatMode)

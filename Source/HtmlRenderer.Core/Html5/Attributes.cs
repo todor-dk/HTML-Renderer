@@ -26,6 +26,10 @@ namespace Scientia.HtmlRenderer.Html5
     {
         public const string Charset = "charset";
 
+        public const string Content = "content";
+
+        public const string HttpEquiv = "http-equiv";
+
         public const string Xmlns = "xmlns";
 
         public const string XmlnsXlink = "xmlns:xlink";

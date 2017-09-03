@@ -1,6 +1,8 @@
 ﻿using HtmlRenderer.DomParseTester.Views;
+using Scientia.HtmlRenderer.Html5.Parsing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -52,6 +54,31 @@ namespace HtmlRenderer.DomParseTester
             ReferenceDomExplorer window = new ReferenceDomExplorer();
             window.Owner = this;
             window.Show();
+        }
+
+        private void Test_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+
+            for (int i = 0; i < 200; i++)
+            {
+                using (var fs = File.OpenRead(@"C:\Temp\Docs\Test1.htm"))
+                {
+                    StreamHtmlStream s = new StreamHtmlStream(fs);
+                    var r = s.DetermineEncoding(null);
+
+                    char ch;
+                    do
+                    {
+                        ch = s.ReadChar();
+                    }
+                    while (ch != '\uFFFF');
+                }
+            }
+
+            sw.Stop();
+            MessageBox.Show(sw.ElapsedMilliseconds.ToString());
         }
     }
 }

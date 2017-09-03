@@ -153,14 +153,21 @@ namespace HtmlRenderer.DomParseTester.DomComparing
             if (String.IsNullOrWhiteSpace(dlg.FileName))
                 return;
 
-            string html = File.ReadAllText(dlg.FileName);
+            using (var f = File.OpenRead(dlg.FileName))
+            {
+                var enc = CharacterEncoding.PrescanHelper.DetermineEncoding(f);
+                Console.WriteLine(enc);
+            }
 
-            // Parse the HTML
-            StringHtmlStream stream = new StringHtmlStream(html);
-            BrowsingContext browsingContext = new BrowsingContext();
-            var document = browsingContext.ParseDocument(stream, "url:unknown");
-
-            ReferenceNode root = ReferenceDocument.FromDocument(document);
+            ReferenceNode root;
+            using (FileStream fs = File.OpenRead(dlg.FileName))
+            {
+                // Parse the HTML
+                StreamHtmlStream stream = new StreamHtmlStream(fs);
+                BrowsingContext browsingContext = new BrowsingContext();
+                Scientia.HtmlRenderer.Dom.Document document = browsingContext.ParseDocument(stream, "url:unknown");
+                root = ReferenceDocument.FromDocument(document);
+            }
 
             Node node = Node.FromReferenceNode(this.Context, root);
             action(node);
@@ -180,14 +187,14 @@ namespace HtmlRenderer.DomParseTester.DomComparing
             ReferenceNode root;
             if (recent.Type == RecentItem.FileType.Html)
             {
-                string html = File.ReadAllText(path);
-
-                // Parse the HTML
-                StringHtmlStream stream = new StringHtmlStream(html);
-                BrowsingContext browsingContext = new BrowsingContext();
-                var document = browsingContext.ParseDocument(stream, "url:unknown");
-
-                root = ReferenceDocument.FromDocument(document);
+                using (FileStream fs = File.OpenRead(path))
+                {
+                    // Parse the HTML
+                    StreamHtmlStream stream = new StreamHtmlStream(fs);
+                    BrowsingContext browsingContext = new BrowsingContext();
+                    Scientia.HtmlRenderer.Dom.Document document = browsingContext.ParseDocument(stream, "url:unknown");
+                    root = ReferenceDocument.FromDocument(document);
+                }
             }
             else
             {
@@ -231,7 +238,7 @@ namespace HtmlRenderer.DomParseTester.DomComparing
         private void CompareAndValidate()
         {
             CompareContext cc = new CompareContext(this.Left, this.Right);
-            cc.IgnoredCompareResult = CompareResult.Node_BaseUri | CompareResult.Document_CharacterSet | CompareResult.Document_DocumentUri | CompareResult.Document_Url | CompareResult.Document_Origin;
+            cc.IgnoredCompareResult = CompareResult.Node_BaseUri | CompareResult.Document_DocumentUri | CompareResult.Document_Url | CompareResult.Document_Origin;
 
             if ((this.Left != null) && (this.Right != null))
                 cc.CompareRecursive(this.Left.GetModel(), this.Right.GetModel());

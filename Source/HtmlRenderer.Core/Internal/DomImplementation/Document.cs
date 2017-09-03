@@ -81,7 +81,7 @@ namespace Scientia.HtmlRenderer.Internal.DomImplementation
         /// <summary>
         /// Returns the character encoding of the current document.
         /// </summary>
-        public string CharacterSet { get; private set; }
+        public string CharacterSet { get; internal set; }
 
         /// <summary>
         /// Return "BackCompat" if the document is in quirks mode, and "CSS1Compat" otherwise.

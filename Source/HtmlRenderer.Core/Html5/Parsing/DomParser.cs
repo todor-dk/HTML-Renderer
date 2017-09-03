@@ -2378,16 +2378,38 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 if (this.Token.TagIsSelfClosing)
                     this.Tokenizer.AcknowledgeSelfClosingTag();
 
-                // If the element has a charset attribute, and getting an encoding from its value results in an encoding,
-                // and the confidence is currently tentative, then change the encoding to the resulting encoding.
+                if (this.Tokenizer.HtmlStream.EncodingConfidence == HtmlStream.ConfidenceEnum.Tentative)
+                {
+                    // If the element has a charset attribute, and getting an encoding from its value results in an encoding,
+                    // and the confidence is currently tentative, then change the encoding to the resulting encoding.
+                    string charset = meta.GetAttribute(Attributes.Charset);
+                    if (!String.IsNullOrWhiteSpace(charset))
+                    {
+                        Encoding encoding = CharacterEncoding.GetEncoding(charset);
+                        this.Tokenizer.HtmlStream.ChangeEncoding(encoding);
+                        this.DomFactory.SetCharacterSet(this.Document, this.Tokenizer.HtmlStream.CharacterSet);
+                    }
 
-                // Otherwise, if the element has an http-equiv attribute whose value is an ASCII case-insensitive
-                // match for the string "Content-Type", and the element has a content attribute, and applying the
-                // algorithm for extracting a character encoding from a meta element to that attribute's value returns
-                // a supported ASCII-compatible character encoding or a UTF-16 encoding, and the confidence is currently
-                // tentative, then change the encoding to the extracted encoding.
-
-                // ISSUE. TO-DO. Handle encoding.
+                    // Otherwise, if the element has an http-equiv attribute whose value is an ASCII case-insensitive match 
+                    // for the string "Content-Type", and the element has a content attribute, and applying the algorithm 
+                    // for extracting a character encoding from a meta element to that attribute’s value returns an encoding, 
+                    // and the confidence is currently tentative, then change the encoding to the extracted encoding.
+                    else
+                    {
+                        string httpEquiv = meta.GetAttribute(Attributes.HttpEquiv);
+                        string content = meta.GetAttribute(Attributes.Content);
+                        if (String.Equals(httpEquiv, "Content-Type", StringComparison.OrdinalIgnoreCase) && !String.IsNullOrEmpty(content))
+                        {
+                            charset = CharacterEncoding.ExtractCharacterEncodingFromMeta(content);
+                            if (!String.IsNullOrWhiteSpace(charset))
+                            {
+                                Encoding encoding = CharacterEncoding.GetEncoding(charset);
+                                this.Tokenizer.HtmlStream.ChangeEncoding(encoding);
+                                this.DomFactory.SetCharacterSet(this.Document, this.Tokenizer.HtmlStream.CharacterSet);
+                            }
+                        }
+                    }
+                }
             }
 
             // A start tag whose tag name is "title"

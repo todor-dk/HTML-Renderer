@@ -58,14 +58,15 @@ namespace HtmlRenderer.DomParseTester
             if (String.IsNullOrWhiteSpace(dlg.FileName))
                 return;
 
-            string html = File.ReadAllText(dlg.FileName);
-
-            // Parse the HTML
-            StringHtmlStream stream = new StringHtmlStream(html);
-            BrowsingContext browsingContext = new BrowsingContext();
-            Document document = browsingContext.ParseDocument(stream, "url:unknown");
-
-            var root = TestLib.Dom.ReferenceDocument.FromDocument(document);
+            TestLib.Dom.ReferenceNode root;
+            using (FileStream fs = File.OpenRead(dlg.FileName))
+            {
+                // Parse the HTML
+                StreamHtmlStream stream = new StreamHtmlStream(fs);
+                BrowsingContext browsingContext = new BrowsingContext();
+                Scientia.HtmlRenderer.Dom.Document document = browsingContext.ParseDocument(stream, "url:unknown");
+                root = TestLib.Dom.ReferenceDocument.FromDocument(document);
+            }
 
             this.DomTree.DataContext = root;
             this.DomTree.ItemsSource = new object[] { root };
