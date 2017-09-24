@@ -29,421 +29,489 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         {
             /// <summary>
             /// Data state
-            /// See: 8.2.4.1 Data state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.1 Data state (http://www.w3.org/TR/html52/syntax.html#tokenizer-data-state)
             /// </summary>
             Data = 1,
 
             /// <summary>
-            /// Character reference in data state
-            /// See: 8.2.4.2 Character reference in data state (http://www.w3.org/TR/html5/syntax.html#tokenization)
-            /// </summary>
-            CharacterReferenceInData = 2,
-
-            /// <summary>
             /// RCDATA state
-            /// See: 8.2.4.3 RCDATA state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.2 RCDATA state (http://www.w3.org/TR/html52/syntax.html#tokenizer-rcdata-state)
             /// </summary>
-            RcData = 3,
-
-            /// <summary>
-            /// Character reference in RCDATA state
-            /// See: 8.2.4.4 Character reference in RCDATA state (http://www.w3.org/TR/html5/syntax.html#tokenization)
-            /// </summary>
-            CharacterReferenceInRcData = 4,
+            RcData = 2,
 
             /// <summary>
             /// RAWTEXT state
-            /// See: 8.2.4.5 RAWTEXT state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.3 RAWTEXT state (http://www.w3.org/TR/html52/syntax.html#tokenizer-rawtext-state)
             /// </summary>
-            RawText = 5,
+            RawText = 3,
 
             /// <summary>
             /// Script data state
-            /// See: 8.2.4.6 Script data state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.4 Script data state (http://www.w3.org/TR/html52/syntax.html#tokenizer-script-data-state)
             /// </summary>
-            ScriptData = 6,
+            ScriptData = 4,
 
             /// <summary>
             /// PLAINTEXT state
-            /// See: 8.2.4.7 PLAINTEXT state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.5 PLAINTEXT state (http://www.w3.org/TR/html52/syntax.html#plaintext-state)
             /// </summary>
-            PlainText = 7,
+            PlainText = 5,
 
             /// <summary>
             /// Tag open state
-            /// See: 8.2.4.8 Tag open state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.6 Tag open state (http://www.w3.org/TR/html52/syntax.html#tokenizer-tag-open-state)
             /// </summary>
-            TagOpen = 8,
+            TagOpen = 6,
 
             /// <summary>
             /// End tag open state
-            /// See: 8.2.4.9 End tag open state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.7 End tag open state (http://www.w3.org/TR/html52/syntax.html#end-tag-open-state)
             /// </summary>
-            EndTagOpen = 9,
+            EndTagOpen = 7,
 
             /// <summary>
             /// Tag name state
-            /// See: 8.2.4.10 Tag name state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.8 Tag name state (http://www.w3.org/TR/html52/syntax.html#tag-name-state)
             /// </summary>
-            TagName = 10,
+            TagName = 8,
 
             /// <summary>
             /// RCDATA less-than sign state
-            /// See: 8.2.4.11 RCDATA less-than sign state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.9 RCDATA less-than sign state (http://www.w3.org/TR/html52/syntax.html#RCDATA-less-than-sign-state)
             /// </summary>
-            RcDataLessThanSign = 11,
+            RcDataLessThanSign = 9,
 
             /// <summary>
             /// RCDATA end tag open state
-            /// See: 8.2.4.12 RCDATA end tag open state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.10 RCDATA end tag open state (http://www.w3.org/TR/html52/syntax.html#RCDATA-end-tag-open-state)
             /// </summary>
-            RcDataEndTagOpen = 12,
+            RcDataEndTagOpen = 10,
 
             /// <summary>
             /// RCDATA end tag name state
-            /// See: 8.2.4.13 RCDATA end tag name state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.11 RCDATA end tag name state (http://www.w3.org/TR/html52/syntax.html#RCDATA-end-tag-name-state)
             /// </summary>
-            RcDataEndTagName = 13,
+            RcDataEndTagName = 11,
 
             /// <summary>
             /// RAWTEXT less-than sign state
-            /// See: 8.2.4.14 RAWTEXT less-than sign state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.12 RAWTEXT less-than sign state (http://www.w3.org/TR/html52/syntax.html#rawtext-less-than-sign-state)
             /// </summary>
-            RawTextLessThanSign = 14,
+            RawTextLessThanSign = 12,
 
             /// <summary>
             /// RAWTEXT end tag open state
-            /// See: 8.2.4.15 RAWTEXT end tag open state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.13 RAWTEXT end tag open state (http://www.w3.org/TR/html52/syntax.html#rawtext-end-tag-open-state)
             /// </summary>
-            RawTextEndTagOpen = 15,
+            RawTextEndTagOpen = 13,
 
             /// <summary>
             /// RAWTEXT end tag name state
-            /// See: 8.2.4.16 RAWTEXT end tag name state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.14 RAWTEXT end tag name state (http://www.w3.org/TR/html52/syntax.html#rawtext-end-tag-name-state)
             /// </summary>
-            RawTextEndTagName = 16,
+            RawTextEndTagName = 14,
 
             /// <summary>
             /// Script data less-than sign state
-            /// See: 8.2.4.17 Script data less-than sign state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.15 Script data less-than sign state (http://www.w3.org/TR/html52/syntax.html#script-data-less-than-sign-state)
             /// </summary>
-            ScriptDataLessThanSign = 17,
+            ScriptDataLessThanSign = 15,
 
             /// <summary>
             /// Script data end tag open state
-            /// See: 8.2.4.18 Script data end tag open state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.16 Script data end tag open state (http://www.w3.org/TR/html52/syntax.html#script-data-end-tag-open-state)
             /// </summary>
-            ScriptDataEndTagOpen = 18,
+            ScriptDataEndTagOpen = 16,
 
             /// <summary>
             /// Script data end tag name state
-            /// See: 8.2.4.19 Script data end tag name state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.17 Script data end tag name state (http://www.w3.org/TR/html52/syntax.html#script-data-end-tag-name-state)
             /// </summary>
-            ScriptDataEndTagName = 19,
+            ScriptDataEndTagName = 17,
 
             /// <summary>
             /// Script data escape start state
-            /// See: 8.2.4.20 Script data escape start state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.18 Script data escape start state (http://www.w3.org/TR/html52/syntax.html#script-data-escape-start-state)
             /// </summary>
-            ScriptDataEscapeStart = 20,
+            ScriptDataEscapeStart = 18,
 
             /// <summary>
             /// Script data escape start dash state
-            /// See: 8.2.4.21 Script data escape start dash state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.19 Script data escape start dash state (http://www.w3.org/TR/html52/syntax.html#script-data-escape-start-dash-state)
             /// </summary>
-            ScriptDataEscapeStartDash = 21,
+            ScriptDataEscapeStartDash = 19,
 
             /// <summary>
             /// Script data escaped state
-            /// See: 8.2.4.22 Script data escaped state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.20 Script data escaped state (http://www.w3.org/TR/html52/syntax.html#script-data-escaped-state)
             /// </summary>
-            ScriptDataEscaped = 22,
+            ScriptDataEscaped = 20,
 
             /// <summary>
             /// Script data escaped dash state
-            /// See: 8.2.4.23 Script data escaped dash state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.21 Script data escaped dash state (http://www.w3.org/TR/html52/syntax.html#script-data-escaped-dash-state)
             /// </summary>
-            ScriptDataEscapedDash = 23,
+            ScriptDataEscapedDash = 21,
 
             /// <summary>
             /// Script data escaped dash dash state
-            /// See: 8.2.4.24 Script data escaped dash dash state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.22 Script data escaped dash dash state (http://www.w3.org/TR/html52/syntax.html#script-data-escaped-dash-dash-state)
             /// </summary>
-            ScriptDataEscapedDashDash = 24,
+            ScriptDataEscapedDashDash = 22,
 
             /// <summary>
             /// Script data escaped less-than sign state
-            /// See: 8.2.4.25 Script data escaped less-than sign state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.23 Script data escaped less-than sign state (http://www.w3.org/TR/html52/syntax.html#script-data-escaped-less-than-sign-state)
             /// </summary>
-            ScriptDataEscapedLessThanSign = 25,
+            ScriptDataEscapedLessThanSign = 23,
 
             /// <summary>
             /// Script data escaped end tag open state
-            /// See: 8.2.4.26 Script data escaped end tag open state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.24 Script data escaped end tag open state (http://www.w3.org/TR/html52/syntax.html#script-data-escaped-end-tag-open-state)
             /// </summary>
-            ScriptDataEscapedEndTagOpen = 26,
+            ScriptDataEscapedEndTagOpen = 24,
 
             /// <summary>
             /// Script data escaped end tag name state
-            /// See: 8.2.4.27 Script data escaped end tag name state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.25 Script data escaped end tag name state (http://www.w3.org/TR/html52/syntax.html#script-data-escaped-end-tag-name-state)
             /// </summary>
-            ScriptDataEscapedEndTagName = 27,
+            ScriptDataEscapedEndTagName = 25,
 
             /// <summary>
             /// Script data double escape start state
-            /// See: 8.2.4.28 Script data double escape start state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.26 Script data double escape start state (http://www.w3.org/TR/html52/syntax.html#script-data-double-escape-start-state)
             /// </summary>
-            ScriptDataDoubleEscapeStart = 28,
+            ScriptDataDoubleEscapeStart = 26,
 
             /// <summary>
             /// Script data double escaped state
-            /// See: 8.2.4.29 Script data double escaped state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.27 Script data double escaped state (http://www.w3.org/TR/html52/syntax.html#script-data-double-escaped-state)
             /// </summary>
-            ScriptDataDoubleEscaped = 29,
+            ScriptDataDoubleEscaped = 27,
 
             /// <summary>
             /// Script data double escaped dash state
-            /// See: 8.2.4.30 Script data double escaped dash state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.28 Script data double escaped dash state (http://www.w3.org/TR/html52/syntax.html#script-data-double-escaped-dash-state)
             /// </summary>
-            ScriptDataDoubleEscapedDash = 30,
+            ScriptDataDoubleEscapedDash = 28,
 
             /// <summary>
             /// Script data double escaped dash dash state
-            /// See: 8.2.4.31 Script data double escaped dash dash state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.29 Script data double escaped dash dash state (http://www.w3.org/TR/html52/syntax.html#script-data-double-escaped-dash-dash-state)
             /// </summary>
-            ScriptDataDoubleEscapedDashDash = 31,
+            ScriptDataDoubleEscapedDashDash = 29,
 
             /// <summary>
             /// Script data double escaped less-than sign state
-            /// See: 8.2.4.32 Script data double escaped less-than sign state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.30 Script data double escaped less-than sign state (http://www.w3.org/TR/html52/syntax.html#script-data-double-escaped-less-than-sign-state)
             /// </summary>
-            ScriptDataDoubleEscapedLessThanSign = 32,
+            ScriptDataDoubleEscapedLessThanSign = 30,
 
             /// <summary>
             /// Script data double escape end state
-            /// See: 8.2.4.33 Script data double escape end state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.31 Script data double escape end state (http://www.w3.org/TR/html52/syntax.html#script-data-double-escape-end-state)
             /// </summary>
-            ScriptDataDoubleEscapeEnd = 33,
+            ScriptDataDoubleEscapeEnd = 31,
 
             /// <summary>
             /// Before attribute name state
-            /// See: 8.2.4.34 Before attribute name state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.32 Before attribute name state (http://www.w3.org/TR/html52/syntax.html#before-attribute-name-state)
             /// </summary>
-            BeforeAttributeName = 34,
+            BeforeAttributeName = 32,
 
             /// <summary>
             /// Attribute name state
-            /// See: 8.2.4.35 Attribute name state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.33 Attribute name state (http://www.w3.org/TR/html52/syntax.html#attribute-name-state)
             /// </summary>
-            AttributeName = 35,
+            AttributeName = 33,
 
             /// <summary>
             /// After attribute name state
-            /// See: 8.2.4.36 After attribute name state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.34 After attribute name state (http://www.w3.org/TR/html52/syntax.html#after-attribute-name-state)
             /// </summary>
-            AfterAttributeName = 36,
+            AfterAttributeName = 34,
 
             /// <summary>
             /// Before attribute value state
-            /// See: 8.2.4.37 Before attribute value state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.35 Before attribute value state (http://www.w3.org/TR/html52/syntax.html#before-attribute-value-state)
             /// </summary>
-            BeforeAttributeValue = 37,
+            BeforeAttributeValue = 35,
 
             /// <summary>
             /// Attribute value (double-quoted) state
-            /// See: 8.2.4.38 Attribute value (double-quoted) state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.36 Attribute value (double-quoted) state (http://www.w3.org/TR/html52/syntax.html#attribute-value-double-quoted-state)
             /// </summary>
-            AttributeValueDoubleQuoted = 38,
+            AttributeValueDoubleQuoted = 36,
 
             /// <summary>
             /// Attribute value (single-quoted) state
-            /// See: 8.2.4.39 Attribute value (single-quoted) state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.37 Attribute value (single-quoted) state (http://www.w3.org/TR/html52/syntax.html#attribute-value-single-quoted-state)
             /// </summary>
-            AttributeValueSingleQuoted = 39,
+            AttributeValueSingleQuoted = 37,
 
             /// <summary>
             /// Attribute value (unquoted) state
-            /// See: 8.2.4.40 Attribute value (unquoted) state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.38 Attribute value (unquoted) state (http://www.w3.org/TR/html52/syntax.html#attribute-value-unquoted-state)
             /// </summary>
-            AttributeValueUnquoted = 40,
-
-            /// <summary>
-            /// Character reference in attribute value state
-            /// See: 8.2.4.41 Character reference in attribute value state (http://www.w3.org/TR/html5/syntax.html#tokenization)
-            /// </summary>
-            CharacterReferenceInAttributeValue = 41,
+            AttributeValueUnquoted = 38,
 
             /// <summary>
             /// After attribute value (quoted) state
-            /// See: 8.2.4.42 After attribute value (quoted) state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.39 After attribute value (quoted) state (http://www.w3.org/TR/html52/syntax.html#after-attribute-value-quoted-state)
             /// </summary>
-            AfterAttributeValueQuoted = 42,
+            AfterAttributeValueQuoted = 39,
 
             /// <summary>
             /// Self-closing start tag state
-            /// See: 8.2.4.43 Self-closing start tag state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.40 Self-closing start tag state (http://www.w3.org/TR/html52/syntax.html#self-closing-start-tag-state)
             /// </summary>
-            SelfClosingStartTag = 43,
+            SelfClosingStartTag = 40,
 
             /// <summary>
             /// Bogus comment state
-            /// See: 8.2.4.44 Bogus comment state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.41 Bogus comment state (http://www.w3.org/TR/html52/syntax.html#bogus-comment-state)
             /// </summary>
-            BogusComment = 44,
+            BogusComment = 41,
 
             /// <summary>
             /// Markup declaration open state
-            /// See: 8.2.4.45 Markup declaration open state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.42 Markup declaration open state (http://www.w3.org/TR/html52/syntax.html#markup-declaration-open-state)
             /// </summary>
-            MarkupDeclarationOpen = 45,
+            MarkupDeclarationOpen = 42,
 
             /// <summary>
             /// Comment start state
-            /// See: 8.2.4.46 Comment start state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.43 Comment start state (http://www.w3.org/TR/html52/syntax.html#comment-start-state)
             /// </summary>
-            CommentStart = 46,
+            CommentStart = 43,
 
             /// <summary>
             /// Comment start dash state
-            /// See: 8.2.4.47 Comment start dash state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.44 Comment start dash state (http://www.w3.org/TR/html52/syntax.html#comment-start-dash-state)
             /// </summary>
-            CommentStartDash = 47,
+            CommentStartDash = 44,
 
             /// <summary>
             /// Comment state
-            /// See: 8.2.4.48 Comment state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.45 Comment state (http://www.w3.org/TR/html52/syntax.html#comment-state)
             /// </summary>
-            Comment = 48,
+            Comment = 45,
+
+            /// <summary>
+            /// Comment less-than sign state
+            /// See: 8.2.4.46 Comment less-than sign state (http://www.w3.org/TR/html52/syntax.html#comment-less-than-sign-state)
+            /// </summary>
+            CommentLessThanSign = 46,
+
+            /// <summary>
+            /// Comment less-than sign bang state
+            /// See: 8.2.4.47 Comment less-than sign bang state (http://www.w3.org/TR/html52/syntax.html#comment-less-than-sign-bang-state)
+            /// </summary>
+            CommentLessThanSignBang = 47,
+
+            /// <summary>
+            /// Comment less-than sign bang dash state
+            /// See: 8.2.4.48 Comment less-than sign bang dash state (http://www.w3.org/TR/html52/syntax.html#comment-less-than-sign-bang-dash-state)
+            /// </summary>
+            CommentLessThanSignBangDash = 48,
+
+            /// <summary>
+            /// Comment less-than sign bang dash dash state
+            /// See: 8.2.4.49 Comment less-than sign bang dash dash state (http://www.w3.org/TR/html52/syntax.html#comment-less-than-sign-bang-dash-dash-state)
+            /// </summary>
+            CommentLessThanSignBangDashDash = 49,
 
             /// <summary>
             /// Comment end dash state
-            /// See: 8.2.4.49 Comment end dash state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.50 Comment end dash state (http://www.w3.org/TR/html52/syntax.html#comment-end-dash-state)
             /// </summary>
-            CommentEndDash = 49,
+            CommentEndDash = 50,
 
             /// <summary>
             /// Comment end state
-            /// See: 8.2.4.50 Comment end state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.51 Comment end state (http://www.w3.org/TR/html52/syntax.html#comment-end-state)
             /// </summary>
-            CommentEnd = 50,
+            CommentEnd = 51,
 
             /// <summary>
             /// Comment end bang state
-            /// See: 8.2.4.51 Comment end bang state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.52 Comment end bang state (http://www.w3.org/TR/html52/syntax.html#comment-end-bang-state)
             /// </summary>
-            CommentEndBang = 51,
+            CommentEndBang = 52,
 
             /// <summary>
             /// DOCTYPE state
-            /// See: 8.2.4.52 DOCTYPE state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.53 DOCTYPE state (http://www.w3.org/TR/html52/syntax.html#doctype-state)
             /// </summary>
-            DocType = 52,
+            DocType = 53,
 
             /// <summary>
             /// Before DOCTYPE name state
-            /// See: 8.2.4.53 Before DOCTYPE name state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.54 Before DOCTYPE name state (http://www.w3.org/TR/html52/syntax.html#before-doctype-name-state)
             /// </summary>
-            BeforeDocTypeName = 53,
+            BeforeDocTypeName = 54,
 
             /// <summary>
             /// DOCTYPE name state
-            /// See: 8.2.4.54 DOCTYPE name state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.55 DOCTYPE name state (http://www.w3.org/TR/html52/syntax.html#doctype-name-state)
             /// </summary>
-            DocTypeName = 54,
+            DocTypeName = 55,
 
             /// <summary>
             /// After DOCTYPE name state
-            /// See: 8.2.4.55 After DOCTYPE name state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.56 After DOCTYPE name state (http://www.w3.org/TR/html52/syntax.html#after-doctype-name-state)
             /// </summary>
-            AfterDocTypeName = 55,
+            AfterDocTypeName = 56,
 
             /// <summary>
             /// After DOCTYPE public keyword state
-            /// See: 8.2.4.56 After DOCTYPE public keyword state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.57 After DOCTYPE public keyword state (http://www.w3.org/TR/html52/syntax.html#after-doctype-public-keyword-state)
             /// </summary>
-            AfterDocTypePublicKeyword = 56,
+            AfterDocTypePublicKeyword = 57,
 
             /// <summary>
             /// Before DOCTYPE public identifier state
-            /// See: 8.2.4.57 Before DOCTYPE public identifier state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.58 Before DOCTYPE public identifier state (http://www.w3.org/TR/html52/syntax.html#before-doctype-public-identifier-state)
             /// </summary>
-            BeforeDocTypePublicIdentifier = 57,
+            BeforeDocTypePublicIdentifier = 58,
 
             /// <summary>
             /// DOCTYPE public identifier (double-quoted) state
-            /// See: 8.2.4.58 DOCTYPE public identifier (double-quoted) state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.59 DOCTYPE public identifier (double-quoted) state (http://www.w3.org/TR/html52/syntax.html#doctype-public-identifier-double-quoted-state)
             /// </summary>
-            DocTypePublicIdentifierDoubleQuoted = 58,
+            DocTypePublicIdentifierDoubleQuoted = 59,
 
             /// <summary>
             /// DOCTYPE public identifier (single-quoted) state
-            /// See: 8.2.4.59 DOCTYPE public identifier (single-quoted) state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.60 DOCTYPE public identifier (single-quoted) state (http://www.w3.org/TR/html52/syntax.html#doctype-public-identifier-single-quoted-state)
             /// </summary>
-            DocTypePublicIdentifierSingleQuoted = 59,
+            DocTypePublicIdentifierSingleQuoted = 60,
 
             /// <summary>
             /// After DOCTYPE public identifier state
-            /// See: 8.2.4.60 After DOCTYPE public identifier state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.61 After DOCTYPE public identifier state (http://www.w3.org/TR/html52/syntax.html#after-doctype-public-identifier-state)
             /// </summary>
-            AfterDocTypePublicIdentifier = 60,
+            AfterDocTypePublicIdentifier = 61,
 
             /// <summary>
             /// Between DOCTYPE public and system identifiers state
-            /// See: 8.2.4.61 Between DOCTYPE public and system identifiers state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.62 Between DOCTYPE public and system identifiers state (http://www.w3.org/TR/html52/syntax.html#between-doctype-public-and-system-identifiers-state)
             /// </summary>
-            BetweenDocTypePublicAndSystemIdentifiers = 61,
+            BetweenDocTypePublicAndSystemIdentifiers = 62,
 
             /// <summary>
             /// After DOCTYPE system keyword state
-            /// See: 8.2.4.62 After DOCTYPE system keyword state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.63 After DOCTYPE system keyword state (http://www.w3.org/TR/html52/syntax.html#after-doctype-system-keyword-state)
             /// </summary>
-            AfterDocTypeSystemKeyword = 62,
+            AfterDocTypeSystemKeyword = 63,
 
             /// <summary>
             /// Before DOCTYPE system identifier state
-            /// See: 8.2.4.63 Before DOCTYPE system identifier state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.64 Before DOCTYPE system identifier state (http://www.w3.org/TR/html52/syntax.html#before-doctype-system-identifier-state)
             /// </summary>
-            BeforeDocTypeSystemIdentifier = 63,
+            BeforeDocTypeSystemIdentifier = 64,
 
             /// <summary>
             /// DOCTYPE system identifier (double-quoted) state
-            /// See: 8.2.4.64 DOCTYPE system identifier (double-quoted) state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.65 DOCTYPE system identifier (double-quoted) state (http://www.w3.org/TR/html52/syntax.html#doctype-system-identifier-double-quoted-state)
             /// </summary>
-            DocTypeSystemIdentifierDoubleQuoted = 64,
+            DocTypeSystemIdentifierDoubleQuoted = 65,
 
             /// <summary>
             /// DOCTYPE system identifier (single-quoted) state
-            /// See: 8.2.4.65 DOCTYPE system identifier (single-quoted) state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.66 DOCTYPE system identifier (single-quoted) state (http://www.w3.org/TR/html52/syntax.html#doctype-system-identifier-single-quoted-state)
             /// </summary>
-            DocTypeSystemIdentifierSingleQuoted = 65,
+            DocTypeSystemIdentifierSingleQuoted = 66,
 
             /// <summary>
             /// After DOCTYPE system identifier state
-            /// See: 8.2.4.66 After DOCTYPE system identifier state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.67 After DOCTYPE system identifier state (http://www.w3.org/TR/html52/syntax.html#after-doctype-system-identifier-state)
             /// </summary>
-            AfterDocTypeSystemIdentifier = 66,
+            AfterDocTypeSystemIdentifier = 67,
 
             /// <summary>
             /// Bogus DOCTYPE state
-            /// See: 8.2.4.67 Bogus DOCTYPE state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.68 Bogus DOCTYPE state (http://www.w3.org/TR/html52/syntax.html#bogus-doctype-state)
             /// </summary>
-            BogusDocType = 67,
+            BogusDocType = 68,
 
             /// <summary>
             /// CDATA section state
-            /// See: 8.2.4.68 CDATA section state (http://www.w3.org/TR/html5/syntax.html#tokenization)
+            /// See: 8.2.4.69 CDATA section state (http://www.w3.org/TR/html52/syntax.html#CDATA-section-state)
             /// </summary>
-            CDataSection = 68
+            CDataSection = 69,
+
+            /// <summary>
+            /// CDATA section bracket state
+            /// See: 8.2.4.70 CDATA section bracket state (http://www.w3.org/TR/html52/syntax.html#CDATA-section-bracket-state)
+            /// </summary>
+            CDataSectionBracket = 70,
+
+            /// <summary>
+            /// CDATA section end state
+            /// See: 8.2.4.71 CDATA section end state (http://www.w3.org/TR/html52/syntax.html#CDATA-section-end-state)
+            /// </summary>
+            CDataSectionEnd = 71,
+
+            /// <summary>
+            /// Character reference state
+            /// See: 8.2.4.72 Character reference state (http://www.w3.org/TR/html52/syntax.html#character-reference-state)
+            /// </summary>
+            CharacterReference = 72,
+
+            /// <summary>
+            /// Numeric character reference state
+            /// See: 8.2.4.73 Numeric character reference state (http://www.w3.org/TR/html52/syntax.html#numeric-character-reference-state)
+            /// </summary>
+            NumericCharacterReference = 73,
+
+            /// <summary>
+            /// Hexadecimal character reference start state
+            /// See: 8.2.4.74 Hexadecimal character reference start state (http://www.w3.org/TR/html52/syntax.html#hexadecimal-character-reference-start-state)
+            /// </summary>
+            HexadecimalCharacterReferenceStart = 74,
+
+            /// <summary>
+            /// Decimal character reference start state
+            /// See: 8.2.4.75 Decimal character reference start state (http://www.w3.org/TR/html52/syntax.html#decimal-character-reference-start-state)
+            /// </summary>
+            DecimalCharacterReferenceStart = 75,
+
+            /// <summary>
+            /// Hexadecimal character reference state
+            /// See: 8.2.4.76 Hexadecimal character reference state (http://www.w3.org/TR/html52/syntax.html#hexadecimal-character-reference-state)
+            /// </summary>
+            HexadecimalCharacterReference = 76,
+
+            /// <summary>
+            /// Decimal character reference state
+            /// See: 8.2.4.77 Decimal character reference state (http://www.w3.org/TR/html52/syntax.html#decimal-character-reference-state)
+            /// </summary>
+            DecimalCharacterReference = 77,
+
+            /// <summary>
+            /// Numeric character reference end state
+            /// See: 8.2.4.78 Numeric character reference end state (http://www.w3.org/TR/html52/syntax.html#numeric-character-reference-end-state)
+            /// </summary>
+            NumericCharacterReferenceEnd = 78,
+
+            /// <summary>
+            /// Character reference end state
+            /// See: 8.2.4.79 Character reference end state (http://www.w3.org/TR/html52/syntax.html#character-reference-end-state)
+            /// </summary>
+            CharacterReferenceEnd = 79
         }
+
+        #region Public Interface
 
         public Tokenizer(HtmlStream stream)
         {
             Contract.RequiresNotNull(stream, nameof(stream));
 
             this.HtmlStream = stream;
+            this.CurrentLine = 1;
+            this.CurrentColumn = 1;
         }
-
-        #region Public Interface
 
         public Token LastToken
         {
@@ -488,7 +556,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private readonly Queue<Action> EmitTokenQueue = new Queue<Action>();
 
         /// <summary>
-        /// Used by the tree parsing stage to inform the tokinzer that a
+        /// Used by the tree parsing stage to inform the tokenizer that a
         /// self-closing tag has been acknowledged.
         /// </summary>
         public void AcknowledgeSelfClosingTag()
@@ -520,14 +588,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 case StateEnum.Data:
                     this.HandleStateData();
                     break;
-                case StateEnum.CharacterReferenceInData:
-                    this.HandleStateCharacterReferenceInData();
-                    break;
                 case StateEnum.RcData:
                     this.HandleStateRcData();
-                    break;
-                case StateEnum.CharacterReferenceInRcData:
-                    this.HandleStateCharacterReferenceInRcData();
                     break;
                 case StateEnum.RawText:
                     this.HandleStateRawText();
@@ -637,9 +699,6 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 case StateEnum.AttributeValueUnquoted:
                     this.HandleStateAttributeValueUnquoted();
                     break;
-                case StateEnum.CharacterReferenceInAttributeValue:
-                    this.HandleStateCharacterReferenceInAttributeValue();
-                    break;
                 case StateEnum.AfterAttributeValueQuoted:
                     this.HandleStateAfterAttributeValueQuoted();
                     break;
@@ -660,6 +719,18 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     break;
                 case StateEnum.Comment:
                     this.HandleStateComment();
+                    break;
+                case StateEnum.CommentLessThanSign:
+                    this.HandleStateCommentLessThanSign();
+                    break;
+                case StateEnum.CommentLessThanSignBang:
+                    this.HandleStateCommentLessThanSignBang();
+                    break;
+                case StateEnum.CommentLessThanSignBangDash:
+                    this.HandleStateCommentLessThanSignBangDash();
+                    break;
+                case StateEnum.CommentLessThanSignBangDashDash:
+                    this.HandleStateCommentLessThanSignBangDashDash();
                     break;
                 case StateEnum.CommentEndDash:
                     this.HandleStateCommentEndDash();
@@ -721,6 +792,36 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 case StateEnum.CDataSection:
                     this.HandleStateCDataSection();
                     break;
+                case StateEnum.CDataSectionBracket:
+                    this.HandleStateCDataSectionBracket();
+                    break;
+                case StateEnum.CDataSectionEnd:
+                    this.HandleStateCDataSectionEnd();
+                    break;
+                case StateEnum.CharacterReference:
+                    this.HandleStateCharacterReference();
+                    break;
+                case StateEnum.NumericCharacterReference:
+                    this.HandleStateNumericCharacterReference();
+                    break;
+                case StateEnum.HexadecimalCharacterReferenceStart:
+                    this.HandleStateHexadecimalCharacterReferenceStart();
+                    break;
+                case StateEnum.DecimalCharacterReferenceStart:
+                    this.HandleStateDecimalCharacterReferenceStart();
+                    break;
+                case StateEnum.HexadecimalCharacterReference:
+                    this.HandleStateHexadecimalCharacterReference();
+                    break;
+                case StateEnum.DecimalCharacterReference:
+                    this.HandleStateDecimalCharacterReference();
+                    break;
+                case StateEnum.NumericCharacterReferenceEnd:
+                    this.HandleStateNumericCharacterReferenceEnd();
+                    break;
+                case StateEnum.CharacterReferenceEnd:
+                    this.HandleStateCharacterReferenceEnd();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -728,15 +829,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
         internal void SwitchTo(StateEnum state)
         {
-            switch (state)
+            switch (this.State)
             {
                 case StateEnum.Data:
                     break;
-                case StateEnum.CharacterReferenceInData:
-                    break;
                 case StateEnum.RcData:
-                    break;
-                case StateEnum.CharacterReferenceInRcData:
                     break;
                 case StateEnum.RawText:
                     break;
@@ -822,17 +919,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     break;
                 case StateEnum.AttributeValueUnquoted:
                     break;
-                case StateEnum.CharacterReferenceInAttributeValue:
-                    break;
                 case StateEnum.AfterAttributeValueQuoted:
                     break;
                 case StateEnum.SelfClosingStartTag:
                     break;
                 case StateEnum.BogusComment:
-                    // ... a comment token whose data is the concatenation of all the characters starting
-                    // from and including the character that caused the state machine to switch into the bogus comment state ...
-                    this.CommentData.Clear();
-                    this.CommentData.Append((this.CurrentInputCharacter == Characters.Null) ? Characters.ReplacementCharacter : this.CurrentInputCharacter);
                     break;
                 case StateEnum.MarkupDeclarationOpen:
                     break;
@@ -841,6 +932,14 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 case StateEnum.CommentStartDash:
                     break;
                 case StateEnum.Comment:
+                    break;
+                case StateEnum.CommentLessThanSign:
+                    break;
+                case StateEnum.CommentLessThanSignBang:
+                    break;
+                case StateEnum.CommentLessThanSignBangDash:
+                    break;
+                case StateEnum.CommentLessThanSignBangDashDash:
                     break;
                 case StateEnum.CommentEndDash:
                     break;
@@ -882,6 +981,26 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     break;
                 case StateEnum.CDataSection:
                     break;
+                case StateEnum.CDataSectionBracket:
+                    break;
+                case StateEnum.CDataSectionEnd:
+                    break;
+                case StateEnum.CharacterReference:
+                    break;
+                case StateEnum.NumericCharacterReference:
+                    break;
+                case StateEnum.HexadecimalCharacterReferenceStart:
+                    break;
+                case StateEnum.DecimalCharacterReferenceStart:
+                    break;
+                case StateEnum.HexadecimalCharacterReference:
+                    break;
+                case StateEnum.DecimalCharacterReference:
+                    break;
+                case StateEnum.NumericCharacterReferenceEnd:
+                    break;
+                case StateEnum.CharacterReferenceEnd:
+                    break;
                 default:
                     break;
             }
@@ -899,6 +1018,18 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         #region Character reading related logic
 
         /// <summary>
+        /// Current line. This is used for diagnostic purposes.
+        /// This is not 100% precise.
+        /// </summary>
+        internal int CurrentLine { get; private set; }
+
+        /// <summary>
+        /// Current line. This is used for diagnostic purposes.
+        /// This is not 100% precise.
+        /// </summary>
+        internal int CurrentColumn { get; private set; }
+
+        /// <summary>
         /// The source HTML stream, where we read characters from.
         /// </summary>
         internal readonly HtmlStream HtmlStream;
@@ -914,36 +1045,133 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private char[] CharactersToReconsume = new char[10];
 
         /// <summary>
-        /// Current count of valid characters in <see cref="CharactersToReconsume"/>.
+        /// Current index of the characters in <see cref="CharactersToReconsume"/>.
         /// </summary>
-        private int CharactersToReconsumeCount = 0;
+        private int CharactersToReconsumeIndex = -1;
 
         /// <summary>
-        /// Buffer for constructing temporary strings (used by misc states).
+        /// Certain states also use a temporary buffer to track progress.
+        /// See: http://www.w3.org/TR/html52/syntax.html#temporary-buffer.
         /// </summary>
+        /// <remarks>
+        /// This is used by:
+        /// 8.2.4.9 RCDATA less-than sign state
+        /// 8.2.4.11 RCDATA end tag name state
+        /// 8.2.4.12 RAWTEXT less-than sign state
+        /// 8.2.4.14 RAWTEXT end tag name state
+        /// 8.2.4.15 Script data less-than sign state
+        /// 8.2.4.17 Script data end tag name state
+        /// 8.2.4.23 Script data escaped less-than sign state
+        /// 8.2.4.25 Script data escaped end tag name state
+        /// 8.2.4.26 Script data double escape start state
+        /// 8.2.4.30 Script data double escaped less-than sign state
+        /// 8.2.4.31 Script data double escape end state
+        ///
+        /// 8.2.4.72 Character reference state
+        /// 8.2.4.73 Numeric character reference state
+        /// 8.2.4.78 Numeric character reference end state
+        /// 8.2.4.79 Character reference end state
+        /// </remarks>
         private readonly StringBuilder TempBuffer = new StringBuilder(1024);
+
+        /// <summary>
+        /// The <see cref="StateEnum.CharacterReference"/> state uses a return state to return to the state it was invoked from.
+        /// See: http://www.w3.org/TR/html52/syntax.html#return-state
+        /// </summary>
+        private StateEnum ReturnState;
 
         private char ConsumeNextInputCharacter()
         {
-            if (this.CharactersToReconsumeCount > 0)
+            // Most states consume a single character, which may have various side-effects, 
+            // and either switches the state machine to a new state to reconsume the current input character, 
+            // or switches it to a new state to consume the next character, or stays in the same state to consume the next character.
+            //
+            // When a state says to reconsume a matched character in a specified state, that means to switch to that state,
+            // but when it attempts to consume the next input character, provide it with the current input character instead.
+            // See: http://www.w3.org/TR/html52/syntax.html#tokenization
+            
+            /*
+            8.2.2.5 Preprocessing the input stream
+            See: http://www.w3.org/TR/2017/CR-html51-20170620/syntax.html#preprocessing-the-input-stream
+
+            The input stream consists of the characters pushed into it as the input byte stream is
+            decoded or from the various APIs that directly manipulate the input stream.
+
+            One leading U+FEFF BYTE ORDER MARK character must be ignored if any are present in the input stream.
+
+            NOTE: The requirement to strip a U+FEFF BYTE ORDER MARK character regardless of whether that character
+            was used to determine the byte order is a willful violation of Unicode, motivated by a desire to increase the
+            resilience of user agents in the face of naïve transcoders.
+
+            IMPLEMENTATION NOTE: Stripping BOMs is done by the HTML stream.
+  
+            Any occurrences of any characters in the ranges U+0001 to U+0008, U+000E to U+001F, U+007F to U+009F,
+            U+FDD0 to U+FDEF, and characters U+000B, U+FFFE, U+FFFF, U+1FFFE, U+1FFFF, U+2FFFE, U+2FFFF, U+3FFFE,
+            U+3FFFF, U+4FFFE, U+4FFFF, U+5FFFE, U+5FFFF, U+6FFFE, U+6FFFF, U+7FFFE, U+7FFFF, U+8FFFE, U+8FFFF,
+            U+9FFFE, U+9FFFF, U+AFFFE, U+AFFFF, U+BFFFE, U+BFFFF, U+CFFFE, U+CFFFF, U+DFFFE, U+DFFFF, U+EFFFE,
+            U+EFFFF, U+FFFFE, U+FFFFF, U+10FFFE, and U+10FFFF are parse errors. These are all control characters or
+            permanently undefined Unicode characters (noncharacters).
+
+            IMPLEMENTATION NOTE: Too expensive. We don't check characters. It's only a parse error and corrected by the parser.
+            
+            Any character that is a not a Unicode character, i.e. any isolated surrogate, is a parse error.
+            (These can only find their way into the input stream via script APIs such as document.write().)
+
+            IMPLEMENTATION NOTE: Checking for surrogates or characters over U+10000 is too expensive. We don't!
+
+            "CR" (U+000D) characters and "LF" (U+000A) characters are treated specially. All CR characters must be converted
+            to LF characters, and any LF characters that immediately follow a CR character must be ignored. Thus, newlines in
+            HTML DOMs are represented by LF characters, and there are never any CR characters in the input to the tokenization stage.
+            */
+
+            char ch = this.ConsumeNextInputCharacterWorker();
+            if (ch == Characters.Cr)
             {
-                // Take the first character
-                this.CurrentInputCharacter = this.CharactersToReconsume[0];
-
-                // Decrement the count in the list
-                this.CharactersToReconsumeCount--;
-
-                // And shift the remaining characters to the left (if anything left in the array).
-                // We may need to optimize this algorithm if the performance penalty is too high.
-                if (this.CharactersToReconsumeCount > 0)
-                    Array.Copy(this.CharactersToReconsume, 1, this.CharactersToReconsume, 0, this.CharactersToReconsumeCount);
-
-                return this.CurrentInputCharacter;
+                // Is the CR followed by an LF? If so, just skip the CR and use the LF instead.
+                ch = this.HtmlStream.ReadChar();
+                if (ch != Characters.Lf)
+                {
+                    // If not, put back the not-LF character and pretend the CR is an LF.
+                    // NB: CharactersToReconsume is empty at this point.
+                    // NB: We may return a CR for re-consumption, but this will be handled next time.
+                    this.CharactersToReconsume[0] = ch;
+                    this.CharactersToReconsumeIndex = 0;
+                    ch = Characters.Lf;
+                }
             }
 
-            char ch = this.HtmlStream.ReadChar();
+            if (ch == Characters.Lf)
+            {
+                this.CurrentLine++;
+                this.CurrentColumn = 1;
+            }
+            else
+            {
+                this.CurrentColumn++;
+            }
+
             this.CurrentInputCharacter = ch;
             return ch;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private char ConsumeNextInputCharacterWorker()
+        {
+            if (this.CharactersToReconsumeIndex >= 0)
+            {
+                // Take the first character
+                char ch = this.CharactersToReconsume[this.CharactersToReconsumeIndex];
+
+                // Decrement the index in the list
+                this.CharactersToReconsumeIndex--;
+                
+                return ch;
+            }
+            else
+            {
+                char ch = this.HtmlStream.ReadChar();
+                return ch;
+            }
         }
 
         private string ConsumeNextInputCharacters(int count, bool replaceNulls)
@@ -966,26 +1194,50 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             return new string(buffer);
         }
 
-        private void ReconsumeInputCharacter()
+        /// <summary>
+        /// When a state says to reconsume a matched character in a specified state, that means to switch to that state,
+        /// but when it attempts to consume the next input character, provide it with the current input character instead.
+        /// See: http://www.w3.org/TR/html52/syntax.html#reconsume
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ReconsumeIn(StateEnum state)
         {
+            this.SwitchTo(state);
             this.ReconsumeInputCharacter(this.CurrentInputCharacter);
         }
 
+        /// <summary>
+        /// When a state says to reconsume a matched character in a specified state, that means to switch to that state,
+        /// but when it attempts to consume the next input character, provide it with the current input character instead.
+        /// See: http://www.w3.org/TR/html52/syntax.html#reconsume
+        /// </summary>
         private void ReconsumeInputCharacter(char ch)
         {
-            if (this.CharactersToReconsumeCount >= this.CharactersToReconsume.Length)
+            this.CharactersToReconsumeIndex++;
+            if (this.CharactersToReconsumeIndex >= this.CharactersToReconsume.Length)
                 Array.Resize(ref this.CharactersToReconsume, this.CharactersToReconsume.Length * 2);
-            this.CharactersToReconsume[this.CharactersToReconsumeCount] = ch;
-            this.CharactersToReconsumeCount++;
+            this.CharactersToReconsume[this.CharactersToReconsumeIndex] = ch;
+
+            if (ch == Characters.Lf)
+            {
+                this.CurrentLine--;
+                this.CurrentColumn = 1;
+            }
         }
 
+        /// <summary>
+        /// When a state says to reconsume a matched character in a specified state, that means to switch to that state,
+        /// but when it attempts to consume the next input character, provide it with the current input character instead.
+        /// See: http://www.w3.org/TR/html52/syntax.html#reconsume
+        /// </summary>
         private void ReconsumeInputCharacters(string chars)
         {
             if (String.IsNullOrEmpty(chars))
                 return;
 
-            foreach (char ch in chars)
-                this.ReconsumeInputCharacter(ch);
+            // NB: Must be pushed in reverse order, because this is a stack
+            for (int i = chars.Length - 1; i >= 0; i--)
+                this.ReconsumeInputCharacter(chars[i]);
         }
 
         #endregion
@@ -1181,17 +1433,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private readonly StringBuilder AttributeValue = new StringBuilder(32);
 
         /// <summary>
-        /// Used when parsing attribute values
-        /// </summary>
-        private char AdditionalAllowedChar = Characters.EOF;
-
-        /// <summary>
-        /// The attribute value state that switched into the CharacterReferenceInAttributeValue state.
-        /// </summary>
-        private StateEnum BeforeCharacterReferenceInAttributeValueState;
-
-        /// <summary>
-        /// Indicates that there's currenty a new attribute.
+        /// Indicates that there's currently a new attribute.
         /// </summary>
         private bool HasCurrentAttribute;
 
@@ -1199,7 +1441,6 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         {
             this.AddCurrentAttributeToList();
             this.HasCurrentAttribute = true;
-            this.AdditionalAllowedChar = Characters.EOF;
         }
 
         private void AddCurrentAttributeToList()
@@ -1265,9 +1506,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         {
             /*
             8.2.4.1 Data state
+            See: http://www.w3.org/TR/html52/syntax.html#tokenizer-data-state
+
             Consume the next input character:
                 U+0026 AMPERSAND (&)
-                    Switch to the character reference in data state.
+                    Set the return state to the data state. Switch to the character reference state.
                 "<" (U+003C)
                     Switch to the tag open state.
                 U+0000 NULL
@@ -1280,7 +1523,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             char ch = this.ConsumeNextInputCharacter();
             if (ch == Characters.Ampersand)
             {
-                this.SwitchTo(StateEnum.CharacterReferenceInData);
+                this.ReturnState = StateEnum.Data;
+                this.SwitchTo(StateEnum.CharacterReference);
             }
             else if (ch == '<')
             {
@@ -1302,41 +1546,15 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void HandleStateCharacterReferenceInData()
-        {
-            /*
-            8.2.4.2 Character reference in data state
-            Switch to the data state.
-            Attempt to consume a character reference, with no additional allowed character.
-            If nothing is returned, emit a U+0026 AMPERSAND character (&) token.
-            Otherwise, emit the character tokens that were returned.
-            */
-            this.SwitchTo(StateEnum.Data);
-            string ch = this.ConsumeCharacterReference(false);
-            if (ch == null)
-            {
-                this.EmitCharacter('&');
-            }
-            else if (ch.Length == 1)
-            {
-                this.EmitCharacter(ch[0]);
-            }
-            else
-            {
-                for (int i = 0; i < ch.Length; i++)
-                {
-                    this.EmitCharacter(ch[i]);
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void HandleStateRcData()
         {
             /*
-            Consume the next input character:
+            8.2.4.2 RCDATA state
+            See: http://www.w3.org/TR/html52/syntax.html#tokenizer-rcdata-state
+
+             Consume the next input character:
                 U+0026 AMPERSAND (&)
-                    Switch to the character reference in RCDATA state.
+                    Set the return state to the RCDATA state. Switch to the character reference state.
                 "<" (U+003C)
                     Switch to the RCDATA less-than sign state.
                 U+0000 NULL
@@ -1349,7 +1567,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             char ch = this.ConsumeNextInputCharacter();
             if (ch == Characters.Ampersand)
             {
-                this.SwitchTo(StateEnum.CharacterReferenceInRcData);
+                this.ReturnState = StateEnum.RcData;
+                this.SwitchTo(StateEnum.CharacterReference);
             }
             else if (ch == '<')
             {
@@ -1371,39 +1590,12 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void HandleStateCharacterReferenceInRcData()
-        {
-            /*
-            8.2.4.4 Character reference in RCDATA state
-            Switch to the RCDATA state.
-            Attempt to consume a character reference, with no additional allowed character.
-            If nothing is returned, emit a U+0026 AMPERSAND character (&) token.
-            Otherwise, emit the character tokens that were returned.
-            */
-            this.SwitchTo(StateEnum.RcData);
-            string ch = this.ConsumeCharacterReference(false);
-            if (ch == null)
-            {
-                this.EmitCharacter('&');
-            }
-            else if (ch.Length == 1)
-            {
-                this.EmitCharacter(ch[0]);
-            }
-            else
-            {
-                for (int i = 0; i < ch.Length; i++)
-                {
-                    this.EmitCharacter(ch[i]);
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void HandleStateRawText()
         {
             /*
-            8.2.4.5 RAWTEXT state
+            8.2.4.3 RAWTEXT state
+            See: http://www.w3.org/TR/html52/syntax.html#tokenizer-rawtext-state
+
             Consume the next input character:
                 "<" (U+003C)
                     Switch to the RAWTEXT less-than sign state.
@@ -1438,7 +1630,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptData()
         {
             /*
-            8.2.4.6 Script data state
+            8.2.4.4 Script data state
+            See: http://www.w3.org/TR/html52/syntax.html#tokenizer-script-data-state
+
             Consume the next input character:
                 "<" (U+003C)
                     Switch to the script data less-than sign state.
@@ -1473,7 +1667,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStatePlainText()
         {
             /*
-            8.2.4.7 PLAINTEXT state
+            8.2.4.5 PLAINTEXT state
+            See: http://www.w3.org/TR/html52/syntax.html#plaintext-state
+
             Consume the next input character:
                 U+0000 NULL
                     Parse error. Emit a U+FFFD REPLACEMENT CHARACTER character token.
@@ -1502,24 +1698,23 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateTagOpen()
         {
             /*
-            8.2.4.8 Tag open state
+            8.2.4.6 Tag open state
+            See: http://www.w3.org/TR/html52/syntax.html#tokenizer-tag-open-state
+
             Consume the next input character:
                 "!" (U+0021)
                     Switch to the markup declaration open state.
                 "/" (U+002F)
                     Switch to the end tag open state.
-                Uppercase ASCII letter
-                    Create a new start tag token, set its tag name to the lowercase version of the current input character
-                    (add 0x0020 to the character's code point), then switch to the tag name state. (Don't emit the token
-                    yet; further details will be filled in before it is emitted.)
-                Lowercase ASCII letter
-                    Create a new start tag token, set its tag name to the current input character, then switch to the tag
-                    name state. (Don't emit the token yet; further details will be filled in before it is emitted.)
+                ASCII letter 
+                    Create a new start tag token, set its tag name to the empty string. 
+                    Reconsume in the tag name state.
                 "?" (U+003F)
-                    Parse error. Switch to the bogus comment state.
+                    Parse error. Create a comment token whose data is the empty string. 
+                    Reconsume in the bogus comment state.
                 Anything else
-                    Parse error. Switch to the data state. Emit a U+003C LESS-THAN SIGN character token. Reconsume the
-                    current input character.
+                    Parse error.Emit a U+003C LESS-THAN SIGN character token. 
+                    Reconsume in the data state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '!')
@@ -1530,31 +1725,24 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             {
                 this.SwitchTo(StateEnum.EndTagOpen);
             }
-            else if (ch.IsUppercaseAsciiLetter())
+            else if (ch.IsAsciiLetter())
             {
                 this.NewStartTag();
                 this.TagName.Clear();
-                this.TagName.Append(ch.ToLowercaseAsciiLetter());
-                this.SwitchTo(StateEnum.TagName);
-            }
-            else if (ch.IsLowercaseAsciiLetter())
-            {
-                this.NewStartTag();
-                this.TagName.Clear();
-                this.TagName.Append(ch);
-                this.SwitchTo(StateEnum.TagName);
+                this.ReconsumeIn(StateEnum.TagName);
             }
             else if (ch == '?')
             {
                 this.InformParseError(Parsing.ParseError.InvalidTag);
-                this.SwitchTo(StateEnum.BogusComment);
+                this.NewComment();
+                this.CommentData.Clear();
+                this.ReconsumeIn(StateEnum.BogusComment);
             }
             else
             {
                 this.InformParseError(Parsing.ParseError.InvalidTag);
-                this.SwitchTo(StateEnum.Data);
                 this.EmitCharacter('<');
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.Data);
             }
         }
 
@@ -1562,37 +1750,27 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateEndTagOpen()
         {
             /*
-            8.2.4.9 End tag open state
+            8.2.4.7 End tag open state
+            See: http://www.w3.org/TR/html52/syntax.html#end-tag-open-state
+
             Consume the next input character:
-                Uppercase ASCII letter
-                    Create a new end tag token, set its tag name to the lowercase version of the current input character
-                    (add 0x0020 to the character's code point), then switch to the tag name state. (Don't emit the token
-                    yet; further details will be filled in before it is emitted.)
-                Lowercase ASCII letter
-                    Create a new end tag token, set its tag name to the current input character, then switch to the tag
-                    name state. (Don't emit the token yet; further details will be filled in before it is emitted.)
+                ASCII letter 
+                    Create a new end tag token, set its tag name to the empty string. 
+                    Reconsume in the tag name state.
                 ">" (U+003E)
                     Parse error. Switch to the data state.
                 EOF
-                    Parse error. Switch to the data state. Emit a U+003C LESS-THAN SIGN character token and a U+002F SOLIDUS
-                    character token. Reconsume the EOF character.
+                    Parse error. Emit a U+003C LESS-THAN SIGN character token, 
+                    a U+002F SOLIDUS character token and an end-of-file token.
                 Anything else
                     Parse error. Switch to the bogus comment state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsUppercaseAsciiLetter())
+            if (ch.IsAsciiLetter())
             {
                 this.NewEndTag();
                 this.TagName.Clear();
-                this.TagName.Append(ch.ToLowercaseAsciiLetter());
-                this.SwitchTo(StateEnum.TagName);
-            }
-            else if (ch.IsLowercaseAsciiLetter())
-            {
-                this.NewEndTag();
-                this.TagName.Clear();
-                this.TagName.Append(ch);
-                this.SwitchTo(StateEnum.TagName);
+                this.ReconsumeIn(StateEnum.TagName);
             }
             else if (ch == '>')
             {
@@ -1602,10 +1780,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidTag);
-                this.SwitchTo(StateEnum.Data);
                 this.EmitCharacter('<');
                 this.EmitCharacter('\u002F');
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -1618,7 +1795,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateTagName()
         {
             /*
-            8.2.4.10 Tag name state
+            8.2.4.8 Tag name state
+            See: http://www.w3.org/TR/html52/syntax.html#tag-name-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -1635,7 +1814,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 U+0000 NULL
                     Parse error. Append a U+FFFD REPLACEMENT CHARACTER character to the current tag token's tag name.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
                     Append the current input character to the current tag token's tag name.
             */
@@ -1665,7 +1844,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.PrematureEndOfFile);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -1677,13 +1856,14 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateRcDataLessThanSign()
         {
             /*
-            8.2.4.11 RCDATA less-than sign state
+            8.2.4.9 RCDATA less-than sign state
+            See: http://www.w3.org/TR/html52/syntax.html#RCDATA-less-than-sign-state
+
             Consume the next input character:
                 "/" (U+002F)
                     Set the temporary buffer to the empty string. Switch to the RCDATA end tag open state.
                 Anything else
-                    Switch to the RCDATA state. Emit a U+003C LESS-THAN SIGN character token. Reconsume the current
-                    input character.
+                    Emit a U+003C LESS-THAN SIGN character token. Reconsume in the RCDATA state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '/')
@@ -1693,9 +1873,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.RcData);
                 this.EmitCharacter('<');
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.RcData);
             }
         }
 
@@ -1703,44 +1882,29 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateRcDataEndTagOpen()
         {
             /*
-            8.2.4.12 RCDATA end tag open state
+            8.2.4.10 RCDATA end tag open state
+            See: http://www.w3.org/TR/html52/syntax.html#RCDATA-end-tag-open-state
+
             Consume the next input character:
-                Uppercase ASCII letter
-                    Create a new end tag token, and set its tag name to the lowercase version of the current input
-                    character (add 0x0020 to the character's code point). Append the current input character to the
-                    temporary buffer. Finally, switch to the RCDATA end tag name state. (Don't emit the token yet;
-                    further details will be filled in before it is emitted.)
-                Lowercase ASCII letter
-                    Create a new end tag token, and set its tag name to the current input character. Append the current
-                    input character to the temporary buffer. Finally, switch to the RCDATA end tag name state. (Don't emit
-                    the token yet; further details will be filled in before it is emitted.)
+                ASCII letter 
+                    Create a new end tag token, set its tag name to the empty string. 
+                    Reconsume in RCDATA end tag name state.
                 Anything else
-                    Switch to the RCDATA state. Emit a U+003C LESS-THAN SIGN character token and a U+002F SOLIDUS character
-                    token. Reconsume the current input character.
+                    Emit a U+003C LESS-THAN SIGN character token and a U+002F SOLIDUS
+                    character token. Reconsume in the RCDATA state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsUppercaseAsciiLetter())
+            if (ch.IsAsciiLetter())
             {
                 this.NewEndTag();
                 this.TagName.Clear();
-                this.TagName.Append(ch.ToLowercaseAsciiLetter());
-                this.TempBuffer.Append(ch);
-                this.SwitchTo(StateEnum.RcDataEndTagName);
-            }
-            else if (ch.IsLowercaseAsciiLetter())
-            {
-                this.NewEndTag();
-                this.TagName.Clear();
-                this.TagName.Append(ch);
-                this.TempBuffer.Append(ch);
-                this.SwitchTo(StateEnum.RcDataEndTagName);
+                this.ReconsumeIn(StateEnum.RcDataEndTagName);
             }
             else
             {
-                this.SwitchTo(StateEnum.RcData);
                 this.EmitCharacter('<');
                 this.EmitCharacter('\u002F');
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.RcData);
             }
         }
 
@@ -1748,7 +1912,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateRcDataEndTagName()
         {
             /*
-            8.2.4.13 RCDATA end tag name state
+            8.2.4.11 RCDATA end tag name state
+            See: http://www.w3.org/TR/html52/syntax.html#RCDATA-end-tag-name-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -1769,9 +1935,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Append the current input character to the current tag token's tag name. Append the current input
                     character to the temporary buffer.
                 Anything else
-                    Switch to the RCDATA state. Emit a U+003C LESS-THAN SIGN character token, a U+002F SOLIDUS character
-                    token, and a character token for each of the characters in the temporary buffer (in the order they
-                    were added to the buffer). Reconsume the current input character.
+                    Emit a U+003C LESS-THAN SIGN character token, a U+002F SOLIDUS character token,
+                    and a character token for each of the characters in the temporary buffer
+                    (in the order they were added to the buffer). Reconsume in the RCDATA state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsSpaceCharacter() && this.IsCurrentEndTagAppropriateEndTag())
@@ -1799,12 +1965,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.RcData);
                 this.EmitCharacter('<');
                 this.EmitCharacter('\u002F');
                 foreach (char c in this.TempBuffer.ToString())
                     this.EmitCharacter(c);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.RcData);
             }
         }
 
@@ -1812,13 +1977,14 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateRawTextLessThanSign()
         {
             /*
-            8.2.4.14 RAWTEXT less-than sign state
+            8.2.4.12 RAWTEXT less-than sign state
+            See: http://www.w3.org/TR/html52/syntax.html#rawtext-less-than-sign-state
+
             Consume the next input character:
                 "/" (U+002F)
                     Set the temporary buffer to the empty string. Switch to the RAWTEXT end tag open state.
                 Anything else
-                    Switch to the RAWTEXT state. Emit a U+003C LESS-THAN SIGN character token. Reconsume the
-                    current input character.
+                    Emit a U+003C LESS-THAN SIGN character token. Reconsume in the RAWTEXT state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '/')
@@ -1828,9 +1994,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.RawText);
                 this.EmitCharacter('<');
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.RawText);
             }
         }
 
@@ -1838,44 +2003,29 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateRawTextEndTagOpen()
         {
             /*
-            8.2.4.15 RAWTEXT end tag open state
+            8.2.4.13 RAWTEXT end tag open state
+            See: http://www.w3.org/TR/html52/syntax.html#rawtext-end-tag-open-state
+
             Consume the next input character:
-                Uppercase ASCII letter
-                    Create a new end tag token, and set its tag name to the lowercase version of the current input
-                    character (add 0x0020 to the character's code point). Append the current input character to the
-                    temporary buffer. Finally, switch to the RAWTEXT end tag name state. (Don't emit the token yet;
-                    further details will be filled in before it is emitted.)
-                Lowercase ASCII letter
-                    Create a new end tag token, and set its tag name to the current input character. Append the current
-                    input character to the temporary buffer. Finally, switch to the RAWTEXT end tag name state.
-                    (Don't emit the token yet; further details will be filled in before it is emitted.)
+                ASCII letter 
+                    Create a new end tag token, set its tag name to the empty string. 
+                    Reconsume in the RAWTEXT end tag name state.
                 Anything else
-                    Switch to the RAWTEXT state. Emit a U+003C LESS-THAN SIGN character token and a U+002F SOLIDUS
-                    character token. Reconsume the current input character.
+                    Emit a U+003C LESS-THAN SIGN character token and a U+002F SOLIDUS
+                    character token. Reconsume in the RAWTEXT state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsUppercaseAsciiLetter())
+            if (ch.IsAsciiLetter())
             {
                 this.NewEndTag();
                 this.TagName.Clear();
-                this.TagName.Append(ch.ToLowercaseAsciiLetter());
-                this.TempBuffer.Append(ch);
-                this.SwitchTo(StateEnum.RawTextEndTagName);
-            }
-            else if (ch.IsLowercaseAsciiLetter())
-            {
-                this.NewEndTag();
-                this.TagName.Clear();
-                this.TagName.Append(ch);
-                this.TempBuffer.Append(ch);
-                this.SwitchTo(StateEnum.RawTextEndTagName);
+                this.ReconsumeIn(StateEnum.RawTextEndTagName);
             }
             else
             {
-                this.SwitchTo(StateEnum.RawText);
                 this.EmitCharacter('<');
                 this.EmitCharacter('\u002F');
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.RawText);
             }
         }
 
@@ -1883,7 +2033,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateRawTextEndTagName()
         {
             /*
-            8.2.4.16 RAWTEXT end tag name state
+            8.2.4.14 RAWTEXT end tag name state
+            See: http://www.w3.org/TR/html52/syntax.html#rawtext-end-tag-name-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -1904,9 +2056,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Append the current input character to the current tag token's tag name. Append the current input
                     character to the temporary buffer.
                 Anything else
-                    Switch to the RAWTEXT state. Emit a U+003C LESS-THAN SIGN character token, a U+002F SOLIDUS character
-                    token, and a character token for each of the characters in the temporary buffer (in the order they
-                    were added to the buffer). Reconsume the current input character.
+                    Emit a U+003C LESS-THAN SIGN character token, a U+002F SOLIDUS character token,
+                    and a character token for each of the characters in the temporary buffer
+                    (in the order they were added to the buffer). Reconsume in the RAWTEXT state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsSpaceCharacter() && this.IsCurrentEndTagAppropriateEndTag())
@@ -1934,12 +2086,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.RawText);
                 this.EmitCharacter('<');
                 this.EmitCharacter('\u002F');
                 foreach (char c in this.TempBuffer.ToString())
                     this.EmitCharacter(c);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.RawText);
             }
         }
 
@@ -1949,7 +2100,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataLessThanSign()
         {
             /*
-            8.2.4.17 Script data less-than sign state
+            8.2.4.15 Script data less-than sign state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-less-than-sign-state
+
             Consume the next input character:
                 "/" (U+002F)
                     Set the temporary buffer to the empty string. Switch to the script data end tag open state.
@@ -1957,8 +2110,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Switch to the script data escape start state. Emit a U+003C LESS-THAN SIGN character token and a
                     U+0021 EXCLAMATION MARK character token.
                 Anything else
-                    Switch to the script data state. Emit a U+003C LESS-THAN SIGN character token. Reconsume the current
-                    input character.
+                    Emit a U+003C LESS-THAN SIGN character token. Reconsume in the script data state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '/')
@@ -1974,9 +2126,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.ScriptData);
                 this.EmitCharacter('<');
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.ScriptData);
             }
         }
 
@@ -1984,44 +2135,29 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataEndTagOpen()
         {
             /*
-            8.2.4.18 Script data end tag open state
+            8.2.4.16 Script data end tag open state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-end-tag-open-state
+
             Consume the next input character:
-                Uppercase ASCII letter
-                    Create a new end tag token, and set its tag name to the lowercase version of the current input
-                    character (add 0x0020 to the character's code point). Append the current input character to the
-                    temporary buffer. Finally, switch to the script data end tag name state. (Don't emit the token yet;
-                    further details will be filled in before it is emitted.)
-                Lowercase ASCII letter
-                    Create a new end tag token, and set its tag name to the current input character. Append the current
-                    input character to the temporary buffer. Finally, switch to the script data end tag name state.
-                    (Don't emit the token yet; further details will be filled in before it is emitted.)
+                ASCII letter 
+                    Create a new end tag token, set its tag name to the empty string. 
+                    Reconsume in the script data end tag name state.
                 Anything else
-                    Switch to the script data state. Emit a U+003C LESS-THAN SIGN character token and a U+002F SOLIDUS
-                    character token. Reconsume the current input character.
+                    Emit a U+003C LESS-THAN SIGN character token and a U+002F SOLIDUS
+                    character token. Reconsume in the script data state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsUppercaseAsciiLetter())
+            if (ch.IsAsciiLetter())
             {
                 this.NewEndTag();
                 this.TagName.Clear();
-                this.TagName.Append(ch.ToLowercaseAsciiLetter());
-                this.TempBuffer.Append(ch);
-                this.SwitchTo(StateEnum.ScriptDataEndTagName);
-            }
-            else if (ch.IsLowercaseAsciiLetter())
-            {
-                this.NewEndTag();
-                this.TagName.Clear();
-                this.TagName.Append(ch);
-                this.TempBuffer.Append(ch);
-                this.SwitchTo(StateEnum.ScriptDataEndTagName);
+                this.ReconsumeIn(StateEnum.ScriptDataEndTagName);
             }
             else
             {
-                this.SwitchTo(StateEnum.ScriptData);
                 this.EmitCharacter('<');
                 this.EmitCharacter('\u002F');
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.ScriptData);
             }
         }
 
@@ -2029,7 +2165,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataEndTagName()
         {
             /*
-            8.2.4.19 Script data end tag name state
+            8.2.4.17 Script data end tag name state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-end-tag-name-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -2050,9 +2188,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Append the current input character to the current tag token's tag name. Append the current input
                     character to the temporary buffer.
                 Anything else
-                    Switch to the script data state. Emit a U+003C LESS-THAN SIGN character token, a U+002F SOLIDUS
-                    character token, and a character token for each of the characters in the temporary buffer (in the
-                    order they were added to the buffer). Reconsume the current input character.
+                    Emit a U+003C LESS-THAN SIGN character token, a U+002F SOLIDUS character token,
+                    and a character token for each of the characters in the temporary buffer
+                    (in the order they were added to the buffer). Reconsume in the script data state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsSpaceCharacter() && this.IsCurrentEndTagAppropriateEndTag())
@@ -2080,12 +2218,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.ScriptData);
                 this.EmitCharacter('<');
                 this.EmitCharacter('\u002F');
                 foreach (char c in this.TempBuffer.ToString())
                     this.EmitCharacter(c);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.ScriptData);
             }
         }
 
@@ -2093,12 +2230,14 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataEscapeStart()
         {
             /*
-            8.2.4.20 Script data escape start state
+            8.2.4.18 Script data escape start state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-escape-start-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Switch to the script data escape start dash state. Emit a U+002D HYPHEN-MINUS character token.
                 Anything else
-                    Switch to the script data state. Reconsume the current input character.
+                    Reconsume in the script data state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '-')
@@ -2108,8 +2247,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.ScriptData);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.ScriptData);
             }
         }
 
@@ -2117,12 +2255,14 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataEscapeStartDash()
         {
             /*
-            8.2.4.21 Script data escape start dash state
+            8.2.4.19 Script data escape start dash state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-escape-start-dash-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Switch to the script data escaped dash dash state. Emit a U+002D HYPHEN-MINUS character token.
                 Anything else
-                    Switch to the script data state. Reconsume the current input character.
+                Reconsume in the script data state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '-')
@@ -2132,8 +2272,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.ScriptData);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.ScriptData); 
             }
         }
 
@@ -2141,7 +2280,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataEscaped()
         {
             /*
-            8.2.4.22 Script data escaped state
+            8.2.4.20 Script data escaped state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-escaped-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Switch to the script data escaped dash state. Emit a U+002D HYPHEN-MINUS character token.
@@ -2150,7 +2291,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 U+0000 NULL
                     Parse error. Emit a U+FFFD REPLACEMENT CHARACTER character token.
                 EOF
-                    Switch to the data state. Parse error. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
                     Emit the current input character as a character token.
             */
@@ -2171,9 +2312,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.EOF)
             {
-                this.SwitchTo(StateEnum.ScriptData);
                 this.InformParseError(Parsing.ParseError.InvalidScript);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -2185,7 +2325,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataEscapedDash()
         {
             /*
-            8.2.4.23 Script data escaped dash state
+            8.2.4.21 Script data escaped dash state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-escaped-dash-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Switch to the script data escaped dash dash state. Emit a U+002D HYPHEN-MINUS character token.
@@ -2195,7 +2337,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Switch to the script data escaped state. Emit a U+FFFD REPLACEMENT CHARACTER
                     character token.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
                     Switch to the script data escaped state. Emit the current input character as a character token.
             */
@@ -2218,8 +2360,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidScript);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -2232,7 +2373,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataEscapedDashDash()
         {
             /*
-            8.2.4.24 Script data escaped dash dash state
+            8.2.4.22 Script data escaped dash dash state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-escaped-dash-dash-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Emit a U+002D HYPHEN-MINUS character token.
@@ -2244,7 +2387,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Switch to the script data escaped state. Emit a U+FFFD REPLACEMENT CHARACTER
                     character token.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
                     Switch to the script data escaped state. Emit the current input character as a character token.
             */
@@ -2271,8 +2414,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidScript);
-                this.SwitchTo(StateEnum.Data);
-                this.EmitCharacter(ch);
+                this.EmitEndOfFile();
             }
             else
             {
@@ -2285,22 +2427,18 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataEscapedLessThanSign()
         {
             /*
-            8.2.4.25 Script data escaped less-than sign state
+            8.2.4.23 Script data escaped less-than sign state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-escaped-less-than-sign-state
+
             Consume the next input character:
                 "/" (U+002F)
                     Set the temporary buffer to the empty string. Switch to the script data escaped end tag open state.
-                Uppercase ASCII letter
-                    Set the temporary buffer to the empty string. Append the lowercase version of the current input
-                    character (add 0x0020 to the character's code point) to the temporary buffer. Switch to the script
-                    data double escape start state. Emit a U+003C LESS-THAN SIGN character token and the current input
-                    character as a character token.
-                Lowercase ASCII letter
-                    Set the temporary buffer to the empty string. Append the current input character to the temporary
-                    buffer. Switch to the script data double escape start state. Emit a U+003C LESS-THAN SIGN character
-                    token and the current input character as a character token.
+                ASCII letter 
+                    Set the temporary buffer to the empty string. 
+                    Emit a U+003C LESS-THAN SIGN character token. 
+                    Reconsume in the script data double escape start state.
                 Anything else
-                    Switch to the script data escaped state. Emit a U+003C LESS-THAN SIGN character token. Reconsume the
-                    current input character.
+                    Emit a U+003C LESS-THAN SIGN character token. Reconsume in the script data escaped state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '/')
@@ -2308,27 +2446,16 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 this.TempBuffer.Clear();
                 this.SwitchTo(StateEnum.ScriptDataEscapedEndTagOpen);
             }
-            else if (ch.IsUppercaseAsciiLetter())
+            else if (ch.IsAsciiLetter())
             {
                 this.TempBuffer.Clear();
-                this.TempBuffer.Append(ch.ToLowercaseAsciiLetter());
-                this.SwitchTo(StateEnum.ScriptDataDoubleEscapeStart);
                 this.EmitCharacter('<');
-                this.EmitCharacter(ch);
-            }
-            else if (ch.IsLowercaseAsciiLetter())
-            {
-                this.TempBuffer.Clear();
-                this.TempBuffer.Append(ch);
-                this.SwitchTo(StateEnum.ScriptDataDoubleEscapeStart);
-                this.EmitCharacter('<');
-                this.EmitCharacter(ch);
+                this.ReconsumeIn(StateEnum.ScriptDataDoubleEscapeStart);
             }
             else
             {
-                this.SwitchTo(StateEnum.ScriptDataEscaped);
                 this.EmitCharacter('<');
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.ScriptDataEscaped);
             }
         }
 
@@ -2336,44 +2463,31 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataEscapedEndTagOpen()
         {
             /*
-            8.2.4.26 Script data escaped end tag open state
+            8.2.4.24 Script data escaped end tag open state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-escaped-end-tag-open-state
+
             Consume the next input character:
-                Uppercase ASCII letter
-                    Create a new end tag token, and set its tag name to the lowercase version of the current input
-                    character (add 0x0020 to the character's code point). Append the current input character to the
-                    temporary buffer. Finally, switch to the script data escaped end tag name state. (Don't emit the
-                    token yet; further details will be filled in before it is emitted.)
-                Lowercase ASCII letter
-                    Create a new end tag token, and set its tag name to the current input character. Append the current
-                    input character to the temporary buffer. Finally, switch to the script data escaped end tag name state.
-                    (Don't emit the token yet; further details will be filled in before it is emitted.)
+                ASCII letter 
+                    Create a new end tag token. 
+                    Reconsume in the script data escaped end tag name state. 
+                    (Don’t emit the token yet; further details will be filled in
+                    before it is emitted.)
                 Anything else
-                    Switch to the script data escaped state. Emit a U+003C LESS-THAN SIGN character token and a
-                    U+002F SOLIDUS character token. Reconsume the current input character.
+                    Emit a U+003C LESS-THAN SIGN character token and a U+002F SOLIDUS
+                    character token. Reconsume in the script data escaped state.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsUppercaseAsciiLetter())
+            if (ch.IsAsciiLetter())
             {
                 this.NewEndTag();
                 this.TagName.Clear();
-                this.TagName.Append(ch.ToLowercaseAsciiLetter());
-                this.TempBuffer.Append(ch);
-                this.SwitchTo(StateEnum.ScriptDataEscapedEndTagName);
-            }
-            else if (ch.IsLowercaseAsciiLetter())
-            {
-                this.NewEndTag();
-                this.TagName.Clear();
-                this.TagName.Append(ch);
-                this.TempBuffer.Append(ch);
-                this.SwitchTo(StateEnum.ScriptDataEscapedEndTagName);
+                this.ReconsumeIn(StateEnum.ScriptDataEscapedEndTagName);
             }
             else
             {
-                this.SwitchTo(StateEnum.ScriptDataEscaped);
                 this.EmitCharacter('<');
                 this.EmitCharacter('\u002F');
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.ScriptDataEscaped);
             }
         }
 
@@ -2381,7 +2495,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataEscapedEndTagName()
         {
             /*
-            8.2.4.27 Script data escaped end tag name state
+            8.2.4.25 Script data escaped end tag name state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-escaped-end-tag-name-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -2402,9 +2518,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Append the current input character to the current tag token's tag name. Append the current input
                     character to the temporary buffer.
                 Anything else
-                    Switch to the script data escaped state. Emit a U+003C LESS-THAN SIGN character token, a U+002F SOLIDUS
-                    character token, and a character token for each of the characters in the temporary buffer (in the order
-                    they were added to the buffer). Reconsume the current input character.
+                    Emit a U+003C LESS-THAN SIGN character token, a U+002F SOLIDUS character token,
+                    and a character token for each of the characters in the temporary buffer
+                    (in the order they were added to the buffer). Reconsume in the script data escaped state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsSpaceCharacter() && this.IsCurrentEndTagAppropriateEndTag())
@@ -2432,12 +2548,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.ScriptDataEscaped);
                 this.EmitCharacter('<');
                 this.EmitCharacter('\u002F');
                 foreach (char c in this.TempBuffer.ToString())
                     this.EmitCharacter(c);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.ScriptDataEscaped);
             }
         }
 
@@ -2445,7 +2560,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataDoubleEscapeStart()
         {
             /*
-            8.2.4.28 Script data double escape start state
+            8.2.4.26 Script data double escape start state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-double-escape-start-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -2463,7 +2580,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Append the current input character to the temporary buffer. Emit the current input character as a
                     character token.
                 Anything else
-                    Switch to the script data escaped state. Reconsume the current input character.
+                    Reconsume in the script data escaped state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsSpaceCharacter() || (ch == '/') || (ch == '>'))
@@ -2487,8 +2604,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.ScriptDataEscaped);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.ScriptDataEscaped);
             }
         }
 
@@ -2496,7 +2612,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataDoubleEscaped()
         {
             /*
-            8.2.4.29 Script data double escaped state
+            8.2.4.27 Script data double escaped state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-double-escaped-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Switch to the script data double escaped dash state. Emit a U+002D HYPHEN-MINUS character token.
@@ -2506,7 +2624,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 U+0000 NULL
                     Parse error. Emit a U+FFFD REPLACEMENT CHARACTER character token.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
                     Emit the current input character as a character token.
             */
@@ -2529,8 +2647,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidScript);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -2542,7 +2659,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataDoubleEscapedDash()
         {
             /*
-            8.2.4.30 Script data double escaped dash state
+            8.2.4.28 Script data double escaped dash state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-double-escaped-dash-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Switch to the script data double escaped dash dash state. Emit a U+002D HYPHEN-MINUS character token.
@@ -2553,7 +2672,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Switch to the script data double escaped state. Emit a U+FFFD REPLACEMENT CHARACTER
                     character token.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
                     Switch to the script data double escaped state. Emit the current input character as a character token.
             */
@@ -2577,8 +2696,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidScript);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -2591,7 +2709,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataDoubleEscapedDashDash()
         {
             /*
-            8.2.4.31 Script data double escaped dash dash state
+            8.2.4.29 Script data double escaped dash dash state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-double-escaped-dash-dash-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Emit a U+002D HYPHEN-MINUS character token.
@@ -2604,7 +2724,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Switch to the script data double escaped state. Emit a U+FFFD REPLACEMENT CHARACTER
                     character token.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
                     Switch to the script data double escaped state. Emit the current input character as a character token.
             */
@@ -2632,8 +2752,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidScript);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -2646,13 +2765,15 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataDoubleEscapedLessThanSign()
         {
             /*
-            8.2.4.32 Script data double escaped less-than sign state
+            8.2.4.30 Script data double escaped less-than sign state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-double-escaped-less-than-sign-state
+
             Consume the next input character:
                 "/" (U+002F)
                     Set the temporary buffer to the empty string. Switch to the script data double escape end state.
                     Emit a U+002F SOLIDUS character token.
                 Anything else
-                    Switch to the script data double escaped state. Reconsume the current input character.
+                    Reconsume in the script data double escaped state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '/')
@@ -2663,8 +2784,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.ScriptDataDoubleEscaped);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.ScriptDataDoubleEscaped);
             }
         }
 
@@ -2672,7 +2792,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateScriptDataDoubleEscapeEnd()
         {
             /*
-            8.2.4.33 Script data double escape end state
+            8.2.4.31 Script data double escape end state
+            See: http://www.w3.org/TR/html52/syntax.html#script-data-double-escape-end-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -2690,7 +2812,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Append the current input character to the temporary buffer. Emit the current input character as a
                     character token.
                 Anything else
-                    Switch to the script data double escaped state. Reconsume the current input character.
+                    Reconsume in the script data double escaped state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsSpaceCharacter() || (ch == '/') || (ch == '>'))
@@ -2714,8 +2836,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else
             {
-                this.SwitchTo(StateEnum.ScriptDataDoubleEscaped);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.ScriptDataDoubleEscaped);
             }
         }
 
@@ -2727,7 +2848,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateBeforeAttributeName()
         {
             /*
-            8.2.4.34 Before attribute name state
+            8.2.4.32 Before attribute name state
+            See: http://www.w3.org/TR/html52/syntax.html#before-attribute-name-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -2735,75 +2858,42 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 U+0020 SPACE
                     Ignore the character.
                 "/" (U+002F)
-                    Switch to the self-closing start tag state.
                 ">" (U+003E)
-                    Switch to the data state. Emit the current tag token.
-                Uppercase ASCII letter
-                    Start a new attribute in the current tag token. Set that attribute's name to the lowercase version
-                    of the current input character (add 0x0020 to the character's code point), and its value to the empty
-                    string. Switch to the attribute name state.
-                U+0000 NULL
-                    Parse error. Start a new attribute in the current tag token. Set that attribute's name to a
-                    U+FFFD REPLACEMENT CHARACTER character, and its value to the empty string. Switch to the attribute
-                    name state.
-                U+0022 QUOTATION MARK (")
-                "'" (U+0027)
-                "<" (U+003C)
-                "=" (U+003D)
-                    Parse error. Treat it as per the "anything else" entry below.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Reconsume in the after attribute name state.
+                "=" (U+003D)
+                    Parse error. Start a new attribute in the current tag token. 
+                    Set that attribute’s name to the current input character, and 
+                    its value to the empty string. Switch to the attribute name state.
                 Anything else
-                    Start a new attribute in the current tag token. Set that attribute's name to the current input
-                    character, and its value to the empty string. Switch to the attribute name state.
+                    Start a new attribute in the current tag token. 
+                    Set that attribute’s name and value to the empty string. 
+                    Reconsume in the attribute name state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsSpaceCharacter())
             {
                 // Ignore
             }
-            else if (ch == '/')
+            else if ((ch == '/') || (ch == '>') || (ch == Characters.EOF))
             {
-                this.SwitchTo(StateEnum.SelfClosingStartTag);
+                this.ReconsumeIn(StateEnum.AfterAttributeName);
             }
-            else if (ch == '>')
-            {
-                this.SwitchTo(StateEnum.Data);
-                this.EmitTag();
-            }
-            else if (ch.IsUppercaseAsciiLetter())
-            {
-                this.NewAttribute();
-                this.AttributeName.Clear();
-                this.AttributeName.Append(ch.ToLowercaseAsciiLetter());
-                this.AttributeValue.Clear();
-                this.SwitchTo(StateEnum.AttributeName);
-            }
-            else if (ch == Characters.Null)
+            else if (ch == '=')
             {
                 this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.NewAttribute();
-                this.AttributeName.Clear();
-                this.AttributeName.Append(Characters.ReplacementCharacter);
-                this.AttributeValue.Clear();
-                this.SwitchTo(StateEnum.AttributeName);
-            }
-            else if (ch == Characters.EOF)
-            {
-                this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
-            }
-            else
-            {
-                if ((ch == '\u0022') || (ch == '\u0027') || (ch == '<') || (ch == '='))
-                    this.InformParseError(Parsing.ParseError.InvalidAttribute);
-
                 this.NewAttribute();
                 this.AttributeName.Clear();
                 this.AttributeName.Append(ch);
                 this.AttributeValue.Clear();
                 this.SwitchTo(StateEnum.AttributeName);
+            }
+            else
+            {
+                this.NewAttribute();
+                this.AttributeName.Clear();
+                this.AttributeValue.Clear();
+                this.ReconsumeIn(StateEnum.AttributeName);
             }
         }
 
@@ -2811,19 +2901,21 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateAttributeName()
         {
             /*
-            8.2.4.35 Attribute name state
+            8.2.4.33 Attribute name state
+            See: http://www.w3.org/TR/html52/syntax.html#attribute-name-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
                 "FF" (U+000C)
                 U+0020 SPACE
-                    Switch to the after attribute name state.
                 "/" (U+002F)
-                    Switch to the self-closing start tag state.
+                ">" (U+003E)
+                EOF
+                    Reconsume in the after attribute name state.
                 "=" (U+003D)
                     Switch to the before attribute value state.
-                ">" (U+003E)
-                    Switch to the data state. Emit the current tag token.
+
                 Uppercase ASCII letter
                     Append the lowercase version of the current input character (add 0x0020 to the character's code point)
                     to the current attribute's name.
@@ -2833,8 +2925,6 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 "'" (U+0027)
                 "<" (U+003C)
                     Parse error. Treat it as per the "anything else" entry below.
-                EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
                 Anything else
                     Append the current input character to the current attribute's name.
 
@@ -2849,22 +2939,13 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             however.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch.IsSpaceCharacter())
+            if (ch.IsSpaceCharacter() || (ch == '/') || (ch == '>') || (ch == Characters.EOF))
             {
-                this.SwitchTo(StateEnum.AfterAttributeName);
-            }
-            else if (ch == '/')
-            {
-                this.SwitchTo(StateEnum.SelfClosingStartTag);
+                this.ReconsumeIn(StateEnum.AfterAttributeName);
             }
             else if (ch == '=')
             {
                 this.SwitchTo(StateEnum.BeforeAttributeValue);
-            }
-            else if (ch == '>')
-            {
-                this.SwitchTo(StateEnum.Data);
-                this.EmitTag();
             }
             else if (ch.IsUppercaseAsciiLetter())
             {
@@ -2875,15 +2956,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 this.InformParseError(Parsing.ParseError.InvalidAttribute);
                 this.AttributeName.Append(Characters.ReplacementCharacter);
             }
-            else if (ch == Characters.EOF)
-            {
-                this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
-            }
             else
             {
-                if ((ch == '\u0027') || (ch == '<'))
+                if ((ch == '\u0022') || (ch == '\u0027') || (ch == '<'))
                     this.InformParseError(Parsing.ParseError.InvalidAttribute);
 
                 this.AttributeName.Append(ch);
@@ -2894,7 +2969,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateAfterAttributeName()
         {
             /*
-            8.2.4.36 After attribute name state
+            8.2.4.34 After attribute name state
+            See: http://www.w3.org/TR/html52/syntax.html#after-attribute-name-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -2907,23 +2984,12 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Switch to the before attribute value state.
                 ">" (U+003E)
                     Switch to the data state. Emit the current tag token.
-                Uppercase ASCII letter
-                    Start a new attribute in the current tag token. Set that attribute's name to the lowercase version of
-                    the current input character (add 0x0020 to the character's code point), and its value to the empty
-                    string. Switch to the attribute name state.
-                U+0000 NULL
-                    Parse error. Start a new attribute in the current tag token. Set that attribute's name to a
-                    U+FFFD REPLACEMENT CHARACTER character, and its value to the empty string. Switch to the attribute
-                    name state.
-                U+0022 QUOTATION MARK (")
-                "'" (U+0027)
-                "<" (U+003C)
-                    Parse error. Treat it as per the "anything else" entry below.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
-                    Start a new attribute in the current tag token. Set that attribute's name to the current input
-                    character, and its value to the empty string. Switch to the attribute name state.
+                    Start a new attribute in the current tag token.
+                    Set that attribute’s name and value to the empty string.
+                    Reconsume in the attribute name state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsSpaceCharacter())
@@ -2943,39 +3009,17 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 this.SwitchTo(StateEnum.Data);
                 this.EmitTag();
             }
-            else if (ch.IsUppercaseAsciiLetter())
-            {
-                this.NewAttribute();
-                this.AttributeName.Clear();
-                this.AttributeName.Append(ch.ToLowercaseAsciiLetter());
-                this.AttributeValue.Clear();
-                this.SwitchTo(StateEnum.AttributeName);
-            }
-            else if (ch == Characters.Null)
-            {
-                this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.NewAttribute();
-                this.AttributeName.Clear();
-                this.AttributeName.Append(Characters.ReplacementCharacter);
-                this.AttributeValue.Clear();
-                this.SwitchTo(StateEnum.AttributeName);
-            }
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
-                if ((ch == '\u0022') || (ch == '\u0027') || (ch == '<'))
-                    this.InformParseError(Parsing.ParseError.InvalidAttribute);
-
                 this.NewAttribute();
                 this.AttributeName.Clear();
-                this.AttributeName.Append(ch);
                 this.AttributeValue.Clear();
-                this.SwitchTo(StateEnum.AttributeName);
+                this.ReconsumeIn(StateEnum.AttributeName);
             }
         }
 
@@ -2983,7 +3027,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateBeforeAttributeValue()
         {
             /*
-            8.2.4.37 Before attribute value state
+            8.2.4.35 Before attribute value state
+            See: http://www.w3.org/TR/html52/syntax.html#before-attribute-value-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -2992,68 +3038,32 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Ignore the character.
                 U+0022 QUOTATION MARK (")
                     Switch to the attribute value (double-quoted) state.
-                U+0026 AMPERSAND (&)
-                    Switch to the attribute value (unquoted) state. Reconsume the current input character.
                 "'" (U+0027)
                     Switch to the attribute value (single-quoted) state.
-                U+0000 NULL
-                    Parse error. Append a U+FFFD REPLACEMENT CHARACTER character to the current attribute's value.
-                    Switch to the attribute value (unquoted) state.
                 ">" (U+003E)
-                    Parse error. Switch to the data state. Emit the current tag token.
-                "<" (U+003C)
-                "=" (U+003D)
-                "`" (U+0060)
                     Parse error. Treat it as per the "anything else" entry below.
-                EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
                 Anything else
-                    Append the current input character to the current attribute's value. Switch to the attribute value
-                    (unquoted) state.
+                    Reconsume in the attribute value (unquoted) state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsSpaceCharacter())
             {
-                // Ignote
+                // Ignore
             }
             else if (ch == '\u0022')
             {
                 this.SwitchTo(StateEnum.AttributeValueDoubleQuoted);
             }
-            else if (ch == '&')
-            {
-                this.SwitchTo(StateEnum.AttributeValueUnquoted);
-                this.ReconsumeInputCharacter();
-            }
             else if (ch == '\u0027')
             {
                 this.SwitchTo(StateEnum.AttributeValueSingleQuoted);
             }
-            else if (ch == Characters.Null)
-            {
-                this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.AttributeValue.Append(Characters.ReplacementCharacter);
-                this.SwitchTo(StateEnum.AttributeValueUnquoted);
-            }
-            else if (ch == '>')
-            {
-                this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.SwitchTo(StateEnum.Data);
-                this.EmitTag();
-            }
-            else if (ch == Characters.EOF)
-            {
-                this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
-            }
             else
             {
-                if ((ch == '<') || (ch == '=') || (ch == '\u0060'))
+                if (ch == '>')
                     this.InformParseError(Parsing.ParseError.InvalidAttribute);
 
-                this.AttributeValue.Append(ch);
-                this.SwitchTo(StateEnum.AttributeValueUnquoted);
+                this.ReconsumeIn(StateEnum.AttributeValueUnquoted);
             }
         }
 
@@ -3061,17 +3071,19 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateAttributeValueDoubleQuoted()
         {
             /*
-            8.2.4.38 Attribute value (double-quoted) state
+            8.2.4.36 Attribute value (double-quoted) state
+            See: http://www.w3.org/TR/html52/syntax.html#attribute-value-double-quoted-state
+
             Consume the next input character:
                 U+0022 QUOTATION MARK (")
                     Switch to the after attribute value (quoted) state.
                 U+0026 AMPERSAND (&)
-                    Switch to the character reference in attribute value state, with the additional allowed character
-                    being U+0022 QUOTATION MARK (").
+                    Set the return state to the attribute value (double-quoted) state.
+                    Switch to the character reference state.
                 U+0000 NULL
                     Parse error. Append a U+FFFD REPLACEMENT CHARACTER character to the current attribute's value.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
                     Append the current input character to the current attribute's value.
             */
@@ -3082,9 +3094,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '&')
             {
-                this.SwitchTo(StateEnum.CharacterReferenceInAttributeValue);
-                this.AdditionalAllowedChar = '\u0022';
-                this.BeforeCharacterReferenceInAttributeValueState = StateEnum.AttributeValueDoubleQuoted;
+                this.ReturnState = StateEnum.AttributeValueDoubleQuoted;
+                this.SwitchTo(StateEnum.CharacterReference);
             }
             else if (ch == Characters.Null)
             {
@@ -3094,8 +3105,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -3107,17 +3117,19 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateAttributeValueSingleQuoted()
         {
             /*
-            8.2.4.39 Attribute value (single-quoted) state
+            8.2.4.37 Attribute value (single-quoted) state
+            See: http://www.w3.org/TR/html52/syntax.html#attribute-value-single-quoted-state
+
             Consume the next input character:
                 "'" (U+0027)
                     Switch to the after attribute value (quoted) state.
                 U+0026 AMPERSAND (&)
-                    Switch to the character reference in attribute value state, with the additional allowed character
-                    being "'" (U+0027).
+                    Set the return state to the attribute value (single-quoted) state.
+                    Switch to the character reference state.
                 U+0000 NULL
                     Parse error. Append a U+FFFD REPLACEMENT CHARACTER character to the current attribute's value.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
                     Append the current input character to the current attribute's value.
             */
@@ -3128,9 +3140,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '&')
             {
-                this.SwitchTo(StateEnum.CharacterReferenceInAttributeValue);
-                this.AdditionalAllowedChar = '\u0027';
-                this.BeforeCharacterReferenceInAttributeValueState = StateEnum.AttributeValueSingleQuoted;
+                this.ReturnState = StateEnum.AttributeValueSingleQuoted;
+                this.SwitchTo(StateEnum.CharacterReference);
             }
             else if (ch == Characters.Null)
             {
@@ -3140,8 +3151,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -3153,7 +3163,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateAttributeValueUnquoted()
         {
             /*
-            8.2.4.40 Attribute value (unquoted) state
+            8.2.4.38 Attribute value (unquoted) state
+            See: http://www.w3.org/TR/html52/syntax.html#attribute-value-unquoted-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -3161,8 +3173,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 U+0020 SPACE
                     Switch to the before attribute name state.
                 U+0026 AMPERSAND (&)
-                    Switch to the character reference in attribute value state, with the additional allowed character
-                    being ">" (U+003E).
+                    Set the return state to the attribute value (unquoted) state.
+                    Switch to the character reference state.
                 ">" (U+003E)
                     Switch to the data state. Emit the current tag token.
                 U+0000 NULL
@@ -3174,7 +3186,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 "`" (U+0060)
                     Parse error. Treat it as per the "anything else" entry below.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
                     Append the current input character to the current attribute's value.
             */
@@ -3185,9 +3197,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '&')
             {
-                this.SwitchTo(StateEnum.CharacterReferenceInAttributeValue);
-                this.AdditionalAllowedChar = '>';
-                this.BeforeCharacterReferenceInAttributeValueState = StateEnum.AttributeValueUnquoted;
+                this.ReturnState = StateEnum.AttributeValueUnquoted;
+                this.SwitchTo(StateEnum.CharacterReference);
             }
             else if (ch == '>')
             {
@@ -3202,8 +3213,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -3215,29 +3225,12 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void HandleStateCharacterReferenceInAttributeValue()
-        {
-            /*
-            8.2.4.41 Character reference in attribute value state
-            Attempt to consume a character reference.
-            If nothing is returned, append a U+0026 AMPERSAND character (&) to the current attribute's value.
-            Otherwise, append the returned character tokens to the current attribute's value.
-            Finally, switch back to the attribute value state that switched into this state.
-            */
-            string ch = this.ConsumeCharacterReference(this.AdditionalAllowedChar, true);
-            if (ch == null)
-                this.AttributeValue.Append('&');
-            else
-                this.AttributeValue.Append(ch);
-
-            this.SwitchTo(this.BeforeCharacterReferenceInAttributeValueState);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void HandleStateAfterAttributeValueQuoted()
         {
             /*
-            8.2.4.42 After attribute value (quoted) state
+            8.2.4.39 After attribute value (quoted) state
+            See: http://www.w3.org/TR/html52/syntax.html#after-attribute-value-quoted-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -3249,9 +3242,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 ">" (U+003E)
                     Switch to the data state. Emit the current tag token.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
-                    Parse error. Switch to the before attribute name state. Reconsume the character.
+                    Parse error. Reconsume in the before attribute name state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsSpaceCharacter())
@@ -3270,14 +3263,12 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
                 this.InformParseError(Parsing.ParseError.InvalidAttribute);
-                this.SwitchTo(StateEnum.BeforeAttributeName);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.BeforeAttributeName);
             }
         }
 
@@ -3287,15 +3278,18 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateSelfClosingStartTag()
         {
             /*
-            8.2.4.43 Self-closing start tag state
+            8.2.4.40 Self-closing start tag state
+            See: http://www.w3.org/TR/html52/syntax.html#self-closing-start-tag-state
+
             Consume the next input character:
                 ">" (U+003E)
-                    Set the self-closing flag of the current tag token. Switch to the data state.
+                    Set the self-closing flag of the current tag token. 
+                    Switch to the data state.
                     Emit the current tag token.
                 EOF
-                    Parse error. Switch to the data state. Reconsume the EOF character.
+                    Parse error. Emit an end-of-file token.
                 Anything else
-                    Parse error. Switch to the before attribute name state. Reconsume the character.
+                    Parse error. Reconsume in the before attribute name state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '>')
@@ -3307,47 +3301,52 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidTag);
-                this.SwitchTo(StateEnum.Data);
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
                 this.InformParseError(Parsing.ParseError.InvalidTag);
-                this.SwitchTo(StateEnum.BeforeAttributeName);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.BeforeAttributeName);
             }
         }
+
+        #region Comments
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void HandleStateBogusComment()
         {
             /*
-            8.2.4.44 Bogus comment state
-            Consume every character up to and including the first ">" (U+003E) character or the end of the file (EOF),
-            whichever comes first. Emit a comment token whose data is the concatenation of all the characters starting
-            from and including the character that caused the state machine to switch into the bogus comment state, up to
-            and including the character immediately before the last consumed character (i.e. up to the character just
-            before the U+003E or EOF character), but with any U+0000 NULL characters replaced by U+FFFD REPLACEMENT
-            CHARACTER characters. (If the comment was started by the end of the file (EOF), the token is empty. Similarly,
-            the token is empty if it was generated by the string "<!>".)
+            8.2.4.41 Bogus comment state
+            See: http://www.w3.org/TR/html52/syntax.html#bogus-comment-state
 
-            Switch to the data state.
-
-            If the end of the file was reached, reconsume the EOF character.
+            Consume the next input character:
+                ">" (U+003E)
+                    Switch to the data state. Emit the comment token.
+                EOF 
+                    Emit the comment. Emit an end-of-file token.
+                NULL (U+0000)
+                    Append a U+FFFD REPLACEMENT CHARACTER character to the comment token’s data.
+                Anything else 
+                    Append the current input character to the comment token’s data.
             */
-            while (true)
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch == '>')
             {
-                char ch = this.ConsumeNextInputCharacter();
-                if ((ch == '>') || (ch == Characters.EOF))
-                {
-                    this.EmitComment();
-                    return;
-                }
-
-                if (ch == Characters.Null)
-                    this.CommentData.Append(Characters.ReplacementCharacter);
-                else
-                    this.CommentData.Append(ch);
+                this.SwitchTo(StateEnum.Data);
+                this.EmitComment();
+            }
+            else if (ch == Characters.EOF)
+            {
+                this.EmitComment();
+                this.EmitEndOfFile();
+            }
+            else if (ch == Characters.Null)
+            {
+                this.CommentData.Append(Characters.ReplacementCharacter);
+            }
+            else
+            {
+                this.CommentData.Append(ch);
             }
         }
 
@@ -3355,7 +3354,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateMarkupDeclarationOpen()
         {
             /*
-            8.2.4.45 Markup declaration open state
+            8.2.4.42 Markup declaration open state
+            See: http://www.w3.org/TR/html52/syntax.html#markup-declaration-open-state
+
             If the next two characters are both "-" (U+002D) characters, consume those two characters, create a comment
             token whose data is the empty string, and switch to the comment start state.
 
@@ -3366,8 +3367,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             seven characters are a case-sensitive match for the string "[CDATA[" (the five uppercase letters "CDATA" with
             a U+005B LEFT SQUARE BRACKET character before and after), then consume those characters and switch to the
             CDATA section state.
-            Otherwise, this is a parse error. Switch to the bogus comment state. The next character that is consumed,
-            if any, is the first character that will be in the comment.
+
+            Otherwise, this is a parse error. Create a comment token whose data is the empty string. 
+            Switch to the bogus comment state (don’t consume anything in the current state).
             */
             string tmp = this.ConsumeNextInputCharacters(7, false);
             if (tmp.StartsWith("--", StringComparison.Ordinal))
@@ -3393,8 +3395,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 this.ReconsumeInputCharacters(tmp);
 
                 this.InformParseError(Parsing.ParseError.InvalidMarkup);
-                this.SwitchTo(StateEnum.BogusComment);
                 this.NewComment();
+                this.CommentData.Clear();
+                this.SwitchTo(StateEnum.BogusComment);
             }
         }
 
@@ -3402,30 +3405,21 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateCommentStart()
         {
             /*
-            8.2.4.46 Comment start state
+            8.2.4.43 Comment start state
+            See: http://www.w3.org/TR/html52/syntax.html#comment-start-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Switch to the comment start dash state.
-                U+0000 NULL
-                    Parse error. Append a U+FFFD REPLACEMENT CHARACTER character to the comment token's data.
-                    Switch to the comment state.
                 ">" (U+003E)
                     Parse error. Switch to the data state. Emit the comment token.
-                EOF
-                    Parse error. Switch to the data state. Emit the comment token. Reconsume the EOF character.
                 Anything else
-                    Append the current input character to the comment token's data. Switch to the comment state.
+                    Reconsume in the comment state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '-')
             {
                 this.SwitchTo(StateEnum.CommentStartDash);
-            }
-            else if (ch == Characters.Null)
-            {
-                this.InformParseError(Parsing.ParseError.InvalidComment);
-                this.CommentData.Append(Characters.ReplacementCharacter);
-                this.SwitchTo(StateEnum.Comment);
             }
             else if (ch == '>')
             {
@@ -3433,17 +3427,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
             }
-            else if (ch == Characters.EOF)
-            {
-                this.InformParseError(Parsing.ParseError.InvalidComment);
-                this.SwitchTo(StateEnum.Data);
-                this.EmitComment();
-                this.ReconsumeInputCharacter();
-            }
             else
             {
-                this.CommentData.Append(ch);
-                this.SwitchTo(StateEnum.Comment);
+                this.ReconsumeIn(StateEnum.Comment);
             }
         }
 
@@ -3451,32 +3437,24 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateCommentStartDash()
         {
             /*
-            8.2.4.47 Comment start dash state
+            8.2.4.44 Comment start dash state
+            See: http://www.w3.org/TR/html52/syntax.html#comment-start-dash-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Switch to the comment end state
-                U+0000 NULL
-                    Parse error. Append a "-" (U+002D) character and a U+FFFD REPLACEMENT CHARACTER character to
-                    the comment token's data. Switch to the comment state.
                 ">" (U+003E)
                     Parse error. Switch to the data state. Emit the comment token.
                 EOF
-                    Parse error. Switch to the data state. Emit the comment token. Reconsume the EOF character.
+                    Parse error. Emit the comment token. Emit an end-of-file token.
                 Anything else
-                    Append a "-" (U+002D) character and the current input character to the comment token's data.
-                    Switch to the comment state.
+                    Append a U+002D HYPHEN-MINUS character (-) to the comment token’s data. 
+                    Reconsume in the comment state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '-')
             {
                 this.SwitchTo(StateEnum.CommentEnd);
-            }
-            else if (ch == Characters.Null)
-            {
-                this.InformParseError(Parsing.ParseError.InvalidComment);
-                this.CommentData.Append('-');
-                this.CommentData.Append(Characters.ReplacementCharacter);
-                this.SwitchTo(StateEnum.Comment);
             }
             else if (ch == '>')
             {
@@ -3487,15 +3465,13 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidComment);
-                this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
                 this.CommentData.Append('-');
-                this.CommentData.Append(ch);
-                this.SwitchTo(StateEnum.Comment);
+                this.ReconsumeIn(StateEnum.Comment);
             }
         }
 
@@ -3503,19 +3479,29 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateComment()
         {
             /*
-            8.2.4.48 Comment state
+            8.2.4.45 Comment state
+            See: http://www.w3.org/TR/html52/syntax.html#comment-state
+
             Consume the next input character:
+                "<" (U+003C)
+                    Append the current input character to the comment token’s data.
+                    Switch to the comment less-than sign state.
                 "-" (U+002D)
                     Switch to the comment end dash state
                 U+0000 NULL
                     Parse error. Append a U+FFFD REPLACEMENT CHARACTER character to the comment token's data.
                 EOF
-                    Parse error. Switch to the data state. Emit the comment token. Reconsume the EOF character.
+                    Parse error. Emit the comment token. Emit an end-of-file token.
                 Anything else
                     Append the current input character to the comment token's data.
             */
             char ch = this.ConsumeNextInputCharacter();
-            if (ch == '-')
+            if (ch == '<')
+            {
+                this.CommentData.Append(ch);
+                this.SwitchTo(StateEnum.CommentLessThanSign);
+            }
+            else if (ch == '-')
             {
                 this.SwitchTo(StateEnum.CommentEndDash);
             }
@@ -3527,13 +3513,118 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidComment);
-                this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
                 this.CommentData.Append(ch);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateCommentLessThanSign()
+        {
+            /*
+            8.2.4.46 Comment less-than sign state
+            See: http://www.w3.org/TR/html52/syntax.html#comment-less-than-sign-state
+
+            Consume the next input character:
+                "!" (U+0021)
+                    Append the current input character to the comment token’s data. 
+                    Switch to the comment less-than sign bang state.
+                "<" (U+003C)
+                    Append the current input character to the comment token’s data.
+                Anything else 
+                    Reconsume in the comment state.
+            */
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch == '!')
+            {
+                this.CommentData.Append(ch);
+                this.SwitchTo(StateEnum.CommentLessThanSignBang);
+            }
+            else if (ch == '<')
+            {
+                this.CommentData.Append(ch);
+            }
+            else
+            {
+                this.ReconsumeIn(StateEnum.Comment);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateCommentLessThanSignBang()
+        {
+            /*
+            8.2.4.47 Comment less-than sign bang state
+            See: http://www.w3.org/TR/html52/syntax.html#comment-less-than-sign-bang-state
+
+            Consume the next input character:
+                "-" (U+002D)
+                    Switch to the comment less-than sign bang dash state.
+                Anything else 
+                    Reconsume in the comment state.
+            */
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch == '-')
+            {
+                this.SwitchTo(StateEnum.CommentLessThanSignBangDash);
+            }
+            else
+            {
+                this.ReconsumeIn(StateEnum.Comment);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateCommentLessThanSignBangDash()
+        {
+            /*
+            8.2.4.48 Comment less-than sign bang dash state
+            See: http://www.w3.org/TR/html52/syntax.html#comment-less-than-sign-bang-dash-state
+
+            Consume the next input character:
+                "-" (U+002D)
+                    Switch to the comment less-than sign bang dash dash state.
+                Anything else 
+                    Reconsume in the comment end dash state.
+            */
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch == '-')
+            {
+                this.SwitchTo(StateEnum.CommentLessThanSignBangDashDash);
+            }
+            else
+            {
+                this.ReconsumeIn(StateEnum.CommentEndDash);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateCommentLessThanSignBangDashDash()
+        {
+            /*
+            8.2.4.49 Comment less-than sign bang dash dash state
+            See: http://www.w3.org/TR/html52/syntax.html#comment-less-than-sign-bang-dash-dash-state
+
+            Consume the next input character:
+                ">" (U+003E)
+                EOF 
+                    Reconsume in the comment end state.
+                Anything else 
+                    Parse error. Reconsume in the comment end state.
+            */
+            char ch = this.ConsumeNextInputCharacter();
+            if ((ch == '>') || (ch == Characters.EOF))
+            {
+                this.ReconsumeIn(StateEnum.CommentEnd);
+            }
+            else
+            {
+                this.InformParseError(Parsing.ParseError.InvalidComment);
+                this.ReconsumeIn(StateEnum.CommentEnd);
             }
         }
 
@@ -3541,43 +3632,33 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateCommentEndDash()
         {
             /*
-            8.2.4.49 Comment end dash state
+            8.2.4.50 Comment end dash state
+            See: http://www.w3.org/TR/html52/syntax.html#comment-end-dash-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Switch to the comment end state
-                U+0000 NULL
-                    Parse error. Append a "-" (U+002D) character and a U+FFFD REPLACEMENT CHARACTER character to the
-                    comment token's data. Switch to the comment state.
                 EOF
-                    Parse error. Switch to the data state. Emit the comment token. Reconsume the EOF character.
+                    Parse error. Emit the comment token. Emit an end-of-file token.
                 Anything else
-                    Append a "-" (U+002D) character and the current input character to the comment token's data.
-                    Switch to the comment state.
+                    Append a U+002D HYPHEN-MINUS character (-) to the comment token’s data.
+                    Reconsume in the comment state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '-')
             {
                 this.SwitchTo(StateEnum.CommentEnd);
             }
-            else if (ch == Characters.Null)
-            {
-                this.InformParseError(Parsing.ParseError.InvalidComment);
-                this.CommentData.Append('-');
-                this.CommentData.Append(Characters.ReplacementCharacter);
-                this.SwitchTo(StateEnum.Comment);
-            }
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidComment);
-                this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
                 this.CommentData.Append('-');
-                this.CommentData.Append(ch);
-                this.SwitchTo(StateEnum.Comment);
+                this.ReconsumeIn(StateEnum.Comment);
             }
         }
 
@@ -3585,22 +3666,21 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateCommentEnd()
         {
             /*
-            8.2.4.50 Comment end state
+            8.2.4.51 Comment end state
+            See: http://www.w3.org/TR/html52/syntax.html#comment-end-state
+
             Consume the next input character:
                 ">" (U+003E)
                     Switch to the data state. Emit the comment token.
-                U+0000 NULL
-                    Parse error. Append two "-" (U+002D) characters and a U+FFFD REPLACEMENT CHARACTER character to
-                    the comment token's data. Switch to the comment state.
                 "!" (U+0021)
-                    Parse error. Switch to the comment end bang state.
+                    Switch to the comment end bang state.
                 "-" (U+002D)
-                    Parse error. Append a "-" (U+002D) character to the comment token's data.
+                    Append a U+002D HYPHEN-MINUS character (-) to the comment token’s data.
                 EOF
-                    Parse error. Switch to the data state. Emit the comment token. Reconsume the EOF character.
+                    Parse error. Emit the comment token. Emit an end-of-file token.
                 Anything else
-                    Parse error. Append two "-" (U+002D) characters and the current input character to the comment
-                    token's data. Switch to the comment state.
+                    Append two U+002D HYPHEN-MINUS characters (-) to the comment token’s data.
+                    Reconsume in the comment state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '>')
@@ -3608,38 +3688,25 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
             }
-            else if (ch == Characters.Null)
-            {
-                this.InformParseError(Parsing.ParseError.InvalidComment);
-                this.CommentData.Append('-');
-                this.CommentData.Append('-');
-                this.CommentData.Append(Characters.ReplacementCharacter);
-                this.SwitchTo(StateEnum.Comment);
-            }
             else if (ch == '!')
             {
-                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.SwitchTo(StateEnum.CommentEndBang);
             }
             else if (ch == '-')
             {
-                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.CommentData.Append('-');
             }
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidComment);
-                this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
-                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.CommentData.Append('-');
                 this.CommentData.Append('-');
-                this.CommentData.Append(ch);
-                this.SwitchTo(StateEnum.Comment);
+                this.ReconsumeIn(StateEnum.Comment);
             }
         }
 
@@ -3647,21 +3714,20 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateCommentEndBang()
         {
             /*
-            8.2.4.51 Comment end bang state
+            8.2.4.52 Comment end bang state
+            See: http://www.w3.org/TR/html52/syntax.html#comment-end-bang-state
+
             Consume the next input character:
                 "-" (U+002D)
                     Append two "-" (U+002D) characters and a "!" (U+0021) character to the comment token's data. Switch
                     to the comment end dash state.
                 ">" (U+003E)
-                    Switch to the data state. Emit the comment token.
-                U+0000 NULL
-                    Parse error. Append two "-" (U+002D) characters, a "!" (U+0021) character, and a U+FFFD REPLACEMENT
-                    CHARACTER character to the comment token's data. Switch to the comment state.
+                    Parse error. Switch to the data state. Emit the comment token.
                 EOF
-                    Parse error. Switch to the data state. Emit the comment token. Reconsume the EOF character.
+                    Parse error. Emit the comment token. Emit an end-of-file token.
                 Anything else
-                    Append two "-" (U+002D) characters, a "!" (U+0021) character, and the current input character to the
-                    comment token's data. Switch to the comment state.
+                    Append two U+002D HYPHEN-MINUS characters (-) and a U+0021 EXCLAMATION MARK character (!)
+                    to the comment token’s data. Reconsume in the comment state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch == '-')
@@ -3671,30 +3737,24 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else if (ch == '>')
             {
+                this.InformParseError(Parsing.ParseError.InvalidComment);
                 this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
-            }
-            else if (ch == Characters.Null)
-            {
-                this.InformParseError(Parsing.ParseError.InvalidComment);
-                this.CommentData.Append("--!");
-                this.CommentData.Append(Characters.ReplacementCharacter);
-                this.SwitchTo(StateEnum.Comment);
             }
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidComment);
-                this.SwitchTo(StateEnum.Data);
                 this.EmitComment();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
                 this.CommentData.Append("--!");
-                this.CommentData.Append(ch);
-                this.SwitchTo(StateEnum.Comment);
+                this.ReconsumeIn(StateEnum.Comment);
             }
         }
+
+        #endregion
 
         #region DocTypes
 
@@ -3702,7 +3762,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateDocType()
         {
             /*
-            8.2.4.52 DOCTYPE state
+            8.2.4.53 DOCTYPE state
+            See: http://www.w3.org/TR/html52/syntax.html#doctype-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -3710,10 +3772,12 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 U+0020 SPACE
                     Switch to the before DOCTYPE name state.
                 EOF
-                    Parse error. Switch to the data state. Create a new DOCTYPE token. Set its force-quirks flag to on.
-                    Emit the token. Reconsume the EOF character.
+                    Parse error. Create a new DOCTYPE token. 
+                    Set its force-quirks flag to on. 
+                    Emit the token. 
+                    Emit an end-of-file token.
                 Anything else
-                    Parse error. Switch to the before DOCTYPE name state. Reconsume the character.
+                    Parse error. Reconsume in the before DOCTYPE name state.
             */
             char ch = this.ConsumeNextInputCharacter();
             if (ch.IsSpaceCharacter())
@@ -3723,17 +3787,15 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.NewDocType();
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.BeforeDocTypeName);
-                this.ReconsumeInputCharacter();
+                this.ReconsumeIn(StateEnum.BeforeDocTypeName);
             }
         }
 
@@ -3741,7 +3803,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateBeforeDocTypeName()
         {
             /*
-            8.2.4.53 Before DOCTYPE name state
+            8.2.4.54 Before DOCTYPE name state
+            See: http://www.w3.org/TR/html52/syntax.html#before-doctype-name-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -3758,8 +3822,10 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Create a new DOCTYPE token. Set its force-quirks flag to on. Switch to the data state.
                     Emit the token.
                 EOF
-                    Parse error. Switch to the data state. Create a new DOCTYPE token. Set its force-quirks flag to on.
-                    Emit the token. Reconsume the EOF character.
+                    Parse error. Create a new DOCTYPE token. 
+                    Set its force-quirks flag to on. 
+                    Emit the token. 
+                    Emit an end-of-file token.
                 Anything else
                     Create a new DOCTYPE token. Set the token's name to the current input character. Switch to the
                     DOCTYPE name state.
@@ -3795,11 +3861,10 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.NewDocType();
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -3814,7 +3879,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateDocTypeName()
         {
             /*
-            8.2.4.54 DOCTYPE name state
+            8.2.4.55 DOCTYPE name state
+            See: http://www.w3.org/TR/html52/syntax.html#doctype-name-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -3829,8 +3896,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 U+0000 NULL
                     Parse error. Append a U+FFFD REPLACEMENT CHARACTER character to the current DOCTYPE token's name.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Append the current input character to the current DOCTYPE token's name.
             */
@@ -3856,10 +3923,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -3871,7 +3937,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateAfterDocTypeName()
         {
             /*
-            8.2.4.55 After DOCTYPE name state
+            8.2.4.56 After DOCTYPE name state
+            See: http://www.w3.org/TR/html52/syntax.html#after-doctype-name-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -3881,8 +3949,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 ">" (U+003E)
                     Switch to the data state. Emit the current DOCTYPE token.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     If the six characters starting from the current input character are an ASCII case-insensitive match
                     for the word "PUBLIC", then consume those characters and switch to the after DOCTYPE public keyword
@@ -3908,10 +3976,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -3940,7 +4007,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateAfterDocTypePublicKeyword()
         {
             /*
-            8.2.4.56 After DOCTYPE public keyword state
+            8.2.4.57 After DOCTYPE public keyword state
+            See: http://www.w3.org/TR/html52/syntax.html#after-doctype-public-keyword-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -3957,8 +4026,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the data state. Emit that
                     DOCTYPE token.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
@@ -3989,10 +4058,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4006,7 +4074,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateBeforeDocTypePublicIdentifier()
         {
             /*
-            8.2.4.57 Before DOCTYPE public identifier state
+            8.2.4.58 Before DOCTYPE public identifier state
+            See: http://www.w3.org/TR/html52/syntax.html#before-doctype-public-identifier-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -4023,8 +4093,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the data state. Emit that
                     DOCTYPE token.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
@@ -4053,10 +4123,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4070,7 +4139,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateDocTypePublicIdentifierDoubleQuoted()
         {
             /*
-            8.2.4.58 DOCTYPE public identifier (double-quoted) state
+            8.2.4.59 DOCTYPE public identifier (double-quoted) state
+            See: http://www.w3.org/TR/html52/syntax.html#doctype-public-identifier-double-quoted-state
+
             Consume the next input character:
                 U+0022 QUOTATION MARK (")
                     Switch to the after DOCTYPE public identifier state.
@@ -4081,8 +4152,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the data state. Emit that
                     DOCTYPE token.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Append the current input character to the current DOCTYPE token's public identifier.
             */
@@ -4106,10 +4177,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4121,7 +4191,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateDocTypePublicIdentifierSingleQuoted()
         {
             /*
-            8.2.4.59 DOCTYPE public identifier (single-quoted) state
+            8.2.4.60 DOCTYPE public identifier (single-quoted) state
+            See: http://www.w3.org/TR/html52/syntax.html#doctype-public-identifier-single-quoted-state
+
             Consume the next input character:
                 "'" (U+0027)
                     Switch to the after DOCTYPE public identifier state.
@@ -4132,8 +4204,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the data state. Emit that
                     DOCTYPE token.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Append the current input character to the current DOCTYPE token's public identifier.
             */
@@ -4157,10 +4229,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4172,7 +4243,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateAfterDocTypePublicIdentifier()
         {
             /*
-            8.2.4.60 After DOCTYPE public identifier state
+            8.2.4.61 After DOCTYPE public identifier state
+            See: http://www.w3.org/TR/html52/syntax.html#after-doctype-public-identifier-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -4188,8 +4261,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's system identifier to the empty string (not missing), then
                     switch to the DOCTYPE system identifier (single-quoted) state.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
@@ -4218,10 +4291,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4235,7 +4307,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateBetweenDocTypePublicAndSystemIdentifiers()
         {
             /*
-            8.2.4.61 Between DOCTYPE public and system identifiers state
+            8.2.4.62 Between DOCTYPE public and system identifiers state
+            See: http://www.w3.org/TR/html52/syntax.html#between-doctype-public-and-system-identifiers-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -4251,8 +4325,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Set the DOCTYPE token's system identifier to the empty string (not missing), then switch to the
                     DOCTYPE system identifier (single-quoted) state.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
@@ -4279,10 +4353,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4296,7 +4369,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateAfterDocTypeSystemKeyword()
         {
             /*
-            8.2.4.62 After DOCTYPE system keyword state
+            8.2.4.63 After DOCTYPE system keyword state
+            See: http://www.w3.org/TR/html52/syntax.html#after-doctype-system-keyword-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -4313,8 +4388,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the data state. Emit that
                     DOCTYPE token.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
@@ -4345,10 +4420,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4362,7 +4436,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateBeforeDocTypeSystemIdentifier()
         {
             /*
-            8.2.4.63 Before DOCTYPE system identifier state
+            8.2.4.64 Before DOCTYPE system identifier state
+            See: http://www.w3.org/TR/html52/syntax.html#before-doctype-system-identifier-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -4379,8 +4455,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the data state. Emit that
                     DOCTYPE token.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the bogus DOCTYPE state.
             */
@@ -4409,10 +4485,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4426,7 +4501,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateDocTypeSystemIdentifierDoubleQuoted()
         {
             /*
-            8.2.4.64 DOCTYPE system identifier (double-quoted) state
+            8.2.4.65 DOCTYPE system identifier (double-quoted) state
+            See: http://www.w3.org/TR/html52/syntax.html#doctype-system-identifier-double-quoted-state
+
             Consume the next input character:
                 U+0022 QUOTATION MARK (")
                     Switch to the after DOCTYPE system identifier state.
@@ -4437,8 +4514,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the data state. Emit that
                     DOCTYPE token.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Append the current input character to the current DOCTYPE token's system identifier.
             */
@@ -4462,10 +4539,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4477,7 +4553,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateDocTypeSystemIdentifierSingleQuoted()
         {
             /*
-            8.2.4.65 DOCTYPE system identifier (single-quoted) state
+            8.2.4.66 DOCTYPE system identifier (single-quoted) state
+            See: http://www.w3.org/TR/html52/syntax.html#doctype-system-identifier-single-quoted-state
+
             Consume the next input character:
                 "'" (U+0027)
                     Switch to the after DOCTYPE system identifier state.
@@ -4488,8 +4566,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Parse error. Set the DOCTYPE token's force-quirks flag to on. Switch to the data state. Emit that
                     DOCTYPE token.
                 EOF
-                    Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on. Emit that
-                    DOCTYPE token. Reconsume the EOF character.
+                    Parse error. Set the DOCTYPE token's force-quirks flag to on. Emit that
+                    DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Append the current input character to the current DOCTYPE token's system identifier.
             */
@@ -4513,10 +4591,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4528,7 +4605,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateAfterDocTypeSystemIdentifier()
         {
             /*
-            8.2.4.66 After DOCTYPE system identifier state
+            8.2.4.67 After DOCTYPE system identifier state
+            See: http://www.w3.org/TR/html52/syntax.html#after-doctype-system-identifier-state
+
             Consume the next input character:
                 "tab" (U+0009)
                 "LF" (U+000A)
@@ -4539,7 +4618,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                     Switch to the data state. Emit the current DOCTYPE token.
                 EOF
                     Parse error. Switch to the data state. Set the DOCTYPE token's force-quirks flag to on.
-                    Emit that DOCTYPE token. Reconsume the EOF character.
+                    Emit that DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Parse error. Switch to the bogus DOCTYPE state. (This does not set the DOCTYPE token's
                     force-quirks flag to on.)
@@ -4557,10 +4636,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             else if (ch == Characters.EOF)
             {
                 this.InformParseError(Parsing.ParseError.InvalidDocType);
-                this.SwitchTo(StateEnum.Data);
                 this.DocTypeForceQuirks = true;
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4573,12 +4651,14 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         private void HandleStateBogusDocType()
         {
             /*
-            8.2.4.67 Bogus DOCTYPE state
+            8.2.4.68 Bogus DOCTYPE state
+            See: http://www.w3.org/TR/html52/syntax.html#bogus-doctype-state
+
             Consume the next input character:
                 ">" (U+003E)
                     Switch to the data state. Emit the DOCTYPE token.
                 EOF
-                    Switch to the data state. Emit the DOCTYPE token. Reconsume the EOF character.
+                    Emit the DOCTYPE token. Emit an end-of-file token.
                 Anything else
                     Ignore the character.
             */
@@ -4590,9 +4670,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             }
             else if (ch == Characters.EOF)
             {
-                this.SwitchTo(StateEnum.Data);
                 this.EmitDocType();
-                this.ReconsumeInputCharacter();
+                this.EmitEndOfFile();
             }
             else
             {
@@ -4602,290 +4681,520 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
         #endregion
 
+        #region CDATA
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void HandleStateCDataSection()
         {
             /*
-            8.2.4.68 CDATA section state
-            Switch to the data state.
+            8.2.4.69 CDATA section state
+            See: http://www.w3.org/TR/html52/syntax.html#CDATA-section-state
 
-            Consume every character up to the next occurrence of the three character sequence U+005D RIGHT SQUARE BRACKET
-            U+005D RIGHT SQUARE BRACKET U+003E GREATER-THAN SIGN (]]>), or the end of the file (EOF), whichever comes
-            first. Emit a series of character tokens consisting of all the characters consumed except the matching three
-            character sequence at the end (if one was found before the end of the file).
+            Consume the next input character:
+                "]" (U+005D)
+                    Switch to the CDATA section bracket state.
+                EOF 
+                    Parse error. Emit an end-of-file token.
+                Anything else 
+                    Emit the current input character as a character token.
 
-            If the end of the file was reached, reconsume the EOF character.
+                NOTE: U+0000 NULL characters are handled in the tree construction stage,
+                as part of the in foreign content insertion mode, which is the only place
+                where CDATA sections can appear.
             */
-            this.SwitchTo(StateEnum.Data);
-
-            while (true)
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch == ']')
             {
-                char ch = this.ConsumeNextInputCharacter();
-
-                if (ch == ']')
-                {
-                    ch = this.ConsumeNextInputCharacter();
-                    if (ch == ']')
-                    {
-                        ch = this.ConsumeNextInputCharacter();
-                        if (ch == '>')
-                            return;
-
-                        this.EmitCharacter(']');
-                    }
-
-                    this.EmitCharacter(']');
-                }
-
-                if (ch == Characters.EOF)
-                {
-                    this.ReconsumeInputCharacter();
-                    return;
-                }
-
+                this.SwitchTo(StateEnum.CDataSectionBracket);
+            }
+            else if (ch == Characters.EOF)
+            {
+                this.InformParseError(Parsing.ParseError.InvalidCharacterData);
+                this.EmitEndOfFile();
+            }
+            else
+            {
                 this.EmitCharacter(ch);
             }
         }
 
-        #region Character References
-
-        private string ConsumeCharacterReference(bool partOfAnAttribute)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateCDataSectionBracket()
         {
-            // EOF is already in the list of special characters, therefore using EOF has no effect.
-            return this.ConsumeCharacterReference(Characters.EOF, partOfAnAttribute);
-        }
+            /*
+            8.2.4.70 CDATA section bracket state
+            See: http://www.w3.org/TR/html52/syntax.html#CDATA-section-bracket-state
 
-        private string ConsumeCharacterReference(char additionalCharacter, bool partOfAnAttribute)
-        {
-            // The behavior depends on the identity of the next character (the one immediately after the U+0026 AMPERSAND character):
+            Consume the next input character:
+                "]" (U+005D)
+                    Switch to the CDATA section end state.
+                Anything else 
+                    Emit a U+005D RIGHT SQUARE BRACKET character token. 
+                    Reconsume in the CDATA section state
+            */
             char ch = this.ConsumeNextInputCharacter();
-
-            // "tab" (U+0009)
-            // "LF" (U+000A)
-            // "FF" (U+000C)
-            // U+0020 SPACE
-            // U+003C LESS-THAN SIGN
-            // U+0026 AMPERSAND
-            // EOF
-            // The additional allowed character, if there is one
-            if (ch.IsSpaceCharacter() || (ch == '<') || (ch == '&') || (ch == Characters.EOF) || (ch == additionalCharacter))
+            if (ch == ']')
             {
-                // Not a character reference. No characters are consumed, and nothing is returned. (This is not an error, either.)
-                this.ReconsumeInputCharacter();
-                return null;
-            }
-
-            StringBuilder consumedCharacters = new StringBuilder();
-            if (ch == '#')
-            {
-                // Consume the U+0023 NUMBER SIGN.
-                consumedCharacters.Append(ch);
-
-                // The behavior further depends on the character after the U+0023 NUMBER SIGN:
-                ch = this.ConsumeNextInputCharacter();
-
-                bool isHex;
-
-                // U+0078 LATIN SMALL LETTER X
-                // U+0058 LATIN CAPITAL LETTER X
-                if ((ch == 'x') || (ch == 'X'))
-                {
-                    // Consume the X.
-                    consumedCharacters.Append(ch);
-
-                    // Follow the steps below, but using the range of characters ASCII digits, U +0061 LATIN SMALL LETTER A
-                    // to U+0066 LATIN SMALL LETTER F, and U+0041 LATIN CAPITAL LETTER A to U+0046 LATIN CAPITAL LETTER F
-                    // (in other words, 0-9, A-F, a-f).
-
-                    // When it comes to interpreting the number, interpret it as a hexadecimal number.
-                    isHex = true;
-                    ch = this.ConsumeNextInputCharacter();
-                }
-                else
-                {
-                    // Anything else
-
-                    // Follow the steps below, but using the range of characters ASCII digits.
-                    // When it comes to interpreting the number, interpret it as a decimal number.
-                    isHex = false;
-                }
-
-                // Consume as many characters as match the range of characters given above (ASCII hex digits or ASCII digits).
-
-                StringBuilder number = new StringBuilder();
-
-                while ((isHex && ch.IsAsciiHexDigit()) || (!isHex && ch.IsAsciiDigit()))
-                {
-                    consumedCharacters.Append(ch);
-                    number.Append(ch);
-
-                    ch = this.ConsumeNextInputCharacter();
-                }
-
-                // If no characters match the range, then don't consume any characters
-                // (and unconsume the U+0023 NUMBER SIGN character and, if appropriate, the X character).
-                // This is a parse error; nothing is returned.
-                if (number.Length == 0)
-                {
-                    consumedCharacters.Append(ch); // Reconsume last char.
-                    this.ReconsumeInputCharacters(consumedCharacters.ToString());
-                    this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
-                    return null;
-                }
-
-                // Otherwise, if the next character is a U + 003B SEMICOLON, consume that too.
-                if (ch == ';')
-                {
-                    consumedCharacters.Append(ch);
-                }
-                else
-                {
-                    // If it isn't, there is a parse error.
-                    this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
-
-                    // Must reconsume the last char that is not useful to us.
-                    this.ReconsumeInputCharacters(new string(ch, 1));
-                }
-
-                // If one or more characters match the range, then take them all and interpret the
-                // string of characters as a number(either hexadecimal or decimal as appropriate).
-                int codePoint = Tokenizer.ParseNumber(number.ToString(), isHex);
-
-                // If that number is one of the numbers in the first column of the following table,
-                // then this is a parse error.
-                char replacementChar = '\u0000';
-                if (codePoint < Tokenizer.CharacterReferenceReplacetCharacters.Length)
-                    replacementChar = Tokenizer.CharacterReferenceReplacetCharacters[codePoint];
-                if (replacementChar != '\u0000')
-                {
-                    // The code-point is defined in the table.
-                    this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
-
-                    // Find the row with that number in the first column, and return a
-                    // character token for the Unicode character given in the second column of that row.
-                    return replacementChar.ToString();
-                }
-                else if (((0xD800 <= codePoint) && (codePoint <= 0xDFFF)) || (codePoint > 0x10FFFF))
-                {
-                    // Otherwise, if the number is in the range 0xD800 to 0xDFFF or is greater than 0x10FFFF,
-                    // then this is a parse error. Return a U + FFFD REPLACEMENT CHARACTER character token.
-                    this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
-                    return Characters.ReplacementCharacter.ToString();
-                }
-                else
-                {
-                    // Otherwise, return a character token for the Unicode character whose code point is that number.
-
-                    // Parameters must be on same line or separate lines
-                    // Additionally, if the number is in the range 0x0001 to 0x0008, 0x000D to 0x001F, 0x007F to 0x009F,
-                    // 0xFDD0 to 0xFDEF, or is one of 0x000B, 0xFFFE, 0xFFFF, 0x1FFFE, 0x1FFFF, 0x2FFFE, 0x2FFFF, 0x3FFFE,
-                    // 0x3FFFF, 0x4FFFE, 0x4FFFF, 0x5FFFE, 0x5FFFF, 0x6FFFE, 0x6FFFF, 0x7FFFE, 0x7FFFF, 0x8FFFE, 0x8FFFF,
-                    // 0x9FFFE, 0x9FFFF, 0xAFFFE, 0xAFFFF, 0xBFFFE, 0xBFFFF, 0xCFFFE, 0xCFFFF, 0xDFFFE, 0xDFFFF, 0xEFFFE,
-                    // 0xEFFFF, 0xFFFFE, 0xFFFFF, 0x10FFFE, or 0x10FFFF, then this is a parse error.
-                    if (
-#pragma warning disable SA1117
-                        codePoint.IsInRange(0x0001, 0x0008) ||
-                        codePoint.IsInRange(0x000D, 0x001F) ||
-                        codePoint.IsInRange(0x007F, 0x009F) ||
-                        codePoint.IsInRange(0xFDD0, 0xFDEF) ||
-                        codePoint.IsOneOf(
-                            0x000B, 0xFFFE, 0xFFFF, 0x1FFFE, 0x1FFFF, 0x2FFFE, 0x2FFFF, 0x3FFFE,
-                            0x3FFFF, 0x4FFFE, 0x4FFFF, 0x5FFFE, 0x5FFFF, 0x6FFFE, 0x6FFFF, 0x7FFFE, 0x7FFFF, 0x8FFFE, 0x8FFFF,
-                            0x9FFFE, 0x9FFFF, 0xAFFFE, 0xAFFFF, 0xBFFFE, 0xBFFFF, 0xCFFFE, 0xCFFFF, 0xDFFFE, 0xDFFFF, 0xEFFFE,
-                            0xEFFFF, 0xFFFFE, 0xFFFFF, 0x10FFFE, 0x10FFFF))
-#pragma warning restore SA1117 // Parameters must be on same line or separate lines
-                    {
-                        this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
-                    }
-
-                    return Char.ConvertFromUtf32(codePoint);
-                }
+                this.SwitchTo(StateEnum.CDataSectionEnd);
             }
             else
             {
-                // Anything else (not a #)
+                this.EmitCharacter(']');
+                this.ReconsumeIn(StateEnum.CDataSection);
+            }
+        }
 
-                // Consume the maximum number of characters possible, with the consumed characters
-                // matching one of the identifiers in the first column of the named character
-                // references table (in a case-sensitive manner).
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateCDataSectionEnd()
+        {
+            /*
+            8.2.4.71 CDATA section end state
+            See: http://www.w3.org/TR/html52/syntax.html#CDATA-section-end-state
+
+            Consume the next input character:
+                "]" (U+005D)
+                    Emit a U+005D RIGHT SQUARE BRACKET character token.
+                ">" (U+003E)
+                    Switch to the data state.
+                Anything else
+                    Emit two U+005D RIGHT SQUARE BRACKET character tokens. 
+                    Reconsume in the CDATA section state
+            */
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch == ']')
+            {
+                this.EmitCharacter(']');
+            }
+            else if (ch == '>')
+            {
+                this.SwitchTo(StateEnum.Data);
+            }
+            else
+            {
+                this.EmitCharacter(']');
+                this.EmitCharacter(']');
+                this.ReconsumeIn(StateEnum.CDataSection);
+            }
+        }
+
+        #endregion
+
+        #region Character Reference
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateCharacterReference()
+        {
+            /*
+            8.2.4.72 Character reference state
+            See: http://www.w3.org/TR/html52/syntax.html#character-reference-state
+
+            Set the temporary buffer to the empty string. 
+            Append a U+0026 AMPERSAND (&) character to the temporary buffer.
+
+            Consume the next input character:
+                U+0009 CHARACTER TABULATION (tab) 
+                U+000A LINE FEED (LF) 
+                U+000C FORM FEED (FF) 
+                U+0020 SPACE 
+                U+003C LESS-THAN SIGN 
+                U+0026 AMPERSAND 
+                EOF 
+                    Reconsume in the character reference end state.
+                U+0023 NUMBER SIGN (#) 
+                    Append the current input character to the temporary buffer. Switch to the numeric character reference state.
+                Anything else 
+                    *** See comments inline ***
+                    
+            */
+            this.TempBuffer.Clear();
+            this.TempBuffer.Append('&');
+
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch.IsSpaceCharacter() || (ch == '<') || (ch == '&') || (ch == Characters.EOF))
+            {
+                this.ReconsumeIn(StateEnum.CharacterReferenceEnd);
+            }
+            else if (ch == '#')
+            {
+                this.TempBuffer.Append(ch);
+                this.SwitchTo(StateEnum.NumericCharacterReference);
+            }
+            else
+            {
+                // IMPLEMENTATION: This is the worst description in the whole HTML5 specification. Some comments are needed.
+                // The <TempBuffer> instance variable keeps track of what we've read so far of characters. It contains all
+                // characters read incl. the "&", "#", "X" and all other chars we may encounter. 
+                // * If all ends good, then we switch to "8.2.4.78 Numeric character reference end state", which clears the
+                //   temp buffer and replaces the contents with the character reference.
+                // * In any case, we end up in "8.2.4.79 Character reference end state", which emits the contents of the 
+                //   temp buffer. If 8.2.4.78 was not called, then the temp buffer contains whatever raw chars we may have
+                //   read so far; If 8.2.4.78 was called, then the temp buffer will contain the character.
+
+                // Consume the maximum number of characters possible, with the consumed characters matching one of the identifiers
+                // in the first column of the §8.5 Named character references table(in a case-sensitive manner).
+                // Append each character to the temporary buffer when it’s consumed.
+
                 StringBuilder characterName = new StringBuilder();
-                for (int i = 0; i < NamedCharacters.MaxNameLength; i++)
+                // IMPLEMENTATION: No where does it was to use the current char, but it makes no sense to throw it away. Add it to the name.
+                characterName.Append(ch);
+                NamedCharacters.Match match = NamedCharacters.Match.NoMatch;
+                do
                 {
-                    // In reality, the above means: Read characters until one of the above is true:
-                    // * We encounter a ";" (semicolon). No names contain semicolon, and we can perform the lookup immedeately.
-                    // * We reach the "NamedCharacters.MaxNameLength", in which case, we'll need to brute-force lookup the name.
-                    // * We reach EOF ... we have to stop.
-                    if (i != 0)
-                        ch = this.ConsumeNextInputCharacter();
-                    consumedCharacters.Append(ch);
+                    // IMPLEMENTATION: Because we need to "consume the maximum number of characters possible",
+                    // we continue consuming until we hit a no-match. This means we will get one of the following matches:
+                    // * None
+                    // * Partial, Partial ... Partial, None
+                    // * Partial, Partial ... Partial, Full, None
+                    NamedCharacters.Match tmpMatch = NamedCharacters.TryGetNamedCharacter(characterName.ToString());
+                    if (!tmpMatch.HasMatch)
+                        break;
+
+                    // IMPLEMENTATION: Remember the last match.
+                    match = tmpMatch;
+
+                    // IMPLEMENTATION: Add the last consumed char to the temp buffer.
+                    this.TempBuffer.Append(ch);
+                    // IMPLEMENTATION: Consume another character.
+                    ch = this.ConsumeNextInputCharacter();
                     if (ch == Characters.EOF)
                         break;
                     characterName.Append(ch);
-                    if (ch == ';')
-                        break; // No need for further lookup
                 }
+                while (true);
 
-                string actualName;
-                string namedCharacter = NamedCharacters.TryGetNamedCharacter(characterName.ToString(), out actualName);
+                // IMPLEMENTATION: Always return the last consumed char, because it was never used for a match and it is not for us.
+                this.ReconsumeInputCharacter(ch);
 
-                if (namedCharacter == null)
+                // A partial match is not a match!
+                if (match.HasMatch && !match.IsFullMatch)
+                    match = NamedCharacters.Match.NoMatch; 
+
+                // IMPLEMENTATION: It is unclear from the HTML5 specification how to read the remaining clauses. We assume they are independent.
+
+                if (!match.HasMatch)
                 {
-                    // If no match can be made, then no characters are consumed, and nothing is returned.
-                    this.ReconsumeInputCharacters(consumedCharacters.ToString());
+                    // If no match can be made and the temporary buffer consists of a U+0026 AMPERSAND character(&) followed by a
+                    // sequence of one or more alphanumeric ASCII characters and a U+003B SEMICOLON character(;), then this is a parse error.
+                    string tmp = this.TempBuffer.ToString();
+                    if (tmp.Length >= 3)
+                    {
+                        if ((tmp[0] == '&') && (tmp[tmp.Length - 1] == ';') && tmp.Skip(1).Take(tmp.Length - 2).All(c => c.IsAlphaNumericAsciiCharacter()))
+                        {
+                            // IMPLEMENTATION: This is a case like "&foo;", which is an unrecognized named character reference.
+                            this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+                        }
+                    }
+                
 
-                    // In this case, if the characters after the U+0026 AMPERSAND character (&) consist of a
-                    // sequence of one or more alphanumeric ASCII characters followed by a U + 003B SEMICOLON character(;),
-                    // then this is a parse error.
-                    if ((characterName.Length >= 2) && characterName.ToString().Substring(0, characterName.Length - 1).All(c => c.IsAsciiHexDigit()) && (characterName.ToString()[characterName.Length - 1] == ';'))
-                        this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+                    // If no match can be made, switch to the character reference end state.
+                    this.SwitchTo(StateEnum.CharacterReferenceEnd);
 
-                    return null;
+                    // IMPLEMENTATION: We are done! Return here! "8.2.4.79 Character reference end" outputs the temp buffer.
+                    return;
                 }
                 else
                 {
-                    // We need to figure out what the next char is.
-                    if (actualName.Length < characterName.Length)
-                    { 
-                        ch = characterName[actualName.Length];
-                    }
-                    else if (ch != Characters.EOF)
+                    // If the character reference was consumed as part of an attribute (return state is either attribute value(double - quoted)
+                    //    state, attribute value(single-quoted) state or attribute value(unquoted) state), 
+                    // and the last character matched is not a U + 003B SEMICOLON character(;), 
+                    // and the next input character is either a U + 003D EQUALS SIGN character(=) 
+                    //    or an alphanumeric ASCII character, 
+                    // then, for historical reasons, switch to the character reference end state.
+                    bool attrib = (this.ReturnState == StateEnum.AttributeValueDoubleQuoted) || (this.ReturnState == StateEnum.AttributeValueSingleQuoted) || (this.ReturnState == StateEnum.AttributeValueUnquoted);
+                    if (attrib && (match.LastMatchedCharacter != ';') && ((ch == '=') || ch.IsAlphaNumericAsciiCharacter()))
                     {
-                        // If the last read char was EOF, no need to do this.
-                        ch = this.ConsumeNextInputCharacter();
-                        consumedCharacters.Append(ch);
+                        // IMPLEMENTATION: This is a case like "&amp=" inside an attribute, which does not qualify
+                        // for one of the *hack names* listed in "8.5. Named character references". 
+                        // Return here and let "8.2.4.79 Character reference end" outputs the temp buffer.
+                        this.SwitchTo(StateEnum.CharacterReferenceEnd);
+                        return;
                     }
 
-                    // If the character reference is being consumed as part of an attribute, and the last character matched
-                    // is not a ";" (U + 003B) character, and the next character is either a "=" (U + 003D) character or an
-                    // alphanumeric ASCII character, then ...
-                    if (partOfAnAttribute && (actualName[actualName.Length - 1] != ';') && ((ch == '=') || ch.IsAlphaNumericAsciiCharacter()))
+                    // If the last character matched is not a U + 003B SEMICOLON character(;), this is a parse error.
+                    if (match.LastMatchedCharacter != ';')
                     {
-                        // ... then, for historical reasons all the characters that were matched after
-                        // the U + 0026 AMPERSAND character(&) must be unconsumed, and nothing is returned.
-                        this.ReconsumeInputCharacters(consumedCharacters.ToString());
-
-                        // However, if this next character is in fact a "=" (U + 003D) character, then this is a parse error,
-                        // because some legacy user agents will misinterpret the markup in those cases.
-                        if (ch == '=')
-                            this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
-
-                        return null;
-                    }
-
-                    // Otherwise, a character reference is parsed. If the last character matched is not a ";"(U + 003B) character,
-                    // there is a parse error.
-                    if (actualName[actualName.Length - 1] != ';')
+                        // IMPLEMENTATION: This is a case like "&amp", which is a character reference is missing an ending semicolon ";".
+                        // We still output the character. Only few named characters allow this hack and are listed in "8.5. Named character references"
                         this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+                    }
 
-                    // Return one or two character tokens for the character(s) corresponding to the character reference name
-                    // (as given by the second column of the named character references table).
+                    // Set the temporary buffer to the empty string.
+                    // Append one or two characters corresponding to the character reference name
+                    // (as given by the second column of the §8.5 Named character references table) to the temporary buffer.
+                    this.TempBuffer.Clear();
+                    this.TempBuffer.Append(match.Character);
 
-                    // Return whatever characters we did not need.
-                    consumedCharacters.Remove(0, actualName.Length);
-                    this.ReconsumeInputCharacters(consumedCharacters.ToString());
-                    return namedCharacter;
+                    // Switch to the character reference end state.
+                    // IMPLEMENTATION: Let "8.2.4.79 Character reference end" outputs the temp buffer.
+                    this.SwitchTo(StateEnum.CharacterReferenceEnd);
                 }
             }
+        }
+
+        /// <summary>
+        /// See: http://www.w3.org/TR/html52/syntax.html#character-reference-code
+        /// </summary>
+        private int CharacterReferenceCode;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateNumericCharacterReference()
+        {
+            /*
+            8.2.4.73 Numeric character reference state
+            See: http://www.w3.org/TR/html52/syntax.html#numeric-character-reference-state
+
+            Set the character reference code to zero (0).
+            
+            Consume the next input character:
+                U+0078 LATIN SMALL LETTER X 
+                U+0058 LATIN CAPITAL LETTER X 
+                    Append the current input character to the temporary buffer. Switch to the hexadecimal character reference start state.
+                Anything else 
+                    Reconsume in the decimal character reference start state.
+            */
+            this.CharacterReferenceCode = 0;
+
+            char ch = this.ConsumeNextInputCharacter();
+            if ((ch == 'x') || (ch == 'X'))
+            {
+                this.TempBuffer.Append(ch);
+                this.SwitchTo(StateEnum.HexadecimalCharacterReferenceStart);
+            }
+            else
+            {
+                this.ReconsumeIn(StateEnum.DecimalCharacterReferenceStart);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateHexadecimalCharacterReferenceStart()
+        {
+            /*
+            8.2.4.74 Hexadecimal character reference start state
+            See: http://www.w3.org/TR/html52/syntax.html#hexadecimal-character-reference-start-state
+
+            Consume the next input character:
+                ASCII hex digit 
+                    Reconsume in the hexadecimal character reference state.
+                Anything else 
+                    Parse error. Reconsume in the character reference end state.
+            */
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch.IsAsciiHexDigit())
+            {
+                this.ReconsumeIn(StateEnum.HexadecimalCharacterReference);
+            }
+            else
+            {
+                this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+                this.ReconsumeIn(StateEnum.CharacterReferenceEnd);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateDecimalCharacterReferenceStart()
+        {
+            /*
+            8.2.4.75 Decimal character reference start state
+            See: http://www.w3.org/TR/html52/syntax.html#decimal-character-reference-start-state
+
+            Consume the next input character:
+                ASCII digit 
+                    Reconsume in the decimal character reference state.
+                Anything else 
+                    Parse error. Reconsume in the character reference end state.
+            */
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch.IsAsciiDigit())
+            {
+                this.ReconsumeIn(StateEnum.DecimalCharacterReference);
+            }
+            else
+            {
+                this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+                this.ReconsumeIn(StateEnum.CharacterReferenceEnd);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateHexadecimalCharacterReference()
+        {
+            /*
+            8.2.4.76 Hexadecimal character reference state
+            See: http://www.w3.org/TR/html52/syntax.html#hexadecimal-character-reference-state
+
+            Consume the next input character:
+                Uppercase ASCII hex digit 
+                    Multiply the character reference code by 16. Add a numeric version of the current input character
+                    as a hexademical digit (subtract 0x0037 from the character’s code point) to the character reference code.
+                Lowercase ASCII hex digit 
+                    Multiply the character reference code by 16. Add a numeric version of the current input character
+                    as a hexademical digit (subtract 0x0057 from the character’s code point) to the character reference code.
+                ASCII digit 
+                    Multiply the character reference code by 16. Add a numeric version of the current input character
+                    (subtract 0x0030 from the character’s code point) to the character reference code.
+                U+003B SEMICOLON character (;) 
+                    Switch to the numeric character reference end state.
+                Anything else 
+                    Parse error. Reconsume in the numeric character reference end state.
+            */
+            char ch = this.ConsumeNextInputCharacter();
+
+            // IMPLEMENTATION: There is a BUG in the HTML5 specification. Must handle ASCII-Digit *BEFORE* ASCII-Hex-Digits.
+
+            if (ch.IsAsciiDigit())
+            {
+                this.CharacterReferenceCode = this.CharacterReferenceCode * 16;
+                this.CharacterReferenceCode = this.CharacterReferenceCode + (ch - 0x0030);
+            }
+            else if (ch.IsUppercaseAsciiHexDigit())
+            {
+                this.CharacterReferenceCode = this.CharacterReferenceCode * 16;
+                this.CharacterReferenceCode = this.CharacterReferenceCode + (ch - 0x0037);
+            }
+            else if (ch.IsLowercaseAsciiHexDigit())
+            {
+                this.CharacterReferenceCode = this.CharacterReferenceCode * 16;
+                this.CharacterReferenceCode = this.CharacterReferenceCode + (ch - 0x0057);
+            }
+            else if (ch == ';')
+            {
+                this.SwitchTo(StateEnum.NumericCharacterReferenceEnd);
+            }
+            else
+            {
+                this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+                this.ReconsumeIn(StateEnum.NumericCharacterReferenceEnd);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateDecimalCharacterReference()
+        {
+            /*
+            8.2.4.77 Decimal character reference state
+            See: http://www.w3.org/TR/html52/syntax.html#decimal-character-reference-state
+
+            Consume the next input character:
+                ASCII digit 
+                    Multiply the character reference code by 16. Add a numeric version of the current input character
+                    (subtract 0x0030 from the character’s code point) to the character reference code.
+                U+003B SEMICOLON character (;) 
+                    Switch to the numeric character reference end state.
+                Anything else 
+                    Parse error. Reconsume in the numeric character reference end state.
+            */
+            char ch = this.ConsumeNextInputCharacter();
+            if (ch.IsAsciiDigit())
+            {
+                // IMPLEMENTATION: There is a BUG in the HTML5 specification. Must multiply by 10 (not by 16).
+                this.CharacterReferenceCode = this.CharacterReferenceCode * 10;
+                this.CharacterReferenceCode = this.CharacterReferenceCode + (ch - 0x0030);
+            }
+            else if (ch == ';')
+            {
+                this.SwitchTo(StateEnum.NumericCharacterReferenceEnd);
+            }
+            else
+            {
+                this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+                this.ReconsumeIn(StateEnum.NumericCharacterReferenceEnd);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateNumericCharacterReferenceEnd()
+        {
+            /*
+            8.2.4.78 Numeric character reference end state
+            See: http://www.w3.org/TR/html52/syntax.html#numeric-character-reference-end-state
+            */
+
+            // Check the character reference code:
+            
+            // If that number is one of the numbers in the first column of the following table, then this is a parse error. 
+            // Find the row with that number in the first column, and set the character reference code to the number in the
+            // second column of that row.
+            char replacementChar = '\u0000';
+            if (this.CharacterReferenceCode < Tokenizer.CharacterReferenceReplacetCharacters.Length)
+                replacementChar = Tokenizer.CharacterReferenceReplacetCharacters[this.CharacterReferenceCode];
+            if (replacementChar != '\u0000')
+            {
+                // The code-point is defined in the table.
+                this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+                this.CharacterReferenceCode = replacementChar;
+            }
+
+            // If the number is in the range 0xD800 to 0xDFFF or is greater than 0x10FFFF, then this is a parse error.
+            // Set the character reference code to 0xFFFD.
+            else if (((0xD800 <= this.CharacterReferenceCode) && (this.CharacterReferenceCode <= 0xDFFF)) || (this.CharacterReferenceCode > 0x10FFFF))
+            {
+                this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+                this.CharacterReferenceCode = 0xFFFD;
+            }
+
+            // If the number is in the range 0x0001 to 0x0008, 0x000D to 0x001F, 0x007F to 0x009F, 0xFDD0 to 0xFDEF, 
+            // or is one of 0x000B, 0xFFFE, 0xFFFF, 0x1FFFE, 0x1FFFF, 0x2FFFE, 0x2FFFF, 0x3FFFE, 0x3FFFF, 0x4FFFE, 
+            // 0x4FFFF, 0x5FFFE, 0x5FFFF, 0x6FFFE, 0x6FFFF, 0x7FFFE, 0x7FFFF, 0x8FFFE, 0x8FFFF, 0x9FFFE, 0x9FFFF, 0xAFFFE, 
+            // 0xAFFFF, 0xBFFFE, 0xBFFFF, 0xCFFFE, 0xCFFFF, 0xDFFFE, 0xDFFFF, 0xEFFFE, 0xEFFFF, 0xFFFFE, 0xFFFFF, 0x10FFFE,
+            // or 0x10FFFF, then this is a parse error.
+
+            else if (
+#pragma warning disable SA1117
+                    this.CharacterReferenceCode.IsInRange(0x0001, 0x0008) ||
+                    this.CharacterReferenceCode.IsInRange(0x000D, 0x001F) ||
+                    this.CharacterReferenceCode.IsInRange(0x007F, 0x009F) ||
+                    this.CharacterReferenceCode.IsInRange(0xFDD0, 0xFDEF) ||
+                    this.CharacterReferenceCode.IsOneOf(
+                        0x000B, 0xFFFE, 0xFFFF, 0x1FFFE, 0x1FFFF, 0x2FFFE, 0x2FFFF, 0x3FFFE,
+                        0x3FFFF, 0x4FFFE, 0x4FFFF, 0x5FFFE, 0x5FFFF, 0x6FFFE, 0x6FFFF, 0x7FFFE, 0x7FFFF, 0x8FFFE, 0x8FFFF,
+                        0x9FFFE, 0x9FFFF, 0xAFFFE, 0xAFFFF, 0xBFFFE, 0xBFFFF, 0xCFFFE, 0xCFFFF, 0xDFFFE, 0xDFFFF, 0xEFFFE,
+                        0xEFFFF, 0xFFFFE, 0xFFFFF, 0x10FFFE, 0x10FFFF))
+#pragma warning restore SA1117 // Parameters must be on same line or separate lines
+            {
+                this.InformParseError(Parsing.ParseError.InvalidCharacterReference);
+            }
+
+            // Set the temporary buffer to the empty string. 
+            // Append the Unicode character with code point equal to the character reference code to the temporary buffer. 
+            // Switch to the character reference end state.
+            this.TempBuffer.Clear();
+            this.TempBuffer.Append(Char.ConvertFromUtf32(this.CharacterReferenceCode));
+            this.SwitchTo(StateEnum.CharacterReferenceEnd);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void HandleStateCharacterReferenceEnd()
+        {
+            /*
+            8.2.4.79 Character reference end state
+            See: http://www.w3.org/TR/html52/syntax.html#character-reference-end-state
+
+            Consume the next input character.
+
+            Check the return state:
+                attribute value (double-quoted) state 
+                attribute value (single-quoted) state 
+                attribute value (unquoted) state 
+                    Append each character in the temporary buffer (in the order they were added to the buffer) to the current attribute’s value.
+                Anything else 
+                    For each of the characters in the temporary buffer (in the order they were added to the buffer), emit the character as a character token.
+
+            Reconsume in the return state.
+            */
+            char ch = this.ConsumeNextInputCharacter();
+
+            if ((this.ReturnState == StateEnum.AttributeValueDoubleQuoted) || (this.ReturnState == StateEnum.AttributeValueSingleQuoted) || (this.ReturnState == StateEnum.AttributeValueUnquoted))
+            {
+                this.AttributeValue.Append(this.TempBuffer.ToString());
+            }
+            else
+            {
+                foreach (char c in this.TempBuffer.ToString())
+                    this.EmitCharacter(c);
+            }
+
+            this.ReconsumeIn(this.ReturnState);
         }
 
         private static readonly char[] CharacterReferenceReplacetCharacters = Tokenizer.GetCharacterReferenceReplacetCharacters();
@@ -4894,7 +5203,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         {
             char[] chars = new char[256];
 
-            // List found in 8.2.4.69 Tokenizing character references.
+            // List found in 8.2.4.78. Numeric character reference end state
+            // See: http://www.w3.org/TR/html52/syntax.html#numeric-character-reference-end-state
             // Every array index not set to a value (i.e. \u0000) is not defined in the table.
             chars[0x00] = '\uFFFD';
             chars[0x80] = '\u20AC';
@@ -4926,53 +5236,6 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars[0x9F] = '\u0178';
 
             return chars;
-        }
-
-        private static int ParseNumber(string digits, bool isHex)
-        {
-            if ((digits == null) || (digits.Length == 0))
-                throw new ArgumentOutOfRangeException(nameof(digits));
-            if (isHex && (digits.Length > 7))
-                throw new ArgumentOutOfRangeException(nameof(digits));
-            if (!isHex && (digits.Length > 9))
-                throw new ArgumentOutOfRangeException(nameof(digits));
-
-            if (isHex)
-            {
-                int number = 0;
-                foreach (char digit in digits)
-                {
-                    int value;
-                    if (('0' <= digit) && (digit <= '9'))
-                        value = digit - '0';
-                    else if (('A' <= digit) && (digit <= 'F'))
-                        value = (digit - 'A') + 10;
-                    else if (('a' <= digit) && (digit <= 'f'))
-                        value = (digit - 'a') + 10;
-                    else
-                        throw new ArgumentOutOfRangeException(nameof(digits)); // Garbage digit
-
-                    number = (number * 16) + value;
-                }
-
-                return number;
-            }
-            else
-            {
-                int number = 0;
-                foreach (char digit in digits)
-                {
-                    int value;
-                    if (('0' <= digit) && (digit <= '9'))
-                        value = digit - '0';
-                    else
-                        throw new ArgumentOutOfRangeException(nameof(digits)); // Garbage digit
-
-                    number = (number * 10) + value;
-                }
-
-                return number;
-            }
         }
 
         #endregion

@@ -98,5 +98,10 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return String.Format("{0}=\"{1}\"", this.Name, this.Value);
+        }
     }
 }

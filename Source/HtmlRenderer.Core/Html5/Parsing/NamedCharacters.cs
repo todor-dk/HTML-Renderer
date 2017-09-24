@@ -24,13 +24,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 {
     /// <summary>
     /// Helper class containing functionality related to named characters.
-    /// See: http://www.w3.org/TR/html51/syntax.html#named-character-references
+    /// See: http://www.w3.org/TR/html52/syntax.html#named-character-references
     /// </summary>
     internal static class NamedCharacters
     {
-        private static readonly IReadOnlyDictionary<string, string> CompleteNameMap;
-
-        private static readonly IReadOnlyDictionary<string, string> IncompleteNameMap;
+        private static readonly KeyValuePair<string, string>[] SortedNameMap;
 
         public static readonly int MaxNameLength;
 
@@ -38,80 +36,159 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
         {
             Dictionary<string, string> characters = NamedCharacters.GetCharacters();
 
-            // The names in the dictionary are either "XYZ" or "XYZ;". We divide into the two categories.
-            NamedCharacters.CompleteNameMap = characters.Where(pair => pair.Key.EndsWith(";", StringComparison.Ordinal)).ToDictionary(p => p.Key, p => p.Value);
-            NamedCharacters.IncompleteNameMap = characters.Where(pair => !pair.Key.EndsWith(";", StringComparison.Ordinal)).ToDictionary(p => p.Key, p => p.Value);
+            // Create a list for binary searching
+            NamedCharacters.SortedNameMap = characters.ToArray();
+            Array.Sort(NamedCharacters.SortedNameMap, Comparer.Default);
 
             // Calculate the maximum length
             NamedCharacters.MaxNameLength = characters.Max(pair => pair.Key.Length);
         }
 
-        /// <summary>
-        /// Try find a named character with the given named. The logic looks for
-        /// a named character with the longest possible name, if none found, then
-        /// it looks for a character with next longest name etc.
-        /// </summary>
-        /// <param name="name">The character name to lookup.</param>
-        /// <param name="characterName">Contains the actual name.</param>
-        /// <returns>The character with the longest possible name or null if no character matches the name.</returns>
-        public static string TryGetNamedCharacter(string name, out string characterName)
+        private class Comparer : IComparer<KeyValuePair<string, string>>
         {
-            characterName = name;
-            if (String.IsNullOrEmpty(characterName))
-                return null;
-
-            // Optimization for commonly used characters
-            if (characterName.StartsWith("lt;", StringComparison.Ordinal))
-                return "\u003C";
-            if (characterName.StartsWith("LT;", StringComparison.Ordinal))
-                return "\u003C";
-            if (characterName.StartsWith("gt;", StringComparison.Ordinal))
-                return "\u003E";
-            if (characterName.StartsWith("GT;", StringComparison.Ordinal))
-                return "\u003E";
-            if (characterName.StartsWith("amp;", StringComparison.Ordinal))
-                return "\u0026";
-            if (characterName.StartsWith("AMP;", StringComparison.Ordinal))
-                return "\u0026";
-            if (characterName.StartsWith("quot;", StringComparison.Ordinal))
-                return "\u0022";
-            if (characterName.StartsWith("QUOT;", StringComparison.Ordinal))
-                return "\u0022";
-            if (characterName.StartsWith("apos;", StringComparison.Ordinal))
-                return "\u0027";
-
-            // Consume the maximum number of characters possible, with the consumed characters
-            // matching one of the identifiers in the first column of the named character
-            // references table (in a case-sensitive manner).
-
-            // The above means to try to find the character with the longest name.
-            string namedCharacter;
-            if ((characterName[characterName.Length - 1] == ';') && NamedCharacters.CompleteNameMap.TryGetValue(characterName, out namedCharacter))
-                return namedCharacter;
-            if (NamedCharacters.IncompleteNameMap.TryGetValue(characterName, out namedCharacter))
-                return namedCharacter;
-
-            // Try with shorter and shorter name.
-            for (int i = name.Length - 1; i >= 1; i--)
+            public static readonly Comparer Default = new Comparer();
+            public int Compare(KeyValuePair<string, string> x, KeyValuePair<string, string> y)
             {
-                characterName = name.Substring(0, i);
-                if ((characterName[characterName.Length - 1] == ';') && NamedCharacters.CompleteNameMap.TryGetValue(characterName, out namedCharacter))
-                    return namedCharacter;
-                if (NamedCharacters.IncompleteNameMap.TryGetValue(characterName, out namedCharacter))
-                    return namedCharacter;
+                return StringComparer.Ordinal.Compare(x.Key, y.Key);
             }
 
-            // Nothing found
-            characterName = null;
-            return null;
+            public Match CompareMatch(string candidate, string name)
+            {
+                int len = Math.Min(candidate.Length, name.Length);
+
+                for (int i = 0; i < len; i++)
+                {
+                    char cc = candidate[i];
+                    char cn = name[i];
+                    int comp = cc.CompareTo(cn);
+                    if (comp < 0)
+                        return Match.Before;
+                    else if (comp > 0)
+                        return Match.After;
+                }
+
+                if (candidate.Length < name.Length)
+                    return Match.Before;
+                else if (candidate.Length > name.Length)
+                    return Match.PartialMatch;
+                else
+                    return Match.FullMatch;
+            }
+
+            public enum Match
+            {
+                Before,
+                After,
+                FullMatch,
+                PartialMatch
+            }
+        }
+
+        /// <summary>
+        /// Represents a match from the <see cref="TryGetNamedCharacter(string)"/> method.
+        /// </summary>
+        public struct Match
+        {
+            public static readonly Match NoMatch = new Match();
+
+            /// <summary>
+            /// The character value of the named character.
+            /// </summary>
+            public string Character { get; private set; }
+
+            /// <summary>
+            /// The character reference name that matches the name given to the
+            /// <see cref="NamedCharacters.TryGetNamedCharacter(string)"/> method.
+            /// </summary>
+            public string Name { get; private set; }
+
+            /// <summary>
+            /// If true, the <see cref="Name"/> matches 100% the named given to the
+            /// <see cref="NamedCharacters.TryGetNamedCharacter(string)"/> method.
+            /// Otherwise, this is a partial match, for example "am" was matched for
+            /// "amp;" and the caller could try to continue matching by giving additional
+            /// input to the TryGetNamedCharacter method. If several named characters
+            /// match the given input, the first and the best is returned.
+            /// </summary>
+            public bool IsFullMatch { get; private set; }
+
+            /// <summary>
+            /// Indicates if the input to <see cref="NamedCharacters.TryGetNamedCharacter(string)"/>
+            /// had any match at all (either partial or full match).
+            /// </summary>
+            public bool HasMatch
+            {
+                get { return this.Name != null; }
+            }
+
+            public char LastMatchedCharacter
+            {
+                get
+                {
+                    if (String.IsNullOrEmpty(this.Name))
+                        return '\u0000';
+                    else
+                        return this.Name[this.Name.Length - 1];
+                }
+            }
+
+            internal Match(KeyValuePair<string, string> pair, bool fullMatch)
+            {
+                this.Character = pair.Value;
+                this.Name = pair.Key;
+                this.IsFullMatch = fullMatch;
+            }
+        }
+
+        /// <summary>
+        /// Try find a named character with the given named. The logic looks for
+        /// a named character with the given <paramref name="name"/> or alternatively 
+        /// starting with the given <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The character name to lookup.</param>
+        /// <returns>Returns a <see cref="Match"/> containing information about the found named character.</returns>
+        public static Match TryGetNamedCharacter(string name)
+        {
+            Contract.RequiresNotNull(name, nameof(name));
+
+            if (name.Length > NamedCharacters.MaxNameLength)
+                return Match.NoMatch;
+
+            int lo = 0;
+            int hi = NamedCharacters.SortedNameMap.Length - 1;
+            int partial = -1;
+            while (lo <= hi)
+            {
+                int i = lo + ((hi - lo) >> 1);
+                Comparer.Match match = Comparer.Default.CompareMatch(NamedCharacters.SortedNameMap[i].Key, name);
+
+                if (match == Comparer.Match.FullMatch)
+                    return new Match(NamedCharacters.SortedNameMap[i], true);
+
+                if (match == Comparer.Match.PartialMatch)
+                {
+                    partial = i;
+                    match = Comparer.Match.After;
+                }
+
+                if (match == Comparer.Match.Before)
+                    lo = i + 1;
+                else
+                    hi = i - 1;
+            }
+
+            if (partial != -1)
+                return new Match(NamedCharacters.SortedNameMap[partial], false);
+
+            return Match.NoMatch;
         }
 
         private static Dictionary<string, string> GetCharacters()
         {
             Dictionary<string, string> chars = new Dictionary<string, string>(StringComparer.Ordinal);
 
-            // See: http://www.w3.org/TR/html51/syntax.html#named-character-references
-            // See: http://www.w3.org/TR/html51/entities.json
+            // See: http://www.w3.org/TR/html52/syntax.html#named-character-references
+            // See: http://www.w3.org/TR/html52/entities.json
             chars.Add("Aacute;", "\u00C1");
             chars.Add("Aacute", "\u00C1");
             chars.Add("aacute;", "\u00E1");
@@ -147,20 +224,19 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("Amacr;", "\u0100");
             chars.Add("amacr;", "\u0101");
             chars.Add("amalg;", "\u2A3F");
-            chars.Add("AMP;", "\u0026");
-            chars.Add("AMP", "\u0026");
             chars.Add("amp;", "\u0026");
             chars.Add("amp", "\u0026");
+            chars.Add("AMP;", "\u0026");
+            chars.Add("AMP", "\u0026");
+            chars.Add("andand;", "\u2A55");
             chars.Add("And;", "\u2A53");
             chars.Add("and;", "\u2227");
-            chars.Add("andand;", "\u2A55");
             chars.Add("andd;", "\u2A5C");
             chars.Add("andslope;", "\u2A58");
             chars.Add("andv;", "\u2A5A");
             chars.Add("ang;", "\u2220");
             chars.Add("ange;", "\u29A4");
             chars.Add("angle;", "\u2220");
-            chars.Add("angmsd;", "\u2221");
             chars.Add("angmsdaa;", "\u29A8");
             chars.Add("angmsdab;", "\u29A9");
             chars.Add("angmsdac;", "\u29AA");
@@ -169,6 +245,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("angmsdaf;", "\u29AD");
             chars.Add("angmsdag;", "\u29AE");
             chars.Add("angmsdah;", "\u29AF");
+            chars.Add("angmsd;", "\u2221");
             chars.Add("angrt;", "\u221F");
             chars.Add("angrtvb;", "\u22BE");
             chars.Add("angrtvbd;", "\u299D");
@@ -179,8 +256,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("aogon;", "\u0105");
             chars.Add("Aopf;", "\uD835\uDD38");
             chars.Add("aopf;", "\uD835\uDD52");
-            chars.Add("ap;", "\u2248");
             chars.Add("apacir;", "\u2A6F");
+            chars.Add("ap;", "\u2248");
             chars.Add("apE;", "\u2A70");
             chars.Add("ape;", "\u224A");
             chars.Add("apid;", "\u224B");
@@ -216,8 +293,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("Backslash;", "\u2216");
             chars.Add("Barv;", "\u2AE7");
             chars.Add("barvee;", "\u22BD");
-            chars.Add("Barwed;", "\u2306");
             chars.Add("barwed;", "\u2305");
+            chars.Add("Barwed;", "\u2306");
             chars.Add("barwedge;", "\u2305");
             chars.Add("bbrk;", "\u23B5");
             chars.Add("bbrktbrk;", "\u23B6");
@@ -226,8 +303,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("bcy;", "\u0431");
             chars.Add("bdquo;", "\u201E");
             chars.Add("becaus;", "\u2235");
-            chars.Add("Because;", "\u2235");
             chars.Add("because;", "\u2235");
+            chars.Add("Because;", "\u2235");
             chars.Add("bemptyv;", "\u29B0");
             chars.Add("bepsi;", "\u03F6");
             chars.Add("bernou;", "\u212C");
@@ -273,61 +350,61 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("bottom;", "\u22A5");
             chars.Add("bowtie;", "\u22C8");
             chars.Add("boxbox;", "\u29C9");
-            chars.Add("boxDL;", "\u2557");
-            chars.Add("boxDl;", "\u2556");
-            chars.Add("boxdL;", "\u2555");
             chars.Add("boxdl;", "\u2510");
-            chars.Add("boxDR;", "\u2554");
-            chars.Add("boxDr;", "\u2553");
-            chars.Add("boxdR;", "\u2552");
+            chars.Add("boxdL;", "\u2555");
+            chars.Add("boxDl;", "\u2556");
+            chars.Add("boxDL;", "\u2557");
             chars.Add("boxdr;", "\u250C");
-            chars.Add("boxH;", "\u2550");
+            chars.Add("boxdR;", "\u2552");
+            chars.Add("boxDr;", "\u2553");
+            chars.Add("boxDR;", "\u2554");
             chars.Add("boxh;", "\u2500");
-            chars.Add("boxHD;", "\u2566");
+            chars.Add("boxH;", "\u2550");
+            chars.Add("boxhd;", "\u252C");
             chars.Add("boxHd;", "\u2564");
             chars.Add("boxhD;", "\u2565");
-            chars.Add("boxhd;", "\u252C");
-            chars.Add("boxHU;", "\u2569");
+            chars.Add("boxHD;", "\u2566");
+            chars.Add("boxhu;", "\u2534");
             chars.Add("boxHu;", "\u2567");
             chars.Add("boxhU;", "\u2568");
-            chars.Add("boxhu;", "\u2534");
+            chars.Add("boxHU;", "\u2569");
             chars.Add("boxminus;", "\u229F");
             chars.Add("boxplus;", "\u229E");
             chars.Add("boxtimes;", "\u22A0");
-            chars.Add("boxUL;", "\u255D");
-            chars.Add("boxUl;", "\u255C");
-            chars.Add("boxuL;", "\u255B");
             chars.Add("boxul;", "\u2518");
-            chars.Add("boxUR;", "\u255A");
-            chars.Add("boxUr;", "\u2559");
-            chars.Add("boxuR;", "\u2558");
+            chars.Add("boxuL;", "\u255B");
+            chars.Add("boxUl;", "\u255C");
+            chars.Add("boxUL;", "\u255D");
             chars.Add("boxur;", "\u2514");
-            chars.Add("boxV;", "\u2551");
+            chars.Add("boxuR;", "\u2558");
+            chars.Add("boxUr;", "\u2559");
+            chars.Add("boxUR;", "\u255A");
             chars.Add("boxv;", "\u2502");
-            chars.Add("boxVH;", "\u256C");
-            chars.Add("boxVh;", "\u256B");
-            chars.Add("boxvH;", "\u256A");
+            chars.Add("boxV;", "\u2551");
             chars.Add("boxvh;", "\u253C");
-            chars.Add("boxVL;", "\u2563");
-            chars.Add("boxVl;", "\u2562");
-            chars.Add("boxvL;", "\u2561");
+            chars.Add("boxvH;", "\u256A");
+            chars.Add("boxVh;", "\u256B");
+            chars.Add("boxVH;", "\u256C");
             chars.Add("boxvl;", "\u2524");
-            chars.Add("boxVR;", "\u2560");
-            chars.Add("boxVr;", "\u255F");
-            chars.Add("boxvR;", "\u255E");
+            chars.Add("boxvL;", "\u2561");
+            chars.Add("boxVl;", "\u2562");
+            chars.Add("boxVL;", "\u2563");
             chars.Add("boxvr;", "\u251C");
+            chars.Add("boxvR;", "\u255E");
+            chars.Add("boxVr;", "\u255F");
+            chars.Add("boxVR;", "\u2560");
             chars.Add("bprime;", "\u2035");
-            chars.Add("Breve;", "\u02D8");
             chars.Add("breve;", "\u02D8");
+            chars.Add("Breve;", "\u02D8");
             chars.Add("brvbar;", "\u00A6");
             chars.Add("brvbar", "\u00A6");
-            chars.Add("Bscr;", "\u212C");
             chars.Add("bscr;", "\uD835\uDCB7");
+            chars.Add("Bscr;", "\u212C");
             chars.Add("bsemi;", "\u204F");
             chars.Add("bsim;", "\u223D");
             chars.Add("bsime;", "\u22CD");
-            chars.Add("bsol;", "\u005C");
             chars.Add("bsolb;", "\u29C5");
+            chars.Add("bsol;", "\u005C");
             chars.Add("bsolhsub;", "\u27C8");
             chars.Add("bull;", "\u2022");
             chars.Add("bullet;", "\u2022");
@@ -338,11 +415,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("bumpeq;", "\u224F");
             chars.Add("Cacute;", "\u0106");
             chars.Add("cacute;", "\u0107");
-            chars.Add("Cap;", "\u22D2");
-            chars.Add("cap;", "\u2229");
             chars.Add("capand;", "\u2A44");
             chars.Add("capbrcup;", "\u2A49");
             chars.Add("capcap;", "\u2A4B");
+            chars.Add("cap;", "\u2229");
+            chars.Add("Cap;", "\u22D2");
             chars.Add("capcup;", "\u2A47");
             chars.Add("capdot;", "\u2A40");
             chars.Add("CapitalDifferentialD;", "\u2145");
@@ -370,17 +447,16 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("cemptyv;", "\u29B2");
             chars.Add("cent;", "\u00A2");
             chars.Add("cent", "\u00A2");
-            chars.Add("CenterDot;", "\u00B7");
             chars.Add("centerdot;", "\u00B7");
-            chars.Add("Cfr;", "\u212D");
+            chars.Add("CenterDot;", "\u00B7");
             chars.Add("cfr;", "\uD835\uDD20");
+            chars.Add("Cfr;", "\u212D");
             chars.Add("CHcy;", "\u0427");
             chars.Add("chcy;", "\u0447");
             chars.Add("check;", "\u2713");
             chars.Add("checkmark;", "\u2713");
             chars.Add("Chi;", "\u03A7");
             chars.Add("chi;", "\u03C7");
-            chars.Add("cir;", "\u25CB");
             chars.Add("circ;", "\u02C6");
             chars.Add("circeq;", "\u2257");
             chars.Add("circlearrowleft;", "\u21BA");
@@ -394,6 +470,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("CircleMinus;", "\u2296");
             chars.Add("CirclePlus;", "\u2295");
             chars.Add("CircleTimes;", "\u2297");
+            chars.Add("cir;", "\u25CB");
             chars.Add("cirE;", "\u29C3");
             chars.Add("cire;", "\u2257");
             chars.Add("cirfnint;", "\u2A10");
@@ -404,8 +481,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("CloseCurlyQuote;", "\u2019");
             chars.Add("clubs;", "\u2663");
             chars.Add("clubsuit;", "\u2663");
-            chars.Add("Colon;", "\u2237");
             chars.Add("colon;", "\u003A");
+            chars.Add("Colon;", "\u2237");
             chars.Add("Colone;", "\u2A74");
             chars.Add("colone;", "\u2254");
             chars.Add("coloneq;", "\u2254");
@@ -418,22 +495,22 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("cong;", "\u2245");
             chars.Add("congdot;", "\u2A6D");
             chars.Add("Congruent;", "\u2261");
-            chars.Add("Conint;", "\u222F");
             chars.Add("conint;", "\u222E");
+            chars.Add("Conint;", "\u222F");
             chars.Add("ContourIntegral;", "\u222E");
-            chars.Add("Copf;", "\u2102");
             chars.Add("copf;", "\uD835\uDD54");
+            chars.Add("Copf;", "\u2102");
             chars.Add("coprod;", "\u2210");
             chars.Add("Coproduct;", "\u2210");
-            chars.Add("COPY;", "\u00A9");
-            chars.Add("COPY", "\u00A9");
             chars.Add("copy;", "\u00A9");
             chars.Add("copy", "\u00A9");
+            chars.Add("COPY;", "\u00A9");
+            chars.Add("COPY", "\u00A9");
             chars.Add("copysr;", "\u2117");
             chars.Add("CounterClockwiseContourIntegral;", "\u2233");
             chars.Add("crarr;", "\u21B5");
-            chars.Add("Cross;", "\u2A2F");
             chars.Add("cross;", "\u2717");
+            chars.Add("Cross;", "\u2A2F");
             chars.Add("Cscr;", "\uD835\uDC9E");
             chars.Add("cscr;", "\uD835\uDCB8");
             chars.Add("csub;", "\u2ACF");
@@ -447,11 +524,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("cuesc;", "\u22DF");
             chars.Add("cularr;", "\u21B6");
             chars.Add("cularrp;", "\u293D");
-            chars.Add("Cup;", "\u22D3");
-            chars.Add("cup;", "\u222A");
             chars.Add("cupbrcap;", "\u2A48");
-            chars.Add("CupCap;", "\u224D");
             chars.Add("cupcap;", "\u2A46");
+            chars.Add("CupCap;", "\u224D");
+            chars.Add("cup;", "\u222A");
+            chars.Add("Cup;", "\u22D3");
             chars.Add("cupcup;", "\u2A4A");
             chars.Add("cupdot;", "\u228D");
             chars.Add("cupor;", "\u2A45");
@@ -471,12 +548,12 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("cwconint;", "\u2232");
             chars.Add("cwint;", "\u2231");
             chars.Add("cylcty;", "\u232D");
-            chars.Add("Dagger;", "\u2021");
             chars.Add("dagger;", "\u2020");
+            chars.Add("Dagger;", "\u2021");
             chars.Add("daleth;", "\u2138");
+            chars.Add("darr;", "\u2193");
             chars.Add("Darr;", "\u21A1");
             chars.Add("dArr;", "\u21D3");
-            chars.Add("darr;", "\u2193");
             chars.Add("dash;", "\u2010");
             chars.Add("Dashv;", "\u2AE4");
             chars.Add("dashv;", "\u22A3");
@@ -486,10 +563,10 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("dcaron;", "\u010F");
             chars.Add("Dcy;", "\u0414");
             chars.Add("dcy;", "\u0434");
-            chars.Add("DD;", "\u2145");
-            chars.Add("dd;", "\u2146");
             chars.Add("ddagger;", "\u2021");
             chars.Add("ddarr;", "\u21CA");
+            chars.Add("DD;", "\u2145");
+            chars.Add("dd;", "\u2146");
             chars.Add("DDotrahd;", "\u2911");
             chars.Add("ddotseq;", "\u2A77");
             chars.Add("deg;", "\u00B0");
@@ -510,8 +587,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("DiacriticalGrave;", "\u0060");
             chars.Add("DiacriticalTilde;", "\u02DC");
             chars.Add("diam;", "\u22C4");
-            chars.Add("Diamond;", "\u22C4");
             chars.Add("diamond;", "\u22C4");
+            chars.Add("Diamond;", "\u22C4");
             chars.Add("diamondsuit;", "\u2666");
             chars.Add("diams;", "\u2666");
             chars.Add("die;", "\u00A8");
@@ -554,10 +631,10 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("DoubleUpArrow;", "\u21D1");
             chars.Add("DoubleUpDownArrow;", "\u21D5");
             chars.Add("DoubleVerticalBar;", "\u2225");
+            chars.Add("DownArrowBar;", "\u2913");
+            chars.Add("downarrow;", "\u2193");
             chars.Add("DownArrow;", "\u2193");
             chars.Add("Downarrow;", "\u21D3");
-            chars.Add("downarrow;", "\u2193");
-            chars.Add("DownArrowBar;", "\u2913");
             chars.Add("DownArrowUpArrow;", "\u21F5");
             chars.Add("DownBreve;", "\u0311");
             chars.Add("downdownarrows;", "\u21CA");
@@ -565,13 +642,13 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("downharpoonright;", "\u21C2");
             chars.Add("DownLeftRightVector;", "\u2950");
             chars.Add("DownLeftTeeVector;", "\u295E");
-            chars.Add("DownLeftVector;", "\u21BD");
             chars.Add("DownLeftVectorBar;", "\u2956");
+            chars.Add("DownLeftVector;", "\u21BD");
             chars.Add("DownRightTeeVector;", "\u295F");
-            chars.Add("DownRightVector;", "\u21C1");
             chars.Add("DownRightVectorBar;", "\u2957");
-            chars.Add("DownTee;", "\u22A4");
+            chars.Add("DownRightVector;", "\u21C1");
             chars.Add("DownTeeArrow;", "\u21A7");
+            chars.Add("DownTee;", "\u22A4");
             chars.Add("drbkarow;", "\u2910");
             chars.Add("drcorn;", "\u231F");
             chars.Add("drcrop;", "\u230C");
@@ -598,18 +675,18 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("easter;", "\u2A6E");
             chars.Add("Ecaron;", "\u011A");
             chars.Add("ecaron;", "\u011B");
-            chars.Add("ecir;", "\u2256");
             chars.Add("Ecirc;", "\u00CA");
             chars.Add("Ecirc", "\u00CA");
             chars.Add("ecirc;", "\u00EA");
             chars.Add("ecirc", "\u00EA");
+            chars.Add("ecir;", "\u2256");
             chars.Add("ecolon;", "\u2255");
             chars.Add("Ecy;", "\u042D");
             chars.Add("ecy;", "\u044D");
             chars.Add("eDDot;", "\u2A77");
             chars.Add("Edot;", "\u0116");
-            chars.Add("eDot;", "\u2251");
             chars.Add("edot;", "\u0117");
+            chars.Add("eDot;", "\u2251");
             chars.Add("ee;", "\u2147");
             chars.Add("efDot;", "\u2252");
             chars.Add("Efr;", "\uD835\uDD08");
@@ -634,9 +711,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("EmptySmallSquare;", "\u25FB");
             chars.Add("emptyv;", "\u2205");
             chars.Add("EmptyVerySmallSquare;", "\u25AB");
-            chars.Add("emsp;", "\u2003");
             chars.Add("emsp13;", "\u2004");
             chars.Add("emsp14;", "\u2005");
+            chars.Add("emsp;", "\u2003");
             chars.Add("ENG;", "\u014A");
             chars.Add("eng;", "\u014B");
             chars.Add("ensp;", "\u2002");
@@ -666,8 +743,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("eqvparsl;", "\u29E5");
             chars.Add("erarr;", "\u2971");
             chars.Add("erDot;", "\u2253");
-            chars.Add("Escr;", "\u2130");
             chars.Add("escr;", "\u212F");
+            chars.Add("Escr;", "\u2130");
             chars.Add("esdot;", "\u2250");
             chars.Add("Esim;", "\u2A73");
             chars.Add("esim;", "\u2242");
@@ -686,8 +763,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("exist;", "\u2203");
             chars.Add("Exists;", "\u2203");
             chars.Add("expectation;", "\u2130");
-            chars.Add("ExponentialE;", "\u2147");
             chars.Add("exponentiale;", "\u2147");
+            chars.Add("ExponentialE;", "\u2147");
             chars.Add("fallingdotseq;", "\u2252");
             chars.Add("Fcy;", "\u0424");
             chars.Add("fcy;", "\u0444");
@@ -707,8 +784,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("fnof;", "\u0192");
             chars.Add("Fopf;", "\uD835\uDD3D");
             chars.Add("fopf;", "\uD835\uDD57");
-            chars.Add("ForAll;", "\u2200");
             chars.Add("forall;", "\u2200");
+            chars.Add("ForAll;", "\u2200");
             chars.Add("fork;", "\u22D4");
             chars.Add("forkv;", "\u2AD9");
             chars.Add("Fouriertrf;", "\u2131");
@@ -733,8 +810,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("frac78;", "\u215E");
             chars.Add("frasl;", "\u2044");
             chars.Add("frown;", "\u2322");
-            chars.Add("Fscr;", "\u2131");
             chars.Add("fscr;", "\uD835\uDCBB");
+            chars.Add("Fscr;", "\u2131");
             chars.Add("gacute;", "\u01F5");
             chars.Add("Gamma;", "\u0393");
             chars.Add("gamma;", "\u03B3");
@@ -750,15 +827,15 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("gcy;", "\u0433");
             chars.Add("Gdot;", "\u0120");
             chars.Add("gdot;", "\u0121");
-            chars.Add("gE;", "\u2267");
             chars.Add("ge;", "\u2265");
+            chars.Add("gE;", "\u2267");
             chars.Add("gEl;", "\u2A8C");
             chars.Add("gel;", "\u22DB");
             chars.Add("geq;", "\u2265");
             chars.Add("geqq;", "\u2267");
             chars.Add("geqslant;", "\u2A7E");
-            chars.Add("ges;", "\u2A7E");
             chars.Add("gescc;", "\u2AA9");
+            chars.Add("ges;", "\u2A7E");
             chars.Add("gesdot;", "\u2A80");
             chars.Add("gesdoto;", "\u2A82");
             chars.Add("gesdotol;", "\u2A84");
@@ -766,20 +843,20 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("gesles;", "\u2A94");
             chars.Add("Gfr;", "\uD835\uDD0A");
             chars.Add("gfr;", "\uD835\uDD24");
-            chars.Add("Gg;", "\u22D9");
             chars.Add("gg;", "\u226B");
+            chars.Add("Gg;", "\u22D9");
             chars.Add("ggg;", "\u22D9");
             chars.Add("gimel;", "\u2137");
             chars.Add("GJcy;", "\u0403");
             chars.Add("gjcy;", "\u0453");
-            chars.Add("gl;", "\u2277");
             chars.Add("gla;", "\u2AA5");
+            chars.Add("gl;", "\u2277");
             chars.Add("glE;", "\u2A92");
             chars.Add("glj;", "\u2AA4");
             chars.Add("gnap;", "\u2A8A");
             chars.Add("gnapprox;", "\u2A8A");
-            chars.Add("gnE;", "\u2269");
             chars.Add("gne;", "\u2A88");
+            chars.Add("gnE;", "\u2269");
             chars.Add("gneq;", "\u2A88");
             chars.Add("gneqq;", "\u2269");
             chars.Add("gnsim;", "\u22E7");
@@ -798,13 +875,13 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("gsim;", "\u2273");
             chars.Add("gsime;", "\u2A8E");
             chars.Add("gsiml;", "\u2A90");
+            chars.Add("gtcc;", "\u2AA7");
+            chars.Add("gtcir;", "\u2A7A");
+            chars.Add("gt;", "\u003E");
+            chars.Add("gt", "\u003E");
             chars.Add("GT;", "\u003E");
             chars.Add("GT", "\u003E");
             chars.Add("Gt;", "\u226B");
-            chars.Add("gt;", "\u003E");
-            chars.Add("gt", "\u003E");
-            chars.Add("gtcc;", "\u2AA7");
-            chars.Add("gtcir;", "\u2A7A");
             chars.Add("gtdot;", "\u22D7");
             chars.Add("gtlPar;", "\u2995");
             chars.Add("gtquest;", "\u2A7C");
@@ -823,9 +900,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("hamilt;", "\u210B");
             chars.Add("HARDcy;", "\u042A");
             chars.Add("hardcy;", "\u044A");
-            chars.Add("hArr;", "\u21D4");
-            chars.Add("harr;", "\u2194");
             chars.Add("harrcir;", "\u2948");
+            chars.Add("harr;", "\u2194");
+            chars.Add("hArr;", "\u21D4");
             chars.Add("harrw;", "\u21AD");
             chars.Add("Hat;", "\u005E");
             chars.Add("hbar;", "\u210F");
@@ -835,8 +912,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("heartsuit;", "\u2665");
             chars.Add("hellip;", "\u2026");
             chars.Add("hercon;", "\u22B9");
-            chars.Add("Hfr;", "\u210C");
             chars.Add("hfr;", "\uD835\uDD25");
+            chars.Add("Hfr;", "\u210C");
             chars.Add("HilbertSpace;", "\u210B");
             chars.Add("hksearow;", "\u2925");
             chars.Add("hkswarow;", "\u2926");
@@ -844,12 +921,12 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("homtht;", "\u223B");
             chars.Add("hookleftarrow;", "\u21A9");
             chars.Add("hookrightarrow;", "\u21AA");
-            chars.Add("Hopf;", "\u210D");
             chars.Add("hopf;", "\uD835\uDD59");
+            chars.Add("Hopf;", "\u210D");
             chars.Add("horbar;", "\u2015");
             chars.Add("HorizontalLine;", "\u2500");
-            chars.Add("Hscr;", "\u210B");
             chars.Add("hscr;", "\uD835\uDCBD");
+            chars.Add("Hscr;", "\u210B");
             chars.Add("hslash;", "\u210F");
             chars.Add("Hstrok;", "\u0126");
             chars.Add("hstrok;", "\u0127");
@@ -874,8 +951,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("iexcl;", "\u00A1");
             chars.Add("iexcl", "\u00A1");
             chars.Add("iff;", "\u21D4");
-            chars.Add("Ifr;", "\u2111");
             chars.Add("ifr;", "\uD835\uDD26");
+            chars.Add("Ifr;", "\u2111");
             chars.Add("Igrave;", "\u00CC");
             chars.Add("Igrave", "\u00CC");
             chars.Add("igrave;", "\u00EC");
@@ -887,7 +964,6 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("iiota;", "\u2129");
             chars.Add("IJlig;", "\u0132");
             chars.Add("ijlig;", "\u0133");
-            chars.Add("Im;", "\u2111");
             chars.Add("Imacr;", "\u012A");
             chars.Add("imacr;", "\u012B");
             chars.Add("image;", "\u2111");
@@ -895,17 +971,18 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("imagline;", "\u2110");
             chars.Add("imagpart;", "\u2111");
             chars.Add("imath;", "\u0131");
+            chars.Add("Im;", "\u2111");
             chars.Add("imof;", "\u22B7");
             chars.Add("imped;", "\u01B5");
             chars.Add("Implies;", "\u21D2");
-            chars.Add("in;", "\u2208");
             chars.Add("incare;", "\u2105");
+            chars.Add("in;", "\u2208");
             chars.Add("infin;", "\u221E");
             chars.Add("infintie;", "\u29DD");
             chars.Add("inodot;", "\u0131");
-            chars.Add("Int;", "\u222C");
-            chars.Add("int;", "\u222B");
             chars.Add("intcal;", "\u22BA");
+            chars.Add("int;", "\u222B");
+            chars.Add("Int;", "\u222C");
             chars.Add("integers;", "\u2124");
             chars.Add("Integral;", "\u222B");
             chars.Add("intercal;", "\u22BA");
@@ -925,8 +1002,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("iprod;", "\u2A3C");
             chars.Add("iquest;", "\u00BF");
             chars.Add("iquest", "\u00BF");
-            chars.Add("Iscr;", "\u2110");
             chars.Add("iscr;", "\uD835\uDCBE");
+            chars.Add("Iscr;", "\u2110");
             chars.Add("isin;", "\u2208");
             chars.Add("isindot;", "\u22F5");
             chars.Add("isinE;", "\u22F9");
@@ -982,32 +1059,32 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("lagran;", "\u2112");
             chars.Add("Lambda;", "\u039B");
             chars.Add("lambda;", "\u03BB");
-            chars.Add("Lang;", "\u27EA");
             chars.Add("lang;", "\u27E8");
+            chars.Add("Lang;", "\u27EA");
             chars.Add("langd;", "\u2991");
             chars.Add("langle;", "\u27E8");
             chars.Add("lap;", "\u2A85");
             chars.Add("Laplacetrf;", "\u2112");
             chars.Add("laquo;", "\u00AB");
             chars.Add("laquo", "\u00AB");
-            chars.Add("Larr;", "\u219E");
-            chars.Add("lArr;", "\u21D0");
-            chars.Add("larr;", "\u2190");
             chars.Add("larrb;", "\u21E4");
             chars.Add("larrbfs;", "\u291F");
+            chars.Add("larr;", "\u2190");
+            chars.Add("Larr;", "\u219E");
+            chars.Add("lArr;", "\u21D0");
             chars.Add("larrfs;", "\u291D");
             chars.Add("larrhk;", "\u21A9");
             chars.Add("larrlp;", "\u21AB");
             chars.Add("larrpl;", "\u2939");
             chars.Add("larrsim;", "\u2973");
             chars.Add("larrtl;", "\u21A2");
-            chars.Add("lat;", "\u2AAB");
-            chars.Add("lAtail;", "\u291B");
             chars.Add("latail;", "\u2919");
+            chars.Add("lAtail;", "\u291B");
+            chars.Add("lat;", "\u2AAB");
             chars.Add("late;", "\u2AAD");
             chars.Add("lates;", "\u2AAD\uFE00");
-            chars.Add("lBarr;", "\u290E");
             chars.Add("lbarr;", "\u290C");
+            chars.Add("lBarr;", "\u290E");
             chars.Add("lbbrk;", "\u2772");
             chars.Add("lbrace;", "\u007B");
             chars.Add("lbrack;", "\u005B");
@@ -1028,51 +1105,51 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("ldrdhar;", "\u2967");
             chars.Add("ldrushar;", "\u294B");
             chars.Add("ldsh;", "\u21B2");
-            chars.Add("lE;", "\u2266");
             chars.Add("le;", "\u2264");
+            chars.Add("lE;", "\u2266");
             chars.Add("LeftAngleBracket;", "\u27E8");
+            chars.Add("LeftArrowBar;", "\u21E4");
+            chars.Add("leftarrow;", "\u2190");
             chars.Add("LeftArrow;", "\u2190");
             chars.Add("Leftarrow;", "\u21D0");
-            chars.Add("leftarrow;", "\u2190");
-            chars.Add("LeftArrowBar;", "\u21E4");
             chars.Add("LeftArrowRightArrow;", "\u21C6");
             chars.Add("leftarrowtail;", "\u21A2");
             chars.Add("LeftCeiling;", "\u2308");
             chars.Add("LeftDoubleBracket;", "\u27E6");
             chars.Add("LeftDownTeeVector;", "\u2961");
-            chars.Add("LeftDownVector;", "\u21C3");
             chars.Add("LeftDownVectorBar;", "\u2959");
+            chars.Add("LeftDownVector;", "\u21C3");
             chars.Add("LeftFloor;", "\u230A");
             chars.Add("leftharpoondown;", "\u21BD");
             chars.Add("leftharpoonup;", "\u21BC");
             chars.Add("leftleftarrows;", "\u21C7");
+            chars.Add("leftrightarrow;", "\u2194");
             chars.Add("LeftRightArrow;", "\u2194");
             chars.Add("Leftrightarrow;", "\u21D4");
-            chars.Add("leftrightarrow;", "\u2194");
             chars.Add("leftrightarrows;", "\u21C6");
             chars.Add("leftrightharpoons;", "\u21CB");
             chars.Add("leftrightsquigarrow;", "\u21AD");
             chars.Add("LeftRightVector;", "\u294E");
-            chars.Add("LeftTee;", "\u22A3");
             chars.Add("LeftTeeArrow;", "\u21A4");
+            chars.Add("LeftTee;", "\u22A3");
             chars.Add("LeftTeeVector;", "\u295A");
             chars.Add("leftthreetimes;", "\u22CB");
-            chars.Add("LeftTriangle;", "\u22B2");
             chars.Add("LeftTriangleBar;", "\u29CF");
+            chars.Add("LeftTriangle;", "\u22B2");
             chars.Add("LeftTriangleEqual;", "\u22B4");
             chars.Add("LeftUpDownVector;", "\u2951");
             chars.Add("LeftUpTeeVector;", "\u2960");
-            chars.Add("LeftUpVector;", "\u21BF");
             chars.Add("LeftUpVectorBar;", "\u2958");
-            chars.Add("LeftVector;", "\u21BC");
+            chars.Add("LeftUpVector;", "\u21BF");
             chars.Add("LeftVectorBar;", "\u2952");
+            chars.Add("LeftVector;", "\u21BC");
             chars.Add("lEg;", "\u2A8B");
             chars.Add("leg;", "\u22DA");
             chars.Add("leq;", "\u2264");
             chars.Add("leqq;", "\u2266");
             chars.Add("leqslant;", "\u2A7D");
-            chars.Add("les;", "\u2A7D");
             chars.Add("lescc;", "\u2AA8");
+            chars.Add("les;", "\u2A7D");
             chars.Add("lesdot;", "\u2A7F");
             chars.Add("lesdoto;", "\u2A81");
             chars.Add("lesdotor;", "\u2A83");
@@ -1103,37 +1180,37 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("lhblk;", "\u2584");
             chars.Add("LJcy;", "\u0409");
             chars.Add("ljcy;", "\u0459");
-            chars.Add("Ll;", "\u22D8");
-            chars.Add("ll;", "\u226A");
             chars.Add("llarr;", "\u21C7");
+            chars.Add("ll;", "\u226A");
+            chars.Add("Ll;", "\u22D8");
             chars.Add("llcorner;", "\u231E");
             chars.Add("Lleftarrow;", "\u21DA");
             chars.Add("llhard;", "\u296B");
             chars.Add("lltri;", "\u25FA");
             chars.Add("Lmidot;", "\u013F");
             chars.Add("lmidot;", "\u0140");
-            chars.Add("lmoust;", "\u23B0");
             chars.Add("lmoustache;", "\u23B0");
+            chars.Add("lmoust;", "\u23B0");
             chars.Add("lnap;", "\u2A89");
             chars.Add("lnapprox;", "\u2A89");
-            chars.Add("lnE;", "\u2268");
             chars.Add("lne;", "\u2A87");
+            chars.Add("lnE;", "\u2268");
             chars.Add("lneq;", "\u2A87");
             chars.Add("lneqq;", "\u2268");
             chars.Add("lnsim;", "\u22E6");
             chars.Add("loang;", "\u27EC");
             chars.Add("loarr;", "\u21FD");
             chars.Add("lobrk;", "\u27E6");
+            chars.Add("longleftarrow;", "\u27F5");
             chars.Add("LongLeftArrow;", "\u27F5");
             chars.Add("Longleftarrow;", "\u27F8");
-            chars.Add("longleftarrow;", "\u27F5");
+            chars.Add("longleftrightarrow;", "\u27F7");
             chars.Add("LongLeftRightArrow;", "\u27F7");
             chars.Add("Longleftrightarrow;", "\u27FA");
-            chars.Add("longleftrightarrow;", "\u27F7");
             chars.Add("longmapsto;", "\u27FC");
+            chars.Add("longrightarrow;", "\u27F6");
             chars.Add("LongRightArrow;", "\u27F6");
             chars.Add("Longrightarrow;", "\u27F9");
-            chars.Add("longrightarrow;", "\u27F6");
             chars.Add("looparrowleft;", "\u21AB");
             chars.Add("looparrowright;", "\u21AC");
             chars.Add("lopar;", "\u2985");
@@ -1157,10 +1234,10 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("lrm;", "\u200E");
             chars.Add("lrtri;", "\u22BF");
             chars.Add("lsaquo;", "\u2039");
-            chars.Add("Lscr;", "\u2112");
             chars.Add("lscr;", "\uD835\uDCC1");
-            chars.Add("Lsh;", "\u21B0");
+            chars.Add("Lscr;", "\u2112");
             chars.Add("lsh;", "\u21B0");
+            chars.Add("Lsh;", "\u21B0");
             chars.Add("lsim;", "\u2272");
             chars.Add("lsime;", "\u2A8D");
             chars.Add("lsimg;", "\u2A8F");
@@ -1169,13 +1246,13 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("lsquor;", "\u201A");
             chars.Add("Lstrok;", "\u0141");
             chars.Add("lstrok;", "\u0142");
+            chars.Add("ltcc;", "\u2AA6");
+            chars.Add("ltcir;", "\u2A79");
+            chars.Add("lt;", "\u003C");
+            chars.Add("lt", "\u003C");
             chars.Add("LT;", "\u003C");
             chars.Add("LT", "\u003C");
             chars.Add("Lt;", "\u226A");
-            chars.Add("lt;", "\u003C");
-            chars.Add("lt", "\u003C");
-            chars.Add("ltcc;", "\u2AA6");
-            chars.Add("ltcir;", "\u2A79");
             chars.Add("ltdot;", "\u22D6");
             chars.Add("lthree;", "\u22CB");
             chars.Add("ltimes;", "\u22C9");
@@ -1214,13 +1291,13 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("mho;", "\u2127");
             chars.Add("micro;", "\u00B5");
             chars.Add("micro", "\u00B5");
-            chars.Add("mid;", "\u2223");
             chars.Add("midast;", "\u002A");
             chars.Add("midcir;", "\u2AF0");
+            chars.Add("mid;", "\u2223");
             chars.Add("middot;", "\u00B7");
             chars.Add("middot", "\u00B7");
-            chars.Add("minus;", "\u2212");
             chars.Add("minusb;", "\u229F");
+            chars.Add("minus;", "\u2212");
             chars.Add("minusd;", "\u2238");
             chars.Add("minusdu;", "\u2A2A");
             chars.Add("MinusPlus;", "\u2213");
@@ -1231,8 +1308,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("Mopf;", "\uD835\uDD44");
             chars.Add("mopf;", "\uD835\uDD5E");
             chars.Add("mp;", "\u2213");
-            chars.Add("Mscr;", "\u2133");
             chars.Add("mscr;", "\uD835\uDCC2");
+            chars.Add("Mscr;", "\u2133");
             chars.Add("mstpos;", "\u223E");
             chars.Add("Mu;", "\u039C");
             chars.Add("mu;", "\u03BC");
@@ -1247,9 +1324,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("napid;", "\u224B\u0338");
             chars.Add("napos;", "\u0149");
             chars.Add("napprox;", "\u2249");
-            chars.Add("natur;", "\u266E");
             chars.Add("natural;", "\u266E");
             chars.Add("naturals;", "\u2115");
+            chars.Add("natur;", "\u266E");
             chars.Add("nbsp;", "\u00A0");
             chars.Add("nbsp", "\u00A0");
             chars.Add("nbump;", "\u224E\u0338");
@@ -1265,11 +1342,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("Ncy;", "\u041D");
             chars.Add("ncy;", "\u043D");
             chars.Add("ndash;", "\u2013");
-            chars.Add("ne;", "\u2260");
             chars.Add("nearhk;", "\u2924");
-            chars.Add("neArr;", "\u21D7");
             chars.Add("nearr;", "\u2197");
+            chars.Add("neArr;", "\u21D7");
             chars.Add("nearrow;", "\u2197");
+            chars.Add("ne;", "\u2260");
             chars.Add("nedot;", "\u2250\u0338");
             chars.Add("NegativeMediumSpace;", "\u200B");
             chars.Add("NegativeThickSpace;", "\u200B");
@@ -1297,8 +1374,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("ngt;", "\u226F");
             chars.Add("ngtr;", "\u226F");
             chars.Add("nGtv;", "\u226B\u0338");
-            chars.Add("nhArr;", "\u21CE");
             chars.Add("nharr;", "\u21AE");
+            chars.Add("nhArr;", "\u21CE");
             chars.Add("nhpar;", "\u2AF2");
             chars.Add("ni;", "\u220B");
             chars.Add("nis;", "\u22FC");
@@ -1306,15 +1383,15 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("niv;", "\u220B");
             chars.Add("NJcy;", "\u040A");
             chars.Add("njcy;", "\u045A");
-            chars.Add("nlArr;", "\u21CD");
             chars.Add("nlarr;", "\u219A");
+            chars.Add("nlArr;", "\u21CD");
             chars.Add("nldr;", "\u2025");
             chars.Add("nlE;", "\u2266\u0338");
             chars.Add("nle;", "\u2270");
-            chars.Add("nLeftarrow;", "\u21CD");
             chars.Add("nleftarrow;", "\u219A");
-            chars.Add("nLeftrightarrow;", "\u21CE");
+            chars.Add("nLeftarrow;", "\u21CD");
             chars.Add("nleftrightarrow;", "\u21AE");
+            chars.Add("nLeftrightarrow;", "\u21CE");
             chars.Add("nleq;", "\u2270");
             chars.Add("nleqq;", "\u2266\u0338");
             chars.Add("nleqslant;", "\u2A7D\u0338");
@@ -1330,8 +1407,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("nmid;", "\u2224");
             chars.Add("NoBreak;", "\u2060");
             chars.Add("NonBreakingSpace;", "\u00A0");
-            chars.Add("Nopf;", "\u2115");
             chars.Add("nopf;", "\uD835\uDD5F");
+            chars.Add("Nopf;", "\u2115");
             chars.Add("Not;", "\u2AEC");
             chars.Add("not;", "\u00AC");
             chars.Add("not", "\u00AC");
@@ -1357,8 +1434,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("notinva;", "\u2209");
             chars.Add("notinvb;", "\u22F7");
             chars.Add("notinvc;", "\u22F6");
-            chars.Add("NotLeftTriangle;", "\u22EA");
             chars.Add("NotLeftTriangleBar;", "\u29CF\u0338");
+            chars.Add("NotLeftTriangle;", "\u22EA");
             chars.Add("NotLeftTriangleEqual;", "\u22EC");
             chars.Add("NotLess;", "\u226E");
             chars.Add("NotLessEqual;", "\u2270");
@@ -1376,8 +1453,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("NotPrecedesEqual;", "\u2AAF\u0338");
             chars.Add("NotPrecedesSlantEqual;", "\u22E0");
             chars.Add("NotReverseElement;", "\u220C");
-            chars.Add("NotRightTriangle;", "\u22EB");
             chars.Add("NotRightTriangleBar;", "\u29D0\u0338");
+            chars.Add("NotRightTriangle;", "\u22EB");
             chars.Add("NotRightTriangleEqual;", "\u22ED");
             chars.Add("NotSquareSubset;", "\u228F\u0338");
             chars.Add("NotSquareSubsetEqual;", "\u22E2");
@@ -1396,22 +1473,22 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("NotTildeFullEqual;", "\u2247");
             chars.Add("NotTildeTilde;", "\u2249");
             chars.Add("NotVerticalBar;", "\u2224");
-            chars.Add("npar;", "\u2226");
             chars.Add("nparallel;", "\u2226");
+            chars.Add("npar;", "\u2226");
             chars.Add("nparsl;", "\u2AFD\u20E5");
             chars.Add("npart;", "\u2202\u0338");
             chars.Add("npolint;", "\u2A14");
             chars.Add("npr;", "\u2280");
             chars.Add("nprcue;", "\u22E0");
-            chars.Add("npre;", "\u2AAF\u0338");
             chars.Add("nprec;", "\u2280");
             chars.Add("npreceq;", "\u2AAF\u0338");
-            chars.Add("nrArr;", "\u21CF");
-            chars.Add("nrarr;", "\u219B");
+            chars.Add("npre;", "\u2AAF\u0338");
             chars.Add("nrarrc;", "\u2933\u0338");
+            chars.Add("nrarr;", "\u219B");
+            chars.Add("nrArr;", "\u21CF");
             chars.Add("nrarrw;", "\u219D\u0338");
-            chars.Add("nRightarrow;", "\u21CF");
             chars.Add("nrightarrow;", "\u219B");
+            chars.Add("nRightarrow;", "\u21CF");
             chars.Add("nrtri;", "\u22EB");
             chars.Add("nrtrie;", "\u22ED");
             chars.Add("nsc;", "\u2281");
@@ -1458,10 +1535,10 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("numero;", "\u2116");
             chars.Add("numsp;", "\u2007");
             chars.Add("nvap;", "\u224D\u20D2");
-            chars.Add("nVDash;", "\u22AF");
-            chars.Add("nVdash;", "\u22AE");
-            chars.Add("nvDash;", "\u22AD");
             chars.Add("nvdash;", "\u22AC");
+            chars.Add("nvDash;", "\u22AD");
+            chars.Add("nVdash;", "\u22AE");
+            chars.Add("nVDash;", "\u22AF");
             chars.Add("nvge;", "\u2265\u20D2");
             chars.Add("nvgt;", "\u003E\u20D2");
             chars.Add("nvHarr;", "\u2904");
@@ -1474,8 +1551,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("nvrtrie;", "\u22B5\u20D2");
             chars.Add("nvsim;", "\u223C\u20D2");
             chars.Add("nwarhk;", "\u2923");
-            chars.Add("nwArr;", "\u21D6");
             chars.Add("nwarr;", "\u2196");
+            chars.Add("nwArr;", "\u21D6");
             chars.Add("nwarrow;", "\u2196");
             chars.Add("nwnear;", "\u2927");
             chars.Add("Oacute;", "\u00D3");
@@ -1483,11 +1560,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("oacute;", "\u00F3");
             chars.Add("oacute", "\u00F3");
             chars.Add("oast;", "\u229B");
-            chars.Add("ocir;", "\u229A");
             chars.Add("Ocirc;", "\u00D4");
             chars.Add("Ocirc", "\u00D4");
             chars.Add("ocirc;", "\u00F4");
             chars.Add("ocirc", "\u00F4");
+            chars.Add("ocir;", "\u229A");
             chars.Add("Ocy;", "\u041E");
             chars.Add("ocy;", "\u043E");
             chars.Add("odash;", "\u229D");
@@ -1530,9 +1607,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("OpenCurlyQuote;", "\u2018");
             chars.Add("operp;", "\u29B9");
             chars.Add("oplus;", "\u2295");
+            chars.Add("orarr;", "\u21BB");
             chars.Add("Or;", "\u2A54");
             chars.Add("or;", "\u2228");
-            chars.Add("orarr;", "\u21BB");
             chars.Add("ord;", "\u2A5D");
             chars.Add("order;", "\u2134");
             chars.Add("orderof;", "\u2134");
@@ -1556,9 +1633,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("Otilde", "\u00D5");
             chars.Add("otilde;", "\u00F5");
             chars.Add("otilde", "\u00F5");
+            chars.Add("otimesas;", "\u2A36");
             chars.Add("Otimes;", "\u2A37");
             chars.Add("otimes;", "\u2297");
-            chars.Add("otimesas;", "\u2A36");
             chars.Add("Ouml;", "\u00D6");
             chars.Add("Ouml", "\u00D6");
             chars.Add("ouml;", "\u00F6");
@@ -1568,10 +1645,10 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("OverBrace;", "\u23DE");
             chars.Add("OverBracket;", "\u23B4");
             chars.Add("OverParenthesis;", "\u23DC");
-            chars.Add("par;", "\u2225");
             chars.Add("para;", "\u00B6");
             chars.Add("para", "\u00B6");
             chars.Add("parallel;", "\u2225");
+            chars.Add("par;", "\u2225");
             chars.Add("parsim;", "\u2AF3");
             chars.Add("parsl;", "\u2AFD");
             chars.Add("part;", "\u2202");
@@ -1597,10 +1674,10 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("planck;", "\u210F");
             chars.Add("planckh;", "\u210E");
             chars.Add("plankv;", "\u210F");
-            chars.Add("plus;", "\u002B");
             chars.Add("plusacir;", "\u2A23");
             chars.Add("plusb;", "\u229E");
             chars.Add("pluscir;", "\u2A22");
+            chars.Add("plus;", "\u002B");
             chars.Add("plusdo;", "\u2214");
             chars.Add("plusdu;", "\u2A25");
             chars.Add("pluse;", "\u2A72");
@@ -1612,18 +1689,16 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("pm;", "\u00B1");
             chars.Add("Poincareplane;", "\u210C");
             chars.Add("pointint;", "\u2A15");
-            chars.Add("Popf;", "\u2119");
             chars.Add("popf;", "\uD835\uDD61");
+            chars.Add("Popf;", "\u2119");
             chars.Add("pound;", "\u00A3");
             chars.Add("pound", "\u00A3");
+            chars.Add("prap;", "\u2AB7");
             chars.Add("Pr;", "\u2ABB");
             chars.Add("pr;", "\u227A");
-            chars.Add("prap;", "\u2AB7");
             chars.Add("prcue;", "\u227C");
-            chars.Add("prE;", "\u2AB3");
-            chars.Add("pre;", "\u2AAF");
-            chars.Add("prec;", "\u227A");
             chars.Add("precapprox;", "\u2AB7");
+            chars.Add("prec;", "\u227A");
             chars.Add("preccurlyeq;", "\u227C");
             chars.Add("Precedes;", "\u227A");
             chars.Add("PrecedesEqual;", "\u2AAF");
@@ -1633,9 +1708,11 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("precnapprox;", "\u2AB9");
             chars.Add("precneqq;", "\u2AB5");
             chars.Add("precnsim;", "\u22E8");
+            chars.Add("pre;", "\u2AAF");
+            chars.Add("prE;", "\u2AB3");
             chars.Add("precsim;", "\u227E");
-            chars.Add("Prime;", "\u2033");
             chars.Add("prime;", "\u2032");
+            chars.Add("Prime;", "\u2033");
             chars.Add("primes;", "\u2119");
             chars.Add("prnap;", "\u2AB9");
             chars.Add("prnE;", "\u2AB5");
@@ -1646,8 +1723,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("profline;", "\u2312");
             chars.Add("profsurf;", "\u2313");
             chars.Add("prop;", "\u221D");
-            chars.Add("Proportion;", "\u2237");
             chars.Add("Proportional;", "\u221D");
+            chars.Add("Proportion;", "\u2237");
             chars.Add("propto;", "\u221D");
             chars.Add("prsim;", "\u227E");
             chars.Add("prurel;", "\u22B0");
@@ -1659,8 +1736,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("Qfr;", "\uD835\uDD14");
             chars.Add("qfr;", "\uD835\uDD2E");
             chars.Add("qint;", "\u2A0C");
-            chars.Add("Qopf;", "\u211A");
             chars.Add("qopf;", "\uD835\uDD62");
+            chars.Add("Qopf;", "\u211A");
             chars.Add("qprime;", "\u2057");
             chars.Add("Qscr;", "\uD835\uDCAC");
             chars.Add("qscr;", "\uD835\uDCC6");
@@ -1668,30 +1745,30 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("quatint;", "\u2A16");
             chars.Add("quest;", "\u003F");
             chars.Add("questeq;", "\u225F");
-            chars.Add("QUOT;", "\u0022");
-            chars.Add("QUOT", "\u0022");
             chars.Add("quot;", "\u0022");
             chars.Add("quot", "\u0022");
+            chars.Add("QUOT;", "\u0022");
+            chars.Add("QUOT", "\u0022");
             chars.Add("rAarr;", "\u21DB");
             chars.Add("race;", "\u223D\u0331");
             chars.Add("Racute;", "\u0154");
             chars.Add("racute;", "\u0155");
             chars.Add("radic;", "\u221A");
             chars.Add("raemptyv;", "\u29B3");
-            chars.Add("Rang;", "\u27EB");
             chars.Add("rang;", "\u27E9");
+            chars.Add("Rang;", "\u27EB");
             chars.Add("rangd;", "\u2992");
             chars.Add("range;", "\u29A5");
             chars.Add("rangle;", "\u27E9");
             chars.Add("raquo;", "\u00BB");
             chars.Add("raquo", "\u00BB");
-            chars.Add("Rarr;", "\u21A0");
-            chars.Add("rArr;", "\u21D2");
-            chars.Add("rarr;", "\u2192");
             chars.Add("rarrap;", "\u2975");
             chars.Add("rarrb;", "\u21E5");
             chars.Add("rarrbfs;", "\u2920");
             chars.Add("rarrc;", "\u2933");
+            chars.Add("rarr;", "\u2192");
+            chars.Add("Rarr;", "\u21A0");
+            chars.Add("rArr;", "\u21D2");
             chars.Add("rarrfs;", "\u291E");
             chars.Add("rarrhk;", "\u21AA");
             chars.Add("rarrlp;", "\u21AC");
@@ -1700,13 +1777,13 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("Rarrtl;", "\u2916");
             chars.Add("rarrtl;", "\u21A3");
             chars.Add("rarrw;", "\u219D");
-            chars.Add("rAtail;", "\u291C");
             chars.Add("ratail;", "\u291A");
+            chars.Add("rAtail;", "\u291C");
             chars.Add("ratio;", "\u2236");
             chars.Add("rationals;", "\u211A");
-            chars.Add("RBarr;", "\u2910");
-            chars.Add("rBarr;", "\u290F");
             chars.Add("rbarr;", "\u290D");
+            chars.Add("rBarr;", "\u290F");
+            chars.Add("RBarr;", "\u2910");
             chars.Add("rbbrk;", "\u2773");
             chars.Add("rbrace;", "\u007D");
             chars.Add("rbrack;", "\u005D");
@@ -1726,23 +1803,23 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("rdquo;", "\u201D");
             chars.Add("rdquor;", "\u201D");
             chars.Add("rdsh;", "\u21B3");
-            chars.Add("Re;", "\u211C");
             chars.Add("real;", "\u211C");
             chars.Add("realine;", "\u211B");
             chars.Add("realpart;", "\u211C");
             chars.Add("reals;", "\u211D");
+            chars.Add("Re;", "\u211C");
             chars.Add("rect;", "\u25AD");
-            chars.Add("REG;", "\u00AE");
-            chars.Add("REG", "\u00AE");
             chars.Add("reg;", "\u00AE");
             chars.Add("reg", "\u00AE");
+            chars.Add("REG;", "\u00AE");
+            chars.Add("REG", "\u00AE");
             chars.Add("ReverseElement;", "\u220B");
             chars.Add("ReverseEquilibrium;", "\u21CB");
             chars.Add("ReverseUpEquilibrium;", "\u296F");
             chars.Add("rfisht;", "\u297D");
             chars.Add("rfloor;", "\u230B");
-            chars.Add("Rfr;", "\u211C");
             chars.Add("rfr;", "\uD835\uDD2F");
+            chars.Add("Rfr;", "\u211C");
             chars.Add("rHar;", "\u2964");
             chars.Add("rhard;", "\u21C1");
             chars.Add("rharu;", "\u21C0");
@@ -1751,17 +1828,17 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("rho;", "\u03C1");
             chars.Add("rhov;", "\u03F1");
             chars.Add("RightAngleBracket;", "\u27E9");
+            chars.Add("RightArrowBar;", "\u21E5");
+            chars.Add("rightarrow;", "\u2192");
             chars.Add("RightArrow;", "\u2192");
             chars.Add("Rightarrow;", "\u21D2");
-            chars.Add("rightarrow;", "\u2192");
-            chars.Add("RightArrowBar;", "\u21E5");
             chars.Add("RightArrowLeftArrow;", "\u21C4");
             chars.Add("rightarrowtail;", "\u21A3");
             chars.Add("RightCeiling;", "\u2309");
             chars.Add("RightDoubleBracket;", "\u27E7");
             chars.Add("RightDownTeeVector;", "\u295D");
-            chars.Add("RightDownVector;", "\u21C2");
             chars.Add("RightDownVectorBar;", "\u2955");
+            chars.Add("RightDownVector;", "\u21C2");
             chars.Add("RightFloor;", "\u230B");
             chars.Add("rightharpoondown;", "\u21C1");
             chars.Add("rightharpoonup;", "\u21C0");
@@ -1769,33 +1846,33 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("rightleftharpoons;", "\u21CC");
             chars.Add("rightrightarrows;", "\u21C9");
             chars.Add("rightsquigarrow;", "\u219D");
-            chars.Add("RightTee;", "\u22A2");
             chars.Add("RightTeeArrow;", "\u21A6");
+            chars.Add("RightTee;", "\u22A2");
             chars.Add("RightTeeVector;", "\u295B");
             chars.Add("rightthreetimes;", "\u22CC");
-            chars.Add("RightTriangle;", "\u22B3");
             chars.Add("RightTriangleBar;", "\u29D0");
+            chars.Add("RightTriangle;", "\u22B3");
             chars.Add("RightTriangleEqual;", "\u22B5");
             chars.Add("RightUpDownVector;", "\u294F");
             chars.Add("RightUpTeeVector;", "\u295C");
-            chars.Add("RightUpVector;", "\u21BE");
             chars.Add("RightUpVectorBar;", "\u2954");
-            chars.Add("RightVector;", "\u21C0");
+            chars.Add("RightUpVector;", "\u21BE");
             chars.Add("RightVectorBar;", "\u2953");
+            chars.Add("RightVector;", "\u21C0");
             chars.Add("ring;", "\u02DA");
             chars.Add("risingdotseq;", "\u2253");
             chars.Add("rlarr;", "\u21C4");
             chars.Add("rlhar;", "\u21CC");
             chars.Add("rlm;", "\u200F");
-            chars.Add("rmoust;", "\u23B1");
             chars.Add("rmoustache;", "\u23B1");
+            chars.Add("rmoust;", "\u23B1");
             chars.Add("rnmid;", "\u2AEE");
             chars.Add("roang;", "\u27ED");
             chars.Add("roarr;", "\u21FE");
             chars.Add("robrk;", "\u27E7");
             chars.Add("ropar;", "\u2986");
-            chars.Add("Ropf;", "\u211D");
             chars.Add("ropf;", "\uD835\uDD63");
+            chars.Add("Ropf;", "\u211D");
             chars.Add("roplus;", "\u2A2E");
             chars.Add("rotimes;", "\u2A35");
             chars.Add("RoundImplies;", "\u2970");
@@ -1805,10 +1882,10 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("rrarr;", "\u21C9");
             chars.Add("Rrightarrow;", "\u21DB");
             chars.Add("rsaquo;", "\u203A");
-            chars.Add("Rscr;", "\u211B");
             chars.Add("rscr;", "\uD835\uDCC7");
-            chars.Add("Rsh;", "\u21B1");
+            chars.Add("Rscr;", "\u211B");
             chars.Add("rsh;", "\u21B1");
+            chars.Add("Rsh;", "\u21B1");
             chars.Add("rsqb;", "\u005D");
             chars.Add("rsquo;", "\u2019");
             chars.Add("rsquor;", "\u2019");
@@ -1824,14 +1901,14 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("Sacute;", "\u015A");
             chars.Add("sacute;", "\u015B");
             chars.Add("sbquo;", "\u201A");
-            chars.Add("Sc;", "\u2ABC");
-            chars.Add("sc;", "\u227B");
             chars.Add("scap;", "\u2AB8");
             chars.Add("Scaron;", "\u0160");
             chars.Add("scaron;", "\u0161");
+            chars.Add("Sc;", "\u2ABC");
+            chars.Add("sc;", "\u227B");
             chars.Add("sccue;", "\u227D");
-            chars.Add("scE;", "\u2AB4");
             chars.Add("sce;", "\u2AB0");
+            chars.Add("scE;", "\u2AB4");
             chars.Add("Scedil;", "\u015E");
             chars.Add("scedil;", "\u015F");
             chars.Add("Scirc;", "\u015C");
@@ -1843,12 +1920,12 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("scsim;", "\u227F");
             chars.Add("Scy;", "\u0421");
             chars.Add("scy;", "\u0441");
-            chars.Add("sdot;", "\u22C5");
             chars.Add("sdotb;", "\u22A1");
+            chars.Add("sdot;", "\u22C5");
             chars.Add("sdote;", "\u2A66");
             chars.Add("searhk;", "\u2925");
-            chars.Add("seArr;", "\u21D8");
             chars.Add("searr;", "\u2198");
+            chars.Add("seArr;", "\u21D8");
             chars.Add("searrow;", "\u2198");
             chars.Add("sect;", "\u00A7");
             chars.Add("sect", "\u00A7");
@@ -1900,9 +1977,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("smtes;", "\u2AAC\uFE00");
             chars.Add("SOFTcy;", "\u042C");
             chars.Add("softcy;", "\u044C");
-            chars.Add("sol;", "\u002F");
-            chars.Add("solb;", "\u29C4");
             chars.Add("solbar;", "\u233F");
+            chars.Add("solb;", "\u29C4");
+            chars.Add("sol;", "\u002F");
             chars.Add("Sopf;", "\uD835\uDD4A");
             chars.Add("sopf;", "\uD835\uDD64");
             chars.Add("spades;", "\u2660");
@@ -1921,9 +1998,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("sqsupe;", "\u2292");
             chars.Add("sqsupset;", "\u2290");
             chars.Add("sqsupseteq;", "\u2292");
-            chars.Add("squ;", "\u25A1");
-            chars.Add("Square;", "\u25A1");
             chars.Add("square;", "\u25A1");
+            chars.Add("Square;", "\u25A1");
             chars.Add("SquareIntersection;", "\u2293");
             chars.Add("SquareSubset;", "\u228F");
             chars.Add("SquareSubsetEqual;", "\u2291");
@@ -1931,6 +2007,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("SquareSupersetEqual;", "\u2292");
             chars.Add("SquareUnion;", "\u2294");
             chars.Add("squarf;", "\u25AA");
+            chars.Add("squ;", "\u25A1");
             chars.Add("squf;", "\u25AA");
             chars.Add("srarr;", "\u2192");
             chars.Add("Sscr;", "\uD835\uDCAE");
@@ -1944,8 +2021,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("straightepsilon;", "\u03F5");
             chars.Add("straightphi;", "\u03D5");
             chars.Add("strns;", "\u00AF");
-            chars.Add("Sub;", "\u22D0");
             chars.Add("sub;", "\u2282");
+            chars.Add("Sub;", "\u22D0");
             chars.Add("subdot;", "\u2ABD");
             chars.Add("subE;", "\u2AC5");
             chars.Add("sube;", "\u2286");
@@ -1955,8 +2032,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("subne;", "\u228A");
             chars.Add("subplus;", "\u2ABF");
             chars.Add("subrarr;", "\u2979");
-            chars.Add("Subset;", "\u22D0");
             chars.Add("subset;", "\u2282");
+            chars.Add("Subset;", "\u22D0");
             chars.Add("subseteq;", "\u2286");
             chars.Add("subseteqq;", "\u2AC5");
             chars.Add("SubsetEqual;", "\u2286");
@@ -1965,8 +2042,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("subsim;", "\u2AC7");
             chars.Add("subsub;", "\u2AD5");
             chars.Add("subsup;", "\u2AD3");
-            chars.Add("succ;", "\u227B");
             chars.Add("succapprox;", "\u2AB8");
+            chars.Add("succ;", "\u227B");
             chars.Add("succcurlyeq;", "\u227D");
             chars.Add("Succeeds;", "\u227B");
             chars.Add("SucceedsEqual;", "\u2AB0");
@@ -1978,17 +2055,17 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("succnsim;", "\u22E9");
             chars.Add("succsim;", "\u227F");
             chars.Add("SuchThat;", "\u220B");
-            chars.Add("Sum;", "\u2211");
             chars.Add("sum;", "\u2211");
+            chars.Add("Sum;", "\u2211");
             chars.Add("sung;", "\u266A");
-            chars.Add("Sup;", "\u22D1");
-            chars.Add("sup;", "\u2283");
             chars.Add("sup1;", "\u00B9");
             chars.Add("sup1", "\u00B9");
             chars.Add("sup2;", "\u00B2");
             chars.Add("sup2", "\u00B2");
             chars.Add("sup3;", "\u00B3");
             chars.Add("sup3", "\u00B3");
+            chars.Add("sup;", "\u2283");
+            chars.Add("Sup;", "\u22D1");
             chars.Add("supdot;", "\u2ABE");
             chars.Add("supdsub;", "\u2AD8");
             chars.Add("supE;", "\u2AC6");
@@ -2003,8 +2080,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("supnE;", "\u2ACC");
             chars.Add("supne;", "\u228B");
             chars.Add("supplus;", "\u2AC0");
-            chars.Add("Supset;", "\u22D1");
             chars.Add("supset;", "\u2283");
+            chars.Add("Supset;", "\u22D1");
             chars.Add("supseteq;", "\u2287");
             chars.Add("supseteqq;", "\u2AC6");
             chars.Add("supsetneq;", "\u228B");
@@ -2013,8 +2090,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("supsub;", "\u2AD4");
             chars.Add("supsup;", "\u2AD6");
             chars.Add("swarhk;", "\u2926");
-            chars.Add("swArr;", "\u21D9");
             chars.Add("swarr;", "\u2199");
+            chars.Add("swArr;", "\u21D9");
             chars.Add("swarrow;", "\u2199");
             chars.Add("swnwar;", "\u292A");
             chars.Add("szlig;", "\u00DF");
@@ -2035,8 +2112,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("Tfr;", "\uD835\uDD17");
             chars.Add("tfr;", "\uD835\uDD31");
             chars.Add("there4;", "\u2234");
-            chars.Add("Therefore;", "\u2234");
             chars.Add("therefore;", "\u2234");
+            chars.Add("Therefore;", "\u2234");
             chars.Add("Theta;", "\u0398");
             chars.Add("theta;", "\u03B8");
             chars.Add("thetasym;", "\u03D1");
@@ -2044,36 +2121,36 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("thickapprox;", "\u2248");
             chars.Add("thicksim;", "\u223C");
             chars.Add("ThickSpace;", "\u205F\u200A");
-            chars.Add("thinsp;", "\u2009");
             chars.Add("ThinSpace;", "\u2009");
+            chars.Add("thinsp;", "\u2009");
             chars.Add("thkap;", "\u2248");
             chars.Add("thksim;", "\u223C");
             chars.Add("THORN;", "\u00DE");
             chars.Add("THORN", "\u00DE");
             chars.Add("thorn;", "\u00FE");
             chars.Add("thorn", "\u00FE");
-            chars.Add("Tilde;", "\u223C");
             chars.Add("tilde;", "\u02DC");
+            chars.Add("Tilde;", "\u223C");
             chars.Add("TildeEqual;", "\u2243");
             chars.Add("TildeFullEqual;", "\u2245");
             chars.Add("TildeTilde;", "\u2248");
+            chars.Add("timesbar;", "\u2A31");
+            chars.Add("timesb;", "\u22A0");
             chars.Add("times;", "\u00D7");
             chars.Add("times", "\u00D7");
-            chars.Add("timesb;", "\u22A0");
-            chars.Add("timesbar;", "\u2A31");
             chars.Add("timesd;", "\u2A30");
             chars.Add("tint;", "\u222D");
             chars.Add("toea;", "\u2928");
-            chars.Add("top;", "\u22A4");
             chars.Add("topbot;", "\u2336");
             chars.Add("topcir;", "\u2AF1");
+            chars.Add("top;", "\u22A4");
             chars.Add("Topf;", "\uD835\uDD4B");
             chars.Add("topf;", "\uD835\uDD65");
             chars.Add("topfork;", "\u2ADA");
             chars.Add("tosa;", "\u2929");
             chars.Add("tprime;", "\u2034");
-            chars.Add("TRADE;", "\u2122");
             chars.Add("trade;", "\u2122");
+            chars.Add("TRADE;", "\u2122");
             chars.Add("triangle;", "\u25B5");
             chars.Add("triangledown;", "\u25BF");
             chars.Add("triangleleft;", "\u25C3");
@@ -2104,9 +2181,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("Uacute", "\u00DA");
             chars.Add("uacute;", "\u00FA");
             chars.Add("uacute", "\u00FA");
+            chars.Add("uarr;", "\u2191");
             chars.Add("Uarr;", "\u219F");
             chars.Add("uArr;", "\u21D1");
-            chars.Add("uarr;", "\u2191");
             chars.Add("Uarrocir;", "\u2949");
             chars.Add("Ubrcy;", "\u040E");
             chars.Add("ubrcy;", "\u045E");
@@ -2151,27 +2228,27 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("uogon;", "\u0173");
             chars.Add("Uopf;", "\uD835\uDD4C");
             chars.Add("uopf;", "\uD835\uDD66");
+            chars.Add("UpArrowBar;", "\u2912");
+            chars.Add("uparrow;", "\u2191");
             chars.Add("UpArrow;", "\u2191");
             chars.Add("Uparrow;", "\u21D1");
-            chars.Add("uparrow;", "\u2191");
-            chars.Add("UpArrowBar;", "\u2912");
             chars.Add("UpArrowDownArrow;", "\u21C5");
+            chars.Add("updownarrow;", "\u2195");
             chars.Add("UpDownArrow;", "\u2195");
             chars.Add("Updownarrow;", "\u21D5");
-            chars.Add("updownarrow;", "\u2195");
             chars.Add("UpEquilibrium;", "\u296E");
             chars.Add("upharpoonleft;", "\u21BF");
             chars.Add("upharpoonright;", "\u21BE");
             chars.Add("uplus;", "\u228E");
             chars.Add("UpperLeftArrow;", "\u2196");
             chars.Add("UpperRightArrow;", "\u2197");
-            chars.Add("Upsi;", "\u03D2");
             chars.Add("upsi;", "\u03C5");
+            chars.Add("Upsi;", "\u03D2");
             chars.Add("upsih;", "\u03D2");
             chars.Add("Upsilon;", "\u03A5");
             chars.Add("upsilon;", "\u03C5");
-            chars.Add("UpTee;", "\u22A5");
             chars.Add("UpTeeArrow;", "\u21A5");
+            chars.Add("UpTee;", "\u22A5");
             chars.Add("upuparrows;", "\u21C8");
             chars.Add("urcorn;", "\u231D");
             chars.Add("urcorner;", "\u231D");
@@ -2199,8 +2276,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("varphi;", "\u03D5");
             chars.Add("varpi;", "\u03D6");
             chars.Add("varpropto;", "\u221D");
-            chars.Add("vArr;", "\u21D5");
             chars.Add("varr;", "\u2195");
+            chars.Add("vArr;", "\u21D5");
             chars.Add("varrho;", "\u03F1");
             chars.Add("varsigma;", "\u03C2");
             chars.Add("varsubsetneq;", "\u228A\uFE00");
@@ -2210,25 +2287,25 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("vartheta;", "\u03D1");
             chars.Add("vartriangleleft;", "\u22B2");
             chars.Add("vartriangleright;", "\u22B3");
-            chars.Add("Vbar;", "\u2AEB");
             chars.Add("vBar;", "\u2AE8");
+            chars.Add("Vbar;", "\u2AEB");
             chars.Add("vBarv;", "\u2AE9");
             chars.Add("Vcy;", "\u0412");
             chars.Add("vcy;", "\u0432");
-            chars.Add("VDash;", "\u22AB");
-            chars.Add("Vdash;", "\u22A9");
-            chars.Add("vDash;", "\u22A8");
             chars.Add("vdash;", "\u22A2");
+            chars.Add("vDash;", "\u22A8");
+            chars.Add("Vdash;", "\u22A9");
+            chars.Add("VDash;", "\u22AB");
             chars.Add("Vdashl;", "\u2AE6");
-            chars.Add("Vee;", "\u22C1");
-            chars.Add("vee;", "\u2228");
             chars.Add("veebar;", "\u22BB");
+            chars.Add("vee;", "\u2228");
+            chars.Add("Vee;", "\u22C1");
             chars.Add("veeeq;", "\u225A");
             chars.Add("vellip;", "\u22EE");
-            chars.Add("Verbar;", "\u2016");
             chars.Add("verbar;", "\u007C");
-            chars.Add("Vert;", "\u2016");
+            chars.Add("Verbar;", "\u2016");
             chars.Add("vert;", "\u007C");
+            chars.Add("Vert;", "\u2016");
             chars.Add("VerticalBar;", "\u2223");
             chars.Add("VerticalLine;", "\u007C");
             chars.Add("VerticalSeparator;", "\u2758");
@@ -2254,8 +2331,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("Wcirc;", "\u0174");
             chars.Add("wcirc;", "\u0175");
             chars.Add("wedbar;", "\u2A5F");
-            chars.Add("Wedge;", "\u22C0");
             chars.Add("wedge;", "\u2227");
+            chars.Add("Wedge;", "\u22C0");
             chars.Add("wedgeq;", "\u2259");
             chars.Add("weierp;", "\u2118");
             chars.Add("Wfr;", "\uD835\uDD1A");
@@ -2273,12 +2350,12 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("xdtri;", "\u25BD");
             chars.Add("Xfr;", "\uD835\uDD1B");
             chars.Add("xfr;", "\uD835\uDD35");
-            chars.Add("xhArr;", "\u27FA");
             chars.Add("xharr;", "\u27F7");
+            chars.Add("xhArr;", "\u27FA");
             chars.Add("Xi;", "\u039E");
             chars.Add("xi;", "\u03BE");
-            chars.Add("xlArr;", "\u27F8");
             chars.Add("xlarr;", "\u27F5");
+            chars.Add("xlArr;", "\u27F8");
             chars.Add("xmap;", "\u27FC");
             chars.Add("xnis;", "\u22FB");
             chars.Add("xodot;", "\u2A00");
@@ -2286,8 +2363,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("xopf;", "\uD835\uDD69");
             chars.Add("xoplus;", "\u2A01");
             chars.Add("xotime;", "\u2A02");
-            chars.Add("xrArr;", "\u27F9");
             chars.Add("xrarr;", "\u27F6");
+            chars.Add("xrArr;", "\u27F9");
             chars.Add("Xscr;", "\uD835\uDCB3");
             chars.Add("xscr;", "\uD835\uDCCD");
             chars.Add("xsqcup;", "\u2A06");
@@ -2317,9 +2394,9 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("yscr;", "\uD835\uDCCE");
             chars.Add("YUcy;", "\u042E");
             chars.Add("yucy;", "\u044E");
-            chars.Add("Yuml;", "\u0178");
             chars.Add("yuml;", "\u00FF");
             chars.Add("yuml", "\u00FF");
+            chars.Add("Yuml;", "\u0178");
             chars.Add("Zacute;", "\u0179");
             chars.Add("zacute;", "\u017A");
             chars.Add("Zcaron;", "\u017D");
@@ -2332,13 +2409,13 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             chars.Add("ZeroWidthSpace;", "\u200B");
             chars.Add("Zeta;", "\u0396");
             chars.Add("zeta;", "\u03B6");
-            chars.Add("Zfr;", "\u2128");
             chars.Add("zfr;", "\uD835\uDD37");
+            chars.Add("Zfr;", "\u2128");
             chars.Add("ZHcy;", "\u0416");
             chars.Add("zhcy;", "\u0436");
             chars.Add("zigrarr;", "\u21DD");
-            chars.Add("Zopf;", "\u2124");
             chars.Add("zopf;", "\uD835\uDD6B");
+            chars.Add("Zopf;", "\u2124");
             chars.Add("Zscr;", "\uD835\uDCB5");
             chars.Add("zscr;", "\uD835\uDCCF");
             chars.Add("zwj;", "\u200D");

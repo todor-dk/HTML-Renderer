@@ -262,7 +262,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
             this.Encoding = encoding;
             this.Decoder = encoding.GetDecoder();
         }
-
+        
         public override char ReadChar()
         {
             if (this.CharBufferIndex >= this.CharBufferLimit)
@@ -272,7 +272,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 if (this.CharBufferIndex >= this.CharBufferLimit)
                     return Characters.EOF;
             }
-
+            
             char ch = this.CharBuffer[this.CharBufferIndex];
             this.CharBufferIndex++;
             if (ch == Characters.EOF)

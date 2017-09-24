@@ -39,6 +39,8 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
 
         InvalidComment,
 
+        InvalidCharacterData,
+
         NullCharacter,
 
         PrematureEndOfFile,

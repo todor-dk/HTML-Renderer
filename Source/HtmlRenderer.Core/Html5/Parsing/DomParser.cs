@@ -5578,6 +5578,7 @@ namespace Scientia.HtmlRenderer.Html5.Parsing
                 // Parse error. Switch the insertion mode to "in body" and reprocess the token.
                 this.InformParseError(Parsing.ParseError.UnexpectedTag);
                 this.Switch(InsertionModeEnum.InBody);
+                this.ProcessToken();
             }
         }
 
